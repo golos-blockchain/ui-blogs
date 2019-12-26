@@ -91,6 +91,10 @@ export default async function getState(api, url, options, offchain = {}) {
                     })
                 break
 
+                case 'witness':
+                    state.witnesses[uname] = await api.getWitnessByAccount(uname)
+                break
+
                 case 'posts':
                 case 'comments':
                     const comments = await api.getDiscussionsByComments({ start_author: uname, limit: 20 })
@@ -169,7 +173,8 @@ export default async function getState(api, url, options, offchain = {}) {
     } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
         const witnesses = await api.getWitnessesByVote('', 100)
         witnesses.forEach( witness => {
-            state.witnesses[witness.owner] = witness
+            state.witnesses[witness.owner] = witness;
+            accounts.add(witness.owner);
         })
   
     } else if (Object.keys(PUBLIC_API).includes(parts[0])) {

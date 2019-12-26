@@ -49,6 +49,10 @@ export function getAccountReputations(lowerBoundName, limit) {
     return {}
 }
 
+export function getWitnessByAccount(accountName) {
+    return api.getWitnessByAccountAsync(accountName)
+}
+
 export function getWitnessesByVote(from, limit) {
     return api.getWitnessesByVoteAsync(from, limit)
 }

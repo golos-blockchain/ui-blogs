@@ -16,6 +16,7 @@ const Long = ByteBuffer.Long;
 
 class Witnesses extends Component {
     static propTypes = {
+        accounts: PropTypes.object.isRequired,
         witnesses: PropTypes.object.isRequired,
         accountWitnessVote: PropTypes.func.isRequired,
         username: PropTypes.string,
@@ -31,6 +32,7 @@ class Witnesses extends Component {
     shouldComponentUpdate(np, ns) {
         return (
             !is(np.witnessVotes, this.props.witnessVotes) ||
+            np.accounts !== this.props.accounts ||
             np.witnesses !== this.props.witnesses ||
             np.currentProxy !== this.props.currentProxy ||
             np.username !== this.props.username ||
@@ -65,6 +67,18 @@ class Witnesses extends Component {
             const version = item.get('running_version');
             const signingKey = item.get('signing_key');
             const props = item.get('props').toJS();
+
+            let api_node = null;
+            let seed_node = null;
+            const acc = this.props.accounts.get(owner);
+            try {
+              const metadata = JSON.parse(acc.get('json_metadata'));
+              if (metadata.witness) {
+                api_node = metadata.witness.api_node;
+                seed_node = metadata.witness.seed_node;
+              }
+            } catch(err) {
+            }
 
             //https://github.com/roadscape/db.steemd.com/blob/acabdcb7c7a9c9c4260a464ca86ae4da347bbd7a/app/views/witnesses/index.html.erb#L116
             const oneM = Math.pow(10, 6);
@@ -145,7 +159,9 @@ class Witnesses extends Component {
                         </span>
                     </td>
                     <td style={rank <= 20 ? { fontWeight: 'bold' } : null}>
-                        <Link to={'/@' + owner}>{owner}</Link>
+                        <Link to={'/@' + owner}>{owner}</Link>&nbsp;
+                        {api_node && <img src="images/api.png" title={tt('witnesses_jsx.what_is_api')} />}&nbsp;
+                        {seed_node && <img src="images/seed.png" title={tt('witnesses_jsx.what_is_seed')} />}
                     </td>
                     <td>
                         {formatDecimal(approval.toFixed(), 0)}
@@ -188,9 +204,14 @@ class Witnesses extends Component {
                         </div>
                         <div
                             style={{ fontSize: '.9rem' }}
-                            title={tt('witnesses_jsx.block_size')}
                         >
-                            {props.maximum_block_size}
+                            <span title={tt('witnesses_jsx.block_size')}>
+                                {props.maximum_block_size}
+                            </span>
+                            &nbsp;
+                            <Link to={'/@' + owner + '/witness'}>
+                                <Icon name="new/setting" />
+                            </Link>
                         </div>
                     </td>
                     <td>{version}</td>
@@ -338,14 +359,11 @@ class Witnesses extends Component {
                                     </div>
                                 </div>
                             </form>
-                            <br />
                             {addlWitnesses}
-                            <br />
-                            <br />
                         </div>
                     </div>
                 )}
-                {/**  
+                {
                 <div className="row">
                     <div className="column">
                         <p>{tt(currentProxy && currentProxy.length ? 'witnesses_jsx.witness_set' : 'witnesses_jsx.set_witness_proxy', {proxy: currentProxy})}</p>
@@ -357,7 +375,7 @@ class Witnesses extends Component {
                                 <div className="input-group">
                                     <input className="input-group-field bold" disabled type="text" style={{float: "left", width: "75%", maxWidth: "20rem"}} value={currentProxy} />
                                     <div className="input-group-button">
-                                        <button style={{marginBottom: 0}} className="button" onClick={this.props.accountWitnessProxy}>{tt('witnesses_jsx.witness_proxy_clear')}</button>
+                                        <button style={{marginBottom: 0}} className="button" onClick={this._accountWitnessProxy}>{tt('witnesses_jsx.witness_proxy_clear')}</button>
                                     </div>
                                 </div>
                             </form>
@@ -366,14 +384,14 @@ class Witnesses extends Component {
                             <div className="input-group">
                                 <input className="input-group-field bold" type="text" style={{float: "left", width: "75%", maxWidth: "20rem"}} value={proxy} onChange={(e) => {this.setState({proxy: e.target.value});}} />
                                 <div className="input-group-button">
-                                    <button style={{marginBottom: 0}} className="button" onClick={this.props.accountWitnessProxy}>{tt('witnesses_jsx.witness_proxy_set')}</button>
+                                    <button style={{marginBottom: 0}} className="button" onClick={this._accountWitnessProxy}>{tt('witnesses_jsx.witness_proxy_set')}</button>
                                 </div>
                             </div>
                         </form>}
                         {this.state.proxyFailed && <p className="error">{tt('witnesses_jsx.proxy_update_error')}.</p>}
                         <br />
                      </div>
-                </div>*/}
+                </div>}
             </div>
         );
     }
@@ -391,15 +409,15 @@ class Witnesses extends Component {
         this.setState({ customUsername });
     };
 
-    // _accountWitnessProxy = e => {
-    //     e.preventDefault();
-    //
-    //     const { username, accountWitnessProxy } = this.props;
-    //
-    //     accountWitnessProxy(username, this.state.proxy, state => {
-    //         this.setState(state);
-    //     });
-    // };
+    _accountWitnessProxy = e => {
+        e.preventDefault();
+    
+        const { username, accountWitnessProxy } = this.props;
+    
+        accountWitnessProxy(username, this.state.proxy, state => {
+            this.setState(state);
+        });
+    };
 }
 
 export default connect(
@@ -413,6 +431,7 @@ export default connect(
         const currentProxy = currentAccount && currentAccount.get('proxy');
 
         return {
+            accounts: state.global.get('accounts'),
             witnesses: state.global.get('witnesses'),
             username,
             witnessVotes,
@@ -434,30 +453,30 @@ export default connect(
                 );
             },
 
-            // accountWitnessProxy: (account, proxy, stateCallback) => {
-            //     dispatch(
-            //         transaction.actions.broadcastOperation({
-            //             type: 'account_witness_proxy',
-            //             operation: { account, proxy },
-            //             confirm: proxy.length
-            //                 ? 'Set proxy to: ' + proxy
-            //                 : 'You are about to remove your proxy.',
-            //             successCallback: () => {
-            //                 dispatch(
-            //                     g.actions.updateAccountWitnessProxy({
-            //                         account,
-            //                         proxy,
-            //                     })
-            //                 );
-            //                 stateCallback({ proxyFailed: false, proxy: '' });
-            //             },
-            //             errorCallback: e => {
-            //                 console.log('error:', e);
-            //                 stateCallback({ proxyFailed: true });
-            //             },
-            //         })
-            //     );
-            // },
+            accountWitnessProxy: (account, proxy, stateCallback) => {
+                dispatch(
+                    transaction.actions.broadcastOperation({
+                        type: 'account_witness_proxy',
+                        operation: { account, proxy },
+                        confirm: proxy.length
+                            ? 'Установить прокси: ' + proxy
+                            : 'Удалить прокси.',
+                        successCallback: () => {
+                            dispatch(
+                                g.actions.updateAccountWitnessProxy({
+                                    account,
+                                    proxy,
+                                })
+                            );
+                            stateCallback({ proxyFailed: false, proxy: '' });
+                        },
+                        errorCallback: e => {
+                            console.log('error:', e);
+                            stateCallback({ proxyFailed: true });
+                        },
+                    })
+                );
+            },
         };
     }
 )(Witnesses);

@@ -9,6 +9,7 @@ import Icon from 'app/components/elements/Icon'
 import UserKeys from 'app/components/elements/UserKeys';
 import PasswordReset from 'app/components/elements/PasswordReset';
 import UserWallet from 'app/components/modules/UserWallet';
+import WitnessProps from 'app/components/modules/WitnessProps';
 import Settings from 'app/components/modules/Settings';
 import CurationRewards from 'app/components/modules/CurationRewards';
 import AuthorRewards from 'app/components/modules/AuthorRewards';
@@ -334,6 +335,10 @@ export default class UserProfile extends React.Component {
                     <br />
                     <PasswordReset account={accountImm} />
                 </div>
+        }
+        else if( section === 'witness' ) {
+            tab_content = <WitnessProps 
+                account={account} />
         } /*else if( section === 'invites' ) {
             walletClass = 'active'
             tab_content = <div>
@@ -444,7 +449,7 @@ export default class UserProfile extends React.Component {
         return (
             <div className="UserProfile">
 
-                <div className="UserProfile__banner row expanded">
+                {section !== 'witness' && <div className="UserProfile__banner row expanded">
 
                     <div className="column" style={cover_image_style}>
                         <div className="UserProfile__buttons-wrapper">
@@ -482,10 +487,10 @@ export default class UserProfile extends React.Component {
                             <Follow follower={username} following={accountname} what="blog" />
                         </div>
                     </div>
-                </div>
-                <div className="UserProfile__top-nav row expanded noPrint">
+                </div>}
+                {section !== 'witness' && <div className="UserProfile__top-nav row expanded noPrint">
                     {top_menu}
-                </div>
+                </div>}
                 <div>
                   {printLink}
                 </div>
