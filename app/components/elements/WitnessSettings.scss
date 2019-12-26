@@ -2,12 +2,12 @@
 display: inline-block;
 }
 
-input[name=url] { 
+input[name=url2] { 
 width: 400px;
 display: inline-block;
 }
 
-input[name=url]:not(:hover):not(:focus) { 
+input[name=url2]:not(:hover):not(:focus) { 
 border: none;
 transition: none;
 -webkit-transition: none;
@@ -29,4 +29,8 @@ box-shadow: none;
 
 .no-margin-bottom {
   margin-bottom: 0rem !important;
+}
+
+.margin-bottom {
+	margin-bottom: 1rem !important;
 }

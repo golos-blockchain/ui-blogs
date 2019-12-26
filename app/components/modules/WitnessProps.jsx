@@ -58,8 +58,8 @@ class WitnessProps extends React.Component {
         ],
         [
             ['auction_window_size', 'raw'],
-            ['allow_distribute_auction_reward', 'bool'],
-            ['allow_return_auction_reward_to_fund', 'bool'],
+            ['allow_distribute_auction_reward', 'bbool'],
+            ['allow_return_auction_reward_to_fund', 'bbool'],
         ],
         [
             ['worker_reward_percent'],
@@ -82,8 +82,8 @@ class WitnessProps extends React.Component {
 
     initForm(props) {
         this.wprops = [...this.wprops_19, ...this.wprops_22];
-        let wp_flat = this.wprops.flat();
-        this.prop_names = wp_flat.map(p => p[0]);
+        this.wp_flat = this.wprops.flat();
+        this.prop_names = this.wp_flat.map(p => p[0]);
         reactForm({
             instance: this,
             name: 'witnessProps',
@@ -101,8 +101,12 @@ class WitnessProps extends React.Component {
         this.setState({loading: true});
 
         let props = {};
-        for (let prop of this.prop_names) {
-            props[prop] = this.state[prop].value;
+        for (let prop of this.wp_flat) {
+            if (prop.length === 1 || prop[1] == "raw" || prop[1] == "time") {
+                props[prop[0]] = parseInt(this.state[prop[0]].value);
+            } else {
+                props[prop[0]] = this.state[prop[0]].value;
+            }
         }
         if (props.curation_reward_curve == "bounded") {
             props.curation_reward_curve = 0;
@@ -111,6 +115,18 @@ class WitnessProps extends React.Component {
         } else if (props.curation_reward_curve == "square_root") {
             props.curation_reward_curve = 2;
         }
+        props.create_account_delegation_time = parseInt(props.create_account_delegation_time);
+        props.custom_ops_bandwidth_multiplier = parseInt(props.custom_ops_bandwidth_multiplier);
+        props.maximum_block_size = parseInt(props.maximum_block_size);
+        props.sbd_interest_rate = parseInt(props.sbd_interest_rate);
+        props.sbd_debt_convert_rate = parseInt(props.sbd_debt_convert_rate);
+        props.max_delegated_vesting_interest_rate = parseInt(props.max_delegated_vesting_interest_rate);
+        props.max_referral_term_sec = parseInt(props.max_referral_term_sec);
+        props.max_referral_interest_rate = parseInt(props.max_referral_interest_rate);
+        props.posts_window = parseInt(props.posts_window);
+        props.comments_window = parseInt(props.comments_window);
+        props.posts_per_window = parseInt(props.posts_per_window);
+        props.comments_per_window = parseInt(props.comments_per_window);
         updateChainProperties({
             owner: account.name,
             props: [3, props],
