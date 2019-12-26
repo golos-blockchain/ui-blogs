@@ -1,6 +1,6 @@
 import tt from 'counterpart';
 import { select, takeEvery } from 'redux-saga/effects';
-import { Signature, hash } from 'golos-js/lib/auth/ecc/index';
+import { Signature, hash } from 'golos-classic-js/lib/auth/ecc/index';
 
 const MAX_UPLOAD_IMAGE_SIZE = 1024 * 1024;
 

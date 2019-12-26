@@ -3,12 +3,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import transaction from 'app/redux/Transaction'
 import LoadingIndicator from 'app/components/elements/LoadingIndicator'
-import {PrivateKey, PublicKey, key_utils} from 'golos-js/lib/auth/ecc'
+import {PrivateKey, PublicKey, key_utils} from 'golos-classic-js/lib/auth/ecc'
 import {validate_account_name} from 'app/utils/ChainValidation'
 import {cleanReduxInput} from 'app/utils/ReduxForms'
 import tt from 'counterpart';
 import { APP_NAME } from 'app/client_config';
-import {api} from 'golos-js'
+import {api} from 'golos-classic-js'
 
 const {string, oneOf} = PropTypes
 

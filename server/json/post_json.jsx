@@ -1,7 +1,7 @@
 import koa_router from 'koa-router';
 import React from 'react';
 import {routeRegex} from "app/ResolveRoute";
-import {api} from 'golos-js';
+import {api} from 'golos-classic-js';
 
 const DEFAULT_VOTE_LIMIT = 10000
 

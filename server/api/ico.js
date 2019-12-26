@@ -6,7 +6,7 @@ import {esc, escAttrs} from 'db/models';
 import {getRemoteIp, rateLimitReq, checkCSRF} from '../utils';
 import destinationBtcAddress from 'shared/icoAddress'
 import coRequest from 'co-request'
-import {api} from 'golos-js';
+import {api} from 'golos-classic-js';
 
 const cypherToken = config.blockcypher_token
 

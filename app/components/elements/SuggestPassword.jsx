@@ -6,7 +6,7 @@ import {renderToString} from 'react-dom/server'
 import g from 'app/redux/GlobalReducer'
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
 import Icon from 'app/components/elements/Icon'
-import {key_utils} from 'golos-js/lib/auth/ecc'
+import {key_utils} from 'golos-classic-js/lib/auth/ecc'
 import tt from 'counterpart';
 import { APP_NAME, APP_ICON } from 'app/client_config';
 

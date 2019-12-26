@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import { key_utils } from 'golos-js/lib/auth/ecc';
+import { key_utils } from 'golos-classic-js/lib/auth/ecc';
 import tt from 'counterpart';
 import { APP_NAME_UP, TERMS_OF_SERVICE_URL } from 'app/client_config';
 

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import cn from 'classnames';
 import tt from 'counterpart';
 import { isNil } from 'ramda';
-import { api } from 'golos-js';
+import { api } from 'golos-classic-js';
 import {connect} from 'react-redux';
 
 

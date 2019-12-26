@@ -1,7 +1,7 @@
 /* eslint react/prop-types: 0 */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
-import {PrivateKey, PublicKey} from 'golos-js/lib/auth/ecc'
+import {PrivateKey, PublicKey} from 'golos-classic-js/lib/auth/ecc'
 import transaction from 'app/redux/Transaction'
 import g from 'app/redux/GlobalReducer'
 import user from 'app/redux/User'

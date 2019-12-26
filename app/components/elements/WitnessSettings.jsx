@@ -141,6 +141,11 @@ class WitnessSettings extends React.Component {
         });
     }
 
+    clearSigningKey = (e) => {
+        e.preventDefault();
+        this.state.signing_key.props.onChange('GLS1111111111111111111111111111111114T1Anm');
+    }
+
     render() {
         const {
             props: {current_user, json_metadata},
@@ -200,7 +205,7 @@ class WitnessSettings extends React.Component {
                     <td>&nbsp;</td><td title="Подписной ключ">
                         <div className="input-group no-margin-bottom">
                             <input type="text" className="input-group-field" {...signing_key.props} maxLength="256" autoComplete="off" />
-                            <span className="input-group-label" style={{cursor: "pointer"}}>X</span>
+                            <span className="input-group-label" onClick={this.clearSigningKey} style={{cursor: "pointer"}}>X</span>
                         </div>
                     </td>
                 </tr>

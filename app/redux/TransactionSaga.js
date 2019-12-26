@@ -8,8 +8,8 @@ import tr from 'app/redux/Transaction'
 import getSlug from 'speakingurl'
 import {DEBT_TICKER} from 'app/client_config'
 import {serverApiRecordEvent} from 'app/utils/ServerApiClient'
-import {PrivateKey, PublicKey} from 'golos-js/lib/auth/ecc'
-import {api, broadcast, auth, memo} from 'golos-js'
+import {PrivateKey, PublicKey} from 'golos-classic-js/lib/auth/ecc'
+import {api, broadcast, auth, memo} from 'golos-classic-js'
 import constants from './constants';
 import tt from 'counterpart';
 

@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
 import GeneratedPasswordInput from 'app/components/elements/GeneratedPasswordInput';
-import {PrivateKey} from 'golos-js/lib/auth/ecc';
+import {PrivateKey} from 'golos-classic-js/lib/auth/ecc';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import tt from 'counterpart';
 import Callout from 'app/components/elements/Callout';
-import {api} from 'golos-js';
+import {api} from 'golos-classic-js';
 
 function passwordToOwnerPubKey(account_name, password) {
     let pub_key;

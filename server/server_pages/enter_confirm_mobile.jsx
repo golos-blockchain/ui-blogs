@@ -14,7 +14,7 @@ import config from "config";
 // import Mixpanel from "mixpanel";
 import tt from 'counterpart';
 import {metrics} from 'server/metrics';
-import {hash} from 'golos-js/lib/auth/ecc';
+import {hash} from 'golos-classic-js/lib/auth/ecc';
 
 // FIXME copy paste code, refactor mixpanel out
 // if (config.has("mixpanel") && config.get("mixpanel")) {

@@ -1,7 +1,7 @@
 import koa_router from 'koa-router';
 import koa_body from 'koa-body';
 import Tarantool from 'db/tarantool';
-import { api } from 'golos-js';
+import { api } from 'golos-classic-js';
 import proxify from 'db/proxify';
 
 function proxyRoutes(app) {

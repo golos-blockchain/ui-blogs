@@ -104,18 +104,16 @@ class WitnessProps extends React.Component {
         for (let prop of this.prop_names) {
             props[prop] = this.state[prop].value;
         }
+        if (props.curation_reward_curve == "bounded") {
+            props.curation_reward_curve = 0;
+        } else if (props.curation_reward_curve == "linear") {
+            props.curation_reward_curve = 1;
+        } else if (props.curation_reward_curve == "square_root") {
+            props.curation_reward_curve = 2;
+        }
         updateChainProperties({
             owner: account.name,
-            props: [1, {
-                                account_creation_fee: '10.000 GOLOS',
-                                maximum_block_size: this.props.witness_obj.get('props').get('maximum_block_size'),
-                                sbd_interest_rate: this.props.witness_obj.get('props').get('sbd_interest_rate'),
-                                create_account_min_golos_fee: this.props.witness_obj.get('props').get('create_account_min_golos_fee'),
-                                create_account_min_delegation: this.props.witness_obj.get('props').get('create_account_min_delegation'),
-                                create_account_delegation_time: this.props.witness_obj.get('props').get('create_account_delegation_time'),
-                                min_delegation: this.props.witness_obj.get('props').get('min_delegation')
-                            }
-            ],
+            props: [3, props],
             errorCallback: (e) => {
                 if (e === 'Canceled') {
                     this.setState({
@@ -186,7 +184,7 @@ class WitnessProps extends React.Component {
                     <h3 className="inline">Параметры сети</h3>&nbsp;&nbsp;
 
                     {state.loading && <span><LoadingIndicator type="circle" /><br /></span>}
-                    {!state.loading && <input type="submit" className="button" value="Сохранить"  />}
+                    {!state.loading && <input type="submit" className="button" value="Сохранить" disabled={disabled} />}
                     {' '}{
                             state.errorMessage
                                 ? <small className="error">{state.errorMessage}</small>

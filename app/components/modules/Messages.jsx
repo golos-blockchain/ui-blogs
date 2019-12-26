@@ -13,7 +13,7 @@ import Userpic from 'app/components/elements/Userpic';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Tooltip from 'app/components/elements/Tooltip';
 import tt from 'counterpart';
-import { api, memo as memoFunc } from 'golos-js'
+import { api, memo as memoFunc } from 'golos-classic-js'
 
 
 class MessageBox extends Component {
