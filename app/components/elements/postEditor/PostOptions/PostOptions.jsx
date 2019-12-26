@@ -254,13 +254,17 @@ class PostOptions extends React.PureComponent {
         this.setState({
           minCurationPercent: r.min_curation_percent,
           maxCurationPercent: r.max_curation_percent
-        })
+        }, () => {
+            this.props.onCurationPercentChange(r.min_curation_percent);
+        });
       }).catch(e => {
         api.getChainPropertiesAsync().then(r => {
           this.setState({
             minCurationPercent: r.min_curation_percent,
             maxCurationPercent: r.max_curation_percent
-          })
+          }, () => {
+            this.props.onCurationPercentChange(r.min_curation_percent);
+          });
         }).catch(e => {
           this.setState({
             minCurationPercent: 5000,
