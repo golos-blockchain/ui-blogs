@@ -11,8 +11,8 @@ function fractional_part_len(value) {
 }
 
 // FIXME this should be unit tested.. here is one bug: 501,695,.505
-export function formatDecimal(value, decPlaces = 2, truncate0s = true) {
-    let decSeparator, fl, i, j, sign, thouSeparator, abs_value;
+export function formatDecimal(value, decPlaces = 2, truncate0s = true, thouSeparator = ',') {
+    let decSeparator, fl, i, j, sign, abs_value;
     if (value === null || value === void 0 || isNaN(value)) {
         return 'NaN';
     }
@@ -22,7 +22,6 @@ export function formatDecimal(value, decPlaces = 2, truncate0s = true) {
         if (fl < decPlaces) decPlaces = fl;
     }
     decSeparator = '.';
-    thouSeparator = ',';
     sign = value < 0 ? '-' : '';
     abs_value = Math.abs(value);
     i = parseInt(abs_value.toFixed(decPlaces), 10) + '';

@@ -11,7 +11,8 @@ import Icon from 'app/components/elements/Icon';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import transaction from 'app/redux/Transaction';
 import g from 'app/redux/GlobalReducer';
-import { formatDecimal } from 'app/utils/ParsersAndFormatters';
+import { formatDecimal, formatAsset } from 'app/utils/ParsersAndFormatters';
+import {numberWithCommas, vestsToSteem} from 'app/utils/StateFunctions';
 
 const Long = ByteBuffer.Long;
 
@@ -89,7 +90,7 @@ class Witnesses extends Component {
 
             //https://github.com/roadscape/db.steemd.com/blob/acabdcb7c7a9c9c4260a464ca86ae4da347bbd7a/app/views/witnesses/index.html.erb#L116
             const oneM = Math.pow(10, 6);
-            const approval = votes / oneM / oneM;
+            const approval = vestsToSteem((votes / oneM).toString() + '.000000 GESTS', this.props.gprops.toJS());
             const percentage =
                 100 * (votes / oneM / totalVestingShares.split(' ')[0]);
 
@@ -171,9 +172,9 @@ class Witnesses extends Component {
                         <Link to={'/nodes'}>{seed_node && <img src="images/seed.png" title={tt('witnesses_jsx.what_is_seed')} />}</Link>
                     </td>
                     <td>
-                        {formatDecimal(approval.toFixed(), 0)}
+                        {formatAsset(approval + ' GOLOS', false)}
                         <span style={{ fontSize: '65%', opacity: '.5' }}>
-                            M
+                            СГ
                         </span>
                     </td>
                     <td style={{ textAlign: 'center' }}>
@@ -273,10 +274,10 @@ class Witnesses extends Component {
                                     Вы пока не поддержали ни одного делегата.
                                 </strong>}
                                 {witness_vote_count == 1 && <strong>
-                                    Вы поддержали {witness_vote_count} делегата с силой {witness_vote_size} СГ.
+                                    Вы поддержали {witness_vote_count} делегата с силой {formatAsset(witness_vote_size + ' GOLOS', false)} СГ.
                                 </strong>}
                                 {witness_vote_count > 1 && <strong>
-                                    Вы поддержали {witness_vote_count} делегатов с силой {witness_vote_size} СГ за каждого из них.
+                                    Вы поддержали {witness_vote_count} делегатов с силой {formatAsset(witness_vote_size + ' GOLOS', false)} СГ за каждого из них.
                                 </strong>}
                             </p>
                         )}
@@ -434,6 +435,7 @@ class Witnesses extends Component {
 
 export default connect(
     state => {
+        const gprops = state.global.get('props');
         const currentUser = state.user.get('current');
         const username = currentUser && currentUser.get('username');
         const currentAccount =
@@ -441,13 +443,15 @@ export default connect(
         const witnessVotes =
             currentAccount && currentAccount.get('witness_votes').toSet();
         const currentProxy = currentAccount && currentAccount.get('proxy');
-        let witness_vote_size = currentAccount && currentAccount.get('vesting_shares').split(' ')[0];
-        if (witnessVotes.size > 0) {
-            witness_vote_size /= witnessVotes.size;
+        let witness_vote_size = currentAccount && vestsToSteem(currentAccount.get('vesting_shares'), gprops.toJS());
+        if (currentAccount) {
+            if (witnessVotes.size > 0) {
+                witness_vote_size /= witnessVotes.size;
+            }
         }
-        witness_vote_size = Math.floor(witness_vote_size);
 
         return {
+            gprops,
             accounts: state.global.get('accounts'),
             witnesses: state.global.get('witnesses'),
             username,
