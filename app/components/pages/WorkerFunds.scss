@@ -1,0 +1,15 @@
+.WorkerFunds {
+  margin-left: 5px;
+
+  .WorkerFunds__card {
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.3rem;
+    background: #efefef;
+    color: black;
+    cursor: default;
+
+    &:hover {
+      background: #eaeaea;
+    }
+  }
+}

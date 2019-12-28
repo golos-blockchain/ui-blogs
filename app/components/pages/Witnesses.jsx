@@ -6,6 +6,7 @@ import ByteBuffer from 'bytebuffer';
 import { is } from 'immutable';
 import tt from 'counterpart';
 import links from 'app/utils/Links';
+import Button from 'app/components/elements/Button';
 import Icon from 'app/components/elements/Icon';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import transaction from 'app/redux/Transaction';
@@ -27,6 +28,7 @@ class Witnesses extends Component {
         customUsername: '',
         proxy: '',
         proxyFailed: false,
+        showAfter50: false
     };
 
     shouldComponentUpdate(np, ns) {
@@ -42,10 +44,15 @@ class Witnesses extends Component {
         );
     }
 
-    render() {
-        const { witnessVotes, currentProxy, totalVestingShares } = this.props;
+    loadMore = (e) => {
+        e.preventDefault();
+        this.setState({showAfter50: true}, () => { this.forceUpdate(); });
+    }
 
-        const { customUsername, proxy } = this.state;
+    render() {
+        const { witnessVotes, currentProxy, totalVestingShares, witness_vote_size } = this.props;
+
+        const { customUsername, proxy, showAfter50 } = this.state;
         const sorted_witnesses = this.props.witnesses.sort((a, b) =>
             Long.fromString(String(b.get('votes'))).subtract(
                 Long.fromString(String(a.get('votes'))).toString()
@@ -53,7 +60,7 @@ class Witnesses extends Component {
         );
 
         const up = <Icon name="chevron-up-circle" />;
-        let witness_vote_count = 30;
+        let witness_vote_count = 0;
         let rank = 1;
 
         const witnesses = sorted_witnesses.map(item => {
@@ -130,9 +137,9 @@ class Witnesses extends Component {
                 <tr
                     key={owner}
                     style={
-                        isWitnessesDeactive || noPriceFeed
+                        (!showAfter50 && rank > 50) ? { display: 'none' } : (isWitnessesDeactive || noPriceFeed
                             ? { opacity: '0.4' }
-                            : null
+                            : null)
                     }
                     title={
                         isWitnessesDeactive
@@ -160,8 +167,8 @@ class Witnesses extends Component {
                     </td>
                     <td style={rank <= 20 ? { fontWeight: 'bold' } : null}>
                         <Link to={'/@' + owner}>{owner}</Link>&nbsp;
-                        {api_node && <img src="images/api.png" title={tt('witnesses_jsx.what_is_api')} />}&nbsp;
-                        {seed_node && <img src="images/seed.png" title={tt('witnesses_jsx.what_is_seed')} />}
+                        <Link to={'/nodes'}>{api_node && <img src="images/api.png" title={tt('witnesses_jsx.what_is_api')} />}</Link>&nbsp;
+                        <Link to={'/nodes'}>{seed_node && <img src="images/seed.png" title={tt('witnesses_jsx.what_is_seed')} />}</Link>
                     </td>
                     <td>
                         {formatDecimal(approval.toFixed(), 0)}
@@ -222,7 +229,7 @@ class Witnesses extends Component {
         let addlWitnesses = false;
 
         if (witnessVotes) {
-            witness_vote_count -= witnessVotes.size;
+            witness_vote_count = witnessVotes.size;
             addlWitnesses = witnessVotes
                 .filter(item => {
                     return !sorted_witnesses.has(item);
@@ -262,18 +269,15 @@ class Witnesses extends Component {
                         <h2>{tt('witnesses_jsx.top_witnesses')}</h2>
                         {currentProxy && currentProxy.length ? null : (
                             <p>
-                                <strong>
-                                    {tt(
-                                        'witnesses_jsx.you_have_votes_remaining'
-                                    ) +
-                                        tt(
-                                            'witnesses_jsx.you_have_votes_remaining_count',
-                                            { count: witness_vote_count }
-                                        )}.
-                                </strong>{' '}
-                                {tt(
-                                    'witnesses_jsx.you_can_vote_for_maximum_of_witnesses'
-                                )}.
+                                {witness_vote_count == 0 && <strong>
+                                    Вы пока не поддержали ни одного делегата.
+                                </strong>}
+                                {witness_vote_count == 1 && <strong>
+                                    Вы поддержали {witness_vote_count} делегата с силой {witness_vote_size} СГ.
+                                </strong>}
+                                {witness_vote_count > 1 && <strong>
+                                    Вы поддержали {witness_vote_count} делегатов с силой {witness_vote_size} СГ за каждого из них.
+                                </strong>}
                             </p>
                         )}
                     </div>
@@ -317,6 +321,14 @@ class Witnesses extends Component {
                         </div>
                     </div>
                 )}
+
+                {!showAfter50 &&
+                    <div className="row">
+                    <div class="App-center" style={{width: '100%', marginBottom: '0.5rem'}}>
+                        <Button onClick={this.loadMore} round="true" type="secondary">{tt('g.load_more')}</Button>
+                    </div>
+                    </div>
+                }
 
                 {currentProxy && currentProxy.length ? null : (
                     <div className="row">
@@ -429,6 +441,11 @@ export default connect(
         const witnessVotes =
             currentAccount && currentAccount.get('witness_votes').toSet();
         const currentProxy = currentAccount && currentAccount.get('proxy');
+        let witness_vote_size = currentAccount && currentAccount.get('vesting_shares').split(' ')[0];
+        if (witnessVotes.size > 0) {
+            witness_vote_size /= witnessVotes.size;
+        }
+        witness_vote_size = Math.floor(witness_vote_size);
 
         return {
             accounts: state.global.get('accounts'),
@@ -440,6 +457,7 @@ export default connect(
                 'props',
                 'total_vesting_shares',
             ]),
+            witness_vote_size
         };
     },
     dispatch => {
@@ -458,9 +476,6 @@ export default connect(
                     transaction.actions.broadcastOperation({
                         type: 'account_witness_proxy',
                         operation: { account, proxy },
-                        confirm: proxy.length
-                            ? 'Установить прокси: ' + proxy
-                            : 'Удалить прокси.',
                         successCallback: () => {
                             dispatch(
                                 g.actions.updateAccountWitnessProxy({

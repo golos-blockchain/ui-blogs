@@ -68,6 +68,12 @@ export default function resolveRoute(path)
     if (path === '/~witnesses') {
         return {page: 'Witnesses'};
     }
+    if (path === '/workers') {
+        return {page: 'Workers'};
+    }
+    if (path === '/nodes') {
+        return {page: 'Nodes'};
+    }
     if (path === '/submit') {
         return {page: 'SubmitPost', hideSubMenu: true};
     }

@@ -24,8 +24,8 @@ class FeedNodes extends React.Component {
                 sbd_exchange_rate_quote: props.witness_obj.get('sbd_exchange_rate').get('quote').split(' ')[0],
             ...props.witness},
             validation: values => ({
-                api_node: values.api_node && !/^wss?:\/\//.test(values.api_node) ? tt('settings_jsx.invalid_ws') : null,
-                seed_node: values.seed_node && !/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?):[0-9]{1,5}$/.test(values.seed_node) ? tt('settings_jsx.invalid_ip_port') : null,
+                api_node: values.api_node && !/^wss?:\/\//.test(values.api_node) && !/^https?:\/\//.test(values.api_node) ? tt('settings_jsx.invalid_ws') : null,
+                seed_node: values.seed_node && !/^[\w.-]+(?:\.[\w\.-]+)+:\d*/.test(values.seed_node) ? tt('settings_jsx.invalid_ip_port') : null,
             })
         });
         this.handleSubmitForm =

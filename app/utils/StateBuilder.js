@@ -177,6 +177,13 @@ export default async function getState(api, url, options, offchain = {}) {
             accounts.add(witness.owner);
         })
   
+    }  else if (parts[0] === 'nodes') {
+        const witnesses = await api.getWitnessesByVote('', 100)
+        witnesses.forEach( witness => {
+            state.witnesses[witness.owner] = witness;
+            accounts.add(witness.owner);
+        })
+  
     } else if (Object.keys(PUBLIC_API).includes(parts[0])) {
         let args = { limit: 20, truncate_body: 1024 }
         const discussionsType = parts[0]
