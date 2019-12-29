@@ -268,8 +268,8 @@ export function* fetchData(action) {
     if (category.length) {
         const reversed = reveseTag(category)
         reversed
-            ? args[0].select_tags = [ category, reversed ]
-            : args[0].select_tags = [ category ]
+            ? args[0].category = reversed
+            : args[0].category = category
     } else {
         let select_tags = cookie.load(SELECT_TAGS_KEY);
         if (select_tags && select_tags.length) {

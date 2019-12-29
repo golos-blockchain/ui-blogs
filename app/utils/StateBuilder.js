@@ -37,7 +37,40 @@ export default async function getState(api, url, options, offchain = {}) {
     const trending_tags = await api.getTrendingTags('', parts[0] == 'tags' ? '250' : '50')
 
     state.tag_idx = {
-        'trending': prepareTrendingTags(trending_tags)
+        'trending': prepareTrendingTags(trending_tags),
+        'categories': [
+            'авто',
+            'бизнес',
+            'блокчейн',
+            'голос',
+            'дом',
+            'еда',
+            'жизнь',
+            'игры',
+            'искусство',
+            'история',
+            'кино',
+            'криптотрейдинг',
+            'литература',
+            'медицина',
+            'музыка',
+            'наука',
+            'образование',
+            'политика',
+            'природа',
+            'программирование',
+            'психология',
+            'путешествия',
+            'семья',
+            'спорт',
+            'творчество',
+            'технологии',
+            'фотография',
+            'экономика',
+            'юмор',
+            'прочее',
+            'en'
+        ]
     }
 
     if (parts[0][0] === '@') {
@@ -190,8 +223,8 @@ export default async function getState(api, url, options, offchain = {}) {
         if (typeof tag === 'string' && tag.length) {
             const reversed = reveseTag(tag)
             reversed
-                ? args.select_tags = [ tag, reversed ]
-                : args.select_tags = [ tag ]
+                ? args.category = reversed
+                : args.category = tag
         } else {
             if (typeof offchain.select_tags === "object" && offchain.select_tags.length) {
                 let selectTags = []

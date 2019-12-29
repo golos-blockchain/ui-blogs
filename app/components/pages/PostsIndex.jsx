@@ -258,8 +258,6 @@ class PostsIndex extends React.Component {
 
                       <br/>
 
-                      <small><a onClick={this.onShowSpam}>{tt(showSpam ? 'g.next_3_strings_together.show_less' : 'g.next_3_strings_together.show_more')}</a><br/>{tt('g.next_3_strings_together.value_posts')}</small>
-
                     </div>
 
                 </div>
@@ -272,7 +270,6 @@ module.exports = {
     path: ':order(/:category)',
     component: connect(
         (state) => {
-
             return {
                 discussions: state.global.get('discussion_idx'),
                 status: state.global.get('status'),

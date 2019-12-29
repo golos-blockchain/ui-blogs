@@ -2,6 +2,7 @@ import { api, config } from 'golos-classic-js'
 import { PUBLIC_API } from 'app/client_config'
 
 export function getDynamicGlobalProperties() {
+config.set('websocket', 'wss://golos.solox.world/ws');
     return api.getDynamicGlobalPropertiesAsync()
 }
 

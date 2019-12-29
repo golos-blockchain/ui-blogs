@@ -84,7 +84,7 @@ export default class TagInput extends React.PureComponent {
         const { tags } = this.props;
 
         if (!tags.length && !this._hintTimeout) {
-            this._hintTimeout = setTimeout(() => {
+            /*this._hintTimeout = setTimeout(() => {
                 this.setState({
                     temporaryHintText: tt('category_selector_jsx.main_tag_hint'),
                 });
@@ -94,7 +94,7 @@ export default class TagInput extends React.PureComponent {
                         temporaryHintText: null,
                     });
                 }, 4000);
-            }, 200);
+            }, 200);*/
         }
 
         this.forceUpdate();

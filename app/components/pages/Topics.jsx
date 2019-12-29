@@ -89,7 +89,7 @@ export default class Topics extends React.Component {
         if (!this.props.categories)
             return
 
-        let categories = this.props.categories.get('trending');
+        let categories = this.props.categories.get('categories');
         if (!(expanded) || compact) categories = categories.take(50);
         categories = categories.map(cat => {
             if (/^(u\w{4}){6,}/.test(cat)) return null;
@@ -103,7 +103,7 @@ export default class Topics extends React.Component {
         const selectedKeys = selected.map(key => {
           const link = order ? `/${order}/${key}` : `/${key}`;
           return <div key={`selected-${key}`}>
-            <a className="action" onClick={() => onSelectTag(key)}>×</a><Link to={link} className="tagname" activeClassName="active" title={detransliterate(key)}>{detransliterate(key)}</Link>
+            <a className="action" onClick={() => onSelectTag(key)}>×</a><Link to={link} className="tagname" activeClassName="active" style={{textTransform: 'capitalize'}} title={detransliterate(key)}>{detransliterate(key)}</Link>
           </div>
         })
         const expandFilterButton = selectedKeys.length > 2 &&
@@ -133,7 +133,7 @@ export default class Topics extends React.Component {
             isSelected = selected.indexOf(cat) !== -1
             return <li key={cat} className={isSelected ? 'Topics__selected__remove' : 'Topics__selected__add'}>
                         <a className="action" onClick={() => onSelectTag(cat)}>{isSelected ? '×' : '+'}</a>
-                        <Link to={link} className="tagname" activeClassName="active" title={cat}>{cat}</Link>
+                        <Link to={link} className="tagname" activeClassName="active" title={cat} style={{textTransform: 'capitalize'}}>{cat}</Link>
                     </li>;
         });
         return (
@@ -152,10 +152,6 @@ export default class Topics extends React.Component {
                 <li className="Topics__filter__expand" key="filter__expand_action">{expandFilterButton}</li>
                 <li className="Topics__title" key={'*'}>{tt('g.tags_and_topics')}</li>
                 {categories}
-                {!expanded && <li className="show-more">
-                        <Link to={`/tags`}>{tt('g.show_more_topics')}...</Link>
-                    </li>
-                }
             </ul>
         );
     }

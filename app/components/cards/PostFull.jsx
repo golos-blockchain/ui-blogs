@@ -532,7 +532,7 @@ class PostFull extends React.Component {
             main.push(
                 <button
                     key="b2"
-                    className="Donate__button float-right button hollow tiny"
+                    className="Donate__button float-right button alert tiny"
                     onClick={this.showTransfer}
                 >
                     {tt('g.donate')}

@@ -17,6 +17,7 @@ import Settings from './Settings';
 import AddEditWorkerRequest from './AddEditWorkerRequest';
 import ViewWorkerRequest from './ViewWorkerRequest';
 import WorkerFunds from './WorkerFunds';
+import "./WorkerRequests.scss";
 
 export default class WorkerRequests extends React.Component {
   constructor(props) {
