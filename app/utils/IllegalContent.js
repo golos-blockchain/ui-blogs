@@ -57,6 +57,7 @@ sukabuka
 chugoj
 xuyaka
 sambuka
+pretykatty
 `.trim().split("\n")
 
 export const blockedContent = `
