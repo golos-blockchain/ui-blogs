@@ -58,6 +58,7 @@ chugoj
 xuyaka
 sambuka
 pretykatty
+id-matriza
 `.trim().split("\n")
 
 export const blockedContent = `
