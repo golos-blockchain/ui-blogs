@@ -268,8 +268,8 @@ export function* fetchData(action) {
     if (category.length) {
         const reversed = reveseTag(category)
         reversed
-            ? args[0].category = reversed
-            : args[0].category = category
+            ? args[0].select_categories = [category, reversed]
+            : args[0].select_categories = [category]
     } else {
         let select_tags = cookie.load(SELECT_TAGS_KEY);
         if (select_tags && select_tags.length) {
@@ -282,9 +282,53 @@ export function* fetchData(action) {
                 : selectTags = [ ...selectTags, t, ] 
                 
             })
-            args[0].select_tags = selectTags;
+            args[0].select_categories = selectTags;
             category = select_tags.sort().join('/')
         } else {
+            let categories = [
+                'авто',
+                'бизнес',
+                'блокчейн',
+                'голос',
+                'дом',
+                'еда',
+                'жизнь',
+                'здоровье',
+                'игры',
+                'искусство',
+                'история',
+                'кино',
+                'конкурсы',
+                'криптотрейдинг',
+                'литература',
+                'музыка',
+                'наука',
+                'образование',
+                'политика',
+                'природа',
+                'программирование',
+                'психология',
+                'путешествия',
+                'семья',
+                'спорт',
+                'творчество',
+                'технологии',
+                'фотография',
+                'экономика',
+                'юмор',
+                'прочее',
+                'en'
+            ];
+            let selectTags = []
+            
+            categories.forEach( t => {
+                const reversed = reveseTag(t)
+                reversed
+                ? selectTags = [ ...selectTags, t, reversed ]
+                : selectTags = [ ...selectTags, t, ] 
+                
+            })
+            args[0].select_categories = selectTags;
             args[0].filter_tags = IGNORE_TAGS
         }
     }
@@ -311,14 +355,17 @@ export function* fetchData(action) {
         call_name = PUBLIC_API.hot;
     } else if( order === 'by_feed' ) {
         call_name = 'getDiscussionsByFeedAsync';
-        delete args[0].select_tags
+        delete args[0].select_tags;
+        delete args[0].select_categories;
         args[0].select_authors = [accountname];
     } else if (order === 'by_author') {
         call_name = 'getDiscussionsByBlogAsync';
         delete args[0].select_tags;
+        delete args[0].select_categories;
         args[0].select_authors = [accountname];
     } else if (order === 'by_comments') {
         delete args[0].select_tags;
+        delete args[0].select_categories;
         call_name = 'getDiscussionsByCommentsAsync';
     } else if( order === 'by_replies' ) {
         call_name = 'getRepliesByLastUpdateAsync';

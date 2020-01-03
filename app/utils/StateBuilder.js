@@ -46,13 +46,14 @@ export default async function getState(api, url, options, offchain = {}) {
             'дом',
             'еда',
             'жизнь',
+            'здоровье',
             'игры',
             'искусство',
             'история',
             'кино',
+            'конкурсы',
             'криптотрейдинг',
             'литература',
-            'медицина',
             'музыка',
             'наука',
             'образование',
@@ -223,8 +224,8 @@ export default async function getState(api, url, options, offchain = {}) {
         if (typeof tag === 'string' && tag.length) {
             const reversed = reveseTag(tag)
             reversed
-                ? args.category = reversed
-                : args.category = tag
+                ? args.select_categories = [tag, reversed]
+                : args.select_categories = [tag]
         } else {
             if (typeof offchain.select_tags === "object" && offchain.select_tags.length) {
                 let selectTags = []
@@ -236,8 +237,17 @@ export default async function getState(api, url, options, offchain = {}) {
                         : selectTags = [ ...selectTags, t, ] 
 
                 })
-                args.select_tags = state.select_tags = selectTags;
+                args.select_categories = state.select_tags = selectTags;
             } else {
+                let selectTags = [];
+                state.tag_idx['categories'].forEach( t => {
+                    const reversed = reveseTag(t)
+                    reversed
+                        ? selectTags = [ ...selectTags, t, reversed ]
+                        : selectTags = [ ...selectTags, t, ] 
+
+                })
+                args.select_categories = selectTags;
                 args.filter_tags = state.filter_tags = options.IGNORE_TAGS
             }
         }

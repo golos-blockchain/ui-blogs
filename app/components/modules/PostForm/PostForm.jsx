@@ -261,7 +261,7 @@ class PostForm extends React.Component {
                             editMode={editMode}
                             errorText={postError}
                             tags={tags}
-                            categories={categories}
+                            categories={categories.get('categories').toJS()}
                             onTagsChange={this._onTagsChange}
                             payoutType={payoutType}
                             curationPercent={curationPercent}
@@ -433,7 +433,7 @@ class PostForm extends React.Component {
     _onTagsChange = tags => {
         this.setState(
             {
-                tags
+                tags: [...new Set(tags)]
             },
             this._saveDraftLazy
         );
@@ -743,10 +743,6 @@ class PostForm extends React.Component {
 
         if (emptyBody) {
             return 'post_editor.enter_body';
-        }
-
-        if (!tags.length) {
-            return 'category_selector_jsx.must_set_category';
         }
     }
 }

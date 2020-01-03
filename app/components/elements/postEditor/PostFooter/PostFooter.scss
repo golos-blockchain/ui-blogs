@@ -15,6 +15,14 @@
     height: 80px;
   }
 
+  &__category {
+    width: 200px;
+  }
+
+  &__cat {
+    text-transform: capitalize;
+  }
+
   &__tags {
     flex-grow: 1;
     height: 100%;
