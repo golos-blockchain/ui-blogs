@@ -265,11 +265,19 @@ export function* fetchData(action) {
             start_permlink: permlink
         }
     ];
-    if (category.length) {
-        const reversed = reveseTag(category)
-        reversed
-            ? args[0].select_categories = [category, reversed]
-            : args[0].select_categories = [category]
+    if (category.length && (!category.startsWith('tag-') || category.length > 4)) {
+        if (category.startsWith('tag-')) {
+            let tag_raw = category.slice(4);
+            const reversed = reveseTag(tag_raw)
+            reversed
+                ? args[0].select_tags = [tag_raw, reversed]
+                : args[0].select_tags = [tag_raw]
+        } else {
+            const reversed = reveseTag(category)
+            reversed
+                ? args[0].select_categories = [category, reversed]
+                : args[0].select_categories = [category]
+        }
     } else {
         let select_tags = cookie.load(SELECT_TAGS_KEY);
         if (select_tags && select_tags.length) {
@@ -299,20 +307,24 @@ export function* fetchData(action) {
                 'история',
                 'кино',
                 'конкурсы',
-                'криптотрейдинг',
+                'криптовалюты',
                 'литература',
                 'музыка',
                 'наука',
+                'непознанное',
                 'образование',
                 'политика',
+                'право',
                 'природа',
                 'программирование',
                 'психология',
                 'путешествия',
+                'работа',
                 'семья',
                 'спорт',
                 'творчество',
                 'технологии',
+                'трейдинг',
                 'фотография',
                 'экономика',
                 'юмор',

@@ -21,7 +21,7 @@ class SubmitPost extends React.PureComponent {
     render() {
         const { query } = this.props.location;
 
-        if (window.IS_MOBILE) {
+        /*if (window.IS_MOBILE) {
             return (
                 <div className="SubmitPost">
                     <this.SubmitReplyEditor
@@ -30,7 +30,7 @@ class SubmitPost extends React.PureComponent {
                     />
                 </div>
             );
-        } else {
+        } else */{
             return <PostFormLoader onSuccess={this._onSuccess} />;
         }
     }
