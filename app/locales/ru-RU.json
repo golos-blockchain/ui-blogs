@@ -34,7 +34,7 @@
     "must_start_with_a_letter": "Должно начинаться с буквы",
     "must_end_with_a_letter_or_number": "Должно заканчиваться с буквы или номера",
     "denied_to_publish_the_posts_with_tag":"Запрещено публиковать посты с тегом 'stihi-io'",
-    "must_set_category":"Необходимо добавить хотя бы один тег",
+    "must_set_category":"Необходимо выбрать категорию",
     "main_tag_hint": "Первый тег – основной. Пост будет опубликован в этой теме.",
     "title_is_required": "Не заполнено поле заголовок",
     "title_is_not_valid": "Заголовок неправильно заполнен"

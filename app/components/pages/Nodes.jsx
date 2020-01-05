@@ -12,6 +12,7 @@ import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import transaction from 'app/redux/Transaction';
 import g from 'app/redux/GlobalReducer';
 import { formatDecimal } from 'app/utils/ParsersAndFormatters';
+import "./Nodes.scss";
 
 const Long = ByteBuffer.Long;
 
@@ -54,7 +55,7 @@ class Nodes extends Component {
                 }
                 if (seed_node && seed_node != '') {
                     seed_raw_nodes.push(seed_node);
-                    seed_nodes.push(<tr><td><img src="images/seed.png" title={tt('witnesses_jsx.what_is_api')} /></td><td>{seed_node}</td><td><b><Link to={'/~witnesses'}>{owner}</Link></b></td></tr>);
+                    seed_nodes.push(<tr><td><img src="images/seed.png" title={tt('witnesses_jsx.what_is_seed')} /></td><td>{seed_node}</td><td><b><Link to={'/~witnesses'}>{owner}</Link></b></td></tr>);
                 }
               }
             } catch(err) {

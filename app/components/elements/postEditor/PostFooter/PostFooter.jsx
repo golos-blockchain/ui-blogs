@@ -42,8 +42,16 @@ export default class PostFooter extends PureComponent {
         clearTimeout(this._temporaryErrorTimeout);
     }
 
+    onCategoryChange = (event) => {
+        let { tags, categories } = this.props;
+        this.props.onTagsChange(
+            tags.length >= 1 && categories.includes(tags[0]) ?
+            [event.target.value, ...tags.slice(1)] :
+            [event.target.value, ...tags]);
+    }
+
     render() {
-        const {
+        let {
             editMode,
             tags,
             categories,
@@ -55,16 +63,27 @@ export default class PostFooter extends PureComponent {
         let category = "";
 
         let tagsNoCat = [];
-        if (tags.length >= 1 && categories.get('categories').toJS().includes(tags[0])) {
-            category = tags[0];
-            tagsNoCat = tags.slice(1);
+        let onTagsChange= null;
+        if (!editMode) {
+            if (tags.length >= 1 && categories.includes(tags[0])) {
+                category = tags[0];
+                tagsNoCat = tags.slice(1);
+            } else {
+                tagsNoCat = tags;
+                postDisabled = true;
+                disabledHint = tt('category_selector_jsx.must_set_category');
+            }
+
+            onTagsChange = (tags) => {
+                this.props.onTagsChange(category != "" ? [category, ...tags] : tags);
+            };
         } else {
             tagsNoCat = tags;
-        }
 
-const onTagsChange = (tags) => {
-    this.props.onTagsChange(category != "" ? [category, ...tags] : tags);
-};
+            onTagsChange = (tags) => {
+                this.props.onTagsChange(tags);
+            };
+        }
 
         return (
             <div
@@ -76,7 +95,14 @@ const onTagsChange = (tags) => {
             >
                 <div className="PostFooter__line">
                     <div className="PostFooter__tags">
-                        <input type="text" value={category} />
+                        {!editMode && <select className="PostFooter__category" value={category} onChange={this.onCategoryChange}>
+                            <option value="" disabled>Выберите категорию</option>
+                            {
+                                categories.map((cat) => {
+                                    return <option className="PostFooter__cat" key={cat} value={cat}>{cat}</option>;
+                                })
+                            }
+                        </select>}
                         {singleLine ? (
                             <TagsEditLine
                                 tags={tagsNoCat}
@@ -104,11 +130,7 @@ const onTagsChange = (tags) => {
                                 <Button onClick={this.props.onCancelClick}>
                                     {tt('g.cancel')}
                                 </Button>
-                            ) : (
-                                <Button onClick={this.props.onResetClick}>
-                                    {tt('g.clear')}
-                                </Button>
-                            )}
+                            ) : null}
                         </div>
                         <div
                             className={cn('PostFooter__button', {

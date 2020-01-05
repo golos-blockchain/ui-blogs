@@ -46,25 +46,30 @@ export default async function getState(api, url, options, offchain = {}) {
             'дом',
             'еда',
             'жизнь',
+            'здоровье',
             'игры',
             'искусство',
             'история',
             'кино',
-            'криптотрейдинг',
+            'конкурсы',
+            'криптовалюты',
             'литература',
-            'медицина',
             'музыка',
             'наука',
+            'непознанное',
             'образование',
             'политика',
+            'право',
             'природа',
             'программирование',
             'психология',
             'путешествия',
+            'работа',
             'семья',
             'спорт',
             'творчество',
             'технологии',
+            'трейдинг',
             'фотография',
             'экономика',
             'юмор',
@@ -220,11 +225,19 @@ export default async function getState(api, url, options, offchain = {}) {
     } else if (Object.keys(PUBLIC_API).includes(parts[0])) {
         let args = { limit: 20, truncate_body: 1024 }
         const discussionsType = parts[0]
-        if (typeof tag === 'string' && tag.length) {
-            const reversed = reveseTag(tag)
-            reversed
-                ? args.category = reversed
-                : args.category = tag
+        if (typeof tag === 'string' && tag.length && (!tag.startsWith('tag-') || tag.length > 4)) {
+            if (tag.startsWith('tag-')) {
+                let tag_raw = tag.slice(4);
+                const reversed = reveseTag(tag_raw)
+                reversed
+                    ? args.select_tags = [tag_raw, reversed]
+                    : args.select_tags = [tag_raw]
+            } else {
+                const reversed = reveseTag(tag)
+                reversed
+                    ? args.select_categories = [tag, reversed]
+                    : args.select_categories = [tag]
+            }
         } else {
             if (typeof offchain.select_tags === "object" && offchain.select_tags.length) {
                 let selectTags = []
@@ -236,8 +249,17 @@ export default async function getState(api, url, options, offchain = {}) {
                         : selectTags = [ ...selectTags, t, ] 
 
                 })
-                args.select_tags = state.select_tags = selectTags;
+                args.select_categories = state.select_tags = selectTags;
             } else {
+                let selectTags = [];
+                state.tag_idx['categories'].forEach( t => {
+                    const reversed = reveseTag(t)
+                    reversed
+                        ? selectTags = [ ...selectTags, t, reversed ]
+                        : selectTags = [ ...selectTags, t, ] 
+
+                })
+                args.select_categories = selectTags;
                 args.filter_tags = state.filter_tags = options.IGNORE_TAGS
             }
         }
