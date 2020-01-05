@@ -11,8 +11,8 @@ function fractional_part_len(value) {
 }
 
 // FIXME this should be unit tested.. here is one bug: 501,695,.505
-export function formatDecimal(value, decPlaces = 2, truncate0s = true) {
-    let decSeparator, fl, i, j, sign, thouSeparator, abs_value;
+export function formatDecimal(value, decPlaces = 2, truncate0s = true, thouSeparator = ',') {
+    let decSeparator, fl, i, j, sign, abs_value;
     if (value === null || value === void 0 || isNaN(value)) {
         return 'NaN';
     }
@@ -22,7 +22,6 @@ export function formatDecimal(value, decPlaces = 2, truncate0s = true) {
         if (fl < decPlaces) decPlaces = fl;
     }
     decSeparator = '.';
-    thouSeparator = ',';
     sign = value < 0 ? '-' : '';
     abs_value = Math.abs(value);
     i = parseInt(abs_value.toFixed(decPlaces), 10) + '';
@@ -30,6 +29,13 @@ export function formatDecimal(value, decPlaces = 2, truncate0s = true) {
     j = i.length > 3 ? j % 3 : 0;
     const decPart = (decPlaces ? decSeparator + Math.abs(abs_value - i).toFixed(decPlaces).slice(2) : '');
     return [sign + (j ? i.substr(0, j) + thouSeparator : '') + i.substr(j).replace(/(\d{3})(?=\d)/g, '$1' + thouSeparator), decPart];
+}
+
+export function formatAsset(value, withSym=true, withCents=false, thouSeparator=' ') {
+  let ret = formatDecimal(value.split(' ')[0], 3, false, thouSeparator);
+  if (!withCents) ret = ret[0];
+  if (withSym) ret += ' ' + value.split(' ')[1];
+  return ret;
 }
 
 export function parsePayoutAmount(amount) {
@@ -107,6 +113,68 @@ export function translateError(string) {
         default:
             return string
     }
+}
+
+export function ERR(err, opType) {
+  let errorStr = err.toString();
+  let errorKey = errorStr;
+  switch (opType) {
+    case 'worker_request':
+      if (errorStr.includes('required_amount_min.amount must be >0')) {
+        errorKey = 'Минимальная сумма не должна быть 0.';
+      } else if (errorStr.includes('must be GOLOS or GBG')) {
+        errorKey = 'Сумма должна быть в GOLOS или GBG.';
+      } else if (errorStr.includes('must be GOLOS')) {
+        errorKey = 'Выплата в VESTS возможна только при сумме в GOLOS.';
+      } else if (errorStr.includes('required_amount')) {
+        errorKey = 'Неверно указана сумма.';
+
+      } else if (errorStr.includes('duration must be between')) {
+        errorKey = 'Дата окончания голосования раньше 5 дней или позже 30 дней.';
+      } else if (errorStr.includes('worker_request.duration = -')) {
+        errorKey = 'Дата окончания голосования указана в прошлом.';
+      } else if (errorStr.includes('duration')) {
+        errorKey = 'Дата окончания голосования указана неверно.';
+
+      } else if (errorStr.includes('"author": invalid value') || errorStr.includes('"permlink": invalid value')) {
+        errorKey = 'Неверная ссылка на пост.'
+
+      } else if (errorStr.includes('enough fund')) {
+        errorKey = 'Не хватает средств на Вашем балансе GBG - не удается списать плату за создание заявки.';
+
+      } else if (errorStr.includes('Missing account with id')) {
+        errorKey = 'Аккаунт воркера указан неверно.'
+
+      } else if (errorStr.includes('cashout window')) {
+        errorKey = 'Пост слишком старый - должно пройти не более 7 дней с момента создания поста.';
+      } else if (errorStr.includes('Missing comment')) {
+        errorKey = 'Пост не найден. Неверная ссылка на пост.';
+
+      } else if (errorStr.includes('Cannot modify approved')) {
+        errorKey = 'Голосование по заявке завершено - редактировать нельзя.';
+      }
+      break;
+    case 'worker_request_vote':
+      if (errorStr.includes('Request closed, cannot vote')) {
+        errorKey = 'Заявка закрыта, голосовать нельзя.';
+      } else if (errorStr.includes('Request already paying')) {
+        errorKey = 'Заявка уже прошла порог СГ и выплачивается, голосование закрыто.';
+      }
+      break;
+    case 'worker_request_delete':
+      if (errorStr.includes('Request already closed')) {
+        errorKey = 'Заявка уже закрыта или удалена.';
+      }
+      break;
+    case 'search_by_author':
+      if (errorStr.includes('Account name')) {
+        errorKey = 'Неверное имя автора.';
+      }
+      break;
+    default:
+      break;
+  }
+  return errorKey;
 }
 
 //  Missing Active Authority gsteem

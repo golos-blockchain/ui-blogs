@@ -16,6 +16,7 @@ import PromotePost from 'app/components/modules/PromotePost';
 import ExplorePost from 'app/components/modules/ExplorePost';
 import DelegateVestingShares from 'app/components/modules/DelegateVestingShares';
 import DelegateVestingSharesInfo from 'app/components/modules/DelegateVestingSharesInfo';
+import FeedsNodes from 'app/components/modules/FeedsNodes';
 
 class Dialogs extends React.Component {
     static propTypes = {
@@ -97,6 +98,12 @@ class Dialogs extends React.Component {
                <DelegateVestingSharesInfo onClose={this['hide_' + k]} {...v.get('params').toJS()} />
            </Reveal>
             </span>:
+           k === 'feeds_nodes' ? <span key={idx++} >
+                <Reveal onHide={this['hide_' + k]} show>
+                    <CloseButton onClick={this['hide_' + k]} />
+                    <FeedsNodes onClose={this['hide_' + k]} {...v.get('params').toJS()} />
+                </Reveal>
+           </span>:
             null
             return cmp ? r.push(cmp) : r
         }, List())

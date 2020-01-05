@@ -1,7 +1,7 @@
 import { fork, call, put, takeLatest } from 'redux-saga/effects';
 import MarketReducer from './MarketReducer';
 import {getAccount} from './SagaShared';
-import {api} from 'golos-js';
+import {api} from 'golos-classic-js';
 
 export function* marketWatches() {
     yield fork(watchLocationChange);

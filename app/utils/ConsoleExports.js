@@ -1,4 +1,4 @@
-import {PrivateKey, PublicKey, Aes, key_utils} from 'golos-js/lib/auth/ecc'
+import {PrivateKey, PublicKey, Aes, key_utils} from 'golos-classic-js/lib/auth/ecc'
 
 // import secureRandom from 'secure-random'
 // import links from 'app/utils/Links'

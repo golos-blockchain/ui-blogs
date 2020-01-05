@@ -37,7 +37,40 @@ export default async function getState(api, url, options, offchain = {}) {
     const trending_tags = await api.getTrendingTags('', parts[0] == 'tags' ? '250' : '50')
 
     state.tag_idx = {
-        'trending': prepareTrendingTags(trending_tags)
+        'trending': prepareTrendingTags(trending_tags),
+        'categories': [
+            'авто',
+            'бизнес',
+            'блокчейн',
+            'голос',
+            'дом',
+            'еда',
+            'жизнь',
+            'игры',
+            'искусство',
+            'история',
+            'кино',
+            'криптотрейдинг',
+            'литература',
+            'медицина',
+            'музыка',
+            'наука',
+            'образование',
+            'политика',
+            'природа',
+            'программирование',
+            'психология',
+            'путешествия',
+            'семья',
+            'спорт',
+            'творчество',
+            'технологии',
+            'фотография',
+            'экономика',
+            'юмор',
+            'прочее',
+            'en'
+        ]
     }
 
     if (parts[0][0] === '@') {
@@ -89,6 +122,10 @@ export default async function getState(api, url, options, offchain = {}) {
                         state.content[link] = reply
                         state.accounts[uname].recent_replies.push(link)
                     })
+                break
+
+                case 'witness':
+                    state.witnesses[uname] = await api.getWitnessByAccount(uname)
                 break
 
                 case 'posts':
@@ -169,7 +206,15 @@ export default async function getState(api, url, options, offchain = {}) {
     } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
         const witnesses = await api.getWitnessesByVote('', 100)
         witnesses.forEach( witness => {
-            state.witnesses[witness.owner] = witness
+            state.witnesses[witness.owner] = witness;
+            accounts.add(witness.owner);
+        })
+  
+    }  else if (parts[0] === 'nodes') {
+        const witnesses = await api.getWitnessesByVote('', 100)
+        witnesses.forEach( witness => {
+            state.witnesses[witness.owner] = witness;
+            accounts.add(witness.owner);
         })
   
     } else if (Object.keys(PUBLIC_API).includes(parts[0])) {
@@ -178,8 +223,8 @@ export default async function getState(api, url, options, offchain = {}) {
         if (typeof tag === 'string' && tag.length) {
             const reversed = reveseTag(tag)
             reversed
-                ? args.select_tags = [ tag, reversed ]
-                : args.select_tags = [ tag ]
+                ? args.category = reversed
+                : args.category = tag
         } else {
             if (typeof offchain.select_tags === "object" && offchain.select_tags.length) {
                 let selectTags = []

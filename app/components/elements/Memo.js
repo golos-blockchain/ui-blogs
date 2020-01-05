@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
 import tt from 'counterpart';
-import {memo} from 'golos-js'
+import {memo} from 'golos-classic-js'
 import { Link } from 'react-router'
 import links from 'app/utils/Links'
 import {validate_account_name} from 'app/utils/ChainValidation'

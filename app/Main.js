@@ -6,7 +6,7 @@ import plugins from 'app/utils/JsPlugins';
 import { serverApiRecordEvent } from 'app/utils/ServerApiClient';
 import Iso from 'iso';
 import { clientRender } from 'shared/UniversalRender';
-import * as golos from 'golos-js';
+import * as golos from 'golos-classic-js';
 
 // window.onerror = error => {
 //     if (window.$STM_csrf) serverApiRecordEvent('client_error', error);

@@ -1,5 +1,5 @@
 import config from 'config';
-import * as golos from 'golos-js';
+import * as golos from 'golos-classic-js';
 
 delete process.env.BROWSER;
 

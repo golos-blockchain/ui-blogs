@@ -1,7 +1,7 @@
 import assert from 'assert'
 import {serverApiRecordEvent} from 'app/utils/ServerApiClient'
-import {PrivateKey, PublicKey} from 'golos-js/lib/auth/ecc'
-import {memo} from 'golos-js';
+import {PrivateKey, PublicKey} from 'golos-classic-js/lib/auth/ecc'
+import {memo} from 'golos-classic-js';
 
 export const browserTests = {}
 

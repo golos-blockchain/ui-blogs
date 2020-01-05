@@ -7,7 +7,7 @@ import constants from './constants';
 import { reveseTag } from 'app/utils/tags';
 import { DEBT_TOKEN_SHORT, LIQUID_TICKER, DEFAULT_CURRENCY, IGNORE_TAGS, PUBLIC_API, SELECT_TAGS_KEY } from 'app/client_config';
 import cookie from "react-cookie";
-import {api} from 'golos-js';
+import {api} from 'golos-classic-js';
 
 export function* fetchDataWatches () {
     yield fork(watchLocationChange);
@@ -268,8 +268,8 @@ export function* fetchData(action) {
     if (category.length) {
         const reversed = reveseTag(category)
         reversed
-            ? args[0].select_tags = [ category, reversed ]
-            : args[0].select_tags = [ category ]
+            ? args[0].category = reversed
+            : args[0].category = category
     } else {
         let select_tags = cookie.load(SELECT_TAGS_KEY);
         if (select_tags && select_tags.length) {

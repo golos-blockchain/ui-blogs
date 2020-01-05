@@ -1,7 +1,8 @@
-import { api } from 'golos-js'
+import { api, config } from 'golos-classic-js'
 import { PUBLIC_API } from 'app/client_config'
 
 export function getDynamicGlobalProperties() {
+config.set('websocket', 'wss://golos.solox.world/ws');
     return api.getDynamicGlobalPropertiesAsync()
 }
 
@@ -47,6 +48,10 @@ export function getFeedEntries(account, entryId, limit) {
 
 export function getAccountReputations(lowerBoundName, limit) {
     return {}
+}
+
+export function getWitnessByAccount(accountName) {
+    return api.getWitnessByAccountAsync(accountName)
 }
 
 export function getWitnessesByVote(from, limit) {

@@ -1,12 +1,12 @@
 import React from 'react';
 import LoadingIndicator from '@elements/LoadingIndicator';
-import {PrivateKey} from 'golos-js/lib/auth/ecc';
+import {PrivateKey} from 'golos-classic-js/lib/auth/ecc';
 import {validate_account_name} from 'app/utils/ChainValidation';
 import runTests from 'app/utils/BrowserTests';
 import GeneratedPasswordInput from '@elements/GeneratedPasswordInput';
 import { APP_DOMAIN, SUPPORT_EMAIL } from 'app/client_config';
 import tt from 'counterpart';
-import {api, broadcast} from 'golos-js';
+import {api, broadcast} from 'golos-classic-js';
 
 class CreateAccountTestnet extends React.Component {
 

@@ -60,13 +60,6 @@ class PostsIndex extends React.Component {
     }
 
     componentDidMount () {
-        const script = document.createElement("script");
-
-        script.src = "https://files.coinmarketcap.com/static/widget/currency.js";
-        script.async = true;
-
-        document.body.appendChild(script);
-
         const picked_curr = localStorage.getItem('xchange.picked')
 
         this.setState({
@@ -242,18 +235,6 @@ class PostsIndex extends React.Component {
                 </div>
                 <div className="PostsIndex__topics column shrink show-for-large">
 
-                <div className="coinmarketcap-currency-widget"
-                    data-currencyid="1542" // Only GBG
-                    data-base="BTC"
-                    data-secondary="USD"
-                    data-ticker="false"
-                    data-rank="false"
-                    data-marketcap="true"
-                    data-volume="true"
-                    data-stats="USD"
-                    data-statsticker="false">
-                </div>
-
                     <Topics
                         categories={categories}
                         order={topics_order}
@@ -277,8 +258,6 @@ class PostsIndex extends React.Component {
 
                       <br/>
 
-                      <small><a onClick={this.onShowSpam}>{tt(showSpam ? 'g.next_3_strings_together.show_less' : 'g.next_3_strings_together.show_more')}</a><br/>{tt('g.next_3_strings_together.value_posts')}</small>
-
                     </div>
 
                 </div>
@@ -291,7 +270,6 @@ module.exports = {
     path: ':order(/:category)',
     component: connect(
         (state) => {
-
             return {
                 discussions: state.global.get('discussion_idx'),
                 status: state.global.get('status'),

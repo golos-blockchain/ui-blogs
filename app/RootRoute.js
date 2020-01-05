@@ -56,6 +56,10 @@ export default {
             cb(null, [require('@pages/RecoverAccountStep2')]);
         } else if (route.page === 'Witnesses') {
             cb(null, [require('@pages/WitnessesLoader')]);
+        } else if (route.page === 'Workers') {
+            cb(null, [require('@pages/WorkersLoader')]);
+        } else if (route.page === 'Nodes') {
+            cb(null, [require('@pages/NodesLoader')]);
         } else if (route.page === 'LeavePage') {
             cb(null, [require('@pages/LeavePage')]);
         } else if (route.page === 'SubmitPost') {

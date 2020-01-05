@@ -185,7 +185,7 @@ class PostForm extends React.Component {
     }
 
     render() {
-        const { editMode } = this.props;
+        const { editMode, categories } = this.props;
 
         const {
             editorId,
@@ -261,6 +261,7 @@ class PostForm extends React.Component {
                             editMode={editMode}
                             errorText={postError}
                             tags={tags}
+                            categories={categories}
                             onTagsChange={this._onTagsChange}
                             payoutType={payoutType}
                             curationPercent={curationPercent}
@@ -432,7 +433,7 @@ class PostForm extends React.Component {
     _onTagsChange = tags => {
         this.setState(
             {
-                tags,
+                tags
             },
             this._saveDraftLazy
         );
@@ -764,6 +765,7 @@ function markdownToHtmlEditorState(markdown) {
 export default connect(
     state => ({
         author: state.user.getIn(['current', 'username']),
+        categories: state.global.get('tag_idx'),
     }),
     dispatch => ({
         onPost(payload, onSuccess, onError) {

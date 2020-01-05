@@ -1,7 +1,7 @@
 import koa_router from 'koa-router'
 import koa_body from 'koa-body'
 import serverConfig from 'config'
-import { config, broadcast } from 'golos-js'
+import { config, broadcast } from 'golos-classic-js'
 import { createAccount  } from './api/general'
 
 config.set('chain_id',serverConfig.get('chain_id'))

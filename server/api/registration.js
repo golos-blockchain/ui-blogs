@@ -3,7 +3,7 @@ import koa_body from 'koa-body';
 import config from 'config';
 import models from 'db/models';
 import { checkCSRF, getRemoteIp, rateLimitReq } from 'server/utils/misc';
-import { hash } from 'golos-js/lib/auth/ecc';
+import { hash } from 'golos-classic-js/lib/auth/ecc';
 import secureRandom from 'secure-random';
 import gmailSend from 'gmail-send'
 

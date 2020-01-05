@@ -46,11 +46,25 @@ export default class PostFooter extends PureComponent {
         const {
             editMode,
             tags,
+            categories,
             postDisabled,
             disabledHint,
-            onTagsChange,
         } = this.props;
         const { temporaryErrorText, singleLine } = this.state;
+
+        let category = "";
+
+        let tagsNoCat = [];
+        if (tags.length >= 1 && categories.get('categories').toJS().includes(tags[0])) {
+            category = tags[0];
+            tagsNoCat = tags.slice(1);
+        } else {
+            tagsNoCat = tags;
+        }
+
+const onTagsChange = (tags) => {
+    this.props.onTagsChange(category != "" ? [category, ...tags] : tags);
+};
 
         return (
             <div
@@ -62,17 +76,18 @@ export default class PostFooter extends PureComponent {
             >
                 <div className="PostFooter__line">
                     <div className="PostFooter__tags">
-                        <TagInput tags={tags} onChange={onTagsChange} />
+                        <input type="text" value={category} />
                         {singleLine ? (
                             <TagsEditLine
-                                tags={tags}
+                                tags={tagsNoCat}
                                 inline
                                 editMode={editMode}
                                 className="PostFooter__inline-tags-line"
                                 hidePopular={editMode}
-                                onChange={this.props.onTagsChange}
+                                onChange={onTagsChange}
                             />
                         ) : null}
+                        <TagInput tags={tagsNoCat} onChange={onTagsChange} />
                     </div>
                     <PostOptions
                         nsfw={this.props.tags.includes(NSFW_TAG)}
@@ -130,7 +145,7 @@ export default class PostFooter extends PureComponent {
                     <TagsEditLine
                         className="PostFooter__tags-line"
                         editMode={editMode}
-                        tags={tags}
+                        tags={tagsNoCat}
                         hidePopular={editMode}
                         onChange={onTagsChange}
                     />

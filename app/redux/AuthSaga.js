@@ -2,8 +2,8 @@ import { fork, call, put, select, takeEvery } from 'redux-saga/effects';
 import {Set, Map, fromJS, List} from 'immutable'
 import user from 'app/redux/User'
 import {getAccount} from 'app/redux/SagaShared'
-import {PrivateKey} from 'golos-js/lib/auth/ecc';
-import {api} from 'golos-js';
+import {PrivateKey} from 'golos-classic-js/lib/auth/ecc';
+import {api} from 'golos-classic-js';
 
 // operations that require only posting authority
 const postingOps = Set(`vote, comment, delete_comment, custom_json, account_metadata`.trim().split(/,\s*/))

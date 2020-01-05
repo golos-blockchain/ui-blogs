@@ -1,0 +1,36 @@
+.inline {
+display: inline-block;
+}
+
+input[name=url2] { 
+width: 400px;
+display: inline-block;
+}
+
+input[name=url2]:not(:hover):not(:focus) { 
+border: none;
+transition: none;
+-webkit-transition: none;
+box-shadow: none;
+-webkit-box-shadow: none;
+}
+
+.clear-table td {
+  padding: 0;
+}
+
+.clear-table tr {
+  background-color: inherit !important;
+}
+
+.clear-table tbody {
+  border: none;
+}
+
+.no-margin-bottom {
+  margin-bottom: 0rem !important;
+}
+
+.margin-bottom {
+	margin-bottom: 1rem !important;
+}

@@ -16,7 +16,7 @@ import Dialogs from '@modules/Dialogs';
 import Modals from '@modules/Modals';
 import Icon from '@elements/Icon';
 import ScrollButton from '@elements/ScrollButton';
-import { key_utils } from 'golos-js/lib/auth/ecc';
+import { key_utils } from 'golos-classic-js/lib/auth/ecc';
 import MiniHeader from '@modules/MiniHeader';
 import tt from 'counterpart';
 import PageViewsCounter from '@elements/PageViewsCounter';

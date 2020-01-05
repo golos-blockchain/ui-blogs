@@ -7,8 +7,8 @@ import {browserHistory} from 'react-router'
 import {serverApiLogin, serverApiLogout} from 'app/utils/ServerApiClient';
 import {serverApiRecordEvent} from 'app/utils/ServerApiClient';
 import {loadFollows} from 'app/redux/FollowSaga'
-import {PrivateKey, Signature, hash} from 'golos-js/lib/auth/ecc'
-import {api} from 'golos-js'
+import {PrivateKey, Signature, hash} from 'golos-classic-js/lib/auth/ecc'
+import {api} from 'golos-classic-js'
 import g from 'app/redux/GlobalReducer'
 import React from 'react';
 import PushNotificationSaga from 'app/redux/services/PushNotificationSaga';
