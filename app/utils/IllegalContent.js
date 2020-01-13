@@ -59,6 +59,7 @@ xuyaka
 sambuka
 pretykatty
 id-matriza
+alte
 `.trim().split("\n")
 
 export const blockedContent = `
