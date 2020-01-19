@@ -929,7 +929,7 @@
     "convert_to_LIQUID_TOKEN": "Перевести в %(LIQUID_TOKEN)s",
     "withdraw_LIQUID_TOKEN": "Вывести %(LIQUID_TOKEN)s на текущий баланс",
     "withdraw_DEBT_TOKENS": "Вывести %(DEBT_TOKENS)s на текущий баланс",
-    "tokens_worth_about_1_of_LIQUID_TICKER": "Перемещаемые цифровые токены, цена которых равна %(TOKEN_WORTH)s в %(LIQUID_TICKER)s.",
+    "tokens_worth_about_1_of_LIQUID_TICKER": "Перемещаемые цифровые токены, цена которых стремится к %(TOKEN_WORTH)s в %(LIQUID_TICKER)s.",
     "balances": "БАЛАНСЫ",
     "buy_LIQUID_TOKEN_or_VESTING_TOKEN": "Купить %(LIQUID_TOKEN)s или %(VESTING_TOKEN2)s",
     "savings": "СЕЙФ",
@@ -1124,7 +1124,7 @@
   },
   "delegate_vesting_shares_info_jsx": {
     "confirm_title": "Отмена делегирования %(VESTING_TOKENS)s",
-    "confirm_cancel_delegation": "Вы действительно хотите отозвать делегированную %(VESTING_TOKEN2)s у пользователя %(delegatee)s",
+    "confirm_cancel_delegation": "Вы действительно хотите отозвать делегированную %(VESTING_TOKEN2)s у пользователя %(delegatee)s (токены вернутся на ваш баланс через 7 дней)",
     "from": "От кого",
     "to": "Кому"
   },
