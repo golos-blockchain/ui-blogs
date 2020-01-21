@@ -143,6 +143,7 @@ class CommentImpl extends PureComponent {
 
         if (blockedUsers.includes(comment.author)) {
             body = <IllegalContentMessage />;
+            return null;
         } else if (!this.state.collapsed && !hideBody) {
             body = (
                 <MarkdownViewer
