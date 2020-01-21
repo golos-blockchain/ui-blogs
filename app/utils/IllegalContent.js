@@ -60,6 +60,8 @@ sambuka
 pretykatty
 id-matriza
 alte
+id-huy
+ekaterinavolkova
 `.trim().split("\n")
 
 export const blockedContent = `
