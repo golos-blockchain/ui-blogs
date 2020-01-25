@@ -63,6 +63,8 @@ alte
 id-huy
 ekaterinavolkova
 id-i-na-hiy
+id-nahuy
+vam
 `.trim().split("\n")
 
 export const blockedContent = `
