@@ -5,6 +5,10 @@ export function getDynamicGlobalProperties() {
     return api.getDynamicGlobalPropertiesAsync()
 }
 
+export function getChainProperties() {
+    return api.getChainPropertiesAsync()
+}
+
 export function getCurrentMedianHistoryPrice() {
     return api.getCurrentMedianHistoryPriceAsync()
 }

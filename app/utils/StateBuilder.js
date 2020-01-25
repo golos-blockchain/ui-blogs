@@ -227,6 +227,11 @@ export default async function getState(api, url, options, offchain = {}) {
             accounts.add(witness.owner);
         })
   
+  
+    }  else if (parts[0] === 'workers') {
+        accounts.add('workers');
+        state.cprops = await api.getChainProperties();
+  
     } else if (Object.keys(PUBLIC_API).includes(parts[0])) {
         let args = { limit: 20, truncate_body: 1024 }
         const discussionsType = parts[0]

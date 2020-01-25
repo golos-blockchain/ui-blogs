@@ -1,24 +1,26 @@
 import React from 'react';
 import golos from 'golos-classic-js';
 import cn from 'classnames';
+import { connect } from 'react-redux';
 
+import {
+    APP_DOMAIN
+} from 'app/client_config';
 import Button from 'app/components/elements/Button';
 import { formatAsset, ERR } from 'app/utils/ParsersAndFormatters';
 
-import WorkerFunds from './WorkerFunds';
+import WorkerFunds from 'app/components/elements/WorkerFunds';
 import { getAuthorPermlink } from 'app/utils/ParsersAndFormatters';
 
-export default class AddEditWorkerRequest extends React.Component {
+class AddEditWorkerRequest extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      cp: {worker_request_creation_fee: "Неизвестно"},
       url: '',
       required_amount_min: '2000 GOLOS',
       required_amount_max: '5000 GOLOS',
       vest_reward: false,
-      date_end: '',
-      time_end: '',
+      duration: 5,
       worker: this.props.auth.account,
 
       created: '',
@@ -30,45 +32,29 @@ export default class AddEditWorkerRequest extends React.Component {
 
   componentDidMount() {
     const { author, permlink} = this.props;
-    golos.api.getChainProperties(
-      (err, result) => {
-        if (err) {
-          alert(err);
-          return;
-        }
-        this.setState({
-          cp: result
-        }, async () => {
-          if (author === '') return; // Not edit case
-          var query = {
-            limit: 1,
-            start_author: author,
-            start_permlink: permlink
-          };
-          var results = await golos.api.getWorkerRequestsAsync(query, 'by_created', true);
-          if (!results.length) return;
-          const req = results[0];
-          if (req.post.author !== author || req.post.permlink !== permlink) return;
+    this.setState({
+    }, async () => {
+      if (author === '') return; // Not edit case
+      var query = {
+        limit: 1,
+        start_author: author,
+        start_permlink: permlink
+      };
+      var results = await golos.api.getWorkerRequestsAsync(query, 'by_created', true);
+      if (!results.length) return;
+      const req = results[0];
+      if (req.post.author !== author || req.post.permlink !== permlink) return;
 
-          let vote_end_time = new Date(req.vote_end_time);
-          vote_end_time.setSeconds(vote_end_time.getSeconds() - vote_end_time.getTimezoneOffset() * 60 * 2);
-          vote_end_time = vote_end_time.toISOString();
-          let date_end = vote_end_time.split('T')[0];
-          let time_end = vote_end_time.split('T')[1];
-          time_end = time_end.substr(0, time_end.lastIndexOf(':'));
-
-          this.setState({
-            url: "https://golos.id/@" + req.post.author + "/" + req.post.permlink,
-            required_amount_min: formatAsset(req.required_amount_min, true, false, ''),
-            required_amount_max: formatAsset(req.required_amount_max, true, false, ''),
-            vest_reward: req.vest_reward,
-            date_end,
-            time_end,
-            worker: req.worker,
-            created: req.created
-          });
-        });
+      this.setState({
+        url: "https://" + APP_DOMAIN + "/@" + req.post.author + "/" + req.post.permlink,
+        required_amount_min: formatAsset(req.required_amount_min, true, false, ''),
+        required_amount_max: formatAsset(req.required_amount_max, true, false, ''),
+        vest_reward: req.vest_reward,
+        duration: parseInt(req.duration)/(24*60*60),
+        worker: req.worker,
+        created: req.created
       });
+    });
   }
 
   componentWillUnmount() {
@@ -124,7 +110,8 @@ export default class AddEditWorkerRequest extends React.Component {
       created = new Date(this.state.created);
       created.setSeconds(created.getSeconds() - created.getTimezoneOffset() * 60);
     }
-    const duration = Math.round((Date.parse(req.date_end + 'T' + req.time_end) - created) / 1000);
+    let duration = parseInt(req.duration)*24*60*60;
+    if (duration == 0) duration = 5*60;
     golos.broadcast.workerRequest(auth.posting_key,
       arr[0], arr[1], req.worker, required_amount_min, required_amount_max, req.vest_reward, duration, [],
       (err, result) => {
@@ -138,12 +125,12 @@ export default class AddEditWorkerRequest extends React.Component {
 
   render() {
     const req = this.state;
-    const { cp, postError, workerError } = this.state;
+    const { postError, workerError } = this.state;
     const editCase = (this.props.author !== '');
 
     let creation_fee = null;
     if (!editCase) {
-      creation_fee = (<b>&nbsp;Будет списано: {formatAsset(cp.worker_request_creation_fee)}</b>);
+      creation_fee = (<b>&nbsp;Будет списано: {formatAsset(this.props.cprops.worker_request_creation_fee)}</b>);
     }
 
     return(
@@ -157,7 +144,7 @@ export default class AddEditWorkerRequest extends React.Component {
             </label>
             <p>{postError}</p>
         </div>
-        <table class="AmountFields">
+        <table className="AmountFields">
           <tr>
             <td>
               <label>
@@ -177,11 +164,9 @@ export default class AddEditWorkerRequest extends React.Component {
           </tr>
         </table>
         <label>
-          Окончание голосования:
+          Время голосования (дней):
           <div>
-            <input name="date_end" type="date" className="inline" value={req.date_end} onChange={this.handleInputChange} />
-              &nbsp;
-            <input name="time_end" type="time" className="inline" value={req.time_end} onChange={this.handleInputChange} />
+            <input name="duration" type="number" min="5" max="30" className="inline" value={req.duration} onChange={this.handleInputChange} />
           </div>
         </label>
         <div className={cn({ error: workerError })}>
@@ -200,3 +185,17 @@ export default class AddEditWorkerRequest extends React.Component {
     );
   }
 }
+
+export default connect(
+    state => {
+        const cprops = state.global.get('cprops').toJS();
+        return {
+            cprops
+        };
+    },
+    dispatch => {
+        return {
+        };
+    }
+)(AddEditWorkerRequest);
+

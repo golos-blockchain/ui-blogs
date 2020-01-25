@@ -115,6 +115,26 @@ export function translateError(string) {
     }
 }
 
+export function authorURL(name) {
+  return "https://" + APP_DOMAIN + "/@" + name;
+}
+
+export function getAuthorPermlink(url) {
+  var res = ['', ''];
+  url = url.trim();
+  const authIdx = url.lastIndexOf('/@');
+  if (authIdx === -1) return res;
+  url = url.substr(authIdx + 2);
+  const permIdx = url.lastIndexOf('/');
+  if (permIdx === -1) return res;
+  const author = url.substring(0, permIdx);
+  const permlink = url.substr(permIdx + 1);
+  if (author === '' || permlink === '') return res;
+  res = [author, permlink];
+  return res;
+}
+
+
 export function ERR(err, opType) {
   let errorStr = err.toString();
   let errorKey = errorStr;

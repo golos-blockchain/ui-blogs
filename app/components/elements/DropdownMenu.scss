@@ -38,4 +38,9 @@
       left: -50%;
     }
   }
+
+  &.above > .VerticalMenu {
+    bottom: 100%;
+    top: auto;
+  }
 }

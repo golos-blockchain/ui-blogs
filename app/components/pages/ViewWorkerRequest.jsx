@@ -10,7 +10,7 @@ import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Author from 'app/components/elements/Author';
 import PercentSelect from 'app/components/elements/PercentSelect';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
-import { formatAsset, ERR } from 'app/utils/ParsersAndFormatters';
+import { formatDecimal, formatAsset, ERR } from 'app/utils/ParsersAndFormatters';
 
 export default class ViewWorkerRequest extends React.Component {
   constructor(props) {
@@ -146,6 +146,12 @@ export default class ViewWorkerRequest extends React.Component {
     let global_rshares_pct = parseInt(request.stake_total * 100 / this.state.total_vesting_shares);
     global_rshares_pct = !isNaN(global_rshares_pct) ? global_rshares_pct : 0;
 
+    let min_amount = parseFloat(request.required_amount_min.split(" ")[0]);
+    let max_amount = parseFloat(request.required_amount_max.split(" ")[0]);
+    let pend = max_amount * rshares_pct / 100;
+    let pending_amount = formatDecimal(pend, 0, false, ' ');
+    let pending_title = "% голосов \"за\" от отданной СГ: "+rshares_pct+"%";
+
     let upvotes = request.upvotes;
     let downvotes = request.downvotes;
 
@@ -176,7 +182,7 @@ export default class ViewWorkerRequest extends React.Component {
       const { voter, vote_percent } = vote;
       const sign = Math.sign(vote_percent);
       const voterPercent = vote_percent / 100 + '%';
-      return {value: (sign > 0 ? '+ ' : '- ') + voter, link: 'https://golos.id/@' + voter, data: voterPercent};
+      return {value: (sign > 0 ? '+ ' : '- ') + voter, link: 'https://' + APP_DOMAIN + '/@' + voter, data: voterPercent};
     });
     let vote_more = (upvotes+downvotes) - 20;
     if (vote_more > 0) {
@@ -185,12 +191,12 @@ export default class ViewWorkerRequest extends React.Component {
 
     return(
       <div>
-        <h3><a target="_blank" href={"https://" + APP_DOMAIN + "/@" + request.post.author + "/" + request.post.permlink} rel="noopener noreferrer">
+        <h4><a target="_blank" href={"https://" + APP_DOMAIN + "/@" + request.post.author + "/" + request.post.permlink} rel="noopener noreferrer">
           {request.post.title}
-        </a></h3>
+        </a></h4>
         <p>
-          Автор заявки: <Author link={request.post.author} /><br/>
-          Воркер: <Author link={request.worker} />
+          Автор заявки: <Author author={request.post.author} /><br/>
+          Воркер: <Author author={request.worker} />
         </p>
         <p>
           Минимальная сумма: {formatAsset(request.required_amount_min)}<br/>
@@ -202,12 +208,12 @@ export default class ViewWorkerRequest extends React.Component {
           {vote_end}
         </p>
         <p>
-          % голосов "за" от отданной СГ: {rshares_pct}%<br/>
-          % голосов от общей СГ: {global_rshares_pct}%
+          % голосов от общей СГ: {global_rshares_pct}%<br/>
+          <span title={pending_title}>Ожидаемая сумма выплаты: <b>{pending_amount} {request.required_amount_min.split(" ")[1]}</b></span>
         </p>
         <div>
           <div className="Request__Footer_left">
-            <TimeAgoWrapper date={request.created} />&nbsp;<Author link={request.post.author} />{modified_info}
+            <TimeAgoWrapper date={request.created} />&nbsp;<Author author={request.post.author} />{modified_info}
             <div>
               <PercentSelect className="inline" value={myPlanningVote} disabled={myVote !== 0} onChange={this.onPlanningVote} />&nbsp;
               &nbsp;
