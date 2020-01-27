@@ -17,10 +17,10 @@ class AddEditWorkerRequest extends React.Component {
     super(props);
     this.state = {
       url: '',
-      required_amount_min: '2000 GOLOS',
+      required_amount_min: '1000 GOLOS',
       required_amount_max: '5000 GOLOS',
       vest_reward: false,
-      duration: 5,
+      duration: 7,
       worker: this.props.auth.account,
 
       created: '',
@@ -164,14 +164,14 @@ class AddEditWorkerRequest extends React.Component {
           </tr>
         </table>
         <label>
-          Время голосования (дней):
+          Время голосования (суток):
           <div>
             <input name="duration" type="number" min="5" max="30" className="inline" value={req.duration} onChange={this.handleInputChange} />
           </div>
         </label>
         <div className={cn({ error: workerError })}>
             <label>
-              Логин аккаунта воркера:<input name="worker" type="text" value={req.worker} onChange={this.handleInputChange} onBlur={this.onWorkerChanged}/>
+              Получатель средств:<input name="worker" type="text" value={req.worker} onChange={this.handleInputChange} onBlur={this.onWorkerChanged}/>
             </label>
             <p>{workerError}</p>
         </div>
