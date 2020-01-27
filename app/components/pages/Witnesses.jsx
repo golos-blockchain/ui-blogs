@@ -129,7 +129,7 @@ class Witnesses extends Component {
                 } else {
                     witness_thread = (
                         <a href={thread}>
-                            {tt('witnesses_jsx.witness_thread')}&nbsp;<Icon name="extlink" />
+                            {tt('witnesses_jsx.witness_thread')}
                         </a>
                     );
                 }
@@ -168,8 +168,8 @@ class Witnesses extends Component {
                     </td>
                     <td style={rank <= 20 ? { fontWeight: 'bold' } : null}>
                         <Link to={'/@' + owner}>{owner}</Link>&nbsp;
-                        <Link to={'/nodes'}>{api_node && <img src="images/api.png" title={tt('witnesses_jsx.what_is_api')} />}</Link>&nbsp;
-                        <Link to={'/nodes'}>{seed_node && <img src="images/seed.png" title={tt('witnesses_jsx.what_is_seed')} />}</Link>
+                        <Link to={'/nodes'}>{api_node && <img src="images/api.png" width="25" height="17" title={tt('witnesses_jsx.what_is_api')} />}</Link>&nbsp;
+                        <Link to={'/nodes'}>{seed_node && <img src="images/seed.png" width="33" height="17" title={tt('witnesses_jsx.what_is_seed')} />}</Link>
                     </td>
                     <td>
                         {formatAsset(approval + ' GOLOS', false)}
@@ -184,13 +184,13 @@ class Witnesses extends Component {
                     <td style={{ textAlign: 'center' }}>{missed}</td>
                     <td>{lastBlock}</td>
                     <td>
-                        <div style={{ fontSize: '.9rem', fontWeight: 'bold' }}>
+                        <div style={{ fontSize: '.9rem' }}>
                             {priceFeed.get('quote')}
                         </div>
                         <div style={{ fontSize: '.9rem' }}>
                             {priceFeed.get('base')}
                         </div>
-                        <div style={{ fontSize: '1rem' }}>
+                        <div style={{ fontSize: '.9rem' }}>
                             <TimeAgoWrapper
                                 date={lastUpdateFeed}
                                 className={lastUpdateFeedClassName}
