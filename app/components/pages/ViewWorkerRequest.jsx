@@ -150,7 +150,7 @@ export default class ViewWorkerRequest extends React.Component {
     let max_amount = parseFloat(request.required_amount_max.split(" ")[0]);
     let pend = max_amount * rshares_pct / 100;
     let pending_amount = formatDecimal(pend, 0, false, ' ');
-    let pending_title = "% голосов \"за\" от отданной СГ: "+rshares_pct+"%";
+    let pending_title = "Если будет набран мин. % от общей СГ, установленный делегатами";
 
     let upvotes = request.upvotes;
     let downvotes = request.downvotes;
@@ -191,16 +191,16 @@ export default class ViewWorkerRequest extends React.Component {
 
     return(
       <div>
-        <h4><a target="_blank" href={"https://" + APP_DOMAIN + "/@" + request.post.author + "/" + request.post.permlink} rel="noopener noreferrer">
+        <h5><a target="_blank" href={"https://" + APP_DOMAIN + "/@" + request.post.author + "/" + request.post.permlink} rel="noopener noreferrer">
           {request.post.title}
-        </a></h4>
+        </a></h5>
         <p>
           Автор заявки: <Author author={request.post.author} /><br/>
-          Воркер: <Author author={request.worker} />
+          Получатель средств: <Author author={request.worker} />
         </p>
         <p>
+          Желаемая сумма: <b>{formatAsset(request.required_amount_max)}</b><br/>
           Минимальная сумма: {formatAsset(request.required_amount_min)}<br/>
-          Желаемая сумма: {formatAsset(request.required_amount_max)}<br/>
           Выплата в Силу Голоса: {request.vest_reward ? "да" : "нет"}
         </p>
         <p>
@@ -208,8 +208,8 @@ export default class ViewWorkerRequest extends React.Component {
           {vote_end}
         </p>
         <p>
-          % голосов от общей СГ: {global_rshares_pct}%<br/>
-          <span title={pending_title}>Ожидаемая сумма выплаты: <b>{pending_amount} {request.required_amount_min.split(" ")[1]}</b></span>
+          Процент голосов от общей СГ: {global_rshares_pct}%<br/>
+          <span title={pending_title}>Ожидаемая сумма выплаты: <b>{pending_amount} {request.required_amount_min.split(" ")[1]}</b> (?)</span>
         </p>
         <div>
           <div className="Request__Footer_left">
