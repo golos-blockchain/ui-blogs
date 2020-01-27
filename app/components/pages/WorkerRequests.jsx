@@ -162,7 +162,7 @@ class WorkerRequests extends React.Component {
         return (
           <tr>
               <td>
-                <b><a href="#" data-author={req.post.author} data-permlink={req.post.permlink} onClick={this.viewRequest}>{req.post.title}</a></b>
+                <a href="#" data-author={req.post.author} data-permlink={req.post.permlink} onClick={this.viewRequest}>{req.post.title}</a>
               </td>
               <td>
                 <Author author={req.post.author} follow={false} />
@@ -172,10 +172,12 @@ class WorkerRequests extends React.Component {
               </td>
               <td>
                 <div>
-                  <b>{formatAsset(req.required_amount_min)}</b>
+                  <b>{formatAsset(req.required_amount_max)}</b>
                 </div>
                 <div>
-                  {formatAsset(req.required_amount_max)}
+                  <span style={{ fontSize: '80%' }}>
+                    но не менее {formatAsset(req.required_amount_min)}
+                  </span>
                 </div>
               </td>
               <td>
@@ -197,7 +199,7 @@ class WorkerRequests extends React.Component {
     ];
     return (
       <div className="App-workers">
-        <div><h2>Заявки воркеров</h2></div>
+        <div><h2>Заявки на работу</h2></div>
         <Button onClick={this.createRequest} round="true" type="primary">+ {tt('workers.create_request')}</Button>
         <WorkerFunds/>
         <form className="Input__Inline" style={{marginBottom: '1rem'}} onSubmit={this.searchByAuthor}>
