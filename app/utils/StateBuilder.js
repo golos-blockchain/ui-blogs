@@ -1,5 +1,6 @@
 import { PUBLIC_API } from 'app/client_config'
 import { getPinnedPosts } from 'app/utils/NormalizeProfile'
+import { CATEGORIES } from 'app/client_config'
 
 
 import { reveseTag, prepareTrendingTags } from 'app/utils/tags'
@@ -38,49 +39,7 @@ export default async function getState(api, url, options, offchain = {}) {
 
     state.tag_idx = {
         'trending': prepareTrendingTags(trending_tags),
-        'categories': [
-            'авто',
-            'бизнес',
-            'блокчейн',
-            'голос',
-            'дом',
-            'еда',
-            'жизнь',
-            'здоровье',
-            'игры',
-            'искусство',
-            'история',
-            'кино',
-            'компьютеры',
-            'конкурсы',
-            'криптовалюты',
-            'культура',
-            'литература',
-            'медицина',
-            'музыка',
-            'наука',
-            'непознанное',
-            'образование',
-            'политика',
-            'право',
-            'природа',
-            'психология',
-            'путешествия',
-            'работа',
-            'религия',
-            'семья',
-            'спорт',
-            'творчество',
-            'технологии',
-            'трейдинг',
-            'фотография',
-            'хобби',
-            'экономика',
-            'юмор',
-            'прочее',
-            'en',
-            'NSFW'
-        ]
+        'categories': CATEGORIES
     }
 
     if (parts[0][0] === '@') {

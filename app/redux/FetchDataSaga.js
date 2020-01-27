@@ -5,7 +5,7 @@ import {getContent} from 'app/redux/SagaShared';
 import GlobalReducer from './GlobalReducer';
 import constants from './constants';
 import { reveseTag } from 'app/utils/tags';
-import { DEBT_TOKEN_SHORT, LIQUID_TICKER, DEFAULT_CURRENCY, IGNORE_TAGS, PUBLIC_API, SELECT_TAGS_KEY } from 'app/client_config';
+import { CATEGORIES, DEBT_TOKEN_SHORT, LIQUID_TICKER, DEFAULT_CURRENCY, IGNORE_TAGS, PUBLIC_API, SELECT_TAGS_KEY } from 'app/client_config';
 import cookie from "react-cookie";
 import {api} from 'golos-classic-js';
 
@@ -293,52 +293,9 @@ export function* fetchData(action) {
             args[0].select_categories = selectTags;
             category = select_tags.sort().join('/')
         } else {
-            let categories = [
-                'авто',
-                'бизнес',
-                'блокчейн',
-                'голос',
-                'дом',
-                'еда',
-                'жизнь',
-                'здоровье',
-                'игры',
-                'искусство',
-                'история',
-                'кино',
-                'компьютеры',
-                'конкурсы',
-                'криптовалюты',
-                'культура',
-                'литература',
-                'медицина',
-                'музыка',
-                'наука',
-                'непознанное',
-                'образование',
-                'политика',
-                'право',
-                'природа',
-                'психология',
-                'путешествия',
-                'работа',
-                'религия',
-                'семья',
-                'спорт',
-                'творчество',
-                'технологии',
-                'трейдинг',
-                'фотография',
-                'хобби',
-                'экономика',
-                'юмор',
-                'прочее',
-                'en',
-                'NSFW'
-            ];
             let selectTags = []
             
-            categories.forEach( t => {
+            CATEGORIES.forEach( t => {
                 const reversed = reveseTag(t)
                 reversed
                 ? selectTags = [ ...selectTags, t, reversed ]
