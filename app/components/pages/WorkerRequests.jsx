@@ -3,8 +3,7 @@ import golos from 'golos-classic-js';
 import tt from 'counterpart';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
 import Reveal from 'react-foundation-components/lib/global/reveal';
-import { addLocaleData, IntlProvider } from 'react-intl';
-import ru from 'react-intl/locale-data/ru';
+import { connect } from 'react-redux';
 
 import Button from 'app/components/elements/Button';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
@@ -13,21 +12,15 @@ import Author from 'app/components/elements/Author';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
 import { formatAsset, ERR } from 'app/utils/ParsersAndFormatters';
 
-import Settings from './Settings';
 import AddEditWorkerRequest from './AddEditWorkerRequest';
 import ViewWorkerRequest from './ViewWorkerRequest';
-import WorkerFunds from './WorkerFunds';
+import WorkerFunds from 'app/components/elements/WorkerFunds';
 import "./WorkerRequests.scss";
 
-export default class WorkerRequests extends React.Component {
+class WorkerRequests extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      auth: {
-        host: null,
-        account: null,
-        posting_key: null
-      },
       results: [],
       start_author: null,
       start_permlink: null,
@@ -35,7 +28,6 @@ export default class WorkerRequests extends React.Component {
       select_authors: [],
       select_states: ['created'],
       selected_state: 'Открытые заявки',
-      showSettings: false,
       showCreateRequest: false,
       showViewRequest: false,
       current_author: '',
@@ -45,43 +37,16 @@ export default class WorkerRequests extends React.Component {
   }
 
   componentDidMount() {
-    const host = localStorage.getItem('host');
-    if (!host) {
-      this.setState({
-        showSettings: true
-      });
-      return;
-    }
-    window.addEventListener("unload", this.unload);
-    //golos.config.set('websocket', host);
+    let total_vesting_shares = this.props.gprops.get('total_vesting_shares');
+    total_vesting_shares = parseInt(total_vesting_shares.split(' ')[0].replace('.', ''));
     this.setState({
-      auth: {
-        host: host,
-        account: localStorage.getItem('account'),
-        posting_key: localStorage.getItem('posting_key')
-      }
-    }, async () => {
-      let dgp = await golos.api.getDynamicGlobalPropertiesAsync();
-      let total_vesting_shares = parseInt(dgp.total_vesting_shares.split(' ')[0].replace('.', ''));
-      this.setState({
-        total_vesting_shares
-      }, () => {
-        this.loadMore();
-      });
+      total_vesting_shares
+    }, () => {
+      this.loadMore();
     });
   }
 
   componentWillUnmount() {
-    window.removeEventListener("unload", this.unload);
-  }
-
-  unload = () => {
-    if (localStorage.getItem('forgot_posting_key') === 'true') {
-      localStorage.removeItem('host');
-      localStorage.removeItem('account');
-      localStorage.removeItem('posting_key');
-      localStorage.removeItem('forgot_posting_key');
-    }
   }
 
   loadMore = () => {
@@ -127,7 +92,9 @@ export default class WorkerRequests extends React.Component {
     });
   }
 
-  onStateSelected = (link, value) => {
+  onStateSelected = (e) => {
+    e.preventDefault();
+    const {link, value} = e.target.parentNode.dataset;
     let select_states = [];
     if (link === 'closed')
       select_states = ['payment_complete', 'closed_by_author', 'closed_by_expiration', 'closed_by_voters'];
@@ -152,27 +119,6 @@ export default class WorkerRequests extends React.Component {
       start_permlink: null
     }, () => {
       this.loadMore();
-    });
-  }
-
-  settingSubmit = () => {
-    this.setState({
-      showSettings: false
-    }, () => {
-      window.location.reload();
-    });
-  }
-
-  settingReset = () => {
-    this.setState({
-      auth: {
-        host: localStorage.removeItem('host'),
-        account: localStorage.removeItem('account'),
-        posting_key: localStorage.removeItem('posting_key'),
-      }
-    }, () => {
-      localStorage.removeItem('forgot_posting_key');
-      window.location.reload();
     });
   }
 
@@ -216,20 +162,22 @@ export default class WorkerRequests extends React.Component {
         return (
           <tr>
               <td>
-                <b><a href="#" data-author={req.post.author} data-permlink={req.post.permlink} onClick={this.viewRequest}>{req.post.title}</a></b>
+                <a href="#" data-author={req.post.author} data-permlink={req.post.permlink} onClick={this.viewRequest}>{req.post.title}</a>
               </td>
               <td>
-                <Author link={req.post.author} />
+                <Author author={req.post.author} follow={false} />
               </td>
               <td>
                 {tt("workers."+req.state)}
               </td>
               <td>
                 <div>
-                  <b>{formatAsset(req.required_amount_min)}</b>
+                  <b>{formatAsset(req.required_amount_max)}</b>
                 </div>
                 <div>
-                  {formatAsset(req.required_amount_max)}
+                  <span style={{ fontSize: '80%' }}>
+                    но не менее {formatAsset(req.required_amount_min)}
+                  </span>
                 </div>
               </td>
               <td>
@@ -241,37 +189,23 @@ export default class WorkerRequests extends React.Component {
           </tr>
         );
     });
-    const { auth, current_author, current_permlink, selected_state, showSettings, showCreateRequest, showViewRequest} = this.state;
-    let worker_funds = null;
-    let user_bar = null;
-    if (auth.host) {
-      user_bar = (
-        <span>
-          {auth.account}&nbsp;<Button onClick={this.settingReset}>Выйти</Button>
-        </span>
-      );
-      worker_funds = <WorkerFunds />;
-    }
+    const { current_author, current_permlink, selected_state, showCreateRequest, showViewRequest} = this.state;
+    const auth = { account: this.props.account, posting_key: this.props.posting_key };
     let list_states = [
-      {link: 'all', value: 'Все'},
-      {link: 'created', value: 'Открытые заявки'},
-      {link: 'payment', value: 'Выплачиваемые'},
-      {link: 'closed', value: 'Закрытые'}
+      {link: 'all', value: 'Все', onClick: this.onStateSelected},
+      {link: 'created', value: 'Открытые заявки', onClick: this.onStateSelected},
+      {link: 'payment', value: 'Выплачиваемые', onClick: this.onStateSelected},
+      {link: 'closed', value: 'Закрытые', onClick: this.onStateSelected}
     ];
     return (
-      <IntlProvider
-        key="ru"
-        locale="ru"
-        defaultLocale="en">
-      <div className="App">
-        {user_bar}
-        <div><h3>Заявки воркеров Golos Blockchain</h3></div>
+      <div className="App-workers">
+        <div><h2>Заявки на работу</h2></div>
         <Button onClick={this.createRequest} round="true" type="primary">+ {tt('workers.create_request')}</Button>
-        {worker_funds}
-        <form class="Input__Inline" onSubmit={this.searchByAuthor}>
-          <input class="Input__Inline" type="text" placeholder="Поиск по автору" onChange={this.handleSearchAuthor}/>
+        <WorkerFunds/>
+        <form className="Input__Inline" style={{marginBottom: '1rem'}} onSubmit={this.searchByAuthor}>
+          <input className="Input__Inline" type="text" placeholder="Поиск по автору" onChange={this.handleSearchAuthor}/>
         </form>
-        <DropdownMenu className="StatesMenu" items={list_states} selected={selected_state} onSelected={this.onStateSelected} el="span" />
+        <DropdownMenu className="StatesMenu" items={list_states} selected={selected_state} el="span" />
         <table>
           <thead>
             <tr>
@@ -301,12 +235,10 @@ export default class WorkerRequests extends React.Component {
             {workerRequests}
           </tbody>
         </table>
-        <div class="App-center">
+        <div className="App-center">
           <Button onClick={this.loadMore} round="true" type="secondary">{tt('g.load_more')}</Button>
         </div>
-        <Reveal show={showSettings}>
-          <Settings onSubmit={this.settingSubmit} />
-        </Reveal>
+        <br/>
         <Reveal show={showCreateRequest}>
           <CloseButton onClick={this.hideCreateRequest} />
           <AddEditWorkerRequest auth={auth} hider={this.hideCreateRequest} author={current_author} permlink={current_permlink} />
@@ -316,7 +248,28 @@ export default class WorkerRequests extends React.Component {
           <ViewWorkerRequest auth={auth} hider={this.hideViewRequest} author={current_author} permlink={current_permlink} />
         </Reveal>
       </div>
-      </IntlProvider>
     );
   }
 }
+
+export default connect(
+    state => {
+        const gprops = state.global.get('props');
+        const currentUser = state.user.get('current');
+        let account = null;
+        let posting_key = null;
+        if (currentUser) {
+          account = currentUser.get('username');
+          posting_key = currentUser.get('private_keys').get('posting_private');
+        }
+        return {
+            gprops,
+            account,
+            posting_key
+        };
+    },
+    dispatch => {
+        return {
+        };
+    }
+)(WorkerRequests);

@@ -1,4 +1,4 @@
-.App {
+.App-workers {
   max-width: 75rem;
   margin-left: auto;
   margin-right: auto;
@@ -23,6 +23,10 @@
   margin-right: 10px !important;
 }
 
+.inline {
+  width: auto;
+}
+
 @import "./AddEditWorkerRequest";
-@import "./WorkerFunds";
+@import "app/components/elements/WorkerFunds";
 @import "./ViewWorkerRequest";

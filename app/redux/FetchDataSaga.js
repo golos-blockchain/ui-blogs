@@ -208,6 +208,10 @@ export function* fetchState(location_change_action) {
                 state.witnesses[witness.owner] = witness
             })
 
+        }  else if (parts[0] === 'workers') {
+            accounts.add('workers');
+            state.cprops = yield call ([api, api.getChainProperties])
+
         } else if (Object.keys(PUBLIC_API).includes(parts[0])) {
 
             yield call(fetchData, {payload: { order: parts[0], category : tag }})
