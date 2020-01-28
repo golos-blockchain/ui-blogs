@@ -141,5 +141,5 @@ export const CATEGORIES = [
     'юмор',
     'прочее',
     'en',
-    'NSFW'
+    'nsfw'
 ];
