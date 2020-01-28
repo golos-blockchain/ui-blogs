@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 import { browserHistory } from 'react-router';
 import tt from 'counterpart';
 import { detransliterate } from 'app/utils/ParsersAndFormatters';
-import { processCyrillicTag } from 'app/utils/tags';
+import { isCyrillicTag, processCyrillicTag } from 'app/utils/tags';
 import { IGNORE_TAGS, SELECT_TAGS_KEY } from 'app/client_config';
 import cookie from "react-cookie";
 
@@ -128,9 +128,11 @@ export default class Topics extends React.Component {
             const ignoreTags = [...IGNORE_TAGS];
             categories = categories.filter(val => ignoreTags.indexOf(val) === -1);
         }
-        
-        categories = categories.map(cat => {
-            const link = order ? `/${order}/${processCyrillicTag(cat)}` : `/hot/${processCyrillicTag(cat)}`;
+
+        categories = categories.map((cat) => {
+            const urlTag = isCyrillicTag(cat) ? processCyrillicTag(cat) : cat
+            const link = order ? `/${order}/${urlTag}` : `/hot/${urlTag}`;
+
             isSelected = selected.indexOf(cat) !== -1
             return <li key={cat} className={isSelected ? 'Topics__selected__remove' : 'Topics__selected__add'}>
                         <a className="action" onClick={() => onSelectTag(cat)}>{isSelected ? '×' : '+'}</a>
