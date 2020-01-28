@@ -214,11 +214,12 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     yield call(accountAuthLookup, {payload: {account, private_keys, highSecurityLogin, login_owner_pubkey}})
     let authority = yield select(state => state.user.getIn(['authority', username]))
     const hasActiveAuth = authority.get('active') === 'full'
-    if(!highSecurityLogin) {
-        const accountName = account.get('name')
-        authority = authority.set('active', 'none')
-        yield put(user.actions.setAuthority({accountName, auth: authority}))
-    }
+    // TODO Unused code
+    //if(!highSecurityLogin) {
+    //    const accountName = account.get('name')
+    //    authority = authority.set('active', 'none')
+    //    yield put(user.actions.setAuthority({accountName, auth: authority}))
+    //}
     const fullAuths = authority.reduce((r, auth, type) => (auth === 'full' ? r.add(type) : r), Set())
     if (!fullAuths.size) {
         localStorage.removeItem('autopost2')

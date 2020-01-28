@@ -145,7 +145,10 @@ function* broadcastOperation(
                 payload.keys.push(signingKey)
             else {
                 if (!password) {
-                    yield put(user.actions.showLogin({operation: {type, operation, username, successCallback, errorCallback, saveLogin: true}}))
+                    yield put(user.actions.showLogin({
+                      operation: {type, operation, username, successCallback, errorCallback, saveLogin: true},
+                      loginDefault: { username, authType: type == 'transfer' ? 'active' : '' }
+                    }))
                     return
                 }
             }

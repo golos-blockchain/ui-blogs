@@ -323,7 +323,7 @@ export default connect(
                 const {type, operation, successCallback, errorCallback} = loginBroadcastOperation.toJS()
                 dispatch(transaction.actions.broadcastOperation({type, operation, username, password, successCallback, errorCallback}))
                 // Avoid saveLogin, this could be a user-provided content page and the login might be an active key.  Security will reject that...
-                dispatch(user.actions.usernamePasswordLogin({username, password, saveLogin: false, afterLoginRedirectToWelcome, operationType: type}))
+                dispatch(user.actions.usernamePasswordLogin({username, password, saveLogin: true, afterLoginRedirectToWelcome, operationType: type}))
                 dispatch(user.actions.closeLogin())
             } else {
                 dispatch(user.actions.usernamePasswordLogin({username, password, saveLogin, afterLoginRedirectToWelcome}))

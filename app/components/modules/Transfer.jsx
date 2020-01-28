@@ -333,9 +333,8 @@ export default connect(
             if(transferType === 'Savings Withdraw')
                 operation.request_id = Math.floor((Date.now() / 1000) % 4294967295)
 
-
             // handle donate
-            // todo redesign transfer types globally
+            // TODO redesign transfer types globally
             if (flag) {
               // get transfer type and default memo composer
               // now 'donate' only
@@ -349,8 +348,6 @@ export default connect(
               }
             }
 
-
-
             dispatch(transaction.actions.broadcastOperation({
                 type: toVesting ? 'transfer_to_vesting' : (
                     transferType === 'Transfer to Account' ? 'transfer' :
@@ -358,6 +355,7 @@ export default connect(
                     transferType === 'Savings Withdraw' ? 'transfer_from_savings' :
                     null
                 ),
+                username,
                 operation,
                 successCallback,
                 errorCallback
