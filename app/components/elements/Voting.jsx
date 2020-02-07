@@ -145,7 +145,7 @@ class Voting extends React.Component {
         </div>;
 
         if (flag) {
-            const down = <Icon name={votingDownActive ? 'empty' : (myVote < 0 ? 'flag2' : 'flag1')} />;
+            const down = <Icon name={votingDownActive ? 'empty' : 'chevron-up-circle'} />;
             const classDown = 'Voting__button Voting__button-down' + (myVote < 0 ? ' Voting__button--downvoted' : '') + (votingDownActive ? ' votingDown' : '');
             const flagWeight = post_obj.getIn(['stats', 'flagWeight']);
 
