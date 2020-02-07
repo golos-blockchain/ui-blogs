@@ -228,7 +228,6 @@ class CommentImpl extends PureComponent {
                 >
                     <div className="Comment__header">
                         <div className="Comment__header_collapse">
-                            <Voting post={post} flag />
                             <a
                                 title={tt('comment_jsx.collapse_or_expand')}
                                 onClick={this.toggleCollapsed}

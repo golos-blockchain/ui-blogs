@@ -487,9 +487,6 @@ class PostFull extends React.Component {
 
         const main = [
             <span key="content">
-                <div className="float-right">
-                    <Voting post={post} flag />
-                </div>
                 <div className="PostFull__header">
                     {postHeader}
                     <TimeAuthorCategoryLarge
