@@ -139,13 +139,10 @@ class Voting extends React.Component {
             //const down = <Icon name={votingDownActive ? 'empty' : (myVote < 0 ? 'flag2' : 'flag1')} />;
             const down = <Icon name={votingDownActive ? 'empty' : 'chevron-down-circle'} />;
             const classDown = 'Voting__button Voting__button-down' + (myVote < 0 ? ' Voting__button--downvoted' : '') + (votingDownActive ? ' votingDown' : '');
-            const flagWeight = post_obj.getIn(['stats', 'flagWeight']);
 
             //const flagClickAction = myVote === null || myVote === 0 ? this.toggleWeightDown : this.voteDown
             downVote = <span className="Voting">
                 <span className={classDown}>
-                    {flagWeight > 0 && <span className="Voting__button-downvotes">{"•".repeat(flagWeight)}</span>}
-                    {/*votingDownActive ? down : <a href="#" onClick={flagClickAction} title={tt('g.flag')}>{down}</a> */}
                     {votingDownActive ? down : <a href="#" onClick={this.voteDown} title={tt('g.flag')}>{down}</a>}
                 </span>
             </span>
