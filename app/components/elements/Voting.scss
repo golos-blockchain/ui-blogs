@@ -27,7 +27,6 @@
     border-radius: 50%;
   }
   > a {
-    padding-right: 0.5rem;
   }
   path {
     fill: #4BA2F2;
@@ -76,6 +75,8 @@
 
 .Voting__button-down {
   margin-left: 0.25rem;
+  margin-right: 0.5rem;
+
   .Voting__button-downvotes {
     color: #aaa;
     font-size: 80%;
@@ -83,8 +84,20 @@
     padding-right: 0.1rem;
   }
 
-  a:hover path {
+  a path {
     fill: #a00;
+  }
+
+  a circle {
+    stroke: #a00;
+  }
+
+  a:hover circle {
+    fill: #fc544e;
+  }
+
+  a:hover path {
+    fill: #fff;
   }
 }
 
@@ -111,8 +124,14 @@
   stroke: #258DEB;
 }
 
-.Voting__button--downvoted path {
-  fill: #a00;
+.Voting__button--downvoted {
+  path {
+    fill: #fff !important;
+  }
+
+  circle {
+    fill: #fc544e;
+  }
 }
 
 .Voting .DropdownMenu ul {

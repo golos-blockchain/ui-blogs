@@ -134,42 +134,19 @@ class Voting extends React.Component {
         const votingUpActive = voting && votingUp;
         const votingDownActive = voting && votingDown;
 
-        const ABOUT_FLAG = <div>
-            <p>{tt('voting_jsx.flagging_post_can_remove_rewards_the_flag_should_be_used_for_the_following')}:</p>
-            <ul>
-                <li>{tt('voting_jsx.disagreement_on_rewards')}</li>
-                <li>{tt('voting_jsx.fraud_or_plagiarism')}</li>
-                <li>{tt('voting_jsx.hate_speech_or_internet_trolling')}</li>
-                <li>{tt('voting_jsx.intentional_miss_categorized_content_or_spam')}</li>
-            </ul>
-        </div>;
-
-        if (flag) {
-            const down = <Icon name={votingDownActive ? 'empty' : 'chevron-up-circle'} />;
+        let downVote;
+        if (true) {
+            //const down = <Icon name={votingDownActive ? 'empty' : (myVote < 0 ? 'flag2' : 'flag1')} />;
+            const down = <Icon name={votingDownActive ? 'empty' : 'chevron-down-circle'} />;
             const classDown = 'Voting__button Voting__button-down' + (myVote < 0 ? ' Voting__button--downvoted' : '') + (votingDownActive ? ' votingDown' : '');
             const flagWeight = post_obj.getIn(['stats', 'flagWeight']);
 
-            // myVote === current vote
-            const dropdown = <FoundationDropdown show={showWeight} onHide={() => this.setState({showWeight: false})} className="Voting__adjust_weight_down">
-                {(myVote == null || myVote === 0) && net_vesting_shares > VOTE_WEIGHT_DROPDOWN_THRESHOLD &&
-                    <div>
-                        <div className="weight-display">- {weight / 100}%</div>
-                        <Slider min={100} max={10000} step={100} value={weight} onChange={this.handleWeightChange} />
-                    </div>
-                }
-                <CloseButton onClick={() => this.setState({showWeight: false})} />
-                <div className="clear Voting__about-flag">
-                    <p>{ABOUT_FLAG}</p>
-                    <a href="#" onClick={this.voteDown} className="button outline" title={tt('g.flag')}>{tt('g.flag')}</a>
-                </div>
-            </FoundationDropdown>;
-
-            const flagClickAction = myVote === null || myVote === 0 ? this.toggleWeightDown : this.voteDown
-            return <span className="Voting">
+            //const flagClickAction = myVote === null || myVote === 0 ? this.toggleWeightDown : this.voteDown
+            downVote = <span className="Voting">
                 <span className={classDown}>
                     {flagWeight > 0 && <span className="Voting__button-downvotes">{"•".repeat(flagWeight)}</span>}
-                    {votingDownActive ? down : <a href="#" onClick={flagClickAction} title={tt('g.flag')}>{down}</a>}
-                    {dropdown}
+                    {/*votingDownActive ? down : <a href="#" onClick={flagClickAction} title={tt('g.flag')}>{down}</a> */}
+                    {votingDownActive ? down : <a href="#" onClick={this.voteDown} title={tt('g.flag')}>{down}</a>}
                 </span>
             </span>
         }
@@ -259,6 +236,7 @@ class Voting extends React.Component {
                         {votingUpActive ? up : <a href="#" onClick={voteUpClick} title={tt(myVote > 0 ? 'g.remove_vote' : 'g.upvote')}>{up}</a>}
                         {dropdown}
                     </span>
+                    {downVote}
                     {payoutEl}
                 </span>
                 <span className="Voting__inner FoundationDropdownMenu__label" data-tooltip={tt('post_editor.set_curator_percent') + ' ' + curationPercent}>
