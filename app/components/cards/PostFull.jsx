@@ -650,14 +650,6 @@ class PostFull extends React.Component {
                     <span className={"shareMenu"}>
                         <div className="sharpay_widget_simple" data-sharpay="golid" data-lang="ru" data-height="20" data-form="no" data-align="right" data-limit="0" data-networks="facebook,twitter,vkontakte,odnoklassniki,livejournal"></div>
                     </span>
-                
-                    <button
-                        className="explore-post"
-                        title={tt('g.share_this_post')}
-                        onClick={this.showExplorePost}
-                    >
-                        <Icon name="link" className="chain-right" />
-                    </button>
                 </div>
             </div>
         );
