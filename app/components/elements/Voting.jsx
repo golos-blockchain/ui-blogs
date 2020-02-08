@@ -51,6 +51,7 @@ class Voting extends React.Component {
         this.state = {
           xchangePair: 0,
           showWeight: false,
+          showWeightDown: false,
           myVote: null,
           weight: 10000
         };
@@ -58,10 +59,12 @@ class Voting extends React.Component {
         this.voteUp = e => {
             e.preventDefault();
             this.voteUpOrDown(true)
+            if (this.state.showWeight) this.setState({showWeight: false});
         };
         this.voteDown = e => {
             e.preventDefault();
             this.voteUpOrDown(false)
+            if (this.state.showWeightDown) this.setState({showWeightDown: false});
         };
         this.voteUpOrDown = (up) => {
             if(this.props.voting) return;
@@ -74,7 +77,6 @@ class Voting extends React.Component {
             }
             // already voted Up, remove the vote
             const weight = up ? (myVote > 0 ? 0 : this.state.weight) : (myVote < 0 ? 0 : -1 * this.state.weight);
-            if (this.state.showWeight) this.setState({showWeight: false});
             this.props.vote(weight, {author, permlink, username, myVote})
         };
 
@@ -85,10 +87,12 @@ class Voting extends React.Component {
         this.toggleWeightUp = e => {
             e.preventDefault();
             this.toggleWeightUpOrDown(true)
+            this.setState({showWeight: !this.state.showWeight})
         };
         this.toggleWeightDown = e => {
             e.preventDefault();
             this.toggleWeightUpOrDown(false)
+            this.setState({showWeightDown: !this.state.showWeightDown})
         };
         this.toggleWeightUpOrDown = up => {
             const {username, is_comment} = this.props;
@@ -98,7 +102,6 @@ class Voting extends React.Component {
                 const saved_weight = localStorage.getItem('voteWeight' + (up ? '' : 'Down') + '-'+username+(is_comment ? '-comment' : ''));
                 this.setState({weight: saved_weight ? parseInt(saved_weight, 10) : 10000});
             }
-            this.setState({showWeight: !this.state.showWeight})
         };
         this.shouldComponentUpdate = shouldComponentUpdate(this, 'Voting')
     }
@@ -127,7 +130,7 @@ class Voting extends React.Component {
     render() {
         const {active_votes, showList, voting, flag, net_vesting_shares, is_comment, post_obj} = this.props;
         const {username} = this.props;
-        const {votingUp, votingDown, showWeight, weight, myVote} = this.state;
+        const {votingUp, votingDown, showWeight, showWeightDown, weight, myVote} = this.state;
         if(flag && !username) return null
 
         const votingUpActive = voting && votingUp;
@@ -135,16 +138,24 @@ class Voting extends React.Component {
 
         let downVote;
         if (true) {
-            //const down = <Icon name={votingDownActive ? 'empty' : (myVote < 0 ? 'flag2' : 'flag1')} />;
             const down = <Icon name={votingDownActive ? 'empty' : 'chevron-down-circle'} />;
             const classDown = 'Voting__button Voting__button-down' + (myVote < 0 ? ' Voting__button--downvoted' : '') + (votingDownActive ? ' votingDown' : '');
 
-            //const flagClickAction = myVote === null || myVote === 0 ? this.toggleWeightDown : this.voteDown
-            downVote = <span className="Voting">
-                <span className={classDown}>
-                    {votingDownActive ? down : <a href="#" onClick={this.voteDown} title={tt('g.flag')}>{down}</a>}
+            const flagClickAction = myVote === null || myVote === 0 ? this.toggleWeightDown : this.voteDown
+
+            const dropdown = <FoundationDropdown show={showWeightDown} onHide={() => this.setState({showWeightDown: false})}>
+                <div className="Voting__adjust_weight row align-middle collapse">
+                    <a href="#" onClick={this.voteDown} className="columns small-2 confirm_weight" title={tt('g.upvote')}><Icon size="2x" name="chevron-down-circle" /></a>
+                    <div className="columns small-2 weight-display">{weight / 100}%</div>
+                    <Slider min={100} max={10000} step={100} value={weight} className="columns small-6" onChange={this.handleWeightChange} />
+                    <CloseButton className="columns small-2 Voting__adjust_weight_close" onClick={() => this.setState({showWeightDown: false})} />
+                </div>
+            </FoundationDropdown>;
+
+            downVote = <span className={classDown}>
+                    {votingDownActive ? down : <a href="#" onClick={flagClickAction} title={tt('g.flag')}>{down}</a>}
+                    {dropdown}
                 </span>
-            </span>
         }
 
         const total_votes = post_obj.getIn(['stats', 'total_votes']);

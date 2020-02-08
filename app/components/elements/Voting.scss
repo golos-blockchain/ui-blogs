@@ -284,7 +284,7 @@
 
 
 @media screen and (max-width: 39.9375em) {
-  .Voting__button-up {
+  .Voting__button-up,.Voting__button-down {
     .dropdown-pane {
       margin-top: -36px;
       position: absolute;
@@ -296,7 +296,7 @@
 
 /* Medium and bigger */
 @media screen and (min-width: 39.9375em) {
-  .Voting__button-up {
+  .Voting__button-up,.Voting__button-down {
     display: inline-block;
     position: relative;
     .dropdown-pane {
