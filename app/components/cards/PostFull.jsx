@@ -153,6 +153,15 @@ class PostFull extends React.Component {
         );
     }
 
+    componentDidMount () {
+        const script = document.createElement("script");
+
+        script.src = "https://app.sharpay.io/api/script.js";
+        script.async = true;
+
+        document.body.appendChild(script);
+    }
+
     onShowReply = () => {
         const { showReply, formId } = this.state;
         const newShowReply = !showReply;
@@ -637,7 +646,11 @@ class PostFull extends React.Component {
                             sinceDate={isPreViewCount ? 'Dec 2016' : null}
                         />
                     </span>
-                    <ShareMenu menu={shareMenu} />
+
+                    <span className={"shareMenu"}>
+                        <div className="sharpay_widget_simple" data-sharpay="golid" data-lang="ru" data-height="20" data-form="no" data-align="right" data-limit="0" data-networks="facebook,twitter,vkontakte,odnoklassniki,livejournal"></div>
+                    </span>
+                
                     <button
                         className="explore-post"
                         title={tt('g.share_this_post')}
