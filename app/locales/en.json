@@ -908,6 +908,7 @@
     "always_show": "Always show",
     "muted_users": "Muted Users",
     "update": "Update",
+    "upload": "Upload",
     "profile_image_url": "Profile picture url",
     "cover_image_url": "Cover image url",
     "profile_name": "Display Name",
@@ -921,7 +922,14 @@
     },
     "profile_about": "About",
     "profile_location": "Location",
-    "profile_website": "Website"
+    "profile_website": "Website",
+    "rounding_numbers": {
+      "info_message": "Displaying rewards",
+      "integer": "Round up to the whole number",
+      "one_decimal": "One decimal place",
+      "two_decimal": "Two decimal places",
+      "three_decimal": "Three decimal places"
+    }
   },
   "transfer_jsx": {
     "amount_is_in_form": "Amount is in the form 99999.999",
