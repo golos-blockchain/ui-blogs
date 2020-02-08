@@ -46,23 +46,22 @@ const availableLinks = [
 
 const availableDomains = [
     'golos.id',
+    'golos.in',
+    'goldvoice.club',
     'ropox.app',
     'golos.cf',
+    'dpos.space',
+    'golosboard.com',
     'rudex.org',
+    'kuna.io',
+    'steem-engine.com',
     'github.com',
     'play.google.com',
     't.me',
     'facebook.com',
     'twitter.com',
-    'kuna.com.ua',
-    'forklog.com',
-    'goldvoice.club',
-    'oneplace.media',
-    'golos.today',
-    'cpeda.space',
-    'linkedin.com',
-    'golosboard.com',
     'instagram.com',
+    'vk.com',
 ];
 
 class App extends React.Component {
