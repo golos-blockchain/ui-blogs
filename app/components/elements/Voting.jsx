@@ -30,7 +30,6 @@ class Voting extends React.Component {
         // Redux connect properties
         vote: PropTypes.func.isRequired,
         author: PropTypes.string, // post was deleted
-        curationPercent: PropTypes.number,
         permlink: PropTypes.string,
         username: PropTypes.string,
         is_comment: PropTypes.bool,
@@ -126,7 +125,7 @@ class Voting extends React.Component {
     }
 
     render() {
-        const {active_votes, showList, voting, flag, net_vesting_shares, curationPercent, is_comment, post_obj} = this.props;
+        const {active_votes, showList, voting, flag, net_vesting_shares, is_comment, post_obj} = this.props;
         const {username} = this.props;
         const {votingUp, votingDown, showWeight, weight, myVote} = this.state;
         if(flag && !username) return null
@@ -155,7 +154,6 @@ class Voting extends React.Component {
         const pending_payout = parsePayoutAmount(post_obj.get('pending_payout_value'));
         const promoted = parsePayoutAmount(post_obj.get('promoted'));
         const total_author_payout = parsePayoutAmount(post_obj.get('total_payout_value'));
-        const total_curator_payout = parsePayoutAmount(post_obj.get('curator_payout_value'));
 
         const payout = CalculatePayout(post_obj)
 
@@ -236,13 +234,6 @@ class Voting extends React.Component {
                     {downVote}
                     {payoutEl}
                 </span>
-                <span className="Voting__inner FoundationDropdownMenu__label" data-tooltip={tt('post_editor.set_curator_percent') + ' ' + curationPercent}>
-                  <Icon
-                      name="editor/k"
-                      size="1x"
-                  />
-                  <span>  {curationPercent}%</span>
-                </span>
                 {voters_list}
             </span>
         );
@@ -253,7 +244,6 @@ export default connect(
     (state, ownProps) => {
         const post = state.global.getIn(['content', ownProps.post])
         if (!post) return ownProps
-        const curationPercent = Math.round(post.get('curation_rewards_percent') / 100)
         const author = post.get('author')
         const permlink = post.get('permlink')
         const active_votes = post.get('active_votes')
@@ -289,7 +279,6 @@ export default connect(
             post_obj: post,
             loggedin: username != null,
             voting,
-            curationPercent
         }
     },
 
