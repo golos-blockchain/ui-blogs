@@ -243,6 +243,7 @@
       cursor: pointer;
       display: inline-block;
       position: absolute;
+      outline: none;
       &:active {
         background: #4ba2f2;
       }
