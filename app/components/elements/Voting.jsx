@@ -145,12 +145,27 @@ class Voting extends React.Component {
 
             const dropdown = <FoundationDropdown show={showWeightDown} onHide={() => this.setState({showWeightDown: false})}>
                 <div className="Voting__adjust_weight_down row align-middle collapse">
-                    <a href="#" onClick={this.voteDown} className="columns small-2 confirm_weight" title={tt('g.upvote')}><Icon size="2x" name="chevron-down-circle" /></a>
+                    <a href="#" onClick={this.voteDown} className="columns small-2 confirm_weight" title={tt('g.flag')}><Icon size="2x" name="chevron-down-circle" /></a>
                     <div className="columns small-2 weight-display">- {weight / 100}%</div>
                     <Slider min={100} max={10000} step={100} value={weight} className="columns small-6" onChange={this.handleWeightChange} />
                     <CloseButton className="columns small-2 Voting__adjust_weight_close" onClick={() => this.setState({showWeightDown: false})} />
                 </div>
             </FoundationDropdown>;
+
+//            const dropdown = <FoundationDropdown show={showWeight} onHide={() => this.setState({showWeight: false})} className="Voting__adjust_weight_down">
+//                {(myVote == null || myVote === 0) && net_vesting_shares > VOTE_WEIGHT_DROPDOWN_THRESHOLD &&
+//                    <div>
+//                        <div className="weight-display">- {weight / 100}%</div>
+//                        <Slider min={100} max={10000} step={100} value={weight} onChange={this.handleWeightChange} />
+//                    </div>
+//                }
+//                <CloseButton onClick={() => this.setState({showWeight: false})} />
+//                <div className="clear Voting__about-flag">
+//                    <p>{ABOUT_FLAG}</p>
+//                    <a href="#" onClick={this.voteDown} className="button outline" title={tt('g.flag')}>{tt('g.flag')}</a>
+//                </div>
+//            </FoundationDropdown>;
+
 
             downVote = <span className={classDown}>
                     {votingDownActive ? down : <a href="#" onClick={flagClickAction} title={tt('g.flag')}>{down}</a>}
