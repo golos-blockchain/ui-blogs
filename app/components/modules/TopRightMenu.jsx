@@ -116,10 +116,10 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     }
     additional_menu.push(
         { link: '/market', value: tt('userwallet_jsx.market') },
-        { link: '/~witnesses', value: 'Голосовать за делегатов', target: 'blank' },
-        { link: '/workers', value: 'Заявки на работу (воркеры)', target: 'blank' },
+        { link: '/~witnesses', value: tt("navigation.witnesses"), target: 'blank' },
+        { link: '/workers', value: tt("navigation.workers"), target: 'blank' },
+        { link: 'https://explorer.golos.id/', value: tt("navigation.explorer"), target: 'blank' },
         { link: 'https://rudex.org/', value: 'Купи-продай GOLOS/GBG', target: 'blank' },
-        { link: 'https://explorer.golos.id/', value: 'Обозреватель блокчейна', target: 'blank' },
         { link: 'https://ropox.app/', value: 'Сервисы ropox.app', target: 'blank' },
         { link: 'https://golos.cf/', value: 'Сервисы golos.cf', target: 'blank' },
         { link: 'https://dpos.space/golos-donates/', value: 'Сервисы dpos.space', target: 'blank' },
