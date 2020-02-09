@@ -291,6 +291,8 @@
     "APP_NAME_chat": "%(APP_NAME)s Chat",
     "APP_NAME_app_center": "%(APP_NAME)s App Center",
     "witnesses": "Witnesses",
+    "workers": "Workers",
+    "explorer": "Blockchain Explorer",
     "vote_for_witnesses": "Vote for Witnesses",
     "privacy_policy": "Privacy Policy",
     "payouts_by_tag": "Payouts by tag",
