@@ -144,9 +144,9 @@ class Voting extends React.Component {
             const flagClickAction = myVote === null || myVote === 0 ? this.toggleWeightDown : this.voteDown
 
             const dropdown = <FoundationDropdown show={showWeightDown} onHide={() => this.setState({showWeightDown: false})}>
-                <div className="Voting__adjust_weight row align-middle collapse">
+                <div className="Voting__adjust_weight_down row align-middle collapse">
                     <a href="#" onClick={this.voteDown} className="columns small-2 confirm_weight" title={tt('g.upvote')}><Icon size="2x" name="chevron-down-circle" /></a>
-                    <div className="columns small-2 weight-display">{weight / 100}%</div>
+                    <div className="columns small-2 weight-display">- {weight / 100}%</div>
                     <Slider min={100} max={10000} step={100} value={weight} className="columns small-6" onChange={this.handleWeightChange} />
                     <CloseButton className="columns small-2 Voting__adjust_weight_close" onClick={() => this.setState({showWeightDown: false})} />
                 </div>
