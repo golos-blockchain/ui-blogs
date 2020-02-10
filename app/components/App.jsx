@@ -62,6 +62,7 @@ const availableDomains = [
     'twitter.com',
     'instagram.com',
     'vk.com',
+    'app.sharpay.io',
 ];
 
 class App extends React.Component {
