@@ -30,7 +30,6 @@ class Voting extends React.Component {
         // Redux connect properties
         vote: PropTypes.func.isRequired,
         author: PropTypes.string, // post was deleted
-        curationPercent: PropTypes.number,
         permlink: PropTypes.string,
         username: PropTypes.string,
         is_comment: PropTypes.bool,
@@ -52,6 +51,7 @@ class Voting extends React.Component {
         this.state = {
           xchangePair: 0,
           showWeight: false,
+          showWeightDown: false,
           myVote: null,
           weight: 10000
         };
@@ -59,10 +59,12 @@ class Voting extends React.Component {
         this.voteUp = e => {
             e.preventDefault();
             this.voteUpOrDown(true)
+            if (this.state.showWeight) this.setState({showWeight: false});
         };
         this.voteDown = e => {
             e.preventDefault();
             this.voteUpOrDown(false)
+            if (this.state.showWeightDown) this.setState({showWeightDown: false});
         };
         this.voteUpOrDown = (up) => {
             if(this.props.voting) return;
@@ -75,7 +77,6 @@ class Voting extends React.Component {
             }
             // already voted Up, remove the vote
             const weight = up ? (myVote > 0 ? 0 : this.state.weight) : (myVote < 0 ? 0 : -1 * this.state.weight);
-            if (this.state.showWeight) this.setState({showWeight: false});
             this.props.vote(weight, {author, permlink, username, myVote})
         };
 
@@ -86,10 +87,12 @@ class Voting extends React.Component {
         this.toggleWeightUp = e => {
             e.preventDefault();
             this.toggleWeightUpOrDown(true)
+            this.setState({showWeight: !this.state.showWeight})
         };
         this.toggleWeightDown = e => {
             e.preventDefault();
             this.toggleWeightUpOrDown(false)
+            this.setState({showWeightDown: !this.state.showWeightDown})
         };
         this.toggleWeightUpOrDown = up => {
             const {username, is_comment} = this.props;
@@ -99,7 +102,6 @@ class Voting extends React.Component {
                 const saved_weight = localStorage.getItem('voteWeight' + (up ? '' : 'Down') + '-'+username+(is_comment ? '-comment' : ''));
                 this.setState({weight: saved_weight ? parseInt(saved_weight, 10) : 10000});
             }
-            this.setState({showWeight: !this.state.showWeight})
         };
         this.shouldComponentUpdate = shouldComponentUpdate(this, 'Voting')
     }
@@ -126,52 +128,49 @@ class Voting extends React.Component {
     }
 
     render() {
-        const {active_votes, showList, voting, flag, net_vesting_shares, curationPercent, is_comment, post_obj} = this.props;
+        const {active_votes, showList, voting, flag, net_vesting_shares, is_comment, post_obj} = this.props;
         const {username} = this.props;
-        const {votingUp, votingDown, showWeight, weight, myVote} = this.state;
+        const {votingUp, votingDown, showWeight, showWeightDown, weight, myVote} = this.state;
         if(flag && !username) return null
 
         const votingUpActive = voting && votingUp;
         const votingDownActive = voting && votingDown;
 
-        const ABOUT_FLAG = <div>
-            <p>{tt('voting_jsx.flagging_post_can_remove_rewards_the_flag_should_be_used_for_the_following')}:</p>
-            <ul>
-                <li>{tt('voting_jsx.disagreement_on_rewards')}</li>
-                <li>{tt('voting_jsx.fraud_or_plagiarism')}</li>
-                <li>{tt('voting_jsx.hate_speech_or_internet_trolling')}</li>
-                <li>{tt('voting_jsx.intentional_miss_categorized_content_or_spam')}</li>
-            </ul>
-        </div>;
-
-        if (flag) {
-            const down = <Icon name={votingDownActive ? 'empty' : (myVote < 0 ? 'flag2' : 'flag1')} />;
+        let downVote;
+        if (true) {
+            const down = <Icon name={votingDownActive ? 'empty' : 'chevron-down-circle'} />;
             const classDown = 'Voting__button Voting__button-down' + (myVote < 0 ? ' Voting__button--downvoted' : '') + (votingDownActive ? ' votingDown' : '');
-            const flagWeight = post_obj.getIn(['stats', 'flagWeight']);
 
-            // myVote === current vote
-            const dropdown = <FoundationDropdown show={showWeight} onHide={() => this.setState({showWeight: false})} className="Voting__adjust_weight_down">
-                {(myVote == null || myVote === 0) && net_vesting_shares > VOTE_WEIGHT_DROPDOWN_THRESHOLD &&
-                    <div>
-                        <div className="weight-display">- {weight / 100}%</div>
-                        <Slider min={100} max={10000} step={100} value={weight} onChange={this.handleWeightChange} />
-                    </div>
-                }
-                <CloseButton onClick={() => this.setState({showWeight: false})} />
-                <div className="clear Voting__about-flag">
-                    <p>{ABOUT_FLAG}</p>
-                    <a href="#" onClick={this.voteDown} className="button outline" title={tt('g.flag')}>{tt('g.flag')}</a>
+            const flagClickAction = myVote === null || myVote === 0 ? this.toggleWeightDown : this.voteDown
+
+            const dropdown = <FoundationDropdown show={showWeightDown} onHide={() => this.setState({showWeightDown: false})}>
+                <div className="Voting__adjust_weight_down row align-middle collapse">
+                    <a href="#" onClick={this.voteDown} className="columns small-2 confirm_weight" title={tt('g.flag')}><Icon size="2x" name="chevron-down-circle" /></a>
+                    <div className="columns small-2 weight-display">- {weight / 100}%</div>
+                    <Slider min={100} max={10000} step={100} value={weight} className="columns small-6" onChange={this.handleWeightChange} />
+                    <CloseButton className="columns small-2 Voting__adjust_weight_close" onClick={() => this.setState({showWeightDown: false})} />
                 </div>
             </FoundationDropdown>;
 
-            const flagClickAction = myVote === null || myVote === 0 ? this.toggleWeightDown : this.voteDown
-            return <span className="Voting">
-                <span className={classDown}>
-                    {flagWeight > 0 && <span className="Voting__button-downvotes">{"•".repeat(flagWeight)}</span>}
+//            const dropdown = <FoundationDropdown show={showWeight} onHide={() => this.setState({showWeight: false})} className="Voting__adjust_weight_down">
+//                {(myVote == null || myVote === 0) && net_vesting_shares > VOTE_WEIGHT_DROPDOWN_THRESHOLD &&
+//                    <div>
+//                        <div className="weight-display">- {weight / 100}%</div>
+//                        <Slider min={100} max={10000} step={100} value={weight} onChange={this.handleWeightChange} />
+//                    </div>
+//                }
+//                <CloseButton onClick={() => this.setState({showWeight: false})} />
+//                <div className="clear Voting__about-flag">
+//                    <p>{ABOUT_FLAG}</p>
+//                    <a href="#" onClick={this.voteDown} className="button outline" title={tt('g.flag')}>{tt('g.flag')}</a>
+//                </div>
+//            </FoundationDropdown>;
+
+
+            downVote = <span className={classDown}>
                     {votingDownActive ? down : <a href="#" onClick={flagClickAction} title={tt('g.flag')}>{down}</a>}
                     {dropdown}
                 </span>
-            </span>
         }
 
         const total_votes = post_obj.getIn(['stats', 'total_votes']);
@@ -181,7 +180,6 @@ class Voting extends React.Component {
         const pending_payout = parsePayoutAmount(post_obj.get('pending_payout_value'));
         const promoted = parsePayoutAmount(post_obj.get('promoted'));
         const total_author_payout = parsePayoutAmount(post_obj.get('total_payout_value'));
-        const total_curator_payout = parsePayoutAmount(post_obj.get('curator_payout_value'));
 
         const payout = CalculatePayout(post_obj)
 
@@ -259,14 +257,8 @@ class Voting extends React.Component {
                         {votingUpActive ? up : <a href="#" onClick={voteUpClick} title={tt(myVote > 0 ? 'g.remove_vote' : 'g.upvote')}>{up}</a>}
                         {dropdown}
                     </span>
+                    {downVote}
                     {payoutEl}
-                </span>
-                <span className="Voting__inner FoundationDropdownMenu__label" data-tooltip={tt('post_editor.set_curator_percent') + ' ' + curationPercent}>
-                  <Icon
-                      name="editor/k"
-                      size="1x"
-                  />
-                  <span>  {curationPercent}%</span>
                 </span>
                 {voters_list}
             </span>
@@ -278,7 +270,6 @@ export default connect(
     (state, ownProps) => {
         const post = state.global.getIn(['content', ownProps.post])
         if (!post) return ownProps
-        const curationPercent = Math.round(post.get('curation_rewards_percent') / 100)
         const author = post.get('author')
         const permlink = post.get('permlink')
         const active_votes = post.get('active_votes')
@@ -314,7 +305,6 @@ export default connect(
             post_obj: post,
             loggedin: username != null,
             voting,
-            curationPercent
         }
     },
 

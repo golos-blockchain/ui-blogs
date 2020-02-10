@@ -152,6 +152,7 @@
     "unmute": "Unmute",
     "upvote": "Upvote",
     "upvote_post": "Upvote post",
+    "upload": "Upload",
     "username": "Username",
     "version": "Version",
     "video": "Video",
@@ -291,6 +292,8 @@
     "APP_NAME_chat": "%(APP_NAME)s Chat",
     "APP_NAME_app_center": "%(APP_NAME)s App Center",
     "witnesses": "Witnesses",
+    "workers": "Workers",
+    "explorer": "Blockchain Explorer",
     "vote_for_witnesses": "Vote for Witnesses",
     "privacy_policy": "Privacy Policy",
     "payouts_by_tag": "Payouts by tag",
@@ -921,7 +924,14 @@
     },
     "profile_about": "About",
     "profile_location": "Location",
-    "profile_website": "Website"
+    "profile_website": "Website",
+    "rounding_numbers": {
+      "info_message": "Displaying rewards",
+      "integer": "Round up to the whole number",
+      "one_decimal": "One decimal place",
+      "two_decimal": "Two decimal places",
+      "three_decimal": "Three decimal places"
+    }
   },
   "transfer_jsx": {
     "amount_is_in_form": "Amount is in the form 99999.999",

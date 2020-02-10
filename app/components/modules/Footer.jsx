@@ -92,6 +92,12 @@ class Footer extends React.Component {
                         size: '1_5x',
                     },
                     {
+                        name: 'VK',
+                        url: 'https://vk.com/golosclassic',
+                        icon: 'new/vk',
+                        size: '1_5x',
+                    },
+                    {
                         name: 'GitHub',
                         url: 'https://github.com/golos-blockchain',
                         icon: 'github',

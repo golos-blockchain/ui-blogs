@@ -78,24 +78,6 @@ class PostOptions extends React.PureComponent {
 
         return (
             <div className="PostOptions">
-							{(
-                <span className="PostOptions__item-wrapper">
-                    <span
-                        className={cn('PostOptions__item', {
-                            PostOptions__item_active: showCuratorMenu,
-                        })}
-                        onClick={this._onCuratorClick}
-                    >
-                        <Icon
-                            name="editor/k"
-                            size="1_5x"
-                            data-tooltip={tt('post_editor.payout_hint')}
-                        />
-                    </span>
-                    {showCuratorMenu ? this._renderCuratorMenu() : null}
-                </span>
-								)}
-
                 <span className="PostOptions__item-wrapper">
                     <span
                         className={cn('PostOptions__item', {
@@ -124,47 +106,6 @@ class PostOptions extends React.PureComponent {
                     />
                 </span>
             </div>
-        );
-    }
-
-  _renderCuratorMenu() {
-        let { editMode, curationPercent } = this.props;
-        let { minCurationPercent, maxCurationPercent } = this.state;
-
-        let min;
-        let max;
-        let percent;
-        let showCaptions;
-
-        if (editMode) {
-            min = 0;
-            max = 100;
-            percent = curationPercent / 100;
-            showCaptions = false;
-        } else {
-            const actualPercent = Math.round(curationPercent / 100);
-
-            min = Math.ceil(minCurationPercent / 100);
-            max = Math.floor(maxCurationPercent / 100);
-            percent = Math.max(Math.min(actualPercent, max), min);
-            showCaptions = true;
-        }
-
-         return (
-            <Hint align="center" innerRef={this._onBubbleRef}>
-                <CuratorText>
-                    {tt('post_editor.set_curator_percent')}{' '}
-                    <CuratorValue>{percent}%</CuratorValue>
-                </CuratorText>
-            <SliderStyled
-                    value={percent}
-                    min={min}
-                    max={max}
-                    disabled={editMode}
-                    showCaptions
-                    onChange={this.onCurationPercentChange}
-                />
-            </Hint>
         );
     }
 
@@ -199,22 +140,6 @@ class PostOptions extends React.PureComponent {
                 const { showCoinMenu } = this.state;
 
                 if (showCoinMenu && !this._onAwayClickListen) {
-                    window.addEventListener('mousedown', this._onAwayClick);
-                    this._onAwayClickListen = true;
-                }
-            }
-        );
-    };
-
-    _onCuratorClick = () => {
-        this.setState(
-            {
-                showCuratorMenu: !this.state.showCuratorMenu,
-            },
-            () => {
-                const { showCuratorMenu } = this.state;
-
-                if (showCuratorMenu && !this._onAwayClickListen) {
                     window.addEventListener('mousedown', this._onAwayClick);
                     this._onAwayClickListen = true;
                 }
