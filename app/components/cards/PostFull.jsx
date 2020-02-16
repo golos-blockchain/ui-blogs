@@ -21,7 +21,6 @@ import ReplyEditor from 'app/components/elements/ReplyEditor';
 import TagList from 'app/components/elements/TagList';
 import Author from 'app/components/elements/Author';
 import PageViewsCounter from 'app/components/elements/PageViewsCounter';
-import ShareMenu from 'app/components/elements/ShareMenu';
 import Userpic from 'app/components/elements/Userpic';
 import PostFormLoader from 'app/components/modules/PostForm/loader';
 import CommentFormLoader from 'app/components/modules/CommentForm/loader';
@@ -186,73 +185,6 @@ class PostFull extends React.Component {
     onDeletePost = () => {
         const content = this.props.cont.get(this.props.post);
         this.props.deletePost(content.get('author'), content.get('permlink'));
-    };
-
-    fbShare = e => {
-        const href = this.share_params.url;
-        e.preventDefault();
-
-        window.FB.ui(
-            {
-                method: 'share',
-                href,
-            },
-            response => {
-                if (response && !response.error_message) {
-                    serverApiRecordEvent('FbShare', this.share_params.link);
-                }
-            }
-        );
-    };
-
-    twitterShare = e => {
-        e.preventDefault();
-
-        const winWidth = 640;
-        const winHeight = 320;
-        const winTop = screen.height / 2 - winWidth / 2;
-        const winLeft = screen.width / 2 - winHeight / 2;
-        const s = this.share_params;
-
-        const q =
-            'text=' +
-            encodeURIComponent(s.title) +
-            '&url=' +
-            encodeURIComponent(s.url);
-
-        window.open(
-            'http://twitter.com/share?' + q,
-            'Share',
-            `top=${winTop},left=${winLeft},toolbar=0,status=0,width=${winWidth},height=${winHeight}`
-        );
-    };
-
-    vkShare = e => {
-        e.preventDefault();
-        const winWidth = 720;
-        const winHeight = 480;
-        const winTop = screen.height / 2 - winWidth / 2;
-        const winLeft = screen.width / 2 - winHeight / 2;
-
-        window.open(
-            'https://vk.com/share.php?url=' + this.share_params.url,
-            this.share_params,
-            `top=${winTop},left=${winLeft},toolbar=0,status=0,width=${winWidth},height=${winHeight}`
-        );
-    };
-
-    ljShare = e => {
-        e.preventDefault();
-
-        const href = this.share_params.url;
-        const title = this.share_params.title;
-        const desc = this.share_params.desc;
-        const link = `<div><a href=${href}>${title}</a></div>`;
-
-        window.open(
-            `http://www.livejournal.com/update.bml?subject=${title}&event=${desc +
-                link}`
-        );
     };
 
     showPromotePost = () => {
@@ -555,37 +487,6 @@ class PostFull extends React.Component {
         const { username, post } = this.props;
         const { showReply, showEdit } = this.state;
         const { author, permlink } = content;
-
-        const shareMenu = [
-            {
-                link: '#',
-                onClick: this.ljShare,
-                value: 'LJ',
-                title: tt('postfull_jsx.share_on_lj'),
-                icon: 'lj',
-            },
-            {
-                link: '#',
-                onClick: this.vkShare,
-                value: 'VK',
-                title: tt('postfull_jsx.share_on_vk'),
-                icon: 'vk',
-            },
-            {
-                link: '#',
-                onClick: this.fbShare,
-                value: 'Facebook',
-                title: tt('postfull_jsx.share_on_facebook'),
-                icon: 'facebook',
-            },
-            {
-                link: '#',
-                onClick: this.twitterShare,
-                value: 'Twitter',
-                title: tt('postfull_jsx.share_on_twitter'),
-                icon: 'twitter',
-            },
-        ];
 
         const readonly = $STM_Config.read_only_mode;
         const _isPaidout =
