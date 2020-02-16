@@ -549,7 +549,7 @@ class PostFull extends React.Component {
                     </span>
 
                     <span className={"shareMenu"}>
-                        <div className="sharpay_widget_simple" data-sharpay="golid" data-lang="ru" data-height="18" data-form="no" data-align="right" data-limit="3" data-networks="facebook,twitter,vkontakte,odnoklassniki,livejournal"></div>
+                        <div className="sharpay_widget_simple" data-sharpay="golid" data-lang="ru" data-height="18" data-form="no" data-align="right" data-limit="3" data-networks="facebook,twitter,vkontakte,reddit,odnoklassniki,telegram,livejournal,copy"></div>
                     </span>
                 </div>
             </div>
