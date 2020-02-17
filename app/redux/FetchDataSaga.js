@@ -44,6 +44,7 @@ export function* fetchState(location_change_action) {
         yield fork(fetchFollowCount, username)
         yield fork(loadFollows, "getFollowersAsync", username, 'blog')
         yield fork(loadFollows, "getFollowingAsync", username, 'blog')
+        yield fork(loadFollows, "getFollowingAsync", username, 'ignore') // TODO Добавить это и для SSR логики
     }
 
     // `ignore_fetch` case should only trigger on initial page load. No need to call
