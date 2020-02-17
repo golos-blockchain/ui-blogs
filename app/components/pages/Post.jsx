@@ -15,7 +15,6 @@ import { buttonClick } from 'app/utils/Analytics';
 import CTABlock from '../elements/CTA/CTABlock'
 
 class Post extends React.Component {
-
     static propTypes = {
         content: PropTypes.object.isRequired,
         post: PropTypes.string,
@@ -25,6 +24,7 @@ class Post extends React.Component {
         signup_bonus: PropTypes.string,
         current_user: PropTypes.object,
     };
+
     constructor() {
         super();
         this.state = {

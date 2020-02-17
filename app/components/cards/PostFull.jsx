@@ -338,6 +338,12 @@ class PostFull extends React.Component {
     }
 
     _renderReplyEditor(replyParams, jsonMetadata, isEdit) {
+        const { ignoring, username } = this.props;
+
+        if (ignoring && ignoring.has(username)) {
+            return <span className="error">Пользователь не желает получать комментарии</span>
+        }
+
         return (
             <CommentFormLoader
                 editMode={isEdit}
@@ -347,7 +353,7 @@ class PostFull extends React.Component {
                 onSuccess={this._onEditFinish}
                 onCancel={this._onEditFinish}
             />
-        );
+        )
     }
 
     _renderContent(postContent, content, jsonMetadata, authorRepLog10) {
@@ -484,13 +490,14 @@ class PostFull extends React.Component {
     }
 
     _renderFooter(postContent, content, link, authorRepLog10) {
-        const { username, post } = this.props;
+        const { username, post, ignoring } = this.props;
         const { showReply, showEdit } = this.state;
         const { author, permlink } = content;
 
         const readonly = $STM_Config.read_only_mode;
         const _isPaidout =
             postContent.get('cashout_time') === '1969-12-31T23:59:59';
+
         const showReplyOption = postContent.get('depth') < 255;
         const showEditOption = username === author;
         const showDeleteOption =
@@ -519,7 +526,7 @@ class PostFull extends React.Component {
                                 <a onClick={this.onShowReply}>
                                     {tt('g.reply')}
                                 </a>
-                            ) : null}{' '}
+                            ) : <span className="error" title={"Пользователь не желает получать комментарии"}>{tt('g.reply')}</span>}
                             {showEditOption && !showEdit ? (
                                 <a onClick={this.onShowEdit}>{tt('g.edit')}</a>
                             ) : null}{' '}
@@ -582,10 +589,20 @@ function saveOnShow(formId, type) {
 }
 
 export default connect(
-    (state, props) => ({
-        ...props,
-        username: state.user.getIn(['current', 'username']),
-    }),
+    (state, props) => {
+        const username = state.user.getIn(['current', 'username'])
+
+        const curr_blog_author = props.cont.get(props.post).get('author')
+        const key = ['follow', 'getFollowingAsync', curr_blog_author, 'ignore_result']
+        const ignoring = state.global.getIn(key)
+
+        return {
+            ...props,
+            username,
+            ignoring
+        }
+    },
+
     dispatch => ({
         dispatchSubmit(data) {
             dispatch(user.actions.usernamePasswordLogin({ ...data }));
