@@ -122,6 +122,7 @@ class Post extends React.Component {
                     sortOrder={sort_order}
                     showNegativeComments={showNegativeComments}
                     onHide={this.onHideComment}
+                    ignoreList={ignoring}
                 />)
             );
 
