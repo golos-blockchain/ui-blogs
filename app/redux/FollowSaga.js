@@ -39,8 +39,9 @@ export function* loadFollows(method, account, type, force = false) {
         payload: {
             key: ['follow', method, account],
             notSet: Map(),
-            updater: m => m.set(type + '_loading', true),
-    }})
+            updater: m => m.set(type + '_loading', true)
+        }
+    })
 
     yield loadFollowsLoop(method, account, type)
 }

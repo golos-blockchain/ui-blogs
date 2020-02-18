@@ -21,7 +21,6 @@ import ReplyEditor from 'app/components/elements/ReplyEditor';
 import TagList from 'app/components/elements/TagList';
 import Author from 'app/components/elements/Author';
 import PageViewsCounter from 'app/components/elements/PageViewsCounter';
-import ShareMenu from 'app/components/elements/ShareMenu';
 import Userpic from 'app/components/elements/Userpic';
 import PostFormLoader from 'app/components/modules/PostForm/loader';
 import CommentFormLoader from 'app/components/modules/CommentForm/loader';
@@ -188,73 +187,6 @@ class PostFull extends React.Component {
         this.props.deletePost(content.get('author'), content.get('permlink'));
     };
 
-    fbShare = e => {
-        const href = this.share_params.url;
-        e.preventDefault();
-
-        window.FB.ui(
-            {
-                method: 'share',
-                href,
-            },
-            response => {
-                if (response && !response.error_message) {
-                    serverApiRecordEvent('FbShare', this.share_params.link);
-                }
-            }
-        );
-    };
-
-    twitterShare = e => {
-        e.preventDefault();
-
-        const winWidth = 640;
-        const winHeight = 320;
-        const winTop = screen.height / 2 - winWidth / 2;
-        const winLeft = screen.width / 2 - winHeight / 2;
-        const s = this.share_params;
-
-        const q =
-            'text=' +
-            encodeURIComponent(s.title) +
-            '&url=' +
-            encodeURIComponent(s.url);
-
-        window.open(
-            'http://twitter.com/share?' + q,
-            'Share',
-            `top=${winTop},left=${winLeft},toolbar=0,status=0,width=${winWidth},height=${winHeight}`
-        );
-    };
-
-    vkShare = e => {
-        e.preventDefault();
-        const winWidth = 720;
-        const winHeight = 480;
-        const winTop = screen.height / 2 - winWidth / 2;
-        const winLeft = screen.width / 2 - winHeight / 2;
-
-        window.open(
-            'https://vk.com/share.php?url=' + this.share_params.url,
-            this.share_params,
-            `top=${winTop},left=${winLeft},toolbar=0,status=0,width=${winWidth},height=${winHeight}`
-        );
-    };
-
-    ljShare = e => {
-        e.preventDefault();
-
-        const href = this.share_params.url;
-        const title = this.share_params.title;
-        const desc = this.share_params.desc;
-        const link = `<div><a href=${href}>${title}</a></div>`;
-
-        window.open(
-            `http://www.livejournal.com/update.bml?subject=${title}&event=${desc +
-                link}`
-        );
-    };
-
     showPromotePost = () => {
         const postContent = this.props.cont.get(this.props.post);
 
@@ -406,6 +338,12 @@ class PostFull extends React.Component {
     }
 
     _renderReplyEditor(replyParams, jsonMetadata, isEdit) {
+        const { ignoring, username } = this.props;
+
+        if (ignoring && ignoring.has(username)) {
+            return <span className="error">Вы заблокированы в данном блоге.</span>
+        }
+
         return (
             <CommentFormLoader
                 editMode={isEdit}
@@ -415,7 +353,7 @@ class PostFull extends React.Component {
                 onSuccess={this._onEditFinish}
                 onCancel={this._onEditFinish}
             />
-        );
+        )
     }
 
     _renderContent(postContent, content, jsonMetadata, authorRepLog10) {
@@ -552,44 +490,14 @@ class PostFull extends React.Component {
     }
 
     _renderFooter(postContent, content, link, authorRepLog10) {
-        const { username, post } = this.props;
+        const { username, post, ignoring } = this.props;
         const { showReply, showEdit } = this.state;
         const { author, permlink } = content;
-
-        const shareMenu = [
-            {
-                link: '#',
-                onClick: this.ljShare,
-                value: 'LJ',
-                title: tt('postfull_jsx.share_on_lj'),
-                icon: 'lj',
-            },
-            {
-                link: '#',
-                onClick: this.vkShare,
-                value: 'VK',
-                title: tt('postfull_jsx.share_on_vk'),
-                icon: 'vk',
-            },
-            {
-                link: '#',
-                onClick: this.fbShare,
-                value: 'Facebook',
-                title: tt('postfull_jsx.share_on_facebook'),
-                icon: 'facebook',
-            },
-            {
-                link: '#',
-                onClick: this.twitterShare,
-                value: 'Twitter',
-                title: tt('postfull_jsx.share_on_twitter'),
-                icon: 'twitter',
-            },
-        ];
 
         const readonly = $STM_Config.read_only_mode;
         const _isPaidout =
             postContent.get('cashout_time') === '1969-12-31T23:59:59';
+
         const showReplyOption = postContent.get('depth') < 255;
         const showEditOption = username === author;
         const showDeleteOption =
@@ -618,7 +526,7 @@ class PostFull extends React.Component {
                                 <a onClick={this.onShowReply}>
                                     {tt('g.reply')}
                                 </a>
-                            ) : null}{' '}
+                            ) : <span className="error" title={"Пользователь не желает получать комментарии"}>{tt('g.reply')}</span>}
                             {showEditOption && !showEdit ? (
                                 <a onClick={this.onShowEdit}>{tt('g.edit')}</a>
                             ) : null}{' '}
@@ -648,7 +556,7 @@ class PostFull extends React.Component {
                     </span>
 
                     <span className={"shareMenu"}>
-                        <div className="sharpay_widget_simple" data-sharpay="golid" data-lang="ru" data-height="18" data-form="no" data-align="right" data-limit="3" data-networks="facebook,twitter,vkontakte,odnoklassniki,livejournal"></div>
+                        <div className="sharpay_widget_simple" data-sharpay="golid" data-lang="ru" data-height="18" data-form="no" data-align="right" data-limit="3" data-networks="facebook,twitter,vkontakte,reddit,odnoklassniki,telegram,livejournal,copy"></div>
                     </span>
                 </div>
             </div>
@@ -681,10 +589,20 @@ function saveOnShow(formId, type) {
 }
 
 export default connect(
-    (state, props) => ({
-        ...props,
-        username: state.user.getIn(['current', 'username']),
-    }),
+    (state, props) => {
+        const username = state.user.getIn(['current', 'username'])
+
+        const curr_blog_author = props.cont.get(props.post).get('author')
+        const key = ['follow', 'getFollowingAsync', curr_blog_author, 'ignore_result']
+        const ignoring = state.global.getIn(key)
+
+        return {
+            ...props,
+            username,
+            ignoring
+        }
+    },
+
     dispatch => ({
         dispatchSubmit(data) {
             dispatch(user.actions.usernamePasswordLogin({ ...data }));

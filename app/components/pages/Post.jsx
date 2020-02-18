@@ -15,7 +15,6 @@ import { buttonClick } from 'app/utils/Analytics';
 import CTABlock from '../elements/CTA/CTABlock'
 
 class Post extends React.Component {
-
     static propTypes = {
         content: PropTypes.object.isRequired,
         post: PropTypes.string,
@@ -25,6 +24,7 @@ class Post extends React.Component {
         signup_bonus: PropTypes.string,
         current_user: PropTypes.object,
     };
+
     constructor() {
         super();
         this.state = {
@@ -122,6 +122,7 @@ class Post extends React.Component {
                     sortOrder={sort_order}
                     showNegativeComments={showNegativeComments}
                     onHide={this.onHideComment}
+                    ignoreList={ignoring}
                 />)
             );
 
@@ -234,13 +235,28 @@ class Post extends React.Component {
 
 const emptySet = Set()
 
-export default connect(state => {
+export default connect((state, props) => {
     const current_user = state.user.get('current')
-    let ignoring
-    if(current_user) {
-        const key = ['follow', 'getFollowingAsync', current_user.get('username'), 'ignore_result']
+
+    let { post } = props;
+    if (!post) {
+        const route_params = props.routeParams;
+        post = route_params.username + '/' + route_params.slug;
+    }
+    const dis = state.global.get('content').get(post);
+
+    let ignoring = new Set()
+
+    if (dis && state.global.get('follow')) {
+        const key = ['follow', 'getFollowingAsync', dis.get('author'), 'ignore_result']
         ignoring = state.global.getIn(key, emptySet)
     }
+
+    if (current_user) {
+        const key = ['follow', 'getFollowingAsync', current_user.get('username'), 'ignore_result']
+        ignoring = new Set([...ignoring, ...state.global.getIn(key, emptySet)])
+    }
+
     return {
         content: state.global.get('content'),
         signup_bonus: state.offchain.get('signup_bonus'),

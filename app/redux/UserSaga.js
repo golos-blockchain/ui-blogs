@@ -123,7 +123,7 @@ function* usernamePasswordLogin(action) {
   // Sets 'loading' while the login is taking place.  The key generation can take a while on slow computers.
     yield call(usernamePasswordLogin2, action)
     const current = yield select(state => state.user.get('current'))
-    if(current) {
+    if (current) {
         const username = current.get('username')
         yield fork(loadFollows, "getFollowingAsync", username, 'blog')
         yield fork(loadFollows, "getFollowingAsync", username, 'ignore')

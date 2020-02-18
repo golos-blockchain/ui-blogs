@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router'
 import Icon from 'app/components/elements/Icon.jsx';
 
+// FIXME Unused component
 export default class ShareMenu extends React.Component {
 
     static propTypes = {

@@ -118,6 +118,7 @@ class CommentImpl extends PureComponent {
             showNegativeComments,
             ignoreList,
             sortOrder,
+            username
         } = this.props;
 
         const post = comment.author + '/' + comment.permlink;
@@ -183,6 +184,7 @@ class CommentImpl extends PureComponent {
                         rootComment={this._getRootComment(comment)}
                         showNegativeComments={showNegativeComments}
                         onHide={this.props.onHide}
+                        ignoreList={ignoreList}
                     />
                 ));
             }
@@ -201,6 +203,10 @@ class CommentImpl extends PureComponent {
                     onCancel={this._onCancel}
                 />
             );
+        }
+
+        if (ignoreList && ignoreList.has(username)) {
+            renderedEditor = <span className="error">Вы заблокированы в данном блоге.</span>
         }
 
         return (
@@ -395,23 +401,12 @@ const Comment = connect(
         const { content } = props;
 
         const username = state.user.getIn(['current', 'username']);
-        let ignoreList = null;
-
-        if (username) {
-            ignoreList = state.global.getIn([
-                'follow',
-                'getFollowingAsync',
-                username,
-                'ignore_result',
-            ]);
-        }
 
         return {
             ...props,
             // Using a hash here is not standard but intentional; see issue #124 for details
             anchorLink: '#@' + content,
             username,
-            ignoreList,
         };
     },
     {

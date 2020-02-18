@@ -44,14 +44,15 @@ export function* fetchState(location_change_action) {
         yield fork(fetchFollowCount, username)
         yield fork(loadFollows, "getFollowersAsync", username, 'blog')
         yield fork(loadFollows, "getFollowingAsync", username, 'blog')
+        yield fork(loadFollows, "getFollowingAsync", username, 'ignore')
     }
 
     // `ignore_fetch` case should only trigger on initial page load. No need to call
     // fetchState immediately after loading fresh state from the server. Details: #593
     const server_location = yield select(state => state.offchain.get('server_location'))
-    const ignore_fetch = (pathname === server_location && is_initial_state)
+    //const ignore_fetch = (pathname === server_location && is_initial_state)
     is_initial_state = false
-    if(ignore_fetch) return
+    //if(ignore_fetch) return
 
     let url = `${pathname}`
     if (url === '/') url = 'trending'
@@ -179,6 +180,10 @@ export function* fetchState(location_change_action) {
 
         } else if (parts.length === 3 && parts[1].length > 0 && parts[1][0] == '@') {
             const account = parts[1].substr(1)
+
+            // Fetch for ignored follow for hide comments
+            yield fork(loadFollows, "getFollowingAsync", account, 'ignore')
+
             const category = parts[0]
             const permlink = parts[2]
     
