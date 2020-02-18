@@ -184,6 +184,7 @@ class CommentImpl extends PureComponent {
                         rootComment={this._getRootComment(comment)}
                         showNegativeComments={showNegativeComments}
                         onHide={this.props.onHide}
+                        ignoreList={ignoreList}
                     />
                 ));
             }
