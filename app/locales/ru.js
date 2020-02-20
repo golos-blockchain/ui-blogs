@@ -359,7 +359,7 @@ const ru = {
   hide: 'Скрыть',
   show: 'Показать',
   sort_order: 'Порядок сортировки',
-  comments_were_hidden_due_to_low_ratings: 'Комментарии были скрыты из-за низкого рейтинга',
+  comments_were_hidden_due_to_low_ratings: 'Комментарии были скрыты из-за низкого рейтинга или заблокированы автором блога',
   we_will_be_unable_to_create_account_with_this_browser: 'У нас не получится создать аккаунт используя этот браузер',
   you_need_to_logout_before_creating_account: 'Вам нужно {logoutLink} прежде чем вы сможете создать другой аккаунт',
   APP_NAME_can_only_register_one_account_per_verified_user: 'Пожалуйста, имейте ввиду что ' + APP_NAME + ' может регистрировть только один аккаунт для каждого подтвержденного пользователя',
