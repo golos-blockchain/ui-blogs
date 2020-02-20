@@ -36,6 +36,7 @@ class CommentImpl extends PureComponent {
         anchorLink: PropTypes.string.isRequired,
         deletePost: PropTypes.func.isRequired,
         ignoreList: PropTypes.any,
+        negativeCommenters: PropTypes.any
     };
 
     static defaultProps = {
@@ -54,6 +55,15 @@ class CommentImpl extends PureComponent {
 
     componentWillMount() {
         const content = this.props.cont.get(this.props.content);
+        const hide = hideSubtree(this.props.cont, this.props.content);
+
+        this.setState({
+            hideBody: hide || content.getIn(['stats', 'gray']),
+        })
+    }
+
+    componentWillUpdate() {
+        const content = this.props.cont.get(this.props.content);
 
         if (content) {
             this._checkHide(content);
@@ -66,7 +76,13 @@ class CommentImpl extends PureComponent {
      *    it hides the comment body (but not the header) until the "reveal comment" link is clicked.
      */
     _checkHide(content) {
-        const hide = hideSubtree(this.props.cont, this.props.content);
+        let hide = false
+
+        if (this.props.negativeCommenters.has(content.get('author'))) {
+            hide = true
+        } else {
+            hide = hideSubtree(this.props.cont, this.props.content);
+        }
 
         if (hide) {
             const { onHide } = this.props;
@@ -78,7 +94,6 @@ class CommentImpl extends PureComponent {
 
         this.setState({
             hide,
-            hideBody: hide || content.getIn(['stats', 'gray']),
         });
     }
 
@@ -117,14 +132,17 @@ class CommentImpl extends PureComponent {
             anchorLink,
             showNegativeComments,
             ignoreList,
+            negativeCommenters,
             sortOrder,
-            username
+            username,
         } = this.props;
 
         const post = comment.author + '/' + comment.permlink;
         const { showReply, showEdit, hide, hideBody } = this.state;
 
         const ignore = ignoreList && ignoreList.has(comment.author);
+
+        const blocked = negativeCommenters.has(comment.author)
 
         if (!showNegativeComments && (hide || ignore)) {
             return null;
@@ -185,6 +203,7 @@ class CommentImpl extends PureComponent {
                         showNegativeComments={showNegativeComments}
                         onHide={this.props.onHide}
                         ignoreList={ignoreList}
+                        negativeCommenters={negativeCommenters}
                     />
                 ));
             }
@@ -228,7 +247,7 @@ class CommentImpl extends PureComponent {
                 </div>
                 <div
                     className={cn({
-                        downvoted: ignore || gray,
+                        downvoted: ignore || gray || blocked,
                         highlighted: this.state.highlight,
                     })}
                 >
