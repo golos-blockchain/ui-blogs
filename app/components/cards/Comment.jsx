@@ -36,6 +36,7 @@ class CommentImpl extends PureComponent {
         anchorLink: PropTypes.string.isRequired,
         deletePost: PropTypes.func.isRequired,
         ignoreList: PropTypes.any,
+        negativeCommenters: PropTypes.any
     };
 
     static defaultProps = {
@@ -56,30 +57,8 @@ class CommentImpl extends PureComponent {
         const content = this.props.cont.get(this.props.content);
 
         if (content) {
-            this._checkHide(content);
+            this._checkHide(content, this.props.negativeCommenters);
         }
-    }
-
-    /**
-     * - `hide` is based on author reputation, and will hide the entire post on initial render.
-     * - `hideBody` is true when comment rshares OR author rep is negative.
-     *    it hides the comment body (but not the header) until the "reveal comment" link is clicked.
-     */
-    _checkHide(content) {
-        const hide = hideSubtree(this.props.cont, this.props.content);
-
-        if (hide) {
-            const { onHide } = this.props;
-
-            if (onHide) {
-                onHide();
-            }
-        }
-
-        this.setState({
-            hide,
-            hideBody: hide || content.getIn(['stats', 'gray']),
-        });
     }
 
     componentDidMount() {
@@ -93,6 +72,44 @@ class CommentImpl extends PureComponent {
                 this.setState({ highlight: true });
             }
         }
+    }
+
+    componentWillReceiveProps(np) {
+        const content = np.cont.get(np.content);
+
+        if (content) {
+            this._checkHide(content, np.negativeCommenters);
+        }
+    }
+
+    /**
+     * - `hide` is based on author reputation, and will hide the entire post on initial render.
+     * - `hideBody` is true when comment rshares OR author rep is negative.
+     *    it hides the comment body (but not the header) until the "reveal comment" link is clicked.
+     */
+    _checkHide(content, negativeCommenters) {
+        let hide = hideSubtree(this.props.cont, this.props.content)
+
+        if (content) {
+            const comment = content.toJS()
+            if (negativeCommenters.has(comment.author)) {
+                hide = true
+            }
+        }
+
+
+        if (hide) {
+            const { onHide } = this.props;
+
+            if (onHide) {
+                onHide();
+            }
+        }
+
+        this.setState({
+            hide,
+            hideBody: hide || content.getIn(['stats', 'gray']),
+        });
     }
 
     render() {
@@ -117,8 +134,10 @@ class CommentImpl extends PureComponent {
             anchorLink,
             showNegativeComments,
             ignoreList,
+            negativeCommenters,
             sortOrder,
-            username
+            username,
+            blocked
         } = this.props;
 
         const post = comment.author + '/' + comment.permlink;
@@ -185,6 +204,7 @@ class CommentImpl extends PureComponent {
                         showNegativeComments={showNegativeComments}
                         onHide={this.props.onHide}
                         ignoreList={ignoreList}
+                        negativeCommenters={negativeCommenters}
                     />
                 ));
             }
@@ -205,7 +225,7 @@ class CommentImpl extends PureComponent {
             );
         }
 
-        if (ignoreList && ignoreList.has(username)) {
+        if (negativeCommenters && negativeCommenters.has(username)) {
             renderedEditor = <span className="error">Вы заблокированы в данном блоге.</span>
         }
 
@@ -228,7 +248,7 @@ class CommentImpl extends PureComponent {
                 </div>
                 <div
                     className={cn({
-                        downvoted: ignore || gray,
+                        downvoted: ignore || gray || blocked,
                         highlighted: this.state.highlight,
                     })}
                 >
@@ -398,12 +418,20 @@ class CommentImpl extends PureComponent {
 
 const Comment = connect(
     (state, props) => {
-        const { content } = props;
+        const { cont, content, negativeCommenters } = props;
 
         const username = state.user.getIn(['current', 'username']);
+        const dis = cont.get(content);
+        let blocked = false
+
+        if (dis) {
+            const comment = dis.toJS()
+            blocked = negativeCommenters.has(comment.author)
+        }
 
         return {
             ...props,
+            blocked,
             // Using a hash here is not standard but intentional; see issue #124 for details
             anchorLink: '#@' + content,
             username,

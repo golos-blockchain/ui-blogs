@@ -23,6 +23,7 @@ class Post extends React.Component {
         location: PropTypes.object,
         signup_bonus: PropTypes.string,
         current_user: PropTypes.object,
+        negativeCommenters: PropTypes.any,
     };
 
     constructor() {
@@ -56,12 +57,10 @@ class Post extends React.Component {
     }
 
     render() {
-        const LIQUID_TOKEN = tt('token_names.LIQUID_TOKEN')
-
-        const {current_user, ignoring, signup_bonus, content} = this.props
+        const {ignoring, content, negativeCommenters} = this.props
         const {showNegativeComments, commentHidden, showAnyway} = this.state
-        let post = this.props.post;
-        const aiPosts = this.props.aiPosts;
+        let { post } = this.props;
+        const { aiPosts } = this.props;
         if (!post) {
             const route_params = this.props.routeParams;
             post = route_params.username + '/' + route_params.slug;
@@ -123,6 +122,7 @@ class Post extends React.Component {
                     showNegativeComments={showNegativeComments}
                     onHide={this.onHideComment}
                     ignoreList={ignoring}
+                    negativeCommenters={negativeCommenters}
                 />)
             );
 
@@ -246,15 +246,16 @@ export default connect((state, props) => {
     const dis = state.global.get('content').get(post);
 
     let ignoring = new Set()
+    let negativeCommenters = new Set()
 
     if (dis && state.global.get('follow')) {
         const key = ['follow', 'getFollowingAsync', dis.get('author'), 'ignore_result']
-        ignoring = state.global.getIn(key, emptySet)
+        negativeCommenters = state.global.getIn(key, emptySet)
     }
 
     if (current_user) {
         const key = ['follow', 'getFollowingAsync', current_user.get('username'), 'ignore_result']
-        ignoring = new Set([...ignoring, ...state.global.getIn(key, emptySet)])
+        ignoring = state.global.getIn(key, emptySet)
     }
 
     return {
@@ -262,6 +263,7 @@ export default connect((state, props) => {
         signup_bonus: state.offchain.get('signup_bonus'),
         current_user,
         ignoring,
+        negativeCommenters
     }
 }
 )(Post);
