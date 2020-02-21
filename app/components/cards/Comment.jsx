@@ -55,46 +55,10 @@ class CommentImpl extends PureComponent {
 
     componentWillMount() {
         const content = this.props.cont.get(this.props.content);
-        const hide = hideSubtree(this.props.cont, this.props.content);
-
-        this.setState({
-            hideBody: hide || content.getIn(['stats', 'gray']),
-        })
-    }
-
-    componentWillUpdate() {
-        const content = this.props.cont.get(this.props.content);
 
         if (content) {
-            this._checkHide(content);
+            this._checkHide(content, this.props.negativeCommenters);
         }
-    }
-
-    /**
-     * - `hide` is based on author reputation, and will hide the entire post on initial render.
-     * - `hideBody` is true when comment rshares OR author rep is negative.
-     *    it hides the comment body (but not the header) until the "reveal comment" link is clicked.
-     */
-    _checkHide(content) {
-        let hide = false
-
-        if (this.props.negativeCommenters.has(content.get('author'))) {
-            hide = true
-        } else {
-            hide = hideSubtree(this.props.cont, this.props.content);
-        }
-
-        if (hide) {
-            const { onHide } = this.props;
-
-            if (onHide) {
-                onHide();
-            }
-        }
-
-        this.setState({
-            hide,
-        });
     }
 
     componentDidMount() {
@@ -108,6 +72,44 @@ class CommentImpl extends PureComponent {
                 this.setState({ highlight: true });
             }
         }
+    }
+
+    componentWillReceiveProps(np) {
+        const content = np.cont.get(np.content);
+
+        if (content) {
+            this._checkHide(content, np.negativeCommenters);
+        }
+    }
+
+    /**
+     * - `hide` is based on author reputation, and will hide the entire post on initial render.
+     * - `hideBody` is true when comment rshares OR author rep is negative.
+     *    it hides the comment body (but not the header) until the "reveal comment" link is clicked.
+     */
+    _checkHide(content, negativeCommenters) {
+        let hide = hideSubtree(this.props.cont, this.props.content)
+
+        if (content) {
+            const comment = content.toJS()
+            if (negativeCommenters.has(comment.author)) {
+                hide = true
+            }
+        }
+
+
+        if (hide) {
+            const { onHide } = this.props;
+
+            if (onHide) {
+                onHide();
+            }
+        }
+
+        this.setState({
+            hide,
+            hideBody: hide || content.getIn(['stats', 'gray']),
+        });
     }
 
     render() {
@@ -135,14 +137,13 @@ class CommentImpl extends PureComponent {
             negativeCommenters,
             sortOrder,
             username,
+            blocked
         } = this.props;
 
         const post = comment.author + '/' + comment.permlink;
         const { showReply, showEdit, hide, hideBody } = this.state;
 
         const ignore = ignoreList && ignoreList.has(comment.author);
-
-        const blocked = negativeCommenters.has(comment.author)
 
         if (!showNegativeComments && (hide || ignore)) {
             return null;
@@ -417,12 +418,20 @@ class CommentImpl extends PureComponent {
 
 const Comment = connect(
     (state, props) => {
-        const { content } = props;
+        const { cont, content, negativeCommenters } = props;
 
         const username = state.user.getIn(['current', 'username']);
+        const dis = cont.get(content);
+        let blocked = false
+
+        if (dis) {
+            const comment = dis.toJS()
+            blocked = negativeCommenters.has(comment.author)
+        }
 
         return {
             ...props,
+            blocked,
             // Using a hash here is not standard but intentional; see issue #124 for details
             anchorLink: '#@' + content,
             username,
