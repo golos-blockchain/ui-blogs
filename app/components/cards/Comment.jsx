@@ -225,7 +225,7 @@ class CommentImpl extends PureComponent {
             );
         }
 
-        if (ignoreList && ignoreList.has(username)) {
+        if (negativeCommenters && negativeCommenters.has(username)) {
             renderedEditor = <span className="error">Вы заблокированы в данном блоге.</span>
         }
 
