@@ -17,14 +17,13 @@ class Start extends React.Component {
         let simpleAnswer = <p className='landing-start-block-text'>
             <b>{'Golos.id '}</b>
             — это блог-платформа на <span data-tip='Блокчейн — распределенная база данных'>блокчейне <ReactTooltip type='light' effect="solid" /></span>, где
-            пользователи могут публиковать записи и голосовать за понравившиеся статьи.
-            Голосуя за понравившуюся статью, они вознаграждают ее своими «голосами», которые
-            можно перевести в реальные деньги.
+            публикуя интересные посты можно получить и весьма реальное вознаграждение от других пользователей.
+            Вы также участвуете и в ранжировании контента голосуя за или против постов.
         </p>
 
         let difAnswer = <p className='landing-start-block-text'>
-            Каждый день мы отдаем все <span data-tip='Майнинг — деятельность по поддержанию блокчейна'>намайненое <ReactTooltip type='light' effect="solid" /> </span> в пул вознаграждения авторов. Он распределяется в зависимости от количества
-            «голосов» пользователей под каждой публикацией.
+            В режиме реального времени большая часть эмиссии токенов блокчейна поступает в пул вестинга, из которого каждый пользователь согласно своей доли от общего количества Силы Голоса - получает процент на баланс.
+            Именно с этого баланса у каждого пользователя есть возможность и отблагодарить авторов понравившегося контента.
         </p>
 
         return (
@@ -97,20 +96,19 @@ class Start extends React.Component {
                             <div className='column large-3 medium-3 small-6'>
                                 <Icon name='team' size='10x'/>
                                 <h5>Социальная значимость</h5>
-                                <p className='landing-start-block-icon-text'>Наше сообщество ценит мнения, истории и творческий контент.</p>
+                                <p className='landing-start-block-icon-text'>Наше сообщество ценит мнения, интересные истории и творческий контент</p>
                             </div>
                             <div className='column large-3 medium-3 small-6'>
                                 <Icon name='money' size='10x'/>
                                 <h5>Выгодно для блогинга</h5>
-                                <p className='landing-start-block-icon-text'>Мы вознаграждаем как авторов, так и
-                                    читателей — тех, кто оценивает и комментирует публикации</p>
+                                <p className='landing-start-block-icon-text'>Каждый может получить вознаграждение, как за интересный пост, так и просто за развернутый комментарий</p>
 
                             </div>
                             <div className='column large-3 medium-3 small-6'>
                                 <Icon name='rocket' size='10x'/>
                                 <h5>В интересах каждого</h5>
-                                <p className='landing-start-block-icon-text'>Писать можно обо всем на свете —
-                                    расскажите о ракетостроении или выложите фотографию любимого кота</p>
+                                <p className='landing-start-block-icon-text'>Писать можно обо всём на свете —
+                                    расскажите о ракетостроении или выложите красочные фотографии с отпуска</p>
 
                             </div>
                             <div className='column large-3 medium-3 small-6'>
@@ -123,36 +121,6 @@ class Start extends React.Component {
 
                             <div className='landing-start-block-center column large-12 medium-12 small-12'>
                                 <a href="/create_account" className="button">Создать аккаунт</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className='landing-start-block'>
-                    <div className='column large-12 medium-12 small-12'>
-                        <h2>О нас говорят</h2>
-                        <div className='column large-12 medium-12 small-12'>
-                            <hr/>
-                        </div>
-                        <div className='column large-12 medium-12 small-12'>
-                            <div className='row'>
-                                <div className='landing-start-person column large-3 medium-3 small-3'>
-                                    <img
-                                        className='landing-start-round-img'
-                                        src='https://imgp.golos.id/120x120/https://images.golos.id/DQmQh3z15LkKqHcBUUfZedzed6Y263rvzJ9F7gn3beUgXrR/vv_ava.jpg'/>
-                                    <p>
-                                        <b>Познер Online</b>
-                                    </p>
-                                    <a href="/@pozneronline">@pozneronline</a>
-                                </div>
-                                <div className='column large-9 medium-9 small-9'>
-                                    <p className='landing-start-block-text'>
-                                        «Считаем «Голос» перспективным проектом и постараемся привлечь на него как можно
-                                        больше пользователей»
-                                    </p>
-                                </div>
-                                <div className='landing-start-block-center column large-12 medium-12 small-12'>
-                                    <a href="/create_account" className="button">Создать аккаунт</a>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -174,7 +142,7 @@ class Start extends React.Component {
                                     <div className='column large-10 medium-10 small-10'>
                                         <h3 className=''>
                                             Регистрация<br/>
-                                            бесплатна
+                                            совершенно бесплатна
                                         </h3>
                                     </div>
                                 </div>
@@ -186,7 +154,7 @@ class Start extends React.Component {
                                     </div>
                                     <div className='column large-10 medium-10 small-10'>
                                         <h3 className=''>
-                                            Вознаграждаем
+                                            Вознаграждения
                                             <br/>с первой публикации
                                         </h3>
                                     </div>
@@ -208,8 +176,7 @@ class Start extends React.Component {
                             <div className='column large-12 medium-12 small-12'>
                                 <p className='landing-start-block-text landing-start-block-center'>
                                     У нас есть собственная <a href='https://wiki.golos.id/'>Википедия</a>,
-                                    со всей информацией про блог-платформу Golos.id. Кроме того, мы
-                                    оперативно ответим на любой технический вопрос в нашей группе в <a href='https://t.me/golos_id_issue'>Телеграме</a>.</p>
+                                    со всей информацией про блог-платформу Golos.id. Кроме того, получить ответы на многие вопросы можно и у сообщества в нашей группе в <a href='https://t.me/golos_id'>Телеграме</a>.</p>
                             </div>
                         </div>
                     </div>
