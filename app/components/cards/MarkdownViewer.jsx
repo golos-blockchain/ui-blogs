@@ -6,8 +6,11 @@ import cn from 'classnames';
 import tt from 'counterpart';
 import sanitize from 'sanitize-html';
 import HtmlReady from 'shared/HtmlReady';
+import { getTags } from 'shared/HtmlReady'
 import YoutubePlayer from 'app/components/elements/common/YoutubePlayer/YoutubePlayer';
 import sanitizeConfig, { noImageText } from 'app/utils/SanitizeConfig';
+import Lightbox from 'lightbox-react';
+import 'lightbox-react/style.css';
 
 let remarkable = null;
 
@@ -47,10 +50,18 @@ class MarkdownViewer extends Component {
     constructor(props) {
         super(props);
 
-        this.state = {
-            allowNoImage: true,
-        };
+        this.images = [];
+        this.imagesAlts = [];
+
+        this.handleContentClick = this.handleContentClick.bind(this);
     }
+
+    state = {
+      allowNoImage: true,
+
+      lightboxOpen: false,
+      lightboxIndex: 0
+    };
 
     shouldComponentUpdate(np, ns) {
         return (
@@ -58,17 +69,36 @@ class MarkdownViewer extends Component {
             np.large !== this.props.large ||
             // np.formId !== this.props.formId ||
             np.canEdit !== this.props.canEdit ||
-            ns.allowNoImage !== this.state.allowNoImage
+            ns.allowNoImage !== this.state.allowNoImage ||
+            ns.lightboxOpen !== this.state.lightboxOpen ||
+            ns.lightboxIndex !== this.state.lightboxIndex
         );
     }
 
     onAllowNoImage = () => {
-        this.setState({ allowNoImage: false });
+        this.setState({ ...this.state, allowNoImage: false });
     };
+
+    handleContentClick(e) {
+      if (e.target.tagName === 'IMG' && this.images) {
+        const tags = this.contentDiv.getElementsByTagName('img');
+        for (let i = 0; i < tags.length; i += 1) {
+          if (tags[i] === e.target && this.images.length > i) {
+            if (e.target.parentNode && e.target.parentNode.tagName === 'A') return;
+            this.setState({
+              ...this.state,
+
+              lightboxOpen: true,
+              lightboxIndex: i
+            })
+          }
+        }
+      }
+    }
 
     render() {
         const { noImage, className, large, highQualityPost } = this.props;
-        const { allowNoImage } = this.state;
+        const { allowNoImage, lightboxOpen, lightboxIndex } = this.state;
 
         let text = this.props.text || '';
 
@@ -130,6 +160,9 @@ class MarkdownViewer extends Component {
             );
             return <div />;
         }
+
+        const rtags = getTags(cleanText);
+        this.images = Array.from(rtags.images);
 
         const noImageActive = cleanText.indexOf(noImageText) !== -1;
 
@@ -227,12 +260,17 @@ class MarkdownViewer extends Component {
         }
 
         return (
-            <div
-                className={cn('MarkdownViewer Markdown', className, {
-                    html: isHtml,
-                    'MarkdownViewer--small': !large,
-                })}
-            >
+          <div
+              role="presentation"
+              className={cn('MarkdownViewer Markdown', className, {
+                  html: isHtml,
+                  'MarkdownViewer--small': !large,
+              })}
+              ref={(div) => {
+                this.contentDiv = div;
+              }}
+              onClick={this.handleContentClick}
+          >
                 {sections}
                 {noImageActive &&
                     allowNoImage && (
@@ -251,6 +289,31 @@ class MarkdownViewer extends Component {
                             </button>
                         </div>
                     )}
+                {lightboxOpen && (
+                  <Lightbox
+                    mainSrc={this.images[lightboxIndex]}
+                    nextSrc={this.images[(lightboxIndex + 1) % this.images.length]}
+                    prevSrc={this.images[(lightboxIndex + (this.images.length - 1)) % this.images.length]}
+                    onCloseRequest={() => {
+                      this.setState({
+                        ...this.state,
+                        lightboxOpen: false
+                      });
+                    }}
+                    onMovePrevRequest={() =>
+                      this.setState({
+                        ...this.state,
+                        lightboxIndex: (lightboxIndex + (this.images.length - 1)) % this.images.length
+                      })
+                    }
+                    onMoveNextRequest={() =>
+                      this.setState({
+                        ...this.state,
+                        lightboxIndex: (lightboxIndex + (this.images.length + 1)) % this.images.length
+                      })
+                    }
+                  />
+                )}
             </div>
         );
     }
