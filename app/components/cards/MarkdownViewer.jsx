@@ -271,7 +271,6 @@ class MarkdownViewer extends Component {
               }}
               onClick={this.handleContentClick}
           >
-                {lightboxOpen && <h1>asdfasdf</h1>}
                 {sections}
                 {noImageActive &&
                     allowNoImage && (
