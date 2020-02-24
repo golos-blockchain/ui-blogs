@@ -48,7 +48,7 @@ services:
     image: golosnotify/datafeed
     restart: unless-stopped
     build:
-      context: https://github.com/avral/golosnotify.git
+      context: https://github.com/golos-blockchain/golosnotify.git
       dockerfile: Dockerfile-datafeed
     environment:
       NODE_URL: ${SDC_SERVER_WEBSOCKET_URL}
@@ -61,7 +61,7 @@ services:
   datastore:
     image: golosnotify/datastore
     build:
-      context: https://github.com/avral/golosnotify.git
+      context: https://github.com/golos-blockchain/golosnotify.git
       dockerfile: Dockerfile-datastore
     volumes:
       - ./data/tarantool:/var/lib/tarantool

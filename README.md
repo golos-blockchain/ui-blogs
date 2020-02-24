@@ -1,9 +1,9 @@
 # [GOLOS.id](https://golos.id)
 
-GOLOS.id is the react.js web interface to the world's first and best blockchain-based social media platform.  It uses [STEEM/GOLOS](https://github.com/GolosChain/golos), a fork of Steem/Steemit blockchain powered by Graphene 2.0 technology to store JSON-based content for a plethora of web applications.   
+GOLOS.id is the react.js web interface to the world's first and best blockchain-based social media platform.  It uses [Golos blockchain](https://github.com/golos-blockchain/golos), a fork of Steem/Steemit blockchain powered by Graphene 2.0 technology to store JSON-based content for a plethora of web applications.   
 
 ## Why would I want to use GOLOS.id?
-* Learning how to build blockchain-based web applications using STEEM/Golos as a content storage mechanism in react.js
+* Learning how to build blockchain-based web applications using GOLOS/STEEM as a content storage mechanism in react.js
 * Reviewing the inner workings of the GOLOS.id social media platform
 * Assisting with software development for GOLOS.id
 
@@ -11,8 +11,8 @@ GOLOS.id is the react.js web interface to the world's first and best blockchain-
 
 #### Clone the repository and make a tmp folder
 ```bash
-git clone https://github.com/GolosChain/tolstoy
-cd tolstoy
+git clone https://github.com/golos-blockchain/golos-ui
+cd golos-ui
 mkdir tmp
 ```
 
@@ -95,7 +95,7 @@ Run `sequelize db:migrate` in `db/` directory.
 yarn start
 ```
 
-You now have your development front end running at localhost:3002, connected to the main public golos blockchain. You don't need to run ```golos``` locally, by default you will connect to ```wss://ws.golos.io```.  Use your regular account name and credentials to login -- there is no separate dev login.
+You now have your development front end running at localhost:3002, connected to the main public golos blockchain. You don't need to run ```golos``` locally, by default you will connect to ```wss://api-full.golos.id/ws```.  Use your regular account name and credentials to login -- there is no separate dev login.
 
 #### Style Guides
 
@@ -146,8 +146,6 @@ pm2 start config/process.json
 
 ## Issues
 
-To report a non-critical issue, please file an issue on this GitHub project.
-
-If you find a security issue please report details to: https://github.com/avral/golos-ui/issues
+To report a issue: https://github.com/golos-blockchain/golos-ui/issues
 
 We will evaluate the risk and make a patch available before filing the issue.
