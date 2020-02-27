@@ -363,7 +363,7 @@ export function* fetchData(action) {
 
         const data = yield call([api, api[call_name]], ...args);
 
-        if (['created', 'hot', 'trending'].includes(order) && !args[0].start_author) {
+        if (['created', 'responses', 'hot', 'trending'].includes(order) && !args[0].start_author) {
           // Add top 3 from promo to tranding and 1 to hot, created
           args[0].limit = order == 'trending' ? 3 : 1
 
