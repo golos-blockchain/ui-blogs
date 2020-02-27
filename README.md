@@ -1,6 +1,6 @@
 # [GOLOS.id](https://golos.id)
 
-GOLOS.id is the react.js web interface to the world's first and best blockchain-based social media platform.  It uses [Golos blockchain](https://github.com/golos-blockchain/golos), a fork of Steem/Steemit blockchain powered by Graphene 2.0 technology to store JSON-based content for a plethora of web applications.   
+GOLOS.id is the react.js web interface to the world's first and best blockchain-based social media platform. It uses [Golos blockchain](https://github.com/golos-blockchain/golos), a fork of Steem/Steemit blockchain powered by Graphene 2.0 technology to store JSON-based content for a plethora of web applications.   
 
 ## Why would I want to use GOLOS.id?
 * Learning how to build blockchain-based web applications using GOLOS/STEEM as a content storage mechanism in react.js
@@ -16,11 +16,17 @@ cd golos-ui
 mkdir tmp
 ```
 
+#### Using Docker
+Run all services (production mode):
+```
+docker-compose up
+```
+
 #### Install dependencies
 
 ```bash
-# Install at least Node v6.3 if you don't already have it ([NVM](https://github.com/creationix/nvm) recommended)
-sudo nvm install v6
+# Install at least Node v8.12 if you don't already have it ([NVM](https://github.com/creationix/nvm) recommended)
+sudo nvm install v8
 
 yarn install
 yarn global add babel-cli
@@ -68,11 +74,7 @@ On Ubuntu 16.04+ you may be unable to connect to mysql without root access, if
 so update the mysql root user as follows::
 
 ```
-mysql -u root
-> DROP USER 'root'@'localhost';
-> CREATE USER 'root'@'%' IDENTIFIED BY '';
-> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';
-> FLUSH PRIVILEGES;
+mysql -u root -pgolosdev -e "GRANT ALL PRIVILEGES ON *.* TO 'golosdev'@'%'; FLUSH PRIVILEGES;"
 ```
 
 Now launch mysql client and create golos_dev database:
@@ -95,12 +97,11 @@ Run `sequelize db:migrate` in `db/` directory.
 yarn start
 ```
 
-You now have your development front end running at localhost:3002, connected to the main public golos blockchain. You don't need to run ```golos``` locally, by default you will connect to ```wss://api-full.golos.id/ws```.  Use your regular account name and credentials to login -- there is no separate dev login.
+You now have your development front end running at localhost:8080, connected to the main public golos blockchain. You don't need to run ```golos``` locally, by default you will connect to ```wss://api-full.golos.id/ws```.  Use your regular account name and credentials to login -- there is no separate dev login.
 
 #### Style Guides
 
 ##### File naming and location
-
 - Prefer CamelCase js and jsx file names
 - Prefer lower case one word directory names
 - Keep stylesheet files close to components
@@ -126,7 +127,6 @@ We adhere to BEM methodology with exception for Foundation classes, here is an e
 ```
 
 ### Production
-
 If you want to test it locally in production mode, just run the following commands:
 
 ```bash
