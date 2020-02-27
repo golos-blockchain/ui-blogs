@@ -7,7 +7,8 @@ class LeavePage extends Component {
     }
 
     leaveOut = target => () => {
-        window.location.assign(target)
+          const win = window.open(target, '_blank');
+          win.focus();
     }
 
     render() {
