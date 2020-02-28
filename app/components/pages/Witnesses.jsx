@@ -325,7 +325,7 @@ class Witnesses extends Component {
 
                 {!showAfter50 &&
                     <div className="row">
-                    <div class="App-center" style={{width: '100%', marginBottom: '0.5rem'}}>
+                    <div className="App-center" style={{width: '100%', marginBottom: '0.5rem'}}>
                         <Button onClick={this.loadMore} round="true" type="secondary">{tt('g.load_more')}</Button>
                     </div>
                     </div>
