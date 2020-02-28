@@ -169,7 +169,7 @@ class Header extends React.Component {
         const sort_orders_horizontal = [
             ['created', tt('g.new')],
             ['hot', tt('main_menu.hot')],
-            ['responses', 'Обсуждаемое'],
+            ['responses', tt('main_menu.discussion')],
             ['trending', tt('main_menu.trending')],
             ['promoted', tt('g.promoted')]
             //['payout', 'payout (posts)'],
