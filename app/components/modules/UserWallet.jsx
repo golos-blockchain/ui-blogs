@@ -13,6 +13,7 @@ import FoundationDropdownMenu from 'app/components/elements/FoundationDropdownMe
 import WalletSubMenu from 'app/components/elements/WalletSubMenu';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import Tooltip from 'app/components/elements/Tooltip';
+import Icon from 'app/components/elements/Icon';
 import tt from 'counterpart';
 import {List} from 'immutable';
 import LocalizedCurrency from 'app/components/elements/LocalizedCurrency';
@@ -404,7 +405,7 @@ class UserWallet extends React.Component {
             <div className="row">
                 <div className="column small-12">
                     {/** history */}
-                    <span className="right-link"><span className="secondary">Альтернативный сервис просмотра истории</span> <a target="_blank" href="https://golos.cf/">GOLOS.cf</a></span>
+                    <span style={{ float: 'right' }}><Icon name="new/search" /> <span className="secondary">Сервис просмотра истории</span> <a target="_blank" href="https://golos.cf">GOLOS.cf</a></span>
                     <h4>{tt('userwallet_jsx.history')}</h4>
                     <table>
                         <tbody>
