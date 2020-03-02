@@ -283,7 +283,9 @@ class UserWallet extends React.Component {
             <div className="UserWallet__balance row zebra">
                 <div className="column small-12 medium-8">
                     {VESTING_TOKEN.toUpperCase()}<br />
-                    <span className="secondary">{powerTip.split(".").map((a, index) => {if (a) {return <div key={index}>{a}.</div>;} return null;})}</span>
+                    <span className="secondary">{powerTip.split(".").map((a, index) => {if (a) {return <div key={index}>{a}.</div>;} return null;})}
+                    Топ 100 пользователей по Силе Голоса - <a target="_blank" href="https://dpos.space/golos-top/GP/">dpos.space <Icon name="extlink" /></a>
+                    </span>
                 </div>
                 <div className="column small-12 medium-4">
                     {isMyAccount
