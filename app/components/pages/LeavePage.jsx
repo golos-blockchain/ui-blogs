@@ -11,7 +11,7 @@ class LeavePage extends Component {
     }
 
     render() {
-        const targetPage = this.props.location.search.slice(1)
+        const targetPage = this.props.location.search.slice(1) + this.props.location.hash
         return (
             <div className="leave-page" style={{ backgroundImage: 'url(images/leave-bg.svg)' }}>
                 <div className="leave-page_content row medium-7 large-7">
