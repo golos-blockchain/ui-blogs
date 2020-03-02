@@ -284,8 +284,7 @@ class UserWallet extends React.Component {
                 <div className="column small-12 medium-8">
                     {VESTING_TOKEN.toUpperCase()}<br />
                     <span className="secondary">{powerTip.split(".").map((a, index) => {if (a) {return <div key={index}>{a}.</div>;} return null;})}
-                    Топ 100 пользователей по Силе Голоса - <a target="_blank" href="https://dpos.space/golos-top/GP/">dpos.space <Icon name="extlink" /></a>
-                    </span>
+                    {tt('userwallet_jsx.top_dpos')} - <a target="_blank" href="https://dpos.space/golos-top/GP/">dpos.space <Icon name="extlink" /></a></span>
                 </div>
                 <div className="column small-12 medium-4">
                     {isMyAccount
@@ -407,7 +406,7 @@ class UserWallet extends React.Component {
             <div className="row">
                 <div className="column small-12">
                     {/** history */}
-                    <span className="secondary" style={{ float: 'right' }}><Icon name="new/search" /> Сервис просмотра истории - <a target="_blank" href="https://golos.cf">golos.cf <Icon name="extlink" /></a></span>
+                    <span className="secondary" style={{ float: 'right' }}><Icon name="new/search" /> {tt('userwallet_jsx.history_viewing')} - <a target="_blank" href="https://golos.cf">golos.cf <Icon name="extlink" /></a></span>
                     <h4>{tt('userwallet_jsx.history')}</h4>
                     <table>
                         <tbody>
