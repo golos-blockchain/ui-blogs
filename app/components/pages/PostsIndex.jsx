@@ -190,7 +190,7 @@ class PostsIndex extends React.Component {
         const metaData = account ? o2j.ifStringParseJSON(json_metadata) : {}
 
         let promo_posts = []
-        if (['created', 'hot', 'trending'].includes(order) && posts && posts.size) {
+        if (['created', 'hot', 'responses', 'trending'].includes(order) && posts && posts.size) {
           const slice_step = order == 'trending' ? 3 : 1
 
           promo_posts = posts.slice(0, slice_step)

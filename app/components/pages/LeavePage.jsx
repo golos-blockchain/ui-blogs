@@ -11,7 +11,7 @@ class LeavePage extends Component {
     }
 
     render() {
-        const targetPage = this.props.location.search.slice(1)
+        const targetPage = this.props.location.search.slice(1) + this.props.location.hash
         return (
             <div className="leave-page" style={{ backgroundImage: 'url(images/leave-bg.svg)' }}>
                 <div className="leave-page_content row medium-7 large-7">
@@ -31,10 +31,7 @@ class LeavePage extends Component {
                             Рекомендуем вам не переходить по ссылке, если у вас нет серьезных оснований доверять внешнему ресурсу. Помните, что активный ключ вашего аккаунта на <a href="https://golos.id/" target="_blank">Golos.id</a> не может быть восстановлен, а доступ к нему позволит мошенникам завладеть всеми вашими средствами.
                         </p>
                         <p className="text-center medium-text-left">
-                            <Button round onClick={this.goBack}>
-                                Вернуться на Golos.id
-                            </Button>
-                            <Button type="secondary" onClick={this.leaveOut(targetPage)} round>
+                            <Button onClick={this.leaveOut(targetPage)} round>
                                 Перейти по ссылке
                             </Button>
                         </p>

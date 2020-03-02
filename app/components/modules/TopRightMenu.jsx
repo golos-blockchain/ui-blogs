@@ -84,6 +84,13 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     const commentsLink = `/@${username}/comments`;
     const reset_password_link = `/@${username}/password`;
 
+    const wikiItem = <li className={scn}>
+        <a target="_blank" href="https://wiki.golos.id/" title={tt('navigation.wiki')}>
+          {vertical ? <span>{tt('navigation.wiki')}</span> : <Icon name="new/wikipedia" size="1_5x" />}
+        </a>
+      </li>
+    ;
+    
     const searchItem = <li className={scn}>
         <a href="/static/search.html" title={tt('g.search')}>
           {vertical ? <span>{tt('g.search')}</span> : <Icon name="new/search" size="1_25x" />}
@@ -123,7 +130,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
         { link: 'https://ropox.app/', value: 'Сервисы ropox.app', target: 'blank' },
         { link: 'https://golos.cf/', value: 'Сервисы golos.cf', target: 'blank' },
         { link: 'https://dpos.space/golos-donates/', value: 'Сервисы dpos.space', target: 'blank' },
-        { link: 'https://worthless-man.github.io/GolosMultisig/index.html?page=dashboard&multisig=gc-transit', value: 'Предложения на подпись', target: 'blank' }
+        { link: 'https://wiki.golos.id/', value: 'База знаний Golos', target: 'blank' }
     );
     const navAdditional = <LinkWithDropdown
         closeOnClickOutside
@@ -164,7 +171,8 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
 
         return (
             <ul className={mcn + mcl}>
-            		<LocaleSelect />
+                <LocaleSelect />
+                {wikiItem}
                 {searchItem}
                 <li className="delim show-for-medium" />
                 {submitStory}
@@ -218,6 +226,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     return (
         <ul className={mcn + mcl}>
             <LocaleSelect />
+            {wikiItem}
             {searchItem}
             <li className="delim show-for-medium" />
             {!probablyLoggedIn && !externalTransfer && <li className={scn}>

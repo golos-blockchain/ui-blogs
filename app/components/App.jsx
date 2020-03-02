@@ -148,7 +148,9 @@ class App extends React.Component {
         ) {
             e.stopPropagation();
             e.preventDefault();
-            this.props.router.push(`/leave_page?${a.href}`);
+
+            const win = window.open(`/leave_page?${a.href}`, '_blank');
+            win.focus();
         }
     };
 

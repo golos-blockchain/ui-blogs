@@ -10,6 +10,7 @@ import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Author from 'app/components/elements/Author';
 import PercentSelect from 'app/components/elements/PercentSelect';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
+import Icon from 'app/components/elements/Icon';
 import { formatDecimal, formatAsset, ERR } from 'app/utils/ParsersAndFormatters';
 
 export default class ViewWorkerRequest extends React.Component {
@@ -150,7 +151,7 @@ export default class ViewWorkerRequest extends React.Component {
     let max_amount = parseFloat(request.required_amount_max.split(" ")[0]);
     let pend = max_amount * rshares_pct / 100;
     let pending_amount = formatDecimal(pend, 0, false, ' ');
-    let pending_title = "Если будет набран мин. % от общей СГ, установленный делегатами";
+    let pending_title = "Если будет набран минимальный % поддержки от общей СГ";
 
     let upvotes = request.upvotes;
     let downvotes = request.downvotes;
@@ -191,7 +192,7 @@ export default class ViewWorkerRequest extends React.Component {
 
     return(
       <div>
-        <h5><a target="_blank" href={"https://" + APP_DOMAIN + "/@" + request.post.author + "/" + request.post.permlink} rel="noopener noreferrer">
+        <h5><a target="_blank" href={"https://" + APP_DOMAIN + "/@" + request.post.author + "/" + request.post.permlink} rel="noopener noreferrer"><Icon name="extlink" size="1_5x" /> 
           {request.post.title}
         </a></h5>
         <p>
@@ -209,7 +210,7 @@ export default class ViewWorkerRequest extends React.Component {
         </p>
         <p>
           Процент голосов от общей СГ: {global_rshares_pct}%<br/>
-          <span title={pending_title}>Ожидаемая сумма выплаты: <b>{pending_amount} {request.required_amount_min.split(" ")[1]}</b> (?)</span>
+          <span title={pending_title}>Расчётная сумма выплаты: <b>{pending_amount} {request.required_amount_min.split(" ")[1]}</b> <Icon name="info_o" /></span>
         </p>
         <div>
           <div className="Request__Footer_left">

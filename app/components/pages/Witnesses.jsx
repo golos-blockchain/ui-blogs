@@ -267,6 +267,8 @@ class Witnesses extends Component {
             <div>
                 <div className="row">
                     <div className="column">
+                        <a target="_blank" href="https://t.me/golos_delegates" class="golos-btn btn-secondary btn-round" style={{ float: 'right', marginTop: '0.5rem' }}>Чат делегатов <Icon name="new/telegram" /></a>
+                        <a target="_blank" href="https://ropox.app/chainprops" class="golos-btn btn-secondary btn-round" style={{ float: 'right', marginTop: '0.5rem' }}>Параметры сети <Icon name="extlink" /></a>
                         <h2>{tt('witnesses_jsx.top_witnesses')}</h2>
                         {currentProxy && currentProxy.length ? null : (
                             <p>
@@ -325,7 +327,7 @@ class Witnesses extends Component {
 
                 {!showAfter50 &&
                     <div className="row">
-                    <div class="App-center" style={{width: '100%', marginBottom: '0.5rem'}}>
+                    <div className="App-center" style={{width: '100%', marginBottom: '0.5rem'}}>
                         <Button onClick={this.loadMore} round="true" type="secondary">{tt('g.load_more')}</Button>
                     </div>
                     </div>

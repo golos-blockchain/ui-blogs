@@ -13,6 +13,7 @@ import FoundationDropdownMenu from 'app/components/elements/FoundationDropdownMe
 import WalletSubMenu from 'app/components/elements/WalletSubMenu';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import Tooltip from 'app/components/elements/Tooltip';
+import Icon from 'app/components/elements/Icon';
 import tt from 'counterpart';
 import {List} from 'immutable';
 import LocalizedCurrency from 'app/components/elements/LocalizedCurrency';
@@ -282,7 +283,9 @@ class UserWallet extends React.Component {
             <div className="UserWallet__balance row zebra">
                 <div className="column small-12 medium-8">
                     {VESTING_TOKEN.toUpperCase()}<br />
-                    <span className="secondary">{powerTip.split(".").map((a, index) => {if (a) {return <div key={index}>{a}.</div>;} return null;})}</span>
+                    <span className="secondary">{powerTip.split(".").map((a, index) => {if (a) {return <div key={index}>{a}.</div>;} return null;})}
+                    Топ 100 пользователей по Силе Голоса - <a target="_blank" href="https://dpos.space/golos-top/GP/">dpos.space <Icon name="extlink" /></a>
+                    </span>
                 </div>
                 <div className="column small-12 medium-4">
                     {isMyAccount
@@ -404,6 +407,7 @@ class UserWallet extends React.Component {
             <div className="row">
                 <div className="column small-12">
                     {/** history */}
+                    <span style={{ float: 'right' }}><Icon name="new/search" /> <span className="secondary">Сервис просмотра истории</span> <a target="_blank" href="https://golos.cf">GOLOS.cf</a></span>
                     <h4>{tt('userwallet_jsx.history')}</h4>
                     <table>
                         <tbody>
