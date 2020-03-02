@@ -407,7 +407,7 @@ class UserWallet extends React.Component {
             <div className="row">
                 <div className="column small-12">
                     {/** history */}
-                    <span style={{ float: 'right' }}><Icon name="new/search" /> <span className="secondary">Сервис просмотра истории</span> <a target="_blank" href="https://golos.cf">GOLOS.cf</a></span>
+                    <span className="secondary" style={{ float: 'right' }}><Icon name="new/search" /> Сервис просмотра истории - <a target="_blank" href="https://golos.cf">golos.cf <Icon name="extlink" /></a></span>
                     <h4>{tt('userwallet_jsx.history')}</h4>
                     <table>
                         <tbody>
