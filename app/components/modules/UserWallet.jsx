@@ -21,11 +21,30 @@ import { LIQUID_TICKER, VEST_TICKER, DEBT_TICKER} from 'app/client_config';
 const assetPrecision = 1000;
 
 class UserWallet extends React.Component {
-    
     constructor() {
         super();
         this.state = {};
         this.shouldComponentUpdate = shouldComponentUpdate(this, 'UserWallet');
+    }
+
+    componentDidMount() {
+      //todo make transfer call a member? since code is repeated in some places
+      const callTransfer = ({ to, amount, token, memo}) => {
+      // immediate transfer processing (e.g. from foreign link)
+      const transferType = 'Transfer to Account';
+      this.props.showTransfer({
+        to,
+        asset: token.toUpperCase(), //since it's lowercased by koa
+        transferType,
+        memo,
+        amount,
+        disableMemo: true,
+        disableTo: true,
+        disableAmount: true
+      });
+    }
+      const { transferDetails: { immediate, to, amount, token, memo } } = this.props;
+      if (immediate) callTransfer({ to, amount, token, memo})
     }
 
     render() {
@@ -414,25 +433,6 @@ class UserWallet extends React.Component {
                 </div>
             </div>
         </div>);
-    }
-    componentDidMount() {
-      //todo make transfer call a member? since code is repeated in some places
-      const callTransfer = ({ to, amount, token, memo}) => {
-      // immediate transfer processing (e.g. from foreign link)
-      const transferType = 'Transfer to Account';
-      this.props.showTransfer({
-        to,
-        asset: token.toUpperCase(), //since it's lowercased by koa
-        transferType,
-        memo,
-        amount,
-        disableMemo: true,
-        disableTo: true,
-        disableAmount: true
-      });
-    }
-      const { transferDetails: { immediate, to, amount, token, memo } } = this.props;
-      if (immediate) callTransfer({ to, amount, token, memo})
     }
 }
 
