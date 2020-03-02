@@ -31,7 +31,7 @@ class LeavePage extends Component {
                             Рекомендуем вам не переходить по ссылке, если у вас нет серьезных оснований доверять внешнему ресурсу. Помните, что активный ключ вашего аккаунта на <a href="https://golos.id/" target="_blank">Golos.id</a> не может быть восстановлен, а доступ к нему позволит мошенникам завладеть всеми вашими средствами.
                         </p>
                         <p className="text-center medium-text-left">
-                            <Button type="secondary" onClick={this.leaveOut(targetPage)} round>
+                            <Button onClick={this.leaveOut(targetPage)} round>
                                 Перейти по ссылке
                             </Button>
                         </p>
