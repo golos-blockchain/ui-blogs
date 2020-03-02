@@ -164,7 +164,6 @@
     "warning": "warning",
     "yes": "Yes",
     "you_are_viewing_a_single_comments_thread_from": "You are viewing a single comment's thread from",
-
     "about_project": "About",
     "account_not_found": "Account not found",
     "this_is_wrong_password": "This is the wrong password",
@@ -209,7 +208,6 @@
     "cannot_increase_reward_of_post_within_the_last_minute_before_payout": "Cannot increase reward of post within the last minute before payout",
     "vote_currently_exists_user_must_be_indicate_a_to_reject_witness": "vote currently exists, user must be indicate a desire to reject witness",
     "only_one_APP_NAME_account_allowed_per_ip_address_every_10_minutes": "Only one Steem account allowed per IP address every 10 minutes",
-
     "resteem_this_post": "Resteem This Post",
     "reblog": "Resteem",
     "write_your_story": "Write your story",
@@ -225,7 +223,6 @@
     "server_returned_error": "server returned error",
     "APP_NAME_support": "%(APP_NAME)s Support",
     "please_email_questions_to": "Please email your questions to",
-
     "next_7_strings_sinngle_block": {
       "authors_get_paid_when_people_like_you_upvote_their_post": "Authors get paid when people like you upvote their post",
       "if_you_enjoyed_what_you_read_earn_amount": "Join our amazing community to comment and reward others.",
@@ -235,13 +232,11 @@
       "sign_up_now_to_receive": "Sign up now to receive ",
       "free_steem": "FREE %(LIQUID_TOKEN)ss!"
     },
-
     "next_3_strings_together": {
       "show_more": "Show more",
       "show_less": "Show fewer",
       "value_posts": "low value posts"
     },
-
     "show_less_low_value_posts": "Show fewer low value posts",
     "show_more_low_value_posts": "Show more low value posts",
     "select_topic": "Select Topic",
@@ -276,7 +271,8 @@
     "keep_me_logged_in": "Keep me logged in",
     "donate": "Donate",
     "received_vesting": "%(VESTING_TOKEN)s delegated to this account",
-    "delegated_vesting": "%(VESTING_TOKEN)s delegated from this account"
+    "delegated_vesting": "%(VESTING_TOKEN)s delegated from this account",
+    "about_project": "Golos.id — social platform, blogger community, media network developed on the GOLOS blockchain"
   },
   "navigation": {
     "about": "About",
@@ -623,8 +619,16 @@
     "witness_thread": "witness thread",
     "top_witnesses": "Witness Voting",
     "you_can_vote_for_maximum_of_witnesses": "You can vote for a maximum of 30 witnesses",
+    "chat_delegates": "Chat to delegates",
+    "chain_properties": "Сhain properties",
     "witness": "Witness",
+    "witness_0": "You haven't supported any delegates yet",
+    "witness_1": "witness with a force of",
+    "witness_2": "witnesses with a force of",
+    "witness_supported": "You supported",
+    "witness_addon": "for each of them",
     "information": "Information",
+    "load_more": "Load more",
     "approval": "Votes",
     "missed_1": "Missed",
     "missed_2": "blocks",
@@ -721,9 +725,9 @@
     "tradeable_tokens_that_may_be_transferred_anywhere_at_anytime": "Tradeable tokens that may be transferred anywhere at anytime.",
     "LIQUID_TOKEN_can_be_converted_to_VESTING_TOKEN_in_a_process_called_powering_up": "%(LIQUID_TOKEN)s can be converted to %(VESTING_TOKEN2)s in a process called powering up.",
     "tokens_worth_about_AMOUNT_of_LIQUID_TOKEN": "Tokens worth about %(amount)s of %(LIQUID_TOKEN)s.",
-    "influence_tokens_which_give_you_more_control_over": "Influence tokens which give you more control over post payouts and allow you to earn on curation rewards.",
+    "influence_tokens_which_give_you_more_control_over": "Golos Power is non-transferable, its amount increases with long-term storage. The more Golos Power you have, the greater the impact on project development by selecting witnesses and supporting worker requests, as well as user reward users.",
     "the_more_you_hold_the_more_you_influence_post_rewards": "The more you hold the more you influence post rewards and earn for accurate voting.",
-    "the_estimated_value_is_based_on_an_average_value_of_steem_in_US_dollars": "The estimated value is based on an average value of %(LIQUID_TOKEN)s in US dollars.",
+    "the_estimated_value_is_based_on_an_average_value_of_steem_in_US_dollars": "The estimated cost is calculated on an 7-day average cost of %(LIQUID_TOKEN)s.",
     "VESTING_TOKEN_is_non_transferrable_and_requires_convert_back_to_LIQUID_TOKEN": "%(VESTING_TOKEN2)s is non-transferrable and requires 3 months (13 payments) to convert back to %(LIQUID_TOKEN)s.",
     "converted_VESTING_TOKEN_can_be_sent_to_yourself_but_can_not_transfer_again": "Converted %(VESTING_TOKEN)s can be sent to yourself or someone else but can not transfer again without converting back to %(LIQUID_TOKEN)s.",
     "profile": "Profile",
@@ -774,7 +778,6 @@
     "resources": "Resources",
     "join_our_slack": "Join our Slack",
     "mobileBannerAlt": "Get it on Google Play"
-
   },
   "markdownviewer_jsx": {
     "images_were_hidden_due_to_low_ratings": "Images were hidden due to low ratings."
@@ -950,7 +953,7 @@
     "memo_placeholder" : "You may comment your transfer here",
     "advanced": "Advanced",
     "convert_to_VESTING_TOKEN": "Convert to %(VESTING_TOKEN2)s",
-    "balance_subject_to_3_day_withdraw_waiting_period": "Balance subject to 3 day withdraw waiting period,",
+    "balance_subject_to_3_day_withdraw_waiting_period": "Balance subject to 3 day withdraw waiting period.",
     "move_funds_to_another_account": "Move funds to another account.",
     "protect_funds_by_requiring_a_3_day_withdraw_waiting_period": "Protect funds by requiring a 3 day withdraw waiting period.",
     "withdraw_funds_after_the_required_3_day_waiting_period": "Withdraw funds after the required 3 day waiting period.",
@@ -975,6 +978,8 @@
     "next_power_down_is_scheduled_to_happen": "The next power down is scheduled to happen",
     "transfers_are_temporary_disabled": "Transfers are temporary disabled.",
     "cancel_power_down": "Cancel Power Down",
+    "top_dpos": "Top 100 users by Golos Power",
+    "history_viewing": "History viewing service",
     "history": "HISTORY"
   },
   "generated_password_input": {
