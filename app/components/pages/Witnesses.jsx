@@ -267,17 +267,19 @@ class Witnesses extends Component {
             <div>
                 <div className="row">
                     <div className="column">
+                        <a target="_blank" href="https://t.me/golos_delegates" class="golos-btn btn-secondary btn-round" style={{ float: 'right', marginTop: '0.75rem' }}>{tt('witnesses_jsx.chat_delegates')} <Icon name="new/telegram" /></a>
+                        <a target="_blank" href="https://ropox.app/chainprops" class="golos-btn btn-secondary btn-round" style={{ float: 'right', marginTop: '0.75rem' }}>{tt('witnesses_jsx.chain_properties')} <Icon name="extlink" /></a>
                         <h2>{tt('witnesses_jsx.top_witnesses')}</h2>
                         {currentProxy && currentProxy.length ? null : (
                             <p>
                                 {witness_vote_count == 0 && <strong>
-                                    Вы пока не поддержали ни одного делегата.
+                                    {tt('witnesses_jsx.witness_0')}.
                                 </strong>}
                                 {witness_vote_count == 1 && <strong>
-                                    Вы поддержали {witness_vote_count} делегата с силой {formatAsset(witness_vote_size + ' GOLOS', false)} СГ.
+                                    {tt('witnesses_jsx.witness_supported')} {witness_vote_count} {tt('witnesses_jsx.witness_1')} {formatAsset(witness_vote_size + ' GOLOS', false)} СГ.
                                 </strong>}
                                 {witness_vote_count > 1 && <strong>
-                                    Вы поддержали {witness_vote_count} делегатов с силой {formatAsset(witness_vote_size + ' GOLOS', false)} СГ за каждого из них.
+                                    {tt('witnesses_jsx.witness_supported')} {witness_vote_count} {tt('witnesses_jsx.witness_2')} {formatAsset(witness_vote_size + ' GOLOS', false)} СГ {tt('witnesses_jsx.witness_addon')}.
                                 </strong>}
                             </p>
                         )}
@@ -326,7 +328,7 @@ class Witnesses extends Component {
                 {!showAfter50 &&
                     <div className="row">
                     <div className="App-center" style={{width: '100%', marginBottom: '0.5rem'}}>
-                        <Button onClick={this.loadMore} round="true" type="secondary">{tt('g.load_more')}</Button>
+                        <Button onClick={this.loadMore} round="true" type="secondary">{tt('witnesses_jsx.load_more')}</Button>
                     </div>
                     </div>
                 }

@@ -81,7 +81,7 @@ class Footer extends React.Component {
                 items: [
                     {
                         name: 'Twitter',
-                        url: 'https://twitter.com/Golos_id/',
+                        url: 'https://twitter.com/Golos_id',
                         icon: 'new/twitter',
                         size: '1_5x',
                     },
@@ -103,6 +103,12 @@ class Footer extends React.Component {
                         icon: 'github',
                         size: '1_5x',
                     },
+                    {
+                        name: 'Wiki',
+                        url: 'https://wiki.golos.id',
+                        icon: 'new/wikipedia',
+                        size: '1_5x',
+                    }
                 ],
             },
         );
@@ -126,9 +132,7 @@ class Footer extends React.Component {
                     <div className="row">
                         <div className="small-12 medium-12 columns">
                             <span className="text-left">
-                                © 2016-2020 Golos blockchain - социальная платформа,
-                                  сообщество блогеров, медиасеть,
-                                  разработанная на Медиаблокчейне ГОЛОС
+                                © 2016-2020 {tt('g.about_project')}
                             </span>
                         </div>
                     </div>
