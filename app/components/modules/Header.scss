@@ -4,14 +4,17 @@
   left: 0;
   width: 100%;
   z-index: 100;
-  background-color: $white;
+  backface-visibility: hidden;
+  @include themify($themes) {
+    background-color: themed('summaryBackgroundColor');
+    border-bottom: themed('border');
+  }
 
   h3 {
     padding-left: 1rem;
     margin-bottom: 0;
   }
   .menu {
-    background-color: $white;
     padding-left: 0;
     align-items: center;
 
@@ -38,8 +41,10 @@
 }
 
 .Header__top {
-  background-color: $white;
-  border-bottom: 1px solid $light-gray;
+  @include themify($themes) {
+    background-color: themed('navBackgroundColor');
+    border-bottom: themed('border');
+  }
 
   .row {
     height: 5rem;
@@ -68,7 +73,9 @@
       font-size: 1.1rem;
 
       .Icon {
-        fill: #333;
+        @include themify($themes) {
+          fill: themed('textColorPrimary');
+        }
       }
 
       &:hover {
@@ -145,8 +152,11 @@ ul > li.Header__top-logo > a {
 .Header__sub-nav {
   position: relative;
   padding: 0;
-  background-color: $white;
-  border-bottom: 1px solid $light-gray;
+
+  @include themify($themes) {
+    background-color: themed('summaryBackgroundColor');
+  }
+
   transition: all .3s;
   z-index: -1;
   height: 2.5rem;
@@ -162,9 +172,10 @@ ul > li.Header__top-logo > a {
   }
 
   li > a {
-    color: $dark-gray;
-    background-color: $white;
-    border-bottom: 1px solid transparent;
+    @include themify($themes) {
+      color: themed('textColorSecondary');
+    }
+
     font-size: 1rem;
     line-height: 0;
     padding: 0;
@@ -176,8 +187,11 @@ ul > li.Header__top-logo > a {
   .caret-down {
     fill: $dark-gray;
   }
-  a.active {
-    color: $black;
+
+  li.active a {
+    @include themify($themes) {
+      color: themed('textColorPrimary');
+    }
   }
 }
 

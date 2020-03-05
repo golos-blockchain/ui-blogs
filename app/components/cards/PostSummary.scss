@@ -5,7 +5,9 @@ ul.PostsList__summaries {
 .PostSummary {
   padding: 0 0 0.5rem;
   margin: 0 0 1.25vw;
-  background-color: $white;
+  @include themify($themes) {
+    background-color: themed('summaryBackgroundColor');
+  }
   clear: left;
   @include clearfix;
 
@@ -75,10 +77,14 @@ ul.PostsList__summaries {
     margin: 0;
     overflow: hidden;
     > a {
-      color: #000;
+      @include themify($themes) {
+        color: themed('textColorPrimary');
+      }
     }
     > a:visited {
-      color: #b3b3b3;
+      @include themify($themes) {
+        color: themed('textColorSecondary');
+      }
     }
     .Icon {
       margin: 0 0.25rem;
@@ -116,7 +122,11 @@ ul.PostsList__summaries {
   width: auto;
   padding: 0.3rem 0.1rem 0.15rem;
   font-family: $body-font-family;
-  color: #3f3f3f;
+
+  @include themify($themes) {
+    color: themed('textColorPrimary');
+  }
+
   overflow: hidden;
   line-height: 1.4;
   white-space: nowrap;
@@ -127,7 +137,9 @@ ul.PostsList__summaries {
     display: inline;
   }
   > a:visited {
-    color: #6f6f6f;
+    @include themify($themes) {
+      color: themed('textColorSecondary');
+    }
   }
 }
 

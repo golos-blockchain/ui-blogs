@@ -31,7 +31,11 @@ const Current = styled.div`
     height: 48px;
     font-weight: 500;
     text-transform: uppercase;
-    color: #393636;
+
+    @include themify($themes) {
+        color: themed('textColorPrimary');
+    }
+
     user-select: none;
     z-index: 1;
 `;

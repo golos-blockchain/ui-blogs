@@ -22,7 +22,11 @@
 
     &_active {
       font-weight: 500;
-      color: #000;
+
+      @include themify($themes) {
+        color: themed('textColorPrimary')
+      }
+
       border-bottom-color: #0078C4;
       cursor: default;
     }
@@ -32,7 +36,9 @@
     }
 
     &:hover {
-      color: #000;
+      @include themify($themes) {
+        color: themed('textColorPrimary')
+      }
     }
   }
 

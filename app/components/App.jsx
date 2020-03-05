@@ -99,6 +99,9 @@ class App extends React.Component {
         if (process.env.BROWSER) {
             initAnchorHelper();
         }
+
+        document.body.classList.add('theme-dark');
+        //document.body.classList.add('theme-light');
     }
 
     componentWillUnmount() {

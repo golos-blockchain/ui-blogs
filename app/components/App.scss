@@ -122,7 +122,9 @@ HTML {
     -webkit-filter: grayscale(1); // image
     filter: gray; // image grayscale
     .Comment__header-user {
-        color: #848282;
+      @include themify($themes) {
+        color: themed('textColorPrimary');
+      }
     }
 }
 .downvoted:hover {

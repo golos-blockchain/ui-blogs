@@ -33,4 +33,46 @@
   }
 }
 
-@import "./simplemde-overrides";
+.MarkdownEditor {
+  & .CodeMirror {
+    padding: 0;
+    margin: 0 -4px;
+    border: none;
+    border-radius: 0;
+    color: #333;
+    background: none;
+  }
+
+  &_comment .CodeMirror {
+    padding: 10px 8px 0;
+    margin: 0;
+    background: #fafafa;
+    border-radius: 6px;
+  }
+
+  & .CodeMirror-scroll {
+    min-height: 350px;
+  }
+
+  &_comment {
+    & .CodeMirror,
+    & .CodeMirror-scroll {
+      min-height: 3em;
+    }
+  }
+
+  & .CodeMirror-lines {
+    font-family: 'Source Serif Pro', serif;
+    font-size: 1.2em;
+    line-height: 1.5em;
+  }
+
+  &_comment .CodeMirror-lines {
+    font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 16px;
+  }
+
+  & .cm-formatting-strikethrough {
+    text-decoration: none !important;
+  }
+}
