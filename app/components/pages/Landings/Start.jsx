@@ -15,12 +15,11 @@ class Start extends React.Component {
     render() {
         let {simple} = this.state
         let simpleAnswer = <p className='landing-start-block-text'>
-            <b>{'Golos.id '}</b>
-            — это блог-платформа на <span data-tip='Блокчейн — распределенная база данных'>блокчейне <ReactTooltip type='light' effect="solid" /></span> GOLOS. Публикуя здесь интересные посты, вы можете получить вознаграждение от других пользователей. Участвуйте в ранжировании контента, голосуя "за" или "против" постов.
+            <b>{'Golos.id'}</b> — это блог-платформа на <span data-tip='Распределенная база данных'>блокчейне</span><ReactTooltip type='light' effect="solid" /> GOLOS. Публикуя интересные посты, вы можете получить вознаграждение от других пользователей. Участвуйте в ранжировании контента, голосуя "за" или "против" постов.
         </p>
 
         let difAnswer = <p className='landing-start-block-text'>
-            В режиме реального времени большая часть эмиссии токенов блокчейна GOLOS поступает в пул вестинга. Каждый пользователь, согласно своей доли от общего количества Силы Голоса, из пула вестинга получает процент на баланс. Используя полученные токены, вы имеете возможность отблагодарить авторов понравившегося контента.
+            Каждый пользователь, согласно своей доли от общего количества Силы Голоса, из пула вестинга эмиссии токенов блокчейна получает процент на баланс. Используя эти токены, вы имеете возможность отблагодарить авторов понравившегося контента, а они вас.
         </p>
 
         return (
@@ -42,9 +41,7 @@ class Start extends React.Component {
                             </div>
                         </div>
                         <div className='column small-12 medium-6 large-6'>
-                            <p className='landing-start-block-title-text'>Пишите, фотографируйте, комментируйте и получайте
-                                <span
-                                    data-tip='Токены, которыми вознаграждаются посты, можно перевести в любую мировую валюту.'> вознаграждение</span><ReactTooltip type='light' effect="solid" /> за любое действие</p>
+                            <p className='landing-start-block-title-text'>Пишите, фотографируйте, комментируйте, участвуйте в конкурсах и получайте <span data-tip='Токены, которыми вознаграждаются посты, можно перевести в любую валюту.'>вознаграждение</span>!<ReactTooltip type='light' effect="solid" /></p>
                             <a href="/create_account" className="button">Создать аккаунт</a>
                         </div>
                     </div>
@@ -93,12 +90,12 @@ class Start extends React.Component {
                             <div className='column large-3 medium-3 small-6'>
                                 <Icon name='team' size='10x'/>
                                 <h5>Социальная значимость</h5>
-                                <p className='landing-start-block-icon-text'>Наше сообщество ценит мнения, интересные истории и творческий контент</p>
+                                <p className='landing-start-block-icon-text'>Наше сообщество ценит новую и полезную информацию, интересные истории, творческий контент</p>
                             </div>
                             <div className='column large-3 medium-3 small-6'>
                                 <Icon name='money' size='10x'/>
                                 <h5>Выгодно для блогинга</h5>
-                                <p className='landing-start-block-icon-text'>Каждый может получить вознаграждение, как за интересный пост, так и просто за развернутый комментарий</p>
+                                <p className='landing-start-block-icon-text'>Каждый может получить вознаграждение за интересный пост или за развернутый комментарий</p>
 
                             </div>
                             <div className='column large-3 medium-3 small-6'>
@@ -129,7 +126,7 @@ class Start extends React.Component {
                             <div className='column large-12 medium-12 small-12'>
                                 <p className='landing-start-block-text reg landing-start-block-center'>чтобы
                                     начать делиться своими историями, подписываться на интересных авторов, оценивать
-                                    публикации, знакомиться и получать вознаграждения</p>
+                                    публикации, знакомиться с пользователями и получать вознаграждения</p>
                             </div>
                             <div className='landing-start-panel left column large-5 medium-5 small-12'>
                                 <div className='row'>
@@ -173,7 +170,7 @@ class Start extends React.Component {
                             <div className='column large-12 medium-12 small-12'>
                                 <p className='landing-start-block-text landing-start-block-center'>
                                     У нас есть собственная <a target="_blank" href='https://wiki.golos.id/'>Википедия</a>,
-                                    со всей информацией про блог-платформу Golos.id. Кроме того, получить ответы на многие вопросы можно и у сообщества в группе <a target="_blank" href='https://t.me/golos_id'>t.me/golos_id</a>.</p>
+                                    в которой собрана информация о блог-платформе Golos.id. Кроме того, получить ответы на многие вопросы можно и у сообщества в группе <a target="_blank" href='https://t.me/golos_id'>t.me/golos_id</a></p>
                             </div>
                         </div>
                     </div>
