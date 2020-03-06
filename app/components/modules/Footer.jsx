@@ -75,7 +75,7 @@ class Footer extends React.Component {
 
         menuItems.push(
             {
-                name: 'Социальные сети',
+                name: tt('g.social_network'),
                 columnAlign: 'left',
                 width: 'medium-3',
                 items: [
