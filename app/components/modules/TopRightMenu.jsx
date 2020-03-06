@@ -17,6 +17,7 @@ import LocalizedCurrency from 'app/components/elements/LocalizedCurrency';
 import { vestsToSteem, toAsset } from 'app/utils/StateFunctions';
 import { WIKI_URL } from 'app/client_config';
 
+
 const defaultNavigate = (e) => {
     if (e.metaKey || e.ctrlKey) {
         // prevent breaking anchor tags
@@ -58,7 +59,7 @@ const calculateEstimateOutput = ({ account, price_per_golos, savings_withdraws, 
   return Number(((total_steem * price_per_golos) + total_sbd).toFixed(2) );
 }
 
-function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops, username, showLogin, logout, loggedIn, vertical, navigate, probablyLoggedIn, location, locationQueryParams, showMessages}) {
+function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops, username, showLogin, logout, loggedIn, vertical, navigate, probablyLoggedIn, location, locationQueryParams, showMessages, toggleNightmode}) {
     const APP_NAME = tt('g.APP_NAME');
     
     const mcn = 'menu' + (vertical ? ' vertical show-for-small-only' : '');
@@ -155,6 +156,8 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
             {link: commentsLink, icon: 'new/comment', value: tt('g.comments')},
             {link: repliesLink, icon: 'new/answer', value: tt('g.replies'), addon: <NotifiCounter fields="comment_reply" />},
             {link: walletLink, icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields="follow,send,receive,account_update" />},
+
+            {link: walletLink, onClick: toggleNightmode, icon: 'editor/eye', value: 'Ночной режим'},
             {link: reset_password_link, icon: 'key', value: tt('g.change_password')},
             {link: settingsLink, icon: 'new/setting', value: tt('g.settings')},
             loggedIn ?
@@ -298,6 +301,10 @@ export default connect(
         showMessages: (e) => {
             if (e) e.preventDefault();
             dispatch(user.actions.showMessages())
-        }
+        },
+        toggleNightmode: (e) => {
+            //if (e) e.preventDefault();
+            dispatch(user.actions.toggleNightmode());
+        },
     })
 )(TopRightMenu);
