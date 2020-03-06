@@ -80,7 +80,7 @@ class App extends React.Component {
             p.visitor !== n.visitor ||
             p.flash !== n.flash ||
             this.state !== nextState ||
-            nightmodeEnabled !== n.nightmodeEnabled
+            p.nightmodeEnabled !== n.nightmodeEnabled
         );
     }
 
