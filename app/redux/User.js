@@ -3,7 +3,7 @@ import createModule from 'redux-modules';
 import {DEFAULT_LANGUAGE, LOCALE_COOKIE_KEY} from 'app/client_config';
 import cookie from "react-cookie";
 
-const defaultState = {
+const defaultState = fromJS({
     current: null,
     show_login_modal: false,
     show_transfer_modal: false,
@@ -13,7 +13,7 @@ const defaultState = {
     locale: DEFAULT_LANGUAGE,
     show_messages_modal: false,
     nightmodeEnabled: false
-};
+});
 
 if (process.env.BROWSER) {
     const locale = cookie.load(LOCALE_COOKIE_KEY)
@@ -25,7 +25,7 @@ if (process.env.BROWSER) {
 
 export default createModule({
     name: 'user',
-    initialState: fromJS(defaultState),
+    initialState: defaultState,
     transformations: [
         {
             action: 'SHOW_LOGIN',
