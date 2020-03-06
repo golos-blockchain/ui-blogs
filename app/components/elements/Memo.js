@@ -66,27 +66,27 @@ class Memo extends React.Component {
             if (!post) {return false}
             let el;
             if (from === username) {
-              // txt = `Вы отблагодарили @${to} за пост ${post}`
+              // txt = `{tt('g.you_donate_for_post')} @${to} {tt('g.for_the_post')} ${post}`
               el = <span>
-                {`Вы отблагодарили`}&nbsp;
+                {tt('g.you_donate_for_post')}&nbsp;
                 <Link to={`/@${to}`}>
                   {`@${to}`}&nbsp;
                 </Link>
-                {`за пост `}
+                {tt('g.for_the_post')}&nbsp;
                 <Link to={post}>
                   {`${post}`}
                 </Link>
               </span>
             }
             else if (to === username) {
-              // txt = `@${from} отблагодарил вас за пост ${post}`
+              // txt = `@${from} {tt('g.donate_for_post')} ${post}`
               el = <span>
                 <Link to={`/@${from}`}>
                   {`@${from}`}&nbsp;
                 </Link>
-                {`отблагодарил вас за пост `}
+                {tt('g.donate_for_post')}&nbsp;
                 <Link to={post}>
-                  {`${post}`}&nbsp;
+                  {`${post}`}
                 </Link>
                 </span>
             }
