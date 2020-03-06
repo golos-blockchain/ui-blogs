@@ -178,6 +178,10 @@ $themes: (
     .highcharts-background {
         fill: $color-background-dark;
     }
+
+    .MarkdownEditor_comment .CodeMirror {
+        background: #3e494c;
+    }
   }
 
 

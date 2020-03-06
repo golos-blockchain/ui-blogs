@@ -25,5 +25,9 @@
     height: $input-height;
     line-height: $input-height - 2px;
     cursor: pointer;
+
+    @include themify($themes) {
+      color: themed('textColorSecondary');
+    }
   }
 }

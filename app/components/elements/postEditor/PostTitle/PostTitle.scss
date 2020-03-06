@@ -10,7 +10,11 @@
     background: none;
     font-size: 32px;
     font-family: 'Source Serif Pro', serif;
-    color: #555;
+
+    @include themify($themes) {
+      color: themed('textColorSecondary');
+    }
+
     outline: none !important;
 
     &::placeholder {
