@@ -156,8 +156,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
             {link: commentsLink, icon: 'new/comment', value: tt('g.comments')},
             {link: repliesLink, icon: 'new/answer', value: tt('g.replies'), addon: <NotifiCounter fields="comment_reply" />},
             {link: walletLink, icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields="follow,send,receive,account_update" />},
-
-            {link: walletLink, onClick: toggleNightmode, icon: 'editor/eye', value: 'Ночной режим'},
+            {link: walletLink, onClick: toggleNightmode, icon: 'editor/eye', value: tt('g.night_mode')},
             {link: reset_password_link, icon: 'key', value: tt('g.change_password')},
             {link: settingsLink, icon: 'new/setting', value: tt('g.settings')},
             loggedIn ?
