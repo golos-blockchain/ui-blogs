@@ -118,7 +118,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     const additional_menu = []
     if (!loggedIn) {
         additional_menu.push(
-            { link: accountLink, onClick: toggleNightmode, icon: 'editor/eye', value: tt('g.night_mode') },
+            { link: '#', onClick: toggleNightmode, icon: 'editor/eye', value: tt('g.night_mode') },
             { link: '/login.html', onClick: showLogin, value: tt('g.login'), className: 'show-for-small-only' },
             { link: '/create_account', value: tt('g.sign_up'), className: 'show-for-small-only' }
         )
@@ -157,7 +157,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
             {link: commentsLink, icon: 'new/comment', value: tt('g.comments')},
             {link: repliesLink, icon: 'new/answer', value: tt('g.replies'), addon: <NotifiCounter fields="comment_reply" />},
             {link: walletLink, icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields="follow,send,receive,account_update" />},
-            {link: accountLink, onClick: toggleNightmode, icon: 'editor/eye', value: tt('g.night_mode')},
+            {link: '#', onClick: toggleNightmode, icon: 'editor/eye', value: tt('g.night_mode')},
             {link: reset_password_link, icon: 'key', value: tt('g.change_password')},
             {link: settingsLink, icon: 'new/setting', value: tt('g.settings')},
             loggedIn ?
