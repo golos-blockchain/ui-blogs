@@ -33,13 +33,14 @@ export default createModule({
                 // https://github.com/mboperator/redux-modules/issues/11
                 if (typeof payload === 'function') payload = undefined
                 let operation, loginDefault
-                if(payload) {
+                if (payload) {
                     operation = fromJS(payload.operation)
                     loginDefault = fromJS(payload.loginDefault)
                 }
                 return state.merge({show_login_modal: true, loginBroadcastOperation: operation, loginDefault})
             }
         },
+
         { action: 'HIDE_LOGIN', reducer: state =>
             state.merge({show_login_modal: false, loginBroadcastOperation: undefined, loginDefault: undefined}) },
         { action: 'SAVE_LOGIN_CONFIRM', reducer: (state, {payload}) => state.set('saveLoginConfirm', payload) },
