@@ -390,7 +390,7 @@ App.propTypes = {
 
 export default connect(
     state => {
-        const nightmodeEnabled = localStorage.getItem('nightmodeEnabled') == 'true' || false
+        let nightmodeEnabled = process.env.BROWSER ? localStorage.getItem('nightmodeEnabled') == 'true' || false : false
 
         return {
             error: state.app.get('error'),
