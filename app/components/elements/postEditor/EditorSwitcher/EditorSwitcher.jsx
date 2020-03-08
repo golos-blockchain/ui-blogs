@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
-import './EditorSwitcher.scss';
+//import './EditorSwitcher.scss';
 
 export default class EditorSwitcher extends PureComponent {
     static propTypes = {

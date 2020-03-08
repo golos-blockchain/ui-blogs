@@ -46,7 +46,10 @@
   }
 
   &_page &__footer {
-    background: #fff;
+    @include themify($themes) {
+      background-color: themed('summaryBackgroundColor');
+    }
+
     box-shadow: 0 -2px 12px 0 rgba(0,0,0, 0.07);
   }
 

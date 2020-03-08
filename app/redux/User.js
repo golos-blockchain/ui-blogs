@@ -11,12 +11,16 @@ const defaultState = fromJS({
     show_signup_modal: false,
     pub_keys_used: null,
     locale: DEFAULT_LANGUAGE,
-    show_messages_modal: false
+    show_messages_modal: false,
+    nightmodeEnabled: false
 });
 
 if (process.env.BROWSER) {
     const locale = cookie.load(LOCALE_COOKIE_KEY)
     if (locale) defaultState.locale = locale;
+
+    // TODO Чет нихера не цепляет при первой загрузке
+    defaultState.nightmodeEnabled = localStorage.getItem('nightmodeEnabled') == 'true' || false
 }
 
 export default createModule({
@@ -29,13 +33,14 @@ export default createModule({
                 // https://github.com/mboperator/redux-modules/issues/11
                 if (typeof payload === 'function') payload = undefined
                 let operation, loginDefault
-                if(payload) {
+                if (payload) {
                     operation = fromJS(payload.operation)
                     loginDefault = fromJS(payload.loginDefault)
                 }
                 return state.merge({show_login_modal: true, loginBroadcastOperation: operation, loginDefault})
             }
         },
+
         { action: 'HIDE_LOGIN', reducer: state =>
             state.merge({show_login_modal: false, loginBroadcastOperation: undefined, loginDefault: undefined}) },
         { action: 'SAVE_LOGIN_CONFIRM', reducer: (state, {payload}) => state.set('saveLoginConfirm', payload) },
@@ -67,6 +72,13 @@ export default createModule({
         },
         { action: 'CHANGE_LANGUAGE', reducer: (state, {payload}) => {
             return state.set('locale', payload)}
+        },
+        { action: 'TOGGLE_NIGHTMODE', reducer: (state) => {
+            const nightmodeEnabled = localStorage.getItem('nightmodeEnabled') == 'true' || false
+
+            localStorage.setItem('nightmodeEnabled', !nightmodeEnabled)
+            return state.set('nightmodeEnabled', !nightmodeEnabled)
+          }
         },
         { action: 'SHOW_TRANSFER', reducer: state => state.set('show_transfer_modal', true) },
         { action: 'HIDE_TRANSFER', reducer: state => state.set('show_transfer_modal', false) },

@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import KEYS from 'app/utils/keyCodes';
 import Hint from 'app/components/elements/common/Hint';
-import './PostTitle.scss';
 import tt from 'counterpart';
 
 export default class PostTitle extends PureComponent {

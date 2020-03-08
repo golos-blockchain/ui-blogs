@@ -48,7 +48,7 @@
       "styleSrc": "'self' 'unsafe-inline' cdnjs.cloudflare.com fonts.googleapis.com",
       "imgSrc": "* data:",
       "fontSrc": "data: fonts.gstatic.com",
-      "connectSrc": "'self' images.golos.io wss://api.golos.blckchnd.com/ws wss://api-full.golos.id/ws *.facebook.com *.coinmarketcap.com *.googleapis.com app.sharpay.io www.google-analytics.com api.segment.io api.blocktrades.us query.yahooapis.com api.blockcypher.com api.mixpanel.com mc.yandex.ru mc.yandex.ru",
+      "connectSrc": "'self' steemitimages.com wss://api.golos.blckchnd.com/ws wss://api-full.golos.id/ws *.facebook.com *.coinmarketcap.com *.googleapis.com app.sharpay.io www.google-analytics.com api.segment.io api.blocktrades.us query.yahooapis.com api.blockcypher.com api.mixpanel.com mc.yandex.ru mc.yandex.ru",
       "reportUri": "/api/v1/csp_violation",
       "objectSrc": "'self'",
       "pluginTypes": "application/pdf",
@@ -120,7 +120,7 @@
     "auth_token": false,
     "sender_id": false
   },
-  "upload_image": "https://images.golos.io",
+  "upload_image": "https://steemitimages.com",
   "ws_connection_client": "wss://api-full.golos.id/ws",
   "ws_connection_server": "wss://api-full.golos.id/ws",
   "chain_id": "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12",

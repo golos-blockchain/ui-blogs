@@ -3,12 +3,17 @@
 
 @include foundation-everything(true);
 
+@import "./variables";
+@import "./mixins";
+@import "./layout";
+@import "./themes";
+
 @import "./foundation-overrides";
 @import "./fonts";
 @import "./forms";
-@import "./mixins";
 @import "./markdown";
 @import "./notifications";
+
 @import "app/components/all";
 
 #content {

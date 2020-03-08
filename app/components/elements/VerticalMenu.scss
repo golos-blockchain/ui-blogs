@@ -15,7 +15,11 @@
     line-height: 1rem;
     position: relative;
     padding: 0.7rem 1rem;
-    color: #333333;
+
+    @include themify($themes) {
+      color: themed('textColorPrimary');
+    }
+
     font-size: 14px;
     letter-spacing: 0.4px;
   }
@@ -50,7 +54,9 @@
       line-height: 50px;
 
       .Icon {
-        fill: #333;
+        @include themify($themes) {
+          fill: themed('textColorPrimary');
+        }
       }
 
       &:hover {

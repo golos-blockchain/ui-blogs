@@ -43,13 +43,17 @@ function* uploadImage(action) {
         return;
     }
 
-    const user = yield select(state => state.user);
-    const username = user.getIn(['current', 'username']);
-    const postingKey = user.getIn([
-        'current',
-        'private_keys',
-        'posting_private',
-    ]);
+    //const user = yield select(state => state.user);
+    //const username = user.getIn(['current', 'username']);
+    //const postingKey = user.getIn([
+    //    'current',
+    //    'private_keys',
+    //    'posting_private',
+    //]);
+    //
+    // HACK Захардкоженный ключ от аккаунта в стим для постинга через прокси steemimages
+    const username = 'golosimages';
+    const postingKey = '5JdwhQrmKCaspEEDfvWKZiRSpfAaa2hHpFmh1no3wSLx4zB6dnd';
 
     if (!username) {
         onError(tt('user_saga_js.image_upload.error.login_first'));

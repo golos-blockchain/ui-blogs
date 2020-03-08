@@ -49,6 +49,13 @@
 @import "./elements/common/HintIcon/HintIcon";
 @import "./elements/common/DialogManager/index";
 @import "./elements/common/TooltipManager/index";
+@import "./elements/postEditor/MarkdownEditor/MarkdownEditor";
+@import "./elements/postEditor/MarkdownEditorToolbar/index";
+@import "./elements/postEditor/EditorSwitcher/EditorSwitcher";
+@import "./elements/postEditor/PostTitle/PostTitle";
+@import "./elements/postEditor/TagsEditLine/index";
+@import "./elements/postEditor/TagInput/index";
+
 
 // dialogs
 @import "./dialogs/DialogFrame/index";
@@ -73,6 +80,7 @@
 @import "./modules/Powerdown.scss";
 @import "./modules/Messages";
 @import "./modules/Modals";
+@import "./modules/PostForm/PostForm";
 
 // pages
 @import "./pages/CreateAccount";

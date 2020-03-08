@@ -3,7 +3,9 @@
   padding-top: 1rem;
 
   &.UserWallet__balance.zebra {
-      background: $gray95;
+      @include themify($themes) {
+        background: themed('zebra')
+      }
   }
 }
 
@@ -17,13 +19,19 @@
 
 .WalletSubMenu {
   > li > a {
+
     color: $dark-gray;
+
     &:hover {
-      color: $black;
+      @include themify($themes) {
+        color: themed('textColorPrimary')
+      }
     }
   }
   > li > a.active {
-    color: $black;
+    @include themify($themes) {
+      color: themed('textColorPrimary')
+    }
     font-weight: bold;
   }
   border-bottom: 1px solid $medium-gray;

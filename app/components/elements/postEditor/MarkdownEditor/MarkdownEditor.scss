@@ -1,4 +1,3 @@
-
 .MarkdownEditor {
   padding-top: 4px;
 
@@ -33,4 +32,66 @@
   }
 }
 
-@import "./simplemde-overrides";
+.MarkdownEditor {
+  & .CodeMirror {
+    padding: 0;
+    margin: 0 -4px;
+    border: none;
+    border-radius: 0;
+
+    @include themify($themes) {
+      color: themed('textColorPrimary');
+    }
+
+    background: none;
+  }
+
+  & .CodeMirror-cursor {
+      @include themify($themes) {
+        border-left-color: themed('textColorPrimary');
+      }
+  }
+
+  //& .CodeMirror-selectedtext {
+  //    @include themify($themes) {
+  //      background-color: themed('summaryBackgroundColor');
+  //    }
+  //}
+
+  &_comment .CodeMirror {
+    padding: 10px 8px 0;
+    margin: 0;
+
+    @include themify($themes) {
+        background: themed('zebra');
+    }
+
+    border-radius: 6px;
+  }
+
+  & .CodeMirror-scroll {
+    min-height: 350px;
+  }
+
+  &_comment {
+    & .CodeMirror,
+    & .CodeMirror-scroll {
+      min-height: 3em;
+    }
+  }
+
+  & .CodeMirror-lines {
+    font-family: 'Source Serif Pro', serif;
+    font-size: 1.2em;
+    line-height: 1.5em;
+  }
+
+  &_comment .CodeMirror-lines {
+    font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 16px;
+  }
+
+  & .cm-formatting-strikethrough {
+    text-decoration: none !important;
+  }
+}

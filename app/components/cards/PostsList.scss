@@ -49,12 +49,17 @@
 
 .PostsList__post_container {
   position: relative;
-  background-color: $white;
+
+  @include themify($themes) {
+    background-color: themed('summaryBackgroundColor');
+
+    .PostFull {
+      background-color: themed('summaryBackgroundColor');
+    }
+  }
+
   margin: 1rem auto;
   padding: 2rem 0.9rem;
-  .PostFull {
-    background-color: $white;
-  }
 }
 
 body.with-post-overlay {

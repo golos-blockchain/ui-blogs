@@ -54,7 +54,7 @@ export default async function getState(api, url, options, offchain = {}) {
             switch (parts[1]) {
                 case 'transfers':
                     const history = await api.getAccountHistory(uname, -1, 1000)
-                    account.transfer_history = []
+                    account.transfer_history = [] // TODO Not used
                     account.other_history = []
                     
                     history.forEach(operation => {

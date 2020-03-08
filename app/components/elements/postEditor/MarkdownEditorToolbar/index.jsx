@@ -7,7 +7,6 @@ import DialogManager from 'app/components/elements/common/DialogManager';
 import AddImageDialog from '../../../dialogs/AddImageDialog';
 import LinkOptionsDialog from '../../../dialogs/LinkOptionsDialog';
 import plusSvg from 'app/assets/icons/editor-toolbar/plus.svg';
-import './index.scss';
 
 const MAX_HEADING = 4;
 const TOOLBAR_OFFSET = 7;

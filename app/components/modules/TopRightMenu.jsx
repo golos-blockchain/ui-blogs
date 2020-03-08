@@ -17,6 +17,7 @@ import LocalizedCurrency from 'app/components/elements/LocalizedCurrency';
 import { vestsToSteem, toAsset } from 'app/utils/StateFunctions';
 import { WIKI_URL } from 'app/client_config';
 
+
 const defaultNavigate = (e) => {
     if (e.metaKey || e.ctrlKey) {
         // prevent breaking anchor tags
@@ -58,7 +59,7 @@ const calculateEstimateOutput = ({ account, price_per_golos, savings_withdraws, 
   return Number(((total_steem * price_per_golos) + total_sbd).toFixed(2) );
 }
 
-function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops, username, showLogin, logout, loggedIn, vertical, navigate, probablyLoggedIn, location, locationQueryParams, showMessages}) {
+function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops, username, showLogin, logout, loggedIn, vertical, navigate, probablyLoggedIn, location, locationQueryParams, showMessages, toggleNightmode}) {
     const APP_NAME = tt('g.APP_NAME');
     
     const mcn = 'menu' + (vertical ? ' vertical show-for-small-only' : '');
@@ -117,20 +118,21 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     const additional_menu = []
     if (!loggedIn) {
         additional_menu.push(
+            { link: '#', onClick: toggleNightmode, icon: 'editor/eye', value: tt('g.night_mode') },
             { link: '/login.html', onClick: showLogin, value: tt('g.login'), className: 'show-for-small-only' },
             { link: '/create_account', value: tt('g.sign_up'), className: 'show-for-small-only' }
         )
     }
     additional_menu.push(
-        { link: '/market', value: tt('userwallet_jsx.market') },
-        { link: '/~witnesses', value: tt("navigation.witnesses"), target: 'blank' },
-        { link: '/workers', value: tt("navigation.workers"), target: 'blank' },
-        { link: 'https://explorer.golos.id/', value: tt("navigation.explorer"), target: 'blank' },
-        { link: 'https://rudex.org/', value: 'Купи-продай GOLOS/GBG', target: 'blank' },
-        { link: 'https://ropox.app/', value: 'Сервисы ropox.app', target: 'blank' },
-        { link: 'https://golos.cf/', value: 'Сервисы golos.cf', target: 'blank' },
-        { link: 'https://dpos.space/golos-donates/', value: 'Сервисы dpos.space', target: 'blank' },
-        { link: 'https://wiki.golos.id/', value: 'База знаний Golos', target: 'blank' }
+        { link: '/market', icon: 'voters', value: tt('userwallet_jsx.market') },
+        { link: '/~witnesses', icon: 'new/like', value: tt("navigation.witnesses"), target: 'blank' },
+        { link: '/workers', icon: 'editor/plus', value: tt("navigation.workers"), target: 'blank' },
+        { link: 'https://explorer.golos.id/', icon: 'new/search', value: tt("navigation.explorer"), target: 'blank' },
+        { link: 'https://rudex.org/', icon: 'editor/coin', value: 'GOLOS на RuDEX', target: 'blank' },
+        { link: 'https://kuna.io/', icon: 'editor/coin', value: 'GOLOS на Kuna', target: 'blank' },
+        { link: 'https://ropox.app/', icon: 'new/monitor', value: 'Сервисы ropox.app', target: 'blank' },
+        { link: 'https://golos.cf/', icon: 'new/monitor', value: 'Сервисы golos.cf', target: 'blank' },
+        { link: 'https://dpos.space/golos-donates/', icon: 'new/monitor', value: 'Сервисы dpos.space', target: 'blank' }
     );
     const navAdditional = <LinkWithDropdown
         closeOnClickOutside
@@ -150,11 +152,12 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
 
     if (loggedIn) { // change back to if(username) after bug fix:  Clicking on Login does not cause drop-down to close #TEMP!
         let user_menu = [
-            {link: feedLink, icon: 'new/home', iconSize: '1_25x', value: tt('g.feed'), addon: <NotifiCounter fields="feed" />},
+            {link: feedLink, icon: 'new/home', value: tt('g.feed'), addon: <NotifiCounter fields="feed" />},
             {link: accountLink, icon: 'new/blogging', value: tt('g.blog')},
             {link: commentsLink, icon: 'new/comment', value: tt('g.comments')},
             {link: repliesLink, icon: 'new/answer', value: tt('g.replies'), addon: <NotifiCounter fields="comment_reply" />},
             {link: walletLink, icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields="follow,send,receive,account_update" />},
+            {link: '#', onClick: toggleNightmode, icon: 'editor/eye', value: tt('g.night_mode')},
             {link: reset_password_link, icon: 'key', value: tt('g.change_password')},
             {link: settingsLink, icon: 'new/setting', value: tt('g.settings')},
             loggedIn ?
@@ -298,6 +301,10 @@ export default connect(
         showMessages: (e) => {
             if (e) e.preventDefault();
             dispatch(user.actions.showMessages())
-        }
+        },
+        toggleNightmode: (e) => {
+            if (e) e.preventDefault();
+            dispatch(user.actions.toggleNightmode());
+        },
     })
 )(TopRightMenu);

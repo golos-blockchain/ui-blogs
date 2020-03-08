@@ -47,7 +47,10 @@
     border: 1px solid #E1E1E1;
     border-radius: $tag-height/2;
     font-size: 12px;
-    color: #333;
+
+    @include themify($themes) {
+      color: themed('textColorSecondary');
+    }
 
     &_draggable {
       cursor: move;
@@ -67,7 +70,9 @@
       cursor: pointer;
 
       &:hover {
-        color: #333;
+        @include themify($themes) {
+          color: themed('textColorPrimary');
+        }
         border-color: #e1e1e1;
       }
     }
@@ -84,7 +89,9 @@
 
   &__tag-icon:hover,
   &__tag_favorite:hover &__tag-icon {
-    color: #000;
+    @include themify($themes) {
+      color: themed('textColorPrimary');
+    }
   }
 
   &_drag &__tag-remove:hover {

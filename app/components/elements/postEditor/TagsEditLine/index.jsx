@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import cn from 'classnames';
 import Icon from 'app/components/elements/Icon';
 import { getFavoriteTags } from 'app/utils/tags';
-import './index.scss';
 
 export default class TagsEditLine extends React.PureComponent {
     static propTypes = {

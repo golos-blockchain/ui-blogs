@@ -157,7 +157,9 @@
   }
 
   blockquote > p {
-    color: rgba(0,0,0,.6);
+    @include themify($themes) {
+        color: themed('textColorSecondary');
+    }
   }
 }
 

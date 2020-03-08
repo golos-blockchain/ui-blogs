@@ -24,7 +24,11 @@
     max-width: 300px;
     padding: 22px 26px 20px;
     border-radius: 8px;
-    background: #fff;
+
+    @include themify($themes) {
+        background: themed('summaryBackgroundColor');
+    }
+
     box-shadow: 0 2px 12px 0 rgba(0,0,0, 0.15);
     animation: from-down 0.2s forwards;
 
