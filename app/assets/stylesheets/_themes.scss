@@ -182,6 +182,18 @@ $themes: (
     .MarkdownEditor_comment .CodeMirror {
         background: #3e494c;
     }
+
+    .VerticalMenu {
+       li > a:hover {
+        color: $color-background-dark !important;
+      }
+    }
+
+    .UserProfile__banner {
+        > div.column {
+            background: $color-background-dark;
+        }
+    }
   }
 
 
