@@ -192,6 +192,9 @@ $themes: (
     .UserProfile__banner {
         > div.column {
             background: $color-background-dark;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: 50% 50%;
         }
     }
   }
