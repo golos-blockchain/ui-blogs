@@ -120,7 +120,7 @@
     "auth_token": false,
     "sender_id": false
   },
-  "upload_image": "https://images.golos.io",
+  "upload_image": "https://steemitimages.com",
   "ws_connection_client": "wss://api-full.golos.id/ws",
   "ws_connection_server": "wss://api-full.golos.id/ws",
   "chain_id": "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12",
