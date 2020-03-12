@@ -1,5 +1,4 @@
 export default `
-
 /ru--gosloto/@felicita/udachlivyi-den-dlya-golos.id-razygran-super-priz-v-gosloto
 /ru--gadzhety/@masterokst/zakonno-li-videonablyudenie-v-podezde
 /ru--krymov/@worldcorescam/ico-worldcore-ot-pavla-krymova-okazalos-eshe-bolee-provalnym-chem-vse-ozhidali
@@ -12,4 +11,5 @@ export default `
 /ru--apvot50-50/@vp-cosmos/ochistka-veshestv-metodom-perekristallizacii-svoimi-rukami
 /ru--vzyatki/@bitt333/kak-pravilno-brat-vzyatki
 /ru--rozrabotka/@prismo/skraping-veb-saitov-s-pomoshyu-python-r-mitchell
+/slotum/@joycasino/obzor-slotum-casino-kazino-slotum
 `.trim().split("\n")
