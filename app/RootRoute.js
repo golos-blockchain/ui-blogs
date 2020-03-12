@@ -20,6 +20,8 @@ export default {
             ]);
         } else if (route.page === 'Start') {
             cb(null, [require('@pages/Landings/Start')]);
+        } else if (route.page === 'Exchanges') {
+            cb(null, [require('@pages/Landings/Exchanges')]);
         } else if (route.page === 'Faq') {
             cb(null, [
                 {
