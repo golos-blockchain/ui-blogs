@@ -632,6 +632,8 @@
   "witnesses_jsx": {
     "witness_thread": "witness thread",
     "top_witnesses": "Witness Voting",
+    "what_is_api": "API-nodes have higher demands on server resources, it is through them come the queries to the blockchain for sending/receiving information, they are important for the development of a variety of clients and services...",
+    "what_is_seed": "SEED-nodes are the basis for data exchange for the functioning of the blockchain, accepting and distributing blocks they unload the network bandwidth, reducing the response for geographically close connections...",
     "you_can_vote_for_maximum_of_witnesses": "You can vote for a maximum of 30 witnesses",
     "chat_delegates": "Chat to delegates",
     "chain_properties": "Сhain properties",
