@@ -497,6 +497,14 @@
     "replies_to": "Ответы на",
     "comments_by": "Комментарии"
   },
+  "exchanges_jsx": {
+    "title": "Покупка и продажа токенов",
+    "temporarily_disabled": "Ввод/вывод токенов временно отключён",
+    "total_supply": "Информация об общем количестве токенов",
+    "questions": "Есть вопросы",
+    "community_chat": "Получить ответы можно как в чате сообщества",
+    "delegate_chat": "так и в чате делегатов"
+  },
   "loginform_jsx": {
     "you_need_a_private_password_or_key": "Вам нужен приватный (не публичный) ключ ...",
     "cryptography_test_failed": "Криптографический тест провален",
@@ -587,6 +595,7 @@
     "witnesses": "Голосовать за делегатов",
     "workers": "Заявки на работу",
     "explorer": "Обозреватель блокчейна",
+    "buy_sell": "Купить-продать GOLOS",
     "vote_for_witnesses": "Проголосовать за делегатов",
     "privacy_policy": "Политика конфиденциальности",
     "payouts_by_tag": "Выплаты по тэгам",

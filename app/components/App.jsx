@@ -37,11 +37,10 @@ injectGlobal`
     }
 `;
 
-
 const availableLinks = [
-    'https://www.facebook.com/www.golos.id',
-    'https://vk.com/goloschain',
-    'https://t.me/golos_id_issue',
+    'https://twitter.com/Golos_id',
+    'https://t.me/golos_id',
+    'https://vk.com/golosclassic'
 ];
 
 const availableDomains = [
@@ -54,6 +53,7 @@ const availableDomains = [
     'golosboard.com',
     'rudex.org',
     'kuna.io',
+    'livecoin.net',
     'steem-engine.com',
     'github.com',
     'play.google.com',
@@ -62,7 +62,8 @@ const availableDomains = [
     'twitter.com',
     'instagram.com',
     'vk.com',
-    'app.sharpay.io',
+    'coinmarketcap.com',
+    'app.sharpay.io'
 ];
 
 class App extends React.Component {

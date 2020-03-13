@@ -65,17 +65,13 @@ ekaterinavolkova
 id-i-na-hiy
 id-nahuy
 vam
+joycasino
 `.trim().split("\n")
 
 export const blockedContent = `
 
-
 `.trim().split("\n")
 
 export const blockedUsersContent = `
-bm-marrivas
-bm-eash
-bm-twicy70
-creoboo
 
 `.trim().split("\n")

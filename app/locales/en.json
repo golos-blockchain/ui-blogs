@@ -279,6 +279,14 @@
     "social_network": "Social network",
     "about_project": "Golos.id — social platform, blogger community, media network developed on the GOLOS blockchain"
   },
+  "exchanges_jsx": {
+    "title": "Buying and selling tokens",
+    "temporarily_disabled": "Token deposit/withdraw is temporarily disabled",
+    "total_supply": "Information about the total supply of tokens",
+    "questions": "Any questions",
+    "community_chat": "You can get answers in the community chat",
+    "delegate_chat": "and in the delegates chat"
+  },
   "navigation": {
     "about": "About",
     "explore": "Explore",
@@ -295,6 +303,7 @@
     "witnesses": "Witnesses",
     "workers": "Workers",
     "explorer": "Blockchain Explorer",
+    "buy_sell": "Buy-sell GOLOS",
     "vote_for_witnesses": "Vote for Witnesses",
     "privacy_policy": "Privacy Policy",
     "payouts_by_tag": "Payouts by tag",

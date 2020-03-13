@@ -23,6 +23,9 @@ export default function resolveRoute(path)
     if (path === '/welcome') {
         return {page: 'Welcome', hideSubMenu: true};
     }
+    if (path === '/exchanges'){
+        return {page: 'Exchanges'}
+    }
     if (path === '/start'){
         return {page: 'Start'}
     }

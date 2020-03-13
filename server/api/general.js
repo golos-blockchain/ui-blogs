@@ -11,6 +11,8 @@ import coBody from 'co-body';
 import Tarantool from 'db/tarantool';
 import {PublicKey, Signature, hash} from 'golos-classic-js/lib/auth/ecc';
 import {api, broadcast} from 'golos-classic-js';
+import { getDynamicGlobalProperties } from 'app/utils/APIWrapper'
+
 
 // const mixpanel = config.get('mixpanel') ? Mixpanel.init(config.get('mixpanel')) : null;
 
@@ -23,6 +25,22 @@ export default function useGeneralApi(app) {
         this.status = 200;
         this.statusText = 'OK';
         this.body = {status: 200, statusText: 'OK'};
+    })
+
+    router.get('/gls-supply', function * () {
+        const data = yield api.getDynamicGlobalPropertiesAsync();
+
+        this.status = 200;
+        this.statusText = 'OK';
+        this.body = data.current_supply.split(' ')[0];
+    })
+
+    router.get('/gbg-supply', function * () {
+        const data = yield api.getDynamicGlobalPropertiesAsync();
+
+        this.status = 200;
+        this.statusText = 'OK';
+        this.body = data.current_sbd_supply.split(' ')[0];
     })
 
     router.post('/accounts', koaBody, function *() {
