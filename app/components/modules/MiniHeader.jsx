@@ -11,7 +11,7 @@ export default function MiniHeader() {
                         <li className="Header__top-logo">
                             <a href="/"><Icon name={APP_ICON} size="2x" /></a>
                         </li>
-                        <li className="Header__top-steemit show-for-medium"><a href="/">{APP_NAME}<span className="beta">beta</span></a></li>
+                        <li className="Header__top-steemit show-for-medium"><a href="/">GOLOS<span className="beta">blockchain</span></a></li>
                     </ul>
                 </div>
             </div>
