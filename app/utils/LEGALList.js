@@ -5,6 +5,7 @@ export default `
 /ru--avto/@vladimirben/blanki-i-polisy-osago-deshevo
 /ru--denxgi/@rusaken/kak-pravilno-davat-vzyatki
 /vox-populi/@maxxco6/kto-takaya-anastasiya-gizerskaya
+/ru--kokteijlx/@ilyachema/managa-ili-eshe-odin-sposob-rasslabitsya
 /ru--politika/@ms-boss/chastnaya-armiya-vagnera
 /slotum/@joycasino/obzor-slotum-casino-kazino-slotum
 `.trim().split("\n")
