@@ -60,6 +60,14 @@ class PostsIndex extends React.Component {
     }
 
     componentDidMount () {
+        
+        const script = document.createElement("script");
+
+        script.src = "https://files.coinmarketcap.com/static/widget/currency.js";
+        script.async = true;
+
+        document.body.appendChild(script);
+
         const picked_curr = localStorage.getItem('xchange.picked')
 
         this.setState({
@@ -234,6 +242,18 @@ class PostsIndex extends React.Component {
                         /> }
                 </div>
                 <div className="PostsIndex__topics column shrink show-for-large">
+
+                <div className="coinmarketcap-currency-widget"
+                    data-currencyid="4834" // GOLOS
+                    data-base="RUB"
+                    data-secondary="BTC"
+                    data-ticker="false"
+                    data-rank="true"
+                    data-marketcap="true"
+                    data-volume="true"
+                    data-statsticker="false"
+                    data-stats="USD">
+                </div>
 
                     <Topics
                         categories={categories}

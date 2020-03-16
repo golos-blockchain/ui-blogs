@@ -818,7 +818,7 @@
     "tradeable_tokens_that_may_be_transferred_anywhere_at_anytime": "Торгуемые цифровые токены, которые могут переданы куда угодно в любой момент.",
     "LIQUID_TOKEN_can_be_converted_to_VESTING_TOKEN_in_a_process_called_powering_up": "%(LIQUID_TOKEN)s может быть конвертирован в %(VESTING_TOKEN2)s, этот процесс называется \"увеличение %(VESTING_TOKENS)s\".",
     "tokens_worth_about_AMOUNT_of_LIQUID_TOKEN": "Перемещаемые цифровые токены, цена которых всегда равна %(amount)s в %(LIQUID_TOKEN)s.",
-    "influence_tokens_which_give_you_more_control_over": "%(VESTING_TOKEN)s неперемещаемая, её количество увеличивается при долгосрочном хранении. Чем больше у вас %(VESTING_TOKENS)s, тем выше влияние на развитие проекта путём выбора делегатов и поддержки заявок воркеров, а также возможностей по вознаграждению других пользователей.",
+    "influence_tokens_which_give_you_more_control_over": "%(VESTING_TOKEN)s неперемещаемая, её количество увеличивается при долгосрочном хранении. Чем больше у вас СГ, тем выше влияние на развитие проекта путём выбора делегатов и поддержки заявок воркеров, а также возможностей по вознаграждению пользователей.",
     "the_more_you_hold_the_more_you_influence_post_rewards": "Чем больше у вас %(VESTING_TOKENS)s, тем сильней вы влияете на вознаграждения, выбор делегатов и поддержку заявок воркеров.'",
     "the_estimated_value_is_based_on_an_average_value_of_steem_in_US_dollars": "Оценочная стоимость рассчитывается из 7-ми дневной средней стоимости GOLOS.",
     "VESTING_TOKEN_is_non_transferrable_and_requires_convert_back_to_LIQUID_TOKEN": "Вам потребуются 13 недель (вывод раз в неделю равными долями), чтобы перевести её обратно в токены %(LIQUID_TOKEN)s.",

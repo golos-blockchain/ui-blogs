@@ -74,9 +74,7 @@ export default class About extends PureComponent {
                     <div className="columns">
                         <Header>Golos.id</Header>
                         <SubHeader>
-                            Это уникальные тексты и мысли, которых нет в других
-                            частях Интернета. <br />
-                            Это сила сообщества, генерирующая смыслы и действия.
+                            Это интересные истории, полезные статьи, творческий контент, которые останутся в веках с подтверждённым авторством благодаря блокчейн-технологиям.
                         </SubHeader>
                         <div className="row small-up-1 medium-up-2 large-up-4">
                             {this._renderItem(
@@ -86,7 +84,7 @@ export default class About extends PureComponent {
                             )}
                             {this._renderItem(
                                 'Посты и комментарии,',
-                                'а не баннеры и реклама',
+                                'а не сплошная реклама',
                                 'post'
                             )}
                             {this._renderItem(
@@ -96,7 +94,7 @@ export default class About extends PureComponent {
                             )}
                             {this._renderItem(
                                 'Информация принадлежит вам,',
-                                'а не модерируется',
+                                'а не сайтам',
                                 'teamwork'
                             )}
                         </div>

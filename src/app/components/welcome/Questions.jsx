@@ -78,7 +78,7 @@ export default class Questions extends PureComponent {
                     <div className="columns">
                         <Header>Остались вопросы?</Header>
                         <SubHeader>
-                            Посмотрите, что наше сообщество советует новичкам:
+                            Посмотрите, что сообщество советует новичкам:
                         </SubHeader>
                         <div className="row">
                             <div className="columns small-12 medium-12 large-2">
@@ -92,7 +92,7 @@ export default class Questions extends PureComponent {
                                         </Link>
                                     </div>
                                     <div className="columns">
-                                        <Link href="https://t.me/golos_id_issue">
+                                        <Link href="https://t.me/golos_id">
                                             <Icon
                                                 name="new/telegram"
                                                 size="2x"
@@ -104,7 +104,7 @@ export default class Questions extends PureComponent {
                                             <Icon
                                                 name="new/wikipedia"
                                                 size="2x"
-                                            />Посмотрите нашу википедию
+                                            />Почитайте википедию
                                         </Link>
                                     </div>
                                     <div className="columns">

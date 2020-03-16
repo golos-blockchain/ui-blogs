@@ -29,6 +29,11 @@
   visibility: hidden;
 }
 
+.coinmarketcap-currency-widget {
+    margin-bottom: 10px;
+    width: 12rem;
+}
+
 /* Small only */
 @media screen and (max-width: 39.9375em) {
   .PostsIndex__left {

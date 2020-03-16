@@ -15,7 +15,7 @@ class Start extends React.Component {
     render() {
         let {simple} = this.state
         let simpleAnswer = <p className='landing-start-block-text'>
-            <b>{'Golos.id'}</b> — это блог-платформа на <span data-tip='Распределенная база данных'>блокчейне</span><ReactTooltip type='light' effect="solid" /> GOLOS. Публикуя интересные посты и комментарии, вы можете получить вознаграждение от других пользователей. Участвуйте в ранжировании контента, голосуя "за" или "против" постов.
+            <b>{'Golos.id'}</b> — это блог-платформа на <span data-tip='База данных, которая представляет собой непрерывную цепь из блоков и хранится одновременно на множестве компьютеров.'>блокчейне</span><ReactTooltip type='light' effect="solid" /> GOLOS. Публикуя интересные посты и комментарии, вы можете получить вознаграждение от других пользователей. Участвуйте в ранжировании контента, голосуя "за" или "против" постов.
         </p>
 
         let difAnswer = <p className='landing-start-block-text'>
@@ -40,7 +40,7 @@ class Start extends React.Component {
                             </div>
                         </div>
                         <div className='column small-12 medium-6 large-6'>
-                            <p className='landing-start-block-title-text'>Пишите, комментируйте, репостите, участвуйте в конкурсах и получайте <span data-tip='Токены, которыми вознаграждаются посты, можно перевести в любую валюту.'>вознаграждение</span>!<ReactTooltip type='light' effect="solid" /></p>
+                            <p className='landing-start-block-title-text'>Пишите, комментируйте, репостите, участвуйте в конкурсах и получайте <span data-tip='Токены, которыми вознаграждаются посты/комментарии/репосты можно перевести в любую валюту.'>вознаграждение</span>!<ReactTooltip type='light' effect="solid" /></p>
                             <a href="/create_account" className="button">Создать аккаунт</a>
                         </div>
                     </div>
