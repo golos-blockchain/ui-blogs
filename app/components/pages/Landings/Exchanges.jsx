@@ -13,7 +13,7 @@ class Exchanges extends React.Component {
                     </div>
                     <br />
                     <div className='row'>                            
-                            <a target="_blank" href="https://explorer.golos.id/" class="golos-btn btn-secondary btn-round"><Icon name="new/search" /> Blockchain Explorer</a>&nbsp;<a target="_blank" href="https://github.com/golos-blockchain" class="golos-btn btn-secondary btn-round"><Icon name="github" /> Sourse Code</a>&nbsp;<a target="_blank" href="https://coinmarketcap.com/currencies/golos-blockchain/" class="golos-btn btn-secondary btn-round"><Icon name="extlink" /> CoinMarketCap</a>&nbsp;<a target="_blank" href="mailto:info@golos.id" class="golos-btn btn-secondary btn-round"><Icon name="new/envelope" /> Contact Us</a>&nbsp;<a target="_blank" href="https://t.me/golos_delegates" class="golos-btn btn-secondary btn-round"><Icon name="new/telegram" /> Delegates Chat</a>
+                            <a target="_blank" href="https://explorer.golos.id/" class="golos-btn btn-secondary btn-round"><Icon name="new/search" /> Blockchain Explorer</a>&nbsp;<a target="_blank" href="https://github.com/golos-blockchain" class="golos-btn btn-secondary btn-round"><Icon name="github" /> Source Code</a>&nbsp;<a target="_blank" href="https://coinmarketcap.com/currencies/golos-blockchain/" class="golos-btn btn-secondary btn-round"><Icon name="extlink" /> CoinMarketCap</a>&nbsp;<a target="_blank" href="mailto:info@golos.id" class="golos-btn btn-secondary btn-round"><Icon name="new/envelope" /> Contact Us</a>&nbsp;<a target="_blank" href="https://t.me/golos_delegates" class="golos-btn btn-secondary btn-round"><Icon name="new/telegram" /> Delegates Chat</a>
                     </div>
                 </div>
                 <div className='landing-start-block'>
@@ -47,7 +47,7 @@ class Exchanges extends React.Component {
                                 <a target="_blank" href="https://rudex.org/"><img src='https://i.imgur.com/RyCrpvb.png' width='266' height='75' /></a>
                                 </div>
                                 <div className='landing-start-block-center column large-12 medium-12 small-12'>
-                                    <a target="_blank" href="https://ticker.rudex.org/market/GLS_BTC" className="button">GOLOS-BTC</a>&nbsp;&nbsp;<a target="_blank" href="https://ticker.rudex.org/market/GLS_BTS" className="button">GOLOS-BTS</a>&nbsp;&nbsp;<a target="_blank" href="https://ticker.rudex.org/market/GLS_USDT" className="button">GOLOS-USDT</a>&nbsp;&nbsp;<a target="_blank" href="https://ticker.rudex.org/market/GLS_RUBLE" className="button">GOLOS-RUBLE</a>
+                                    <a target="_blank" href="https://ticker.rudex.org/market/GLS_BTC" className="button">GOLOS-BTC</a>&nbsp;&nbsp;<a target="_blank" href="https://ticker.rudex.org/market/GLS_BTS" className="button">GOLOS-BTS</a>&nbsp;&nbsp;<a target="_blank" href="https://ticker.rudex.org/market/GLS_USDT" className="button">GOLOS-USDT</a>&nbsp;&nbsp;<a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_RUBLE" className="button">GOLOS-RUBLE</a>
                                 </div>
                             </div>
                         </div>

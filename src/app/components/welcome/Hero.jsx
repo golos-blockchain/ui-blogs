@@ -48,10 +48,10 @@ export default class Hero extends PureComponent {
                 <Row className="row align-middle">
                     <div className="column small-12 medium-7">
                         <Greeting>
-                            Добро пожаловать <br /> на Golos.id
+                            Добро пожаловать <br /> на Голос
                         </Greeting>
                         <Congratulations>
-                            Мы рады вас видеть!
+                            Мы рады вас видеть в сообществе!
                         </Congratulations>
                     </div>
                     <div className="column small-12 medium-5">

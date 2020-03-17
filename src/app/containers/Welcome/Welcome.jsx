@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import user from 'app/redux/User';
 import Hero from 'src/app/components/welcome/Hero';
 import About from 'src/app/components/welcome/About';
-import Initial from 'src/app/components/welcome/Initial';
 import Differences from 'src/app/components/welcome/Differences';
 import Mobile from 'src/app/components/welcome/Mobile';
 import Reviews from 'src/app/components/welcome/Reviews';
@@ -103,13 +102,6 @@ class Welcome extends Component {
             <div>
                 <Hero />
                 <About />
-                <Initial
-                    tags={this.tags}
-                    tagsLoading={tagsLoading}
-                    tagsActiveId={tagsActiveId}
-                    tagsCards={tagsCards}
-                    onTagClick={this._onTagClick}
-                />
                 <Differences />
                 { /* <Mobile /> TODO Mobile app*/} 
                 <Reviews slides={this.slides} />

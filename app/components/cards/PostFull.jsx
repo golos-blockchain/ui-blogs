@@ -556,7 +556,7 @@ class PostFull extends React.Component {
                     </span>
 
                     <span className={"shareMenu"}>
-                        <div className="sharpay_widget_simple" data-sharpay="golid" data-lang="ru" data-height="18" data-form="no" data-font="#8a8a8a" data-align="right" data-limit="3"></div>
+                        <div className="sharpay_widget_simple" data-sharpay="golid" data-lang="ru" data-height="18" data-form="no" data-hover="lighter" data-font="#8a8a8a" data-align="right" data-limit="3"></div>
                     </span>
                 </div>
             </div>
