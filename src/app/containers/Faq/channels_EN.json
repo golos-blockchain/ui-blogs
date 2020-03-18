@@ -8,55 +8,31 @@
     "showOnMobile": false
   },
   {
-    "inscription": "Golos.id news and updates",
+    "inscription": "Golos.id news",
     "thumbnail": "ic_newspaper",
-    "link": "/@golosio",
+    "link": "/@goloschain",
     "width": "26",
     "height": "26",
     "showOnMobile": false
   },
   {
-    "inscription": "Facebook",
-    "thumbnail": "ic_facebook",
-    "link": "https://www.facebook.com/www.golos.id/\n",
-    "width": "14",
-    "height": "30",
-    "showOnMobile": false
-  },
-  {
-    "inscription": "github",
-    "thumbnail": "ic_github",
-    "link": "https://github.com/golos-classic",
-    "width": "32",
-    "height": "31",
-    "showOnMobile": false
-  },
-  {
-    "inscription": "ENG support channel",
+    "inscription": "Telegram Chat",
     "thumbnail": "ic_support_eng",
-    "link": "https://t.me/golos_en",
+    "link": "https://t.me/golos_id_issue",
     "width": "30",
     "height": "31",
     "showOnMobile": true
   },
   {
-    "inscription": "Best of Golos.id",
+    "inscription": "Twitter",
     "thumbnail": "ic_like",
-    "link": "https://golos.id/trending",
+    "link": "https://twitter.com/Golos_id",
     "width": "28",
     "height": "28",
     "showOnMobile": false
   },
   {
-    "inscription": "Vkontakte",
-    "thumbnail": "ic_vk",
-    "link": "https://vk.com/goloschain",
-    "width": "30",
-    "height": "20",
-    "showOnMobile": false
-  },
-  {
-    "inscription": "Partnership, press and media enquiries",
+    "inscription": "Mail",
     "thumbnail": "ic_mail",
     "link": "mailto:info@golos.id",
     "width": "28",

@@ -1,6 +1,6 @@
 [
   {
-    "inscription": "основной сайт",
+    "inscription": "Основной сайт",
     "thumbnail": "ic_monitor",
     "link": "/",
     "width": "34",
@@ -8,7 +8,15 @@
     "showOnMobile": false
   },
   {
-    "inscription": "канал техподдержки",
+    "inscription": "Новости Golos.id",
+    "thumbnail": "ic_newspaper",
+    "link": "/@goloschain",
+    "width": "26",
+    "height": "26",
+    "showOnMobile": false
+  },
+  {
+    "inscription": "Чат в Телеграм",
     "thumbnail": "ic_support_ru",
     "link": "https://t.me/golos_id_issue",
     "width": "30",
@@ -16,55 +24,15 @@
     "showOnMobile": true
   },
   {
-    "inscription": "Новости и анонсы Golos.id",
-    "thumbnail": "ic_newspaper",
-    "link": "/@golos-info",
-    "width": "26",
-    "height": "26",
-    "showOnMobile": false
-  },
-  {
-    "inscription": "Публичный чат телеграм",
-    "thumbnail": "ic_support_ru",
-    "link": "https://t.me/golos_id",
-    "width": "14",
-    "height": "30",
-    "showOnMobile": false
-  },
-  {
-    "inscription": "github",
-    "thumbnail": "ic_github",
-    "link": "https://github.com/golos-classic",
-    "width": "32",
-    "height": "31",
-    "showOnMobile": false
-  },
-  {
-    "inscription": "ENG support channel",
-    "thumbnail": "ic_support_eng",
-    "link": "https://t.me/golos_en",
-    "width": "30",
-    "height": "31",
-    "showOnMobile": true
-  },
-  {
-    "inscription": "Лучшее на Golos.id",
+    "inscription": "Твиттер",
     "thumbnail": "ic_like",
-    "link": "https://golos.id/trending",
+    "link": "https://twitter.com/Golos_id",
     "width": "28",
     "height": "28",
     "showOnMobile": false
   },
   {
-    "inscription": "Вконтакте",
-    "thumbnail": "ic_vk",
-    "link": "https://vk.com/goloschain",
-    "width": "30",
-    "height": "20",
-    "showOnMobile": false
-  },
-  {
-    "inscription": "контакты для СМИ",
+    "inscription": "Почта",
     "thumbnail": "ic_mail",
     "link": "mailto:info@golos.id",
     "width": "28",

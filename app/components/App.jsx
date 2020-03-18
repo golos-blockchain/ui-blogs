@@ -331,7 +331,6 @@ class App extends React.Component {
                             <a
                                 className="button hollow uppercase"
                                 href="/start"
-                                target="_blank"
                                 onClick={this.learnMore}
                             >
                                 {' '}

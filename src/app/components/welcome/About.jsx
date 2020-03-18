@@ -74,7 +74,7 @@ export default class About extends PureComponent {
                     <div className="columns">
                         <Header>Golos.id</Header>
                         <SubHeader>
-                            Это интересные истории, полезные статьи, творческий контент, которые останутся в веках с подтверждённым авторством благодаря блокчейн-технологиям.
+                            Это интересные истории, полезные статьи, творческий контент, которые благодаря блокчейн-технологиям останутся в веках с подтверждённым авторством.
                         </SubHeader>
                         <div className="row small-up-1 medium-up-2 large-up-4">
                             {this._renderItem(

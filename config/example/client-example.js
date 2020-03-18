@@ -5,7 +5,7 @@ export const APP_NAME   = 'Голос'
 export const APP_NAME_LATIN         = 'Golos'
 export const APP_NAME_UPPERCASE     = 'Golos'
 export const APP_ICON               = 'golos'
-export const APP_URL                = 'golos.io'
+export const APP_URL                = 'golos.id'
 
 export const LIQUID_TOKEN               = 'Голос'
 export const LIQUID_TOKEN_UPPERCASE     = 'ГОЛОС'
@@ -25,13 +25,13 @@ export const DEBT_TOKEN                 = 'Золотой'
 
 // export const DEBT_TOKEN_UPPERCASE = 'Golos Backed Gold'
 export const CURRENCY_SIGN = '₽≈' // '$'
-export const WIKI_URL = 'https://wiki.golos.io/'
-//export const WELCOME_PAGE_URL       = 'https://golos.io/welcome'
+export const WIKI_URL = 'https://wiki.golos.id/'
+//export const WELCOME_PAGE_URL       = 'https://golos.id/welcome'
 
-export const LANDING_PAGE_URL       = 'https://golos.io/about'
-export const TERMS_OF_SERVICE_URL   = 'https://golos.io/legal/terms_of_service.pdf'
-export const PRIVACY_POLICY_URL     = 'https://golos.io/ru--konfidenczialxnostx/@golos/politika-konfidencialnosti'
-export const WHITEPAPER_URL         = 'https://golos.io/ru--golos/@golos/golos-russkoyazychnaya-socialno-mediinaya-blokchein-platforma'
+export const LANDING_PAGE_URL       = 'https://golos.id/about'
+export const TERMS_OF_SERVICE_URL   = 'https://golos.id/legal/terms_of_service.pdf'
+export const PRIVACY_POLICY_URL     = 'https://golos.id/ru--konfidenczialxnostx/@golos/politika-konfidencialnosti'
+export const WHITEPAPER_URL         = 'https://golos.id/ru--golos/@golos/golos-russkoyazychnaya-socialno-mediinaya-blokchein-platforma'
 
 
 // these are dealing with asset types, not displaying to client, rather sending data over websocket
@@ -49,8 +49,8 @@ export const FRACTION_DIGITS_MARKET = 3 // accurate amount of deciaml digits (ex
 
 // meta info
 export const TWITTER_HANDLE = '@example'
-export const SHARE_IMAGE = 'https://golos.io/images/golos-share.png'
-export const TWITTER_SHARE_IMAGE = 'https://golos.io/images/golos-twshare.png'
+export const SHARE_IMAGE = 'https://golos.id/images/golos-share.png'
+export const TWITTER_SHARE_IMAGE = 'https://golos.id/images/golos-twshare.png'
 export const SITE_DESCRIPTION = 'Голос - социальная сеть, построенная на публичном блокчейне. Вознаграждение пользователей осуществляется за счет дополнительной эмиссии токенов. При этом распределением токенов управляют текущие пользователи сети через голосование за лучший контент.'
 
 // various

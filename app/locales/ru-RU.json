@@ -429,7 +429,7 @@
     "to_obtaion_a_more_secure_set_of_keys": "Например, для получения более безопасного набора ключей",
     "update_your_password": "обновить ваш пароль",
     "enter_username": "Введите свое имя пользователя",
-    "password_or_wif": "Пароль или WIF",
+    "password_or_wif": "Пароль или соответствующий ключ",
     "requires_auth_key": "Эта операция требует вашего %(authType)s ключа (или используйте главный пароль)",
     "keep_me_logged_in": "Оставить меня залогиненным",
     "donate": "Отблагодарить",
@@ -517,7 +517,7 @@
     "login_to_comment": "Пожалуйста, авторизуйтесь для выполнения следующих действий",
     "login_to_your_steem_account": "Войти в свой Голос аккаунт",
     "posting": "Постинг",
-    "active_or_owner": "активный или владельца",
+    "active_or_owner": "Активного",
     "this_password_is_bound_to_your_account_owner_key": "Этот пароль привязан к главному ключу аккаунта и не может быть использован для входа на этот сайт.",
     "however_you_can_use_it_to": "Тем не менее его можно использовать чтобы ",
     "update_your_password": "обновить ваш пароль",
@@ -529,8 +529,8 @@
     "password_update_succes": "Пароль для %(accountName)s был успешно обновлен",
     "password_info": "Этот пароль или ключ был введён неправильно. Вероятно, есть ошибка при вводе данных.",
     "enter_your_username": "Введите своё имя пользователя",
-    "password_or_wif": "Пароль или WIF",
-    "this_operation_requires_your_key_or_master_password": "Эта операция требует ввода вашего активного ключа или главного пароля",
+    "password_or_wif": "Пароль или соответствующий ключ",
+    "this_operation_requires_your_key_or_master_password": "Эта операция требует ввода вашего %(authType)s ключа или главного пароля",
     "keep_me_logged_in": "Оставить меня залогиненным",
     "amazing_community": "удивительное сообщество",
     "to_comment_and_reward_others": " комментировать и вознаграждать других.",
@@ -931,11 +931,11 @@
     "private": "Эта заметка является приватной",
     "public_something_key": "Публичный %(key)s ключ",
     "private_something_key": "Приватный %(key)s ключ",
-    "posting_key_is_required_it_should_be_different": "Постинг ключ используется для постинга и голосования. Он должен отличаться от активного ключа и ключа владельца.",
-    "the_active_key_is_used_to_make_transfers_and_place_orders": "Активный ключ используется для переводов и размещения заказов на внутреннем рынке.",
+    "posting_key_is_required_it_should_be_different": "Постинг ключ используется для постинга и голосования. Он должен отличаться от других ключей.",
+    "the_active_key_is_used_to_make_transfers_and_place_orders": "Активный ключ используется для переводов, голосования за делегатов и заказов на внутренней бирже.",
     "the_owner_key_is_required_to_change_other_keys": "Ключ владельца это главный ключ ко всему аккаунту, он необходим для изменения других ключей.",
-    "the_private_key_or_password_should_be_kept_offline": "Приватный ключ или пароль должен храниться в оффлайне насколько это возможно.",
-    "the_memo_key_is_used_to_create_and_read_memos": "Ключ заметок используется для создания и чтения заметок."
+    "the_private_key_or_password_should_be_kept_offline": "Приватный ключ владельца (если вы его получали) и главный пароль должны храниться в оффлайне.",
+    "the_memo_key_is_used_to_create_and_read_memos": "Memo ключ для создания и чтения заметок (используется очень редко)."
   },
   "userwallet_jsx": {
     "conversion_complete_tip": "Завершается",
@@ -1169,7 +1169,7 @@
     "telegram": "телеграм",
     "email": "почта",
     "official_channels": "Официальные каналы",
-    "footer_message": "Мы никогда не попросим ваши приватные ключи или деньги. Если кто-то представляется членами команды Golos и просит такую информацию, напишите нам."
+    "footer_message": "Мы никогда не попросим ваши приватные ключи или деньги. Если кто-то представляется членами команды Golos.id и просит такую информацию, напишите нам."
   },
   "workers": {
     "create_request": "Создать заявку",

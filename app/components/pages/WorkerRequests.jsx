@@ -222,8 +222,8 @@ class WorkerRequests extends React.Component {
                 Сумма
               </th>
               <th>
-                <Tooltip t="% отданной СГ от всей СГ системы">
-                  % от СГ системы
+                <Tooltip t="Процент принявших участие в голосовании от суммы всей Силы Голоса системы">
+                  % от общей СГ (?)
                 </Tooltip>
               </th>
               <th>

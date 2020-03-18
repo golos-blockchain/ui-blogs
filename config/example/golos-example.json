@@ -44,9 +44,9 @@
     "signing_key": "5J.....",
     "recovery_account": "golos"
   },
-  "ws_connection_client": "wss://ws.golos.io",
+  "ws_connection_client": "wss://ws.golos.id",
   "ws_connection_server": [
-    "wss://ws.golos.io"
+    "wss://ws.golos.id"
   ],
   "sendgrid": {
     "key": "SG.xxx_yyyy",

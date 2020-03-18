@@ -92,19 +92,19 @@ export default class Questions extends PureComponent {
                                         </Link>
                                     </div>
                                     <div className="columns">
-                                        <Link href="https://t.me/golos_id">
-                                            <Icon
-                                                name="new/telegram"
-                                                size="2x"
-                                            />Спросите в телеграме
-                                        </Link>
-                                    </div>
-                                    <div className="columns">
                                         <Link href={WIKI_URL}>
                                             <Icon
                                                 name="new/wikipedia"
                                                 size="2x"
                                             />Почитайте википедию
+                                        </Link>
+                                    </div>
+                                    <div className="columns">
+                                        <Link href="https://t.me/golos_id">
+                                            <Icon
+                                                name="new/telegram"
+                                                size="2x"
+                                            />Спросите в телеграме
                                         </Link>
                                     </div>
                                     <div className="columns">
