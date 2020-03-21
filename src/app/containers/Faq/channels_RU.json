@@ -1,18 +1,26 @@
 [
   {
-    "inscription": "Основной сайт",
-    "thumbnail": "ic_monitor",
-    "link": "/",
-    "width": "34",
-    "height": "31",
-    "showOnMobile": false
-  },
-  {
-    "inscription": "Новости Golos.id",
+    "inscription": "Новости о Голосе",
     "thumbnail": "ic_newspaper",
     "link": "/@goloschain",
     "width": "26",
     "height": "26",
+    "showOnMobile": false
+  },
+  {
+    "inscription": "Твиттер",
+    "thumbnail": "ic_like",
+    "link": "https://twitter.com/Golos_id",
+    "width": "28",
+    "height": "28",
+    "showOnMobile": true
+  },
+  {
+    "inscription": "GitHub",
+    "thumbnail": "ic_github",
+    "link": "https://github.com/golos-blockchain",
+    "width": "32",
+    "height": "31",
     "showOnMobile": false
   },
   {
@@ -22,14 +30,6 @@
     "width": "30",
     "height": "33",
     "showOnMobile": true
-  },
-  {
-    "inscription": "Твиттер",
-    "thumbnail": "ic_like",
-    "link": "https://twitter.com/Golos_id",
-    "width": "28",
-    "height": "28",
-    "showOnMobile": false
   },
   {
     "inscription": "Почта",
