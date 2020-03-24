@@ -105,7 +105,7 @@ class Exchanges extends React.Component {
                         </div>
                     </div>
                     <div className='landing-start-block-center column large-12 medium-12 small-12'>
-                        <a target="_blank" href="https://golos.id/api/v1/gls-supply" class="golos-btn btn-secondary btn-round">Supply GOLOS</a>&nbsp;&nbsp;<a target="_blank" href="https://golos.id/api/v1/gbg-supply" class="golos-btn btn-secondary btn-round">Supply GBG</a>
+                        <a target="_blank" href="/api/v1/gls-supply" class="golos-btn btn-secondary btn-round">Supply GOLOS</a>&nbsp;&nbsp;<a target="_blank" href="/api/v1/gbg-supply" class="golos-btn btn-secondary btn-round">Supply GBG</a>
                     </div>
                 </div>
                 <div className='landing-start-block'>

@@ -1,6 +1,6 @@
 [
   {
-    "inscription": "Новости о Голосе",
+    "inscription": "Новости Голоса",
     "thumbnail": "ic_newspaper",
     "link": "/@goloschain",
     "width": "26",
@@ -8,7 +8,7 @@
     "showOnMobile": false
   },
   {
-    "inscription": "Твиттер",
+    "inscription": "Twitter",
     "thumbnail": "ic_like",
     "link": "https://twitter.com/Golos_id",
     "width": "28",
@@ -24,15 +24,15 @@
     "showOnMobile": false
   },
   {
-    "inscription": "Чат в Телеграм",
+    "inscription": "Telegram",
     "thumbnail": "ic_support_ru",
-    "link": "https://t.me/golos_id_issue",
+    "link": "https://t.me/golos_id",
     "width": "30",
     "height": "33",
     "showOnMobile": true
   },
   {
-    "inscription": "Почта",
+    "inscription": "E-mail",
     "thumbnail": "ic_mail",
     "link": "mailto:info@golos.id",
     "width": "28",

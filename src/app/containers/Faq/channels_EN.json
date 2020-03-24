@@ -24,15 +24,15 @@
     "showOnMobile": false
   },
   {
-    "inscription": "Telegram Chat",
+    "inscription": "Telegram",
     "thumbnail": "ic_support_eng",
-    "link": "https://t.me/golos_id_issue",
+    "link": "https://t.me/golos_id",
     "width": "30",
     "height": "31",
     "showOnMobile": true
   },
   {
-    "inscription": "E-Mail",
+    "inscription": "E-mail",
     "thumbnail": "ic_mail",
     "link": "mailto:info@golos.id",
     "width": "28",

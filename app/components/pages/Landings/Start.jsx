@@ -75,9 +75,6 @@ class Start extends React.Component {
                                         ? simpleAnswer
                                         : difAnswer}
                                 </div>
-                                <div className='landing-start-block-center column large-12 medium-12 small-12'>
-                                    <a href="/create_account" className="button">Создать аккаунт</a>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -85,7 +82,6 @@ class Start extends React.Component {
                 <div className='landing-start-block'>
                     <div className='column large-12 medium-12 small-12'>
                         <div className='row'>
-
                             <div className='column large-3 medium-3 small-6'>
                                 <Icon name='team' size='10x'/>
                                 <h5>Социальная значимость</h5>
@@ -95,25 +91,18 @@ class Start extends React.Component {
                                 <Icon name='money' size='10x'/>
                                 <h5>Выгодно для блогинга</h5>
                                 <p className='landing-start-block-icon-text'>Каждый может получить вознаграждения за интересные пост и комментарии, а также за репосты</p>
-
                             </div>
                             <div className='column large-3 medium-3 small-6'>
                                 <Icon name='rocket' size='10x'/>
                                 <h5>В интересах каждого</h5>
                                 <p className='landing-start-block-icon-text'>Писать можно обо всём на свете —
                                     расскажите о ракетостроении или выложите красочные фотографии с отпуска</p>
-
                             </div>
                             <div className='column large-3 medium-3 small-6'>
                                     <Icon name='blockchain' size='10x'/>
                                 <h5>Инновационная модель</h5>
                                 <p className='landing-start-block-icon-text'>Golos.id работает на блокчейне, а
                                     значит информация пользователей принадлежит только им</p>
-
-                            </div>
-
-                            <div className='landing-start-block-center column large-12 medium-12 small-12'>
-                                <a href="/create_account" className="button">Создать аккаунт</a>
                             </div>
                         </div>
                     </div>
