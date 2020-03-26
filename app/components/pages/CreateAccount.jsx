@@ -184,7 +184,7 @@ class CreateAccount extends React.Component {
                             <Icon name="vk" size="1_25x" />  
 
                             <span> Доступна</span>
-                            <a href="https://golos.id/ru--golos/@ksantoprotein/besplatnaya-registraciya-na-blokcheine-golos-bez-sms"> регистрация через бота ВКонтакте </a>
+                            <a href="/@ksantoprotein/besplatnaya-registraciya-na-blokcheine-golos-bez-sms"> регистрация через бота ВКонтакте </a>
                             от <a target="_blank" href="/@ksantoprotein">@ksantoprotein</a>
                         </p>
                         <hr />

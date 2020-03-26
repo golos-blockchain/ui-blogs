@@ -85,9 +85,9 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     const commentsLink = `/@${username}/comments`;
     const reset_password_link = `/@${username}/password`;
 
-    const wikiItem = <li className={scn}>
-        <a target="_blank" href="https://wiki.golos.id/" title={tt('navigation.wiki')}>
-          {vertical ? <span>{tt('navigation.wiki')}</span> : <Icon name="new/wikipedia" size="1_5x" />}
+    const faqItem = <li className={scn}>
+        <a href="/faq" title={tt('navigation.faq')}>
+          {vertical ? <span>{tt('navigation.faq')}</span> : <Icon name="info_o" size="1_5x" />}
         </a>
       </li>
     ;
@@ -118,9 +118,9 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     const additional_menu = []
     if (!loggedIn) {
         additional_menu.push(
-            { link: '#', onClick: toggleNightmode, icon: 'editor/eye', value: tt('g.night_mode') },
             { link: '/login.html', onClick: showLogin, value: tt('g.login'), className: 'show-for-small-only' },
-            { link: '/create_account', value: tt('g.sign_up'), className: 'show-for-small-only' }
+            { link: '/create_account', value: tt('g.sign_up'), className: 'show-for-small-only' },
+            { link: '#', onClick: toggleNightmode, icon: 'editor/eye', value: tt('g.night_mode') }
         )
     }
     additional_menu.push(
@@ -174,7 +174,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
         return (
             <ul className={mcn + mcl}>
                 <LocaleSelect />
-                {wikiItem}
+                {faqItem}
                 {searchItem}
                 <li className="delim show-for-medium" />
                 {submitStory}
@@ -228,7 +228,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     return (
         <ul className={mcn + mcl}>
             <LocaleSelect />
-            {wikiItem}
+            {faqItem}
             {searchItem}
             <li className="delim show-for-medium" />
             {!probablyLoggedIn && !externalTransfer && <li className={scn}>

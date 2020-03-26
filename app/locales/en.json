@@ -302,7 +302,7 @@
     "APP_NAME_app_center": "%(APP_NAME)s App Center",
     "witnesses": "Witnesses",
     "workers": "Workers",
-    "explorer": "Blockchain Explorer",
+    "explorer": "Block Explorer",
     "buy_sell": "Buy-sell GOLOS",
     "vote_for_witnesses": "Vote for Witnesses",
     "privacy_policy": "Privacy Policy",
@@ -635,7 +635,7 @@
     "what_is_api": "API-nodes have higher demands on server resources, it is through them come the queries to the blockchain for sending/receiving information, they are important for the development of a variety of clients and services...",
     "what_is_seed": "SEED-nodes are the basis for data exchange for the functioning of the blockchain, accepting and distributing blocks they unload the network bandwidth, reducing the response for geographically close connections...",
     "you_can_vote_for_maximum_of_witnesses": "You can vote for a maximum of 30 witnesses",
-    "chat_delegates": "Chat to delegates",
+    "chat_delegates": "Delegates Chat",
     "chain_properties": "Сhain properties",
     "witness": "Witness",
     "witness_0": "You haven't supported any delegates yet",
@@ -1117,11 +1117,23 @@
     "close_forever": "Close forever"
   },
   "faq_jsq": {
-    "page_title": "FAQ",
-    "page_description" : "There you can find answers on all questions you may be curious about.",
+    "page_title": "Frequently Asked Questions",
+    "page_description" : "This page contains popular user questions and official Golos Blockchain communication channels.",
     "telegram": "telegram",
     "email": "email",
+    "wiki": "wiki golos",
+    "twitter": "twitter",
+    "blog": "news golos",
     "official_channels": "Official channels",
-    "footer_message": "Мы никогда не попросим ваши приватные ключи или деньги. Если кто-то представляется членами команды Golos.id и просит такую информацию, напишите нам на почту <a href='mailto:pr@golos.id' target='_blank'>pr@golos.id</a>."
+    "footer_message": "We will never ask for your private keys or money. If someone introduces themselves as members of the Golos Blockchain team and asks for such information, please contact us."
+  },
+  "workers": {
+    "create_request": "Create a request",
+    "created": "Voting",
+    "payment": "Payment",
+    "payment_complete": "Paid",
+    "closed_by_author": "Removed",
+    "closed_by_expiration": "Rejected",
+    "closed_by_voters": "Rejected"
   }
 }

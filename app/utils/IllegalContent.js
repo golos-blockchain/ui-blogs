@@ -66,6 +66,7 @@ id-i-na-hiy
 id-nahuy
 vam
 joycasino
+id-mefklad
 `.trim().split("\n")
 
 export const blockedContent = `

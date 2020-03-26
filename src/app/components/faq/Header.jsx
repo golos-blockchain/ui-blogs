@@ -64,7 +64,7 @@ const Button = styled.a`
     align-items: center;
     border-radius: 100px;
     margin-right: 15px;
-    width: 138px;
+    width: 158px;
     height: 34px;
     text-transform: uppercase;
     font-family: 'Open Sans', sans-serif;
@@ -76,7 +76,6 @@ const BlueButton = Button.extend`
     color: #ffffff;
     line-height: 18px;
     text-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.15);
-    letter-spacing: 1px;
     background: #2879ff;
     transition: 0.2s;
 
@@ -150,20 +149,19 @@ export default class Header extends PureComponent {
                         </Description>
                         <ButtonsBlock>
                             <BlueButton
-                                href="https://t.me/golos_id_issue"
-                                target="_blank"
-                            >
-                                <Icon name="telegram" size="16px" fill="#fff" />
-                                <ButtonLabel>
-                                    {tt('faq_jsq.telegram')}
-                                </ButtonLabel>
+                                href="https://wiki.golos.id/"
+                                target="_blank">
+                                <ButtonLabel>{tt('faq_jsq.wiki')}</ButtonLabel>
                             </BlueButton>
                             <WhiteButton
-                                href="mailto:info@golos.id"
-                                target="_blank"
-                            >
-                                <Icon name="envelope" size="16px" />
-                                <ButtonLabel>{tt('faq_jsq.email')}</ButtonLabel>
+                                href="/@goloschain"
+                                target="_blank">
+                                <ButtonLabel>{tt('faq_jsq.blog')}</ButtonLabel>
+                            </WhiteButton>
+                            <WhiteButton
+                                href="https://twitter.com/goloschain"
+                                target="_blank">
+                                <ButtonLabel>{tt('faq_jsq.twitter')}</ButtonLabel>
                             </WhiteButton>
                         </ButtonsBlock>
                     </MainBlock>

@@ -72,9 +72,9 @@ export default class About extends PureComponent {
             <Root>
                 <Row className="row align-middle">
                     <div className="columns">
-                        <Header>Golos.id</Header>
+                        <Header>Golos.id <span className="secondary">(зеркало <a target="_blank" href="https://golos.in/">golos.in</a>)</span></Header>
                         <SubHeader>
-                            Это интересные истории, полезные статьи, творческий контент, которые останутся в веках с подтверждённым авторством благодаря блокчейн-технологиям.
+                            Это интересные истории, полезные статьи, творческий контент, которые благодаря блокчейн-технологиям останутся в веках с подтверждённым авторством.
                         </SubHeader>
                         <div className="row small-up-1 medium-up-2 large-up-4">
                             {this._renderItem(
@@ -84,7 +84,7 @@ export default class About extends PureComponent {
                             )}
                             {this._renderItem(
                                 'Посты и комментарии,',
-                                'а не сплошная реклама',
+                                'а не назойливая реклама',
                                 'post'
                             )}
                             {this._renderItem(
@@ -94,7 +94,7 @@ export default class About extends PureComponent {
                             )}
                             {this._renderItem(
                                 'Информация принадлежит вам,',
-                                'а не сайтам',
+                                'а не сайту',
                                 'teamwork'
                             )}
                         </div>

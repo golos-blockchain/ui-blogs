@@ -38,8 +38,8 @@ injectGlobal`
 `;
 
 const availableLinks = [
-    'https://twitter.com/Golos_id',
-    'https://t.me/golos_id',
+    'https://twitter.com/goloschain',
+    'https://t.me/goloschain',
     'https://vk.com/golosclassic'
 ];
 
@@ -275,13 +275,11 @@ class App extends React.Component {
                                     this.closeBox();
                                 }}
                             />
-                            <Link
-                                className="link"
-                                to="golosio/@golosio/golos.id-grantovaya-programma-podderzhki-molodykh-avtorov-i-unikalnogo-kontenta"
+                            <Link className="link"
+                                to="/@lex"
                             >
-                                <Icon className="logo-icon" name={APP_ICON} />&nbsp;{tt(
-                                    'g.announcement_text'
-                                )}
+                                <Icon className="logo-icon" name={APP_ICON} />&nbsp;
+                                Домен golos.id работает без ограничений + вознаграждения за репосты в социальные сети теперь и токенами Голос! 
                             </Link>
                         </div>
                     </div>
@@ -331,7 +329,6 @@ class App extends React.Component {
                             <a
                                 className="button hollow uppercase"
                                 href="/start"
-                                target="_blank"
                                 onClick={this.learnMore}
                             >
                                 {' '}

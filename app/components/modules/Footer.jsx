@@ -81,13 +81,13 @@ class Footer extends React.Component {
                 items: [
                     {
                         name: 'Twitter',
-                        url: 'https://twitter.com/Golos_id',
+                        url: 'https://twitter.com/goloschain',
                         icon: 'new/twitter',
                         size: '1_5x',
                     },
                     {
                         name: 'Telegram',
-                        url: 'https://t.me/golos_id',
+                        url: 'https://t.me/goloschain',
                         icon: 'new/telegram',
                         size: '1_5x',
                     },

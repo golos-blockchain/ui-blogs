@@ -9,15 +9,15 @@
     },
     {
         "title": "A text message was successfully sent but I cannot complete the sign-up form, what should I do?",
-        "answer": "Please, contact the Support Chat [https://t.me/golos_eng](https://t.me/golos_eng) to report a problem about it or send a direct message to @dankinescop or @chinpu"
+        "answer": "Please, contact the Support Chat [https://t.me/golos_id_issue](https://t.me/golos_id_issue)"
     },
     {
         "title": "I’ve completed the registration but there occurred an error. What should I do?",
-        "answer": "Please, contact the Support Chat [https://t.me/golos_eng](https://t.me/golos_eng) to report a problem about it or send a direct message to @dankinescop or @chinpu"
+        "answer": "Please, contact the Support Chat [https://t.me/golos_id_issue](https://t.me/golos_id_issue)"
     },
     {
         "title": "I’ve completed the registration but when I try to log in I see a message that there’s no such account name.",
-        "answer": "Please, contact the Support Chat [https://t.me/golos_eng](https://t.me/golos_eng) to report a problem about it or send a direct message to @dankinescop or @chinpu"
+        "answer": "Please, contact the Support Chat [https://t.me/golos_id_issue](https://t.me/golos_id_issue)"
     },
     {
         "title": "What should a newcomer read to easily use Golos.id platform? Is there any guide?",
@@ -25,11 +25,11 @@
     },
     {
         "title": "What actions can I perform with the minimum Golos Power, that I receive after registration? Can I write posts, comment, vote?",
-        "answer": "You can easily post, comment and vote. Please note, you shouldn’t make a lot of actions at once because there are limits on the platform: no more than 4 posts per day and 40 upvotes with 100% of Golos Power are allowed. <br/>Also pay attention to the expense of your Voting Power, it is limited and decreases with each given vote by up to 5%. The rate of decreasing depends on the voting frequency: the more you vote, the faster it decreases. Go to the site header to find the battery charge of your current Voting Power. <br/>Please, stop voting for a while to increase the voting power, usually it takes a day or two, but sometimes it can take a week."
+        "answer": "You can easily post, comment and vote. Please note, you shouldn’t make a lot of actions at once because there are limits on the platform: no more than 4 posts per day and 10 upvotes with 100% of Golos Power are allowed. <br/>Also pay attention to the expense of your Voting Power, it is limited and decreases with each given vote by up to 5%. The rate of decreasing depends on the voting frequency: the more you vote, the faster it decreases. Go to the site header to find the battery charge of your current Voting Power. <br/>Please, stop voting for a while to increase the voting power, usually it takes a day or two, but sometimes it can take a week."
     },
     {
         "title": "I found a lot of keys in my wallet in the permissions tab. Which ones should I save? Where can I get more info about this page?",
-        "answer": "Keys are like your passport or id in the blockchain, your password is linked not only with your posting account but also with a wallet where you store your tokens. Therefore, you should take to care for them and store in several places, preferably not only as digital ones, but also paper copies.<br/>The owner's key is the most important, it can replace all the other keys or can be used to update the password if it has been compromised. It should be used if you have no choice. Please use a posting key to post and vote and an active key to make transactions. <br/>Find more info about the keys in [Golos Wiki](https://wiki.golos.id/1-introduction/koshelek-klyuchi-viplati.html)."
+        "answer": "Keys are like your passport or id in the blockchain, your password is linked not only with your posting account but also with a wallet where you store your tokens. Therefore, you should take to care for them and store in several places, preferably not only as digital ones, but also paper copies.<br/>The owner's key is the most important, it can replace all the other keys or can be used to update the password if it has been compromised. It should be used if you have no choice. Please use a posting key to post and vote and an active key to make transactions."
     },
     {
         "title": "I did not save or forgot my password. How can I reset it?",
@@ -37,7 +37,7 @@
     },
     {
         "title": "I forgot my username. What do I do?",
-        "answer": "If you specified your email address while signing up, please report the issue to [https://t.me/golos_eng](https://t.me/golos_eng)  in a private message  to @dankinescop or @chinpu in Telegram."
+        "answer": "If you specified your email address while signing up, please report the issue to [https://t.me/golos_id_issue](https://t.me/golos_id_issue)."
     },
     {
         "title": "I’ve got “Account exceeded maximum allowed bandwidth per vesting share” error message. What does it mean?",
@@ -53,7 +53,7 @@
     },
     {
         "title": "I can’t open golos.id website. What do I do?",
-        "answer": "Please use the mirror website  [https://golos.blog](https://golos.blog/)."
+        "answer": "Please use the mirror website  [https://golos.in](https://golos.in/)."
     },
     {
         "title": "How can I delete my account?",

@@ -4,7 +4,6 @@ import cn from 'classnames';
 
 const images = new Map([
     ['facebook', require('app/assets/images/facebook.svg')],
-    ['reddit', require('app/assets/images/reddit.svg')],
     ['golos', require('app/assets/images/golos.svg')],
 ]);
 

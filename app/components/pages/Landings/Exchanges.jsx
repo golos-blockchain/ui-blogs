@@ -13,7 +13,7 @@ class Exchanges extends React.Component {
                     </div>
                     <br />
                     <div className='row'>                            
-                            <a target="_blank" href="https://explorer.golos.id/" class="golos-btn btn-secondary btn-round"><Icon name="new/search" /> Blockchain Explorer</a>&nbsp;<a target="_blank" href="https://github.com/golos-blockchain" class="golos-btn btn-secondary btn-round"><Icon name="github" /> Source Code</a>&nbsp;<a target="_blank" href="https://coinmarketcap.com/currencies/golos-blockchain/" class="golos-btn btn-secondary btn-round"><Icon name="extlink" /> CoinMarketCap</a>&nbsp;<a target="_blank" href="mailto:info@golos.id" class="golos-btn btn-secondary btn-round"><Icon name="new/envelope" /> Contact Us</a>&nbsp;<a target="_blank" href="https://t.me/golos_delegates" class="golos-btn btn-secondary btn-round"><Icon name="new/telegram" /> Delegates Chat</a>
+                            <a target="_blank" href="https://explorer.golos.id/" class="golos-btn btn-secondary btn-round"><Icon name="new/search" /> Block Explorer</a>&nbsp;<a target="_blank" href="https://github.com/golos-blockchain" class="golos-btn btn-secondary btn-round"><Icon name="github" /> Source Code</a>&nbsp;<a target="_blank" href="https://coinmarketcap.com/currencies/golos-blockchain/" class="golos-btn btn-secondary btn-round"><Icon name="extlink" /> CoinMarketCap</a>&nbsp;<a target="_blank" href="mailto:info@golos.id" class="golos-btn btn-secondary btn-round"><Icon name="new/envelope" /> Contact Us</a>&nbsp;<a target="_blank" href="https://t.me/golos_delegates" class="golos-btn btn-secondary btn-round"><Icon name="new/telegram" /> Delegates Chat</a>
                     </div>
                 </div>
                 <div className='landing-start-block'>
@@ -105,7 +105,7 @@ class Exchanges extends React.Component {
                         </div>
                     </div>
                     <div className='landing-start-block-center column large-12 medium-12 small-12'>
-                        <a target="_blank" href="https://golos.id/api/v1/gls-supply" class="golos-btn btn-secondary btn-round">Supply GOLOS</a>&nbsp;&nbsp;<a target="_blank" href="https://golos.id/api/v1/gbg-supply" class="golos-btn btn-secondary btn-round">Supply GBG</a>
+                        <a target="_blank" href="/api/v1/gls-supply" class="golos-btn btn-secondary btn-round">Supply GOLOS</a>&nbsp;&nbsp;<a target="_blank" href="/api/v1/gbg-supply" class="golos-btn btn-secondary btn-round">Supply GBG</a>
                     </div>
                 </div>
                 <div className='landing-start-block'>
@@ -117,7 +117,7 @@ class Exchanges extends React.Component {
                         <div className='row'>
                             <div className='column large-12 medium-12 small-12'>
                                 <p className='landing-start-block-text landing-start-block-center'>
-                                    {tt('exchanges_jsx.community_chat')} <a target="_blank" href='https://t.me/golos_id'>t.me/golos_id</a>, {tt('exchanges_jsx.delegate_chat')} <a target="_blank" href='https://t.me/golos_delegates'>t.me/golos_delegates</a></p>
+                                    {tt('exchanges_jsx.community_chat')} <a target="_blank" href='https://t.me/goloschain'>t.me/goloschain</a>, {tt('exchanges_jsx.delegate_chat')} <a target="_blank" href='https://t.me/golos_delegates'>t.me/golos_delegates</a></p>
                             </div>
                         </div>
                     </div>
