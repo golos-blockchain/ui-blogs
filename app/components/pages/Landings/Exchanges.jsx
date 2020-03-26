@@ -117,7 +117,7 @@ class Exchanges extends React.Component {
                         <div className='row'>
                             <div className='column large-12 medium-12 small-12'>
                                 <p className='landing-start-block-text landing-start-block-center'>
-                                    {tt('exchanges_jsx.community_chat')} <a target="_blank" href='https://t.me/golos_id'>t.me/golos_id</a>, {tt('exchanges_jsx.delegate_chat')} <a target="_blank" href='https://t.me/golos_delegates'>t.me/golos_delegates</a></p>
+                                    {tt('exchanges_jsx.community_chat')} <a target="_blank" href='https://t.me/goloschain'>t.me/goloschain</a>, {tt('exchanges_jsx.delegate_chat')} <a target="_blank" href='https://t.me/golos_delegates'>t.me/golos_delegates</a></p>
                             </div>
                         </div>
                     </div>

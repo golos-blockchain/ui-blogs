@@ -159,7 +159,7 @@ export default class Header extends PureComponent {
                                 <ButtonLabel>{tt('faq_jsq.blog')}</ButtonLabel>
                             </WhiteButton>
                             <WhiteButton
-                                href="https://twitter.com/golos_id"
+                                href="https://twitter.com/goloschain"
                                 target="_blank">
                                 <ButtonLabel>{tt('faq_jsq.twitter')}</ButtonLabel>
                             </WhiteButton>

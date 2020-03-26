@@ -38,8 +38,8 @@ injectGlobal`
 `;
 
 const availableLinks = [
-    'https://twitter.com/Golos_id',
-    'https://t.me/golos_id',
+    'https://twitter.com/goloschain',
+    'https://t.me/goloschain',
     'https://vk.com/golosclassic'
 ];
 

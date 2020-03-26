@@ -49,7 +49,7 @@ export const FRACTION_DIGITS = 2 // default amount of decimal digits
 export const FRACTION_DIGITS_MARKET = 3 // accurate amount of deciaml digits (example: used in market)
 
 // meta info
-export const TWITTER_HANDLE = '@golos_id'
+export const TWITTER_HANDLE = '@goloschain'
 export const SHARE_IMAGE = 'https://' + APP_DOMAIN + '/images/golos-share.png'
 export const TWITTER_SHARE_IMAGE = 'https://' + APP_DOMAIN + '/images/golos-twshare.png'
 export const SITE_DESCRIPTION = 'Голос - социальная сеть, построенная на публичном блокчейне. Вознаграждение пользователей осуществляется за счет дополнительной эмиссии токенов. При этом распределением токенов управляют текущие пользователи сети через голосование за лучший контент.'
