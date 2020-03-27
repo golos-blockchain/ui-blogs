@@ -9,15 +9,15 @@
     },
     {
         "title": "A text message was successfully sent but I cannot complete the sign-up form, what should I do?",
-        "answer": "Please, contact the Support Chat [https://t.me/golos_id_issue](https://t.me/golos_id_issue)"
+        "answer": "Please, contact the Support Chat [https://t.me/golos_id](https://t.me/golos_id)"
     },
     {
         "title": "I’ve completed the registration but there occurred an error. What should I do?",
-        "answer": "Please, contact the Support Chat [https://t.me/golos_id_issue](https://t.me/golos_id_issue)"
+        "answer": "Please, contact the Support Chat [https://t.me/golos_id](https://t.me/golos_id)"
     },
     {
         "title": "I’ve completed the registration but when I try to log in I see a message that there’s no such account name.",
-        "answer": "Please, contact the Support Chat [https://t.me/golos_id_issue](https://t.me/golos_id_issue)"
+        "answer": "Please, contact the Support Chat [https://t.me/golos_id](https://t.me/golos_id)"
     },
     {
         "title": "What should a newcomer read to easily use Golos.id platform? Is there any guide?",
@@ -37,7 +37,7 @@
     },
     {
         "title": "I forgot my username. What do I do?",
-        "answer": "If you specified your email address while signing up, please report the issue to [https://t.me/golos_id_issue](https://t.me/golos_id_issue)."
+        "answer": "If you specified your email address while signing up, please report the issue to [https://t.me/golos_id](https://t.me/golos_id)."
     },
     {
         "title": "I’ve got “Account exceeded maximum allowed bandwidth per vesting share” error message. What does it mean?",

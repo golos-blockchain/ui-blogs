@@ -158,7 +158,7 @@ class Start extends React.Component {
                             <div className='column large-12 medium-12 small-12'>
                                 <p className='landing-start-block-text landing-start-block-center'>
                                     У нас есть собственная <a target="_blank" href='https://wiki.golos.id/'>Википедия</a>,
-                                    в которой собрана информация о блог-платформе Golos.id. Кроме того, получить ответы на многие вопросы можно у сообщества в чате <a target="_blank" href='https://t.me/goloschain'>t.me/goloschain</a></p>
+                                    в которой собрана информация о блог-платформе Golos.id. Кроме того, получить ответы на многие вопросы можно у сообщества в чате <a target="_blank" href='https://t.me/golos_id'>t.me/golos_id</a></p>
                             </div>
                         </div>
                     </div>

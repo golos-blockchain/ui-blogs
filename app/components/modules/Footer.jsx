@@ -87,7 +87,7 @@ class Footer extends React.Component {
                     },
                     {
                         name: 'Telegram',
-                        url: 'https://t.me/goloschain',
+                        url: 'https://t.me/golos_id',
                         icon: 'new/telegram',
                         size: '1_5x',
                     },
