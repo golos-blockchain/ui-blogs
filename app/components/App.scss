@@ -29,6 +29,11 @@ HTML {
         margin-top: 2.5rem;
     }
     .callout {
+      @include themify($themes) {
+        color: themed('textColorPrimary');
+        background-color: themed('backgroundColor');
+      }
+
       margin-top: 0.75rem;
       border: 1px solid $light-gray;
     }

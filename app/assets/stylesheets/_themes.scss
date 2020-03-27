@@ -179,6 +179,14 @@ $themes: (
         fill: $color-background-dark;
     }
 
+    .Markdown {
+        font-family: sans-serif;
+    }
+
+    .Markdown.MarkdownViewer--small {
+        font-family: sans-serif;
+    }
+
     .MarkdownEditor_comment .CodeMirror {
         background: #3e494c;
     }
