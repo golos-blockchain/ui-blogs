@@ -39,7 +39,7 @@ injectGlobal`
 
 const availableLinks = [
     'https://twitter.com/goloschain',
-    'https://t.me/goloschain',
+    'https://t.me/golos_id',
     'https://vk.com/golosclassic'
 ];
 

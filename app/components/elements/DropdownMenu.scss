@@ -12,7 +12,11 @@
     // min-width: 145px;
     min-width: 232px;
     z-index: 1000;
-    background-color: $white;
+
+    @include themify($themes) {
+      background-color: themed('summaryBackgroundColor');
+    }
+
     display: block;
     border: 1px solid $medium-gray;
     border-radius: $global-radius;
