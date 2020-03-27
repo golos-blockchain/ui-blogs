@@ -87,7 +87,12 @@
     font-size: 85%;
     border-radius: 3px;
     border: none;
-    background-color: #F4F4F4;
+
+    @include themify($themes) {
+        background-color: themed('summaryBackgroundColor');
+        color: themed('textColorSecondary');
+    }
+
     font-weight: inherit;
   }
 

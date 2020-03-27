@@ -30,7 +30,9 @@
 
   > li.title {
     padding: 0.56rem;
-    color: #333333;
+    @include themify($themes) {
+      color: themed('textColorPrimary');
+    }
     font-size: 14px;
     font-weight: 500;
     letter-spacing: 0.4px;

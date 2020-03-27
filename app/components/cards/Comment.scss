@@ -33,7 +33,9 @@
 }
 
 .Comment .highlighted {
-  background: #FFD;
+  @include themify($themes) {
+    background: themed('zebra');
+  }
 }
 
 .Comment.collapsed {
