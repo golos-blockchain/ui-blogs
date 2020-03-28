@@ -215,7 +215,7 @@ export default class ViewWorkerRequest extends React.Component {
           {vote_end}
         </p>
         <p>
-          Процент голосов от общей СГ: {global_rshares_pct}%<br/>
+          Процент проголосовавших от общей СГ: {global_rshares_pct}%<br/>
           <span title={pending_title}>Расчётная сумма выплаты: <b>{pending_amount} {request.required_amount_min.split(" ")[1]}</b> <Icon name="info_o" /></span>
         </p>
         <div>

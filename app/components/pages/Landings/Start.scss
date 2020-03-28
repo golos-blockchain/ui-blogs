@@ -26,7 +26,9 @@
         line-height: 40px;
         font-weight: 300;
         a{
-            color: black;
+            @include themify($themes) {
+                color: themed('textColorPrimary');
+            }
             &.active{            
                 border-bottom: 2px dashed #347EC6;
             }
@@ -51,7 +53,9 @@
 
 .landing-start-block-title-text{
     font-family: 'Open Sans', sans-serif;
-    color: #272d2e;
+    @include themify($themes) {
+        color: themed('textColorPrimary');
+    }
     font-size: 25px;
     font-style: normal;      
     line-height: 30px;      
@@ -145,8 +149,14 @@
   }
   
   .landing-start-block:nth-child(2n+1) {
-    background-color: #ffffff;
+    @include themify($themes) {
+        color: themed('textColorPrimary');
+        background-color: themed('backgroundColor');
+    }
   }
   .landing-start-block:nth-child(2n+2) {
-    background-color: #f6f7f7;
+    @include themify($themes) {
+        color: themed('textColorPrimary');
+        background-color: themed('zebra');
+    }
   }

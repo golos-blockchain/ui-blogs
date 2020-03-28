@@ -1,9 +1,9 @@
-  .landing-start{
+  .landing-exchanges{
     font-family: 'Open Sans', sans-serif;
     font-style: normal;
     color: #272d2e;
   }
-  .landing-start-block{
+  .landing-exchanges-block{
     h1, h2, h3, h5 {
         text-align: center;
         font-family: 'Open Sans', sans-serif;
@@ -49,7 +49,7 @@
     }
   }
 
-.landing-start-block-title-text{
+.landing-exchanges-block-title-text{
     font-family: 'Open Sans', sans-serif;
     color: #272d2e;
     font-size: 25px;
@@ -62,7 +62,7 @@
     }
   }
 
-  .landing-start-block-text{
+  .landing-exchanges-block-text{
     font-family: 'Open Sans', sans-serif;    
     font-size: 1.6rem;
     line-height: 2.3rem;      
@@ -80,7 +80,7 @@
     }
 }
 
-.landing-start-block-icon-text{
+.landing-exchanges-block-icon-text{
     font-family: 'Open Sans', sans-serif;    
     font-size: 1rem;
     line-height: 1.4rem;      
@@ -88,7 +88,7 @@
     text-align: left;
 }
 
-  .landing-start-block-center{
+  .landing-exchanges-block-center{
       margin-top: 1rem;
       text-align: center;
       a {
@@ -98,9 +98,9 @@
     }
   }
 
-.landing-start-person{
+.landing-exchanges-person{
     padding-top: 1rem;
-    .landing-start-round-img{
+    .landing-exchanges-round-img{
         border-radius: 100px; 
         border: 0px solid; 
       }
@@ -109,7 +109,7 @@
       } 
 }
 
-.landing-start-panel{ 
+.landing-exchanges-panel{ 
         border-radius: 1rem; 
         border: 2px solid #dcdcdc;
         margin-top: 2rem;
@@ -136,17 +136,23 @@
         }
 }
 
- .landing-start-block hr{
+ .landing-exchanges-block hr{
     max-width: 55rem;
     size: 2px;    
  }
-  .landing-start-block .row{
+  .landing-exchanges-block .row{
       max-width: 55rem;
   }
   
-  .landing-start-block:nth-child(2n+1) {
-    background-color: #ffffff;
+  .landing-exchanges-block:nth-child(2n+1) {
+    @include themify($themes) {
+        color: themed('textColorPrimary');
+        background-color: themed('backgroundColor');
+    }
   }
-  .landing-start-block:nth-child(2n+2) {
-    background-color: #f6f7f7;
+  .landing-exchanges-block:nth-child(2n+2) {
+    @include themify($themes) {
+        color: themed('textColorPrimary');
+        background-color: themed('zebra');
+    }
   }

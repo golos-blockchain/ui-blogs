@@ -181,7 +181,7 @@ class WorkerRequests extends React.Component {
         let rshares_pct = parseInt(req.stake_total * 100 / this.state.total_vesting_shares);
         rshares_pct = !isNaN(rshares_pct) ? rshares_pct : 0;
 
-        let vote_end = "окончено";
+        let vote_end = "Завершено";
         if (!req.vote_end_time.startsWith("19")) {
             vote_end = (<TimeAgoWrapper date={req.vote_end_time} />);
         }
@@ -247,8 +247,8 @@ class WorkerRequests extends React.Component {
                 Сумма
               </th>
               <th>
-                <Tooltip t="Процент принявших участие в голосовании от суммы всей Силы Голоса системы">
-                  % от общей СГ (?)
+                <Tooltip t="Процент проголосовавших от суммы всей Силы Голоса системы">
+                  % от общей СГ
                 </Tooltip>
               </th>
               <th>
