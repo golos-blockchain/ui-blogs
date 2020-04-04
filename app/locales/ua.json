@@ -51,7 +51,8 @@
     "start_with_a_letter": "починатися з літери.",
     "have_only_letters_digits_or_dashes": "складатися тільки з букв, цифр та тире.",
     "have_only_one_dash_in_a_row": "мати тільки одне тире.",
-    "end_with_a_letter_or_digit": "закінчуватися буквою або цифрою."
+    "end_with_a_letter_or_digit": "закінчуватися буквою або цифрою.",
+    "use_caution_sending_to_this_account": "Підозрілий аккаунт, можливо це фішинг."
   },
   "confirmtransactionform_jsx": {
     "ok": "ОК",

@@ -60,7 +60,8 @@
     "have_only_letters_digits_or_dashes": "состоять только из букв, цифр или дефисов.",
     "have_only_one_dash_in_a_row": "иметь только одно тире в строке.",
     "end_with_a_letter_or_digit": "заканчиваться буквой или цифрой.",
-    "end_with_a_letter": "заканчиваться буквой."
+    "end_with_a_letter": "заканчиваться буквой.",
+    "use_caution_sending_to_this_account": "Подозрительный аккаунт, возможно это фишинг."
   },
   "confirmtransactionform_jsx": {
     "ok": "ОК",
