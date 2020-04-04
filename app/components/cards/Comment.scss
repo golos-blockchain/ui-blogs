@@ -34,7 +34,7 @@
 
 .Comment .highlighted {
   @include themify($themes) {
-    background: themed('zebra');
+    background: themed('highlighted');
   }
 }
 
