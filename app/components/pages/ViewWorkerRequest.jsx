@@ -21,7 +21,8 @@ export default class ViewWorkerRequest extends React.Component {
       myPlanningVote: 10000,
       myVote: 0,
       total_vesting_shares: 1,
-      votes: []
+      votes: [],
+      preloading: true
     };
   }
 
@@ -38,6 +39,7 @@ export default class ViewWorkerRequest extends React.Component {
     let total_vesting_shares = parseInt(dgp.total_vesting_shares.split(' ')[0].replace('.', ''));
     this.setState({
       request: requests[0],
+      preloading: false,
       total_vesting_shares
     }, () => {
       this.loadVotes();
@@ -134,7 +136,11 @@ export default class ViewWorkerRequest extends React.Component {
 
   render() {
     const { auth } = this.props;
-    const { request, myVote, myPlanningVote, votes } = this.state;
+    const { request, myVote, myPlanningVote, votes, preloading } = this.state;
+
+    if (preloading) {
+        return (<div>Загрузка...</div>);
+    }
 
     let vote_end = null;
     if (request.state === 'created') {
@@ -209,7 +215,7 @@ export default class ViewWorkerRequest extends React.Component {
           {vote_end}
         </p>
         <p>
-          Процент голосов от общей СГ: {global_rshares_pct}%<br/>
+          Процент проголосовавших от общей СГ: {global_rshares_pct}%<br/>
           <span title={pending_title}>Расчётная сумма выплаты: <b>{pending_amount} {request.required_amount_min.split(" ")[1]}</b> <Icon name="info_o" /></span>
         </p>
         <div>

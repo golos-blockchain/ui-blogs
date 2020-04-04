@@ -429,7 +429,7 @@ class Market extends Component {
                             })}
                         </h4>
                         {account && (
-                            <div>
+                            <div style={{ marginBottom: '1rem' }}>
                                 <small>
                                     <a
                                         href="#"

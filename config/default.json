@@ -44,11 +44,11 @@
     "directives": {
       "defaultSrc": "'self' golos.id www.youtube.com *.facebook.com",
       "childSrc": "'self' *.a-ads.com www.youtube.com w.soundcloud.com *.facebook.com player.vimeo.com *.coinmarketcap.com *.googleapis.com livejournal.com www.google.com/maps/ coub.com yandex.ru/map-widget/ music.yandex.ru deezer.com vk.com/video_ext.php ok.com/videoembed rutube.ru/play/embed/",
-      "scriptSrc": "'self' 'unsafe-inline' *.coinmarketcap.com *.facebook.com *.googleapis.com app.sharpay.io www.google-analytics.com *.facebook.net js-agent.newrelic.com bam.nr-data.net cdn.polyfill.io cdn.segment.com *.mxpnl.com *.metabar.ru mc.yandex.ru media.reformal.ru",
+      "scriptSrc": "'self' 'unsafe-inline' *.coinmarketcap.com *.facebook.com *.googleapis.com app.sharpay.io www.google-analytics.com *.facebook.net cdn.polyfill.io cdn.segment.com mc.yandex.ru",
       "styleSrc": "'self' 'unsafe-inline' cdnjs.cloudflare.com fonts.googleapis.com",
       "imgSrc": "* data:",
       "fontSrc": "data: fonts.gstatic.com",
-      "connectSrc": "'self' steemitimages.com wss://api.golos.blckchnd.com/ws wss://api-full.golos.id/ws *.facebook.com *.coinmarketcap.com *.googleapis.com app.sharpay.io www.google-analytics.com api.segment.io api.blocktrades.us query.yahooapis.com api.blockcypher.com api.mixpanel.com mc.yandex.ru mc.yandex.ru",
+      "connectSrc": "'self' steemitimages.com wss://api-full.golos.id/ws wss://api.golos.blckchnd.com/ws wss://api.aleksw.space/ws *.facebook.com *.coinmarketcap.com *.googleapis.com app.sharpay.io www.google-analytics.com api.segment.io mc.yandex.ru",
       "reportUri": "/api/v1/csp_violation",
       "objectSrc": "'self'",
       "pluginTypes": "application/pdf",

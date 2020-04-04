@@ -10,7 +10,7 @@ import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Tooltip from 'app/components/elements/Tooltip';
 import Author from 'app/components/elements/Author';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
-import { formatAsset, ERR } from 'app/utils/ParsersAndFormatters';
+import { formatAsset, formatDecimal, ERR } from 'app/utils/ParsersAndFormatters';
 
 import AddEditWorkerRequest from './AddEditWorkerRequest';
 import ViewWorkerRequest from './ViewWorkerRequest';
@@ -157,8 +157,35 @@ class WorkerRequests extends React.Component {
   render() {
     tt.setLocale('ru');
     const workerRequests = this.state.results.map((req) => {
+        let rshares_amount_pct = parseInt(req.stake_rshares * 100 / req.stake_total);
+        rshares_amount_pct = !isNaN(rshares_amount_pct) ? rshares_amount_pct : 0;
+        let max_amount = parseFloat(req.required_amount_max.split(" ")[0]);
+        let payed = max_amount * rshares_amount_pct / 100;
+        let payed_amount = formatDecimal(payed, 0, false, ' ');
+        let wr_state = tt("workers."+req.state);
+        if (wr_state == "Выплачено") {
+            wr_state = (<td>
+                <div>
+                  {wr_state}
+                </div>
+                <div>
+                  <span style={{ fontSize: '80%' }}>
+                    {payed_amount} {req.required_amount_min.split(" ")[1]}
+                  </span>
+                </div>
+            </td>);
+        } else {
+            wr_state = (<td>{wr_state}</td>);
+        }
+
         let rshares_pct = parseInt(req.stake_total * 100 / this.state.total_vesting_shares);
         rshares_pct = !isNaN(rshares_pct) ? rshares_pct : 0;
+
+        let vote_end = "Завершено";
+        if (!req.vote_end_time.startsWith("19")) {
+            vote_end = (<TimeAgoWrapper date={req.vote_end_time} />);
+        }
+
         return (
           <tr>
               <td>
@@ -167,9 +194,7 @@ class WorkerRequests extends React.Component {
               <td>
                 <Author author={req.post.author} follow={false} />
               </td>
-              <td>
-                {tt("workers."+req.state)}
-              </td>
+              {wr_state}
               <td>
                 <div>
                   <b>{formatAsset(req.required_amount_max)}</b>
@@ -184,7 +209,7 @@ class WorkerRequests extends React.Component {
                 {rshares_pct}%
               </td>
               <td>
-                <TimeAgoWrapper date={req.vote_end_time} altText="окончено" />
+                {vote_end}
               </td>
           </tr>
         );
@@ -222,8 +247,8 @@ class WorkerRequests extends React.Component {
                 Сумма
               </th>
               <th>
-                <Tooltip t="Процент принявших участие в голосовании от суммы всей Силы Голоса системы">
-                  % от общей СГ (?)
+                <Tooltip t="Процент проголосовавших от суммы всей Силы Голоса системы">
+                  % от общей СГ
                 </Tooltip>
               </th>
               <th>

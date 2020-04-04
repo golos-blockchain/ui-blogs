@@ -87,12 +87,10 @@
     font-size: 85%;
     border-radius: 3px;
     border: none;
-
     @include themify($themes) {
-        background-color: themed('summaryBackgroundColor');
-        color: themed('textColorSecondary');
+        background-color: themed('zebra');
+        color: themed('textColorPrimary');
     }
-
     font-weight: inherit;
   }
 

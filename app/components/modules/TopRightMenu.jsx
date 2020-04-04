@@ -93,7 +93,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     ;
     
     const searchItem = <li className={scn}>
-        <a href="/static/search.html" title={tt('g.search')}>
+        <a target="blank" href="/static/search.html" title={tt('g.search')}>
           {vertical ? <span>{tt('g.search')}</span> : <Icon name="new/search" size="1_25x" />}
         </a>
       </li>
