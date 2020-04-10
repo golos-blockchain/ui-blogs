@@ -46,6 +46,7 @@ const availableLinks = [
 const availableDomains = [
     'golos.id',
     'golos.in',
+    'golos.today',
     'goldvoice.club',
     'ropox.app',
     'golos.cf',
@@ -63,7 +64,7 @@ const availableDomains = [
     'instagram.com',
     'vk.com',
     'coinmarketcap.com',
-    'app.sharpay.io'
+    'sharpay.io'
 ];
 
 class App extends React.Component {
