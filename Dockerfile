@@ -1,13 +1,10 @@
 FROM node:8.15
 
-#RUN yarn global add sequelize sequelize-cli mysql mysql2
-
 RUN npm install -g yarn
 
 WORKDIR /var/app
 RUN mkdir -p /var/app
 ADD package.json yarn.lock /var/app/
-RUN yarn global add sequelize sequelize-cli mysql mysql2
 RUN yarn
 
 COPY . /var/app

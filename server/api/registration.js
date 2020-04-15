@@ -241,7 +241,7 @@ export default function useRegistrationApi(app) {
               pass: config.gmail_send.pass,
               from: 'registrator@golos.id',
               to: email,
-              subject: 'Golos.id verification code',
+              subject: 'Golos verification code',
             });
 
             send({
