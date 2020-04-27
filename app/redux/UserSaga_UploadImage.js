@@ -51,19 +51,19 @@ function* uploadImage(action) {
     //    'posting_private',
     //]);
     //
-    // HACK Захардкоженный ключ от аккаунта в стим для постинга через прокси steemimages
-    const username = 'golosimages';
-    const postingKey = '5JdwhQrmKCaspEEDfvWKZiRSpfAaa2hHpFmh1no3wSLx4zB6dnd';
 
-    if (!username) {
-        onError(tt('user_saga_js.image_upload.error.login_first'));
-        return;
-    }
+    //const username = 'golosimages';
+    //const postingKey = '5JdwhQrmKCaspEEDfvWKZiRSpfAaa2hHpFmh1no3wSLx4zB6dnd';
 
-    if (!postingKey) {
-        onError(tt('user_saga_js.image_upload.error.login_with_posting_key'));
-        return;
-    }
+    //if (!username) {
+    //    onError(tt('user_saga_js.image_upload.error.login_first'));
+    //    return;
+    //}
+
+    //if (!postingKey) {
+    //    onError(tt('user_saga_js.image_upload.error.login_with_posting_key'));
+    //    return;
+    //}
 
     if (!file && !dataUrl) {
         onError(tt('user_saga_js.error_file_or_data_url_required'));
@@ -97,20 +97,23 @@ function* uploadImage(action) {
      * and checked on the client) to make sure the server can't easily make the
      * client sign a transaction doing something else.
      */
-    const prefix = new Buffer('ImageSigningChallenge');
-    const bufSha = hash.sha256(Buffer.concat([prefix, data]));
+    //const prefix = new Buffer('ImageSigningChallenge');
+    //const bufSha = hash.sha256(Buffer.concat([prefix, data]));
 
     const formData = new FormData();
+    formData.append('key', '29d37084b1aebbc2ac7d6cc570413a78');
 
     if (file) {
-        formData.append('file', file);
+        formData.append('image', file);
     } else {
-        formData.append('filename', filename);
-        formData.append('filebase64', dataBase64);
+        formData.append('name', filename);
+        formData.append('image', dataBase64);
     }
 
-    const sig = Signature.signBufferSha256(bufSha, postingKey);
-    const postUrl = `${$STM_Config.upload_image}/${username}/${sig.toHex()}`;
+    //const sig = Signature.signBufferSha256(bufSha, postingKey);
+    //const postUrl = `${$STM_Config.upload_image}/${username}/${sig.toHex()}`;
+  //
+    const postUrl = $STM_Config.upload_image
 
     const xhr = new XMLHttpRequest();
 
@@ -126,24 +129,25 @@ function* uploadImage(action) {
             return;
         }
 
-        const { url, error } = data;
+        const { error } = data;
+        //const { url, error } = data;
 
         if (error) {
-            if (typeof error === 'string') {
-                const loverError = error.toLowerCase();
+            //if (typeof error === 'string') {
+            //    const loverError = error.toLowerCase();
 
-                for (let [text, translateId] of ERRORS_MATCH) {
-                    if (loverError.includes(text)) {
-                        onError(tt(translateId));
-                        return;
-                    }
-                }
-            }
+            //    for (let [text, translateId] of ERRORS_MATCH) {
+            //        if (loverError.includes(text)) {
+            //            onError(tt(translateId));
+            //            return;
+            //        }
+            //    }
+            //}
 
-            onError(error);
+            onError(error.message);
         } else {
             progress({
-                url,
+              url: data.data.url,
             });
         }
     };

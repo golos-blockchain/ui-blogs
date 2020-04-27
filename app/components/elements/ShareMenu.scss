@@ -4,6 +4,12 @@
     height: 1.6em;
 }
 
+@media screen and (max-width: 660px) {
+  .shareMenu {
+    height: auto;
+    }
+}
+
 .shareItems {
     list-style: none;
     display: inline;
