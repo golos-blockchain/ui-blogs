@@ -101,7 +101,6 @@ function* uploadImage(action) {
     //const bufSha = hash.sha256(Buffer.concat([prefix, data]));
 
     const formData = new FormData();
-    formData.append('key', '29d37084b1aebbc2ac7d6cc570413a78');
 
     if (file) {
         formData.append('image', file);
@@ -118,6 +117,7 @@ function* uploadImage(action) {
     const xhr = new XMLHttpRequest();
 
     xhr.open('POST', postUrl);
+    xhr.setRequestHeader('Authorization', 'Client-ID b4d78455f0d5fca')
 
     xhr.onload = function() {
         let data;
@@ -129,10 +129,10 @@ function* uploadImage(action) {
             return;
         }
 
-        const { error } = data;
+        const { success } = data;
         //const { url, error } = data;
 
-        if (error) {
+        if (!success) {
             //if (typeof error === 'string') {
             //    const loverError = error.toLowerCase();
 
@@ -144,10 +144,10 @@ function* uploadImage(action) {
             //    }
             //}
 
-            onError(error.message);
+            onError(xhr.responseText);
         } else {
             progress({
-              url: data.data.url,
+              url: data.data.link,
             });
         }
     };
