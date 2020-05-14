@@ -242,7 +242,7 @@ class App extends React.Component {
         const warning = flash.get('warning');
         const success = flash.get('success');
         let callout = null;
-        const showInfoBox = false && this.isShowInfoBox();
+        const showInfoBox = true && this.isShowInfoBox();
 
         if (this.state.showCallout && (alert || warning || success)) {
             callout = (
@@ -277,10 +277,10 @@ class App extends React.Component {
                                 }}
                             />
                             <Link className="link"
-                                to="/@lex"
+                                to="/@lex/opros-referendum-o-sudbe-fonda-s-32-mln-tokenov"
                             >
                                 <Icon className="logo-icon" name={APP_ICON} />&nbsp;
-                                Домен golos.id работает без ограничений + вознаграждения за репосты в социальные сети теперь и токенами Голос! 
+                                Опрос сообщества о судьбе «фонда референдума» с более чем 32 миллионами токенов на балансе.
                             </Link>
                         </div>
                     </div>
