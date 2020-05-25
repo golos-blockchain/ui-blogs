@@ -141,6 +141,8 @@ class UserWallet extends React.Component {
         const VESTING_TOKEN2 = tt('token_names.VESTING_TOKEN2')
         const VESTING_TOKENS = tt('token_names.VESTING_TOKENS')
         const TOKEN_WORTH = tt('token_names.TOKEN_WORTH')
+        const TIP_TOKEN = tt('token_names.TIP_TOKEN')
+        const CLAIM_TOKEN = tt('token_names.CLAIM_TOKEN')
 
         const {transfer_log, loading} = this.state
         const {convertToSteem, price_per_golos, savings_withdraws, account, current_user, open_orders} = this.props
@@ -253,6 +255,8 @@ class UserWallet extends React.Component {
             ]);
         }, [])
 
+        const tip_balance_steem = parseFloat(account.get('tip_balance').split(' ')[0]);
+        const accumulative_balance_steem = parseFloat(account.get('accumulative_balance').split(' ')[0]);
         const balance_steem = parseFloat(account.get('balance').split(' ')[0]);
         const saving_balance_steem = parseFloat(savings_balance.split(' ')[0]);
         const divesting = parseFloat(account.get('vesting_withdraw_rate').split(' ')[0]) > 0.000000;
@@ -328,6 +332,8 @@ class UserWallet extends React.Component {
         const isWithdrawScheduled = new Date(account.get('next_vesting_withdrawal') + 'Z').getTime() > Date.now()
 
         const steem_balance_str = numberWithCommas(balance_steem.toFixed(3)) + ' ' + LIQUID_TOKEN_UPPERCASE;
+        const steem_tip_balance_str = numberWithCommas(tip_balance_steem.toFixed(3)) + ' ' + LIQUID_TOKEN_UPPERCASE;
+        const steem_claim_balance_str = numberWithCommas(accumulative_balance_steem.toFixed(3)) + ' ' + LIQUID_TOKEN_UPPERCASE;
         const steem_orders_balance_str = numberWithCommas(steemOrders.toFixed(3)) + ' ' + LIQUID_TOKEN_UPPERCASE;
         const power_balance_str = numberWithCommas(vesting_steem) + ' ' + LIQUID_TOKEN_UPPERCASE;
         const savings_balance_str = numberWithCommas(saving_balance_steem.toFixed(3)) + ' ' + LIQUID_TOKEN_UPPERCASE;
@@ -359,6 +365,42 @@ class UserWallet extends React.Component {
                             <br />
                             <h4>{tt('g.balances')}</h4><br />
                           </div>
+                    }
+                </div>
+            </div>
+            <div className="UserWallet__balance row">
+                <div className="column small-12 medium-8">
+                    {TIP_TOKEN.toUpperCase()}<br />
+                    <span className="secondary">Баланс, с которого вы вознаграждаете других пользователей, и на который получаете вознаграждения сами.<br/>Токены с него вывести можно только в пополнение Силы Голоса.</span>
+                </div>
+                <div className="column small-12 medium-4">
+                    {isMyAccount
+                        ? <FoundationDropdownMenu
+                            className="Wallet_dropdown"
+                            dropdownPosition="bottom"
+                            dropdownAlignment="right"
+                            label={steem_tip_balance_str}
+                            menu={steem_menu}
+                        />
+                        : steem_tip_balance_str
+                    }
+                </div>
+            </div>
+            <div className="UserWallet__balance row zebra">
+                <div className="column small-12 medium-8">
+                    {CLAIM_TOKEN.toUpperCase()}<br />
+                    <span className="secondary">Баланс вашей доли от общей эмиссии токенов блокчейна Голос, которую вы можете востребовать для пополнения TIP-баланса, либо увеличения Силы Голоса.</span>
+                </div>
+                <div className="column small-12 medium-4">
+                    {isMyAccount
+                        ? <FoundationDropdownMenu
+                            className="Wallet_dropdown"
+                            dropdownPosition="bottom"
+                            dropdownAlignment="right"
+                            label={steem_claim_balance_str}
+                            menu={steem_menu}
+                        />
+                        : steem_claim_balance_str
                     }
                 </div>
             </div>
@@ -476,15 +518,6 @@ class UserWallet extends React.Component {
                           />
                         : savings_sbd_balance_str
                     }
-                </div>
-            </div>
-            <div className="UserWallet__balance row">
-                <div className="column small-12 medium-8">
-                    {tt('userwallet_jsx.estimated_account_value')}<br />
-                    <span className="secondary">{tt('tips_js.the_estimated_value_is_based_on_an_average_value_of_steem_in_US_dollars', {LIQUID_TOKEN})}</span>
-                </div>
-                <div className="column small-12 medium-4">
-                    {estimate_output}
                 </div>
             </div>
             <div className="UserWallet__balance row">

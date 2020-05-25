@@ -74,6 +74,7 @@ class WitnessProps extends React.Component {
             ['witness_skipping_reset_time', 'time'],
             ['witness_idleness_time', 'time'],
             ['account_idleness_time', 'time'],
+            ['claim_idleness_time', 'time'],
         ],
     ];
 
