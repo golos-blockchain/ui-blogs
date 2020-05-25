@@ -8,7 +8,9 @@
     "VESTING_TOKENS" : "Сили Голосу",
     "DEBT_TOKEN" : "Золотий",
     "DEBT_TOKENS" : "Золоті",
-    "TOKEN_WORTH" : "~1 мг золота"
+    "TOKEN_WORTH" : "~1 мг золота",
+    "TIP_TOKEN": "TIP-баланс",
+    "CLAIM_TOKEN": "CLAIM-баланс"
   },
   "about_jsx": {
     "about_app": "Про %(APP_NAME)s",
