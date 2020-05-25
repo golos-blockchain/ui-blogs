@@ -8,7 +8,9 @@
     "VESTING_TOKENS" : "Golos Power",
     "DEBT_TOKEN" : "GOLD BACKED GOLOS",
     "DEBT_TOKENS" : "GOLD BACKED GOLOS",
-    "TOKEN_WORTH" : "~1 mg of gold"
+    "TOKEN_WORTH" : "~1 mg of gold",
+    "TIP_TOKEN": "TIP balance",
+    "CLAIM_TOKEN": "CLAIM balance"
   },
   "illegal_content": {
     "hidden": "hidden",
