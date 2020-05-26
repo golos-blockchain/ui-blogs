@@ -356,6 +356,18 @@ export default connect(
                 operation.to_vesting = toVesting;
             }
 
+            if (transferType === 'TIP to Account') {
+                let donate_memo = {};
+                donate_memo.app = "golos-id";
+                donate_memo.version = 1;
+                donate_memo.comment = operation.memo;
+                donate_memo.target = {
+                    author: operation.to,
+                    permlink: ""
+                };
+                operation.memo = donate_memo;
+            }
+
             dispatch(transaction.actions.broadcastOperation({
                 type: toVesting ? (
                     transferType === 'TIP to Vesting' ? 'transfer_from_tip' :
