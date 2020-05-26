@@ -331,7 +331,7 @@ export default connect(
             const operation = {
                 from: username,
                 to, amount: parseFloat(amount, 10).toFixed(3) + ' ' + asset2,
-                memo: (toVesting || transferType === 'Claim') ? undefined : (memo ? memo : '')
+                memo: ((toVesting && transferType !== 'TIP to Vesting') || transferType === 'Claim') ? undefined : (memo ? memo : '')
             }
 
             if(transferType === 'Savings Withdraw')
