@@ -304,10 +304,19 @@ class UserWallet extends React.Component {
             return <TransferHistoryRow key={idx++} op={item} context={account.get('name')} />;
         }).filter(el => !!el).reverse();
 
+        let tip_menu = [
+            { value: tt('userwallet_jsx.power_up'), link: '#', onClick: showTransfer.bind( this, VEST_TICKER, 'TIP to Vesting' ) },
+            { value: tt('userwallet_jsx.donate'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'TIP to Account' ) },
+        ]
+        let claim_menu = [
+            { value: tt('userwallet_jsx.claim'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'Claim' ) },
+            { value: tt('userwallet_jsx.power_up'), link: '#', onClick: showTransfer.bind( this, VEST_TICKER, 'Claim' ) },
+        ]
         let steem_menu = [
             { value: tt('g.transfer'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'Transfer to Account' ) },
             { value: tt('userwallet_jsx.transfer_to_savings'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'Transfer to Savings' ) },
             { value: tt('userwallet_jsx.power_up'), link: '#', onClick: showTransfer.bind( this, VEST_TICKER, 'Transfer to Account' ) },
+            { value: tt('userwallet_jsx.transfer_to_tip'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'Transfer to TIP' ) },
         ]
         let power_menu = [
             { value: tt('userwallet_jsx.power_down'), link: '#', onClick: powerDown.bind(this, false) },
@@ -380,7 +389,7 @@ class UserWallet extends React.Component {
                             dropdownPosition="bottom"
                             dropdownAlignment="right"
                             label={steem_tip_balance_str}
-                            menu={steem_menu}
+                            menu={tip_menu}
                         />
                         : steem_tip_balance_str
                     }
@@ -398,7 +407,7 @@ class UserWallet extends React.Component {
                             dropdownPosition="bottom"
                             dropdownAlignment="right"
                             label={steem_claim_balance_str}
-                            menu={steem_menu}
+                            menu={claim_menu}
                         />
                         : steem_claim_balance_str
                     }

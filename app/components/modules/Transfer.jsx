@@ -63,9 +63,11 @@ class TransferForm extends Component {
         const insufficientFunds = (asset, amount) => {
             const {currentAccount} = props
             const isWithdraw = transferType && transferType === 'Savings Withdraw'
+            const isTIP = transferType && transferType.startsWith('TIP to')
+            const isClaim = transferType && transferType === 'Claim'
             const balanceValue =
                 !asset || asset === 'GOLOS' ?
-                    isWithdraw ? currentAccount.get('savings_balance') : currentAccount.get('balance') :
+                    isWithdraw ? currentAccount.get('savings_balance') : (isTIP ? currentAccount.get('tip_balance') : (isClaim ? currentAccount.get('accumulative_balance') : currentAccount.get('balance'))) :
                 asset === 'GBG' ?
                     isWithdraw ? currentAccount.get('savings_sbd_balance') : currentAccount.get('sbd_balance') :
                 null
@@ -75,7 +77,7 @@ class TransferForm extends Component {
         }
         const {toVesting} = props
         const fields = toVesting ? ['to', 'amount'] : ['to', 'amount', 'asset']
-        if(!toVesting && transferType !== 'Transfer to Savings' && transferType !== 'Savings Withdraw')
+        if(!toVesting && transferType !== 'Transfer to Savings' && transferType !== 'Savings Withdraw' && transferType !== 'Claim')
             fields.push('memo')
 
         reactForm({
@@ -111,9 +113,11 @@ class TransferForm extends Component {
         const {currentAccount} = this.props
         const {asset} = this.state
         const isWithdraw = transferType && transferType === 'Savings Withdraw'
+        const isTIP = transferType && transferType.startsWith('TIP to')
+        const isClaim = transferType && transferType === 'Claim'
         return !asset ||
             asset.value === 'GOLOS' ?
-                isWithdraw ? currentAccount.get('savings_balance') : currentAccount.get('balance') :
+                isWithdraw ? currentAccount.get('savings_balance') : (isTIP ? currentAccount.get('tip_balance') : (isClaim ? currentAccount.get('accumulative_balance') : currentAccount.get('balance'))) :
             asset.value === 'GBG' ?
                 isWithdraw ? currentAccount.get('savings_sbd_balance') : currentAccount.get('sbd_balance') :
             null
@@ -227,7 +231,7 @@ class TransferForm extends Component {
                     <div className="column small-10">
                         <div className="input-group" style={{marginBottom: 5}}>
                             <input type="text" placeholder={tt('g.amount')} {...amount.props} ref="amount" autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck="false" disabled={disableAmount || loading} onChange={(e) => this.onChangeAmount(e)}/>
-                            {asset && <span className="input-group-label" style={{paddingLeft: 0, paddingRight: 0}}>
+                            {asset && transferType !== 'Claim' && transferType !== 'TIP to Vesting' & !transferType.endsWith('to TIP') && <span className="input-group-label" style={{paddingLeft: 0, paddingRight: 0}}>
                                 <select {...asset.props} placeholder={tt('transfer_jsx.asset')} disabled={disableAmount || loading} style={{minWidth: "5rem", height: "inherit", backgroundColor: "transparent", border: "none"}}>
                                     <option value={LIQUID_TICKER}>{LIQUID_TOKEN}</option>
                                     <option value={DEBT_TICKER}>{DEBT_TICKER}</option>
@@ -294,7 +298,7 @@ export default connect(
         if(!toVesting && !initialValues.transferType)
             initialValues.transferType = 'Transfer to Account'
 
-        let transferToSelf = toVesting || /Transfer to Savings|Savings Withdraw/.test(initialValues.transferType)
+        let transferToSelf = toVesting || /Transfer to Savings|Savings Withdraw|Claim|Transfer to TIP/.test(initialValues.transferType)
         if (currentUser && transferToSelf && !initialValues.to)
             initialValues.to = currentUser.get('username')
 
@@ -311,7 +315,7 @@ export default connect(
             to, amount, asset, memo, transferType,
             toVesting, currentUser, errorCallback
         }) => {
-            if(!toVesting && !/Transfer to Account|Transfer to Savings|Savings Withdraw/.test(transferType))
+            if(!toVesting && !/Transfer to Account|Transfer to Savings|Savings Withdraw|Claim|Transfer to TIP|TIP to Account/.test(transferType))
                 throw new Error(`Invalid transfer params: toVesting ${toVesting}, transferType ${transferType}`)
 
             const username = currentUser.get('username')
@@ -327,7 +331,7 @@ export default connect(
             const operation = {
                 from: username,
                 to, amount: parseFloat(amount, 10).toFixed(3) + ' ' + asset2,
-                memo: toVesting ? undefined : (memo ? memo : '')
+                memo: (toVesting || transferType === 'Claim') ? undefined : (memo ? memo : '')
             }
 
             if(transferType === 'Savings Withdraw')
@@ -348,11 +352,22 @@ export default connect(
               }
             }
 
+            if (transferType === 'Claim') {
+                operation.to_vesting = toVesting;
+            }
+
             dispatch(transaction.actions.broadcastOperation({
-                type: toVesting ? 'transfer_to_vesting' : (
+                type: toVesting ? (
+                    transferType === 'TIP to Vesting' ? 'transfer_from_tip' :
+                    transferType === 'Claim' ? 'claim' :
+                    'transfer_to_vesting'
+                ) : (
                     transferType === 'Transfer to Account' ? 'transfer' :
                     transferType === 'Transfer to Savings' ? 'transfer_to_savings' :
                     transferType === 'Savings Withdraw' ? 'transfer_from_savings' :
+                    transferType === 'Transfer to TIP' ? 'transfer_to_tip' :
+                    transferType === 'TIP to Account' ? 'donate' :
+                    transferType === 'Claim' ? 'claim' :
                     null
                 ),
                 username,
