@@ -356,8 +356,6 @@ export default connect(
                 operation.to_vesting = toVesting;
             }
 
-            alert(JSON.stringify(operation));
-
             dispatch(transaction.actions.broadcastOperation({
                 type: toVesting ? (
                     transferType === 'TIP to Vesting' ? 'transfer_from_tip' :
