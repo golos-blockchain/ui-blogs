@@ -25,6 +25,7 @@ class WitnessProps extends React.Component {
         [
             ['maximum_block_size', 'raw'],
             ['custom_ops_bandwidth_multiplier', 'raw'],
+            ['min_invite_balance', 'golos'],
         ],
         [
             ['sbd_interest_rate'],
@@ -130,7 +131,7 @@ class WitnessProps extends React.Component {
         props.comments_per_window = parseInt(props.comments_per_window);
         updateChainProperties({
             owner: account.name,
-            props: [3, props],
+            props: [4, props],
             errorCallback: (e) => {
                 if (e === 'Canceled') {
                     this.setState({
