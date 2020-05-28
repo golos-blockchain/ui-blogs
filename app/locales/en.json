@@ -221,6 +221,8 @@
     "not_valid_email": "Not valid email",
     "author_rewards": "Author rewards",
     "curation_rewards": "Curation rewards",
+    "donates_from": "Donates from",
+    "donates_to": "Donates to",
     "connection_lost_reconnecting": "Connection lost, reconnecting",
     "server_returned_error": "server returned error",
     "APP_NAME_support": "%(APP_NAME)s Support",
@@ -858,6 +860,8 @@
     "people_followed_by": "People followed by",
     "curation_rewards_by": "Curation rewards by",
     "author_rewards_by": "Author rewards by",
+    "donates_from": "Donates from",
+    "donates_to": "Donates to",
     "replies_to": "Replies to",
     "comments_by": "Comments by"
   },

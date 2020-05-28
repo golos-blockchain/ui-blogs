@@ -342,7 +342,7 @@ export default connect(
             if (flag) {
               // get transfer type and default memo composer
               // now 'donate' only
-              const { fMemo } = flag;
+              const { fMemo, permlink } = flag;
               if (typeof operation.memo === `string`) {
                 // donation with an empty memo
                 // compose memo default for this case
@@ -365,8 +365,15 @@ export default connect(
                     author: operation.to,
                     permlink: ""
                 };
+                if (flag) {
+                    const { permlink } = flag;
+                    if (typeof permlink === `string`) {
+                        donate_memo.target.permlink = permlink;
+                    }
+                }
                 operation.memo = donate_memo;
             }
+            alert(JSON.stringify(operation));
 
             dispatch(transaction.actions.broadcastOperation({
                 type: toVesting ? (

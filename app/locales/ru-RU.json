@@ -385,6 +385,8 @@
     "not_valid_email": "Недействительный адрес",
     "author_rewards": "Авторские награды",
     "curation_rewards": "Кураторские награды",
+    "donates_from": "Отправленные донаты",
+    "donates_to": "Полученные донаты",
     "connection_lost_reconnecting": "Связь потеряна, переподключаемся",
     "server_returned_error": "ошибка сервера",
     "APP_NAME_support": "%(APP_NAME)s поддержка",
@@ -498,6 +500,8 @@
     "people_followed_by": "Подписчики",
     "curation_rewards_by": "Награда за курирование",
     "author_rewards_by": "Автор награжден",
+    "donates_from": "Донаты, отправленные",
+    "donates_to": "Донаты, полученные",
     "replies_to": "Ответы на",
     "comments_by": "Комментарии"
   },

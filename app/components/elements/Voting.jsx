@@ -192,29 +192,18 @@ class Voting extends React.Component {
         const cashout_active = pending_payout > 0 || (cashout_time.indexOf('1969') !== 0 && !(is_comment && total_votes == 0));
         const payoutItems = [];
 
-        if(cashout_active) {
-            payoutItems.push({value: tt('voting_jsx.potential_payout') + ' ' + localizedCurrency(payout.total) + ' (' + payout.total.toFixed(3) + ' ' + DEBT_TICKER + ')'});
-        }
-        if(promoted > 0) {
-            payoutItems.push({value: tt('voting_jsx.boost_payments') + ' ' + localizedCurrency(promoted)});
-        }
-        if(cashout_active) {
-            payoutItems.push({value: <TimeAgoWrapper date={cashout_time} />});
+        let donates = post_obj.get('donates');
+        if (donates !== undefined) {
+            donates = donates.toJS();
+            donates.forEach((donate) => {
+                payoutItems.push({value: donate.from + ' ' + donate.amount});
+            });
         }
 
-        if(payout.isDeclined) {
-            payoutItems.push({value: tt('voting_jsx.payouts_declined')})
-        } else if (max_payout < 1000000) {
-            payoutItems.push({value: tt('voting_jsx.max_accepted_payout') + localizedCurrency(max_payout)})
-        }
-        if(total_author_payout > 0) {
-            payoutItems.push({value: tt('voting_jsx.past_payouts') + ' ' + localizedCurrency(payout.author + payout.curator)});
-            payoutItems.push({value: ' - ' + tt('voting_jsx.authors') + ': ' + localizedCurrency(payout.author)});
-            payoutItems.push({value: ' - ' + tt('voting_jsx.curators') + ': ' + localizedCurrency(payout.curator)});
-        }
+                //<LocalizedCurrency gold={(promoted > 0)} amount={max_payout} //className={payout.isDeclined ? 'strikethrough' : ''} />
         const payoutEl = <DropdownMenu el="div" items={payoutItems}>
             <span style={payout_limit_hit ? {opacity: '0.33'} : {}}>
-                <LocalizedCurrency gold={(promoted > 0)} amount={payout.total} className={payout.isDeclined ? 'strikethrough' : ''} />
+                Донаты
                 {payoutItems.length > 0 && <Icon name="dropdown-arrow" />}
             </span>
         </DropdownMenu>;
