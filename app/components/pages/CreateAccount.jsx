@@ -514,6 +514,7 @@ class CreateAccount extends React.Component {
                 active_key: publicKeys[1],
                 posting_key: publicKeys[2],
                 memo_key: publicKeys[3],
+                referrer: new URLSearchParams(window.location.search).get('invite')
             });
 
             const data = await res.json();
