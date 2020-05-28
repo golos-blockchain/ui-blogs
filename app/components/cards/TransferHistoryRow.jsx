@@ -112,6 +112,45 @@ class TransferHistoryRow extends React.Component {
                 // data.open_owner filled my order
                 description_start += `Paid ${data.current_pays} for ${data.open_pays}`;
             }
+        } else if (type === 'donate') {
+            const describe_account = () => {
+                if (context === "from") {
+                    other_account = data.to;
+                    return ' для ';
+                } else {
+                    other_account = data.from;
+                    return ' от ';
+                }
+            };
+
+            // golos-id donates of version 1 are for posts (with permlink) and just for account (without)
+            if (data.memo.app == 'golos-id' && data.memo.version == 1
+                    && data.memo.target.permlink != '') {
+                description_start += data.amount;
+                if (context === "from" && data.to != data.memo.target.author) {
+                    description_start += ' для ' + data.to;
+                } else if (context === "to") {
+                    description_start += ' от ' + data.from;
+                }
+                description_start += ' за пост ';
+                other_account = data.memo.target.author + '/' + data.memo.target.permlink;
+            } else {
+                description_start += data.amount;
+                if (context === "from") {
+                    description_start += ' для ';
+                    other_account = data.to;
+                } else {
+                    description_start += ' от ';
+                    other_account = data.from;
+                }
+            }
+
+            // Here is a workaround to not throw in Memo component which is for old (string, not object) memo format
+            if (data.memo.hasOwnProperty('comment') && data.memo.comment != '') {
+                data.memo = data.memo.comment;
+            } else {
+                data.memo = '';
+            }
         } else {
             description_start += JSON.stringify({type, ...data}, null, 2);
         }

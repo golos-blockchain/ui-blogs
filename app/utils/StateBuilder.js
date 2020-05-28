@@ -170,8 +170,12 @@ export default async function getState(api, url, options, offchain = {}) {
             if (reply.parent_permlink === permlink) {
                 state.content[curl].replies.push(link)
             }
+            const donates = await api.getDonates({author: reply.account, permlink: reply.permlink}, '', '', DEFAULT_VOTE_LIMIT, 0);
+            state.content[link].donates = donates;  
         }
-        
+
+        const donates = await api.getDonates({author: account, permlink: permlink}, '', '', DEFAULT_VOTE_LIMIT, 0);
+        state.content[curl].donates = donates;       
     } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
         const witnesses = await api.getWitnessesByVote('', 100)
         witnesses.forEach( witness => {
