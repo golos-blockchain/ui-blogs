@@ -373,7 +373,6 @@ export default connect(
                 }
                 operation.memo = donate_memo;
             }
-            alert(JSON.stringify(operation));
 
             dispatch(transaction.actions.broadcastOperation({
                 type: toVesting ? (

@@ -180,7 +180,7 @@ export default function useGeneralApi(app) {
                     0, {
                         referrer: account.referrer,
                         interest_rate: cp.max_referral_interest_rate,
-                        end_date: new Date(Date.now() + cp.max_referral_term_sec).toISOString().split(".")[0],
+                        end_date: new Date(Date.now() + cp.max_referral_term_sec*1000).toISOString().split(".")[0],
                         break_fee: cp.max_referral_break_fee
                     }
                 ]];
