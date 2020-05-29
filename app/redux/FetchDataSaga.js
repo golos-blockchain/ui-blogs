@@ -207,11 +207,11 @@ export function* fetchState(location_change_action) {
                     state.content[curl].replies.push(link)
                 }
                 const donates =  yield call([api, api.getDonatesAsync], {author: reply.author, permlink: reply.permlink}, '', '', constants.DEFAULT_VOTE_LIMIT, 0)
-                state.content[link].donates = donates
+                state.content[link].donate_list = donates
             }
 
             const donates =  yield call([api, api.getDonatesAsync], {author: account, permlink: permlink}, '', '', constants.DEFAULT_VOTE_LIMIT, 0)
-            state.content[curl].donates = donates
+            state.content[curl].donate_list = donates
         } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
             state.witnesses = {};
             const witnesses =  yield call([api, api.getWitnessesByVoteAsync], '', 100)

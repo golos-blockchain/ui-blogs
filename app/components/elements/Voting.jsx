@@ -192,7 +192,7 @@ class Voting extends React.Component {
         const cashout_active = pending_payout > 0 || (cashout_time.indexOf('1969') !== 0 && !(is_comment && total_votes == 0));
         const payoutItems = [];
 
-        let donates = post_obj.get('donates');
+        let donates = post_obj.get('donate_list');
         if (donates !== undefined) {
             donates = donates.toJS();
             donates.forEach((donate) => {
@@ -200,10 +200,9 @@ class Voting extends React.Component {
             });
         }
 
-                //<LocalizedCurrency gold={(promoted > 0)} amount={max_payout} //className={payout.isDeclined ? 'strikethrough' : ''} />
         const payoutEl = <DropdownMenu el="div" items={payoutItems}>
             <span style={payout_limit_hit ? {opacity: '0.33'} : {}}>
-                Донаты
+                {post_obj.get('donates').toString()}
                 {payoutItems.length > 0 && <Icon name="dropdown-arrow" />}
             </span>
         </DropdownMenu>;
