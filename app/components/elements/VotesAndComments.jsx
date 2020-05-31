@@ -30,9 +30,6 @@ class VotesAndComments extends React.Component {
 
         return (
             <span className="VotesAndComments">
-                <span className="VotesAndComments__votes" title={tt('votesandcomments_jsx.vote_count', {count: votes})}>
-                    <Icon size="1x" name="chevron-up-circle" />&nbsp;{votes}
-                </span>
                 <span className={'VotesAndComments__comments' + (comments === 0 ? ' no-comments' : '')}>
                      <Link to={commentsLink} title={comments_tooltip}>
                         <Icon name={comments > 1 ? 'chatboxes' : 'chatbox'} />&nbsp;{comments}

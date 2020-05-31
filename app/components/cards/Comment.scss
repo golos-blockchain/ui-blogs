@@ -102,10 +102,10 @@
     color: $dark-gray;
     @include hoverUnderline;
   }
-  .Voting__voters_list {
+  .Voting__donates_list {
     border-right: 1px solid $medium-gray;
-    padding-right: 1rem;
-    margin-right: 1rem;
+    padding-right: 0.5rem;
+    margin-right: 0.5rem;
   }
   .Comment__footer__controls {
     a {margin: 0 0.2rem;}

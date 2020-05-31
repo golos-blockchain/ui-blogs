@@ -73,6 +73,7 @@ export default async function getState(api, url, options, offchain = {}) {
                             case 'escrow_approve':
                             case 'escrow_dispute':
                             case 'escrow_release':
+                            case 'donate':
                                 state.accounts[uname].transfer_history.push(operation)
                             break
 
@@ -171,11 +172,11 @@ export default async function getState(api, url, options, offchain = {}) {
                 state.content[curl].replies.push(link)
             }
             const donates = await api.getDonates({author: reply.account, permlink: reply.permlink}, '', '', DEFAULT_VOTE_LIMIT, 0);
-            state.content[link].donates = donates;  
+            state.content[link].donate_list = donates;  
         }
 
         const donates = await api.getDonates({author: account, permlink: permlink}, '', '', DEFAULT_VOTE_LIMIT, 0);
-        state.content[curl].donates = donates;       
+        state.content[curl].donate_list = donates;       
     } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
         const witnesses = await api.getWitnessesByVote('', 100)
         witnesses.forEach( witness => {

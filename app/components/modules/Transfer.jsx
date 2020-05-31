@@ -11,6 +11,7 @@ import {validate_account_name} from 'app/utils/ChainValidation';
 import {countDecimals, formatAmount, checkMemo} from 'app/utils/ParsersAndFormatters';
 import tt from 'counterpart';
 import { LIQUID_TICKER, DEBT_TICKER , VESTING_TOKEN2 } from 'app/client_config';
+import Slider from 'golos-ui/Slider';
 
 /** Warning .. This is used for Power UP too. */
 class TransferForm extends Component {
@@ -139,6 +140,16 @@ class TransferForm extends Component {
         this.state.amount.props.onChange(formatAmount(value))
     }
 
+    onDonateSliderChange = int_value => {
+        this.state.amount.props.onChange(formatAmount(int_value.toString() + '.000'));
+    };
+
+    onPresetClicked = (e) => {
+        e.preventDefault();
+        const amount = e.target.textContent.split(" ")[0] + ".000";
+        this.state.amount.props.onChange(formatAmount(amount));
+    };
+
     render() {
         const LIQUID_TOKEN = tt('token_names.LIQUID_TOKEN')
         const VESTING_TOKEN =  tt('token_names.VESTING_TOKEN')
@@ -162,6 +173,8 @@ class TransferForm extends Component {
                 disableAmount = false} = this.props.initialValues
         const {submitting, valid, handleSubmit} = this.state.transfer
         const isMemoPrivate = memo && /^#/.test(memo.value)
+
+        let permlink = (this.flag && typeof this.flag.permlink === `string`) ? this.flag.permlink : null;
         const form = (
             <form onSubmit={handleSubmit(({data}) => {
                 this.setState({loading: true})
@@ -185,7 +198,43 @@ class TransferForm extends Component {
                     <br />
                 </div>}
 
-                <div className="row">
+                {permlink && (<div className="DonatePresets column">
+                <div>
+                <div className="PresetSelector__container">
+                <button className={"PresetSelector button hollow" + (amount.value === "5.000" ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>5<br/>GOLOS</button>
+                <button className={"PresetSelector button hollow" + (amount.value === "10.000" ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>10<br/>GOLOS</button>
+                <button className={"PresetSelector button hollow" + (amount.value === "25.000" ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>25<br/>GOLOS</button>
+                <button className={"PresetSelector button hollow" + (amount.value === "50.000" ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>50<br/>GOLOS</button>
+                <button className={"PresetSelector button hollow" + (amount.value === "100.000" ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>100<br/>GOLOS</button>
+                </div>
+                <div className="TipBalance">
+                <b>TIP-баланс:</b><br/>
+                {this.balanceValue().split(".")[0] + " GOLOS"}
+                </div>
+                </div>
+                <Slider
+                        {...amount.props}
+                        min={0}
+                        max={parseInt(this.balanceValue().split(".")[0])}
+                        hideHandleValue={amount.value > 999}
+                        onChange={this.onDonateSliderChange}
+                    />
+                </div>)}
+
+                {(permlink && amount.value > 999 && <div className="row">
+                    <div className="column small-2" style={{paddingBottom: 13}}>Сумма</div>
+                    <div className="column small-10">
+                        {amount.value.toString().split(".")[0] + " GOLOS"}
+                    </div>
+                </div>)}
+
+                {permlink && ((asset && asset.touched && asset.error ) || (amount.touched && amount.error)) ?
+                <div className="column error">
+                    {asset && asset.touched && asset.error && asset.error}&nbsp;
+                    {amount.touched && amount.error && amount.error}&nbsp;
+                </div> : null}
+
+                {!permlink && <div className="row">
                     <div className="column small-2" style={{paddingTop: 5}}>{tt('g.from')}</div>
                     <div className="column small-10">
                         <div className="input-group" style={{marginBottom: "1.25rem"}}>
@@ -198,9 +247,9 @@ class TransferForm extends Component {
                             />
                         </div>
                     </div>
-                </div>
+                </div>}
 
-                {advanced && <div className="row">
+                {advanced && !permlink && <div className="row">
                     <div className="column small-2" style={{paddingTop: 5}}>{tt('g.to')}</div>
                     <div className="column small-10">
                         <div className="input-group" style={{marginBottom: "1.25rem"}}>
@@ -226,12 +275,12 @@ class TransferForm extends Component {
                     </div>
                 </div>}
 
-                <div className="row">
+                {!permlink && <div className="row">
                     <div className="column small-2" style={{paddingTop: 5}}>{tt('g.amount')}</div>
                     <div className="column small-10">
                         <div className="input-group" style={{marginBottom: 5}}>
                             <input type="text" placeholder={tt('g.amount')} {...amount.props} ref="amount" autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck="false" disabled={disableAmount || loading} onChange={(e) => this.onChangeAmount(e)}/>
-                            {asset && transferType !== 'Claim' && transferType !== 'TIP to Vesting' & !transferType.endsWith('to TIP') && <span className="input-group-label" style={{paddingLeft: 0, paddingRight: 0}}>
+                            {asset && transferType !== 'Claim' && !transferType.startsWith('TIP to') && !transferType.endsWith('to TIP') && <span className="input-group-label" style={{paddingLeft: 0, paddingRight: 0}}>
                                 <select {...asset.props} placeholder={tt('transfer_jsx.asset')} disabled={disableAmount || loading} style={{minWidth: "5rem", height: "inherit", backgroundColor: "transparent", border: "none"}}>
                                     <option value={LIQUID_TICKER}>{LIQUID_TOKEN}</option>
                                     <option value={DEBT_TICKER}>{DEBT_TICKER}</option>
@@ -247,7 +296,7 @@ class TransferForm extends Component {
                             {amount.touched && amount.error && amount.error}&nbsp;
                         </div> : null}
                     </div>
-                </div>
+                </div>}
 
                 {(memo && !disableMemo) && <div className="row">
                     <div className="column small-2" style={{paddingTop: 33}}>{tt('transfer_jsx.memo')}</div>
