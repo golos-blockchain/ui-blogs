@@ -196,13 +196,14 @@ class Voting extends React.Component {
         if (donates !== undefined) {
             donates = donates.toJS();
             donates.forEach((donate) => {
-                payoutItems.push({value: donate.from + ' ' + donate.amount});
+                const amount = donate.amount.split(".")[0] + " GOLOS";
+                payoutItems.push({value: donate.from, link: '/@' + donate.from, data: amount});
             });
         }
 
-        const payoutEl = <DropdownMenu el="div" items={payoutItems}>
+        const payoutEl = <DropdownMenu className="Voting__donates_list" el="div" items={payoutItems}>
             <span style={payout_limit_hit ? {opacity: '0.33'} : {}}>
-                {post_obj.get('donates').toString()}
+                {post_obj.get('donates').toString().split(".")[0] + " GOLOS"}
                 {payoutItems.length > 0 && <Icon name="dropdown-arrow" />}
             </span>
         </DropdownMenu>;
@@ -215,14 +216,14 @@ class Voting extends React.Component {
             for( let v = 0; v < avotes.length && voters.length < MAX_VOTES_DISPLAY; ++v ) {
                 const {percent, voter} = avotes[v]
                 const sign = Math.sign(percent)
-                const voterPercent= percent / 100 + '%';
+                //const voterPercent= percent / 100 + '%';
                 if(sign === 0) continue
-                voters.push({value: (sign > 0 ? '+ ' : '- ') + voter, link: '/@' + voter, data: voterPercent})
+                voters.push({value: (sign > 0 ? '+ ' : '- ') + voter, link: '/@' + voter})
             }
             if (total_votes > voters.length) {
                 voters.push({value: <span>&hellip; {tt('g.and')} {(total_votes - voters.length)} {tt('g.more')}</span>});
             }
-            voters_list = <DropdownMenu selected={tt('votesandcomments_jsx.vote_count', {count: total_votes})} className="Voting__voters_list" items={voters} el="div" />;
+            voters_list = <DropdownMenu selected={total_votes} className="Voting__voters_list" items={voters} el="div" noArrow={true} />;
         }
 
         let voteUpClick = this.voteUp;
@@ -245,10 +246,10 @@ class Voting extends React.Component {
                         {votingUpActive ? up : <a href="#" onClick={voteUpClick} title={tt(myVote > 0 ? 'g.remove_vote' : 'g.upvote')}>{up}</a>}
                         {dropdown}
                     </span>
+                    {voters_list}
                     {downVote}
-                    {payoutEl}
                 </span>
-                {voters_list}
+                {payoutEl}
             </span>
         );
     }

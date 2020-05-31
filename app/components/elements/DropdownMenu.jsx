@@ -13,7 +13,8 @@ export default class DropdownMenu extends React.Component {
         className: PropTypes.string,
         title: PropTypes.string,
         href: PropTypes.string,
-        el: PropTypes.string.isRequired
+        el: PropTypes.string.isRequired,
+        noArrow: PropTypes.bool
     };
 
     constructor(props) {
@@ -65,12 +66,12 @@ export default class DropdownMenu extends React.Component {
     }
 
     render() {
-        const {el, items, selected, children, className, title, href} = this.props;
+        const {el, items, selected, children, className, title, href, noArrow} = this.props;
         const hasDropdown = items.length > 0
 
         let entry = children || <span>
                 {this.getSelectedLabel(items, selected)}
-                {hasDropdown && <Icon name="dropdown-arrow" />}
+                {hasDropdown && !noArrow && <Icon name="dropdown-arrow" />}
             </span>
 
         if(hasDropdown) entry = <a key="entry" href={href || '#'} onClick={this.toggle}>{entry}</a>

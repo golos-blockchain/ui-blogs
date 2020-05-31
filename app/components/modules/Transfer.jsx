@@ -200,11 +200,17 @@ class TransferForm extends Component {
 
                 {permlink && (<div className="DonatePresets column">
                 <div>
-                <button class={"PresetSelector button hollow" + (amount.value === "5.000" ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>5<br/>GOLOS</button>
-                <button class={"PresetSelector button hollow" + (amount.value === "10.000" ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>10<br/>GOLOS</button>
-                <button class={"PresetSelector button hollow" + (amount.value === "25.000" ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>25<br/>GOLOS</button>
-                <button class={"PresetSelector button hollow" + (amount.value === "50.000" ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>50<br/>GOLOS</button>
-                <button class={"PresetSelector button hollow" + (amount.value === "100.000" ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>100<br/>GOLOS</button>
+                <div className="PresetSelector__container">
+                <button className={"PresetSelector button hollow" + (amount.value === "5.000" ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>5<br/>GOLOS</button>
+                <button className={"PresetSelector button hollow" + (amount.value === "10.000" ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>10<br/>GOLOS</button>
+                <button className={"PresetSelector button hollow" + (amount.value === "25.000" ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>25<br/>GOLOS</button>
+                <button className={"PresetSelector button hollow" + (amount.value === "50.000" ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>50<br/>GOLOS</button>
+                <button className={"PresetSelector button hollow" + (amount.value === "100.000" ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>100<br/>GOLOS</button>
+                </div>
+                <div className="TipBalance">
+                <b>TIP-баланс:</b><br/>
+                0 GOLOS
+                </div>
                 </div>
                 <Slider
                         {...amount.props}
