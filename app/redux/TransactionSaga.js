@@ -49,6 +49,7 @@ const hook = {
     accepted_vote,
     accepted_account_update,
     accepted_withdraw_vesting,
+    accepted_donate,
 }
 
 function* preBroadcast_transfer({operation}) {
@@ -273,6 +274,14 @@ function* accepted_vote({operation: {author, permlink, weight}}) {
     console.log('Vote accepted, weight', weight, 'on', author + '/' + permlink, 'weight');
     // update again with new $$ amount from the steemd node
     yield put(g.actions.remove({key: `transaction_vote_active_${author}_${permlink}`}))
+    yield call(getContent, {author, permlink})
+}
+
+function* accepted_donate({operation}) {
+    if (operation.memo.target.permlink === '') return;
+    const author = operation.memo.target.author;
+    const permlink = operation.memo.target.permlink;
+    console.log('Donate accepted on ', author, '/', permlink);
     yield call(getContent, {author, permlink})
 }
 

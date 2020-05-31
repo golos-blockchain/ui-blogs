@@ -219,7 +219,7 @@ class PostFull extends React.Component {
         // todo redesign transfer types globally
         const flag = {
             type: `donate`,
-            permlink: permlink,
+            permlink: permlink
         };
 
         this.props.showTransfer({
