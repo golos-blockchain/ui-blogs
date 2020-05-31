@@ -170,6 +170,22 @@ export default function useGeneralApi(app) {
                 console.error('Error in /accounts get_chain_properties', error);
             }
 
+            const cp = yield api.getChainPropertiesAsync();
+
+            let extensions = [];
+            if (account.hasOwnProperty('referrer') && account.referrer != "")
+            {
+                extensions = 
+                [[
+                    0, {
+                        referrer: account.referrer,
+                        interest_rate: cp.max_referral_interest_rate,
+                        end_date: new Date(Date.now() + cp.max_referral_term_sec*1000).toISOString().split(".")[0],
+                        break_fee: cp.max_referral_break_fee
+                    }
+                ]];
+            }
+
             yield createAccount({
                 signingKey: config.get('registrar.signing_key'),
                 fee: `${fee.toFixed(3)} ${fee_currency}`,
@@ -179,7 +195,8 @@ export default function useGeneralApi(app) {
                 active: account.active_key,
                 posting: account.posting_key,
                 memo: account.memo_key,
-                delegation
+                delegation,
+                extensions
             });
 
             console.log('-- create_account_with_keys created -->', this.session.uid, account.name, user_id, account.owner_key);
@@ -421,14 +438,14 @@ export default function useGeneralApi(app) {
  */
 export function* createAccount({
     signingKey, fee, creator, new_account_name, json_metadata = '',
-    owner, active, posting, memo, delegation
+    owner, active, posting, memo, delegation, extensions
 }) {
     const operations = [['account_create_with_delegation', {
         fee, delegation, creator, new_account_name, json_metadata,
         owner: {weight_threshold: 1, account_auths: [], key_auths: [[owner, 1]]},
         active: {weight_threshold: 1, account_auths: [], key_auths: [[active, 1]]},
         posting: {weight_threshold: 1, account_auths: [], key_auths: [[posting, 1]]},
-        memo_key: memo, extensions: []
+        memo_key: memo, extensions: extensions
     }]]
     yield broadcast.sendAsync({
         extensions: [],

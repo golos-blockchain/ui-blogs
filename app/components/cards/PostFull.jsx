@@ -207,9 +207,9 @@ class PostFull extends React.Component {
     showTransfer = () => {
         const postContent = this.props.cont.get(this.props.post);
         const content = postContent.toJS();
-        const { author, url } = content;
+        const { author, permlink, url } = content;
         const asset = LIQUID_TICKER;
-        const transferType = 'Transfer to Account';
+        const transferType = 'TIP to Account';
         // const memo = url;
         // const memo = window.JSON.stringify({donate: {post: url}});
         // store/user/transfer_defaults structure initialized correctly for each transfer type
@@ -219,12 +219,13 @@ class PostFull extends React.Component {
         // todo redesign transfer types globally
         const flag = {
             type: `donate`,
-            fMemo: () => JSON.stringify({ donate: { post: url } }),
+            permlink: permlink
         };
 
         this.props.showTransfer({
             flag,
             to: author,
+            amount: '0.000',
             asset,
             transferType,
             // memo,
@@ -234,7 +235,7 @@ class PostFull extends React.Component {
     };
 
     render() {
-        const { post, cont } = this.props;
+        const { username, post, cont } = this.props;
         const { showReply, showEdit } = this.state;
 
         const postContent = cont.get(post);
@@ -295,6 +296,16 @@ class PostFull extends React.Component {
                           authorRepLog10
                       )}
                 {this._renderFooter(postContent, content, link, authorRepLog10)}
+                {(username && username !== author)
+                    ? (<button
+                        key="b2"
+                        className="Donate__button button"
+                        onClick={this.showTransfer}
+                    >
+                        {tt('g.donate')}
+                    </button>)
+                    : null
+                }
                 {showReply ? (
                     <div className="row">
                         <div className="column large-8 medium-10 small-12">
@@ -468,18 +479,6 @@ class PostFull extends React.Component {
                     onClick={this.showPromotePost}
                 >
                     {tt('g.promote')}
-                </button>
-            );
-        }
-
-        if (username && username !== author) {
-            main.push(
-                <button
-                    key="b2"
-                    className="Donate__button float-right button alert tiny"
-                    onClick={this.showTransfer}
-                >
-                    {tt('g.donate')}
                 </button>
             );
         }

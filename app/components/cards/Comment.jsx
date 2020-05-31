@@ -17,6 +17,8 @@ import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Userpic from 'app/components/elements/Userpic';
 import IllegalContentMessage from 'app/components/elements/IllegalContentMessage';
 
+import { LIQUID_TICKER } from 'app/client_config';
+
 class CommentImpl extends PureComponent {
     static propTypes = {
         // html props
@@ -35,6 +37,7 @@ class CommentImpl extends PureComponent {
         rootComment: PropTypes.string,
         anchorLink: PropTypes.string.isRequired,
         deletePost: PropTypes.func.isRequired,
+        showTransfer: PropTypes.func.isRequired,
         ignoreList: PropTypes.any,
         negativeCommenters: PropTypes.any
     };
@@ -321,6 +324,7 @@ class CommentImpl extends PureComponent {
 
             const isPaidOut = comment.cashout_time === '1969-12-31T23:59:59';
 
+            const showDonate = username !== author;
             const showEdit = username === author;
             const showReply = comment.depth < 255;
             const showDelete =
@@ -328,6 +332,9 @@ class CommentImpl extends PureComponent {
 
             controls = (
                 <span className="Comment__footer__controls">
+                    {showDonate && (
+                        <a onClick={this.onShowDonate}>{tt('g.donate')}</a>
+                    )}{' '}
                     {showReply && (
                         <a onClick={this.onShowReply}>{tt('g.reply')}</a>
                     )}{' '}
@@ -366,6 +373,30 @@ class CommentImpl extends PureComponent {
             return dots;
         }
     }
+
+    onShowDonate = () => {
+        const postContent = this.props.cont.get(this.props.content);
+        const content = postContent.toJS();
+        const { author, permlink, url } = content;
+        const asset = LIQUID_TICKER;
+        const transferType = 'TIP to Account';
+
+        const flag = {
+            type: `donate`,
+            permlink: permlink,
+        };
+
+        this.props.showTransfer({
+            flag,
+            to: author,
+            amount: '0.000',
+            asset,
+            transferType,
+            // memo,
+            disableMemo: false,
+            disableTo: true,
+        });
+    };
 
     onShowReply = () => {
         this.setState({ showReply: !this.state.showReply, showEdit: false });
@@ -437,7 +468,7 @@ const Comment = connect(
             username,
         };
     },
-    {
+    dispatch => ({
         unlock: () => user.actions.showLogin(),
         deletePost: (author, permlink) =>
             transaction.actions.broadcastOperation({
@@ -445,7 +476,11 @@ const Comment = connect(
                 operation: { author, permlink },
                 confirm: tt('g.are_you_sure'),
             }),
-    }
+        showTransfer(transferDefaults) {
+            dispatch(user.actions.setTransferDefaults(transferDefaults));
+            dispatch(user.actions.showTransfer());
+        },
+    })
 )(CommentImpl);
 
 // returns true if the comment has a 'hide' flag AND has no descendants w/ positive payout

@@ -112,7 +112,7 @@ class Powerdown extends React.Component {
             );
         }
         if (notes.length === 0) {
-            let AMOUNT =  vestsToSteem(`${new_withdraw} ${VEST_TICKER}`, this.props.gprops) / 13
+            let AMOUNT =  vestsToSteem(`${new_withdraw} ${VEST_TICKER}`, this.props.gprops) / 8
             AMOUNT = AMOUNT.toFixed(AMOUNT >= 10 ? 0 : 1);
             notes.push(
                 <li key="per_week">

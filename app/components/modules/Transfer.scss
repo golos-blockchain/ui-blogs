@@ -1,0 +1,59 @@
+.PresetSelector {
+  border-radius: 0px;
+  margin-left: -1px !important;
+  margin-right: 0px !important;
+
+  border: 1px solid #0078C4 !important;
+  color: #0078C4 !important;
+}
+
+.PresetSelector:nth-child(n+3):nth-last-child(n+3) {
+}
+
+.PresetSelector:first-child {
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  margin-right: 0px !important;
+  margin-left: 0px !important;
+}
+
+.PresetSelector:last-child {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.PresetSelector:hover {
+  border: 1px solid #002080 !important;
+  color: #002080 !important;
+  position: relative;
+  z-index: 10;
+}
+
+.PresetSelector__active {
+  border: 1px solid #002080 !important;
+  color: #002080 !important;
+  position: relative;
+  z-index: 10;
+}
+
+.DonatePresets {
+  margin-bottom: 10px;
+}
+
+.TipBalance {
+  display: inline-block;
+  border-radius: 10px;
+  margin-left: 20px;
+  border: 1px solid black;
+  vertical-align: middle;
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.PresetSelector__container {
+  display: inline-block;
+}

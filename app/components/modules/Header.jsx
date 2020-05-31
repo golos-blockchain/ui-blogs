@@ -133,6 +133,12 @@ class Header extends React.Component {
             if(route.params[1] === "author-rewards"){
                 page_title = tt('header_jsx.author_rewards_by') + " " + user_title;
             }
+            if(route.params[1] === "donates-from"){
+                page_title = tt('header_jsx.donates_from') + " " + user_title;
+            }
+            if(route.params[1] === "donates-to"){
+                page_title = tt('header_jsx.donates_to') + " " + user_title;
+            }
             if(route.params[1] === "recent-replies"){
                 page_title = tt('header_jsx.replies_to') + " " + user_title;
             }

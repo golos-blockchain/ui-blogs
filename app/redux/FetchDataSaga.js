@@ -56,9 +56,11 @@ export function* fetchState(location_change_action) {
 
     let url = `${pathname}`
     if (url === '/') url = 'trending'
-    // Replace /curation-rewards and /author-rewards with /transfers for UserProfile to resolve data correctly
+    // Replace these URLs with /transfers for UserProfile to resolve data correctly
     if (url.indexOf("/curation-rewards") !== -1) url = url.replace("/curation-rewards", "/transfers")
     if (url.indexOf("/author-rewards") !== -1) url = url.replace("/author-rewards", "/transfers")
+    if (url.indexOf("/donates-from") !== -1) url = url.replace("/donates-from", "/transfers")
+    if (url.indexOf("/donates-to") !== -1) url = url.replace("/donates-to", "/transfers")
 
     yield put({type: 'FETCH_DATA_BEGIN'})
     try {
@@ -105,6 +107,7 @@ export function* fetchState(location_change_action) {
                                 case 'escrow_approve':
                                 case 'escrow_dispute':
                                 case 'escrow_release':
+                                case 'donate':
                                     state.accounts[uname].transfer_history.push(operation)
                                 break
 
@@ -203,8 +206,12 @@ export function* fetchState(location_change_action) {
                 if (reply.parent_permlink === permlink) {
                     state.content[curl].replies.push(link)
                 }
+                const donates =  yield call([api, api.getDonatesAsync], {author: reply.author, permlink: reply.permlink}, '', '', constants.DEFAULT_VOTE_LIMIT, 0)
+                state.content[link].donate_list = donates
             }
 
+            const donates =  yield call([api, api.getDonatesAsync], {author: account, permlink: permlink}, '', '', constants.DEFAULT_VOTE_LIMIT, 0)
+            state.content[curl].donate_list = donates
         } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
             state.witnesses = {};
             const witnesses =  yield call([api, api.getWitnessesByVoteAsync], '', 100)

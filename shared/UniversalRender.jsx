@@ -129,9 +129,11 @@ export async function serverRender({
     let serverStore, onchain;
     try {
         let url = location === '/' ? 'trending' : location;
-        // Replace /curation-rewards and /author-rewards with /transfers for UserProfile to resolve data correctly
+        // Replace these URLs with /transfers for UserProfile to resolve data correctly
         if (url.indexOf('/curation-rewards') !== -1) url = url.replace(/\/curation-rewards$/, '/transfers');
         if (url.indexOf('/author-rewards') !== -1) url = url.replace(/\/author-rewards$/, '/transfers');
+        if (url.indexOf('/donates-from') !== -1) url = url.replace(/\/donates-from$/, '/transfers');
+        if (url.indexOf('/donates-to') !== -1) url = url.replace(/\/donates-to$/, '/transfers');
 
         const options = { IGNORE_TAGS }
 

@@ -11,6 +11,8 @@ import PasswordReset from 'app/components/elements/PasswordReset';
 import UserWallet from 'app/components/modules/UserWallet';
 import WitnessProps from 'app/components/modules/WitnessProps';
 import Settings from 'app/components/modules/Settings';
+import DonatesFrom from 'app/components/modules/DonatesFrom';
+import DonatesTo from 'app/components/modules/DonatesTo';
 import CurationRewards from 'app/components/modules/CurationRewards';
 import AuthorRewards from 'app/components/modules/AuthorRewards';
 import UserList from 'app/components/elements/UserList';
@@ -221,6 +223,22 @@ export default class UserProfile extends React.Component {
                 current_user={current_user}
                 />
         }
+        else if( section === 'donates-from' ) {
+            rewardsClass = "active";
+            tab_content = <DonatesFrom
+                account={account}
+                current_user={current_user}
+                incoming={true}
+                />
+        }
+        else if( section === 'donates-to' ) {
+            rewardsClass = "active";
+            tab_content = <DonatesTo
+                account={account}
+                current_user={current_user}
+                incoming={false}
+                />
+        }
         else if( section === 'followers' ) {
             if (followers && followers.has('blog_result')) {
                 tab_content = <div>
@@ -383,7 +401,9 @@ export default class UserProfile extends React.Component {
 
         let rewardsMenu = [
             {link: `/@${accountname}/curation-rewards`, label: tt('g.curation_rewards'), value: tt('g.curation_rewards')},
-            {link: `/@${accountname}/author-rewards`, label: tt('g.author_rewards'), value: tt('g.author_rewards')}
+            {link: `/@${accountname}/author-rewards`, label: tt('g.author_rewards'), value: tt('g.author_rewards')},
+            {link: `/@${accountname}/donates-from`, label: tt('g.donates_from'), value: tt('g.donates_from')},
+            {link: `/@${accountname}/donates-to`, label: tt('g.donates_to'), value: tt('g.donates_to')}
         ];
 
         // set account join date

@@ -6,7 +6,7 @@ import {PrivateKey} from 'golos-classic-js/lib/auth/ecc';
 import {api} from 'golos-classic-js';
 
 // operations that require only posting authority
-const postingOps = Set(`vote, comment, delete_comment, custom_json, account_metadata`.trim().split(/,\s*/))
+const postingOps = Set(`vote, comment, delete_comment, custom_json, account_metadata, claim, donate`.trim().split(/,\s*/))
 
 export function* authWatches() {
     yield fork(watchForAuth) 

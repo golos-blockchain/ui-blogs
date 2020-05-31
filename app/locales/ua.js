@@ -33,7 +33,7 @@ const ua = {
   APP_URL_is_now_open_source: APP_URL + ' тепер Open Source',
   DEBT_TOKEN_will_be_unavailable: 'Ця операція буде проходити через тиждень від справжнього моменту і її не можна скасувати. Ці ' + DEBT_TOKEN + ' миттєво стануть недоступні',
   LIQUID_TOKEN_can_be_converted_to_VESTING_TOKEN_in_a_process_called_powering_up: LIQUID_TOKEN + ' може бути конвертований в ' + VESTING_TOKEN + ', цей процес називається "посилення голосу".',
-  VESTING_TOKEN_is_non_transferrable_and_requires_convert_back_to_LIQUID_TOKEN: VESTING_TOKEN + ' is non-transferrable and requires 3 months (13 payments) to convert back to ' + LIQUID_TOKEN + '.',
+  VESTING_TOKEN_is_non_transferrable_and_requires_convert_back_to_LIQUID_TOKEN: VESTING_TOKEN + ' is non-transferrable and requires 2 months (8 payments) to convert back to ' + LIQUID_TOKEN + '.',
   VESTING_TOKEN_is_non_transferrable_and_will_require_2_years_and_104_payments_to_convert_back_to_LIQUID_TOKEN: VESTING_TOKEN + ' не можна передавати і буде потрібно 2 роки і 104 виплати щоб перевести назад в ' + LIQUID_TOKEN + '.',
   about: "Про проект",
   about_APP_NAME: 'О ' + APP_NAME,

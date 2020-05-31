@@ -192,50 +192,41 @@ class Voting extends React.Component {
         const cashout_active = pending_payout > 0 || (cashout_time.indexOf('1969') !== 0 && !(is_comment && total_votes == 0));
         const payoutItems = [];
 
-        if(cashout_active) {
-            payoutItems.push({value: tt('voting_jsx.potential_payout') + ' ' + localizedCurrency(payout.total) + ' (' + payout.total.toFixed(3) + ' ' + DEBT_TICKER + ')'});
-        }
-        if(promoted > 0) {
-            payoutItems.push({value: tt('voting_jsx.boost_payments') + ' ' + localizedCurrency(promoted)});
-        }
-        if(cashout_active) {
-            payoutItems.push({value: <TimeAgoWrapper date={cashout_time} />});
+        let donates = post_obj.get('donate_list');
+        if (donates !== undefined) {
+            donates = donates.toJS();
+            let i = 0;
+            donates.forEach((donate) => {
+                const amount = donate.amount.split(".")[0] + " GOLOS";
+                payoutItems.push({key: i, value: donate.from, link: '/@' + donate.from, data: amount});
+                i++;
+            });
         }
 
-        if(payout.isDeclined) {
-            payoutItems.push({value: tt('voting_jsx.payouts_declined')})
-        } else if (max_payout < 1000000) {
-            payoutItems.push({value: tt('voting_jsx.max_accepted_payout') + localizedCurrency(max_payout)})
-        }
-        if(total_author_payout > 0) {
-            payoutItems.push({value: tt('voting_jsx.past_payouts') + ' ' + localizedCurrency(payout.author + payout.curator)});
-            payoutItems.push({value: ' - ' + tt('voting_jsx.authors') + ': ' + localizedCurrency(payout.author)});
-            payoutItems.push({value: ' - ' + tt('voting_jsx.curators') + ': ' + localizedCurrency(payout.curator)});
-        }
-        const payoutEl = <DropdownMenu el="div" items={payoutItems}>
-            <span style={payout_limit_hit ? {opacity: '0.33'} : {}}>
-                <LocalizedCurrency gold={(promoted > 0)} amount={payout.total} className={payout.isDeclined ? 'strikethrough' : ''} />
+        const payoutEl = <DropdownMenu className="Voting__donates_list" el="div" items={payoutItems}>
+            <span title={tt('g.rewards_tip')}>
+                <Icon size="0_95x" name="tips" />&nbsp;{post_obj.get('donates').toString().split(".")[0] + " GOLOS"}
                 {payoutItems.length > 0 && <Icon name="dropdown-arrow" />}
             </span>
         </DropdownMenu>;
 
         let voters_list = null;
+        let voters = [];    
         if (showList && total_votes > 0 && active_votes) {
             const avotes = active_votes.toJS();
             avotes.sort((a, b) => Math.abs(parseInt(a.rshares)) > Math.abs(parseInt(b.rshares)) ? -1 : 1)
-            let voters = [];
             for( let v = 0; v < avotes.length && voters.length < MAX_VOTES_DISPLAY; ++v ) {
                 const {percent, voter} = avotes[v]
                 const sign = Math.sign(percent)
-                const voterPercent= percent / 100 + '%';
+                //const voterPercent= percent / 100 + '%';
                 if(sign === 0) continue
-                voters.push({value: (sign > 0 ? '+ ' : '- ') + voter, link: '/@' + voter, data: voterPercent})
+                voters.push({value: (sign > 0 ? '+ ' : '- ') + voter, link: '/@' + voter})
             }
             if (total_votes > voters.length) {
                 voters.push({value: <span>&hellip; {tt('g.and')} {(total_votes - voters.length)} {tt('g.more')}</span>});
             }
-            voters_list = <DropdownMenu selected={tt('votesandcomments_jsx.vote_count', {count: total_votes})} className="Voting__voters_list" items={voters} el="div" />;
         }
+        voters_list = <DropdownMenu selected={total_votes} className="Voting__voters_list" items={voters} el="div" noArrow={true} />;
 
         let voteUpClick = this.voteUp;
         let dropdown = null;
@@ -257,10 +248,10 @@ class Voting extends React.Component {
                         {votingUpActive ? up : <a href="#" onClick={voteUpClick} title={tt(myVote > 0 ? 'g.remove_vote' : 'g.upvote')}>{up}</a>}
                         {dropdown}
                     </span>
+                    {voters_list}
                     {downVote}
-                    {payoutEl}
                 </span>
-                {voters_list}
+                {payoutEl}
             </span>
         );
     }
