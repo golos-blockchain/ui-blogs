@@ -195,9 +195,11 @@ class Voting extends React.Component {
         let donates = post_obj.get('donate_list');
         if (donates !== undefined) {
             donates = donates.toJS();
+            let i = 0;
             donates.forEach((donate) => {
                 const amount = donate.amount.split(".")[0] + " GOLOS";
-                payoutItems.push({value: donate.from, link: '/@' + donate.from, data: amount});
+                payoutItems.push({key: i, value: donate.from, link: '/@' + donate.from, data: amount});
+                i++;
             });
         }
 
