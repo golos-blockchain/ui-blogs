@@ -214,7 +214,7 @@ class TransferForm extends Component {
                 </div>
                 <Slider
                         {...amount.props}
-                        min={1}
+                        min={0}
                         max={parseInt(this.balanceValue().split(".")[0])}
                         hideHandleValue={amount.value > 999}
                         onChange={this.onDonateSliderChange}

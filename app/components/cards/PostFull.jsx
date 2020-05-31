@@ -225,6 +225,7 @@ class PostFull extends React.Component {
         this.props.showTransfer({
             flag,
             to: author,
+            amount: '0.000',
             asset,
             transferType,
             // memo,
