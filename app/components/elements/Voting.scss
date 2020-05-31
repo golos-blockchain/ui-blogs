@@ -74,7 +74,6 @@
 }
 
 .Voting__button-down {
-  margin-left: 0.25rem;
   margin-right: 0.5rem;
 
   .Voting__button-downvotes {
@@ -157,6 +156,7 @@
 
 .DropdownMenu.Voting__voters_list {
   padding-left: 0.25rem;
+  padding-right: 0.25rem;
   min-width: 25px;
   text-align: center;
 }

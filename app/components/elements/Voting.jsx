@@ -209,10 +209,10 @@ class Voting extends React.Component {
         </DropdownMenu>;
 
         let voters_list = null;
+        let voters = [];    
         if (showList && total_votes > 0 && active_votes) {
             const avotes = active_votes.toJS();
             avotes.sort((a, b) => Math.abs(parseInt(a.rshares)) > Math.abs(parseInt(b.rshares)) ? -1 : 1)
-            let voters = [];
             for( let v = 0; v < avotes.length && voters.length < MAX_VOTES_DISPLAY; ++v ) {
                 const {percent, voter} = avotes[v]
                 const sign = Math.sign(percent)
@@ -223,8 +223,8 @@ class Voting extends React.Component {
             if (total_votes > voters.length) {
                 voters.push({value: <span>&hellip; {tt('g.and')} {(total_votes - voters.length)} {tt('g.more')}</span>});
             }
-            voters_list = <DropdownMenu selected={total_votes} className="Voting__voters_list" items={voters} el="div" noArrow={true} />;
         }
+        voters_list = <DropdownMenu selected={total_votes} className="Voting__voters_list" items={voters} el="div" noArrow={true} />;
 
         let voteUpClick = this.voteUp;
         let dropdown = null;

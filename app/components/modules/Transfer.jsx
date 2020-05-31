@@ -209,15 +209,23 @@ class TransferForm extends Component {
                 </div>
                 <div className="TipBalance">
                 <b>TIP-баланс:</b><br/>
-                0 GOLOS
+                {this.balanceValue().split(".")[0] + " GOLOS"}
                 </div>
                 </div>
                 <Slider
                         {...amount.props}
                         min={1}
-                        max={500}
+                        max={parseInt(this.balanceValue().split(".")[0])}
+                        hideHandleValue={amount.value > 999}
                         onChange={this.onDonateSliderChange}
                     />
+                </div>)}
+
+                {(permlink && amount.value > 999 && <div className="row">
+                    <div className="column small-2" style={{paddingBottom: 13}}>Сумма</div>
+                    <div className="column small-10">
+                        {amount.value.toString().split(".")[0] + " GOLOS"}
+                    </div>
                 </div>)}
 
                 {permlink && ((asset && asset.touched && asset.error ) || (amount.touched && amount.error)) ?
