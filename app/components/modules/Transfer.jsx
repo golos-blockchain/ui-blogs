@@ -175,6 +175,14 @@ class TransferForm extends Component {
         const isMemoPrivate = memo && /^#/.test(memo.value)
 
         let permlink = (this.flag && typeof this.flag.permlink === `string`) ? this.flag.permlink : null;
+        let donatePresets;
+        if(process.env.BROWSER) {
+            donatePresets = localStorage.getItem('donate.presets-' + currentUser.get('username'))
+            if (donatePresets) donatePresets = JSON.parse(donatePresets)
+            else {
+              donatePresets = ['5','10','25','50','100'];
+            };
+        }
         const form = (
             <form onSubmit={handleSubmit(({data}) => {
                 this.setState({loading: true})
@@ -201,11 +209,11 @@ class TransferForm extends Component {
                 {permlink && (<div className="DonatePresets column">
                 <div>
                 <div className="PresetSelector__container">
-                <button className={"PresetSelector button hollow" + (amount.value === "5.000" ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>5<br/>GOLOS</button>
-                <button className={"PresetSelector button hollow" + (amount.value === "10.000" ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>10<br/>GOLOS</button>
-                <button className={"PresetSelector button hollow" + (amount.value === "25.000" ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>25<br/>GOLOS</button>
-                <button className={"PresetSelector button hollow" + (amount.value === "50.000" ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>50<br/>GOLOS</button>
-                <button className={"PresetSelector button hollow" + (amount.value === "100.000" ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>100<br/>GOLOS</button>
+                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[0] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[0]}<br/>GOLOS</button>
+                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[1] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[1]}<br/>GOLOS</button>
+                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[2] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[2]}<br/>GOLOS</button>
+                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[3] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[3]}<br/>GOLOS</button>
+                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[4] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[4]}<br/>GOLOS</button>
                 </div>
                 <div className="TipBalance">
                 <b>TIP-баланс:</b><br/>
@@ -216,23 +224,10 @@ class TransferForm extends Component {
                         {...amount.props}
                         min={0}
                         max={parseInt(this.balanceValue().split(".")[0])}
-                        hideHandleValue={amount.value > 999}
+                        hideHandleValue={true}
                         onChange={this.onDonateSliderChange}
                     />
                 </div>)}
-
-                {(permlink && amount.value > 999 && <div className="row">
-                    <div className="column small-2" style={{paddingBottom: 13}}>Сумма</div>
-                    <div className="column small-10">
-                        {amount.value.toString().split(".")[0] + " GOLOS"}
-                    </div>
-                </div>)}
-
-                {permlink && ((asset && asset.touched && asset.error ) || (amount.touched && amount.error)) ?
-                <div className="column error">
-                    {asset && asset.touched && asset.error && asset.error}&nbsp;
-                    {amount.touched && amount.error && amount.error}&nbsp;
-                </div> : null}
 
                 {!permlink && <div className="row">
                     <div className="column small-2" style={{paddingTop: 5}}>{tt('g.from')}</div>
@@ -275,7 +270,7 @@ class TransferForm extends Component {
                     </div>
                 </div>}
 
-                {!permlink && <div className="row">
+                {<div className="row">
                     <div className="column small-2" style={{paddingTop: 5}}>{tt('g.amount')}</div>
                     <div className="column small-10">
                         <div className="input-group" style={{marginBottom: 5}}>
@@ -287,9 +282,9 @@ class TransferForm extends Component {
                                 </select>
                             </span>}
                         </div>
-                        <div style={{marginBottom: "0.6rem"}}>
+                        {!permlink && <div style={{marginBottom: "0.6rem"}}>
                             <AssetBalance balanceValue={this.balanceValue()} onClick={this.assetBalanceClick} />
-                        </div>
+                        </div>}
                         {(asset && asset.touched && asset.error ) || (amount.touched && amount.error) ?
                         <div className="error">
                             {asset && asset.touched && asset.error && asset.error}&nbsp;

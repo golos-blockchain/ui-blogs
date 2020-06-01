@@ -115,6 +115,7 @@ export default class Slider extends PureComponent {
         red: PropTypes.bool,
         showCaptions: PropTypes.bool,
         hideHandleValue: PropTypes.bool,
+        handleTip: PropTypes.func,
         disabled: PropTypes.bool,
         onChange: PropTypes.func.isRequired,
     };
@@ -125,6 +126,7 @@ export default class Slider extends PureComponent {
         max: 100,
         showCaptions: false,
         hideHandleValue: false,
+        handleTip: (value) => null
     };
 
     rootRef = createRef();
@@ -134,7 +136,7 @@ export default class Slider extends PureComponent {
     }
 
     render() {
-        const { min, max, hideHandleValue, showCaptions, disabled, ...passProps } = this.props;
+        const { min, max, hideHandleValue, handleTip, showCaptions, disabled, ...passProps } = this.props;
         const value = Number(this.props.value);
 
         const isMobile = checkMobileDevice();
@@ -154,9 +156,7 @@ export default class Slider extends PureComponent {
                     <HandleWrapper left={percent}>
                         {hideHandleValue && !isMobile ? (
                             <Handle
-                                data-tooltip={tt('settings_jsx.default_voting_power_tip', {
-                                    value,
-                                })}
+                                data-tooltip={handleTip(value)}
                             />
                         ) : (
                             <Handle>{value}</Handle>

@@ -280,7 +280,7 @@
     "recent_password": "Недавний пароль",
     "receive": "Получено",
     "remove": "Удалить",
-    "remove_vote": "Убрать голос",
+    "remove_vote": "Отменить голос",
     "replied_to": "ответил",
     "replies": "Ответы",
     "reply": "Ответить",
@@ -761,6 +761,7 @@
   "settings_jsx": {
     "choose_language": "Выберите язык интерфейса",
     "choose_currency": "Выберите валюту",
+    "choose_preset_tips": "Выберите суммы для кнопок вознаграждений",
     "invalid_url": "Недопустимый URL-адрес",
     "invalid_ws": "wss://ws.golos.id",
     "invalid_ip_port": "Пример: 20.16.10.18:1101",
@@ -977,13 +978,13 @@
     "history": "ИСТОРИЯ"
   },
   "votesandcomments_jsx": {
-    "no_responses_yet_click_to_respond": "Ответов пока нет. Нажмите, чтобы ответить.",
+    "no_responses_yet_click_to_respond": "Комментариев пока нет. Нажмите, чтобы перейти к обсуждению.",
     "response_count": {
-      "zero": "0 ответов",
-      "one": "1 ответ",
-      "other": "%(count)s ответов"
+      "zero": "0 комментариев",
+      "one": "1 комментарий",
+      "other": "%(count)s комментариев"
     },
-    "click_to_respond": "Нажмите, чтобы ответить",
+    "click_to_respond": "Нажмите, чтобы перейти к обсуждению",
     "vote_count": {
       "zero": "0 голосов",
       "one": "1 голос",
