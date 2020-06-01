@@ -32,6 +32,7 @@ class Settings extends React.Component {
         this.onNsfwPrefChange = this.onNsfwPrefChange.bind(this)
         this.onNsfwPrefSubmit = this.onNsfwPrefSubmit.bind(this)
         this.onRoundingNumbersChange = this.onRoundingNumbersChange.bind(this)
+        this.onDonatePresetChange = this.onDonatePresetChange.bind(this)
     }
 
     state = {
@@ -65,7 +66,7 @@ class Settings extends React.Component {
         const {accountname} = this.props
         const {vesting_shares} = this.props.account
         
-        let rounding, nsfwPref;
+        let rounding, nsfwPref, donatePresets;
 
         nsfwPref = (process.env.BROWSER ? localStorage.getItem('nsfwPref-' + accountname) : null) || 'warn'
         this.setState({nsfwPref, oldNsfwPref: nsfwPref})
@@ -79,6 +80,13 @@ class Settings extends React.Component {
                     rounding = FRACTION_DIGITS_MARKET
               }
             this.setState({rounding : rounding})
+
+            donatePresets = localStorage.getItem('donate.presets-' + accountname)
+            if (donatePresets) donatePresets = JSON.parse(donatePresets)
+            else {
+              donatePresets = ['5','10','25','50','100'];
+            }
+            this.setState({donatePresets : donatePresets})
         }
     }
 
@@ -167,6 +175,21 @@ class Settings extends React.Component {
         const {nsfwPref} = this.state;
         localStorage.setItem('nsfwPref-'+accountname, nsfwPref)
         this.setState({oldNsfwPref: nsfwPref})
+    }
+
+    onDonatePresetChange(e) {
+        if (!e.currentTarget.validity.valid || e.currentTarget.value == '') {
+          return;
+        }
+        const donatePresets = this.state.donatePresets.map((item, j) => {
+          if (j == e.currentTarget.dataset.id) {
+            return e.currentTarget.value;
+          }
+          return item;
+        });
+        this.setState({donatePresets});
+        const {accountname} = this.props;
+        localStorage.setItem('donate.presets-'+accountname, JSON.stringify(donatePresets));
     }
 
     notify = () => {
@@ -268,7 +291,7 @@ class Settings extends React.Component {
         const {submitting, valid, touched} = this.state.accountSettings
         const disabled = !props.isOwnAccount || state.loading || submitting || !valid || !touched
 
-        const {profile_image, cover_image, name, about, gender, location, website, rounding} = this.state
+        const {profile_image, cover_image, name, about, gender, location, website, rounding, donatePresets} = this.state
 
         const {follow, account, isOwnAccount} = this.props
         const following = follow && follow.getIn(['getFollowingAsync', account.name]);
@@ -326,24 +349,16 @@ class Settings extends React.Component {
                     </label>
                     <div className="error"></div>
 
-                    <label>{tt('settings_jsx.choose_currency')}
-                        <select defaultValue={process.env.BROWSER ? localStorage.getItem('xchange.picked') : DEFAULT_CURRENCY} onChange={this.onCurrencyChange}>
-                            {CURRENCIES.map(i => {
-                                    return <option key={i} value={i}>{i}</option>
-                                })
-                            }
-                        </select>
+                    <label>
+                        Предустановленные суммы доната в окне "Отблагодарить":
+                        <div>
+                          <input type="number" className="Donate_presets" min="1" step="1" max="99999" data-id="0" value={this.state.donatePresets[0]} onChange={this.onDonatePresetChange} />
+                          <input type="number" className="Donate_presets" min="1" step="1" max="99999" data-id="1" value={this.state.donatePresets[1]} onChange={this.onDonatePresetChange} />
+                          <input type="number" className="Donate_presets" min="1" step="1" max="99999" data-id="2" value={this.state.donatePresets[2]} onChange={this.onDonatePresetChange} />
+                          <input type="number" className="Donate_presets" min="1" step="1" max="99999" data-id="3" value={this.state.donatePresets[3]} onChange={this.onDonatePresetChange} />
+                          <input type="number" className="Donate_presets" min="1" step="1" max="99999" data-id="4" value={this.state.donatePresets[4]} onChange={this.onDonatePresetChange} />
+                        </div>
                     </label>
-
-                    <label>{tt('settings_jsx.rounding_numbers.info_message')}
-                        <select defaultValue={process.env.BROWSER ? rounding : FRACTION_DIGITS} onChange={this.onRoundingNumbersChange}>
-                            <option value="0">{tt('settings_jsx.rounding_numbers.integer')}</option>
-                            <option value="1">{tt('settings_jsx.rounding_numbers.one_decimal')}</option>
-                            <option value="2">{tt('settings_jsx.rounding_numbers.two_decimal')}</option>
-                            <option value="3">{tt('settings_jsx.rounding_numbers.three_decimal')}</option>
-                        </select>
-                    </label>
-
                     <div className="error"></div>
 
                     <label>
