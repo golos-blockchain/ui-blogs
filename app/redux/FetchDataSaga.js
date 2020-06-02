@@ -91,7 +91,7 @@ export function* fetchState(location_change_action) {
                         account.transfer_history = []
                         account.other_history = []
 
-                        state.cprops = yield call([api, api.getChainProperties])
+                        state.cprops = yield call([api, api.getChainPropertiesAsync])
                         
                         history.forEach(operation => {
                             switch (operation[1].op[0]) {
