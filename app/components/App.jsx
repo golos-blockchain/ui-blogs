@@ -305,10 +305,12 @@ class App extends React.Component {
         }
 
         let invite = location.query.invite;
-        if (invite) {
-            localStorage.setItem('invite', invite);
-        } else {
-            invite = localStorage.getItem('invite');
+        if (process.env.BROWSER) {
+            if (invite) {
+                localStorage.setItem('invite', invite);
+            } else {
+                invite = localStorage.getItem('invite');
+            }
         }
 
         let welcome_screen = null;

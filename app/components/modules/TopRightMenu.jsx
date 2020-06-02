@@ -115,11 +115,17 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     //   </li>
     // ;
 
-    let invite = locationQueryParams.invite;
-    if (invite) {
-        localStorage.setItem('invite', invite);
-    } else {
-        invite = localStorage.getItem('invite');
+    let invite;
+    if (locationQueryParams)
+    {
+        invite = locationQueryParams.invite;
+        if (process.env.BROWSER) {
+            if (invite) {
+                localStorage.setItem('invite', invite);
+            } else {
+                invite = localStorage.getItem('invite');
+            }
+        }
     }
 
     const additional_menu = []
