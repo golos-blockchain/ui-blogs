@@ -372,14 +372,6 @@ class UserWallet extends React.Component {
         const sbdInterest = this.props.sbd_interest / 100
         const sbdMessage = <span>{tt('userwallet_jsx.tokens_worth_about_1_of_LIQUID_TICKER', {TOKEN_WORTH, LIQUID_TICKER, sbdInterest})}</span>
 
-        let last_claim = new Date(account.get('last_claim')).getTime() / 1000;
-        let claim_expire = last_claim + this.props.cprops.get('claim_idleness_time');
-        let now = new Date(this.props.gprops.get('time')).getTime() / 1000;
-        claim_expire = now > claim_expire ? now : claim_expire;
-        claim_expire = claim_expire + (60*60*25 - (claim_expire % (60*60*25)));
-        claim_expire = new Date((claim_expire - now) * 1000);
-        claim_expire = claim_expire.getDay() + " дней, "; 
-
         return (<div className="UserWallet">
             <div className="row">
                 <div className="columns small-10 medium-12 medium-expand">
