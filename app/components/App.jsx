@@ -304,6 +304,13 @@ class App extends React.Component {
             );
         }
 
+        let invite = location.query.invite;
+        if (invite) {
+            localStorage.setItem('invite', invite);
+        } else {
+            invite = localStorage.getItem('invite');
+        }
+
         let welcome_screen = null;
         if (ip && new_visitor && this.state.showBanner) {
             welcome_screen = (
@@ -322,7 +329,7 @@ class App extends React.Component {
                                 )}
                             </h4>
                             <br />
-                            <a className="button" href="/create_account">
+                            <a className="button" href={"/create_account" + (invite ? ("?invite=" + invite) : "")}>
                                 {' '}
                                 <b>{tt('navigation.sign_up')}</b>{' '}
                             </a>

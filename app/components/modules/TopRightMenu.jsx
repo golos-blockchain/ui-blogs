@@ -115,11 +115,18 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     //   </li>
     // ;
 
+    let invite = locationQueryParams.invite;
+    if (invite) {
+        localStorage.setItem('invite', invite);
+    } else {
+        invite = localStorage.getItem('invite');
+    }
+
     const additional_menu = []
     if (!loggedIn) {
         additional_menu.push(
             { link: '/login.html', onClick: showLogin, value: tt('g.login'), className: 'show-for-small-only' },
-            { link: '/create_account', value: tt('g.sign_up'), className: 'show-for-small-only' },
+            { link: "/create_account" + (invite ? ("?invite=" + invite) : ""), value: tt('g.sign_up'), className: 'show-for-small-only' },
             { link: '#', onClick: toggleNightmode, icon: 'editor/eye', value: tt('g.night_mode') }
         )
     }
@@ -235,7 +242,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
               <a href="/login.html" onClick={showLogin} className={!vertical && 'button small violet hollow'}>{tt('g.login')}</a>
             </li>}
             {!probablyLoggedIn && <li className={scn}>
-              <a href="/create_account" className={!vertical && 'button small alert'}>{tt('g.sign_up')}</a>
+              <a href={"/create_account" + (invite ? ("?invite=" + invite) : "")} className={!vertical && 'button small alert'}>{tt('g.sign_up')}</a>
             </li>}
             {probablyLoggedIn && <li className={lcn}>
               <LoadingIndicator type="circle" inline />
