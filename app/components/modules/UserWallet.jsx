@@ -21,6 +21,7 @@ import { LIQUID_TICKER, VEST_TICKER, DEBT_TICKER} from 'app/client_config';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import throttle from 'lodash/throttle';
 import * as api from 'app/utils/APIWrapper'
+import transaction from 'app/redux/Transaction';
 
 
 
@@ -218,6 +219,12 @@ class UserWallet extends React.Component {
             this.props.showDelegatedVesting(name, type)
         }
 
+        const claim = (amount, e) => {
+            e.preventDefault()
+            const name = account.get('name')
+            this.props.claim(name, amount)
+        }
+
         // Sum savings withrawals
         let savings_pending = 0, savings_sbd_pending = 0;
         if(savings_withdraws) {
@@ -365,6 +372,14 @@ class UserWallet extends React.Component {
         const sbdInterest = this.props.sbd_interest / 100
         const sbdMessage = <span>{tt('userwallet_jsx.tokens_worth_about_1_of_LIQUID_TICKER', {TOKEN_WORTH, LIQUID_TICKER, sbdInterest})}</span>
 
+        let last_claim = new Date(account.get('last_claim')).getTime() / 1000;
+        let claim_expire = last_claim + this.props.cprops.get('claim_idleness_time');
+        let now = new Date(this.props.gprops.get('time')).getTime() / 1000;
+        claim_expire = now > claim_expire ? now : claim_expire;
+        claim_expire = claim_expire + (60*60*25 - (claim_expire % (60*60*25)));
+        claim_expire = new Date((claim_expire - now) * 1000);
+        claim_expire = claim_expire.getDay() + " дней, "; 
+
         return (<div className="UserWallet">
             <div className="row">
                 <div className="columns small-10 medium-12 medium-expand">
@@ -398,12 +413,13 @@ class UserWallet extends React.Component {
             <div className="UserWallet__balance row zebra">
                 <div className="column small-12 medium-8">
                     {CLAIM_TOKEN.toUpperCase()}<br />
-                    <span className="secondary">Баланс вашей доли от общей эмиссии токенов блокчейна Голос, которую вы можете востребовать для пополнения TIP-баланса, либо увеличения Силы Голоса.</span>
+                    <span className="secondary">Баланс вашей доли от общей эмиссии токенов блокчейна Голос, которую вы можете востребовать для пополнения TIP-баланса, либо увеличения Силы Голоса.
+                    </span>
                 </div>
                 <div className="column small-12 medium-4">
                     {isMyAccount
                         ? <FoundationDropdownMenu
-                            className="Wallet_dropdown"
+                            className="Wallet__claim_dropdown"
                             dropdownPosition="bottom"
                             dropdownAlignment="right"
                             label={steem_claim_balance_str}
@@ -411,6 +427,13 @@ class UserWallet extends React.Component {
                         />
                         : steem_claim_balance_str
                     }
+                    <div>{isMyAccount ? <button
+                        className="Wallet__claim_button button tiny"
+                        disabled={steem_claim_balance_str == '0.000 GOLOS'}
+                        onClick={claim.bind(this, steem_claim_balance_str)}
+                    >
+                        {tt('g.claim')}
+                    </button> : null}</div>
                 </div>
             </div>
             <div className="UserWallet__balance row">
@@ -583,6 +606,7 @@ export default connect(
         const savings_withdraws = state.user.get('savings_withdraws')
         const gprops = state.global.get('props');
         const sbd_interest = gprops.get('sbd_interest_rate')
+        const cprops = state.global.get('cprops');
 
         return {
             ...ownProps,
@@ -590,7 +614,8 @@ export default connect(
             price_per_golos,
             savings_withdraws,
             sbd_interest,
-            gprops
+            gprops,
+            cprops
         }
     },
     // mapDispatchToProps
@@ -610,6 +635,25 @@ export default connect(
         },
         showDelegatedVesting: (account, type) => {
             dispatch(g.actions.showDialog({name: 'delegate_vesting_info', params: {account, type}}))
+        },
+        claim: (username, amount) => {
+            const successCallback = () => {
+                // refresh transfer history
+                dispatch({type: 'FETCH_STATE', payload: {pathname: `@${username}/transfers`}})
+            }
+            const errorCallback = (estr) => {
+                alert(estr);
+            }
+
+            let operation = {from: username, to: username, amount, memo: '', to_vesting: false};
+
+            dispatch(transaction.actions.broadcastOperation({
+                type: 'claim',
+                username,
+                operation,
+                successCallback,
+                errorCallback
+            }))
         }
     })
 )(UserWallet)
