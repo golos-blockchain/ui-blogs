@@ -216,7 +216,7 @@ class TransferForm extends Component {
                 <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[4] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[4]}<br/>GOLOS</button>
                 </div>
                 <div className="TipBalance">
-                <b>TIP-баланс:</b><br/>
+                <b>{tt('token_names.TIP_TOKEN')}:</b><br/>
                 {this.balanceValue().split(".")[0] + " GOLOS"}
                 </div>
                 </div>

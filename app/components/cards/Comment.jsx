@@ -324,7 +324,7 @@ class CommentImpl extends PureComponent {
 
             const isPaidOut = comment.cashout_time === '1969-12-31T23:59:59';
 
-            const showDonate = username !== author;
+            const showDonate = username && username !== author;
             const showEdit = username === author;
             const showReply = comment.depth < 255;
             const showDelete =
