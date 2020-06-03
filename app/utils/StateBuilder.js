@@ -56,7 +56,9 @@ export default async function getState(api, url, options, offchain = {}) {
                     const history = await api.getAccountHistory(uname, -1, 1000)
                     account.transfer_history = [] // TODO Not used
                     account.other_history = []
-                    
+
+                    state.cprops = await api.getChainProperties();
+
                     history.forEach(operation => {
                         switch (operation[1].op[0]) {
                             case 'transfer_to_vesting':

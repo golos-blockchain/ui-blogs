@@ -157,6 +157,9 @@ export default function useGeneralApi(app) {
             const delegation = config.get('registrar.delegation')
 
             let fee = parseFloat(fee_value);
+            let max_referral_interest_rate;
+            let max_referral_term_sec;
+            let max_referral_break_fee;
             try {
                 const chain_properties = yield api.getChainPropertiesAsync();
                 const chain_fee = parseFloat(chain_properties.account_creation_fee);
@@ -166,11 +169,14 @@ export default function useGeneralApi(app) {
                         fee = chain_fee;
                     }
                 }
+                max_referral_interest_rate = chain_properties.max_referral_interest_rate;
+                max_referral_term_sec = chain_properties.max_referral_term_sec;
+                max_referral_break_fee = chain_properties.max_referral_break_fee;
             } catch (error) {
                 console.error('Error in /accounts get_chain_properties', error);
             }
 
-            const cp = yield api.getChainPropertiesAsync();
+            const dgp = yield api.getDynamicGlobalPropertiesAsync();
 
             let extensions = [];
             if (account.hasOwnProperty('referrer') && account.referrer != "")
@@ -179,9 +185,9 @@ export default function useGeneralApi(app) {
                 [[
                     0, {
                         referrer: account.referrer,
-                        interest_rate: cp.max_referral_interest_rate,
-                        end_date: new Date(Date.now() + cp.max_referral_term_sec*1000).toISOString().split(".")[0],
-                        break_fee: cp.max_referral_break_fee
+                        interest_rate: max_referral_interest_rate,
+                        end_date: new Date(Date.parse(dgp.time) + max_referral_term_sec*1000).toISOString().split(".")[0],
+                        break_fee: max_referral_break_fee
                     }
                 ]];
             }
