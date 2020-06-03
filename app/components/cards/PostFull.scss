@@ -207,6 +207,11 @@ input.share-box {
   margin-top: 13px;
   color: #fff !important;
   width: 100%;
+  opacity: .75;
+}
+
+.Donate__button:hover {
+  opacity: 1;
 }
 
 /* Small only */

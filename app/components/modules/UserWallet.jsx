@@ -312,8 +312,8 @@ class UserWallet extends React.Component {
         }).filter(el => !!el).reverse();
 
         let tip_menu = [
+            { value: tt('g.transfer'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'TIP to Account' ) },
             { value: tt('userwallet_jsx.power_up'), link: '#', onClick: showTransfer.bind( this, VEST_TICKER, 'TIP to Vesting' ) },
-            { value: tt('userwallet_jsx.donate'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'TIP to Account' ) },
         ]
         let claim_menu = [
             { value: tt('userwallet_jsx.claim'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'Claim' ) },
@@ -321,9 +321,9 @@ class UserWallet extends React.Component {
         ]
         let steem_menu = [
             { value: tt('g.transfer'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'Transfer to Account' ) },
-            { value: tt('userwallet_jsx.transfer_to_savings'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'Transfer to Savings' ) },
-            { value: tt('userwallet_jsx.power_up'), link: '#', onClick: showTransfer.bind( this, VEST_TICKER, 'Transfer to Account' ) },
             { value: tt('userwallet_jsx.transfer_to_tip'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'Transfer to TIP' ) },
+            { value: tt('userwallet_jsx.power_up'), link: '#', onClick: showTransfer.bind( this, VEST_TICKER, 'Transfer to Account' ) },
+            { value: tt('userwallet_jsx.transfer_to_savings'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'Transfer to Savings' ) },
         ]
         let power_menu = [
             { value: tt('userwallet_jsx.power_down'), link: '#', onClick: powerDown.bind(this, false) },
@@ -387,7 +387,7 @@ class UserWallet extends React.Component {
             <div className="UserWallet__balance row">
                 <div className="column small-12 medium-8">
                     {TIP_TOKEN.toUpperCase()}<br />
-                    <span className="secondary">Баланс, с которого вы вознаграждаете других пользователей, и на который получаете вознаграждения сами.<br/>Токены с него вывести можно только в пополнение Силы Голоса.</span>
+                    <span className="secondary">{tt('tips_js.tip_balance_hint')}</span>
                 </div>
                 <div className="column small-12 medium-4">
                     {isMyAccount
@@ -405,8 +405,7 @@ class UserWallet extends React.Component {
             <div className="UserWallet__balance row zebra">
                 <div className="column small-12 medium-8">
                     {CLAIM_TOKEN.toUpperCase()}<br />
-                    <span className="secondary">Баланс вашей доли от общей эмиссии токенов блокчейна Голос, которую вы можете востребовать для пополнения TIP-баланса, либо увеличения Силы Голоса.
-                    </span>
+                    <span className="secondary">{tt('tips_js.claim_balance_hint')}</span>
                 </div>
                 <div className="column small-12 medium-4">
                     {isMyAccount
@@ -430,33 +429,9 @@ class UserWallet extends React.Component {
             </div>
             <div className="UserWallet__balance row">
                 <div className="column small-12 medium-8">
-                    {LIQUID_TOKEN.toUpperCase()}<br />
-                    <span className="secondary">{steemTip.split(".").map((a, index) => {if (a) {return <div key={index}>{a}.</div>;} return null;})}</span>
-                </div>
-                <div className="column small-12 medium-4">
-                    {isMyAccount
-                        ? <FoundationDropdownMenu
-                            className="Wallet_dropdown"
-                            dropdownPosition="bottom"
-                            dropdownAlignment="right"
-                            label={steem_balance_str}
-                            menu={steem_menu}
-                        />
-                        : steem_balance_str
-                    }
-                    {steemOrders
-                        ? <div style={{paddingRight: isMyAccount ? "0.85rem" : null}}>
-                            <Link to="/market"><Tooltip t={tt('market_jsx.open_orders')}>(+{steem_orders_balance_str})</Tooltip></Link>
-                         </div>
-                        : null
-                    }
-                </div>
-            </div>
-            <div className="UserWallet__balance row zebra">
-                <div className="column small-12 medium-8">
                     {VESTING_TOKEN.toUpperCase()}<br />
                     <span className="secondary">{powerTip.split(".").map((a, index) => {if (a) {return <div key={index}>{a}.</div>;} return null;})}
-                    {tt('userwallet_jsx.top_dpos')} - <a target="_blank" href="https://dpos.space/golos-top/GP/">dpos.space <Icon name="extlink" /></a></span>
+                    <a target="_blank" href="/workers">{tt('userwallet_jsx.worker_foundation')} <Icon name="extlink" /></a> | {tt('userwallet_jsx.top_dpos')} - <a target="_blank" href="https://dpos.space/golos-top/GP/">dpos.space <Icon name="extlink" /></a></span>
                 </div>
                 <div className="column small-12 medium-4">
                     {isMyAccount
@@ -489,7 +464,30 @@ class UserWallet extends React.Component {
                         ) : null}
                 </div>
             </div>
-
+            <div className="UserWallet__balance row zebra">
+                <div className="column small-12 medium-8">
+                    {LIQUID_TOKEN.toUpperCase()}<br />
+                    <span className="secondary">{steemTip.split(".").map((a, index) => {if (a) {return <div key={index}>{a}.</div>;} return null;})}</span>
+                </div>
+                <div className="column small-12 medium-4">
+                    {isMyAccount
+                        ? <FoundationDropdownMenu
+                            className="Wallet_dropdown"
+                            dropdownPosition="bottom"
+                            dropdownAlignment="right"
+                            label={steem_balance_str}
+                            menu={steem_menu}
+                        />
+                        : steem_balance_str
+                    }
+                    {steemOrders
+                        ? <div style={{paddingRight: isMyAccount ? "0.85rem" : null}}>
+                            <Link to="/market"><Tooltip t={tt('market_jsx.open_orders')}>(+{steem_orders_balance_str})</Tooltip></Link>
+                         </div>
+                        : null
+                    }
+                </div>
+            </div>
             <div className="UserWallet__balance row">
                 <div className="column small-12 medium-8">
                     {DEBT_TOKEN.toUpperCase()}<br />

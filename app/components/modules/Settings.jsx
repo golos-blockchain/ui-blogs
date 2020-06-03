@@ -350,7 +350,7 @@ class Settings extends React.Component {
                     <div className="error"></div>
 
                     <label>
-                        Предустановленные суммы доната в окне "Отблагодарить":
+                        {tt('settings_jsx.choose_preset_tips')}
                         <div>
                           <input type="number" className="Donate_presets" min="1" step="1" max="99999" data-id="0" value={this.state.donatePresets[0]} onChange={this.onDonatePresetChange} />
                           <input type="number" className="Donate_presets" min="1" step="1" max="99999" data-id="1" value={this.state.donatePresets[1]} onChange={this.onDonatePresetChange} />

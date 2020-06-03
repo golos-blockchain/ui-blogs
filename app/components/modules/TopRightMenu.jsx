@@ -82,8 +82,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     const walletLink = `/@${username}/transfers`;
     const settingsLink = `/@${username}/settings`;
     const accountLink = `/@${username}`;
-    const commentsLink = `/@${username}/comments`;
-    const reset_password_link = `/@${username}/password`;
+    const donatesLink = `/@${username}/donates-to`;
 
     const faqItem = <li className={scn}>
         <a href="/faq" title={tt('navigation.faq')}>
@@ -166,11 +165,10 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
         let user_menu = [
             {link: feedLink, icon: 'new/home', value: tt('g.feed'), addon: <NotifiCounter fields="feed" />},
             {link: accountLink, icon: 'new/blogging', value: tt('g.blog')},
-            {link: commentsLink, icon: 'new/comment', value: tt('g.comments')},
             {link: repliesLink, icon: 'new/answer', value: tt('g.replies'), addon: <NotifiCounter fields="comment_reply" />},
+            {link: donatesLink, icon: 'editor/coin', value: tt('g.rewards')},
             {link: walletLink, icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields="follow,send,receive,account_update" />},
             {link: '#', onClick: toggleNightmode, icon: 'editor/eye', value: tt('g.night_mode')},
-            {link: reset_password_link, icon: 'key', value: tt('g.change_password')},
             {link: settingsLink, icon: 'new/setting', value: tt('g.settings')},
             loggedIn ?
                 {link: '#', icon: 'new/logout', onClick: logout, value: tt('g.logout')} :

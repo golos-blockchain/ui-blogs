@@ -54,6 +54,7 @@ const icons = new Map([
     ['male', require('app/assets/icons/male.svg')],
     ['female', require('app/assets/icons/female.svg')],
     ['money', require('app/assets/icons/money.svg')],
+    ['tips', require('app/assets/icons/tips.svg')],
     ['team', require('app/assets/icons/team.svg')],
     ['rocket', require('app/assets/icons/rocket.svg')],
     ['blockchain', require('app/assets/icons/blockchain.svg')],

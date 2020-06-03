@@ -204,8 +204,8 @@ class Voting extends React.Component {
         }
 
         const payoutEl = <DropdownMenu className="Voting__donates_list" el="div" items={payoutItems}>
-            <span style={payout_limit_hit ? {opacity: '0.33'} : {}}>
-                {post_obj.get('donates').toString().split(".")[0] + " GOLOS"}
+            <span title={tt('g.rewards_tip')}>
+                <Icon size="0_95x" name="tips" />&nbsp;{post_obj.get('donates').toString().split(".")[0] + " GOLOS"}
                 {payoutItems.length > 0 && <Icon name="dropdown-arrow" />}
             </span>
         </DropdownMenu>;
