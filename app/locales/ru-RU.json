@@ -439,7 +439,7 @@
     "requires_auth_key": "Эта операция требует вашего %(authType)s ключа (или используйте главный пароль)",
     "keep_me_logged_in": "Оставить меня залогиненным",
     "donate": "Отблагодарить",
-    "claim": "Забрать",
+    "claim": "Получить",
     "received_vesting": "%(VESTING_TOKEN)s делегированная на этот аккаунт",
     "delegated_vesting": "%(VESTING_TOKEN)s делегированная с этого аккаунта",
     "load_more": "Показать еще",

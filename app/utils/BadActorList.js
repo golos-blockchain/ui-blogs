@@ -1,6 +1,7 @@
 const list = `
 rude
 rudeks
+rudex-gateway
 kunai
 steem-engin
 steemengine
