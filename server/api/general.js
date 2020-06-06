@@ -179,7 +179,7 @@ export default function useGeneralApi(app) {
             const dgp = yield api.getDynamicGlobalPropertiesAsync();
 
             let extensions = [];
-            if (account.hasOwnProperty('referrer') && account.referrer != "")
+            if (account.referrer)
             {
                 extensions = 
                 [[
