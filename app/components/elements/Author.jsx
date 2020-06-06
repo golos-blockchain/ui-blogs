@@ -20,6 +20,7 @@ class Author extends React.Component {
         follow: bool,
         mute: bool,
         authorRepLog10: number,
+        donateUrl: string,
     };
     static defaultProps = {
         follow: true,
@@ -51,7 +52,7 @@ class Author extends React.Component {
 
     shouldComponentUpdate = shouldComponentUpdate(this, 'Author');
     render() {
-        const {author, follow, mute, authorRepLog10} = this.props; // html
+        const {author, follow, mute, authorRepLog10, donateUrl} = this.props; // html
         const {username} = this.props; // redux
 
         const author_link = <span className="author" itemProp="author" itemScope itemType="http://schema.org/Person">
@@ -75,7 +76,7 @@ class Author extends React.Component {
             </Link>
             <div>
                 <Follow className="float-right" follower={username} following={author} what="blog"
-                        showFollow={follow} showMute={mute} />
+                        showFollow={follow} showMute={mute} donateUrl={donateUrl} />
             </div>
 
             <div className="Author__bio">
