@@ -55,7 +55,7 @@ function TimeAuthorCategory({ content, authorRepLog10, showTags }) {
             <Icon name="clock" className="space-right" />
             <TimeAgoWrapper date={content.created} className="updated" />
             {} {tt('g.by')}{' '}
-            <Author author={content.author} authorRepLog10={authorRepLog10} />
+            <Author author={content.author} authorRepLog10={authorRepLog10} donateUrl={content.url} />
             {showTags && (
                 <span>
                     {' '}
@@ -78,6 +78,7 @@ function TimeAuthorCategoryLarge({ content, authorRepLog10 }) {
                 <Author
                     author={content.author}
                     authorRepLog10={authorRepLog10}
+                    donateUrl={content.url}
                 />
                 <span>
                     {' '}
