@@ -421,7 +421,7 @@ class UserWallet extends React.Component {
                     <div>{isMyAccount ? <button
                         className="Wallet__claim_button button tiny"
                         disabled={steem_claim_balance_str == '0.000 GOLOS'}
-                        onClick={claim.bind(this, steem_claim_balance_str)}
+                        onClick={claim.bind(this, account.get('accumulative_balance'))}
                     >
                         {tt('g.claim')}
                     </button> : null}</div>
