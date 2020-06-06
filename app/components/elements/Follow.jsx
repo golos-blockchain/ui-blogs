@@ -9,6 +9,7 @@ import tt from 'counterpart';
 import user from 'app/redux/User';
 
 const {string, bool, any} = PropTypes;
+import { LIQUID_TICKER } from 'app/client_config';
 
 export default class Follow extends React.Component {
     static propTypes = {
@@ -16,6 +17,7 @@ export default class Follow extends React.Component {
         follower: string, // OPTIONAL default to current user
         showFollow: bool,
         showMute: bool,
+        donateUrl: string,
         children: any,
         showLogin: PropTypes.func.isRequired,
     };
@@ -64,6 +66,34 @@ export default class Follow extends React.Component {
         this.props.showLogin(e);
     }
 
+    showTransfer = () => {
+        const asset = LIQUID_TICKER;
+        const transferType = 'Transfer to Account';
+        // const memo = url;
+        // const memo = window.JSON.stringify({donate: {post: this.props.donateUrl}});
+        // store/user/transfer_defaults structure initialized correctly for each transfer type
+        // (click in wallet, external link, donate from PostFull)
+        // so, mark this kind of transfer with a flag for now to analyze in transfer.jsx
+        // the rest of transfer types don't have the flag for now
+        // todo redesign transfer types globally
+        const flag = {
+            type: `donate`,
+            fMemo: () => JSON.stringify({ donate: { post: this.props.donateUrl } }),
+        };
+
+        document.body.click();
+
+        this.props.showTransfer({
+            flag,
+            to: this.props.following,
+            asset,
+            transferType,
+            // memo,
+            disableMemo: false,
+            disableTo: true,
+        });
+    };
+
     render() {
         const {loading} = this.props;
         if(loading) return <span><LoadingIndicator /> {tt('g.loading')}&hellip;</span>;
@@ -81,11 +111,12 @@ export default class Follow extends React.Component {
         if(follower === following) return <span></span>
 
         const {followingWhat} = this.props; // redux
-        const {showFollow, showMute, children} = this.props; // html
+        const {showFollow, showMute, donateUrl, children} = this.props; // html
         const {busy} = this.state;
 
         const cnBusy = busy ? 'disabled' : '';
         const cnInactive = 'button slim hollow secondary ' + cnBusy;
+        const cnDonate = 'button slim alert ' + cnBusy;
         return <span>
             {showFollow && followingWhat !== 'blog' &&
                 <label className={cnInactive} onClick={this.follow}>{tt('g.follow')}</label>}
@@ -98,6 +129,9 @@ export default class Follow extends React.Component {
 
             {showMute && followingWhat === 'ignore' &&
                 <label className={cnInactive} onClick={this.unignore}>{tt('g.unmute')}</label>}
+
+            {donateUrl &&
+                <label style={{color: '#fff'}} className={cnDonate} onClick={this.showTransfer}>&nbsp;{tt('g.transfer2')}&nbsp;</label>}
 
             {children && <span>&nbsp;&nbsp;{children}</span>}
         </span>
@@ -148,6 +182,10 @@ module.exports = connect(
         showLogin: e => {
             if (e) e.preventDefault();
             dispatch(user.actions.showLogin())
+        },
+        showTransfer(transferDefaults) {
+            dispatch(user.actions.setTransferDefaults(transferDefaults));
+            dispatch(user.actions.showTransfer());
         },
     })
 )(Follow);
