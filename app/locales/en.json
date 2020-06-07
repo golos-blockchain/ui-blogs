@@ -326,6 +326,7 @@
   "main_menu": {
     "hot": "hot",
     "trending": "trending",
+    "donates": "donates",
     "payout_time": "payout time",
     "active": "active",
     "discussion": "discussion",
