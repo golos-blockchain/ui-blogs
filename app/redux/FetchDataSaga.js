@@ -341,6 +341,8 @@ export function* fetchData(action) {
         call_name = PUBLIC_API.created;
     } else if( order === 'responses' ) {
         call_name = PUBLIC_API.responses;
+    } else if( order === 'donates' ) {
+        call_name = PUBLIC_API.donates;
     } else if( order === 'votes' ) {
         call_name = PUBLIC_API.votes;
     } else if( order === 'hot' ) {
