@@ -176,7 +176,8 @@ class Header extends React.Component {
             ['created', tt('g.new')],
             ['responses', tt('main_menu.discussion')],
             ['trending', tt('main_menu.trending')],
-            ['promoted', tt('g.promoted')]
+            ['promoted', tt('g.promoted')],
+            ['donates', tt('main_menu.donates')],
             //['payout', 'payout (posts)'],
             //['payout_comments', 'payout (comments)'],
         ];

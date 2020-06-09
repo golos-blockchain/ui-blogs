@@ -554,6 +554,7 @@
   "main_menu": {
     "hot": "Актуальное",
     "trending": "Популярное",
+    "donates": "Донаты",
     "payout_time": "время выплаты",
     "active": "Обсуждаемое",
     "discussion": "Обсуждаемое",
@@ -640,7 +641,7 @@
     "history": "История"
   },
   "post_jsx": {
-    "now_showing_comments_with_low_ratings": "Отображаем комментарии с низким рейтингом",
+    "now_showing_comments_with_low_ratings": "Отображаем скрытые комментарии",
     "sort_order": "Порядок сортировки",
     "comments_were_hidden_due_to_low_ratings": "Комментарии были скрыты из-за низкого рейтинга или заблокированы автором блога"
   },
