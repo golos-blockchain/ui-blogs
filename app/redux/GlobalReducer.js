@@ -246,6 +246,39 @@ export default createModule({
                 ),
         },
         {
+            action: 'DONATED',
+            reducer: (
+                state,
+                { payload: { username, author, permlink, amount } }
+            ) =>
+                state.updateIn(
+                    ['content', author + '/' + permlink, 'donate_list'],
+                    List(),
+                    donateList =>
+                        donateList.withMutations(donateList => {
+                            const idx = donateList.findIndex(
+                                v => v.get('from') === username
+                            );
+
+                            if (idx === -1) {
+                                const donate = Map({
+                                    from: username,
+                                    amount,
+                                });
+                                donateList.push(donate);
+                            } else {
+                                const oldAmount = parseInt(donateList.get(idx).toJS().amount.split(".")[0]);
+                                const newAmount = parseInt(amount.split(".")[0]);
+                                const donate = Map({
+                                    from: username,
+                                    amount: (oldAmount + newAmount).toString(),
+                                });
+                                donateList.set(idx, donate);
+                            }
+                        })
+                ),
+        },
+        {
             action: 'FETCHING_DATA',
             reducer: (state, { payload: { order, category } }) =>
                 state.updateIn(['status', category || '', order], () => ({

@@ -283,6 +283,7 @@ function* accepted_donate({operation}) {
     const permlink = operation.memo.target.permlink;
     console.log('Donate accepted on ', author, '/', permlink);
     yield call(getContent, {author, permlink})
+    yield put(g.actions.donated({username: operation.from, author, permlink, amount: operation.amount}))
 }
 
 function* accepted_withdraw_vesting({operation}) {
