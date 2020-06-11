@@ -63,7 +63,7 @@
     "have_only_one_dash_in_a_row": "иметь только одно тире в строке.",
     "end_with_a_letter_or_digit": "заканчиваться буквой или цифрой.",
     "end_with_a_letter": "заканчиваться буквой.",
-    "use_caution_sending_to_this_account": "Подозрительный аккаунт, возможно это фишинг."
+    "use_caution_sending_to_this_account": "Перевод невозможен, уточнить причины этого можно в телеграм-группе @golos_id"
   },
   "confirmtransactionform_jsx": {
     "ok": "ОК",

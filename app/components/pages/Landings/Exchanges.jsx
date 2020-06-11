@@ -24,50 +24,12 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <a target="_blank" href="https://kuna.io/"><img src='https://i.imgur.com/saLaUIC.png' width='236' height='75' /></a>
-                                </div>
-                                <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
-                                    <a target="_blank" href="https://kuna.io/markets/golbtc" className="button">GOLOS-BTC</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='column large-12 medium-12 small-12'>
-                            <hr/>
-                        </div>
-                    </div>
-                </div>
-                <div className='landing-exchanges-block'>
-                    <div className='column large-12 medium-12 small-12'>
-                        <div className='column large-12 medium-12 small-12'>
-                            <hr/>
-                        </div>
-                        <div className='column large-12 medium-12 small-12'>
-                            <div className='row'>
-                                <div className='column large-12 medium-12 small-12' align='center'>
                                 <a target="_blank" href="https://rudex.org/"><img src='https://i.imgur.com/RyCrpvb.png' width='266' height='75' /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
+                                    <a target="_blank" href="/@allforyou/golos-delistyat-s-kuny-perekhodim-na-rudex">Инструкция</a> по интерфейсу RuDEX от <a target="_blank" href="/@allforyou">@allforyou</a>
+                                    <br /><br />
                                     <a target="_blank" href="https://ticker.rudex.org/market/GLS_BTC" className="button">GOLOS-BTC</a>&nbsp;&nbsp;<a target="_blank" href="https://ticker.rudex.org/market/GLS_BTS" className="button">GOLOS-BTS</a>&nbsp;&nbsp;<a target="_blank" href="https://ticker.rudex.org/market/GLS_USDT" className="button">GOLOS-USDT</a>&nbsp;&nbsp;<a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_RUBLE" className="button">GOLOS-RUBLE</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='column large-12 medium-12 small-12'>
-                            <hr/>
-                        </div>
-                    </div>
-                </div>
-                <div className='landing-exchanges-block'>
-                    <div className='column large-12 medium-12 small-12'>
-                        <div className='column large-12 medium-12 small-12'>
-                            <hr/>
-                        </div>
-                        <div className='column large-12 medium-12 small-12'>
-                            <div className='row'>
-                                <div className='column large-12 medium-12 small-12' align='center'>
-                                <a target="_blank" href="https://steem-engine.com/"><img src='https://i.imgur.com/KpqwZy6.png' width='182' height='125' /></a>
-                                </div>
-                                <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
-                                    <a target="_blank" href="https://steem-engine.com/?p=market&t=GOLOSP" className="button">GOLOS-STEEM</a>
                                 </div>
                             </div>
                         </div>
@@ -96,6 +58,66 @@ class Exchanges extends React.Component {
                         </div>
                     </div>
                 </div>
+                <div className='landing-exchanges-block'>
+                    <div className='column large-12 medium-12 small-12'>
+                        <div className='column large-12 medium-12 small-12'>
+                            <hr/>
+                        </div>
+                        <div className='column large-12 medium-12 small-12'>
+                            <div className='row'>
+                                <div className='column large-12 medium-12 small-12' align='center'>
+                                <a target="_blank" href="https://kuna.io/"><img src='https://i.imgur.com/saLaUIC.png' width='236' height='75' /></a>
+                                </div>
+                                <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
+                                    <a target="_blank" href="https://kuna.io/markets/golbtc" className="button">GOLOS-BTC</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='column large-12 medium-12 small-12'>
+                            <hr/>
+                        </div>
+                    </div>
+                </div> 
+                <div className='landing-exchanges-block'>
+                    <div className='column large-12 medium-12 small-12'>
+                        <div className='column large-12 medium-12 small-12'>
+                            <hr/>
+                        </div>
+                        <div className='column large-12 medium-12 small-12'>
+                            <div className='row'>
+                                <div className='column large-12 medium-12 small-12' align='center'>
+                                <a target="_blank" href="https://hive-engine.com/"><img src='https://i.imgur.com/z5JfS8K.png' width='375' height='60' /></a>
+                                </div>
+                                <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
+                                    <a target="_blank" href="https://hive-engine.com/?p=market&t=SWAP.GOLOS" className="button">GOLOS-HIVE</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='column large-12 medium-12 small-12'>
+                            <hr/>
+                        </div>
+                    </div>
+                </div>
+                <div className='landing-exchanges-block'>
+                    <div className='column large-12 medium-12 small-12'>
+                        <div className='column large-12 medium-12 small-12'>
+                            <hr/>
+                        </div>
+                        <div className='column large-12 medium-12 small-12'>
+                            <div className='row'>
+                                <div className='column large-12 medium-12 small-12' align='center'>
+                                <a target="_blank" href="https://steem-engine.com/"><img src='https://i.imgur.com/KpqwZy6.png' width='182' height='125' /></a>
+                                </div>
+                                <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
+                                    <a target="_blank" href="https://steem-engine.com/?p=market&t=GOLOSP" className="button">GOLOS-STEEM</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='column large-12 medium-12 small-12'>
+                            <hr/>
+                        </div>
+                    </div>
+                </div>               
                 <div className='landing-exchanges-block'>
                     <div className='column large-12 medium-12 small-12'>
                         <div className='row'>
