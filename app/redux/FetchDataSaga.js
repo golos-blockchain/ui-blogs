@@ -208,11 +208,11 @@ export function* fetchState(location_change_action) {
                 if (reply.parent_permlink === permlink) {
                     state.content[curl].replies.push(link)
                 }
-                const donates =  yield call([api, api.getDonatesAsync], {author: reply.author, permlink: reply.permlink}, '', '', 10, 0, true)
+                const donates =  yield call([api, api.getDonatesAsync], {author: reply.author, permlink: reply.permlink}, '', '', 20, 0, true)
                 state.content[link].donate_list = donates
             }
 
-            const donates =  yield call([api, api.getDonatesAsync], {author: account, permlink: permlink}, '', '', 10, 0, true)
+            const donates =  yield call([api, api.getDonatesAsync], {author: account, permlink: permlink}, '', '', 20, 0, true)
             state.content[curl].donate_list = donates
         } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
             state.witnesses = {};
