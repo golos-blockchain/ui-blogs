@@ -47,7 +47,6 @@ const availableDomains = [
     'golos.id',
     'golos.in',
     'golos.today',
-    'goldvoice.club',
     'ropox.app',
     'golos.cf',
     'dpos.space',
@@ -56,6 +55,7 @@ const availableDomains = [
     'kuna.io',
     'livecoin.net',
     'steem-engine.com',
+    'hive-engine.com',
     'github.com',
     'play.google.com',
     't.me',
@@ -242,7 +242,7 @@ class App extends React.Component {
         const warning = flash.get('warning');
         const success = flash.get('success');
         let callout = null;
-        const showInfoBox = true && this.isShowInfoBox();
+        const showInfoBox = false && this.isShowInfoBox();
 
         if (this.state.showCallout && (alert || warning || success)) {
             callout = (

@@ -49,7 +49,7 @@
     "foundation-sites": "^6.4.3",
     "git-rev-sync": "^1.12.0",
     "gmail-send": "^1.8.10",
-    "golos-classic-js": "0.7.41",
+    "golos-classic-js": "0.7.42",
     "grant-koa": "^3.6.0",
     "history": "^2.0.0-rc2",
     "immutable": "^3.8.2",
