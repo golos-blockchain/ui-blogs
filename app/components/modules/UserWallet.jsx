@@ -312,7 +312,7 @@ class UserWallet extends React.Component {
         }).filter(el => !!el).reverse();
 
         let tip_menu = [
-            { value: tt('g.transfer'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'TIP to Account' ) },
+            { value: tt('g.donate'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'TIP to Account' ) },
             { value: tt('userwallet_jsx.power_up'), link: '#', onClick: showTransfer.bind( this, VEST_TICKER, 'TIP to Vesting' ) },
         ]
         let claim_menu = [
@@ -405,8 +405,8 @@ class UserWallet extends React.Component {
             <div className="UserWallet__balance row zebra">
                 <div className="column small-12 medium-8">
                     {CLAIM_TOKEN.toUpperCase()}<br />
-                    <span className="secondary">{tt('tips_js.claim_balance_hint')}<br/>
-                    Окно востребования токенов закончится <b><TimeAgoWrapper date={account.get('claim_expiration')} /></b>.</span>
+                    <span className="secondary">{tt('tips_js.claim_balance_hint')} {tt('tips_js.claim_expiration_hint')} 
+                    &nbsp;<Icon name="clock" />&nbsp;<b><TimeAgoWrapper date={account.get('claim_expiration')} /></b>.</span>
                 </div>
                 <div className="column small-12 medium-4">
                     {isMyAccount

@@ -27,7 +27,7 @@ class Exchanges extends React.Component {
                                 <a target="_blank" href="https://rudex.org/"><img src='https://i.imgur.com/RyCrpvb.png' width='266' height='75' /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
-                                    <a target="_blank" href="/@allforyou/golos-delistyat-s-kuny-perekhodim-na-rudex">Инструкция</a> по интерфейсу RuDEX от <a target="_blank" href="/@allforyou">@allforyou</a>
+                                    <a target="_blank" href="/@allforyou/golos-delistyat-s-kuny-perekhodim-na-rudex">{tt('exchanges_jsx.guide_user')} @allforyou</a>
                                     <br /><br />
                                     <a target="_blank" href="https://ticker.rudex.org/market/GLS_BTC" className="button">GOLOS-BTC</a>&nbsp;&nbsp;<a target="_blank" href="https://ticker.rudex.org/market/GLS_BTS" className="button">GOLOS-BTS</a>&nbsp;&nbsp;<a target="_blank" href="https://ticker.rudex.org/market/GLS_USDT" className="button">GOLOS-USDT</a>&nbsp;&nbsp;<a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_RUBLE" className="button">GOLOS-RUBLE</a>
                                 </div>
@@ -58,26 +58,6 @@ class Exchanges extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className='landing-exchanges-block'>
-                    <div className='column large-12 medium-12 small-12'>
-                        <div className='column large-12 medium-12 small-12'>
-                            <hr/>
-                        </div>
-                        <div className='column large-12 medium-12 small-12'>
-                            <div className='row'>
-                                <div className='column large-12 medium-12 small-12' align='center'>
-                                <a target="_blank" href="https://kuna.io/"><img src='https://i.imgur.com/saLaUIC.png' width='236' height='75' /></a>
-                                </div>
-                                <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
-                                    <a target="_blank" href="https://kuna.io/markets/golbtc" className="button">GOLOS-BTC</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='column large-12 medium-12 small-12'>
-                            <hr/>
-                        </div>
-                    </div>
-                </div> 
                 <div className='landing-exchanges-block'>
                     <div className='column large-12 medium-12 small-12'>
                         <div className='column large-12 medium-12 small-12'>
