@@ -389,6 +389,8 @@
     "curation_rewards": "Кураторские награды",
     "donates_from": "Отправленные донаты",
     "donates_to": "Полученные донаты",
+    "referral_link": "Ваша реферальная ссылка",
+    "referral_link_title": "Ссылка для приглашения рефералов",
     "connection_lost_reconnecting": "Связь потеряна, переподключаемся",
     "server_returned_error": "ошибка сервера",
     "APP_NAME_support": "%(APP_NAME)s поддержка",

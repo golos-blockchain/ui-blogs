@@ -5,6 +5,8 @@ import TransferHistoryRow from 'app/components/cards/TransferHistoryRow';
 import {numberWithCommas, vestsToSp, assetFloat} from 'app/utils/StateFunctions'
 import tt from 'counterpart';
 import { LIQUID_TICKER, VEST_TICKER } from 'app/client_config';
+import { Link } from 'react-router';
+import Icon from 'app/components/elements/Icon';
 
 class DonatesTo extends React.Component {
     state = { historyIndex: 0 }
@@ -99,6 +101,7 @@ class DonatesTo extends React.Component {
                 <div className="column small-12">
                     {/** history */}
                     <h4 className="uppercase">{incoming ? tt('g.donates_from') : tt('g.donates_to')}</h4>
+                    <span>{tt('g.referral_link')} <span title={tt('g.referral_link_title')}><Icon name="info_o" /></span> -&nbsp;<Link to={"/welcome?invite=" + account.name}>{location.origin + "/welcome?invite=" + account.name}</Link></span>
                     {navButtons}
                     <table>
                         <tbody>
