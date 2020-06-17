@@ -100,7 +100,7 @@ class UserWallet extends React.Component {
 
         this.setState({loading: true})
 
-        const history = await api.getAccountHistory(this.props.account.get('name'), from, 1000)
+        const history = await api.getAccountHistory(this.props.account.get('name'), from, 1000, ['producer_reward'])
 
         if (this.transfer_log_from == -1 && history) {
             this.transfer_log_from = history[history.length - 1][0]
