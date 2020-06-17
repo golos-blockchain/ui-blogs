@@ -68,6 +68,10 @@ export default async function getState(api, url, options, offchain = {}) {
                             case 'liquidity_reward':
                             case 'author_reward':
                             case 'curation_reward':
+                            case 'worker_reward':
+                            case 'transfer_to_tip':
+                            case 'transfer_from_tip':
+                            case 'claim':
                             case 'transfer_to_savings':
                             case 'transfer_from_savings':
                             case 'cancel_transfer_from_savings':

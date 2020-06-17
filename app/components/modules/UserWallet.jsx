@@ -216,7 +216,7 @@ class UserWallet extends React.Component {
             const type = item.getIn([1, 'op', 0]);
             
             // Filter out rewards
-            if (type === "curation_reward" || type === "author_reward") return null;
+            if (type === "curation_reward" || type === "author_reward" || type === "donate") return null;
             
             if(data.sbd_payout === '0.000 GBG' && data.vesting_payout === '0.000000 GESTS') return null
 
