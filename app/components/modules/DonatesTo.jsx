@@ -100,8 +100,8 @@ class DonatesTo extends React.Component {
             <div className="row">
                 <div className="column small-12">
                     {/** history */}
+                    <span style={{ float: 'right' }} title={tt('g.referral_link_title')}><Icon name="hf/hf5" size="2x" /> {tt('g.referral_link')} - <Link target="_blank" to={"/welcome?invite=" + account.name}>{location.origin + "/welcome?invite=" + account.name}</Link></span>
                     <h4 className="uppercase">{incoming ? tt('g.donates_from') : tt('g.donates_to')}</h4>
-                    <span>{tt('g.referral_link')} <span title={tt('g.referral_link_title')}><Icon name="info_o" /></span> -&nbsp;<Link to={"/welcome?invite=" + account.name}>{location.origin + "/welcome?invite=" + account.name}</Link></span>
                     {navButtons}
                     <table>
                         <tbody>
