@@ -156,7 +156,7 @@ class TransferHistoryRow extends React.Component {
                 data_memo = '';
             }
         } else if (type === 'claim') {
-            description_start += "Забрано с TIP-баланса ";
+            description_start += "Забрано с CLAIM-баланса ";
             description_start += data.amount;
             if (data.to_vesting) {
                 description_start += " в Силу Голоса";
