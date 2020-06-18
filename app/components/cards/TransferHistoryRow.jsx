@@ -113,6 +113,9 @@ class TransferHistoryRow extends React.Component {
                 // data.open_owner filled my order
                 description_start += `Paid ${data.current_pays} for ${data.open_pays}`;
             }
+        } else if (type === 'donate' && context == 'ref') {
+            description_start += "Реферальная выплата";
+            data_memo = "";
         } else if (type === 'donate') {
             const describe_account = () => {
                 if (context === "from") {

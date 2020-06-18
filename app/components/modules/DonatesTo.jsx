@@ -42,10 +42,12 @@ class DonatesTo extends React.Component {
         let curation_log = account.transfer_history.map((item, index) => {
             // Filter out rewards
             if (item[1].op[0] === "donate") {
-                if (incoming && item[1].op[1].from != account.name) {
-                    return null;
-                }
-                if (!incoming && item[1].op[1].to != account.name) {
+                let context = "";
+                if (item[1].op[1].to == account.name) {
+                    context = "to";
+                } else if (item[1].op[1].from != account.name) { // For referrals
+                    context = "ref";
+                } else {
                     return null;
                 }
                 if (!finalDate) {
@@ -61,10 +63,7 @@ class DonatesTo extends React.Component {
                 }
                 totalRewards += vest;
 
-                if (incoming)
-                    return <TransferHistoryRow key={index} op={item} context="from"/>;
-                else
-                    return <TransferHistoryRow key={index} op={item} context="to"/>;
+                return <TransferHistoryRow key={index} op={item} context={context}/>;
             }
             return null;
         }).filter(el => !!el);
