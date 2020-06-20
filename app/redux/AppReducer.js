@@ -20,8 +20,7 @@ const defaultState = Map({
         account_update: 0,
         message: 0,
         receive: 0,
-        donate_send: 0,
-        donate_receive: 0
+        donate: 0
     })
 });
 

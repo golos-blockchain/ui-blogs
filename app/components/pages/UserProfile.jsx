@@ -206,7 +206,7 @@ export default class UserProfile extends React.Component {
                     showPowerdown={this.props.showPowerdown}
                     current_user={current_user}
                     withdrawVesting={this.props.withdrawVesting} />
-                { isMyAccount && <div><MarkNotificationRead fields="send,receive,donate_receive" account={account.name} /></div> }
+                { isMyAccount && <div><MarkNotificationRead fields="send,receive,donate" account={account.name} /></div> }
                 </div>;
         }
         else if( section === 'curation-rewards' ) {
@@ -239,7 +239,7 @@ export default class UserProfile extends React.Component {
                     current_user={current_user}
                     incoming={false}
                     />
-                    { isMyAccount && <div><MarkNotificationRead fields="send,receive,donate_receive" account={account.name} /></div> }
+                    { isMyAccount && <div><MarkNotificationRead fields="send,receive,donate" account={account.name} /></div> }
                 </div>
         }
         else if( section === 'followers' ) {
@@ -403,7 +403,7 @@ export default class UserProfile extends React.Component {
         // const wallet_tab_active = section === 'transfers' || section === 'password' || section === 'permissions' ? 'active' : ''; // className={wallet_tab_active}
 
         let donates_to_addon = undefined;
-        if (isMyAccount) donates_to_addon = <NotifiCounter fields="donate_receive" />;
+        if (isMyAccount) donates_to_addon = <NotifiCounter fields="donate" />;
         let rewardsMenu = [
             {link: `/@${accountname}/curation-rewards`, label: tt('g.curation_rewards'), value: tt('g.curation_rewards')},
             {link: `/@${accountname}/author-rewards`, label: tt('g.author_rewards'), value: tt('g.author_rewards')},
@@ -440,7 +440,7 @@ export default class UserProfile extends React.Component {
                             ref={this._onLinkRef}
                         >
                             {tt('g.rewards')}
-                            {isMyAccount && <NotifiCounter fields="donate_receive" />}
+                            {isMyAccount && <NotifiCounter fields="donate" />}
                             <Icon name="dropdown-arrow" />
                         </a>
                     </LinkWithDropdown>
