@@ -202,7 +202,7 @@ export default async function getState(api, url, options, offchain = {}) {
         state.cprops = await api.getChainProperties();
   
     } else if (Object.keys(PUBLIC_API).includes(parts[0])) {
-        let args = { limit: 20, truncate_body: 1024 }
+        let args = { limit: 20, truncate_body: 1024, period_sec: 604800 }
         const discussionsType = parts[0]
         if (typeof tag === 'string' && tag.length && (!tag.startsWith('tag-') || tag.length > 4)) {
             if (tag.startsWith('tag-')) {

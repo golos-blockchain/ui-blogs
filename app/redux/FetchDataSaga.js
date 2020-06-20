@@ -284,7 +284,8 @@ export function* fetchData(action) {
             limit: constants.FETCH_DATA_BATCH_SIZE,
             truncate_body: constants.FETCH_DATA_TRUNCATE_BODY,
             start_author: author,
-            start_permlink: permlink
+            start_permlink: permlink,
+            period_sec: 604800
         }
     ];
     if (category.length && (!category.startsWith('tag-') || category.length > 4)) {
