@@ -8,10 +8,6 @@ import { formatAsset } from 'app/utils/ParsersAndFormatters';
 class WorkerFunds extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      balance: "0.000 GOLOS",
-      sbd_balance: "0.000 GOLOS"
-    };
   }
 
   componentDidMount() {
@@ -21,7 +17,7 @@ class WorkerFunds extends React.Component {
   }
 
   render() {
-    const { balance, sbd_balance } = this.props.workersAcc;
+    const { balance, sbd_balance } = this.props;
     return(
       <span className="WorkerFunds">
         <Tooltip t="Текущий баланс фонда воркеров">
@@ -38,9 +34,12 @@ class WorkerFunds extends React.Component {
 
 export default connect(
     state => {
-        const workersAcc = state.global.getIn(['accounts', 'workers']).toJS();
+        let workersAcc = state.global.getIn(['accounts', 'workers']);
+        let balance = workersAcc ? workersAcc.get('balance') : '0.000 GOLOS';
+        let sbd_balance = workersAcc ? workersAcc.get('sbd_balance') : '0.000 GOLOS';
         return {
-            workersAcc
+            balance,
+            sbd_balance
         };
     },
     dispatch => {

@@ -12,6 +12,8 @@ class DonatesTo extends React.Component {
     state = { historyIndex: 0 }
 
     shouldComponentUpdate(nextProps, nextState) {
+        if (!this.props.account.transfer_history) return true;
+        if (!nextProps.account.transfer_history) return true;
         return (
             nextProps.account.transfer_history.length !== this.props.account.transfer_history.length ||
             nextState.historyIndex !== this.state.historyIndex);
