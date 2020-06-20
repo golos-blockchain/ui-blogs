@@ -206,7 +206,7 @@ export default class UserProfile extends React.Component {
                     showPowerdown={this.props.showPowerdown}
                     current_user={current_user}
                     withdrawVesting={this.props.withdrawVesting} />
-                { isMyAccount && <div><MarkNotificationRead fields="send,receive,donate" account={account.name} /></div> }
+                { isMyAccount && <div><MarkNotificationRead fields="send,receive" account={account.name} /></div> }
                 </div>;
         }
         else if( section === 'curation-rewards' ) {
@@ -239,7 +239,7 @@ export default class UserProfile extends React.Component {
                     current_user={current_user}
                     incoming={false}
                     />
-                    { isMyAccount && <div><MarkNotificationRead fields="send,receive,donate" account={account.name} /></div> }
+                    { isMyAccount && <div><MarkNotificationRead fields="donate" account={account.name} /></div> }
                 </div>
         }
         else if( section === 'followers' ) {
