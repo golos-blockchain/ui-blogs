@@ -23,8 +23,6 @@ class DonatesTo extends React.Component {
     }
 
     render() {
-        const VESTING_TOKENS = tt('token_names.VESTING_TOKENS')
-
         const {state: {historyIndex}} = this
         const {account, incoming} = this.props;
 
@@ -32,13 +30,6 @@ class DonatesTo extends React.Component {
         if (!account.transfer_history) account.transfer_history = [];
 
         /// transfer log
-        let rewards24 = 0, rewardsWeek = 0, totalRewards = 0;
-        let today = new Date();
-        let oneDay = 86400 * 1000;
-        let yesterday = new Date(today.getTime() - oneDay ).getTime();
-        let lastWeek = new Date(today.getTime() - 7 * oneDay ).getTime();
-
-        let firstDate, finalDate;
         let curation_log = account.transfer_history.map((item, index) => {
             // Filter out rewards
             if (item[1].op[0] === "donate") {
@@ -54,19 +45,6 @@ class DonatesTo extends React.Component {
                 } else {
                     return null;
                 }
-                if (!finalDate) {
-                    finalDate = new Date(item[1].timestamp).getTime();
-                }
-                firstDate = new Date(item[1].timestamp).getTime();
-                const vest = assetFloat(item[1].op[1].reward, VEST_TICKER);
-                if (new Date(item[1].timestamp).getTime() > yesterday) {
-                    rewards24 += vest;
-                    rewardsWeek += vest;
-                } else if (new Date(item[1].timestamp).getTime() > lastWeek) {
-                    rewardsWeek += vest;
-                }
-                totalRewards += vest;
-
                 return <TransferHistoryRow key={index} op={item} context={context}/>;
             }
             return null;
@@ -104,7 +82,7 @@ class DonatesTo extends React.Component {
                 <div className="column small-12">
                     {/** history */}
                     <h4 className="uppercase">{incoming ? tt('g.donates_from') : tt('g.donates_to')}</h4>
-                    <span>{tt('g.referral_link')} <span title={tt('g.referral_link_title')}><Icon name="info_o" /></span> -&nbsp;<Link to={"/welcome?invite=" + account.name}>{location.origin + "/welcome?invite=" + account.name}</Link></span>
+                    {process.env.BROWSER && (<span>{tt('g.referral_link')} <span title={tt('g.referral_link_title')}><Icon name="info_o" /></span> -&nbsp;<Link to={"/welcome?invite=" + account.name}>{window.location.origin + "/welcome?invite=" + account.name}</Link></span>)}
                     {navButtons}
                     <table>
                         <tbody>
