@@ -47,6 +47,10 @@ class DonatesTo extends React.Component {
                     context = "to";
                 } else if (item[1].op[1].from != account.name) { // For referrals
                     context = "ref";
+                    const donate_meta = JSON.parse(item[1].json_metadata);
+                    if (donate_meta.referrer_interest == "0.000 GOLOS") {
+                        return null;
+                    }
                 } else {
                     return null;
                 }

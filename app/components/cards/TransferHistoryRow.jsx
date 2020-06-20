@@ -114,7 +114,11 @@ class TransferHistoryRow extends React.Component {
                 description_start += `Paid ${data.current_pays} for ${data.open_pays}`;
             }
         } else if (type === 'donate' && context == 'ref') {
-            description_start += JSON.stringify(op);// "Реферальная выплата";
+            const donate_meta = JSON.parse(op[1].json_metadata);
+            description_start += "Получено ";
+            description_start += donate_meta.referrer_interest;
+            description_start += " TIP-баланса от реферала ";
+            other_account = data.to;
             data_memo = "";
         } else if (type === 'donate') {
             const describe_account = () => {

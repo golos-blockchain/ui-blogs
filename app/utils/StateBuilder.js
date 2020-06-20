@@ -53,12 +53,11 @@ export default async function getState(api, url, options, offchain = {}) {
 
             switch (parts[1]) {
                 case 'transfers':
-                    const history = await api.getAccountHistory(uname, -1, 1000, ['producer_reward'])
+                    const history = await api.getAccountHistory(uname, -1, 1000, ['producer_reward','fill_vesting_withdraw'])
                     account.transfer_history = []
                     account.other_history = []
 
                     state.cprops = await api.getChainProperties();
-
                     history.forEach(operation => {
                         switch (operation[1].op[0]) {
                             case 'transfer_to_vesting':

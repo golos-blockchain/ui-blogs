@@ -18,6 +18,7 @@ import tt from 'counterpart';
 import {List} from 'immutable';
 import LocalizedCurrency from 'app/components/elements/LocalizedCurrency';
 import { LIQUID_TICKER, VEST_TICKER, DEBT_TICKER} from 'app/client_config';
+import transaction from 'app/redux/Transaction';
 
 const assetPrecision = 1000;
 
