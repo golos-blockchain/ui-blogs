@@ -142,3 +142,30 @@ export const CATEGORIES = [
     'en',
     'nsfw'
 ];
+
+export const CONFETTI_CONFIG = {
+  post: {
+    angle: "90",
+    spread: "357",
+    startVelocity: "19",
+    elementCount: "31",
+    dragFriction: "0.19",
+    duration: "1690",
+    stagger: 0,
+    width: "10px",
+    height: "10px",
+    colors: ["#f00", "#0f0", "#00f"]
+  },
+  comment: {
+    angle: "90",
+    spread: "357",
+    startVelocity: "19",
+    elementCount: "31",
+    dragFriction: "0.19",
+    duration: "1690",
+    stagger: 0,
+    width: "10px",
+    height: "10px",
+    colors: ["#f00", "#0f0", "#00f"]
+  }
+};

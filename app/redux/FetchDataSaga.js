@@ -214,10 +214,12 @@ export function* fetchState(location_change_action) {
                 }
                 const donates =  yield call([api, api.getDonatesAsync], {author: reply.author, permlink: reply.permlink}, '', '', 20, 0, true)
                 state.content[link].donate_list = donates
+                state.content[link].confetti_active = false
             }
 
             const donates =  yield call([api, api.getDonatesAsync], {author: account, permlink: permlink}, '', '', 20, 0, true)
             state.content[curl].donate_list = donates
+            state.content[curl].confetti_active = false
         } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
             state.witnesses = {};
             const witnesses =  yield call([api, api.getWitnessesByVoteAsync], '', 100)

@@ -25,8 +25,9 @@ import Userpic from 'app/components/elements/Userpic';
 import PostFormLoader from 'app/components/modules/PostForm/loader';
 import CommentFormLoader from 'app/components/modules/CommentForm/loader';
 import { getEditDraftPermLink } from 'app/utils/postForm';
+import Confetti from 'react-dom-confetti';
 
-import { APP_ICON, SEO_TITLE, LIQUID_TICKER } from 'app/client_config';
+import { APP_ICON, SEO_TITLE, LIQUID_TICKER, CONFETTI_CONFIG } from 'app/client_config';
 
 // function loadFbSdk(d, s, id) {
 //     return new Promise(resolve => {
@@ -304,6 +305,7 @@ class PostFull extends React.Component {
                         onClick={this.showTransfer}
                     >
                         {tt('g.donate')}
+                        <Confetti config={CONFETTI_CONFIG.post} active={content.confetti_active}/>
                     </button>)
                     : null
                 }

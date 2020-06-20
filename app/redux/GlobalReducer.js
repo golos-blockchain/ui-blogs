@@ -250,8 +250,12 @@ export default createModule({
             reducer: (
                 state,
                 { payload: { username, author, permlink, amount } }
-            ) =>
-                state.updateIn(
+            ) => {
+                let new_state = state;
+                new_state = new_state.setIn(
+                    ['content', author + '/' + permlink, 'confetti_active'],
+                    true);
+                new_state = new_state.updateIn(
                     ['content', author + '/' + permlink, 'donate_list'],
                     List(),
                     donateList =>
@@ -276,7 +280,9 @@ export default createModule({
                                 donateList.set(idx, donate);
                             }
                         })
-                ),
+                );
+                return new_state;
+            },
         },
         {
             action: 'FETCHING_DATA',
