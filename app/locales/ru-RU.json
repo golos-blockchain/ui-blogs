@@ -63,7 +63,7 @@
     "have_only_one_dash_in_a_row": "иметь только одно тире в строке.",
     "end_with_a_letter_or_digit": "заканчиваться буквой или цифрой.",
     "end_with_a_letter": "заканчиваться буквой.",
-    "use_caution_sending_to_this_account": "Подозрительный аккаунт, возможно это фишинг."
+    "use_caution_sending_to_this_account": "Перевод невозможен, уточнить причины этого можно в телеграм-группе @golos_id"
   },
   "confirmtransactionform_jsx": {
     "ok": "ОК",
@@ -390,7 +390,7 @@
     "donates_from": "Отправленные донаты",
     "donates_to": "Полученные донаты",
     "referral_link": "Ваша реферальная ссылка",
-    "referral_link_title": "Ссылка для приглашения рефералов",
+    "referral_link_title": "В течение года 10%% от вознаграждений пользователей зарегистрированных после перехода по рефссылке будут поступать на ваш TIP-баланс",
     "connection_lost_reconnecting": "Связь потеряна, переподключаемся",
     "server_returned_error": "ошибка сервера",
     "APP_NAME_support": "%(APP_NAME)s поддержка",
@@ -442,7 +442,7 @@
     "requires_auth_key": "Эта операция требует вашего %(authType)s ключа (или используйте главный пароль)",
     "keep_me_logged_in": "Оставить меня залогиненным",
     "donate": "Отблагодарить",
-    "claim": "Забрать",
+    "claim": "Получить",
     "received_vesting": "%(VESTING_TOKEN)s делегированная на этот аккаунт",
     "delegated_vesting": "%(VESTING_TOKEN)s делегированная с этого аккаунта",
     "load_more": "Показать еще",
@@ -514,6 +514,7 @@
   "exchanges_jsx": {
     "title": "Покупка и продажа токенов",
     "temporarily_disabled": "Ввод/вывод токенов временно отключён",
+    "guide_user": "Инструкция по интерфейсу биржи от",
     "total_supply": "Информация об общем количестве токенов",
     "questions": "Есть вопросы",
     "community_chat": "Получить ответы можно как в чате сообщества",
@@ -643,7 +644,7 @@
     "history": "История"
   },
   "post_jsx": {
-    "now_showing_comments_with_low_ratings": "Отображаем комментарии с низким рейтингом",
+    "now_showing_comments_with_low_ratings": "Отображаем скрытые комментарии",
     "sort_order": "Порядок сортировки",
     "comments_were_hidden_due_to_low_ratings": "Комментарии были скрыты из-за низкого рейтинга или заблокированы автором блога"
   },
@@ -768,7 +769,7 @@
     "choose_currency": "Выберите валюту",
     "choose_preset_tips": "Выберите суммы для кнопок вознаграждений",
     "invalid_url": "Недопустимый URL-адрес",
-    "invalid_ws": "wss://ws.golos.id",
+    "invalid_ws": "wss://api.golos.id",
     "invalid_ip_port": "Пример: 20.16.10.18:1101",
     "name_is_too_long": "Имя слишком длинное",
     "name_must_not_begin_with": "Имя не должно начинаться с @",
@@ -833,11 +834,12 @@
   },
   "tips_js": {
     "tip_balance_hint": "Баланс, с которого вы вознаграждаете пользователей, и на который получаете вознаграждения сами. Токены с него можно также отправить на увеличение Силы Голоса.",
-    "claim_balance_hint": "Баланс вашей доли от общей эмиссии токенов блокчейна Голос, которую вы можете востребовать для пополнения TIP-баланса, либо увеличения Силы Голоса.",
+    "claim_balance_hint": "Баланс вашей доли от эмиссии токенов блокчейна Голос, которую вы можете получить для пополнения TIP-баланса, либо увеличения Силы Голоса.",
+    "claim_expiration_hint": "Окно востребования токенов закончится",
     "tradeable_tokens_that_may_be_transferred_anywhere_at_anytime": "Торгуемые цифровые токены, которые могут переданы куда угодно в любой момент.",
     "LIQUID_TOKEN_can_be_converted_to_VESTING_TOKEN_in_a_process_called_powering_up": "Например, сконвертированы в %(VESTING_TOKEN2)s или отправлены на TIP-баланс для вознаграждений.",
     "tokens_worth_about_AMOUNT_of_LIQUID_TOKEN": "Перемещаемые цифровые токены, цена которых всегда равна %(amount)s в %(LIQUID_TOKEN)s.",
-    "influence_tokens_which_give_you_more_control_over": "Чем больше у вас Силы Голоса, тем больший процент поступает на CLAIM-баланс и выше влияние на развитие проекта путём выбора делегатов и поддержки заявок на финансирование из фонда воркеров.",
+    "influence_tokens_which_give_you_more_control_over": "Чем больше у вас СГ, тем больший процент от эмиссии поступает на CLAIM-баланс и выше влияние на развитие проекта путём выбора делегатов и поддержки заявок на финансирование из фонда воркеров.",
     "the_more_you_hold_the_more_you_influence_post_rewards": "Чем больше у вас %(VESTING_TOKENS)s, тем сильней вы влияете на вознаграждения, выбор делегатов и поддержку заявок воркеров.'",
     "the_estimated_value_is_based_on_an_average_value_of_steem_in_US_dollars": "Рассчитывается из 7-ми дневной средней стоимости токенов Голос.",
     "VESTING_TOKEN_is_non_transferrable_and_requires_convert_back_to_LIQUID_TOKEN": "Вам потребуются 8 недель (вывод раз в неделю равными долями), чтобы перевести её обратно в ликвидные токены Голос.",

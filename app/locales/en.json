@@ -225,6 +225,8 @@
     "curation_rewards": "Curation rewards",
     "donates_from": "Donates from",
     "donates_to": "Donates to",
+    "referral_link": "Your referral link",
+    "referral_link_title": "When registering users after clicking on the referral link, you will receive 10%% of the donations received by them within a year",
     "connection_lost_reconnecting": "Connection lost, reconnecting",
     "server_returned_error": "server returned error",
     "APP_NAME_support": "%(APP_NAME)s Support",
@@ -289,6 +291,7 @@
   "exchanges_jsx": {
     "title": "Buying and selling tokens",
     "temporarily_disabled": "Token deposit/withdraw is temporarily disabled",
+    "guide_user": "Instructions for the exchange from",
     "total_supply": "Information about the total supply of tokens",
     "questions": "Any questions",
     "community_chat": "You can get answers in the community chat",
@@ -748,6 +751,7 @@
   "tips_js": {
     "tip_balance_hint": "Balance that you use to reward users and that you use to earn rewards for yourself. Tokens from it can also be sent to increase the Golos Power.",
     "claim_balance_hint": "Balance of your share of the emission of Golos blockchain tokens, which you can use to top up your TIP balance or increase the Golos Power.",
+    "claim_expiration_hint": "The tokens request window will end",
     "tradeable_tokens_that_may_be_transferred_anywhere_at_anytime": "Tradable digital tokens that can be transferred anywhere at any time.",
     "LIQUID_TOKEN_can_be_converted_to_VESTING_TOKEN_in_a_process_called_powering_up": "For example, converted to Golos Power or sent to the TIP balance for rewards.",
     "tokens_worth_about_AMOUNT_of_LIQUID_TOKEN": "Tokens worth about %(TOKEN_WORTH)s in %(LIQUID_TICKER)s.",

@@ -47,7 +47,6 @@ const availableDomains = [
     'golos.id',
     'golos.in',
     'golos.today',
-    'goldvoice.club',
     'ropox.app',
     'golos.cf',
     'dpos.space',
@@ -56,6 +55,7 @@ const availableDomains = [
     'kuna.io',
     'livecoin.net',
     'steem-engine.com',
+    'hive-engine.com',
     'github.com',
     'play.google.com',
     't.me',
@@ -277,10 +277,10 @@ class App extends React.Component {
                                 }}
                             />
                             <Link className="link"
-                                to="/@lex/opros-referendum-o-sudbe-fonda-s-32-mln-tokenov"
+                                to="/@lex/referalnaya-programma-i-para-slov-o-fonde-soobshestva"
                             >
                                 <Icon className="logo-icon" name={APP_ICON} />&nbsp;
-                                Опрос сообщества о судьбе «фонда референдума» с более чем 32 миллионами токенов на балансе.
+                                Ограничения с домена golos.id были сняты, а также новости о реферальной программе и фонде сообщества.
                             </Link>
                         </div>
                     </div>

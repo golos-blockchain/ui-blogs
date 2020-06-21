@@ -51,7 +51,7 @@ export const FRACTION_DIGITS_MARKET = 3 // accurate amount of deciaml digits (ex
 export const TWITTER_HANDLE = '@example'
 export const SHARE_IMAGE = 'https://golos.id/images/golos-share.png'
 export const TWITTER_SHARE_IMAGE = 'https://golos.id/images/golos-twshare.png'
-export const SITE_DESCRIPTION = 'Голос - социальная сеть, построенная на публичном блокчейне. Вознаграждение пользователей осуществляется за счет дополнительной эмиссии токенов. При этом распределением токенов управляют текущие пользователи сети через голосование за лучший контент.'
+export const SITE_DESCRIPTION = 'Голос - платформа блогов, построенная на децентрализованном блокчейне. Вознаграждение пользователей осуществляется за счет эмиссии токенов. При этом распределением управляют текущие пользователи сети поддерживая интересный им контент голосами и наградами.'
 
 // various
 export const SUPPORT_EMAIL = 'support@yourdomain.name'
