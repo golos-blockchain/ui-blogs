@@ -233,11 +233,14 @@ export default class UserProfile extends React.Component {
         }
         else if( section === 'donates-to' ) {
             rewardsClass = "active";
-            tab_content = <DonatesTo
-                account={account}
-                current_user={current_user}
-                incoming={false}
-                />
+            tab_content = <div>
+                <DonatesTo
+                    account={account}
+                    current_user={current_user}
+                    incoming={false}
+                    />
+                    { isMyAccount && <div><MarkNotificationRead fields="donate" account={account.name} /></div> }
+                </div>
         }
         else if( section === 'followers' ) {
             if (followers && followers.has('blog_result')) {
@@ -399,8 +402,10 @@ export default class UserProfile extends React.Component {
 
         // const wallet_tab_active = section === 'transfers' || section === 'password' || section === 'permissions' ? 'active' : ''; // className={wallet_tab_active}
 
+        let donates_to_addon = undefined;
+        if (isMyAccount) donates_to_addon = <NotifiCounter fields="donate" />;
         let rewardsMenu = [
-            {link: `/@${accountname}/donates-to`, label: tt('g.donates_to'), value: tt('g.donates_to')},
+            {link: `/@${accountname}/donates-to`, label: tt('g.donates_to'), value: tt('g.donates_to'), addon: donates_to_addon},
             {link: `/@${accountname}/donates-from`, label: tt('g.donates_from'), value: tt('g.donates_from')},
             {link: `/@${accountname}/author-rewards`, label: tt('g.author_rewards'), value: tt('g.author_rewards')},
             {link: `/@${accountname}/curation-rewards`, label: tt('g.curation_rewards'), value: tt('g.curation_rewards')}
@@ -435,6 +440,7 @@ export default class UserProfile extends React.Component {
                             ref={this._onLinkRef}
                         >
                             {tt('g.rewards')}
+                            {isMyAccount && <NotifiCounter fields="donate" />}
                             <Icon name="dropdown-arrow" />
                         </a>
                     </LinkWithDropdown>

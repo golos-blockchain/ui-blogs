@@ -27,6 +27,7 @@ class TransferHistoryRow extends React.Component {
         let description_start = ""
         let other_account = null;
         let description_end = "";
+        let data_memo = data.memo;
 
         if( type === 'transfer_to_vesting' ) {
             const amount = data.amount && data.amount.split && data.amount.split(' ')[0]
@@ -112,6 +113,13 @@ class TransferHistoryRow extends React.Component {
                 // data.open_owner filled my order
                 description_start += `Paid ${data.current_pays} for ${data.open_pays}`;
             }
+        } else if (type === 'donate' && context == 'ref') {
+            const donate_meta = JSON.parse(op[1].json_metadata);
+            description_start += "Получено ";
+            description_start += donate_meta.referrer_interest;
+            description_start += " TIP-баланса от реферала ";
+            other_account = data.to;
+            data_memo = "";
         } else if (type === 'donate') {
             const describe_account = () => {
                 if (context === "from") {
@@ -147,10 +155,40 @@ class TransferHistoryRow extends React.Component {
 
             // Here is a workaround to not throw in Memo component which is for old (string, not object) memo format
             if (data.memo.hasOwnProperty('comment') && data.memo.comment != '') {
-                data.memo = data.memo.comment;
+                data_memo = data.memo.comment;
             } else {
-                data.memo = '';
+                data_memo = '';
             }
+        } else if (type === 'claim') {
+            description_start += "Забрано с CLAIM-баланса ";
+            description_start += data.amount;
+            if (data.to_vesting) {
+                description_start += " в Силу Голоса";
+            }
+            if (data.from != data.to) {
+                description_start += " для ";
+                other_account = data.to;
+            }
+        } else if (type === 'transfer_to_tip') {
+            description_start += "Передано на TIP-баланс ";
+            description_start += data.amount;
+            if (data.from != data.to) {
+                description_start += " для ";
+                other_account = data.to;
+            }
+        } else if (type === 'transfer_from_tip') {
+            description_start += "Передано с TIP-баланса ";
+            description_start += data.amount;
+            description_start += " в Силу Голоса"
+            if (data.from != data.to) {
+                description_start += " для ";
+                other_account = data.to;
+            }
+        } else if (type === 'worker_reward') {
+            description_start += "Заработано ";
+            description_start += data.reward;
+            description_start += " за ";
+            other_account = data.worker_request_author + "/" + data.worker_request_permlink;
         } else {
             description_start += JSON.stringify({type, ...data}, null, 2);
         }
@@ -167,8 +205,8 @@ class TransferHistoryRow extends React.Component {
                         {other_account && <Link to={`/@${other_account}`}>{other_account}</Link>}
                         {description_end}
                     </td>
-                    <td className="show-for-medium" style={{maxWidth: "40rem", wordWrap: "break-word"}}>
-                        <Memo text={data.memo} data={data} username={context} />
+                    <td className="show-for-medium" style={{maxWidth: "20rem", whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden"}} title={data_memo}>
+                        <Memo text={data_memo} data={data} username={context} />
                     </td>
                 </tr>
         );

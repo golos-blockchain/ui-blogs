@@ -25,7 +25,8 @@ const defaultState = Map({
         reply: 0,
         account_update: 0,
         message: 0,
-        receive: 0
+        receive: 0,
+        donate: 0
     })
 });
 

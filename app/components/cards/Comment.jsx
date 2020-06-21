@@ -16,8 +16,9 @@ import Voting from 'app/components/elements/Voting';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Userpic from 'app/components/elements/Userpic';
 import IllegalContentMessage from 'app/components/elements/IllegalContentMessage';
+import Confetti from 'react-dom-confetti';
 
-import { LIQUID_TICKER } from 'app/client_config';
+import { LIQUID_TICKER, CONFETTI_CONFIG } from 'app/client_config';
 
 class CommentImpl extends PureComponent {
     static propTypes = {
@@ -214,7 +215,6 @@ class CommentImpl extends PureComponent {
         }
 
         let renderedEditor = null;
-
         if (showReply || showEdit) {
             renderedEditor = (
                 <CommentFormLoader
@@ -344,6 +344,7 @@ class CommentImpl extends PureComponent {
                     {showDelete && (
                         <a onClick={this.onDeletePost}>{tt('g.delete')}</a>
                     )}
+                    <Confetti config={CONFETTI_CONFIG.comment} active={comment.confetti_active}/>
                 </span>
             );
         }
