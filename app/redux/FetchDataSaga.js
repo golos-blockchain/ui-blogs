@@ -87,7 +87,7 @@ export function* fetchState(location_change_action) {
 
                 switch (parts[1]) {
                     case 'transfers':
-                        const history = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000)
+                        const history = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {filter_ops: ['producer_reward','fill_vesting_withdraw']})
                         account.transfer_history = []
                         account.other_history = []
 
@@ -102,6 +102,10 @@ export function* fetchState(location_change_action) {
                                 case 'liquidity_reward':
                                 case 'author_reward':
                                 case 'curation_reward':
+                                case 'worker_reward':
+                                case 'transfer_to_tip':
+                                case 'transfer_from_tip':
+                                case 'claim':
                                 case 'transfer_to_savings':
                                 case 'transfer_from_savings':
                                 case 'cancel_transfer_from_savings':
@@ -210,10 +214,12 @@ export function* fetchState(location_change_action) {
                 }
                 const donates =  yield call([api, api.getDonatesAsync], {author: reply.author, permlink: reply.permlink}, '', '', 20, 0, true)
                 state.content[link].donate_list = donates
+                state.content[link].confetti_active = false
             }
 
             const donates =  yield call([api, api.getDonatesAsync], {author: account, permlink: permlink}, '', '', 20, 0, true)
             state.content[curl].donate_list = donates
+            state.content[curl].confetti_active = false
         } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
             state.witnesses = {};
             const witnesses =  yield call([api, api.getWitnessesByVoteAsync], '', 100)
@@ -280,7 +286,8 @@ export function* fetchData(action) {
             limit: constants.FETCH_DATA_BATCH_SIZE,
             truncate_body: constants.FETCH_DATA_TRUNCATE_BODY,
             start_author: author,
-            start_permlink: permlink
+            start_permlink: permlink,
+            period_sec: 604800
         }
     ];
     if (category.length && (!category.startsWith('tag-') || category.length > 4)) {

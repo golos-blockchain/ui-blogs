@@ -25,8 +25,8 @@ export function getAccounts(names) {
     return api.getAccountsAsync(names)
 }
 
-export function getAccountHistory(account, from, limit) {
-    return api.getAccountHistoryAsync(account, from, limit)
+export function getAccountHistory(account, from, limit, filter_ops) {
+    return api.getAccountHistoryAsync(account, from, limit, {filter_ops})
 }
 
 export function getRepliesByLastUpdate(startAuthor, startPermlink, limit, voteLimit) {

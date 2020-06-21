@@ -18,37 +18,18 @@ import tt from 'counterpart';
 import {List} from 'immutable';
 import LocalizedCurrency from 'app/components/elements/LocalizedCurrency';
 import { LIQUID_TICKER, VEST_TICKER, DEBT_TICKER} from 'app/client_config';
-import LoadingIndicator from 'app/components/elements/LoadingIndicator';
-import throttle from 'lodash/throttle';
-import * as api from 'app/utils/APIWrapper'
 import transaction from 'app/redux/Transaction';
-
-
-
-function topPosition(domElt) {
-    if (!domElt) {
-        return 0;
-    }
-    return domElt.offsetTop + topPosition(domElt.offsetParent);
-}
 
 const assetPrecision = 1000;
 
 class UserWallet extends React.Component {
     constructor() {
         super();
-        this.state = {
-            loading: false,
-            transfer_log: [],
-        };
-        this.transfer_log_from = -1
-        //this.shouldComponentUpdate = shouldComponentUpdate(this, 'UserWallet');
+        this.state = {};
+        this.shouldComponentUpdate = shouldComponentUpdate(this, 'UserWallet');
     }
 
     componentDidMount() {
-      this.scrollListener();
-      this.attachScrollListener();
-
       //todo make transfer call a member? since code is repeated in some places
       const callTransfer = ({ to, amount, token, memo}) => {
       // immediate transfer processing (e.g. from foreign link)
@@ -68,71 +49,6 @@ class UserWallet extends React.Component {
       if (immediate) callTransfer({ to, amount, token, memo})
     }
 
-    scrollListener = throttle(async () => {
-        const el = window.document.getElementById('transfers_history');
-        if (!el) return;
-        const scrollTop =
-            window.pageYOffset !== undefined
-                ? window.pageYOffset
-                : (
-                      document.documentElement ||
-                      document.body.parentNode ||
-                      document.body
-                  ).scrollTop;
-
-        if (
-            topPosition(el) + el.offsetHeight - scrollTop - window.innerHeight <
-            10
-        ) {
-            await this.fetchMore(this.transfer_log_from);
-            this.scrollListener()
-        }
-    }, 150, { leading: false });
-
-    attachScrollListener() {
-        window.addEventListener('scroll', this.scrollListener);
-        window.addEventListener('resize', this.scrollListener);
-    }
-
-    async fetchMore(from) {
-        const { transfer_log, loading } = this.state
-        if (loading || this.transfer_log_from < -1) return;
-
-        this.setState({loading: true})
-
-        const history = await api.getAccountHistory(this.props.account.get('name'), from, 1000)
-
-        if (this.transfer_log_from == -1 && history) {
-            this.transfer_log_from = history[history.length - 1][0]
-        } else {
-            this.transfer_log_from = this.transfer_log_from - 1000
-        }
-
-        history.reverse().forEach((operation) => {
-            switch (operation[1].op[0]) {
-                case 'transfer_to_vesting':
-                case 'withdraw_vesting':
-                case 'interest':
-                case 'transfer':
-                case 'liquidity_reward':
-                case 'author_reward':
-                case 'curation_reward':
-                case 'transfer_to_savings':
-                case 'transfer_from_savings':
-                case 'cancel_transfer_from_savings':
-                case 'escrow_transfer':
-                case 'escrow_approve':
-                case 'escrow_dispute':
-                case 'escrow_release':
-                    transfer_log.unshift(operation)
-                break
-                default:
-            }
-        })
-
-        this.setState({ transfer_log, loading: false })
-    }
-
     render() {
         const LIQUID_TOKEN = tt('token_names.LIQUID_TOKEN')
         const LIQUID_TOKEN_UPPERCASE = tt('token_names.LIQUID_TOKEN_UPPERCASE')
@@ -145,7 +61,7 @@ class UserWallet extends React.Component {
         const TIP_TOKEN = tt('token_names.TIP_TOKEN')
         const CLAIM_TOKEN = tt('token_names.CLAIM_TOKEN')
 
-        const {transfer_log, loading} = this.state
+        const {showDeposit, depositType, toggleDivestError} = this.state
         const {convertToSteem, price_per_golos, savings_withdraws, account, current_user, open_orders} = this.props
         const gprops = this.props.gprops.toJS();
 
@@ -295,20 +211,17 @@ class UserWallet extends React.Component {
         
         /// transfer log
         let idx = 0
-        const transfers = transfer_log
+        const transfer_log = account.get('transfer_history', [])
         .map(item => {
-            //const data = item.getIn([1, 'op', 1]);
-            //const type = item.getIn([1, 'op', 0]);
-            const data = item[1].op[1]
-            const type = item[1].op[0]
+            const data = item.getIn([1, 'op', 1]);
+            const type = item.getIn([1, 'op', 0]);
             
             // Filter out rewards
-            if (type === "curation_reward" || type === "author_reward") return null;
+            if (type === "curation_reward" || type === "author_reward" || type === "donate") return null;
             
             if(data.sbd_payout === '0.000 GBG' && data.vesting_payout === '0.000000 GESTS') return null
 
-            //return <TransferHistoryRow key={idx++} op={item.toJS()} context={account.get('name')} />;
-            return <TransferHistoryRow key={idx++} op={item} context={account.get('name')} />;
+            return <TransferHistoryRow key={idx++} op={item.toJS()} context={account.get('name')} />;
         }).filter(el => !!el).reverse();
 
         let tip_menu = [
@@ -566,18 +479,15 @@ class UserWallet extends React.Component {
             {isMyAccount && <SavingsWithdrawHistory />}
 
             <div className="row">
-                <div id="transfers_history" className="column small-12">
+                <div className="column small-12">
                     {/** history */}
-                    <span className="secondary" style={{ float: 'right' }}><Icon name="new/search" /> {tt('userwallet_jsx.history_viewing')} - <a target="_blank" href="https://golos.cf">golos.cf <Icon name="extlink" /></a></span>
+                    <span className="secondary" style={{ float: 'right' }}><Icon name="new/search" /> {tt('userwallet_jsx.history_viewing')} - <Link target="_blank" to={"https://golos.cf/@" + account.get('name')}>golos.cf <Icon name="extlink" /></Link></span>
                     <h4>{tt('userwallet_jsx.history')}</h4>
                     <table>
                         <tbody>
-                            {transfers}
+                        {transfer_log}
                         </tbody>
                      </table>
-                        {(loading && <center>
-                         <LoadingIndicator type="circle" />
-                     </center>)}
                 </div>
             </div>
         </div>);

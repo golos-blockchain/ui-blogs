@@ -18,9 +18,7 @@ import WorkerFunds from 'app/components/elements/WorkerFunds';
 import "./WorkerRequests.scss";
 
 class WorkerRequests extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
+  state = {
       results: [],
       start_author: null,
       start_permlink: null,
@@ -34,7 +32,6 @@ class WorkerRequests extends React.Component {
       current_permlink: '',
       total_vesting_shares: 1
     };
-  }
 
   componentDidMount() {
     let total_vesting_shares = this.props.gprops.get('total_vesting_shares');

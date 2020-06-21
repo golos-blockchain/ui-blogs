@@ -50,7 +50,7 @@ class Memo extends React.Component {
                 sections.push(<Link key={idx++} to={section}>{section}&nbsp;</Link>)
             }
             else {
-                sections.push(<span key={idx++}>{section}&nbsp;</span>)
+                sections.push(<span className="overflow-ellipsis" key={idx++}>{section}&nbsp;</span>)
             }
       }
         return sections
@@ -67,7 +67,7 @@ class Memo extends React.Component {
             let el;
             if (from === username) {
               // txt = `{tt('g.you_donate_for_post')} @${to} {tt('g.for_the_post')} ${post}`
-              el = <span>
+              el = <span className="overflow-ellipsis">
                 {tt('g.you_donate_for_post')}&nbsp;
                 <Link to={`/@${to}`}>
                   {`@${to}`}&nbsp;
@@ -80,7 +80,7 @@ class Memo extends React.Component {
             }
             else if (to === username) {
               // txt = `@${from} {tt('g.donate_for_post')} ${post}`
-              el = <span>
+              el = <span className="overflow-ellipsis">
                 <Link to={`/@${from}`}>
                   {`@${from}`}&nbsp;
                 </Link>
@@ -105,9 +105,9 @@ class Memo extends React.Component {
         // fixme: ugly and temporary
         const donate = this.renderDonate(text);
         
-        if(!isEncoded) return <span>{donate || linkify(text)}</span>
+        if(!isEncoded) return <span className="overflow-ellipsis">{donate || linkify(text)}</span>
             if(!myAccount) return <span></span>
-            if(memo_private) return <span>{decodeMemo(memo_private, text)}</span>
+            if(memo_private) return <span className="overflow-ellipsis">{decodeMemo(memo_private, text)}</span>
             return <span>{tt('g.login_to_see_memo')}</span>
         }
 }

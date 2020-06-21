@@ -21,7 +21,7 @@
     "mobileBannerAlt": "Доступно в Google Play"
   },
   "authorrewards_jsx": {
-    "estimated_author_rewards_last_week": "Оценочные авторские вознаграждения за прошлую неделю",
+    "estimated_author_rewards_last_week": "Оценочные авторские вознаграждения за неделю",
     "author_rewards_history": "История авторских наград"
   },
     "category_selector_jsx": {
@@ -142,8 +142,8 @@
   "curationrewards_jsx": {
     "curation_rewards_last_24_hours": "Кураторские награды за последние 24 часа",
     "daily_average_curation_rewards": "Среднесуточные кураторские награды",
-    "estimated_curation_rewards_last_week": "Оценочные кураторские награды за последнюю неделю",
-    "curation_rewards_last_week": "Кураторские награды за последнюю неделю",
+    "estimated_curation_rewards_last_week": "Оценочные кураторские награды за неделю",
+    "curation_rewards_last_week": "Кураторские награды за неделю",
     "curation_rewards_history": "История кураторских наград"
   },
   "enter_confirm_email_jsx": {
@@ -389,6 +389,14 @@
     "curation_rewards": "Кураторские награды",
     "donates_from": "Отправленные донаты",
     "donates_to": "Полученные донаты",
+    "with_claim": " с CLAIM-баланса ",
+    "with_tip": " с TIP-баланса ",
+    "funded_workers": "Профинансировано ",
+    "to_golos_power": " в Силу Голоса",
+    "fortips": " для ",
+    "percen_referral": " - процент от награды в адрес вашего реферала ",
+    "referral_link": "Ваша реферальная ссылка",
+    "referral_link_title": "В течение года 10%% от вознаграждений пользователей зарегистрированных после перехода по рефссылке будут поступать на ваш TIP-баланс",
     "connection_lost_reconnecting": "Связь потеряна, переподключаемся",
     "server_returned_error": "ошибка сервера",
     "APP_NAME_support": "%(APP_NAME)s поддержка",
@@ -767,7 +775,7 @@
     "choose_currency": "Выберите валюту",
     "choose_preset_tips": "Выберите суммы для кнопок вознаграждений",
     "invalid_url": "Недопустимый URL-адрес",
-    "invalid_ws": "wss://ws.golos.id",
+    "invalid_ws": "wss://api.golos.id",
     "invalid_ip_port": "Пример: 20.16.10.18:1101",
     "name_is_too_long": "Имя слишком длинное",
     "name_must_not_begin_with": "Имя не должно начинаться с @",

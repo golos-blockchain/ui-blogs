@@ -49,27 +49,9 @@ class Exchanges extends React.Component {
                                 <a target="_blank" href="https://livecoin.net/"><img src='https://i.imgur.com/7RrhYFw.png' width='308' height='75' /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
-                                    {tt('exchanges_jsx.temporarily_disabled')}...
-                                </div>
-                            </div>
-                        </div>
-                        <div className='column large-12 medium-12 small-12'>
-                            <hr/>
-                        </div>
-                    </div>
-                </div>
-                <div className='landing-exchanges-block'>
-                    <div className='column large-12 medium-12 small-12'>
-                        <div className='column large-12 medium-12 small-12'>
-                            <hr/>
-                        </div>
-                        <div className='column large-12 medium-12 small-12'>
-                            <div className='row'>
-                                <div className='column large-12 medium-12 small-12' align='center'>
-                                <a target="_blank" href="https://hive-engine.com/"><img src='https://i.imgur.com/z5JfS8K.png' width='375' height='60' /></a>
-                                </div>
-                                <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
-                                    <a target="_blank" href="https://hive-engine.com/?p=market&t=SWAP.GOLOS" className="button">GOLOS-HIVE</a>
+                                    {tt('exchanges_jsx.temporarily_disabled')}...                                    
+                                    <br /><br />
+                                    <a target="_blank" href="https://www.livecoin.net/en/trading/GOLOS_BTC" className="button">GOLOS-BTC</a>&nbsp;&nbsp;<a target="_blank" href="https://www.livecoin.net/en/trading/GOLOS_USDT" className="button">GOLOS-USDT</a>
                                 </div>
                             </div>
                         </div>
@@ -89,6 +71,8 @@ class Exchanges extends React.Component {
                                 <a target="_blank" href="https://steem-engine.com/"><img src='https://i.imgur.com/KpqwZy6.png' width='182' height='125' /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
+                                    <a target="_blank" href="/@allforyou/zavodim-i-vyvodim-golosa-s-birzhi-steem-engine">{tt('exchanges_jsx.guide_user')} @allforyou</a>
+                                    <br /><br />
                                     <a target="_blank" href="https://steem-engine.com/?p=market&t=GOLOSP" className="button">GOLOS-STEEM</a>
                                 </div>
                             </div>
@@ -97,7 +81,27 @@ class Exchanges extends React.Component {
                             <hr/>
                         </div>
                     </div>
-                </div>               
+                </div> 
+                <div className='landing-exchanges-block'>
+                    <div className='column large-12 medium-12 small-12'>
+                        <div className='column large-12 medium-12 small-12'>
+                            <hr/>
+                        </div>
+                        <div className='column large-12 medium-12 small-12'>
+                            <div className='row'>
+                                <div className='column large-12 medium-12 small-12' align='center'>
+                                <a target="_blank" href="https://hive-engine.com/"><img src='https://i.imgur.com/z5JfS8K.png' width='344' height='55' /></a>
+                                </div>
+                                <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
+                                    <a target="_blank" href="https://hive-engine.com/?p=market&t=SWAP.GOLOS" className="button">GOLOS-HIVE</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='column large-12 medium-12 small-12'>
+                            <hr/>
+                        </div>
+                    </div>
+                </div>              
                 <div className='landing-exchanges-block'>
                     <div className='column large-12 medium-12 small-12'>
                         <div className='row'>

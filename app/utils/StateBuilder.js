@@ -53,12 +53,11 @@ export default async function getState(api, url, options, offchain = {}) {
 
             switch (parts[1]) {
                 case 'transfers':
-                    const history = await api.getAccountHistory(uname, -1, 1000)
-                    account.transfer_history = [] // TODO Not used
+                    const history = await api.getAccountHistory(uname, -1, 1000, ['producer_reward','fill_vesting_withdraw'])
+                    account.transfer_history = []
                     account.other_history = []
 
                     state.cprops = await api.getChainProperties();
-
                     history.forEach(operation => {
                         switch (operation[1].op[0]) {
                             case 'transfer_to_vesting':
@@ -68,6 +67,10 @@ export default async function getState(api, url, options, offchain = {}) {
                             case 'liquidity_reward':
                             case 'author_reward':
                             case 'curation_reward':
+                            case 'worker_reward':
+                            case 'transfer_to_tip':
+                            case 'transfer_from_tip':
+                            case 'claim':
                             case 'transfer_to_savings':
                             case 'transfer_from_savings':
                             case 'cancel_transfer_from_savings':
@@ -174,11 +177,13 @@ export default async function getState(api, url, options, offchain = {}) {
                 state.content[curl].replies.push(link)
             }
             const donates = await api.getDonates({author: reply.account, permlink: reply.permlink}, '', '', 20, 0);
-            state.content[link].donate_list = donates;  
+            state.content[link].donate_list = donates;
+            state.content[link].confetti_active = false;
         }
 
         const donates = await api.getDonates({author: account, permlink: permlink}, '', '', 20, 0);
-        state.content[curl].donate_list = donates;       
+        state.content[curl].donate_list = donates;
+        state.content[curl].confetti_active = false;
     } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
         const witnesses = await api.getWitnessesByVote('', 100)
         witnesses.forEach( witness => {
@@ -199,7 +204,7 @@ export default async function getState(api, url, options, offchain = {}) {
         state.cprops = await api.getChainProperties();
   
     } else if (Object.keys(PUBLIC_API).includes(parts[0])) {
-        let args = { limit: 20, truncate_body: 1024 }
+        let args = { limit: 20, truncate_body: 1024, period_sec: 604800 }
         const discussionsType = parts[0]
         if (typeof tag === 'string' && tag.length && (!tag.startsWith('tag-') || tag.length > 4)) {
             if (tag.startsWith('tag-')) {
