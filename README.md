@@ -97,7 +97,7 @@ Run `sequelize db:migrate` in `db/` directory.
 yarn start
 ```
 
-You now have your development front end running at localhost:8080, connected to the main public golos blockchain. You don't need to run ```golos``` locally, by default you will connect to ```wss://api-full.golos.id/ws```.  Use your regular account name and credentials to login -- there is no separate dev login.
+You now have your development front end running at localhost:8080, connected to the main public golos blockchain. You don't need to run ```golos``` locally, by default you will connect to ```wss://api.golos.id/ws```.  Use your regular account name and credentials to login -- there is no separate dev login.
 
 #### Style Guides
 
