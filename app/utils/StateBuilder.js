@@ -11,6 +11,7 @@ const isHardfork = (v) => v.split('.')[1] === '18'
 
 export default async function getState(api, url, options, offchain = {}) {
     if (!url || typeof url !== 'string' || !url.length || url === '/') url = 'trending'
+    url = url.split('?')[0]
     if (url[0] === '/') url = url.substr(1)
     
     const parts = url.split('/')
