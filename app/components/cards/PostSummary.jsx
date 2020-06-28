@@ -134,8 +134,8 @@ class PostSummary extends React.Component {
            comments_link = p.link + '#comments';
         }
 
-        //if (username)
-        //    title_link_url += "?invite=" + username;
+        if (username)
+            title_link_url += "?invite=" + username;
 
         let content_body = <div className="PostSummary__body entry-content">
             <a href={title_link_url} onClick={e => navigate(e, onClick, post, title_link_url)}>{desc}</a>
