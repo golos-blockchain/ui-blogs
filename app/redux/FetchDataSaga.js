@@ -55,6 +55,7 @@ export function* fetchState(location_change_action) {
     //if(ignore_fetch) return
 
     let url = `${pathname}`
+    url = url.split('?')[0]
     if (url === '/') url = 'trending'
     // Replace these URLs with /transfers for UserProfile to resolve data correctly
     if (url.indexOf("/curation-rewards") !== -1) url = url.replace("/curation-rewards", "/transfers")
