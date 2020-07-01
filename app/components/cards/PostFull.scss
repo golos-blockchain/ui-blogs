@@ -214,6 +214,10 @@ input.share-box {
   opacity: 1;
 }
 
+.Donate__button:focus {
+    outline: none;
+}
+
 /* Small only */
 @media screen and (max-width: 39.9375em) {
   .Post {

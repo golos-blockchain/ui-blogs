@@ -97,8 +97,7 @@ class TransferHistoryRow extends React.Component {
             other_account = data.comment_author + "/" + data.comment_permlink;
         } else if (type === 'author_reward') {
             let steem_payout = ""
-            if(data.steem_payout !== '0.000 ' + LIQUID_TICKER) steem_payout = ", " + data.steem_payout;
-            description_start += `${renameToSd(data.sbd_payout)}${steem_payout}, ${tt('g.and')} ${author_reward} ${VESTING_TOKENS} ${tt('g.for')} ${data.author}/${data.permlink}`;
+            description_start += `${author_reward} ${VESTING_TOKENS} ${tt('g.for')} ${data.author}/${data.permlink}`;            
             // other_account = ``;
             description_end = '';
         } else if (type === 'interest') {
@@ -115,16 +114,15 @@ class TransferHistoryRow extends React.Component {
             }
         } else if (type === 'donate' && context == 'ref') {
             const donate_meta = JSON.parse(op[1].json_metadata);
-            description_start += "Получено ";
             description_start += donate_meta.referrer_interest;
-            description_start += " TIP-баланса от реферала ";
+            description_start += tt('g.percen_referral');
             other_account = data.to;
             data_memo = "";
         } else if (type === 'donate') {
             const describe_account = () => {
                 if (context === "from") {
                     other_account = data.to;
-                    return ' для ';
+                    return tt('g.fortips');
                 } else {
                     other_account = data.from;
                     return ' от ';
@@ -136,16 +134,16 @@ class TransferHistoryRow extends React.Component {
                     && data.memo.target.permlink != '') {
                 description_start += data.amount;
                 if (context === "from" && data.to != data.memo.target.author) {
-                    description_start += ' для ' + data.to;
+                    description_start += tt('g.fortips') + data.to;
                 } else if (context === "to") {
                     description_start += ' от ' + data.from;
                 }
-                description_start += ' за пост ';
+                description_start += ' за ';
                 other_account = data.memo.target.author + '/' + data.memo.target.permlink;
             } else {
                 description_start += data.amount;
                 if (context === "from") {
-                    description_start += ' для ';
+                    description_start += tt('g.fortips');
                     other_account = data.to;
                 } else {
                     description_start += ' от ';
@@ -160,32 +158,32 @@ class TransferHistoryRow extends React.Component {
                 data_memo = '';
             }
         } else if (type === 'claim') {
-            description_start += "Забрано с CLAIM-баланса ";
+            description_start += tt('g.receive') + tt('g.with_claim');
             description_start += data.amount;
             if (data.to_vesting) {
-                description_start += " в Силу Голоса";
+                description_start += tt('g.to_golos_power');
             }
             if (data.from != data.to) {
-                description_start += " для ";
+                description_start += tt('g.fortips');
                 other_account = data.to;
             }
         } else if (type === 'transfer_to_tip') {
-            description_start += "Передано на TIP-баланс ";
+            description_start += tt('transferhistoryrow_jsx.transfer') + tt('g.with_tip');
             description_start += data.amount;
             if (data.from != data.to) {
-                description_start += " для ";
+                description_start += tt('g.fortips');
                 other_account = data.to;
             }
         } else if (type === 'transfer_from_tip') {
-            description_start += "Передано с TIP-баланса ";
+            description_start += tt('transferhistoryrow_jsx.transfer') + tt('g.with_tip');
             description_start += data.amount;
-            description_start += " в Силу Голоса"
+            description_start += tt('g.to_golos_power')
             if (data.from != data.to) {
-                description_start += " для ";
+                description_start += tt('g.fortips');
                 other_account = data.to;
             }
         } else if (type === 'worker_reward') {
-            description_start += "Заработано ";
+            description_start += tt('g.funded_workers');
             description_start += data.reward;
             description_start += " за ";
             other_account = data.worker_request_author + "/" + data.worker_request_permlink;
