@@ -1,10 +1,6 @@
 import React from 'react';
 import golos from 'golos-classic-js';
 import tt from 'counterpart';
-
-import {
-    APP_DOMAIN
-} from 'app/client_config';
 import Button from 'app/components/elements/Button';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Author from 'app/components/elements/Author';
@@ -189,7 +185,7 @@ export default class ViewWorkerRequest extends React.Component {
       const { voter, vote_percent } = vote;
       const sign = Math.sign(vote_percent);
       const voterPercent = vote_percent / 100 + '%';
-      return {value: (sign > 0 ? '+ ' : '- ') + voter, link: 'https://' + APP_DOMAIN + '/@' + voter, data: voterPercent};
+      return {value: (sign > 0 ? '+ ' : '- ') + voter, link: '/@' + voter, data: voterPercent};
     });
     let vote_more = (upvotes+downvotes) - 20;
     if (vote_more > 0) {
@@ -198,7 +194,7 @@ export default class ViewWorkerRequest extends React.Component {
 
     return(
       <div>
-        <h5><a target="_blank" href={"https://" + APP_DOMAIN + "/@" + request.post.author + "/" + request.post.permlink} rel="noopener noreferrer"><Icon name="extlink" size="1_5x" /> 
+        <h5><a target="_blank" href={"/@" + request.post.author + "/" + request.post.permlink} rel="noopener noreferrer"><Icon name="extlink" size="1_5x" /> 
           {request.post.title}
         </a></h5>
         <p>
@@ -206,7 +202,7 @@ export default class ViewWorkerRequest extends React.Component {
           Получатель средств: <Author author={request.worker} />
         </p>
         <p>
-          Желаемая сумма: <b>{formatAsset(request.required_amount_max)}</b><br/>
+          Запрашиваемая сумма: <b>{formatAsset(request.required_amount_max)}</b><br/>
           Минимальная сумма: {formatAsset(request.required_amount_min)}<br/>
           Выплата в Силу Голоса: {request.vest_reward ? "да" : "нет"}
         </p>
