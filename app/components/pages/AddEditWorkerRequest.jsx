@@ -153,7 +153,7 @@ class AddEditWorkerRequest extends React.Component {
             </td>
             <td>
               <label>
-                Желаемая сумма:<input name="required_amount_max" type="text" value={req.required_amount_max} onChange={this.handleInputChange}/>
+                Запрашиваемая сумма:<input name="required_amount_max" type="text" value={req.required_amount_max} onChange={this.handleInputChange}/>
               </label>
             </td>
             <td>

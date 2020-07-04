@@ -41,11 +41,6 @@ export default class LandingPartners extends React.Component {
 						</a>
 					</div>
   				<div className="small-6 medium-3 columns">
-						<a href="https://golos.today/" target="blank">
-							<img src="images/landing/l16.jpg" alt="Golos Today" />
-						</a>
-					</div>
-  				<div className="small-6 medium-3 columns">
 						<a href="https://cpeda.space/" target="blank">
 							<img src="images/landing/l12.jpg" alt="CPEDA.SPACE" />
 						</a>

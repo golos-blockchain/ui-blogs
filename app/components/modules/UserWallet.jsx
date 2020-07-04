@@ -345,7 +345,7 @@ class UserWallet extends React.Component {
                 <div className="column small-12 medium-8">
                     {VESTING_TOKEN.toUpperCase()}<br />
                     <span className="secondary">{powerTip.split(".").map((a, index) => {if (a) {return <div key={index}>{a}.</div>;} return null;})}
-                    <a target="_blank" href="/workers">{tt('userwallet_jsx.worker_foundation')} <Icon name="extlink" /></a> | {tt('userwallet_jsx.top_dpos')} - <a target="_blank" href="https://dpos.space/golos-top/GP/">dpos.space <Icon name="extlink" /></a></span>
+                    <a href="/workers">{tt('userwallet_jsx.worker_foundation')} <Icon name="extlink" /></a> | {tt('userwallet_jsx.top_dpos')} - <a target="_blank" href="https://dpos.space/golos-top/GP/">dpos.space <Icon name="extlink" /></a></span>
                 </div>
                 <div className="column small-12 medium-4">
                     {isMyAccount
