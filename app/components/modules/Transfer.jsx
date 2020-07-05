@@ -12,6 +12,7 @@ import {countDecimals, formatAmount, checkMemo} from 'app/utils/ParsersAndFormat
 import tt from 'counterpart';
 import { LIQUID_TICKER, DEBT_TICKER , VESTING_TOKEN2 } from 'app/client_config';
 import Slider from 'golos-ui/Slider';
+import VerifiedExchangeList from 'app/utils/VerifiedExchangeList';
 
 /** Warning .. This is used for Power UP too. */
 class TransferForm extends Component {
@@ -61,11 +62,11 @@ class TransferForm extends Component {
 
     initForm(props) {
         const {transferType} = props.initialValues
+        const isWithdraw = transferType && transferType === 'Savings Withdraw'
+        const isTIP = transferType && transferType.startsWith('TIP to')
+        const isClaim = transferType && transferType === 'Claim'
         const insufficientFunds = (asset, amount) => {
             const {currentAccount} = props
-            const isWithdraw = transferType && transferType === 'Savings Withdraw'
-            const isTIP = transferType && transferType.startsWith('TIP to')
-            const isClaim = transferType && transferType === 'Claim'
             const balanceValue =
                 !asset || asset === 'GOLOS' ?
                     isWithdraw ? currentAccount.get('savings_balance') : (isTIP ? currentAccount.get('tip_balance') : (isClaim ? currentAccount.get('accumulative_balance') : currentAccount.get('balance'))) :
@@ -87,7 +88,10 @@ class TransferForm extends Component {
             initialValues: props.initialValues,
             validation: values => ({
                 to:
-                    ! values.to ? tt('g.required') : validate_account_name(values.to),
+                    ! values.to ? tt('g.required') :
+                    (VerifiedExchangeList.includes(values.to) && (isTIP || isClaim || values.asset !== 'GOLOS')) ? tt('transfer_jsx.verified_exchange_liquid_only') :
+                    (VerifiedExchangeList.includes(values.to) && values.memo === '') ? tt('transfer_jsx.verified_exchange_no_memo') :
+                    validate_account_name(values.to),
                 amount:
                     ! parseFloat(values.amount) || /^0$/.test(values.amount) ? tt('g.required') :
                     insufficientFunds(values.asset, values.amount) ? tt('transfer_jsx.insufficient_funds') :
