@@ -879,7 +879,9 @@
     "protect_funds_by_requiring_a_3_day_withdraw_waiting_period": "Защитите средства от вывода 3-х дневным периодом ожидания.",
     "withdraw_funds_after_the_required_3_day_waiting_period": "Снять средства после необходимого 3-х дневного периода ожидания.",
     "balance": "Баланс",
-    "private_key_in_memo" : "Не пишите в этом поле свои приватные ключи!"
+    "private_key_in_memo" : "Не пишите в этом поле свои приватные ключи!",
+    "verified_exchange_no_memo": "Для перевода на биржу нужно указать примечание согласно правилам биржи.",
+    "verified_exchange_liquid_only": "Переводить на биржу можно только токены с GOLOS баланса."
   },
   "transferhistoryrow_jsx": {
     "to_savings": "в сейф",

@@ -76,7 +76,8 @@ export function formatAmount(amount){
 }
 
 export function checkMemo(memoValue){
-    return typeof memoValue !== 'undefined' && memoValue.length == 52 && /[PK5]/.test(memoValue.charAt(0))
+    return typeof memoValue !== 'undefined'
+        && ((memoValue.length == 52 && /[PK5]/.test(memoValue.charAt(0))) || (memoValue.length == 51 && /[5J]/.test(memoValue.charAt(0))))
 }
 
 export function countDecimals(amount) {
