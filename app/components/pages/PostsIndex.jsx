@@ -226,8 +226,9 @@ class PostsIndex extends React.Component {
                             showSpam={showSpam}
                             />
 
-                        <hr style={{ borderColor: 'goldenrod' }}>
-                        </hr>
+                        <div class="strike">
+                            <span><Link target="_blank" to="https://wiki.golos.id/users/welcome#prodvinut-post">{tt('g.promote_block')}</Link></span>
+                        </div>
                       </div> : null }
 
 

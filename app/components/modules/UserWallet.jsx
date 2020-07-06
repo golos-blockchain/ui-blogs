@@ -225,7 +225,7 @@ class UserWallet extends React.Component {
         }).filter(el => !!el).reverse();
 
         let tip_menu = [
-            { value: tt('g.donate'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'TIP to Account' ) },
+            { value: tt('g.transfer'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'TIP to Account' ) },
             { value: tt('userwallet_jsx.power_up'), link: '#', onClick: showTransfer.bind( this, VEST_TICKER, 'TIP to Vesting' ) },
         ]
         let claim_menu = [
@@ -249,7 +249,7 @@ class UserWallet extends React.Component {
         }
 
         if(isMyAccount) {
-            steem_menu.push({ value: tt('g.buy_or_sell'), link: '/market' })
+            steem_menu.push({ value: tt('g.buy_or_sell'), link: '/exchanges' })
         }
 
         let dollar_menu = [
