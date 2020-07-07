@@ -1,5 +1,5 @@
 import { call, put, select, fork, cancelled, takeLatest, takeEvery } from 'redux-saga/effects';
-import { getPinnedPosts } from 'app/utils/NormalizeProfile'
+import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile'
 import {loadFollows, fetchFollowCount} from 'app/redux/FollowSaga';
 import {getContent} from 'app/redux/SagaShared';
 import GlobalReducer from './GlobalReducer';
@@ -331,6 +331,12 @@ export function* fetchData(action) {
             args[0].select_categories = selectTags;
             args[0].filter_tags = IGNORE_TAGS
         }
+    }
+
+    if (order == 'created' && localStorage.getItem('invite')) {
+        const [ loader ] = yield call([api, api.getAccountsAsync], [localStorage.getItem('invite')])
+        const mutedInNew = getMutedInNew(loader);
+        args[0].filter_authors = mutedInNew;
     }
 
     yield put({ type: 'global/FETCHING_DATA', payload: { order, category } });

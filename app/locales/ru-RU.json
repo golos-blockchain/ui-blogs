@@ -693,7 +693,8 @@
     "adjust_your": "откорректируйте свои",
     "display_preferences": "настройки отображения",
     "create_an_account": "зарегистрироваться",
-    "to_save_your_preferences": "сохранить ваши настройки"
+    "to_save_your_preferences": "сохранить ваши настройки",
+    "mute_in_new": "Скрывать в Новом"
   },
   "promote_post_jsx": {
     "promote_post": "Продвинуть пост",
@@ -789,6 +790,7 @@
     "always_warn": "Предупреждать",
     "always_show": "Отображать",
     "muted_users": "Заблокированные пользователи",
+    "muted_in_new_users": "Пользователи, чьи посты скрыты в Новом",
     "update": "Обновить",
     "profile_image_url": "Вставьте ссылку на фото профиля или загрузите его",
     "cover_image_url": "Вставьте ссылку на обложку или загрузите её",

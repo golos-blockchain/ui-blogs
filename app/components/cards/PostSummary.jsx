@@ -6,6 +6,7 @@ import Icon from 'app/components/elements/Icon';
 import { connect } from 'react-redux';
 import user from 'app/redux/User';
 import Reblog from 'app/components/elements/Reblog';
+import MuteAuthorInNew from 'app/components/elements/MuteAuthorInNew';
 import PinPost from 'app/components/elements/PinPost';
 import Voting from 'app/components/elements/Voting';
 import {immutableAccessor} from 'app/utils/Accessors';
@@ -48,7 +49,8 @@ class PostSummary extends React.Component {
         thumbSize: PropTypes.string,
         nsfwPref: PropTypes.string,
         onClick: PropTypes.func,
-        visited: PropTypes.bool
+        visited: PropTypes.bool,
+        blockEye: PropTypes.bool
     };
 
     constructor() {
@@ -74,7 +76,7 @@ class PostSummary extends React.Component {
 
     render() {
         const {currentCategory, thumbSize, ignore, onClick} = this.props;
-        const {post, content, pending_payout, total_payout, cashout_time} = this.props;
+        const {post, content, pending_payout, total_payout, cashout_time, blockEye} = this.props;
         const {account} = this.props;
         const {nsfwPref, username} = this.props
         if (!content) return null;
@@ -154,7 +156,9 @@ class PostSummary extends React.Component {
         // author and category
         let author_category = <span className="vcard">
             <a href={title_link_url} onClick={e => navigate(e, onClick, post, title_link_url)}><TimeAgoWrapper date={p.created} className="updated" /></a>
-            {} {tt('g.by')} <Author author={p.author} authorRepLog10={authorRepLog10} follow={false} mute={false} />
+            {} {tt('g.by')}
+            {blockEye && <MuteAuthorInNew author={p.author} />}
+            <Author author={p.author} authorRepLog10={authorRepLog10} follow={false} mute={false} />
             {} {tt('g.in')} <TagList post={p} single />
         </span>
 

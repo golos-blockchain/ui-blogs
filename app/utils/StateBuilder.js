@@ -1,5 +1,5 @@
 import { PUBLIC_API } from 'app/client_config'
-import { getPinnedPosts } from 'app/utils/NormalizeProfile'
+import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile'
 import { CATEGORIES } from 'app/client_config'
 
 
@@ -257,6 +257,11 @@ export default async function getState(api, url, options, offchain = {}) {
           requests.push(api.gedDiscussionsBy('promoted', {...args, limit: 1}))
         }
 
+        if (discussionsType == 'created' && offchain.account) {
+            const [ loader ] = await api.getAccounts([offchain.account]);
+            const mutedInNew = getMutedInNew(loader);
+            args.filter_authors = mutedInNew;
+        }
         requests.push(api.gedDiscussionsBy(discussionsType, args))
         const responses = await Promise.all(requests)
 

@@ -833,7 +833,8 @@
     "adjust_your": "adjust your",
     "display_preferences": "display preferences",
     "create_an_account": "create an account",
-    "to_save_your_preferences": "to save your preferences"
+    "to_save_your_preferences": "to save your preferences",
+    "mute_in_new": "Hide in New"
   },
   "transferhistoryrow_jsx": {
     "to_savings": "to savings",
@@ -956,6 +957,7 @@
     "always_warn": "Always warn",
     "always_show": "Always show",
     "muted_users": "Muted Users",
+    "muted_in_new_users": "Users Whose Posts Hidden In New",
     "update": "Update",
     "profile_image_url": "Profile picture url",
     "cover_image_url": "Cover image url",
