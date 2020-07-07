@@ -218,6 +218,10 @@ input.share-box {
     outline: none;
 }
 
+.PostFull__prevPosts {
+  margin-left: 0px !important;
+}
+
 /* Small only */
 @media screen and (max-width: 39.9375em) {
   .Post {
