@@ -288,9 +288,11 @@ class PostFull extends React.Component {
         const prox = $STM_Config.img_proxy_prefix
 
         let prevPosts = [];
-        if (document.getElementById('post_overlay') == null)
+        let npp = 0;
         for (let pp of this.props.prevPosts) {
             let pp2 = extractContent(objAccessor, pp);
+            if (pp2.author == author && pp2.permlink == permlink) continue;
+            if (npp == 3) continue;
             let iurl = (prox ? prox + '800x600' + '/' : '');
             if (Date.parse(pp2.created) > CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME) {
                 iurl += pp2.image_link
@@ -307,6 +309,7 @@ class PostFull extends React.Component {
               title={pp2.title}
               body={pp2.body} />)
             prevPosts.push(prevPost)
+            ++npp;
         }
 
         return (
