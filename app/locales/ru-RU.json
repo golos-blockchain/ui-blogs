@@ -275,6 +275,7 @@
     "price": "Цена",
     "print": "Распечатать",
     "promote": "Продвинуть",
+    "promote_block": "блок продвигаемого контента",
     "promoted": "Промо",
     "re": "RE",
     "recent_password": "Недавний пароль",
@@ -700,7 +701,7 @@
     "promote_post": "Продвинуть пост",
     "buy_gbg": "купить GBG можно на",
     "market": "внутренней бирже",
-    "spend_your_DEBT_TOKEN_to_advertise_this_post": "Используйте ваши токены GBG, чтобы прорекламировать этот пост в секции продвигаемого контента",
+    "spend_your_DEBT_TOKEN_to_advertise_this_post": "Используйте ваши токены GBG, чтобы прорекламировать этот пост в блоке продвигаемого контента на главной странице",
     "you_successfully_promoted_this_post": "Вы успешно продвинули этот пост",
     "leave_this_unchecked_to_receive_half_your_reward": "Оставьте неотмеченным для получения 1/2 вознаграждения в %(VESTING_TOKEN)s и 1/2 %(DEBT_TOKEN)s",
     "pay_me_100_in_VESTING_TOKEN": "Заплатить мне 100%% в %(VESTING_TOKEN3)s",
@@ -880,7 +881,9 @@
     "protect_funds_by_requiring_a_3_day_withdraw_waiting_period": "Защитите средства от вывода 3-х дневным периодом ожидания.",
     "withdraw_funds_after_the_required_3_day_waiting_period": "Снять средства после необходимого 3-х дневного периода ожидания.",
     "balance": "Баланс",
-    "private_key_in_memo" : "Не пишите в этом поле свои приватные ключи!"
+    "private_key_in_memo" : "Не пишите в этом поле свои приватные ключи!",
+    "verified_exchange_no_memo": "Для перевода на биржу нужно указать примечание согласно правилам биржи.",
+    "verified_exchange_liquid_only": "Переводить на биржу можно только токены с GOLOS баланса."
   },
   "transferhistoryrow_jsx": {
     "to_savings": "в сейф",
@@ -970,7 +973,7 @@
     "in_conversion": "%(amount)s на конвертации",
     "transfer_to_savings": "Перевести в сейф",
     "power_up": "Увеличить Силу Голоса",
-    "transfer_to_tip": "Передать в TIP-баланс",
+    "transfer_to_tip": "Пополнить TIP-баланс",
     "claim": "Пополнить TIP-баланс",
     "donate": "Отблагодарить",
     "power_down": "Уменьшить Силу Голоса",

@@ -113,8 +113,6 @@ class Footer extends React.Component {
             },
         );
 
-          //<iframe data-aa='1148807' src='//ad.a-ads.com/1148807?size=728x90' scrolling='no' style={{width: '728px', height: '90px', border:'0px', padding: '0', overflow:'hidden'}} allowtransparency='true'></iframe>
-
         return (
             <section className="Footer">
                 <div className="Footer__menus">

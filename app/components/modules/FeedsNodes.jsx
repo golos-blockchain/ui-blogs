@@ -78,7 +78,7 @@ class FeedNodes extends React.Component {
             successCallback: () => {
                 publishFeed({
                     publisher: account.name,
-                    exchange_rate: {base: sbd_exchange_rate_base.value + ' GOLOS', quote: sbd_exchange_rate_quote.value + ' GBG'},
+                    exchange_rate: {base: sbd_exchange_rate_base.value + ' GBG', quote: sbd_exchange_rate_quote.value + ' GOLOS'},
                     errorCallback: (e) => {
                         if (e === 'Canceled') {
                             this.setState({
