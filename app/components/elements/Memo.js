@@ -33,7 +33,7 @@ class Memo extends React.Component {
     linkify(text) {
         const sections = []
         let idx = 0
-        if (!text) return
+        if (!text || (typeof text.split !== 'function')) return
         for (let section of text.split(' ')) {
             if (section.trim().length === 0) continue
             const matchUserName = section.match(/(^|\s)(@[a-z][-\.a-z\d]+[a-z\d])/i)
