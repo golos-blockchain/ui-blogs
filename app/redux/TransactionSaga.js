@@ -148,7 +148,7 @@ function* broadcastOperation(
                 if (!password) {
                     yield put(user.actions.showLogin({
                       operation: {type, operation, username, successCallback, errorCallback, saveLogin: true},
-                      loginDefault: { username, authType: type == 'transfer' ? 'active' : '' }
+                      loginDefault: { username, authType: (type == 'transfer' || type == 'account_witness_vote' || type == 'account_witness_proxy') ? 'active' : '' }
                     }))
                     return
                 }
