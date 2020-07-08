@@ -56,15 +56,22 @@ ul.PostsList__summaries {
   .PostSummary__image {
     float: left;
     width: auto;
+    height: 200px;
     opacity: 0.5;
   }
   .PostSummary__text {
     display: block;
-    bottom: 10px;
-    left: 5px;
+    bottom: 0px;
+    width: 100%;
+    min-height: 50px;
+    padding-top: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 6px;
     position: absolute;
-    color: black;
+    color: rgba(255,255,255,0.9);
     z-index: 1;
+    background: linear-gradient(180deg,transparent 0,rgba(0,0,0,0) 16%,rgba(0,0,0,.7));
   }
 }
 
