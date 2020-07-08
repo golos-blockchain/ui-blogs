@@ -17,7 +17,7 @@ export default function* pollData() {
 
         const username = yield select(state => state.user.getIn(['current', 'username']));
         if (username) {
-            if (webpush_params === null) {
+            /*if (webpush_params === null) {
                 try {
                     webpush_params = yield call(registerServiceWorker);
                     if (webpush_params) yield call(webPushRegister, username, webpush_params);
@@ -25,7 +25,7 @@ export default function* pollData() {
                     console.error(error);
                     webpush_params = {error};
                 }
-            }
+            }*/
             const nc = yield call(getNotifications, username, webpush_params);
             yield put({type: 'UPDATE_NOTIFICOUNTERS', payload: nc});
         }
