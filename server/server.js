@@ -45,6 +45,8 @@ const crypto_key = config.get('server_session_secret');
 
 session(app, {
     maxAge: 1000 * 3600 * 24 * 60,
+    secure: true,
+    sameSite: 'none',
     crypto_key,
     key: config.get('session_cookie_key')
 });
