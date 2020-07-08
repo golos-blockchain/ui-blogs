@@ -43,6 +43,31 @@ ul.PostsList__summaries {
   width: 130px;
   }
 
+.PostSummary__text {
+  display: none;
+}
+
+.PostFull__prevPosts {
+  .PostSummary__image_container {
+    width: 240px;
+    height: 200px;
+    margin-right: 10px;
+  }
+  .PostSummary__image {
+    float: left;
+    width: auto;
+    opacity: 0.5;
+  }
+  .PostSummary__text {
+    display: block;
+    bottom: 10px;
+    left: 5px;
+    position: absolute;
+    color: black;
+    z-index: 1;
+  }
+}
+
 .PostSummary__image_nsfw {
   filter: blur(5px);
 }
@@ -178,6 +203,24 @@ ul.PostsList__summaries {
 
 .PostSummary__time_author_category_small a {
   color: $dark-gray;
+}
+
+.MuteAuthorInNew__button {
+  cursor: pointer;
+  margin-left: 6px;
+  margin-right: 7px;
+}
+
+.MuteAuthorInNew__button.loading {
+  padding-right: 0.5rem;
+  svg {
+    border: 1px solid #4BA2F2;
+    border-radius: 100%;
+    border-right-color: transparent;
+    border-top-color: transparent;
+    animation: loading 500ms infinite linear;
+    path {opacity: 0}
+  }
 }
 
 @media screen and (min-width: 39.9375em) {

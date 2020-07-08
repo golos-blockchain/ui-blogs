@@ -8,6 +8,7 @@ import o2j from 'shared/clash/object2json'
 import LoadingIndicator from 'app/components/elements/LoadingIndicator'
 import Userpic from 'app/components/elements/Userpic';
 import reactForm from 'app/utils/ReactForm'
+import {fromJS, Set, Map} from 'immutable'
 import UserList from 'app/components/elements/UserList';
 import cookie from "react-cookie";
 import Dropzone from 'react-dropzone'
@@ -83,11 +84,9 @@ class Settings extends React.Component {
 
             donatePresets = localStorage.getItem('donate.presets-' + accountname)
             if (donatePresets) donatePresets = JSON.parse(donatePresets)
-            else {
-              donatePresets = ['5','10','25','50','100'];
-            }
-            this.setState({donatePresets : donatePresets})
         }
+        if (!donatePresets) donatePresets = ['5','10','25','50','100'];
+        this.setState({donatePresets : donatePresets})
     }
 
     onDrop = (acceptedFiles, rejectedFiles) => {
@@ -295,8 +294,8 @@ class Settings extends React.Component {
 
         const {follow, account, isOwnAccount} = this.props
         const following = follow && follow.getIn(['getFollowingAsync', account.name]);
-        const ignores = isOwnAccount && following && following.get('ignore_result')
-
+        const ignores = isOwnAccount && following && following.get('ignore_result');
+        const mutedInNew = isOwnAccount && props.mutedInNew;
         const {pImageUploading, cImageUploading} = this.state;
 
         const languageSelectBox = <select defaultValue={process.env.BROWSER ? cookie.load(LOCALE_COOKIE_KEY) : DEFAULT_LANGUAGE} onChange={this.onLanguageChange}>
@@ -489,6 +488,13 @@ class Settings extends React.Component {
                         <UserList title={tt('settings_jsx.muted_users')} account={account} users={ignores} />
                     </div>
                 </div>}
+            {mutedInNew && mutedInNew.size > 0 &&
+                <div className="row">
+                    <div className="small-12 columns">
+                        <br /><br />
+                        <UserList title={tt('settings_jsx.muted_in_new_users')} account={account} users={mutedInNew} muteOnlyNew={true} />
+                    </div>
+                </div>}
         </div>
     }
 }
@@ -503,6 +509,7 @@ export default connect(
         let metaData = account ? o2j.ifStringParseJSON(account.json_metadata) : {}
         if (typeof metaData === 'string') metaData = o2j.ifStringParseJSON(metaData); // issue #1237
         const profile = metaData && metaData.profile ? metaData.profile : {}
+        const mutedInNew = metaData && metaData.mutedInNew ? Set(metaData.mutedInNew) : Set([])
 
         return {
             account,
@@ -510,6 +517,7 @@ export default connect(
             accountname,
             isOwnAccount: username == accountname,
             profile,
+            mutedInNew,
             follow: state.global.get('follow'),
             ...ownProps
         }

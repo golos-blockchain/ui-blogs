@@ -1,5 +1,5 @@
 import { call, put, select, fork, cancelled, takeLatest, takeEvery } from 'redux-saga/effects';
-import { getPinnedPosts } from 'app/utils/NormalizeProfile'
+import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile'
 import {loadFollows, fetchFollowCount} from 'app/redux/FollowSaga';
 import {getContent} from 'app/redux/SagaShared';
 import GlobalReducer from './GlobalReducer';
@@ -73,6 +73,7 @@ export function* fetchState(location_change_action) {
         const state = {}
         state.current_route = location
         state.content = {}
+        state.prev_posts = []
         state.accounts = {}
 
         let accounts = new Set()
@@ -221,6 +222,14 @@ export function* fetchState(location_change_action) {
             const donates =  yield call([api, api.getDonatesAsync], {author: account, permlink: permlink}, '', '', 20, 0, true)
             state.content[curl].donate_list = donates
             state.content[curl].confetti_active = false
+
+            let args = { truncate_body: 128, select_categories: [category] };
+            let prev_posts = yield call([api, api[PUBLIC_API.created]], {limit: 4, start_author: account, start_permlink: permlink, select_authors: [account], ...args});
+            if (prev_posts.length <= 1) {
+                state.prev_posts = yield call([api, api[PUBLIC_API.trending]], {limit: 4, ...args});
+            } else {
+                state.prev_posts = prev_posts.slice(1);
+            }
         } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
             state.witnesses = {};
             const witnesses =  yield call([api, api.getWitnessesByVoteAsync], '', 100)
@@ -330,6 +339,12 @@ export function* fetchData(action) {
             args[0].select_categories = selectTags;
             args[0].filter_tags = IGNORE_TAGS
         }
+    }
+
+    if (order == 'created' && localStorage.getItem('invite')) {
+        const [ loader ] = yield call([api, api.getAccountsAsync], [localStorage.getItem('invite')])
+        const mutedInNew = getMutedInNew(loader);
+        args[0].filter_authors = mutedInNew;
     }
 
     yield put({ type: 'global/FETCHING_DATA', payload: { order, category } });

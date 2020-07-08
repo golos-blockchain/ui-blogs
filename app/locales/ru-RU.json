@@ -684,7 +684,8 @@
     "i_understand_dont_show_again": "Понимаю, больше не показывать",
     "insufficent_balance": "Недостаточный баланс",
     "in_week_convert_DEBT_TOKEN_to_LIQUID_TOKEN": "В 3-5 дней перевести %(amount)s %(DEBT_TOKEN)s в %(LIQUID_TOKEN)s",
-    "account_name_is_not_available": "Имя аккаунта недоступно"
+    "account_name_is_not_available": "Имя аккаунта недоступно",
+    "prev_posts": "Вам может быть интересно"
   },
   "postsummary_jsx": {
     "resteemed": "Репост",
@@ -695,7 +696,8 @@
     "adjust_your": "откорректируйте свои",
     "display_preferences": "настройки отображения",
     "create_an_account": "зарегистрироваться",
-    "to_save_your_preferences": "сохранить ваши настройки"
+    "to_save_your_preferences": "сохранить ваши настройки",
+    "mute_in_new": "Скрывать в Новом"
   },
   "promote_post_jsx": {
     "promote_post": "Продвинуть пост",
@@ -791,6 +793,7 @@
     "always_warn": "Предупреждать",
     "always_show": "Отображать",
     "muted_users": "Заблокированные пользователи",
+    "muted_in_new_users": "Пользователи, чьи посты скрыты в Новом",
     "update": "Обновить",
     "profile_image_url": "Вставьте ссылку на фото профиля или загрузите его",
     "cover_image_url": "Вставьте ссылку на обложку или загрузите её",

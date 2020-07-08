@@ -38,6 +38,7 @@ const icons = new Map([
     ['line', require('app/assets/icons/line.svg')],
     ['video', require('app/assets/icons/video.svg')],
     ['eye', require('app/assets/icons/eye.svg')],
+    ['eye_strike', require('app/assets/icons/eye_strike.svg')],
     ['location', require('app/assets/icons/location.svg')],
     ['info_o', require('app/assets/icons/info_o.svg')],
     ['feedback', require('app/assets/icons/feedback.svg')],

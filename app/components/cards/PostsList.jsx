@@ -202,6 +202,7 @@ class PostsList extends PureComponent {
             content,
             ignoreResult,
             account,
+            pathname,
         } = this.props;
 
         const { thumbSize, showPost, nsfwPref } = this.state;
@@ -252,6 +253,7 @@ class PostsList extends PureComponent {
                     onClick={this.onPostClick}
                     nsfwPref={nsfwPref}
                     visited={isPostVisited(item.item)}
+                    blockEye={pathname === '/created'}
                 />
               </li>
             ))

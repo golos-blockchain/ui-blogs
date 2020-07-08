@@ -214,12 +214,12 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     yield call(accountAuthLookup, {payload: {account, private_keys, highSecurityLogin, login_owner_pubkey}})
     let authority = yield select(state => state.user.getIn(['authority', username]))
     const hasActiveAuth = authority.get('active') === 'full'
-    // TODO Unused code
-    //if(!highSecurityLogin) {
-    //    const accountName = account.get('name')
-    //    authority = authority.set('active', 'none')
-    //    yield put(user.actions.setAuthority({accountName, auth: authority}))
-    //}
+    // Forbid loging in with active key
+    if(!operationType) {
+        const accountName = account.get('name')
+        authority = authority.set('active', 'none')
+        yield put(user.actions.setAuthority({accountName, auth: authority}))
+    }
     const fullAuths = authority.reduce((r, auth, type) => (auth === 'full' ? r.add(type) : r), Set())
     if (!fullAuths.size) {
         localStorage.removeItem('autopost2')
@@ -281,7 +281,7 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
         private_keys = private_keys.remove('memo_private')
 
     // If user is signing operation by operaion and has no saved login, don't save to RAM
-    if(!operationType || saveLogin) {
+    if(!operationType) {
         // Keep the posting key in RAM but only when not signing an operation.
         // No operation or the user has checked: Keep me logged in...
         yield put(
@@ -305,7 +305,7 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
         )
     }
 
-    if (!autopost && saveLogin)
+    if (!autopost && saveLogin && !operationType)
         yield put(user.actions.saveLogin());
 
     try {

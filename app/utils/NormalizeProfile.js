@@ -24,6 +24,22 @@ export function getPinnedPosts(account, links=false) {
   return pinnedPosts
 }
 
+export function getMutedInNew(account) {
+  let mutedInNew = [];
+
+  try {
+      let json = account.json_metadata
+      mutedInNew = (json && JSON.parse(json).mutedInNew) || [];
+      if(!Array.isArray(mutedInNew)) {
+          mutedInNew = [];
+      }
+  } catch(e) {
+      mutedInNew = []
+  }
+
+  return mutedInNew
+}
+
 function truncate(str, len) {
     if (str) {
         str = str.trim();

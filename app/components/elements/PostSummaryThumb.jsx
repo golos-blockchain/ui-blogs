@@ -43,7 +43,9 @@ export default class PostSummaryThumb extends React.Component {
   }
 
   render() {
-    const {visitedClassName} = this.props;
+    let {visitedClassName, title, body} = this.props;
+    title = title ? title : '';
+    body = body ? body : '';
     return (
       <a href={this.props.href} onClick={this.props.onClick}>
         <span className="PostSummary__image_container">
@@ -67,6 +69,7 @@ export default class PostSummaryThumb extends React.Component {
           >
           </img>
          </picture>
+          <div className="PostSummary__text">{title}</div>
         </span>
       </a>
     );
