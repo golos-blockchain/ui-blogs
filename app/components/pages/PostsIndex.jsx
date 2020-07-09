@@ -226,7 +226,7 @@ class PostsIndex extends React.Component {
                             showSpam={showSpam}
                             />
 
-                        <div class="strike">
+                        <div className="strike">
                             <span><Link target="_blank" to="https://wiki.golos.id/users/welcome#prodvinut-post">{tt('g.promote_block')}</Link></span>
                         </div>
                       </div> : null }
@@ -269,16 +269,10 @@ class PostsIndex extends React.Component {
                     />
 
                     <div className="sticky-right-ad">
-                      <iframe data-aa='1148471'
-                              src='//ad.a-ads.com/1148471?size=240x400'
-                              scrolling='no'
-                              style={{width: '240px', height: '400px', border: '0px', padding: '0', overflow: 'hidden'}}
-                              allowtransparency='true'
-                              sandbox="allow-same-origin allow-scripts">
-                      </iframe>
-
-                      <br/>
-
+                      <iframe data-aa='1148471' src='//ad.a-ads.com/1148471?size=240x400' scrolling='no'
+                      style={{width: '240px', height: '400px', border: '0px', padding: '0', overflow: 'hidden'}}
+                      allowtransparency='true'
+                      sandbox="allow-same-origin allow-scripts allow-popups"></iframe>
                     </div>
 
                 </div>

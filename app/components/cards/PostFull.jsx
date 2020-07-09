@@ -338,14 +338,6 @@ class PostFull extends React.Component {
                     </button>)
                     : null
                 }
-                {prevPosts.length > 0 && (
-                    <h4>{tt('postfull_jsx.prev_posts')}</h4>
-                )}
-                {prevPosts.length > 0 && (
-                    <div className="row PostFull__prevPosts">
-                    <div>{prevPosts}</div>
-                    </div>
-                )}
                 {showReply ? (
                     <div className="row">
                         <div className="column large-8 medium-10 small-12">
@@ -356,6 +348,16 @@ class PostFull extends React.Component {
                         </div>
                     </div>
                 ) : null}
+                {prevPosts.length > 0 && (
+                    <div className="row strikeprev">
+                        <span>{tt('postfull_jsx.prev_posts')}</span>
+                    </div>
+                )}
+                {prevPosts.length > 0 && (
+                    <div className="row PostFull__prevPosts">
+                    	<div>{prevPosts}</div>
+                    </div>
+                )}
             </article>
         );
     }
@@ -594,7 +596,7 @@ class PostFull extends React.Component {
                         />
                     </span>
                     <span className={"shareMenu"}>
-                        <div className="sharpay_widget_simple" data-sharpay="golid" data-lang="ru" data-height="18" data-form="no" data-hover="lighter" data-font="#8a8a8a" data-align="right" data-limit="3"></div>
+                        <div className="sharpay_widget_simple" data-sharpay="golid" data-height="18" data-form="no" data-hover="lighter" data-font="#8a8a8a" data-align="right" data-limit="3"></div>
                     </span>
                 </div>
             </div>

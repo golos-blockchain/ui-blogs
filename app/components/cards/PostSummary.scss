@@ -49,15 +49,18 @@ ul.PostsList__summaries {
 
 .PostFull__prevPosts {
   .PostSummary__image_container {
-    width: 240px;
+    width: 260px;
     height: 200px;
     margin-right: 10px;
   }
   .PostSummary__image {
     float: left;
-    width: auto;
+    width: 260px;
     height: 200px;
-    opacity: 0.5;
+    opacity: 0.7;
+  }
+  .PostSummary__image:hover {
+    opacity: 1;
   }
   .PostSummary__text {
     display: block;
@@ -67,7 +70,7 @@ ul.PostsList__summaries {
     padding-top: 30px;
     padding-left: 10px;
     padding-right: 10px;
-    padding-bottom: 6px;
+    padding-bottom: 5px;
     position: absolute;
     color: rgba(255,255,255,0.9);
     z-index: 1;

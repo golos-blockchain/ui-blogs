@@ -180,14 +180,6 @@ class CreateAccount extends React.Component {
                         style={{ maxWidth: '36rem', margin: '0 auto' }}
                     >
                         <h2>{tt('g.sign_up')}</h2>
-                        <p>
-                            <Icon name="vk" size="1_25x" />  
-
-                            <span> Доступна</span>
-                            <a href="/@ksantoprotein/besplatnaya-registraciya-na-blokcheine-golos-bez-sms"> регистрация через бота ВКонтакте </a>
-                            от <a target="_blank" href="/@ksantoprotein">@ksantoprotein</a>
-                        </p>
-                        <hr />
                         <form
                             onSubmit={this._onSubmit}
                             autoComplete="off"
