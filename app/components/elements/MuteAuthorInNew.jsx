@@ -35,7 +35,10 @@ export default class MuteAuthorInNew extends React.Component {
 
       let metadata;
       try {
-        metadata = JSON.parse(current_user.json_metadata);
+        if (current_user.json_metadata == '')
+            metadata = {};
+        else
+            metadata = JSON.parse(current_user.json_metadata);
       } catch(err) {
         DialogManager.alert('json_metadata invalid format');
       }
