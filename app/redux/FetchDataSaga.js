@@ -89,7 +89,7 @@ export function* fetchState(location_change_action) {
 
                 switch (parts[1]) {
                     case 'transfers':
-                        const history = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {filter_ops: ['producer_reward','fill_vesting_withdraw']})
+                        const history = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {filter_ops: ['producer_reward']})
                         account.transfer_history = []
                         account.other_history = []
 
@@ -296,8 +296,7 @@ export function* fetchData(action) {
             limit: constants.FETCH_DATA_BATCH_SIZE,
             truncate_body: constants.FETCH_DATA_TRUNCATE_BODY,
             start_author: author,
-            start_permlink: permlink,
-            period_sec: 604800
+            start_permlink: permlink
         }
     ];
     if (category.length && (!category.startsWith('tag-') || category.length > 4)) {

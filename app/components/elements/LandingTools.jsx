@@ -57,7 +57,6 @@ export default class LandingJoinUs extends React.Component {
 			'https://wiki.golos.id/',
 			'http://golosphoto.ru/',
 			'https://pokupo.ru',
-			'https://golos.today',
 			'http://golos.accusta.tk/'
 		]
 

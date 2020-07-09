@@ -112,6 +112,7 @@
     "price": "Price",
     "print": "Print",
     "promote": "Promote",
+    "promote_block": "promoted content",
     "promoted": "promoted",
     "re": "RE",
     "receive": "Receive",
@@ -299,6 +300,7 @@
     "temporarily_disabled": "Token deposit/withdraw is temporarily disabled",
     "guide_user": "Instructions for the exchange from",
     "total_supply": "Information about the total supply of tokens",
+    "p2p_bots": "Bots in Telegram for P2P-exchange",
     "questions": "Any questions",
     "community_chat": "You can get answers in the community chat",
     "delegate_chat": "and in the delegates chat"
