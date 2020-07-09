@@ -170,7 +170,7 @@ module.exports = connect(
 
         const account = state.global.getIn(['accounts', follower])
         let metaData = account ? o2j.ifStringParseJSON(account.get('json_metadata')) : {}
-        if (typeof metaData === 'string') metaData = o2j.ifStringParseJSON(metaData); // issue #1237
+        if (typeof metaData !== 'object') metaData = {}
         metaData.mutedInNew = account ? getMutedInNew(account.toJS(), true) : [];
 
         const {following} = ownProps;
