@@ -441,7 +441,8 @@
     "i_understand_dont_show_again": "I understand, don't show me again",
     "insufficent_balance": "Insufficient balance",
     "in_week_convert_DEBT_TOKEN_to_LIQUID_TOKEN": "In 3.5 days, convert %(amount)s %(DEBT_TOKEN)s into %(LIQUID_TOKEN)s",
-    "account_name_is_not_available": "Account name is not available"
+    "account_name_is_not_available": "Account name is not available",
+    "prev_posts": "See also"
   },
   "market_jsx": {
     "action": "Action",
@@ -835,7 +836,8 @@
     "adjust_your": "adjust your",
     "display_preferences": "display preferences",
     "create_an_account": "create an account",
-    "to_save_your_preferences": "to save your preferences"
+    "to_save_your_preferences": "to save your preferences",
+    "mute_in_new": "Hide in New"
   },
   "transferhistoryrow_jsx": {
     "to_savings": "to savings",
@@ -958,6 +960,7 @@
     "always_warn": "Always warn",
     "always_show": "Always show",
     "muted_users": "Muted Users",
+    "muted_in_new_users": "Users Whose Posts Hidden In New",
     "update": "Update",
     "profile_image_url": "Profile picture url",
     "cover_image_url": "Cover image url",

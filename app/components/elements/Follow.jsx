@@ -7,6 +7,8 @@ import transaction from 'app/redux/Transaction';
 import {Set, Map} from 'immutable'
 import tt from 'counterpart';
 import user from 'app/redux/User';
+import { getMutedInNew } from 'app/utils/NormalizeProfile';
+import o2j from 'shared/clash/object2json'
 
 const {string, bool, any} = PropTypes;
 import { LIQUID_TICKER } from 'app/client_config';
@@ -94,6 +96,20 @@ export default class Follow extends React.Component {
         });
     };
 
+    unmuteNew = () => {
+        let {follower, following, metaData, updateAccount} = this.props
+
+        metaData.mutedInNew = metaData.mutedInNew.filter(val => val !== following);
+
+        updateAccount({
+            json_metadata: JSON.stringify(metaData),
+            account: follower,
+            errorCallback: (e) => {},
+            successCallback: () => {
+            }
+        })
+    };
+
     render() {
         const {loading} = this.props;
         if(loading) return <span><LoadingIndicator /> {tt('g.loading')}&hellip;</span>;
@@ -111,7 +127,7 @@ export default class Follow extends React.Component {
         if(follower === following) return <span></span>
 
         const {followingWhat} = this.props; // redux
-        const {showFollow, showMute, donateUrl, children} = this.props; // html
+        const {showFollow, showMute, showMuteInNew, donateUrl, children} = this.props; // html
         const {busy} = this.state;
 
         const cnBusy = busy ? 'disabled' : '';
@@ -130,6 +146,9 @@ export default class Follow extends React.Component {
             {showMute && followingWhat === 'ignore' &&
                 <label className={cnInactive} onClick={this.unignore}>{tt('g.unmute')}</label>}
 
+            {showMuteInNew &&
+                <label className={cnInactive} onClick={this.unmuteNew}>{tt('g.unmute')}</label>}
+
             {donateUrl &&
                 <label style={{color: '#fff'}} className={cnDonate} onClick={this.showTransfer}>&nbsp;{tt('g.transfer2')}&nbsp;</label>}
 
@@ -144,10 +163,15 @@ const emptySet = Set();
 module.exports = connect(
     (state, ownProps) => {
         let {follower} = ownProps;
+        const current_user = state.user.get('current');
         if(!follower) {
-            const current_user = state.user.get('current');
             follower = current_user ? current_user.get('username') : null
         }
+
+        const account = state.global.getIn(['accounts', follower])
+        let metaData = account ? o2j.ifStringParseJSON(account.get('json_metadata')) : {}
+        if (typeof metaData !== 'object') metaData = {}
+        metaData.mutedInNew = account ? getMutedInNew(account.toJS(), true) : [];
 
         const {following} = ownProps;
         const f = state.global.getIn(['follow', 'getFollowingAsync', follower], emptyMap);
@@ -162,6 +186,7 @@ module.exports = connect(
             following,
             followingWhat,
             loading,
+            metaData,
         };
     },
     dispatch => ({
@@ -178,6 +203,15 @@ module.exports = connect(
                 successCallback: done,
                 errorCallback: done,
             }))
+        },
+        updateAccount: ({successCallback, errorCallback, ...operation}) => {
+            const success = () => {
+                dispatch(user.actions.getAccount())
+                successCallback()
+            }
+
+            const options = {type: 'account_metadata', operation, successCallback: success, errorCallback}
+            dispatch(transaction.actions.broadcastOperation(options))
         },
         showLogin: e => {
             if (e) e.preventDefault();

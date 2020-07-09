@@ -27,10 +27,11 @@ class UserList extends React.Component {
         const account = this.props.account
         const users = this.props.users
         const title = this.props.title
+        const muteOnlyNew = this.props.muteOnlyNew
 
         let idx = 0
         let user_list = users.map(user =>
-            <UserListRow account={account} user={user} key={idx++} />
+            <UserListRow account={account} user={user} key={idx++} muteOnlyNew={muteOnlyNew} />
         )
         user_list = user_list.toArray();
 

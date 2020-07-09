@@ -13,7 +13,7 @@ class Exchanges extends React.Component {
                     </div>
                     <br />
                     <div className='row'>                            
-                            <a target="_blank" href="https://explorer.golos.id/" class="golos-btn btn-secondary btn-round"><Icon name="new/search" /> Block Explorer</a>&nbsp;<a target="_blank" href="https://github.com/golos-blockchain" class="golos-btn btn-secondary btn-round"><Icon name="github" /> Source Code</a>&nbsp;<a target="_blank" href="https://coinmarketcap.com/currencies/golos-blockchain/" class="golos-btn btn-secondary btn-round"><Icon name="extlink" /> CoinMarketCap</a>&nbsp;<a href="mailto:info@golos.id" class="golos-btn btn-secondary btn-round"><Icon name="new/envelope" /> Contact Us</a>&nbsp;<a target="_blank" href="https://t.me/golos_delegates" class="golos-btn btn-secondary btn-round"><Icon name="new/telegram" /> Delegates Chat</a>
+                            <a target="_blank" href="https://explorer.golos.id/" className="golos-btn btn-secondary btn-round"><Icon name="new/search" /> Block Explorer</a>&nbsp;<a target="_blank" href="https://github.com/golos-blockchain" className="golos-btn btn-secondary btn-round"><Icon name="github" /> Source Code</a>&nbsp;<a target="_blank" href="https://coinmarketcap.com/currencies/golos-blockchain/" className="golos-btn btn-secondary btn-round"><Icon name="extlink" /> CoinMarketCap</a>&nbsp;<a href="mailto:info@golos.id" className="golos-btn btn-secondary btn-round"><Icon name="new/envelope" /> Contact Us</a>&nbsp;<a target="_blank" href="https://t.me/golos_delegates" className="golos-btn btn-secondary btn-round"><Icon name="new/telegram" /> Delegates Chat</a>
                     </div>
                 </div>
                 <div className='landing-exchanges-block'>
@@ -113,7 +113,7 @@ class Exchanges extends React.Component {
                                 <p className='landing-exchanges-block-text reg landing-exchanges-block-center'>{tt('exchanges_jsx.p2p_bots')}:</p>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
-                                    <a target="_blank" href="https://t.me/TellerBot" class="golos-btn btn-secondary btn-round"><Icon name="new/telegram" /> TellerBot</a>&nbsp;&nbsp;<a target="_blank" href="https://t.me/P2PDEXBitshares_bot" class="golos-btn btn-secondary btn-round"><Icon name="new/telegram" /> DexGarant</a>
+                                    <a target="_blank" href="https://t.me/TellerBot" className="golos-btn btn-secondary btn-round"><Icon name="new/telegram" /> TellerBot</a>&nbsp;&nbsp;<a target="_blank" href="https://t.me/P2PDEXBitshares_bot" className="golos-btn btn-secondary btn-round"><Icon name="new/telegram" /> DexGarant</a>
                                 </div>
                             </div>
                         </div>
@@ -131,7 +131,7 @@ class Exchanges extends React.Component {
                         </div>
                     </div>
                     <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
-                        <a target="_blank" href="/api/v1/gls-supply" class="golos-btn btn-secondary btn-round">Supply GOLOS</a>&nbsp;&nbsp;<a target="_blank" href="/api/v1/gbg-supply" class="golos-btn btn-secondary btn-round">Supply GBG</a>
+                        <a target="_blank" href="/api/v1/gls-supply" className="golos-btn btn-secondary btn-round">Supply GOLOS</a>&nbsp;&nbsp;<a target="_blank" href="/api/v1/gbg-supply" className="golos-btn btn-secondary btn-round">Supply GBG</a>
                     </div>
                 </div>
                 <div className='landing-exchanges-block'>

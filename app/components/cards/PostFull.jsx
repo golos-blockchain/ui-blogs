@@ -7,7 +7,7 @@ import user from 'app/redux/User';
 import transaction from 'app/redux/Transaction';
 import { repLog10, parsePayoutAmount } from 'app/utils/ParsersAndFormatters';
 import extractContent from 'app/utils/ExtractContent';
-import { immutableAccessor } from 'app/utils/Accessors';
+import { immutableAccessor, objAccessor } from 'app/utils/Accessors';
 import DMCAList from 'app/utils/DMCAList';
 import LEGALList from 'app/utils/LEGALList';
 import { isPostVisited, visitPost } from 'app/utils/helpers';
@@ -26,8 +26,9 @@ import PostFormLoader from 'app/components/modules/PostForm/loader';
 import CommentFormLoader from 'app/components/modules/CommentForm/loader';
 import { getEditDraftPermLink } from 'app/utils/postForm';
 import Confetti from 'react-dom-confetti';
+import PostSummaryThumb from 'app/components/elements/PostSummaryThumb'
 
-import { APP_ICON, SEO_TITLE, LIQUID_TICKER, CONFETTI_CONFIG } from 'app/client_config';
+import { APP_ICON, SEO_TITLE, LIQUID_TICKER, CONFETTI_CONFIG, CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config';
 
 // function loadFbSdk(d, s, id) {
 //     return new Promise(resolve => {
@@ -283,6 +284,34 @@ class PostFull extends React.Component {
 
         const authorRepLog10 = repLog10(content.author_reputation);
 
+        // for prevPosts
+        const prox = $STM_Config.img_proxy_prefix
+
+        let prevPosts = [];
+        let npp = 0;
+        for (let pp of this.props.prevPosts) {
+            let pp2 = extractContent(objAccessor, pp);
+            if (pp2.author == author && pp2.permlink == permlink) continue;
+            if (npp == 3) continue;
+            let iurl = (prox ? prox + '800x600' + '/' : '');
+            if (Date.parse(pp2.created) > CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME) {
+                iurl += pp2.image_link
+            } else {
+                // Proxy old images from io fork
+                iurl += 'https://imgp.golos.io/0x0/' + pp2.image_link
+            }
+            const prevPost = (<PostSummaryThumb
+              visitedClassName=""
+              mobile={false}
+              isNsfw={false}
+              src={iurl}
+              href={pp2.link}
+              title={pp2.title}
+              body={pp2.body} />)
+            prevPosts.push(prevPost)
+            ++npp;
+        }
+
         return (
             <article
                 className="PostFull hentry"
@@ -319,6 +348,16 @@ class PostFull extends React.Component {
                         </div>
                     </div>
                 ) : null}
+                {prevPosts.length > 0 && (
+                    <div className="row strikeprev">
+                        <span>{tt('postfull_jsx.prev_posts')}</span>
+                    </div>
+                )}
+                {prevPosts.length > 0 && (
+                    <div className="row PostFull__prevPosts">
+                    	<div>{prevPosts}</div>
+                    </div>
+                )}
             </article>
         );
     }
@@ -556,9 +595,8 @@ class PostFull extends React.Component {
                             sinceDate={isPreViewCount ? 'Dec 2016' : null}
                         />
                     </span>
-
                     <span className={"shareMenu"}>
-                        <div className="sharpay_widget_simple" data-sharpay="golid" data-lang="ru" data-height="18" data-form="no" data-hover="lighter" data-font="#8a8a8a" data-align="right" data-limit="3"></div>
+                        <div className="sharpay_widget_simple" data-sharpay="golid" data-height="18" data-form="no" data-hover="lighter" data-font="#8a8a8a" data-align="right" data-limit="3"></div>
                     </span>
                 </div>
             </div>
@@ -597,11 +635,14 @@ export default connect(
         const curr_blog_author = props.cont.get(props.post).get('author')
         const key = ['follow', 'getFollowingAsync', curr_blog_author, 'ignore_result']
         const ignoring = state.global.getIn(key)
+        let prevPosts = state.global.get('prev_posts')
+        prevPosts = prevPosts ? prevPosts.toJS() : []
 
         return {
             ...props,
             username,
-            ignoring
+            ignoring,
+            prevPosts
         }
     },
 
