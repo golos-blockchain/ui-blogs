@@ -225,11 +225,11 @@ export function* fetchState(location_change_action) {
 
             let args = { truncate_body: 128, select_categories: [category] };
             let prev_posts = yield call([api, api[PUBLIC_API.created]], {limit: 4, start_author: account, start_permlink: permlink, select_authors: [account], ...args});
-            if (prev_posts.length <= 1) {
-                state.prev_posts = yield call([api, api[PUBLIC_API.trending]], {limit: 4, ...args});
-            } else {
-                state.prev_posts = prev_posts.slice(1);
+            prev_posts = prev_posts.slice(1);
+            if (prev_posts.length < 3) {
+                prev_posts = prev_posts.concat(yield call([api, api[PUBLIC_API.trending]], {limit: (4 - prev_posts.length), ...args}));
             }
+            state.prev_posts = prev_posts;
         } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
             state.witnesses = {};
             const witnesses =  yield call([api, api.getWitnessesByVoteAsync], '', 100)
