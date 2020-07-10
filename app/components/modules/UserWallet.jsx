@@ -225,7 +225,7 @@ class UserWallet extends React.Component {
         }).filter(el => !!el).reverse();
 
         let tip_menu = [
-            { value: tt('g.donate'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'TIP to Account' ) },
+            { value: tt('g.transfer'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'TIP to Account' ) },
             { value: tt('userwallet_jsx.power_up'), link: '#', onClick: showTransfer.bind( this, VEST_TICKER, 'TIP to Vesting' ) },
         ]
         let claim_menu = [
@@ -249,7 +249,7 @@ class UserWallet extends React.Component {
         }
 
         if(isMyAccount) {
-            steem_menu.push({ value: tt('g.buy_or_sell'), link: '/market' })
+            steem_menu.push({ value: tt('g.buy_or_sell'), link: '/exchanges' })
         }
 
         let dollar_menu = [
@@ -345,7 +345,7 @@ class UserWallet extends React.Component {
                 <div className="column small-12 medium-8">
                     {VESTING_TOKEN.toUpperCase()}<br />
                     <span className="secondary">{powerTip.split(".").map((a, index) => {if (a) {return <div key={index}>{a}.</div>;} return null;})}
-                    <a target="_blank" href="/workers">{tt('userwallet_jsx.worker_foundation')} <Icon name="extlink" /></a> | {tt('userwallet_jsx.top_dpos')} - <a target="_blank" href="https://dpos.space/golos-top/GP/">dpos.space <Icon name="extlink" /></a></span>
+                    <a href="/workers">{tt('userwallet_jsx.worker_foundation')} <Icon name="extlink" /></a> | {tt('userwallet_jsx.top_dpos')} - <a target="_blank" href="https://dpos.space/golos-top/GP/">dpos.space <Icon name="extlink" /></a></span>
                 </div>
                 <div className="column small-12 medium-4">
                     {isMyAccount

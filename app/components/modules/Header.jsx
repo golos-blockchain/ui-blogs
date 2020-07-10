@@ -162,8 +162,9 @@ class Header extends React.Component {
 
         const sort_orders = [
             ['created', tt('g.new')],
-            ['hot', tt('main_menu.hot')],
+            ['responses', tt('main_menu.discussion')],
             ['trending', tt('main_menu.trending')],
+            ['donates', tt('main_menu.donates')],
             ['promoted', tt('g.promoted')],
             //['payout', 'payout (posts)'],
             //['payout_comments', 'payout (comments)'],
