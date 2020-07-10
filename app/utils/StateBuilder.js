@@ -189,11 +189,20 @@ export default async function getState(api, url, options, offchain = {}) {
 
         let args = { truncate_body: 1024, select_categories: [category] };
         let prev_posts = await api.gedDiscussionsBy('created', {limit: 4, start_author: account, start_permlink: permlink, select_authors: [account], ...args});
-        if (prev_posts.length <= 1) {
-            state.prev_posts = await api.gedDiscussionsBy('trending', {limit: 4, ...args});
-        } else {
-            state.prev_posts = prev_posts.slice(1);
+        prev_posts = prev_posts.slice(1);
+        let pp_ids = [];
+        for (let pp of prev_posts) {
+            pp_ids.push(pp.author + pp.permlink);
         }
+        if (prev_posts.length < 3) {
+            let trend_posts = await api.gedDiscussionsBy('trending', {limit: 4, ...args});
+            for (let tp of trend_posts) {
+                if (tp.author === account && tp.permlink === permlink) continue;
+                if (pp_ids.includes(tp.author + tp.permlink)) continue;
+                prev_posts.push(tp);
+            }
+        }
+        state.prev_posts = prev_posts.slice(0, 3);
     } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
         const witnesses = await api.getWitnessesByVote('', 100)
         witnesses.forEach( witness => {
