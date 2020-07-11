@@ -50,17 +50,17 @@ ul.PostsList__summaries {
 .PostFull__prevPosts {
   .PostSummary__image_container {
     width: 260px;
-    height: 200px;
+    height: 190px;
     margin-right: 10px;
+    opacity: 0.75;
+  }
+  .PostSummary__image_container:hover {
+    opacity: 1;
   }
   .PostSummary__image {
     float: left;
     width: 260px;
-    height: 200px;
-    opacity: 0.7;
-  }
-  .PostSummary__image:hover {
-    opacity: 1;
+    height: 190px;
   }
   .PostSummary__text {
     display: block;

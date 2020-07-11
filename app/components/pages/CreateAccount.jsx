@@ -245,7 +245,6 @@ class CreateAccount extends React.Component {
                                     {tt('createaccount_jsx.enter_account_name')}
 
                                     <div className="input-group">
-                                        <span className="input-group-label">id-</span>
                                         <input
                                             className="input-group-field"
                                             type="text"
@@ -490,7 +489,7 @@ class CreateAccount extends React.Component {
             publicKeys = [1, 2, 3, 4].map(() => pk.toPublicKey().toString());
         } catch (err) {
             publicKeys = ['owner', 'active', 'posting', 'memo'].map(role =>
-                PrivateKey.fromSeed(`id-${name}${role}${password}`)
+                PrivateKey.fromSeed(`${name}${role}${password}`)
                     .toPublicKey()
                     .toString()
             );
@@ -501,7 +500,7 @@ class CreateAccount extends React.Component {
             const res = await callApi('/api/v1/accounts', {
                 csrf: $STM_csrf,
                 email,
-                name: 'id-' + name,
+                name,
                 owner_key: publicKeys[0],
                 active_key: publicKeys[1],
                 posting_key: publicKeys[2],
@@ -519,7 +518,7 @@ class CreateAccount extends React.Component {
                 });
             } else {
                 successReg();
-                window.location = `/login.html#account=id-${name}&msg=accountcreated`;
+                window.location = `/login.html#account=${name}&msg=accountcreated`;
             }
         } catch (err) {
             console.error('Caught CreateAccount server error', err);
@@ -713,7 +712,7 @@ class CreateAccount extends React.Component {
 
     onNameChange = e => {
         const name = e.target.value.trim().toLowerCase(); // Add prefix here
-        this.validateAccountName('id-' + name);
+        this.validateAccountName(name);
         this.setState({ name });
     };
 
