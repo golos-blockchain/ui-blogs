@@ -24,7 +24,7 @@ class PostWrapper extends React.Component {
                 })
                 .then(content => {
                     if (content) {
-                        browserHistory.replace(`/${content.category}/@${post}`);
+                        browserHistory.replace(`/${content.category}/@${post}` + browserHistory.getCurrentLocation().search);
                     }
                 })
                 .catch(() => {
@@ -35,7 +35,7 @@ class PostWrapper extends React.Component {
             this.setState({ loading: false });
         } else {
             if (browserHistory)
-                browserHistory.replace(`/${dis.get('category')}/@${post}`);
+                browserHistory.replace(`/${dis.get('category')}/@${post}` + browserHistory.getCurrentLocation().search);
         }
     }
 

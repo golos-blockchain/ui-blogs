@@ -297,6 +297,9 @@ class PostFull extends React.Component {
                 // Proxy old images from io fork
                 iurl += 'https://imgp.golos.io/0x0/' + pp2.image_link
             }
+            if (!pp2.image_link) {
+                iurl = '/images/pattern_post.png';
+            }
             const prevPost = (<PostSummaryThumb
               visitedClassName=""
               mobile={false}
