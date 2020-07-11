@@ -204,9 +204,11 @@ class Post extends React.Component {
                 */}
 
                 <div className="row hfeed">
-                  <iframe data-aa='1150095' src='//acceptable.a-ads.com/1150095' scrolling='no'
-                  style={{border: '0px', padding: '0', maxWidth: '50rem', margin: '0 auto', width: '100%', overflow: 'hidden'}} allowtransparency='true'
-                  sandbox="allow-same-origin allow-scripts allow-popups"></iframe>
+
+                    <iframe data-aa='1150095' src='//acceptable.a-ads.com/1150095' scrolling='no'
+                    style={{width:'100%', maxWidth:'50rem', margin:'0 auto', border:'0px', padding:'0', overflow:'hidden'}}
+                    allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups'></iframe>
+
                 </div>
           
                 <div id="comments" className="Post_comments row hfeed">

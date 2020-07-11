@@ -67,14 +67,14 @@ ul.PostsList__summaries {
     bottom: 0px;
     width: 100%;
     min-height: 50px;
-    padding-top: 30px;
+    padding-top: 20px;
     padding-left: 10px;
     padding-right: 10px;
     padding-bottom: 5px;
     position: absolute;
     color: rgba(255,255,255,0.9);
     z-index: 1;
-    background: linear-gradient(180deg,transparent 0,rgba(0,0,0,0) 16%,rgba(0,0,0,.7));
+    background: linear-gradient(180deg,transparent 0,rgba(0,0,0,.4) 16%,rgba(0,0,0,.7));
   }
 }
 
@@ -317,4 +317,17 @@ ul.PostsList__summaries {
         border-right: none;
     }
   }
+.PostFull__prevPosts {
+  .PostSummary__image_container {
+    width: 97%;
+    opacity: 1;
+  }
+  .PostSummary__image {
+    width: 97%;
+  }
+  .PostSummary__text {
+    width: 97%;
+    position: relative;
+  }
+}  
 }
