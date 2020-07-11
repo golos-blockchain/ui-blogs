@@ -288,17 +288,17 @@ class PostFull extends React.Component {
         const prox = $STM_Config.img_proxy_prefix
 
         let prevPosts = [];
-        let npp = 0;
         for (let pp of this.props.prevPosts) {
             let pp2 = extractContent(objAccessor, pp);
-            if (pp2.author == author && pp2.permlink == permlink) continue;
-            if (npp == 3) continue;
             let iurl = (prox ? prox + '800x600' + '/' : '');
             if (Date.parse(pp2.created) > CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME) {
                 iurl += pp2.image_link
             } else {
                 // Proxy old images from io fork
                 iurl += 'https://imgp.golos.io/0x0/' + pp2.image_link
+            }
+            if (!pp2.image_link) {
+                iurl = '/images/pattern_post.png';
             }
             const prevPost = (<PostSummaryThumb
               visitedClassName=""
@@ -309,7 +309,6 @@ class PostFull extends React.Component {
               title={pp2.title}
               body={pp2.body} />)
             prevPosts.push(prevPost)
-            ++npp;
         }
 
         return (
