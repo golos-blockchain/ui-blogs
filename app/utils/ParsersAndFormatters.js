@@ -123,6 +123,7 @@ export function authorURL(name) {
 export function getAuthorPermlink(url) {
   var res = ['', ''];
   url = url.trim();
+  url = url.split('?')[0];
   const authIdx = url.lastIndexOf('/@');
   if (authIdx === -1) return res;
   url = url.substr(authIdx + 2);
