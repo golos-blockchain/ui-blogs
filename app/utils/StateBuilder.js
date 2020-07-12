@@ -81,6 +81,8 @@ export default async function getState(api, url, options, offchain = {}) {
                             case 'escrow_dispute':
                             case 'escrow_release':
                             case 'donate':
+                            case 'invite':
+                            case 'invite_claim':
                                 state.accounts[uname].transfer_history.push(operation)
                             break
 
@@ -88,6 +90,10 @@ export default async function getState(api, url, options, offchain = {}) {
                                 state.accounts[uname].other_history.push(operation)
                         }
                     })
+                break
+
+                case 'invites':
+                    state.cprops = await api.getChainProperties();
                 break
 
                 case 'recent-replies':

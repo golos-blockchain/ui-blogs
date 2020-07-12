@@ -116,6 +116,8 @@ export function* fetchState(location_change_action) {
                                 case 'escrow_dispute':
                                 case 'escrow_release':
                                 case 'donate':
+                                case 'invite':
+                                case 'invite_claim':
                                     state.accounts[uname].transfer_history.push(operation)
                                 break
 
@@ -123,6 +125,10 @@ export function* fetchState(location_change_action) {
                                     state.accounts[uname].other_history.push(operation)
                             }
                         })
+                    break
+
+                    case 'invites':
+                        state.cprops = yield call([api, api.getChainPropertiesAsync])
                     break
 
                     case 'recent-replies':

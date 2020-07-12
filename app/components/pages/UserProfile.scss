@@ -180,6 +180,21 @@
     }
 }
 
+.CreateInvite__copy-button {
+  cursor: pointer;
+
+  .Icon {
+    width: 2.12rem;
+    height: 2.12rem;
+
+    & > svg {
+      width: 2.12rem;
+      height: 2.12rem;
+      vertical-align: top;
+    }
+  }
+}
+
 @media screen and (max-width: 39.9375em) {
 
     .UserProfile__menu-item {

@@ -21,6 +21,7 @@ const icons = new Map([
     ['vk', require('app/assets/icons/vk.svg')],
     ['link', require('app/assets/icons/link.svg')],
     ['clock', require('app/assets/icons/clock.svg')],
+    ['copy', require('app/assets/icons/copy.svg')],
     ['extlink', require('app/assets/icons/extlink.svg')],
     ['golos', require('app/assets/icons/golos.svg')],
     ['dropdown-arrow', require('app/assets/icons/dropdown-arrow.svg')],
