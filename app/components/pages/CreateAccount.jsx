@@ -9,6 +9,7 @@ import LoadingIndicator from '@elements/LoadingIndicator';
 import Icon from 'app/components/elements/Icon';
 import user from 'app/redux/User';
 import { validate_account_name } from 'app/utils/ChainValidation';
+import { formatAsset } from 'app/utils/ParsersAndFormatters';
 import runTests from 'app/utils/BrowserTests';
 import g from 'app/redux/GlobalReducer';
 import GeneratedPasswordInput from '@elements/GeneratedPasswordInput';
@@ -35,12 +36,16 @@ class CreateAccount extends React.Component {
         country: 7,
         name: '',
         email: '',
+        invite_code: '',
+        invite_enabled: false,
         code: '',
         password: '',
         passwordValid: '',
         nameError: '',
         emailHint: '',
         emailError: '',
+        inviteHint: '',
+        inviteError: '',
         codeError: '',
         codeHint: '',
         serverError: '',
@@ -83,11 +88,15 @@ class CreateAccount extends React.Component {
             phone,
             country,
             email,
+            invite_code,
+            invite_enabled,
             name,
             passwordValid,
             nameError,
             emailHint,
             emailError,
+            inviteHint,
+            inviteError,
             serverError,
             loading,
             cryptographyFailure,
@@ -171,6 +180,7 @@ class CreateAccount extends React.Component {
             !okStatus;
 
         const disableGetCode = okStatus || !emailHint;
+        const disableContinueInvite = !inviteHint;
 
         return (
             <div>
@@ -189,9 +199,37 @@ class CreateAccount extends React.Component {
                             <div className="CreateAccount__hello">
                                 {tt('createaccount_jsx.dont_close')}
                             </div>
-                            {showMailForm && (
+                            {(showMailForm || invite_enabled) && (
                                 <div>
-                                    <div>
+                                    {showMailForm && <div>
+                                        <a onClick={this.onInviteEnabledChange}>{tt(invite_enabled ? 'createaccount_jsx.i_have_not_invite_code' : 'createaccount_jsx.i_have_invite_code')}
+                                        </a>
+                                    </div>}
+                                    {invite_enabled && <div>
+                                        <label>
+                                            <span style={{ color: 'red' }}>
+                                                *
+                                            </span>{' '}
+                                            {tt('createaccount_jsx.enter_invite_code')}
+                                            <input
+                                                type="text"
+                                                name="invite_code"
+                                                autoComplete="off"
+                                                disabled={fetchState.checking}
+                                                onChange={this.onInviteCodeChange}
+                                                value={invite_code}
+                                            />
+                                            <div
+                                                className={cn({
+                                                    error: inviteError,
+                                                    success: inviteHint,
+                                                })}
+                                            >
+                                                <p>{inviteError || inviteHint}</p>
+                                            </div>
+                                        </label>
+                                    </div>}
+                                    {!invite_enabled && <div>
                                         <label>
                                             <span style={{ color: 'red' }}>
                                                 *
@@ -214,11 +252,11 @@ class CreateAccount extends React.Component {
                                                 <p>{emailError || emailHint}</p>
                                             </div>
                                         </label>
-                                    </div>
+                                    </div>}
                                 </div>
                             )}
                             {phoneStep}
-                            {showMailForm && (
+                            {showMailForm && !invite_enabled && (
                                 <div>
                                     <p>
                                         <a
@@ -228,6 +266,24 @@ class CreateAccount extends React.Component {
                                             onClick={
                                                 !disableGetCode
                                                     ? this.onClickSendCode
+                                                    : null
+                                            }
+                                        >
+                                            {tt('g.continue')}
+                                        </a>
+                                    </p>
+                                </div>
+                            )}
+                            {showMailForm && invite_enabled && (
+                                <div>
+                                    <p>
+                                        <a
+                                            className={cn('button', {
+                                                disabled: disableContinueInvite,
+                                            })}
+                                            onClick={
+                                                !disableContinueInvite
+                                                    ? this.onClickContinueInvite
                                                     : null
                                             }
                                         >
@@ -480,7 +536,7 @@ class CreateAccount extends React.Component {
     _onSubmit = async e => {
         e.preventDefault();
         this.setState({ serverError: '', loading: true });
-        const { email, name, password, passwordValid } = this.state;
+        const { email, invite_code, name, password, passwordValid } = this.state;
         if (!name || !password || !passwordValid) return;
 
         let publicKeys;
@@ -499,7 +555,8 @@ class CreateAccount extends React.Component {
             // createAccount
             const res = await callApi('/api/v1/accounts', {
                 csrf: $STM_csrf,
-                email,
+                email: email != '' ? email : undefined,
+                invite_code: email == '' ? invite_code : undefined,
                 name,
                 owner_key: publicKeys[0],
                 active_key: publicKeys[1],
@@ -569,6 +626,37 @@ class CreateAccount extends React.Component {
         }
 
         this.setState({ emailError, emailHint });
+    };
+
+    validateInviteCode = async (value, isFinal) => {
+        let inviteError = null;
+        let inviteHint = null;
+
+        if (!value) {
+            inviteError = tt('createaccount_jsx.invite_secret_cannot_be_empty');
+        } else {
+            let pk;
+            try {
+                pk = PrivateKey.fromWif(value);
+            } catch (e) {
+                inviteError = tt('invites_jsx.claim_wrong_secret');
+            }
+            if (pk) try {
+                const res = await api.getInvite(pk.toPublicKey().toString());
+
+                if (!res) {
+                    inviteError = tt(
+                        'invites_jsx.claim_wrong_secret_fatal'
+                    );
+                } else {
+                    inviteHint = tt('createaccount_jsx.invite_new_account_will_receive', {amount: formatAsset(res.balance, true, false, '')});
+                }
+            } catch (err) {
+                inviteError = tt('invites_jsx.claim_wrong_secret_cannot_fetch');
+            }
+        }
+
+        this.setState({ inviteError, inviteHint });
     };
 
     updateFetchingState(res) {
@@ -686,6 +774,37 @@ class CreateAccount extends React.Component {
         }
     };
 
+    onClickContinueInvite = async () => {
+        let fetchState = {
+            checking: true,
+            success: true,
+            status: 'done',
+            message: '',
+            showCheckInfo: false,
+        };
+
+        const res = await callApi('/api/v1/use_invite', {
+            csrf: $STM_csrf,
+            invite_key: PrivateKey.fromWif(this.state.invite_code).toPublicKey().toString()
+        });
+
+        if (res.status === 200) {
+            let data = await res.json();
+            fetchState.success = true;
+        } else {
+            let message = res.status + ' ' + await res.text();
+
+            if (res.status === 429) {
+                message += '. Please wait a moment and try again.';
+            }
+
+            fetchState.status = 'error';
+            fetchState.success = false;
+            fetchState.message = message;
+        }
+        this.setState({ fetchState, email: '' });
+    };
+
     onCheckCode = async () => {
         try {
             const res = await callApi('/api/v1/verify_code', {
@@ -747,6 +866,22 @@ class CreateAccount extends React.Component {
 
         this.setState({
             email
+        });
+    };
+
+    onInviteEnabledChange = e => {
+        this.setState({
+            invite_enabled: !this.state.invite_enabled
+        });
+    };
+
+    onInviteCodeChange = e => {
+        // продолжаем let 
+        let invite_code = e.target.value.trim()
+        this.validateInviteCode(invite_code)
+
+        this.setState({
+            invite_code
         });
     };
 
