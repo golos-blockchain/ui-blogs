@@ -72,6 +72,7 @@ export const PUBLIC_API = {
   votes:     'getDiscussionsByVotesAsync',
   cashout:   'getDiscussionsByCashoutAsync',
   payout:     'getDiscussionsByPayoutAsync',
+  author:     'getDiscussionsByBlogAsync',
 }
 export const SEO_TITLE = 'GOLOS.id Блоги'
 
