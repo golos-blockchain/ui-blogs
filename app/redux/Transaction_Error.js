@@ -32,6 +32,11 @@ export default function transactionErrorReducer(
                     errorKey = 'Insufficient balance.';
                 }
                 break;
+            case 'invite_claim':
+                if (errorStr.includes('Missing invite')) {
+                    errorKey = errorStr = tt('invites_jsx.claim_wrong_secret_fatal');
+                }
+                break;
             case 'withdraw_vesting':
                 if (
                     errorStr.includes(
