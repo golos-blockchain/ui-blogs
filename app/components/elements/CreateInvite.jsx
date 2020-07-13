@@ -210,7 +210,7 @@ class CreateInvite extends Component {
 
                 <div className="row">
                     <div className="column small-10">
-                        {tt('g.amount')} GOLOS ({tt('g.at_least')} <b>{formatAsset(min_invite_balance, true, false, '')}</b>)
+                        {tt('g.amount')} ({tt('g.at_least')} <b>{formatAsset(min_invite_balance, true, false, '')}</b>)
                         <div className="input-group" style={{marginBottom: 5}}>
                             <input type="text" placeholder={tt('g.amount')} {...amount.props} ref="amount" autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck="false" onChange={(e) => this.onChangeAmount(e)}/>
                         </div>

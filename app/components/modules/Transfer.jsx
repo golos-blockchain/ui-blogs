@@ -82,6 +82,7 @@ class TransferForm extends Component {
         if(!toVesting && transferType !== 'Transfer to Savings' && transferType !== 'Savings Withdraw' && transferType !== 'Claim')
             fields.push('memo')
 
+        let permlink = (this.flag && typeof this.flag.permlink === `string`) ? this.flag.permlink : null;
         reactForm({
             name: 'transfer',
             instance: this, fields,
@@ -89,8 +90,8 @@ class TransferForm extends Component {
             validation: values => ({
                 to:
                     ! values.to ? tt('g.required') :
-                    (VerifiedExchangeList.includes(values.to) && (isTIP || isClaim || values.asset !== 'GOLOS')) ? tt('transfer_jsx.verified_exchange_liquid_only') :
-                    (VerifiedExchangeList.includes(values.to) && values.memo === '') ? tt('transfer_jsx.verified_exchange_no_memo') :
+                    (VerifiedExchangeList.includes(values.to) && !permlink && (isTIP || isClaim || values.asset !== 'GOLOS')) ? tt('transfer_jsx.verified_exchange_liquid_only') :
+                    (VerifiedExchangeList.includes(values.to) && !permlink && values.memo === '') ? tt('transfer_jsx.verified_exchange_no_memo') :
                     validate_account_name(values.to),
                 amount:
                     ! parseFloat(values.amount) || /^0$/.test(values.amount) ? tt('g.required') :
