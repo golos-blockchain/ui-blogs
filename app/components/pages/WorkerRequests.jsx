@@ -5,6 +5,7 @@ import CloseButton from 'react-foundation-components/lib/global/close-button';
 import Reveal from 'react-foundation-components/lib/global/reveal';
 import { connect } from 'react-redux';
 
+import Icon from 'app/components/elements/Icon';
 import Button from 'app/components/elements/Button';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Tooltip from 'app/components/elements/Tooltip';
@@ -26,6 +27,7 @@ class WorkerRequests extends React.Component {
       select_authors: [],
       select_states: ['created'],
       selected_state: 'Открытые заявки',
+      show_load_more: false,
       showCreateRequest: false,
       showViewRequest: false,
       current_author: '',
@@ -48,7 +50,7 @@ class WorkerRequests extends React.Component {
 
   loadMore = () => {
     const { start_author, start_permlink, select_authors, select_states } = this.state;
-    var query = {
+    let query = {
       limit: 10,
       start_author,
       start_permlink,
@@ -61,13 +63,36 @@ class WorkerRequests extends React.Component {
           alert(ERR(err, 'search_by_author'));
           return;
         }
-        if (!results.length) return;
+        if (!results.length) {
+          this.setState({
+            show_load_more: false
+          });
+          return;
+        }
         if (start_author) results = results.slice(1);
         const last = results.slice(-1)[0];
         this.setState({
           results: this.state.results.concat(results),
           start_author: last.post.author,
           start_permlink: last.post.permlink
+        }, () => {
+            query = {
+              limit: 10,
+              start_author: last.post.author,
+              start_permlink: last.post.permlink,
+              select_authors,
+              select_states
+            };
+            golos.api.getWorkerRequests(query, 'by_created', true,
+              (err2, results2) => {
+              if (err2) {
+                alert(ERR(err2, 'search_by_author'));
+                return;
+              }
+              this.setState({
+                show_load_more: (results2.length > 1)
+              });
+            });
         });
       });
   }
@@ -95,7 +120,7 @@ class WorkerRequests extends React.Component {
     let select_states = [];
     if (link === 'closed')
       select_states = ['payment_complete', 'closed_by_author', 'closed_by_expiration', 'closed_by_voters'];
-    else if (link !== 'all')
+    else
       select_states = [link];
 
     this.setState({
@@ -152,46 +177,52 @@ class WorkerRequests extends React.Component {
   }
 
   render() {
-    tt.setLocale('ru');
     const workerRequests = this.state.results.map((req) => {
         let rshares_amount_pct = parseInt(req.stake_rshares * 100 / req.stake_total);
         rshares_amount_pct = !isNaN(rshares_amount_pct) ? rshares_amount_pct : 0;
         let max_amount = parseFloat(req.required_amount_max.split(" ")[0]);
         let payed = max_amount * rshares_amount_pct / 100;
         let payed_amount = formatDecimal(payed, 0, false, ' ');
-        let wr_state = tt("workers."+req.state);
-        if (wr_state == "Выплачено") {
-            wr_state = (<td>
-                <div>
-                  {wr_state}
-                </div>
-                <div>
-                  <span style={{ fontSize: '80%' }}>
-                    {payed_amount} {req.required_amount_min.split(" ")[1]}
-                  </span>
-                </div>
-            </td>);
-        } else {
-            wr_state = (<td>{wr_state}</td>);
-        }
 
-        let rshares_pct = parseInt(req.stake_total * 100 / this.state.total_vesting_shares);
+        let rshares_pct = req.stake_total * 100 / this.state.total_vesting_shares;
         rshares_pct = !isNaN(rshares_pct) ? rshares_pct : 0;
+        rshares_pct = +parseFloat(rshares_pct).toFixed(2);
 
         let vote_end = "Завершено";
         if (!req.vote_end_time.startsWith("19")) {
             vote_end = (<TimeAgoWrapper date={req.vote_end_time} />);
         }
 
-        return (
+        return (<div>
+          <a href="#" data-author={req.post.author} data-permlink={req.post.permlink} onClick={this.viewRequest}><h4>{req.post.title}</h4></a>
+          Автор предложения: <Author author={req.post.author} follow={false} />
+          <table>
+          <thead>
+            <tr>
+              <th>
+                Сумма
+              </th>
+              <th>
+                Окончание голосования
+              </th>
+              <th>
+                <Tooltip t="Процент проголосовавших от суммы всей Силы Голоса системы">
+                  Кворум
+                </Tooltip>
+                <div>
+                  <span style={{ fontSize: '80%' }}>
+                    (>{this.props.approve_min_percent / 100}% от общей СГ)
+                  </span>
+                </div>
+              </th>
+              <th>
+                <span className="Workers__green"><Icon name="new/upvote" /> За: {req.upvotes} голосов</span>
+                <span className="Workers__red"> Против: {req.downvotes} голосов<Icon name="new/downvote" /></span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
           <tr>
-              <td>
-                <a href="#" data-author={req.post.author} data-permlink={req.post.permlink} onClick={this.viewRequest}>{req.post.title}</a>
-              </td>
-              <td>
-                <Author author={req.post.author} follow={false} />
-              </td>
-              {wr_state}
               <td>
                 <div>
                   <b>{formatAsset(req.required_amount_max)}</b>
@@ -203,18 +234,21 @@ class WorkerRequests extends React.Component {
                 </div>
               </td>
               <td>
-                {rshares_pct}%
-              </td>
-              <td>
                 {vote_end}
               </td>
+              <td><span className={(rshares_pct >= 15 ? 'Workers__green' : 'Workers__red')}>
+                {rshares_pct}%
+              </span>
+              </td>
           </tr>
+          </tbody>
+          </table>
+          </div>
         );
     });
-    const { current_author, current_permlink, selected_state, showCreateRequest, showViewRequest} = this.state;
+    const { current_author, current_permlink, selected_state, show_load_more, showCreateRequest, showViewRequest} = this.state;
     const auth = { account: this.props.account, posting_key: this.props.posting_key };
     let list_states = [
-      {link: 'all', value: 'Все', onClick: this.onStateSelected},
       {link: 'created', value: 'Открытые заявки', onClick: this.onStateSelected},
       {link: 'payment', value: 'Выплачиваемые', onClick: this.onStateSelected},
       {link: 'closed', value: 'Закрытые', onClick: this.onStateSelected}
@@ -228,37 +262,9 @@ class WorkerRequests extends React.Component {
           <input className="Input__Inline" type="text" placeholder="Поиск по автору" onChange={this.handleSearchAuthor}/>
         </form>
         <DropdownMenu className="StatesMenu" items={list_states} selected={selected_state} el="span" />
-        <table>
-          <thead>
-            <tr>
-              <th width="300">
-                Заявка
-              </th>
-              <th>
-                Автор
-              </th>
-              <th>
-                Статус
-              </th>
-              <th>
-                Сумма
-              </th>
-              <th>
-                <Tooltip t="Процент проголосовавших от суммы всей Силы Голоса системы">
-                  % от общей СГ
-                </Tooltip>
-              </th>
-              <th>
-                Окончание голосования
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {workerRequests}
-          </tbody>
-        </table>
+        {workerRequests}
         <div className="App-center">
-          <Button onClick={this.loadMore} round="true" type="secondary">{tt('g.load_more')}</Button>
+          {show_load_more && <Button onClick={this.loadMore} round="true" type="secondary">{tt('g.load_more')}</Button>}
         </div>
         <br/>
         <Reveal show={showCreateRequest}>
@@ -284,10 +290,13 @@ export default connect(
           account = currentUser.get('username');
           posting_key = currentUser.get('private_keys').get('posting_private');
         }
+        const cprops = state.global.get('cprops');
+        const approve_min_percent = cprops ? cprops.get('worker_request_approve_min_percent') : 100
         return {
             gprops,
             account,
-            posting_key
+            posting_key,
+            approve_min_percent
         };
     },
     dispatch => {
