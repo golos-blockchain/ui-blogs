@@ -7,6 +7,7 @@ import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
 import Icon from 'app/components/elements/Icon'
 import UserKeys from 'app/components/elements/UserKeys';
+import Invites from 'app/components/elements/Invites';
 import PasswordReset from 'app/components/elements/PasswordReset';
 import UserWallet from 'app/components/modules/UserWallet';
 import WitnessProps from 'app/components/modules/WitnessProps';
@@ -331,7 +332,7 @@ export default class UserProfile extends React.Component {
                                 loadMore={this.loadMore}
                                 showSpam={false}
                             />
-                            {isMyAccount && <div><MarkNotificationRead fields="comment_reply,post_reply,mention" account={account.name} /></div>}
+                            {isMyAccount && <div><MarkNotificationRead fields="comment_reply,post_reply" account={account.name} /></div>}
                         </div>
                     );
                 }
@@ -347,6 +348,14 @@ export default class UserProfile extends React.Component {
                 <br />
                 <UserKeys account={accountImm} />
                 { isMyAccount && <div><MarkNotificationRead fields="send,receive" account={account.name} /></div>}
+                </div>;
+        } else if( section === 'invites' && isMyAccount ) {
+            walletClass = 'active'
+            tab_content = <div>
+                 <WalletSubMenu account_name={account.name} />
+
+                <br />
+                <Invites account={accountImm} />
                 </div>;
         } else if( section === 'password' ) {
             walletClass = 'active'
@@ -381,7 +390,7 @@ export default class UserProfile extends React.Component {
         if (!(section === 'transfers' ||
               section === 'permissions' ||
               section === 'password' ||
-            //   section === 'invites' ||
+              section === 'invites' ||
               section === 'assets'||
               section === 'create-asset')) {
             tab_content = <div className="row">
@@ -447,7 +456,7 @@ export default class UserProfile extends React.Component {
                     <div className="UserProfile__filler" />
                     <div>
                         <a href={`/@${accountname}/transfers`} className={`${walletClass} UserProfile__menu-item`} onClick={e => { e.preventDefault(); browserHistory.push(e.target.pathname); return false; }}>
-                            {tt('g.wallet')} {isMyAccount && <NotifiCounter fields="send,receive,account_update" />}
+                            {tt('g.wallet')} {isMyAccount && <NotifiCounter fields="send,receive" />}
                         </a>
                         {isMyAccount ?
                             <Link className="UserProfile__menu-item" to={`/@${accountname}/settings`} activeClassName="active">{tt('g.settings')}</Link>
@@ -496,10 +505,7 @@ export default class UserProfile extends React.Component {
                         <div>
                             {about && <p className="UserProfile__bio">{about}</p>}
                             <div className="UserProfile__stats">
-                                <span>
-                                    <Link to={`/@${accountname}/followers`}>{tt('user_profile.follower_count', {count: followerCount})}</Link>
-                                    {isMyAccount && <NotifiCounter fields="follow" />}
-                                </span>
+                                <span><Link to={`/@${accountname}/followers`}>{tt('user_profile.follower_count', {count: followerCount})}</Link></span>
                                 <span><Link to={`/@${accountname}`}>{tt('user_profile.post_count', {count: account.post_count || 0})}</Link></span>
                                 <span><Link to={`/@${accountname}/followed`}>{tt('user_profile.followed_count', {count: followingCount})}</Link></span>
                             </div>

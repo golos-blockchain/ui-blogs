@@ -81,6 +81,8 @@ export default async function getState(api, url, options, offchain = {}) {
                             case 'escrow_dispute':
                             case 'escrow_release':
                             case 'donate':
+                            case 'invite':
+                            case 'invite_claim':
                                 state.accounts[uname].transfer_history.push(operation)
                             break
 
@@ -88,6 +90,10 @@ export default async function getState(api, url, options, offchain = {}) {
                                 state.accounts[uname].other_history.push(operation)
                         }
                     })
+                break
+
+                case 'invites':
+                    state.cprops = await api.getChainProperties();
                 break
 
                 case 'recent-replies':
@@ -190,16 +196,26 @@ export default async function getState(api, url, options, offchain = {}) {
         let args = { truncate_body: 1024, select_categories: [category] };
         let prev_posts = await api.gedDiscussionsBy('created', {limit: 4, start_author: account, start_permlink: permlink, select_authors: [account], ...args});
         prev_posts = prev_posts.slice(1);
-        let pp_ids = [];
-        for (let pp of prev_posts) {
-            pp_ids.push(pp.author + pp.permlink);
+        let p_ids = [];
+        for (let p of prev_posts) {
+            p_ids.push(p.author + p.permlink);
         }
         if (prev_posts.length < 3) {
             let trend_posts = await api.gedDiscussionsBy('trending', {limit: 4, ...args});
-            for (let tp of trend_posts) {
-                if (tp.author === account && tp.permlink === permlink) continue;
-                if (pp_ids.includes(tp.author + tp.permlink)) continue;
-                prev_posts.push(tp);
+            for (let p of trend_posts) {
+                if (p.author === account && p.permlink === permlink) continue;
+                if (p_ids.includes(p.author + p.permlink)) continue;
+                prev_posts.push(p);
+                p_ids.push(p.author + p.permlink);
+            }
+        }
+        if (prev_posts.length < 3) {
+            delete args.select_categories;
+            let author_posts = await api.gedDiscussionsBy('author', {limit: 4, select_authors: [account], ...args});
+            for (let p of author_posts) {
+                if (p.author === account && p.permlink === permlink) continue;
+                if (p_ids.includes(p.author + p.permlink)) continue;
+                prev_posts.push(p);
             }
         }
         state.prev_posts = prev_posts.slice(0, 3);
