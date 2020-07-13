@@ -13,19 +13,14 @@ export default ({account_name}) => {
                     </Link>
                 </li>
                 <li>
-                    <Link to={`/@${account_name}/permissions`} activeClassName="active">
-                        {tt('g.permissions')} <NotifiCounter fields="account_update" />
-                    </Link>
+                    <Link to={`/@${account_name}/invites`} activeClassName="active">{tt('g.invites')}</Link>
                 </li>
                 <li>
-                    <Link to={`/@${account_name}/invites`} activeClassName="active">{tt('g.invites')}</Link>
+                    <Link to={`/@${account_name}/permissions`} activeClassName="active">{tt('g.permissions')}</Link>
                 </li>
                 <li>
                     <Link to={`/@${account_name}/password`} activeClassName="active">{tt('g.password')}</Link>
                 </li>
-                {/*<li>
-                    <Link to={`/@${account_name}/invites`} activeClassName="active">{tt('g.invites')}</Link>
-                </li>*/}
             </ul>
         </div>
     </div>

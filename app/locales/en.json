@@ -709,7 +709,7 @@
   },
   "invites_jsx": {
     "create_invite": "Create new invite check",
-    "create_invite_warning": "Bla, bla, bla",
+    "create_invite_info": "Cheques (invite codes) are a universal tool for transferring a fixed number of GOLOS tokens to other people outside the blockchain. There are two ways to redeem the code: transfer its balance to your account or register a new account using it.",
     "generate_new": "Generate new",
     "public_key": "Public key",
     "private_key": "Private key",

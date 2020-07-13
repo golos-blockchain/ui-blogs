@@ -154,6 +154,13 @@ class CreateInvite extends Component {
             <form onSubmit={this.handleSubmitForm}>
                 <div className="row">
                     <div className="column small-10">
+                        {tt('invites_jsx.create_invite_info')}
+                    <hr />
+                    </div>
+                </div>
+
+                <div className="row">
+                    <div className="column small-10">
                         <h4>{tt('invites_jsx.create_invite')}</h4>
                     </div>
                 </div>
@@ -228,13 +235,6 @@ class CreateInvite extends Component {
                                 ? <small className="success uppercase">{successMessage}</small>
                                 : null
                         }
-                    </div>
-                </div>
-                <br/>
-
-                <div className="row">
-                    <div className="column small-10">
-                        {tt('invites_jsx.create_invite_warning')}
                     </div>
                 </div>
             </form>
