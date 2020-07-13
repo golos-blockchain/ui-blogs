@@ -129,15 +129,29 @@ export default function useGeneralApi(app) {
                 throw new Error('You are on the waiting list. We will get back to you at the earliest possible opportunity.');
             }
 
-            const mid = yield models.Identity.findOne(
-                {attributes: ['id'], where: {user_id, provider: 'email', verified: true}, order: 'id DESC'}
-            );
-            if (!mid) {
-                console.log(`api /accounts: not confirmed sms for user ${this.session.uid} #${user_id}`);
-                throw new Error('Phone number is not confirmed');
-            }
-            else {
-              console.log(`api /accounts: is confirmed sms for user ${this.session.uid} #${user_id}`)
+            let mid;
+            if (account.invite_code) {
+                mid = yield models.Identity.findOne(
+                    {attributes: ['id'], where: {user_id, provider: (account.email ? 'email' : 'invite_code'), verified: false}, order: 'id DESC'}
+                );
+                if (!mid) {
+                    console.log(`api /accounts: try to skip use_invite step by user ${this.session.uid} #${user_id}`);
+                    throw new Error('Not passed entering use_invite step');
+                }
+                else {
+                  console.log(`api /accounts: found use_invite step for user ${this.session.uid} #${user_id}`)
+                }
+            } else {
+                mid = yield models.Identity.findOne(
+                    {attributes: ['id'], where: {user_id, provider: (account.email ? 'email' : 'invite_code'), verified: true}, order: 'id DESC'}
+                );
+                if (!mid) {
+                    console.log(`api /accounts: not confirmed sms for user ${this.session.uid} #${user_id}`);
+                    throw new Error('Phone number is not confirmed');
+                }
+                else {
+                  console.log(`api /accounts: is confirmed sms for user ${this.session.uid} #${user_id}`)
+                }
             }
 
             // store email
@@ -145,13 +159,15 @@ export default function useGeneralApi(app) {
             const parsed_email = email.match(/^.+\@.*?([\w\d-]+\.\w+)$/);
             if (!parsed_email || parsed_email.length < 2) email = null;
 
-            yield models.Identity.create({
-                provider: "email",
-                user_id,
-                uid: this.session.uid,
-                email,
-                verified: false
-            });
+            if (email) {
+                yield models.Identity.create({
+                    provider: 'email',
+                    user_id,
+                    uid: this.session.uid,
+                    email,
+                    verified: false
+                });
+            }
 
             const [fee_value, fee_currency] = config.get('registrar.fee').split(' ');
             const delegation = config.get('registrar.delegation')
@@ -179,7 +195,7 @@ export default function useGeneralApi(app) {
             const dgp = yield api.getDynamicGlobalPropertiesAsync();
 
             let extensions = [];
-            if (account.referrer)
+            if (!account.invite_code && account.referrer)
             {
                 extensions = 
                 [[
@@ -202,8 +218,13 @@ export default function useGeneralApi(app) {
                 posting: account.posting_key,
                 memo: account.memo_key,
                 delegation,
-                extensions
+                extensions,
+                invite_secret: account.invite_code ? account.invite_code : ''
             });
+
+            if (account.invite_code) {
+                yield mid.update({ verified: true });
+            }
 
             console.log('-- create_account_with_keys created -->', this.session.uid, account.name, user_id, account.owner_key);
 
@@ -444,15 +465,20 @@ export default function useGeneralApi(app) {
  */
 export function* createAccount({
     signingKey, fee, creator, new_account_name, json_metadata = '',
-    owner, active, posting, memo, delegation, extensions
+    owner, active, posting, memo, delegation, extensions, invite_secret = ''
 }) {
-    const operations = [['account_create_with_delegation', {
-        fee, delegation, creator, new_account_name, json_metadata,
+    let operations = [[(invite_secret == '' ? 'account_create_with_delegation' : 'account_create_with_invite'), {
+        fee, creator, new_account_name, json_metadata,
         owner: {weight_threshold: 1, account_auths: [], key_auths: [[owner, 1]]},
         active: {weight_threshold: 1, account_auths: [], key_auths: [[active, 1]]},
         posting: {weight_threshold: 1, account_auths: [], key_auths: [[posting, 1]]},
         memo_key: memo, extensions: extensions
     }]]
+    if (invite_secret != '') {
+        operations[0][1].invite_secret = invite_secret;
+    } else {
+        operations[0][1].delegation = delegation;
+    }
     yield broadcast.sendAsync({
         extensions: [],
         operations
