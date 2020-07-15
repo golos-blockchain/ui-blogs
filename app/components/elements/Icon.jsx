@@ -98,6 +98,8 @@ const icons = new Map([
     ['new/messenger', require('app/assets/icons/new/messenger.svg')],
     ['new/more', require('app/assets/icons/new/more.svg')],
     ['new/like', require('app/assets/icons/new/like.svg')],
+    ['new/upvote', require('app/assets/icons/new/upvote.svg')],
+    ['new/downvote', require('app/assets/icons/new/downvote.svg')],
     ['new/add', require('app/assets/icons/new/add.svg')],
     ['new/search', require('app/assets/icons/new/search.svg')],
     ['new/wikipedia', require('app/assets/icons/new/wikipedia.svg')],
