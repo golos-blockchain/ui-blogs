@@ -162,6 +162,13 @@ class CreateInvite extends Component {
         return (<div>
             <form onSubmit={this.handleSubmitForm}>
                 <div className="row">
+                    <div className="column small-10 secondary">
+                        {tt('invites_jsx.create_invite_info')}
+                    <hr />
+                    </div>
+                </div>
+
+                <div className="row">
                     <div className="column small-10">
                         <h4>{tt('invites_jsx.create_invite')}</h4>
                     </div>
@@ -218,7 +225,7 @@ class CreateInvite extends Component {
 
                 <div className="row">
                     <div className="column small-10">
-                        {tt('g.amount')} GOLOS ({tt('g.at_least')} <b>{formatAsset(min_invite_balance, true, false, '')}</b>)
+                        {tt('g.amount')} ({tt('g.at_least')} <b>{formatAsset(min_invite_balance, true, false, '')}</b>)
                         <div className="input-group" style={{marginBottom: 5}}>
                             <input type="text" placeholder={tt('g.amount')} {...amount.props} ref="amount" autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck="false" onChange={(e) => this.onChangeAmount(e)}/>
                         </div>
@@ -243,13 +250,6 @@ class CreateInvite extends Component {
                                 ? <small className="success uppercase">{successMessage}</small>
                                 : null
                         }
-                    </div>
-                </div>
-                <br/>
-
-                <div className="row">
-                    <div className="column small-10">
-                        {tt('invites_jsx.create_invite_warning')}
                     </div>
                 </div>
             </form>

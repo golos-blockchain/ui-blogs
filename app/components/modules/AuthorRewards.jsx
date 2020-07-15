@@ -116,8 +116,6 @@ class AuthorRewards extends React.Component {
                     {numberWithCommas(vestsToSp(this.props.state, rewardsWeekVests + " " + VEST_TICKER)) + " " + VESTING_TOKENS}
                     <br />
                     {rewardsWeekSteem.toFixed(3) + " " + LIQUID_TICKER}
-                    <br />
-                    {rewardsWeekSBD.toFixed(3) + " " + DEBT_TOKEN_SHORT}
                 </div>
             </div>
 

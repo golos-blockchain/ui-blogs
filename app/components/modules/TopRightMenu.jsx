@@ -163,7 +163,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
             {link: accountLink, icon: 'new/blogging', value: tt('g.blog')},
             {link: repliesLink, icon: 'new/answer', value: tt('g.replies'), addon: <NotifiCounter fields="comment_reply" />},
             {link: donatesLink, icon: 'editor/coin', value: tt('g.rewards'), addon: <NotifiCounter fields="donate" />},
-            {link: walletLink, icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields="follow,send,receive,account_update" />},
+            {link: walletLink, icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields="send,receive" />},
             {link: '#', onClick: toggleNightmode, icon: 'editor/eye', value: tt('g.night_mode')},
             {link: settingsLink, icon: 'new/setting', value: tt('g.settings')},
             loggedIn ?

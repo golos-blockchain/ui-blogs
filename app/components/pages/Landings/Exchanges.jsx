@@ -124,18 +124,6 @@ class Exchanges extends React.Component {
                 </div>             
                 <div className='landing-exchanges-block'>
                     <div className='column large-12 medium-12 small-12'>
-                        <div className='row'>
-                            <div className='column large-12 medium-12 small-12'>
-                                <p className='landing-exchanges-block-text reg landing-exchanges-block-center'>{tt('exchanges_jsx.total_supply')}:</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
-                        <a target="_blank" href="/api/v1/gls-supply" className="golos-btn btn-secondary btn-round">Supply GOLOS</a>&nbsp;&nbsp;<a target="_blank" href="/api/v1/gbg-supply" className="golos-btn btn-secondary btn-round">Supply GBG</a>
-                    </div>
-                </div>
-                <div className='landing-exchanges-block'>
-                    <div className='column large-12 medium-12 small-12'>
                         <h2>{tt('exchanges_jsx.questions')}?</h2>
                         <div className='column large-12 medium-12 small-12'>
                             <hr/>
