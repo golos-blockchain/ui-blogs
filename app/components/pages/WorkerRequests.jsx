@@ -194,18 +194,18 @@ class WorkerRequests extends React.Component {
         }
 
         return (<div>
-          <a href="#" data-author={req.post.author} data-permlink={req.post.permlink} onClick={this.viewRequest}><h4>{req.post.title}</h4></a>
-          Автор предложения: <Author author={req.post.author} follow={false} />
+          <a href="#" data-author={req.post.author} data-permlink={req.post.permlink} onClick={this.viewRequest}><h4 className="Workers__title">{req.post.title}</h4></a>
+          <div className="Workers__author float-right">Автор предложения:&nbsp;&nbsp;<Author author={req.post.author} follow={false} /></div>
           <table>
           <thead>
             <tr>
-              <th>
+              <th style={{ textAlign: 'center' }}>
                 Сумма
               </th>
-              <th>
+              <th style={{ textAlign: 'center' }}>
                 Окончание голосования
               </th>
-              <th>
+              <th style={{ textAlign: 'center' }}>
                 <Tooltip t="Процент проголосовавших от суммы всей Силы Голоса системы">
                   Кворум
                 </Tooltip>
@@ -223,7 +223,7 @@ class WorkerRequests extends React.Component {
           </thead>
           <tbody>
           <tr>
-              <td>
+              <td style={{ textAlign: 'center' }}>
                 <div>
                   <b>{formatAsset(req.required_amount_max)}</b>
                 </div>
@@ -233,12 +233,18 @@ class WorkerRequests extends React.Component {
                   </span>
                 </div>
               </td>
-              <td>
+              <td style={{ textAlign: 'center' }}>
                 {vote_end}
               </td>
-              <td><span className={(rshares_pct >= 15 ? 'Workers__green' : 'Workers__red')}>
+              <td style={{ textAlign: 'center' }}><span className={(rshares_pct >= 15 ? 'Workers__green' : 'Workers__red')}>
                 {rshares_pct}%
               </span>
+              </td>
+              <td>
+                <div>%</div>
+                <div>
+                  <div class="Workers__created float-right">Опубликовано <TimeAgoWrapper date={req.created} /></div>
+                </div>
               </td>
           </tr>
           </tbody>
