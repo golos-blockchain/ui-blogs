@@ -17,6 +17,11 @@
 
   &__category {
     width: 200px;
+    height: 40px;
+    padding: 0 20px 1px 18px;
+    border: none !important;
+    border-radius: 20px;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.18);
   }
 
   &__cat {

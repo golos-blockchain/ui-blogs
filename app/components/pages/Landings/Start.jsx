@@ -26,7 +26,7 @@ class Start extends React.Component {
             <div className='landing-start'>
                 <div className='landing-start-block'>
                     <div className='column large-12 medium-12 small-12'>
-                        <h2>Блог-платформа следующего поколения</h2>
+                        <h2>Децентрализованная блог-платформа</h2>
                     </div>
                     <div className='row'>
                         <div className='column small-12 medium-6 large-6'>
@@ -114,7 +114,7 @@ class Start extends React.Component {
                             <div className='column large-12 medium-12 small-12'>
                                 <p className='landing-start-block-text reg landing-start-block-center'>чтобы
                                     начать делиться своими историями, подписываться на интересных авторов, оценивать
-                                    публикации, знакомиться с пользователями и получать вознаграждения</p>
+                                    публикации и получать вознаграждения</p>
                             </div>
                             <div className='landing-start-panel left column large-5 medium-5 small-12'>
                                 <div className='row'>

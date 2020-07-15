@@ -397,7 +397,8 @@
   },
   "category_selector_jsx": {
     "tag_your_story": "Tag (up to 5 tags), the first tag is your main category.",
-    "select_a_tag": "Select a tag",
+    "select_a_tag": "Select tag",
+    "select_a_category": "Select category",
     "maximum_tag_length_is_24_characters": "Maximum tag length is 24 characters",
     "use_only_lowercase_letters": "Use only lowercase letters",
     "use_one_dash": "Use only one dash",
@@ -714,7 +715,7 @@
   },
   "invites_jsx": {
     "create_invite": "Create new invite check",
-    "create_invite_warning": "After creating invite check you will receive code to claim it. Please save it, because it cannot be restored if lost.",
+    "create_invite_info": "Cheques (invite codes) are a universal tool for transferring a fixed number of GOLOS tokens to other people outside the blockchain. There are two ways to redeem the code: transfer its balance to your account or register a new account using it.",
     "generate_new": "Generate new",
     "public_key": "Public key",
     "private_key": "Private key",
@@ -724,7 +725,6 @@
     "success": "Created! Save it",
     "success_claim": "Claimed!",
     "claim_invite": "Claim invite check balance",
-    "claim_invite_desc": "Enter invite check.",
     "claim_wrong_secret": "Wrong secret",
     "claim_wrong_secret_format": "Wrong key format",
     "claim_wrong_secret_fatal": "No such invite check",

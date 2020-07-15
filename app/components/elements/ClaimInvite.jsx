@@ -71,7 +71,7 @@ class ClaimInvite extends Component {
         const {claimInvite, accountName} = this.props
         const {invite_secret} = this.state
         this.setState({loading: true});
-        claimInvite({invite_secret, accountName, 
+        claimInvite({invite_secret, accountName,
             errorCallback: (e) => {
                 if (e === 'Canceled') {
                     this.setState({
@@ -109,13 +109,6 @@ class ClaimInvite extends Component {
                         <h4>{tt('invites_jsx.claim_invite')}</h4>
                     </div>
                 </div>
-
-                <div className="row">
-                    <div className="column small-10">
-                        {tt('invites_jsx.claim_invite_desc')}
-                    </div>
-                </div>
-                <br/>
 
                 <div className="row">
                     <div className="column small-10">
