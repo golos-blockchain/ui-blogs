@@ -194,7 +194,7 @@ class WorkerRequests extends React.Component {
         }
 
         return (<div>
-          <a href="#" data-author={req.post.author} data-permlink={req.post.permlink} onClick={this.viewRequest}><h4 className="Workers__title">{req.post.title}</h4></a>
+          <a href="#"><h4 className="Workers__title" data-author={req.post.author} data-permlink={req.post.permlink} onClick={this.viewRequest}>{req.post.title}</h4></a>
           <div className="Workers__author float-right">Автор предложения:&nbsp;&nbsp;<Author author={req.post.author} follow={false} /></div>
           <table>
           <thead>
