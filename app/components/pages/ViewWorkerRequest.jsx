@@ -48,6 +48,10 @@ export default class ViewWorkerRequest extends React.Component {
   loadVotes = () => {
     const { author, permlink } = this.props;
     golos.api.getWorkerRequestVotes(author, permlink, '', 20, (err, votes) => {
+      if (err) {
+        alert(err);
+        return;
+      }
       this.setState({
         votes
       }, () => {
@@ -59,6 +63,10 @@ export default class ViewWorkerRequest extends React.Component {
   loadMyVote = () => {
     const { auth, author, permlink } = this.props;
     golos.api.getWorkerRequestVotes(author, permlink, auth.account, 1, (err, myVote) => {
+      if (err) {
+        alert(err);
+        return;
+      }
       if (!myVote.length || myVote[0].voter !== auth.account) return;
       this.setState({
         myVote: myVote[0].vote_percent,

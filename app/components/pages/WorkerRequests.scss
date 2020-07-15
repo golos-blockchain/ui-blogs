@@ -35,6 +35,19 @@
   color: rgb(255,71,109);
 }
 
+.Workers__title {
+  display: inline-block;
+}
+
+.Workers__author {
+  display: inline-block;
+  padding-top: 5px;
+}
+
+.Workers__created {
+    font-size: 85%;
+}
+
 @import "./AddEditWorkerRequest";
 @import "app/components/elements/WorkerFunds";
 @import "./ViewWorkerRequest";
