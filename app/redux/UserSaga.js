@@ -247,7 +247,7 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     if (authority.get('posting') !== 'full')
         private_keys = private_keys.remove('posting_private')
 
-    if(!highSecurityLogin || authority.get('active') !== 'full')
+    if((!highSecurityLogin || authority.get('active') !== 'full') && !pathname.endsWith('/permissions'))
         private_keys = private_keys.remove('active_private')
 
     const owner_pubkey = account.getIn(['owner', 'key_auths', 0, 0])

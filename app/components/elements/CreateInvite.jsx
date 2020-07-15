@@ -90,6 +90,14 @@ class CreateInvite extends Component {
             this.state.invite.handleSubmit(args => this.handleSubmit(args))
     }
 
+    showQrPriv = e => {
+        this.props.showQRKey({type: 'Invite', text: this.state.private_key.value, isPrivate: true});
+    }
+
+    showQrPub = e => {
+        this.props.showQRKey({type: 'Invite', text: this.state.public_key.value, isPrivate: false});
+    }
+
     balanceValue() {
         const {account} = this.props
         return formatAsset(account.get('balance'), true, false, '')
@@ -170,6 +178,9 @@ class CreateInvite extends Component {
                     <div className="column small-10">
                         <div className="float-right"><a onClick={this.generateKeys}>{tt('invites_jsx.generate_new').toUpperCase()}</a></div>{tt('invites_jsx.private_key')}
                         <div className="input-group" style={{marginBottom: "1.25rem"}}>
+                            <div style={{display: "inline-block", paddingTop: 2, paddingRight: 5, cursor: "pointer"}} onClick={this.showQrPriv}>
+                                <img src={require("app/assets/images/qrcode.png")} height="40" width="40" />
+                            </div>
                             <input
                                 className="input-group-field bold"
                                 type="text"
@@ -191,6 +202,9 @@ class CreateInvite extends Component {
                     <div className="column small-10">
                         {tt('invites_jsx.public_key')}
                         <div className="input-group" style={{marginBottom: "1.25rem"}}>
+                            <div style={{display: "inline-block", paddingTop: 2, paddingRight: 5, cursor: "pointer"}} onClick={this.showQrPub}>
+                                <img src={require("app/assets/images/qrcode.png")} height="40" width="40" />
+                            </div>
                             <input
                                 className="input-group-field bold"
                                 type="text"
@@ -283,6 +297,10 @@ export default connect(
                 successCallback: success,
                 errorCallback
             }))
+        },
+
+        showQRKey: ({type, isPrivate, text}) => {
+            dispatch(g.actions.showDialog({name: "qr_key", params: {type, isPrivate, text}}));
         }
     })
 )(CreateInvite)
