@@ -4,6 +4,7 @@ import tt from 'counterpart';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
 import Reveal from 'react-foundation-components/lib/global/reveal';
 import { connect } from 'react-redux';
+import { FormattedPlural } from 'react-intl';
 
 import Icon from 'app/components/elements/Icon';
 import Button from 'app/components/elements/Button';
@@ -11,7 +12,8 @@ import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Tooltip from 'app/components/elements/Tooltip';
 import Author from 'app/components/elements/Author';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
-import { formatAsset, formatDecimal, ERR } from 'app/utils/ParsersAndFormatters';
+import { formatAsset, formatDecimal, longToAsset, ERR } from 'app/utils/ParsersAndFormatters';
+import { vestsToSteem, numberWithCommas } from 'app/utils/StateFunctions';
 
 import AddEditWorkerRequest from './AddEditWorkerRequest';
 import ViewWorkerRequest from './ViewWorkerRequest';
@@ -48,7 +50,7 @@ class WorkerRequests extends React.Component {
   componentWillUnmount() {
   }
 
-  loadMore = () => {
+  loadMore = async () => {
     const { start_author, start_permlink, select_authors, select_states } = this.state;
     let query = {
       limit: 10,
@@ -57,44 +59,48 @@ class WorkerRequests extends React.Component {
       select_authors,
       select_states
     };
-    golos.api.getWorkerRequests(query, 'by_created', true,
-      (err, results) => {
-        if (err) {
-          alert(ERR(err, 'search_by_author'));
-          return;
-        }
-        if (!results.length) {
-          this.setState({
-            show_load_more: false
-          });
-          return;
-        }
-        if (start_author) results = results.slice(1);
-        const last = results.slice(-1)[0];
-        this.setState({
-          results: this.state.results.concat(results),
-          start_author: last.post.author,
-          start_permlink: last.post.permlink
-        }, () => {
-            query = {
-              limit: 10,
-              start_author: last.post.author,
-              start_permlink: last.post.permlink,
-              select_authors,
-              select_states
-            };
-            golos.api.getWorkerRequests(query, 'by_created', true,
-              (err2, results2) => {
-              if (err2) {
-                alert(ERR(err2, 'search_by_author'));
-                return;
-              }
-              this.setState({
-                show_load_more: (results2.length > 1)
-              });
-            });
-        });
+    if (select_authors.length) {
+      let accs = await golos.api.getAccounts([start_author]);
+      if (!accs.length) {
+        alert('Неверное имя автора.');
+        return;
+      }
+    }
+    let results = await golos.api.getWorkerRequests(query, 'by_created', true);
+    if (!results.length) {
+      this.setState({
+        show_load_more: false
       });
+      return;
+    }
+    if (start_author) results = results.slice(1);
+    const last = results.slice(-1)[0];
+    for (let req of results) {
+      req.upvote_total = vestsToSteem(longToAsset(req.upvote_total, 'VESTS', 6), this.props.gprops.toJS());
+      const stake_total = vestsToSteem(longToAsset(req.stake_total, 'VESTS', 6), this.props.gprops.toJS());
+      req.downvote_total = stake_total - req.upvote_total;
+      req.upvote_percent = parseInt(req.upvote_total / stake_total * 100);
+      req.downvote_percent = 100 - req.upvote_percent;
+      req.upvote_total = numberWithCommas((req.upvote_total + '').split('.')[0]);
+      req.downvote_total = numberWithCommas((req.downvote_total + '').split('.')[0]);
+    }
+    this.setState({
+      results: this.state.results.concat(results),
+      start_author: last.post.author,
+      start_permlink: last.post.permlink
+    }, async () => {
+        query = {
+          limit: 10,
+          start_author: last.post.author,
+          start_permlink: last.post.permlink,
+          select_authors,
+          select_states
+        };
+        let results2 = await golos.api.getWorkerRequests(query, 'by_created', true);
+        this.setState({
+          show_load_more: (results2.length > 1)
+        });
+    });
   }
 
   handleSearchAuthor = (event) => {
@@ -194,17 +200,23 @@ class WorkerRequests extends React.Component {
         }
 
         return (<div>
-          <a href="#" data-author={req.post.author} data-permlink={req.post.permlink} onClick={this.viewRequest}><h4 className="Workers__title">{req.post.title}</h4></a>
+          <a href="#"><h4 className="Workers__title" data-author={req.post.author} data-permlink={req.post.permlink} onClick={this.viewRequest}>{req.post.title}</h4></a>
           <div className="Workers__author float-right">Автор предложения:&nbsp;&nbsp;<Author author={req.post.author} follow={false} /></div>
           <table>
           <thead>
             <tr>
-              <th style={{ textAlign: 'center' }}>
+              {['created', 'payment'].includes(req.state) && <th style={{ textAlign: 'center' }}>
                 Сумма
-              </th>
-              <th style={{ textAlign: 'center' }}>
+              </th>}
+              {'created' == req.state && <th style={{ textAlign: 'center' }}>
                 Окончание голосования
-              </th>
+              </th>}
+              {!['created'].includes(req.state) && <th style={{ textAlign: 'center' }}>
+                Выплачено
+              </th>}
+              {!['created', 'payment'].includes(req.state) && <th style={{ textAlign: 'center' }}>
+                Статус
+              </th>}
               <th style={{ textAlign: 'center' }}>
                 <Tooltip t="Процент проголосовавших от суммы всей Силы Голоса системы">
                   Кворум
@@ -215,15 +227,15 @@ class WorkerRequests extends React.Component {
                   </span>
                 </div>
               </th>
-              <th>
-                <span className="Workers__green"><Icon name="new/upvote" /> За: {req.upvotes} голосов</span>
-                <span className="Workers__red"> Против: {req.downvotes} голосов<Icon name="new/downvote" /></span>
+              <th style={{ width: '580px' }}>
+                <span className="Workers__green"><Icon name="new/upvote" /> За: {req.upvote_total} СГ ({req.upvotes} <FormattedPlural value={req.upvotes} one="голос" few="голоса" many="голосов" other="голосов"/>)</span>
+                <span className="Workers__red float-right"> Против: {req.downvote_total} СГ ({req.downvotes} <FormattedPlural value={req.downvotes} one="голос" few="голоса" many="голосов" other="голосов"/>)&nbsp;<Icon name="new/downvote" /></span>
               </th>
             </tr>
           </thead>
           <tbody>
           <tr>
-              <td style={{ textAlign: 'center' }}>
+              {['created', 'payment'].includes(req.state) && <td style={{ textAlign: 'center' }}>
                 <div>
                   <b>{formatAsset(req.required_amount_max)}</b>
                 </div>
@@ -232,16 +244,25 @@ class WorkerRequests extends React.Component {
                     но не менее {formatAsset(req.required_amount_min)}
                   </span>
                 </div>
-              </td>
-              <td style={{ textAlign: 'center' }}>
+              </td>}
+              {'created' == req.state && <td style={{ textAlign: 'center' }}>
                 {vote_end}
-              </td>
+              </td>}
+              {!['created'].includes(req.state) && <td style={{ textAlign: 'center' }}>
+                <b>{formatAsset(req.paid_out)}</b>
+              </td>}
+              {!['created', 'payment'].includes(req.state) && <td style={{ textAlign: 'center' }}>
+                <b className={(req.state == 'payment_complete') ? 'Workers__green' : 'Workers__red'}>{tt('workers.'+req.state)}</b>
+              </td>}
               <td style={{ textAlign: 'center' }}><span className={(rshares_pct >= 15 ? 'Workers__green' : 'Workers__red')}>
                 {rshares_pct}%
               </span>
               </td>
               <td>
-                <div>%</div>
+                <div>
+                  <div className="Workers__progressbar Workers__green_bg" style={{ width: req.upvote_percent + '%' }}>{req.upvote_percent >= 5 ? req.upvote_percent + '%' : ''}</div>
+                  <div className="Workers__progressbar Workers__red_bg" style={{ width: req.downvote_percent + '%' }}>{req.downvote_percent >= 5 ? req.downvote_percent + '%' : ''}</div>
+                </div>
                 <div>
                   <div class="Workers__created float-right">Опубликовано <TimeAgoWrapper date={req.created} /></div>
                 </div>

@@ -11,7 +11,7 @@ import Icon from 'app/components/elements/Icon';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import transaction from 'app/redux/Transaction';
 import g from 'app/redux/GlobalReducer';
-import { formatDecimal, formatAsset } from 'app/utils/ParsersAndFormatters';
+import { formatAsset } from 'app/utils/ParsersAndFormatters';
 import {numberWithCommas, vestsToSteem} from 'app/utils/StateFunctions';
 
 const Long = ByteBuffer.Long;
