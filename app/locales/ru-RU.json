@@ -980,8 +980,6 @@
     "success": "Чек создан, сохраните его!",
     "success_claim": "Чек погашен!",
     "claim_invite": "Забрать баланс с чека",
-    "claim_invite_desc": "Введите ключ чека и имя аккаунта, куда перевести токены.",
-    "receiver": "Получатель",
     "claim_wrong_secret": "Неверно указан ключ",
     "claim_wrong_secret_format": "Неверный формат ключа",
     "claim_wrong_secret_fatal": "Такого чека нет",
@@ -989,8 +987,7 @@
     "claim_btn": "Забрать",
     "hist_invite": "Создан чек ",
     "hist_invite2": " на сумму ",
-    "hist_claimed": "Погашен чек ",
-    "hist_claimed2": " в пользу "
+    "hist_claimed": "Погашен чек "
   },
   "userkeys_jsx": {
     "public": "Эта заметка является публичной",
