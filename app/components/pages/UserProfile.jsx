@@ -7,6 +7,7 @@ import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
 import Icon from 'app/components/elements/Icon'
 import UserKeys from 'app/components/elements/UserKeys';
+import Invites from 'app/components/elements/Invites';
 import PasswordReset from 'app/components/elements/PasswordReset';
 import UserWallet from 'app/components/modules/UserWallet';
 import WitnessProps from 'app/components/modules/WitnessProps';
@@ -348,6 +349,14 @@ export default class UserProfile extends React.Component {
                 <UserKeys account={accountImm} />
                 { isMyAccount && <div><MarkNotificationRead fields="send,receive" account={account.name} /></div>}
                 </div>;
+        } else if( section === 'invites' && isMyAccount ) {
+            walletClass = 'active'
+            tab_content = <div>
+                 <WalletSubMenu account_name={account.name} />
+
+                <br />
+                <Invites account={accountImm} />
+                </div>;
         } else if( section === 'password' ) {
             walletClass = 'active'
             tab_content = <div>
@@ -381,7 +390,7 @@ export default class UserProfile extends React.Component {
         if (!(section === 'transfers' ||
               section === 'permissions' ||
               section === 'password' ||
-            //   section === 'invites' ||
+              section === 'invites' ||
               section === 'assets'||
               section === 'create-asset')) {
             tab_content = <div className="row">

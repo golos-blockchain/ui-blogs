@@ -49,22 +49,32 @@ ul.PostsList__summaries {
 
 .PostFull__prevPosts {
   .PostSummary__image_container {
-    width: 240px;
-    height: 200px;
+    width: 260px;
+    height: 190px;
     margin-right: 10px;
+    opacity: 0.75;
+  }
+  .PostSummary__image_container:hover {
+    opacity: 1;
   }
   .PostSummary__image {
     float: left;
-    width: auto;
-    opacity: 0.5;
+    width: 260px;
+    height: 190px;
   }
   .PostSummary__text {
     display: block;
-    bottom: 10px;
-    left: 5px;
+    bottom: 0px;
+    width: 100%;
+    min-height: 50px;
+    padding-top: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
     position: absolute;
-    color: black;
+    color: rgba(255,255,255,0.9);
     z-index: 1;
+    background: linear-gradient(180deg,transparent 0,rgba(0,0,0,0) 16%,rgba(0,0,0,.7));
   }
 }
 

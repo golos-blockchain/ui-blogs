@@ -7,6 +7,7 @@ import Memo from 'app/components/elements/Memo'
 import {numberWithCommas, vestsToSp} from 'app/utils/StateFunctions'
 import tt from 'counterpart';
 import { VEST_TICKER, LIQUID_TICKER, DEBT_TOKEN_SHORT } from 'app/client_config';
+import {PrivateKey} from 'golos-classic-js/lib/auth/ecc';
 
 class TransferHistoryRow extends React.Component {
 
@@ -167,6 +168,14 @@ class TransferHistoryRow extends React.Component {
                 description_start += tt('g.fortips');
                 other_account = data.to;
             }
+        } else if (type === 'invite') {
+            description_start += tt('invites_jsx.hist_invite');
+            description_start += data.invite_key;
+            description_start += tt('invites_jsx.hist_invite2');
+            description_start += data.balance;
+        } else if (type === 'invite_claim') {
+            description_start += tt('invites_jsx.hist_claimed');
+            description_start += PrivateKey.fromWif(data.invite_secret).toPublicKey().toString();
         } else if (type === 'transfer_to_tip') {
             description_start += tt('transferhistoryrow_jsx.transfer') + tt('g.with_tip');
             description_start += data.amount;

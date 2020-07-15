@@ -55,7 +55,7 @@ export default async function getState(api, url, options, offchain = {}) {
 
             switch (parts[1]) {
                 case 'transfers':
-                    const history = await api.getAccountHistory(uname, -1, 1000, ['producer_reward','fill_vesting_withdraw'])
+                    const history = await api.getAccountHistory(uname, -1, 1000, ['producer_reward'])
                     account.transfer_history = []
                     account.other_history = []
 
@@ -81,6 +81,8 @@ export default async function getState(api, url, options, offchain = {}) {
                             case 'escrow_dispute':
                             case 'escrow_release':
                             case 'donate':
+                            case 'invite':
+                            case 'invite_claim':
                                 state.accounts[uname].transfer_history.push(operation)
                             break
 
@@ -88,6 +90,10 @@ export default async function getState(api, url, options, offchain = {}) {
                                 state.accounts[uname].other_history.push(operation)
                         }
                     })
+                break
+
+                case 'invites':
+                    state.cprops = await api.getChainProperties();
                 break
 
                 case 'recent-replies':
@@ -189,11 +195,30 @@ export default async function getState(api, url, options, offchain = {}) {
 
         let args = { truncate_body: 1024, select_categories: [category] };
         let prev_posts = await api.gedDiscussionsBy('created', {limit: 4, start_author: account, start_permlink: permlink, select_authors: [account], ...args});
-        if (prev_posts.length <= 1) {
-            state.prev_posts = await api.gedDiscussionsBy('trending', {limit: 4, ...args});
-        } else {
-            state.prev_posts = prev_posts.slice(1);
+        prev_posts = prev_posts.slice(1);
+        let p_ids = [];
+        for (let p of prev_posts) {
+            p_ids.push(p.author + p.permlink);
         }
+        if (prev_posts.length < 3) {
+            let trend_posts = await api.gedDiscussionsBy('trending', {limit: 4, ...args});
+            for (let p of trend_posts) {
+                if (p.author === account && p.permlink === permlink) continue;
+                if (p_ids.includes(p.author + p.permlink)) continue;
+                prev_posts.push(p);
+                p_ids.push(p.author + p.permlink);
+            }
+        }
+        if (prev_posts.length < 3) {
+            delete args.select_categories;
+            let author_posts = await api.gedDiscussionsBy('author', {limit: 4, select_authors: [account], ...args});
+            for (let p of author_posts) {
+                if (p.author === account && p.permlink === permlink) continue;
+                if (p_ids.includes(p.author + p.permlink)) continue;
+                prev_posts.push(p);
+            }
+        }
+        state.prev_posts = prev_posts.slice(0, 3);
     } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
         const witnesses = await api.getWitnessesByVote('', 100)
         witnesses.forEach( witness => {
@@ -214,7 +239,7 @@ export default async function getState(api, url, options, offchain = {}) {
         state.cprops = await api.getChainProperties();
   
     } else if (Object.keys(PUBLIC_API).includes(parts[0])) {
-        let args = { limit: 20, truncate_body: 1024, period_sec: 604800 }
+        let args = { limit: 20, truncate_body: 1024 }
         const discussionsType = parts[0]
         if (typeof tag === 'string' && tag.length && (!tag.startsWith('tag-') || tag.length > 4)) {
             if (tag.startsWith('tag-')) {

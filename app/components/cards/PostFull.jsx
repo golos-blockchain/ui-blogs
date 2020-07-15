@@ -288,17 +288,17 @@ class PostFull extends React.Component {
         const prox = $STM_Config.img_proxy_prefix
 
         let prevPosts = [];
-        let npp = 0;
         for (let pp of this.props.prevPosts) {
             let pp2 = extractContent(objAccessor, pp);
-            if (pp2.author == author && pp2.permlink == permlink) continue;
-            if (npp == 3) continue;
             let iurl = (prox ? prox + '800x600' + '/' : '');
             if (Date.parse(pp2.created) > CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME) {
                 iurl += pp2.image_link
             } else {
                 // Proxy old images from io fork
                 iurl += 'https://imgp.golos.io/0x0/' + pp2.image_link
+            }
+            if (!pp2.image_link) {
+                iurl = '/images/pattern_post.png';
             }
             const prevPost = (<PostSummaryThumb
               visitedClassName=""
@@ -309,7 +309,6 @@ class PostFull extends React.Component {
               title={pp2.title}
               body={pp2.body} />)
             prevPosts.push(prevPost)
-            ++npp;
         }
 
         return (
@@ -338,14 +337,6 @@ class PostFull extends React.Component {
                     </button>)
                     : null
                 }
-                {prevPosts.length > 0 && (
-                    <h4>{tt('postfull_jsx.prev_posts')}</h4>
-                )}
-                {prevPosts.length > 0 && (
-                    <div className="row PostFull__prevPosts">
-                    <div>{prevPosts}</div>
-                    </div>
-                )}
                 {showReply ? (
                     <div className="row">
                         <div className="column large-8 medium-10 small-12">
@@ -356,6 +347,16 @@ class PostFull extends React.Component {
                         </div>
                     </div>
                 ) : null}
+                {prevPosts.length > 0 && (
+                    <div className="row strikeprev">
+                        <span>{tt('postfull_jsx.prev_posts')}</span>
+                    </div>
+                )}
+                {prevPosts.length > 0 && (
+                    <div className="row PostFull__prevPosts">
+                    	<div>{prevPosts}</div>
+                    </div>
+                )}
             </article>
         );
     }
@@ -594,7 +595,7 @@ class PostFull extends React.Component {
                         />
                     </span>
                     <span className={"shareMenu"}>
-                        <div className="sharpay_widget_simple" data-sharpay="golid" data-lang="ru" data-height="18" data-form="no" data-hover="lighter" data-font="#8a8a8a" data-align="right" data-limit="3"></div>
+                        <div className="sharpay_widget_simple" data-sharpay="golid" data-height="18" data-form="no" data-hover="lighter" data-font="#8a8a8a" data-align="right" data-limit="3"></div>
                     </span>
                 </div>
             </div>

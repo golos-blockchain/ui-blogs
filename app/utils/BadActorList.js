@@ -6,7 +6,6 @@ kunai
 steem-engin
 steemengine
 kunaexchange
-kunaio
 `.trim().split('\n');
 
 export default list;
