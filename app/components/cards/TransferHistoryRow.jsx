@@ -176,8 +176,6 @@ class TransferHistoryRow extends React.Component {
         } else if (type === 'invite_claim') {
             description_start += tt('invites_jsx.hist_claimed');
             description_start += PrivateKey.fromWif(data.invite_secret).toPublicKey().toString();
-            description_start += tt('invites_jsx.hist_claimed2');
-            other_account = data.receiver;
         } else if (type === 'transfer_to_tip') {
             description_start += tt('transferhistoryrow_jsx.transfer') + tt('g.with_tip');
             description_start += data.amount;

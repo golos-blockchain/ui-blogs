@@ -40,7 +40,7 @@ class ClaimInvite extends Component {
     }
 
     initForm(props) {
-        const fields = ['invite_secret', 'receiver'];
+        const fields = ['invite_secret'];
         const validateSecret = (secret) => {
             try {
                 PrivateKey.fromWif(secret);
@@ -52,12 +52,10 @@ class ClaimInvite extends Component {
         reactForm({
             name: 'invite',
             instance: this, fields,
-            initialValues: {receiver: props.accountName},
+            initialValues: {},
             validation: values => ({
                 invite_secret:
-                    ! values.invite_secret ? tt('g.required') : validateSecret(values.invite_secret),
-                receiver:
-                    ! values.receiver ? tt('g.required') : validate_account_name(values.receiver),
+                    ! values.invite_secret ? tt('g.required') : validateSecret(values.invite_secret)
             })
         })
         this.handleSubmitForm =
@@ -69,16 +67,11 @@ class ClaimInvite extends Component {
         this.state.invite_secret.props.onChange(value.trim())
     }
 
-    onChangeReceiver = (e) => {
-        const {value} = e.target
-        this.state.receiver.props.onChange(value.trim())
-    }
-
     handleSubmit = ({updateInitialValues}) => {
         const {claimInvite, accountName} = this.props
-        const {invite_secret, receiver} = this.state
+        const {invite_secret} = this.state
         this.setState({loading: true});
-        claimInvite({invite_secret, receiver, accountName, 
+        claimInvite({invite_secret, accountName, 
             errorCallback: (e) => {
                 if (e === 'Canceled') {
                     this.setState({
@@ -106,7 +99,7 @@ class ClaimInvite extends Component {
 
     render() {
         const {props: {account, isMyAccount}} = this
-        const {invite_secret, receiver, loading, successMessage, errorMessage} = this.state
+        const {invite_secret, loading, successMessage, errorMessage} = this.state
         const {submitting, valid} = this.state.invite
 
         return (<div>
@@ -142,22 +135,6 @@ class ClaimInvite extends Component {
 
                 <div className="row">
                     <div className="column small-10">
-                        {tt('invites_jsx.receiver')}
-                        <div className="input-group" style={{marginBottom: "1.25rem"}}>
-                            <input
-                                className="input-group-field bold"
-                                type="text"
-                                {...receiver.props} onChange={(e) => this.onChangeReceiver(e)}
-                            />
-                        </div>
-                        {receiver.touched && receiver.blur && receiver.error &&
-                            <div className="error">{receiver.error}&nbsp;</div>
-                        }
-                    </div>
-                </div>
-
-                <div className="row">
-                    <div className="column small-10">
                         {loading && <span><LoadingIndicator type="circle" /><br /></span>}
                         {!loading && <input type="submit" className="button" value={tt('invites_jsx.claim_btn')} disabled={submitting || !valid} />}
                         {' '}{
@@ -187,11 +164,11 @@ export default connect(
     },
     dispatch => ({
         claimInvite: ({
-            invite_secret, receiver, accountName, successCallback, errorCallback
+            invite_secret, accountName, successCallback, errorCallback
         }) => {
             const operation = {
                 initiator: accountName,
-                receiver: receiver.value,
+                receiver: accountName,
                 invite_secret: invite_secret.value
             }
 

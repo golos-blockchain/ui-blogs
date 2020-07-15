@@ -714,7 +714,7 @@
   },
   "invites_jsx": {
     "create_invite": "Create new invite check",
-    "create_invite_warning": "Bla, bla, bla",
+    "create_invite_warning": "After creating invite check you will receive code to claim it. Please save it, because it cannot be restored if lost.",
     "generate_new": "Generate new",
     "public_key": "Public key",
     "private_key": "Private key",
@@ -724,8 +724,7 @@
     "success": "Created! Save it",
     "success_claim": "Claimed!",
     "claim_invite": "Claim invite check balance",
-    "claim_invite_desc": "Enter invite check and account name where claim check's balance to.",
-    "receiver": "Receiver",
+    "claim_invite_desc": "Enter invite check.",
     "claim_wrong_secret": "Wrong secret",
     "claim_wrong_secret_format": "Wrong key format",
     "claim_wrong_secret_fatal": "No such invite check",
@@ -733,8 +732,7 @@
     "claim_btn": "Claim",
     "hist_invite": "Issued invite check ",
     "hist_invite2": " with ",
-    "hist_claimed": "Claimed invite check ",
-    "hist_claimed2": " for"
+    "hist_claimed": "Claimed invite check "
   },
   "userkeys_jsx": {
     "public": "Public",
