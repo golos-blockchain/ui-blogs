@@ -5,6 +5,7 @@ import {countDecimals, formatAsset, formatAmount} from 'app/utils/ParsersAndForm
 import g from 'app/redux/GlobalReducer'
 import {connect} from 'react-redux';
 import transaction from 'app/redux/Transaction'
+import user from 'app/redux/User';
 import tt from 'counterpart';
 import {cleanReduxInput} from 'app/utils/ReduxForms'
 import reactForm from 'app/utils/ReactForm';
@@ -153,7 +154,7 @@ class CreateInvite extends Component {
         return (<div>
             <form onSubmit={this.handleSubmitForm}>
                 <div className="row">
-                    <div className="column small-10">
+                    <div className="column small-10 secondary">
                         {tt('invites_jsx.create_invite_info')}
                     <hr />
                     </div>
@@ -270,11 +271,16 @@ export default connect(
                 invite_key: public_key.value
             }
 
+            const success = () => {
+                dispatch(user.actions.getAccount())
+                successCallback()
+            }
+
             dispatch(transaction.actions.broadcastOperation({
                 type: 'invite',
                 accountName,
                 operation,
-                successCallback,
+                successCallback: success,
                 errorCallback
             }))
         }

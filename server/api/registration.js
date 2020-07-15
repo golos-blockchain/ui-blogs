@@ -4,6 +4,7 @@ import config from 'config';
 import models from 'db/models';
 import { checkCSRF, getRemoteIp, rateLimitReq } from 'server/utils/misc';
 import { hash } from 'golos-classic-js/lib/auth/ecc';
+import { api } from 'golos-classic-js';
 import secureRandom from 'secure-random';
 import gmailSend from 'gmail-send'
 
@@ -271,5 +272,90 @@ export default function useRegistrationApi(app) {
             status: 'waiting',
         });
       }
+    });
+
+    router.post('/use_invite', koaBody, function*() {
+        if (rateLimitReq(this, this.req)) return;
+
+        const body = this.request.body;
+        let params = {};
+        let error = false
+
+        if (typeof body === 'string') {
+            try {
+                params = JSON.parse(body);
+            } catch (e) {}
+        } else {
+            params = body;
+        }
+
+        if (!checkCSRF(this, params.csrf)) return;
+
+        const { invite_key } = params
+
+        //const retry = params.retry ? params.retry : null;
+        console.log(params);
+
+        if (!invite_key) {
+            this.body = JSON.stringify({ status: 'provide_email' });
+            return;
+        }
+
+        const emailHash = hash.sha256(invite_key, 'hex');
+
+        const existing_email = yield models.Identity.findOne({
+            attributes: ['user_id', 'verified'],
+            where: { email: emailHash, provider: 'invite_code' },
+            order: 'id DESC',
+        });
+
+        let user_id = this.session.user;
+        if (existing_email && existing_email.verified) {
+            console.log(
+                '-- /check_invite existing_email -->',
+                user_id,
+                this.session.uid,
+                emailHash,
+                existing_email.user_id
+            );
+            this.body = JSON.stringify({ status: 'already_used' });
+            return;
+        }
+
+        const invite = yield api.getInvite(invite_key);
+        if (!invite) {
+            this.body = JSON.stringify({ status: 'no_invite' });
+            return;
+        }
+
+        let user;
+        if (user_id) {
+            user = yield models.User.findOne({
+                attributes: ['id'],
+                where: { id: user_id },
+            });
+        }
+        if (!user) {
+            user = yield models.User.create({
+                uid: this.session.uid,
+                remote_ip: getRemoteIp(this.request.req),
+            });
+            this.session.user = user_id = user.id;
+        }
+
+        if (!existing_email) {
+            let mid = yield models.Identity.create({
+              provider: 'invite_code',
+              user_id,
+              uid: this.session.uid,
+              email: emailHash,
+              verified: false,
+              confirmation_code: '1234'
+            });
+        }
+
+        this.body = JSON.stringify({
+            status: 'done',
+        });
     });
 }

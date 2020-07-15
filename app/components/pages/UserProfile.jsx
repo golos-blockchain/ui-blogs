@@ -524,7 +524,7 @@ export default class UserProfile extends React.Component {
                     {top_menu}
                 </div>}
                 <div>
-                  {printLink}
+                  {/*printLink*/}
                 </div>
                 <div>
                   {tab_content}

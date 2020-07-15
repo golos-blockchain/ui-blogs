@@ -6,6 +6,7 @@ import {validate_account_name} from 'app/utils/ChainValidation'
 import g from 'app/redux/GlobalReducer'
 import {connect} from 'react-redux';
 import transaction from 'app/redux/Transaction'
+import user from 'app/redux/User';
 import tt from 'counterpart';
 import {cleanReduxInput} from 'app/utils/ReduxForms'
 import reactForm from 'app/utils/ReactForm';
@@ -117,7 +118,7 @@ class ClaimInvite extends Component {
                 </div>
 
                 <div className="row">
-                    <div className="column small-10">
+                    <div className="column small-10 secondary">
                         {tt('invites_jsx.claim_invite_desc')}
                     </div>
                 </div>
@@ -194,11 +195,16 @@ export default connect(
                 invite_secret: invite_secret.value
             }
 
+            const success = () => {
+                dispatch(user.actions.getAccount())
+                successCallback()
+            }
+
             dispatch(transaction.actions.broadcastOperation({
                 type: 'invite_claim',
                 accountName,
                 operation,
-                successCallback,
+                successCallback: success,
                 errorCallback
             }))
         }
