@@ -118,7 +118,7 @@ class ClaimInvite extends Component {
                 </div>
 
                 <div className="row">
-                    <div className="column small-10">
+                    <div className="column small-10 secondary">
                         {tt('invites_jsx.claim_invite_desc')}
                     </div>
                 </div>

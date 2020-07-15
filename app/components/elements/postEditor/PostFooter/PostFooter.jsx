@@ -96,7 +96,7 @@ export default class PostFooter extends PureComponent {
                 <div className="PostFooter__line">
                     <div className="PostFooter__tags">
                         {!editMode && <select className="PostFooter__category" value={category} onChange={this.onCategoryChange}>
-                            <option value="" disabled>Выберите категорию</option>
+                            <option value="" disabled>{tt('category_selector_jsx.select_a_category')}</option>
                             {
                                 categories.map((cat) => {
                                     return <option className="PostFooter__cat" key={cat} value={cat}>{cat}</option>;

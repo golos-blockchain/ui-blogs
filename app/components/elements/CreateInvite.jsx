@@ -154,7 +154,7 @@ class CreateInvite extends Component {
         return (<div>
             <form onSubmit={this.handleSubmitForm}>
                 <div className="row">
-                    <div className="column small-10">
+                    <div className="column small-10 secondary">
                         {tt('invites_jsx.create_invite_info')}
                     <hr />
                     </div>

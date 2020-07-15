@@ -27,6 +27,7 @@
     "category_selector_jsx": {
     "tag_your_story": "Добавь тэги (до 5 штук), первый тэг станет основной категорией.",
     "select_a_tag": "Выбрать тэг",
+    "select_a_category": "Выберите категорию",
     "maximum_tag_length_is_24_characters": "Максимальная длина категории 24 знака",
     "use_only_lowercase_letters": "Используйте только символы нижнего регистра",
     "use_one_dash": "Используйте только одно тире",
@@ -996,7 +997,7 @@
     "private": "Эта заметка является приватной",
     "public_something_key": "Публичный %(key)s ключ",
     "private_something_key": "Приватный %(key)s ключ",
-    "posting_key_is_required_it_should_be_different": "Постинг ключ используется для постинга и голосования. Он должен отличаться от других ключей.",
+    "posting_key_is_required_it_should_be_different": "Постинг ключ используется для авторизации на сайте, написания постов, голосования, отправки донатов.",
     "the_active_key_is_used_to_make_transfers_and_place_orders": "Активный ключ используется для переводов, голосования за делегатов и заказов на внутренней бирже.",
     "the_owner_key_is_required_to_change_other_keys": "Ключ владельца это главный ключ ко всему аккаунту, он необходим для изменения других ключей.",
     "the_private_key_or_password_should_be_kept_offline": "Приватный ключ владельца (если вы его получали) и главный пароль должны храниться в оффлайне.",
