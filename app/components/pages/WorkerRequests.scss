@@ -28,11 +28,27 @@
 }
 
 .Workers__green {
-  color: rgb(30,230,80);
+   color: rgb(30,230,80);
 }
 
 .Workers__red {
-  color: rgb(255,71,109);
+   color: rgb(255,71,109);
+}
+
+.Workers__gray {
+   color: rgb(242,242,242);
+}
+
+.Workers__green_bg {
+   background-color: rgb(30,230,80);
+}
+
+.Workers__red_bg {
+   background-color: rgb(255,71,109);
+}
+
+.Workers__gray_bg {
+   background-color: rgb(242,242,242);
 }
 
 .Workers__title {
@@ -46,6 +62,13 @@
 
 .Workers__created {
     font-size: 85%;
+}
+
+.Workers__progressbar {
+  display: inline-block;
+  text-align: center;
+  color: black;
+  font-weight: bold;
 }
 
 @import "./AddEditWorkerRequest";

@@ -1,6 +1,8 @@
 import React from 'react';
 import golos from 'golos-classic-js';
 import tt from 'counterpart';
+import { connect } from 'react-redux';
+
 import Button from 'app/components/elements/Button';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Author from 'app/components/elements/Author';
@@ -9,7 +11,7 @@ import DropdownMenu from 'app/components/elements/DropdownMenu';
 import Icon from 'app/components/elements/Icon';
 import { formatDecimal, formatAsset, ERR } from 'app/utils/ParsersAndFormatters';
 
-export default class ViewWorkerRequest extends React.Component {
+class ViewWorkerRequest extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -139,7 +141,7 @@ export default class ViewWorkerRequest extends React.Component {
   }
 
   render() {
-    const { auth } = this.props;
+    const { auth, approve_min_percent } = this.props;
     const { request, myVote, myPlanningVote, votes, preloading } = this.state;
 
     if (preloading) {
@@ -152,16 +154,16 @@ export default class ViewWorkerRequest extends React.Component {
     }
 
     let rshares_pct = parseInt(request.stake_rshares * 100 / request.stake_total);
-    rshares_pct = !isNaN(rshares_pct) ? rshares_pct : 0;
 
-    let global_rshares_pct = parseInt(request.stake_total * 100 / this.state.total_vesting_shares);
-    global_rshares_pct = !isNaN(global_rshares_pct) ? global_rshares_pct : 0;
+    let global_rshares_pct = (parseFloat(request.stake_total) * 100 / this.state.total_vesting_shares).toPrecision(4);
 
     let min_amount = parseFloat(request.required_amount_min.split(" ")[0]);
     let max_amount = parseFloat(request.required_amount_max.split(" ")[0]);
     let pend = max_amount * rshares_pct / 100;
-    let pending_amount = formatDecimal(pend, 0, false, ' ');
+    let pending_amount = formatDecimal(pend, 0, false, ' ')[0];
     let pending_title = "Если будет набран минимальный % поддержки от общей СГ";
+
+    let progress_bar_text = pending_amount + ' ' + request.required_amount_min.split(' ')[1] + ' (' + rshares_pct + '%)';
 
     let upvotes = request.upvotes;
     let downvotes = request.downvotes;
@@ -218,19 +220,23 @@ export default class ViewWorkerRequest extends React.Component {
           Статус заявки: {tt("workers."+request.state)}<br/>
           {vote_end}
         </p>
-        <p>
-          Процент проголосовавших от общей СГ: {global_rshares_pct}%<br/>
-          <span title={pending_title}>Расчётная сумма выплаты: <b>{pending_amount} {request.required_amount_min.split(" ")[1]}</b> <Icon name="info_o" /></span>
+        <p style={{marginBottom: '-0rem'}}>
+          Текущий процент проголосовавшей СГ: <b className={ (global_rshares_pct >= (approve_min_percent / 100)) ? 'Workers__green' : 'Workers__red' }>{global_rshares_pct} / {approve_min_percent / 100}%</b><br/>
+          <span title={pending_title}>Расчётная сумма выплаты: <Icon name="info_o" /></span>
         </p>
+        <div style={{marginBottom: '1rem'}}>
+          <div className={'Workers__progressbar ' + ((pend >= min_amount) ? 'Workers__green_bg' : 'Workers__red_bg')} style={{ width: Math.abs(rshares_pct) + '%' }}>{(Math.abs(rshares_pct) >= 40) ? progress_bar_text : '\xa0'}</div>
+          <div className="Workers__progressbar Workers__gray_bg" style={{ width: 100 - Math.abs(rshares_pct) + '%' }}>{(Math.abs(rshares_pct) < 40) ? progress_bar_text : '\xa0'}</div>
+        </div>
         <div>
           <div className="Request__Footer_left">
             <TimeAgoWrapper date={request.created} />&nbsp;<Author author={request.post.author} />{modified_info}
             <div>
               <PercentSelect className="inline" value={myPlanningVote} disabled={myVote !== 0} onChange={this.onPlanningVote} />&nbsp;
               &nbsp;
-              <Button round="true" type={myVote > 0 ? "primary" : "secondary"} onClick={this.upVote}>За ({upvotes})</Button>
+              <Button round="true" type={myVote > 0 ? "primary" : "secondary"} onClick={this.upVote}><Icon name="new/upvote" /> ({upvotes})</Button>
               &nbsp;
-              <Button round="true" type={myVote < 0 ? "primary" : "secondary"} onClick={this.downVote}>Против ({downvotes})</Button>
+              <Button round="true" type={myVote < 0 ? "primary" : "secondary"} onClick={this.downVote}><Icon name="new/downvote" /> ({downvotes})</Button>
               &nbsp;
               <DropdownMenu className="VoteList above" items={vote_list} selected={upvotes+downvotes + " голосов"} el="span" />
             </div>
@@ -241,3 +247,17 @@ export default class ViewWorkerRequest extends React.Component {
     );
   }
 }
+
+export default connect(
+    state => {
+        const cprops = state.global.get('cprops');
+        const approve_min_percent = cprops ? cprops.get('worker_request_approve_min_percent') : 100
+        return {
+            approve_min_percent
+        };
+    },
+    dispatch => {
+        return {
+        };
+    }
+)(ViewWorkerRequest);
