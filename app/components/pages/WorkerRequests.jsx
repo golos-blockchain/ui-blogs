@@ -5,7 +5,7 @@ import tt from 'counterpart';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
 import Reveal from 'react-foundation-components/lib/global/reveal';
 import { connect } from 'react-redux';
-import {Link} from 'react-router';
+import { Link, browserHistory} from 'react-router';
 import { FormattedPlural } from 'react-intl';
 
 import Icon from 'app/components/elements/Icon';
@@ -198,6 +198,7 @@ class WorkerRequests extends React.Component {
   }
 
   hideViewRequest = (msg) => {
+    browserHistory.push('/workers');
     this.setState({
       showViewRequest: false,
       showCreateRequest: (msg === 'edit') ? true : this.state.showCreateRequest
