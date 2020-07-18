@@ -23,6 +23,11 @@ export const longToAsset = (value, sym = 'GOLOS', decPlaces = 3) => {
       return (val_int < 0 ? '-' : '') + int_part + ' ' + sym;
 }
 
+// '134.456 GOLOS' => 123456
+export const assetToLong = (asset) => {
+  return parseInt(asset.split(' ')[0].replace('.', ''));
+}
+
 // FIXME this should be unit tested.. here is one bug: 501,695,.505
 export function formatDecimal(value, decPlaces = 2, truncate0s = true, thouSeparator = ',') {
     let decSeparator, fl, i, j, sign, abs_value;

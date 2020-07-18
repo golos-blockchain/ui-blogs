@@ -1,9 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import golos from 'golos-classic-js';
 import tt from 'counterpart';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
 import Reveal from 'react-foundation-components/lib/global/reveal';
 import { connect } from 'react-redux';
+import { Link, browserHistory} from 'react-router';
 import { FormattedPlural } from 'react-intl';
 
 import Icon from 'app/components/elements/Icon';
@@ -21,6 +23,14 @@ import WorkerFunds from 'app/components/elements/WorkerFunds';
 import "./WorkerRequests.scss";
 
 class WorkerRequests extends React.Component {
+  static propTypes = {
+      routeParams: PropTypes.object,
+      gprops: PropTypes.object,
+      account: PropTypes.string,
+      posting_key: PropTypes.object,
+      approve_min_percent: PropTypes.number,
+  };
+
   state = {
       results: [],
       start_author: null,
@@ -38,10 +48,22 @@ class WorkerRequests extends React.Component {
     };
 
   componentDidMount() {
+    let new_state = {
+      showViewRequest: false,
+      current_author: '',
+      current_permlink: ''
+    }
+    const {routeParams} = this.props;
+    if (routeParams.slug) {
+      new_state.showViewRequest = true;
+      new_state.current_author = routeParams.username;
+      new_state.current_permlink = routeParams.slug;
+    }
     let total_vesting_shares = this.props.gprops.get('total_vesting_shares');
     total_vesting_shares = parseInt(total_vesting_shares.split(' ')[0].replace('.', ''));
     this.setState({
-      total_vesting_shares
+      total_vesting_shares,
+      ...new_state
     }, () => {
       this.loadMore();
     });
@@ -176,6 +198,7 @@ class WorkerRequests extends React.Component {
   }
 
   hideViewRequest = (msg) => {
+    browserHistory.push('/workers');
     this.setState({
       showViewRequest: false,
       showCreateRequest: (msg === 'edit') ? true : this.state.showCreateRequest
@@ -199,8 +222,8 @@ class WorkerRequests extends React.Component {
             vote_end = (<TimeAgoWrapper date={req.vote_end_time} />);
         }
 
-        return (<div>
-          <a href="#"><h4 className="Workers__title" data-author={req.post.author} data-permlink={req.post.permlink} onClick={this.viewRequest}>{req.post.title}</h4></a>
+        return (<div key={req.post.author + "/" + req.post.permlink}>
+          <Link to={'/workers/created/@' + req.post.author + "/" + req.post.permlink}><h4 className="Workers__title" data-author={req.post.author} data-permlink={req.post.permlink} onClick={this.viewRequest}>{req.post.title}</h4></Link>
           <div className="Workers__author float-right">Автор предложения:&nbsp;&nbsp;<Author author={req.post.author} follow={false} /></div>
           <table>
           <thead>
@@ -227,9 +250,17 @@ class WorkerRequests extends React.Component {
                   </span>
                 </div>
               </th>
-              <th style={{ width: '580px' }}>
-                <span className="Workers__green"><Icon name="new/upvote" /> За: {req.upvote_total} СГ ({req.upvotes} <FormattedPlural value={req.upvotes} one="голос" few="голоса" many="голосов" other="голосов"/>)</span>
-                <span className="Workers__red float-right"> Против: {req.downvote_total} СГ ({req.downvotes} <FormattedPlural value={req.downvotes} one="голос" few="голоса" many="голосов" other="голосов"/>)&nbsp;<Icon name="new/downvote" /></span>
+              <th style={{ width: '580px', fontWeight: 'normal' }}>
+                <span className="Workers__green">
+                  <Icon name="new/upvote" />&nbsp;
+                  За: {req.upvote_total} СГ
+                  ({req.upvotes} <FormattedPlural value={req.upvotes} one="голос" few="голоса" many="голосов" other="голосов"/>)
+                </span>
+                <span className="Workers__red float-right">
+                  Против: {req.downvote_total} СГ
+                  ({req.downvotes} <FormattedPlural value={req.downvotes} one="голос" few="голоса" many="голосов" other="голосов"/>)
+                  &nbsp;<Icon name="new/downvote" />
+                </span>
               </th>
             </tr>
           </thead>
@@ -264,7 +295,7 @@ class WorkerRequests extends React.Component {
                   <div className="Workers__progressbar Workers__red_bg" style={{ width: req.downvote_percent + '%' }}>{req.downvote_percent >= 5 ? req.downvote_percent + '%' : ''}</div>
                 </div>
                 <div>
-                  <div class="Workers__created float-right">Опубликовано <TimeAgoWrapper date={req.created} /></div>
+                  <div className="Workers__created float-right">Опубликовано <TimeAgoWrapper date={req.created} /></div>
                 </div>
               </td>
           </tr>
