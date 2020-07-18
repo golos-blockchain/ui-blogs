@@ -43,7 +43,7 @@ class ViewWorkerRequest extends React.Component {
   deleteMe = (event) => {
     event.preventDefault();
     const { auth } = this.props;
-    const { request } = this.state;
+    const { request } = this.props;
 
     golos.broadcast.workerRequestDelete(auth.posting_key, request.post.author, request.post.permlink, [],
       (err, result) => {
@@ -130,7 +130,7 @@ class ViewWorkerRequest extends React.Component {
 
     let rshares_pct = parseInt(request.stake_rshares * 100 / request.stake_total);
 
-    let global_rshares_pct = (parseFloat(request.stake_total) * 100 / assetToLong(this.props.total_vesting_shares)).toPrecision(4);
+    let global_rshares_pct = (parseFloat(request.stake_total) * 100 / assetToLong(this.props.total_vesting_shares)).toFixed(2);
 
     let min_amount = parseFloat(request.required_amount_min.split(" ")[0]);
     let max_amount = parseFloat(request.required_amount_max.split(" ")[0]);
@@ -235,7 +235,7 @@ export default connect(
         const request = req ? req.toJS() : null
         const gprops = state.global.get('props')
         const total_vesting_shares = gprops ? gprops.get('total_vesting_shares') : '1000.000000 GESTS';
-
+                
         return {
           approve_min_percent,
           total_vesting_shares,

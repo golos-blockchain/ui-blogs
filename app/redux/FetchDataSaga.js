@@ -283,7 +283,7 @@ export function* fetchState(location_change_action) {
                 state.worker_requests[url].votes = votes;
                 const voter = yield select(state => state.offchain.get('account'))
                 let [ myVote ] = yield call([api, api.getWorkerRequestVotesAsync], author, permlink, voter, 1);
-                state.worker_requests[url].myVote = myVote.voter == voter ? myVote : null
+                state.worker_requests[url].myVote = (myVote && myVote.voter == voter) ? myVote : null
             }
         } else if (Object.keys(PUBLIC_API).includes(parts[0])) {
 
