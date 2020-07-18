@@ -74,6 +74,7 @@ export function* fetchState(location_change_action) {
         state.current_route = location
         state.content = {}
         state.prev_posts = []
+        state.worker_requests = {}
         state.accounts = {}
 
         let accounts = new Set()
@@ -265,8 +266,25 @@ export function* fetchState(location_change_action) {
 
         }  else if (parts[0] === 'workers') {
             accounts.add('workers');
-            state.cprops = yield call ([api, api.getChainProperties])
+            state.cprops = yield call([api, api.getChainPropertiesAsync])
 
+            if (parts.length === 4) {
+                const author = parts[2].substr(1);
+                const permlink = parts[3];
+                const url = `${author}/${permlink}`;
+                const query = {
+                  limit: 1,
+                  start_author: author,
+                  start_permlink: permlink
+                };
+                let [ wr ] = yield call([api, api.getWorkerRequestsAsync], query, 'by_created', true);
+                state.worker_requests[url] = wr;
+                let votes = yield call([api, api.getWorkerRequestVotesAsync], author, permlink, '', 20);
+                state.worker_requests[url].votes = votes;
+                const voter = yield select(state => state.offchain.get('account'))
+                let [ myVote ] = yield call([api, api.getWorkerRequestVotesAsync], author, permlink, voter, 1);
+                state.worker_requests[url].myVote = myVote.voter == voter ? myVote : null
+            }
         } else if (Object.keys(PUBLIC_API).includes(parts[0])) {
 
             yield call(fetchData, {payload: { order: parts[0], category : tag }})

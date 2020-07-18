@@ -15,9 +15,7 @@ class ViewWorkerRequest extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      request: {post: {title: "Loading..."}, required_amount_min: '0.000 GOLOS', required_amount_max: '0.000 GOLOS' },
       myPlanningVote: 10000,
-      myVote: 0,
       total_vesting_shares: 1,
       votes: [],
       preloading: true
@@ -31,51 +29,19 @@ class ViewWorkerRequest extends React.Component {
       start_author: author,
       start_permlink: permlink
     };
-    const requests = await golos.api.getWorkerRequestsAsync(query, 'by_created', true);
-    if (!requests.length) return;
     let dgp = await golos.api.getDynamicGlobalPropertiesAsync();
     let total_vesting_shares = parseInt(dgp.total_vesting_shares.split(' ')[0].replace('.', ''));
     this.setState({
-      request: requests[0],
       preloading: false,
-      total_vesting_shares
-    }, () => {
-      this.loadVotes();
+      total_vesting_shares,
+      //myPlanningVote: Math.abs(this.props.request.myVote.vote_percent)
     });
   }
 
   componentWillUnmount() {
   }
 
-  loadVotes = () => {
-    const { author, permlink } = this.props;
-    golos.api.getWorkerRequestVotes(author, permlink, '', 20, (err, votes) => {
-      if (err) {
-        alert(err);
-        return;
-      }
-      this.setState({
-        votes
-      }, () => {
-        this.loadMyVote();
-      });
-    });
-  }
-
-  loadMyVote = () => {
-    const { auth, author, permlink } = this.props;
-    golos.api.getWorkerRequestVotes(author, permlink, auth.account, 1, (err, myVote) => {
-      if (err) {
-        alert(err);
-        return;
-      }
-      if (!myVote.length || myVote[0].voter !== auth.account) return;
-      this.setState({
-        myVote: myVote[0].vote_percent,
-        myPlanningVote: Math.abs(myVote[0].vote_percent)
-      });
-    });
-  }
+//        myPlanningVote: Math.abs(myVote[0].vote_percent)
 
   deleteMe = (event) => {
     event.preventDefault();
@@ -108,23 +74,21 @@ class ViewWorkerRequest extends React.Component {
   }
 
   setVote = (percent) => {
-    const { auth } = this.props;
-    const { request } = this.state;
+    const { auth, request } = this.props;
     golos.broadcast.workerRequestVote(auth.posting_key, auth.account, request.post.author, request.post.permlink,
       percent, [], (err, result) => {
         if (err) {
           alert(ERR(err, 'worker_request_vote'));
           return;
         }
-        this.setState({
-          myVote: percent
-        });
+        this.props.fetchState('/workers/requests/@' + request.post.author + '/' + request.post.permlink);
       });
   }
 
   upVote = () => {
-    const { myVote, myPlanningVote } = this.state;
-    if (myVote > 0) {
+    const { request } = this.props;
+    const { myPlanningVote } = this.state;
+    if (request.myVote && request.myVote.vote_percent > 0) {
       this.setVote(0);
       return;
     }
@@ -132,8 +96,9 @@ class ViewWorkerRequest extends React.Component {
   }
 
   downVote = () => {
-    const { myVote, myPlanningVote } = this.state;
-    if (myVote < 0) {
+    const { request } = this.props;
+    const { myPlanningVote } = this.state;
+    if (request.myVote && request.myVote.vote_percent < 0) {
       this.setVote(0);
       return;
     }
@@ -141,10 +106,10 @@ class ViewWorkerRequest extends React.Component {
   }
 
   render() {
-    const { auth, approve_min_percent } = this.props;
-    const { request, myVote, myPlanningVote, votes, preloading } = this.state;
+    const { auth, request, approve_min_percent } = this.props;
+    const { myPlanningVote, preloading } = this.state;
 
-    if (preloading) {
+    if (preloading || !request) {
         return (<div>Загрузка...</div>);
     }
 
@@ -191,7 +156,7 @@ class ViewWorkerRequest extends React.Component {
       );
     }
 
-    let vote_list = votes.map(vote => {
+    let vote_list = request.votes.map(vote => {
       const { voter, vote_percent } = vote;
       const sign = Math.sign(vote_percent);
       const voterPercent = vote_percent / 100 + '%';
@@ -232,11 +197,11 @@ class ViewWorkerRequest extends React.Component {
           <div className="Request__Footer_left">
             <TimeAgoWrapper date={request.created} />&nbsp;<Author author={request.post.author} />{modified_info}
             <div>
-              <PercentSelect className="inline" value={myPlanningVote} disabled={myVote !== 0} onChange={this.onPlanningVote} />&nbsp;
+              <PercentSelect className="inline" value={myPlanningVote} disabled={request.myVote} onChange={this.onPlanningVote} />&nbsp;
               &nbsp;
-              <Button round="true" type={myVote > 0 ? "primary" : "secondary"} onClick={this.upVote}><Icon name="new/upvote" /> ({upvotes})</Button>
+              <Button round="true" type={(request.myVote && request.myVote.vote_percent > 0) ? "primary" : "secondary"} onClick={this.upVote}><Icon name="new/upvote" /> ({upvotes})</Button>
               &nbsp;
-              <Button round="true" type={myVote < 0 ? "primary" : "secondary"} onClick={this.downVote}><Icon name="new/downvote" /> ({downvotes})</Button>
+              <Button round="true" type={(request.myVote && request.myVote.vote_percent < 0) ? "primary" : "secondary"} onClick={this.downVote}><Icon name="new/downvote" /> ({downvotes})</Button>
               &nbsp;
               <DropdownMenu className="VoteList above" items={vote_list} selected={upvotes+downvotes + " голосов"} el="span" />
             </div>
@@ -249,15 +214,21 @@ class ViewWorkerRequest extends React.Component {
 }
 
 export default connect(
-    state => {
+    (state, props) => {
         const cprops = state.global.get('cprops');
         const approve_min_percent = cprops ? cprops.get('worker_request_approve_min_percent') : 100
+        const url = props.author + '/' + props.permlink;
+        const req = state.global.get('worker_requests').get(url)
+        const request = req ? req.toJS() : null
         return {
-            approve_min_percent
+          approve_min_percent,
+          request
         };
     },
     dispatch => {
         return {
+            fetchState: pathname =>
+                dispatch({type: 'FETCH_STATE', payload: {pathname}})
         };
     }
 )(ViewWorkerRequest);

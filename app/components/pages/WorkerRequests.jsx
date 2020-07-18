@@ -1,9 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import golos from 'golos-classic-js';
 import tt from 'counterpart';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
 import Reveal from 'react-foundation-components/lib/global/reveal';
 import { connect } from 'react-redux';
+import {Link} from 'react-router';
 import { FormattedPlural } from 'react-intl';
 
 import Icon from 'app/components/elements/Icon';
@@ -21,6 +23,14 @@ import WorkerFunds from 'app/components/elements/WorkerFunds';
 import "./WorkerRequests.scss";
 
 class WorkerRequests extends React.Component {
+  static propTypes = {
+      routeParams: PropTypes.object,
+      gprops: PropTypes.object,
+      account: PropTypes.string,
+      posting_key: PropTypes.object,
+      approve_min_percent: PropTypes.number,
+  };
+
   state = {
       results: [],
       start_author: null,
@@ -38,10 +48,38 @@ class WorkerRequests extends React.Component {
     };
 
   componentDidMount() {
+    let new_state = {
+      select_states: ['created'],
+      selected_state: 'Открытые заявки',
+      showCreateRequest: false,
+      showViewRequest: false,
+      current_author: '',
+      current_permlink: ''
+    }
+    const {routeParams} = this.props;
+    if (routeParams.state) {
+      if (routeParams.state === 'closed') {
+        new_state.selected_state = 'Закрытые';
+        new_state.select_states = ['payment_complete', 'closed_by_author', 'closed_by_expiration', 'closed_by_voters'];
+      } else {
+        new_state.select_states = [routeParams.state];
+      }
+      if (routeParams.state === 'payment') {
+        new_state.selected_state = 'Выплачиваемые';
+      }
+    }
+    if (routeParams.slug) {
+      new_state.showViewRequest = true;
+      new_state.current_author = routeParams.username;
+      new_state.current_permlink = routeParams.slug;
+    } else if (routeParams.username === '.add') {
+      new_state.showCreateRequest = true;
+    }
     let total_vesting_shares = this.props.gprops.get('total_vesting_shares');
     total_vesting_shares = parseInt(total_vesting_shares.split(' ')[0].replace('.', ''));
     this.setState({
-      total_vesting_shares
+      total_vesting_shares,
+      ...new_state
     }, () => {
       this.loadMore();
     });
@@ -120,26 +158,6 @@ class WorkerRequests extends React.Component {
     });
   }
 
-  onStateSelected = (e) => {
-    e.preventDefault();
-    const {link, value} = e.target.parentNode.dataset;
-    let select_states = [];
-    if (link === 'closed')
-      select_states = ['payment_complete', 'closed_by_author', 'closed_by_expiration', 'closed_by_voters'];
-    else
-      select_states = [link];
-
-    this.setState({
-      results: [],
-      start_author: null,
-      start_permlink: null,
-      select_states,
-      selected_state: value
-    }, () => {
-      this.loadMore();
-    });
-  }
-
   reloadList = () => {
     this.setState({
       results: [],
@@ -183,6 +201,7 @@ class WorkerRequests extends React.Component {
   }
 
   render() {
+    const state_in_route = this.props.routeParams.state || 'created';
     const workerRequests = this.state.results.map((req) => {
         let rshares_amount_pct = parseInt(req.stake_rshares * 100 / req.stake_total);
         rshares_amount_pct = !isNaN(rshares_amount_pct) ? rshares_amount_pct : 0;
@@ -199,8 +218,8 @@ class WorkerRequests extends React.Component {
             vote_end = (<TimeAgoWrapper date={req.vote_end_time} />);
         }
 
-        return (<div>
-          <a href="#"><h4 className="Workers__title" data-author={req.post.author} data-permlink={req.post.permlink} onClick={this.viewRequest}>{req.post.title}</h4></a>
+        return (<div key={req.post.author + "/" + req.post.permlink}>
+          <Link to={'/workers/' + state_in_route + '/@' + req.post.author + "/" + req.post.permlink}><h4 className="Workers__title" data-author={req.post.author} data-permlink={req.post.permlink} onClick={this.viewRequest}>{req.post.title}</h4></Link>
           <div className="Workers__author float-right">Автор предложения:&nbsp;&nbsp;<Author author={req.post.author} follow={false} /></div>
           <table>
           <thead>
@@ -264,7 +283,7 @@ class WorkerRequests extends React.Component {
                   <div className="Workers__progressbar Workers__red_bg" style={{ width: req.downvote_percent + '%' }}>{req.downvote_percent >= 5 ? req.downvote_percent + '%' : ''}</div>
                 </div>
                 <div>
-                  <div class="Workers__created float-right">Опубликовано <TimeAgoWrapper date={req.created} /></div>
+                  <div className="Workers__created float-right">Опубликовано <TimeAgoWrapper date={req.created} /></div>
                 </div>
               </td>
           </tr>
@@ -276,14 +295,14 @@ class WorkerRequests extends React.Component {
     const { current_author, current_permlink, selected_state, show_load_more, showCreateRequest, showViewRequest} = this.state;
     const auth = { account: this.props.account, posting_key: this.props.posting_key };
     let list_states = [
-      {link: 'created', value: 'Открытые заявки', onClick: this.onStateSelected},
-      {link: 'payment', value: 'Выплачиваемые', onClick: this.onStateSelected},
-      {link: 'closed', value: 'Закрытые', onClick: this.onStateSelected}
+      {link: '/workers/created', value: 'Открытые заявки'},
+      {link: '/workers/payment', value: 'Выплачиваемые'},
+      {link: '/workers/closed', value: 'Закрытые'}
     ];
     return (
       <div className="App-workers">
         <div><h2>Заявки на работу</h2></div>
-        <Button onClick={this.createRequest} round="true" type="primary">+ {tt('workers.create_request')}</Button>
+        <Link to={'/workers/' + state_in_route + '/@.add'}>ffffff<Button round="true" type="primary">+ {tt('workers.create_request')}</Button></Link>
         <WorkerFunds/>
         <form className="Input__Inline" style={{marginBottom: '1rem'}} onSubmit={this.searchByAuthor}>
           <input className="Input__Inline" type="text" placeholder="Поиск по автору" onChange={this.handleSearchAuthor}/>

@@ -25,6 +25,7 @@ export default async function getState(api, url, options, offchain = {}) {
     state.tags = {}
     state.content = {}
     state.prev_posts = []
+    state.worker_requests = {}
     state.accounts = {}
     state.witnesses = {}
     state.discussion_idx = {}
@@ -237,7 +238,21 @@ export default async function getState(api, url, options, offchain = {}) {
     }  else if (parts[0] === 'workers') {
         accounts.add('workers');
         state.cprops = await api.getChainProperties();
-  
+
+        if (parts.length === 4) {
+            const author = parts[2].substr(1);
+            const permlink = parts[3];
+            const url = `${author}/${permlink}`;
+            const query = {
+              limit: 1,
+              start_author: author,
+              start_permlink: permlink
+            };
+            let [ wr ] = await api.getWorkerRequests(query, 'by_created', true);
+            state.worker_requests[url] = wr;
+            let votes = await api.getWorkerRequestVotes(author, permlink, '', 20);
+            state.worker_requests[url].votes = votes;
+        }
     } else if (Object.keys(PUBLIC_API).includes(parts[0])) {
         let args = { limit: 20, truncate_body: 1024 }
         const discussionsType = parts[0]

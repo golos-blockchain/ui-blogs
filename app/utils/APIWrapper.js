@@ -88,3 +88,11 @@ export function getActiveVotesAsync(account, permlink) {
 export function getHardforkVersion() {
     return api.getHardforkVersionAsync()
 }
+
+export function getWorkerRequests(query, sort, fillPosts) {
+    return api.getWorkerRequestsAsync(query, sort, fillPosts)
+}
+
+export function getWorkerRequestVotes(author, permlink, voter, limit) {
+    return api.getWorkerRequestVotesAsync(author, permlink, voter, limit)
+}
