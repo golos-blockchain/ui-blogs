@@ -9,14 +9,13 @@ import Author from 'app/components/elements/Author';
 import PercentSelect from 'app/components/elements/PercentSelect';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
 import Icon from 'app/components/elements/Icon';
-import { formatDecimal, formatAsset, ERR } from 'app/utils/ParsersAndFormatters';
+import { formatDecimal, formatAsset, ERR, assetToLong } from 'app/utils/ParsersAndFormatters';
 
 class ViewWorkerRequest extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       myPlanningVote: 10000,
-      total_vesting_shares: 1,
       votes: [],
       vote_list_page: 0,
       preloading: true
@@ -30,11 +29,8 @@ class ViewWorkerRequest extends React.Component {
       start_author: author,
       start_permlink: permlink
     };
-    let dgp = await golos.api.getDynamicGlobalPropertiesAsync();
-    let total_vesting_shares = parseInt(dgp.total_vesting_shares.split(' ')[0].replace('.', ''));
     this.setState({
       preloading: false,
-      total_vesting_shares,
       //myPlanningVote: Math.abs(this.props.request.myVote.vote_percent)
     });
   }
@@ -134,7 +130,7 @@ class ViewWorkerRequest extends React.Component {
 
     let rshares_pct = parseInt(request.stake_rshares * 100 / request.stake_total);
 
-    let global_rshares_pct = (parseFloat(request.stake_total) * 100 / this.state.total_vesting_shares).toPrecision(4);
+    let global_rshares_pct = (parseFloat(request.stake_total) * 100 / assetToLong(this.props.total_vesting_shares)).toPrecision(4);
 
     let min_amount = parseFloat(request.required_amount_min.split(" ")[0]);
     let max_amount = parseFloat(request.required_amount_max.split(" ")[0]);
@@ -237,8 +233,12 @@ export default connect(
         const url = props.author + '/' + props.permlink;
         const req = state.global.get('worker_requests').get(url)
         const request = req ? req.toJS() : null
+        const gprops = state.global.get('props')
+        const total_vesting_shares = gprops ? gprops.get('total_vesting_shares') : '1000.000000 GESTS';
+
         return {
           approve_min_percent,
+          total_vesting_shares,
           request
         };
     },
