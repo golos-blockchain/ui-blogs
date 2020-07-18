@@ -18,6 +18,7 @@ class ViewWorkerRequest extends React.Component {
       myPlanningVote: 10000,
       total_vesting_shares: 1,
       votes: [],
+      vote_list_page: 0,
       preloading: true
     };
   }
@@ -81,7 +82,7 @@ class ViewWorkerRequest extends React.Component {
           alert(ERR(err, 'worker_request_vote'));
           return;
         }
-        this.props.fetchState('/workers/requests/@' + request.post.author + '/' + request.post.permlink);
+        this.props.fetchState('/workers/created/@' + request.post.author + '/' + request.post.permlink);
       });
   }
 
@@ -105,9 +106,22 @@ class ViewWorkerRequest extends React.Component {
     this.setVote(-myPlanningVote);
   }
 
+  nextVoteListPage = () => {
+    this.setState({
+      vote_list_page: ++this.state.vote_list_page
+    });
+  }
+
+  prevVoteListPage = () => {
+    if (this.state.vote_list_page == 0) return;
+    this.setState({
+      vote_list_page: --this.state.vote_list_page
+    });
+  }
+
   render() {
     const { auth, request, approve_min_percent } = this.props;
-    const { myPlanningVote, preloading } = this.state;
+    const { vote_list_page, myPlanningVote, preloading } = this.state;
 
     if (preloading || !request) {
         return (<div>Загрузка...</div>);
@@ -162,16 +176,19 @@ class ViewWorkerRequest extends React.Component {
       const voterPercent = vote_percent / 100 + '%';
       return {value: (sign > 0 ? '+ ' : '- ') + voter, link: '/@' + voter, data: voterPercent};
     });
-    let vote_more = (upvotes+downvotes) - 20;
-    if (vote_more > 0) {
-      vote_list.push({value: <span>{'...и ещё ' + vote_more}</span>});
-    }
+    let next_vote_list = vote_list.slice(20*(vote_list_page+1), 20*(vote_list_page+1)+20);
+    vote_list = vote_list.slice(20*vote_list_page, 20*vote_list_page+20);
+
+    vote_list.push({value: <span>
+      <a className="Workers__votes_pagination" onClick={this.prevVoteListPage}>{vote_list_page > 0 ? '< Назад' : ''}</a>
+      <a className="Workers__votes_pagination" onClick={next_vote_list.length > 0 ? this.nextVoteListPage : null}>{next_vote_list.length > 0 ? 'Ещё >' : ''}</a></span>});
 
     return(
       <div>
         <h5><a target="_blank" href={"/@" + request.post.author + "/" + request.post.permlink} rel="noopener noreferrer"><Icon name="extlink" size="1_5x" /> 
           {request.post.title}
         </a></h5>
+        <hr/>
         <p>
           Автор заявки: <Author author={request.post.author} /><br/>
           Получатель средств: <Author author={request.worker} />
@@ -203,7 +220,7 @@ class ViewWorkerRequest extends React.Component {
               &nbsp;
               <Button round="true" type={(request.myVote && request.myVote.vote_percent < 0) ? "primary" : "secondary"} onClick={this.downVote}><Icon name="new/downvote" /> ({downvotes})</Button>
               &nbsp;
-              <DropdownMenu className="VoteList above" items={vote_list} selected={upvotes+downvotes + " голосов"} el="span" />
+              <DropdownMenu className="VoteList above" items={vote_list} selected={(upvotes+downvotes) + ' голосов'} el="span" />
             </div>
           </div>
           {author_menu}

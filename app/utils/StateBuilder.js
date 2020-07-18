@@ -250,7 +250,7 @@ export default async function getState(api, url, options, offchain = {}) {
             };
             let [ wr ] = await api.getWorkerRequests(query, 'by_created', true);
             state.worker_requests[url] = wr;
-            let votes = await api.getWorkerRequestVotes(author, permlink, '', 20);
+            let votes = await api.getWorkerRequestVotes(author, permlink, '', 50);
             state.worker_requests[url].votes = votes;
         }
     } else if (Object.keys(PUBLIC_API).includes(parts[0])) {

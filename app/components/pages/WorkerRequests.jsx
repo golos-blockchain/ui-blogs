@@ -49,31 +49,15 @@ class WorkerRequests extends React.Component {
 
   componentDidMount() {
     let new_state = {
-      select_states: ['created'],
-      selected_state: 'Открытые заявки',
-      showCreateRequest: false,
       showViewRequest: false,
       current_author: '',
       current_permlink: ''
     }
     const {routeParams} = this.props;
-    if (routeParams.state) {
-      if (routeParams.state === 'closed') {
-        new_state.selected_state = 'Закрытые';
-        new_state.select_states = ['payment_complete', 'closed_by_author', 'closed_by_expiration', 'closed_by_voters'];
-      } else {
-        new_state.select_states = [routeParams.state];
-      }
-      if (routeParams.state === 'payment') {
-        new_state.selected_state = 'Выплачиваемые';
-      }
-    }
     if (routeParams.slug) {
       new_state.showViewRequest = true;
       new_state.current_author = routeParams.username;
       new_state.current_permlink = routeParams.slug;
-    } else if (routeParams.username === '.add') {
-      new_state.showCreateRequest = true;
     }
     let total_vesting_shares = this.props.gprops.get('total_vesting_shares');
     total_vesting_shares = parseInt(total_vesting_shares.split(' ')[0].replace('.', ''));
@@ -158,6 +142,26 @@ class WorkerRequests extends React.Component {
     });
   }
 
+  onStateSelected = (e) => {
+    e.preventDefault();
+    const {link, value} = e.target.parentNode.dataset;
+    let select_states = [];
+    if (link === 'closed')
+      select_states = ['payment_complete', 'closed_by_author', 'closed_by_expiration', 'closed_by_voters'];
+    else
+      select_states = [link];
+
+    this.setState({
+      results: [],
+      start_author: null,
+      start_permlink: null,
+      select_states,
+      selected_state: value
+    }, () => {
+      this.loadMore();
+    });
+  }
+
   reloadList = () => {
     this.setState({
       results: [],
@@ -201,7 +205,6 @@ class WorkerRequests extends React.Component {
   }
 
   render() {
-    const state_in_route = this.props.routeParams.state || 'created';
     const workerRequests = this.state.results.map((req) => {
         let rshares_amount_pct = parseInt(req.stake_rshares * 100 / req.stake_total);
         rshares_amount_pct = !isNaN(rshares_amount_pct) ? rshares_amount_pct : 0;
@@ -219,7 +222,7 @@ class WorkerRequests extends React.Component {
         }
 
         return (<div key={req.post.author + "/" + req.post.permlink}>
-          <Link to={'/workers/' + state_in_route + '/@' + req.post.author + "/" + req.post.permlink}><h4 className="Workers__title" data-author={req.post.author} data-permlink={req.post.permlink} onClick={this.viewRequest}>{req.post.title}</h4></Link>
+          <Link to={'/workers/created/@' + req.post.author + "/" + req.post.permlink}><h4 className="Workers__title" data-author={req.post.author} data-permlink={req.post.permlink} onClick={this.viewRequest}>{req.post.title}</h4></Link>
           <div className="Workers__author float-right">Автор предложения:&nbsp;&nbsp;<Author author={req.post.author} follow={false} /></div>
           <table>
           <thead>
@@ -246,9 +249,17 @@ class WorkerRequests extends React.Component {
                   </span>
                 </div>
               </th>
-              <th style={{ width: '580px' }}>
-                <span className="Workers__green"><Icon name="new/upvote" /> За: {req.upvote_total} СГ ({req.upvotes} <FormattedPlural value={req.upvotes} one="голос" few="голоса" many="голосов" other="голосов"/>)</span>
-                <span className="Workers__red float-right"> Против: {req.downvote_total} СГ ({req.downvotes} <FormattedPlural value={req.downvotes} one="голос" few="голоса" many="голосов" other="голосов"/>)&nbsp;<Icon name="new/downvote" /></span>
+              <th style={{ width: '580px', fontWeight: 'normal' }}>
+                <span className="Workers__green">
+                  <Icon name="new/upvote" />&nbsp;
+                  За: {req.upvote_total} СГ
+                  ({req.upvotes} <FormattedPlural value={req.upvotes} one="голос" few="голоса" many="голосов" other="голосов"/>)
+                </span>
+                <span className="Workers__red float-right">
+                  Против: {req.downvote_total} СГ
+                  ({req.downvotes} <FormattedPlural value={req.downvotes} one="голос" few="голоса" many="голосов" other="голосов"/>)
+                  &nbsp;<Icon name="new/downvote" />
+                </span>
               </th>
             </tr>
           </thead>
@@ -295,14 +306,14 @@ class WorkerRequests extends React.Component {
     const { current_author, current_permlink, selected_state, show_load_more, showCreateRequest, showViewRequest} = this.state;
     const auth = { account: this.props.account, posting_key: this.props.posting_key };
     let list_states = [
-      {link: '/workers/created', value: 'Открытые заявки'},
-      {link: '/workers/payment', value: 'Выплачиваемые'},
-      {link: '/workers/closed', value: 'Закрытые'}
+      {link: 'created', value: 'Открытые заявки', onClick: this.onStateSelected},
+      {link: 'payment', value: 'Выплачиваемые', onClick: this.onStateSelected},
+      {link: 'closed', value: 'Закрытые', onClick: this.onStateSelected}
     ];
     return (
       <div className="App-workers">
         <div><h2>Заявки на работу</h2></div>
-        <Link to={'/workers/' + state_in_route + '/@.add'}>ffffff<Button round="true" type="primary">+ {tt('workers.create_request')}</Button></Link>
+        <Button onClick={this.createRequest} round="true" type="primary">+ {tt('workers.create_request')}</Button>
         <WorkerFunds/>
         <form className="Input__Inline" style={{marginBottom: '1rem'}} onSubmit={this.searchByAuthor}>
           <input className="Input__Inline" type="text" placeholder="Поиск по автору" onChange={this.handleSearchAuthor}/>

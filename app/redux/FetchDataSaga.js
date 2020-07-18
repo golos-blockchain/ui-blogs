@@ -279,7 +279,7 @@ export function* fetchState(location_change_action) {
                 };
                 let [ wr ] = yield call([api, api.getWorkerRequestsAsync], query, 'by_created', true);
                 state.worker_requests[url] = wr;
-                let votes = yield call([api, api.getWorkerRequestVotesAsync], author, permlink, '', 20);
+                let votes = yield call([api, api.getWorkerRequestVotesAsync], author, permlink, '', 50);
                 state.worker_requests[url].votes = votes;
                 const voter = yield select(state => state.offchain.get('account'))
                 let [ myVote ] = yield call([api, api.getWorkerRequestVotesAsync], author, permlink, voter, 1);
