@@ -222,6 +222,17 @@ class WorkerRequests extends React.Component {
             vote_end = (<TimeAgoWrapper date={req.vote_end_time} />);
         }
 
+        let upvote_progress_width = req.upvote_percent;
+        let downvote_progress_width = req.downvote_percent;
+        if (upvote_progress_width != 0 && upvote_progress_width < 6) {
+            upvote_progress_width = 6;
+            downvote_progress_width = 94;
+        }
+        if (downvote_progress_width != 0 && downvote_progress_width < 6) {
+            downvote_progress_width = 6;
+            upvote_progress_width = 94;
+        }
+
         return (<div key={req.post.author + "/" + req.post.permlink}>
           <Link to={'/workers/created/@' + req.post.author + "/" + req.post.permlink}><h4 className="Workers__title" data-author={req.post.author} data-permlink={req.post.permlink} onClick={this.viewRequest}>{req.post.title}</h4></Link>
           <div className="Workers__author float-right">Автор предложения:&nbsp;&nbsp;<Author author={req.post.author} follow={false} /></div>
@@ -229,7 +240,7 @@ class WorkerRequests extends React.Component {
           <thead>
             <tr>
               {['created', 'payment'].includes(req.state) && <th style={{ textAlign: 'center' }}>
-                Сумма
+                Запрашиваемая сумма
               </th>}
               {'created' == req.state && <th style={{ textAlign: 'center' }}>
                 Окончание голосования
@@ -291,8 +302,8 @@ class WorkerRequests extends React.Component {
               </td>
               <td>
                 <div>
-                  <div className="Workers__progressbar Workers__green_bg" style={{ width: req.upvote_percent + '%' }}>{req.upvote_percent >= 5 ? req.upvote_percent + '%' : ''}</div>
-                  <div className="Workers__progressbar Workers__red_bg" style={{ width: req.downvote_percent + '%' }}>{req.downvote_percent >= 5 ? req.downvote_percent + '%' : ''}</div>
+                  <div className="Workers__progressbar Workers__green_bg" style={{ width: upvote_progress_width + '%' }}>{req.upvote_percent >= 1 ? req.upvote_percent + '%' : '\xa0'}</div>
+                  <div className="Workers__progressbar Workers__red_bg" style={{ width: downvote_progress_width + '%' }}>{req.downvote_percent >= 1 ? req.downvote_percent + '%' : '\xa0'}</div>
                 </div>
                 <div>
                   <div className="Workers__created float-right">Опубликовано <TimeAgoWrapper date={req.created} /></div>

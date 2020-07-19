@@ -32,7 +32,7 @@
 }
 
 .Workers__red {
-   color: rgb(206,0,40);
+   color: rgb(252,84,78);
 }
 
 .Workers__gray {
@@ -40,11 +40,11 @@
 }
 
 .Workers__green_bg {
-   background-color: rgb(30,230,80);
+   background-color: rgb(20,180,60);
 }
 
 .Workers__red_bg {
-   background-color: rgb(255,71,109);
+   background-color: rgb(252,84,78);
 }
 
 .Workers__gray_bg {
@@ -67,8 +67,7 @@
 .Workers__progressbar {
   display: inline-block;
   text-align: center;
-  color: black;
-  font-weight: bold;
+  color: white;
 }
 
 @import "./AddEditWorkerRequest";
