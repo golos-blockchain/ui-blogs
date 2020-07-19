@@ -10,6 +10,24 @@ function fractional_part_len(value) {
     return parts.length < 2 ? 0 : parts[1].length;
 }
 
+// 123456 or '123456' -> '134.456 GOLOS'
+export const longToAsset = (value, sym = 'GOLOS', decPlaces = 3) => {
+    let prec = Math.pow(10, decPlaces);
+    let val_int = parseInt(value);
+    let int_part = parseInt(Math.abs(val_int) / prec) + '';
+    let fract_part = (Math.abs(val_int) % prec) + '';
+    fract_part = fract_part.padStart(decPlaces, '0');
+    if (decPlaces > 0)
+      return (val_int < 0 ? '-' : '') + int_part + '.' + fract_part + ' ' + sym;
+    else
+      return (val_int < 0 ? '-' : '') + int_part + ' ' + sym;
+}
+
+// '134.456 GOLOS' => 123456
+export const assetToLong = (asset) => {
+  return parseInt(asset.split(' ')[0].replace('.', ''));
+}
+
 // FIXME this should be unit tested.. here is one bug: 501,695,.505
 export function formatDecimal(value, decPlaces = 2, truncate0s = true, thouSeparator = ',') {
     let decSeparator, fl, i, j, sign, abs_value;

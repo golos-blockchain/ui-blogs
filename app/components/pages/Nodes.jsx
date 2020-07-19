@@ -11,7 +11,6 @@ import Icon from 'app/components/elements/Icon';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import transaction from 'app/redux/Transaction';
 import g from 'app/redux/GlobalReducer';
-import { formatDecimal } from 'app/utils/ParsersAndFormatters';
 import "./Nodes.scss";
 
 const Long = ByteBuffer.Long;

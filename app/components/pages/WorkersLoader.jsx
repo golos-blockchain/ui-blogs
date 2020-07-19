@@ -29,6 +29,6 @@ class WorkersLoader extends Component {
 }
 
 module.exports = {
-    path: '/workers',
+    path: '/workers(/:state)(/@:username)(/:slug)',
     component: WorkersLoader,
 };

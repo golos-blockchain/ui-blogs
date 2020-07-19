@@ -5,6 +5,7 @@ import {Long} from 'bytebuffer';
 import {VEST_TICKER, LIQUID_TICKER} from 'app/client_config'
 import {Map, Seq, fromJS} from 'immutable';
 
+// '1000000' -> '1,000,000'
 export const numberWithCommas = (x) => x.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
 export const toAsset = (value) => {

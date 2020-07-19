@@ -7,6 +7,9 @@ export const routeRegex = {
     CategoryFilters: /^\/(hot|votes|responses|donates|trending|trending30|promoted|cashout|payout|payout_comments|created|active)\/?$/ig,
     PostNoCategory: /^\/(@[\w\.\d-]+)\/([\w\d-]+)/,
     Post: /^\/([\w\d\-\/]+)\/(\@[\w\d\.-]+)\/([\w\d-]+)\/?($|\?)/,
+    WorkerSort: /^\/([\w\d\-]+)\/([\w\d\-]+)\/?($|\?)/,
+    WorkerSearchByAuthor: /^\/([\w\d\-]+)\/([\w\d\-]+)\/(\@[\w\d.-]+)\/?($|\?)/,
+    WorkerRequest: /^\/([\w\d\-]+)\/([\w\d\-]+)\/(\@[\w\d.-]+)\/([\w\d-]+)\/?($|\?)/,
     PostJson: /^\/([\w\d\-\/]+)\/(\@[\w\d\.-]+)\/([\w\d-]+)(\.json)$/,
     UserJson: /^\/(@[\w\.\d-]+)(\.json)$/,
     UserNameJson: /^.*(?=(\.json))/
@@ -83,7 +86,13 @@ export default function resolveRoute(path)
     if (path === '/leave_page') {
         return {page: 'LeavePage'};
     }
-    let match = path.match(routeRegex.PostsIndex);
+    let match = path.match(routeRegex.WorkerRequest)
+        || path.match(routeRegex.WorkerSearchByAuthor)
+        || path.match(routeRegex.WorkerSort);
+    if (match) {
+        return {page: 'Workers', params: match.slice(1)};
+    }
+    match = path.match(routeRegex.PostsIndex);
     if (match) {
         return {page: 'PostsIndex', params: ['home', match[1]]};
     }

@@ -8,6 +8,7 @@ import {
 } from 'app/client_config';
 import Button from 'app/components/elements/Button';
 import { formatAsset, ERR } from 'app/utils/ParsersAndFormatters';
+import { toAsset } from 'app/utils/StateFunctions';
 
 import WorkerFunds from 'app/components/elements/WorkerFunds';
 import { getAuthorPermlink } from 'app/utils/ParsersAndFormatters';
@@ -26,7 +27,9 @@ class AddEditWorkerRequest extends React.Component {
       created: '',
 
       postError: '',
-      workerError: ''
+      workerError: '',
+      amountError: '',
+      voteEndError: ''
     };
   }
 
@@ -85,6 +88,36 @@ class AddEditWorkerRequest extends React.Component {
       });
   }
 
+  onAmountChanged = (event) => {
+    let amountError = null;
+
+    let required_amount_min = this.state.required_amount_min.trim().replace(" ", ".000 ");
+    let required_amount_max = this.state.required_amount_max.trim().replace(" ", ".000 ");
+    required_amount_min = toAsset(required_amount_min);
+    required_amount_max = toAsset(required_amount_max);
+    if (required_amount_min.amount == NaN || required_amount_max.amount == NaN)
+      amountError = 'Неверно указана сумма.';
+    else if (required_amount_min.symbol != 'GOLOS' && required_amount_min.symbol != 'GBG')
+      amountError = 'Сумма должна быть в GOLOS или GBG.';
+    else if (required_amount_min.symbol != required_amount_max.symbol)
+      amountError = 'Обе суммы должны быть в одной и той же валюте.';
+    else if (required_amount_min.amount <= 0 || required_amount_max.amount <= 0)
+      amountError = 'Сумма должна быть больше 0.';
+    else if (required_amount_min.amount > required_amount_max.amount)
+      amountError = 'Минимальная сумма больше максимальной.';
+    this.setState({ amountError });
+  }
+
+  onVoteEndChanged = (event) => {
+    let voteEndError = null;
+
+    let dur = parseInt(this.state.duration);
+    if (dur === NaN || dur < 5 || dur > 30) {
+      voteEndError = 'Неверное время голосования. Допускается от 5 до 30 суток.';
+    }
+    this.setState({ voteEndError });
+  }
+
   sendOp = async (event) => {
     event.preventDefault();
     const { auth } = this.props;
@@ -125,7 +158,7 @@ class AddEditWorkerRequest extends React.Component {
 
   render() {
     const req = this.state;
-    const { postError, workerError } = this.state;
+    const { postError, workerError, amountError, voteEndError } = this.state;
     const editCase = (this.props.author !== '');
 
     let creation_fee = null;
@@ -144,16 +177,16 @@ class AddEditWorkerRequest extends React.Component {
             </label>
             <p>{postError}</p>
         </div>
-        <table className="AmountFields">
+        <table className={"AmountFields" + cn({ error: amountError })}>
           <tr>
             <td>
               <label>
-                Минимальная сумма:<input name="required_amount_min" type="text" value={req.required_amount_min} onChange={this.handleInputChange}/>
+                Минимальная сумма:<input name="required_amount_min" type="text" value={req.required_amount_min} onChange={this.handleInputChange} onBlur={this.onAmountChanged}/>
               </label>
             </td>
             <td>
               <label>
-                Запрашиваемая сумма:<input name="required_amount_max" type="text" value={req.required_amount_max} onChange={this.handleInputChange}/>
+                Запрашиваемая сумма:<input name="required_amount_max" type="text" value={req.required_amount_max} onChange={this.handleInputChange}  onBlur={this.onAmountChanged}/>
               </label>
             </td>
             <td>
@@ -163,12 +196,14 @@ class AddEditWorkerRequest extends React.Component {
             </td>
           </tr>
         </table>
+        <p className={cn({ error: amountError })}>{amountError}</p>
         <label>
           Время голосования (суток):
           <div>
-            <input name="duration" type="number" min="5" max="30" className="inline" value={req.duration} onChange={this.handleInputChange} />
+            <input name="duration" type="number" min="5" max="30" className="inline" value={req.duration} onChange={this.handleInputChange}  onBlur={this.onVoteEndChanged}/>
           </div>
         </label>
+        <p className={cn({ error: voteEndError })}>{voteEndError}</p>
         <div className={cn({ error: workerError })}>
             <label>
               Получатель средств:<input name="worker" type="text" value={req.worker} onChange={this.handleInputChange} onBlur={this.onWorkerChanged}/>
@@ -176,7 +211,7 @@ class AddEditWorkerRequest extends React.Component {
             <p>{workerError}</p>
         </div>
         <div>
-          <Button round="true" type="primary" onClick={this.sendOp}>Отправить</Button>&nbsp;
+          {(!postError && !workerError && !amountError && !voteEndError) && <Button round="true" type="primary" onClick={this.sendOp}>Отправить</Button>}&nbsp;
           <Button round="true" type="secondary" onClick={(event) => {event.preventDefault(); this.props.hider('closed');}}>Отмена</Button>
           {creation_fee}
         </div>
