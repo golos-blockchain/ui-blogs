@@ -240,7 +240,7 @@ class WorkerRequests extends React.Component {
           <thead>
             <tr>
               {['created', 'payment'].includes(req.state) && <th style={{ textAlign: 'center' }}>
-                Сумма
+                Запрашиваемая сумма
               </th>}
               {'created' == req.state && <th style={{ textAlign: 'center' }}>
                 Окончание голосования

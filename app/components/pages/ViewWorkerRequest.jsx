@@ -136,7 +136,7 @@ class ViewWorkerRequest extends React.Component {
     let max_amount = parseFloat(request.required_amount_max.split(" ")[0]);
     let pend = max_amount * rshares_pct / 100;
     let pending_amount = formatDecimal(pend, 0, false, ' ')[0];
-    let pending_title = "Если будет набран минимальный % поддержки от общей СГ";
+    let pending_title = "Если на момент окончания голосования будет набран мин. % поддержки от общей СГ и\nрасчётная сумма заявки выше мин. суммы запрашиваемой воркером";
 
     let progress_bar_text = pending_amount + ' ' + request.required_amount_min.split(' ')[1] + ' (' + rshares_pct + '%)';
 
