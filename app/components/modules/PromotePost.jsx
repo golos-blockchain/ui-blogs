@@ -105,8 +105,8 @@ class PromotePost extends Component {
                    <form onSubmit={this.onSubmit} onChange={() => this.setState({trxError: ''})}>
                        <h4>{tt('promote_post_jsx.promote_post')}</h4>
                        <p>{tt('promote_post_jsx.spend_your_DEBT_TOKEN_to_advertise_this_post', {DEBT_TOKEN})}.</p>
-                       <p>{tt('promote_post_jsx.to_promote_this_post_sent')}<b>{this.props.promoted.split('.')[0] + ' GBG'}</b>.
-                       {!alreadyInTop && <div>{tt('promote_post_jsx.remaining_to_promote')}<b>{requiredAmount}</b>.</div>}
+                       <p>{tt('promote_post_jsx.to_promote_this_post_sent')}<b>{this.props.promoted.split('.')[0] + ' GBG'}</b>
+                       {!alreadyInTop && <div>{tt('promote_post_jsx.remaining_to_promote')}<b>{requiredAmount}</b></div>}
                        </p>
                        <hr />
                        <div className="row">
