@@ -7,9 +7,9 @@ export const routeRegex = {
     CategoryFilters: /^\/(hot|votes|responses|donates|trending|trending30|promoted|cashout|payout|payout_comments|created|active)\/?$/ig,
     PostNoCategory: /^\/(@[\w\.\d-]+)\/([\w\d-]+)/,
     Post: /^\/([\w\d\-\/]+)\/(\@[\w\d\.-]+)\/([\w\d-]+)\/?($|\?)/,
-    WorkerSort: /^\/([\w\d\-]+)\/([\w\d\-]+)\/?($|\?)/,
-    WorkerSearchByAuthor: /^\/([\w\d\-]+)\/([\w\d\-]+)\/(\@[\w\d.-]+)\/?($|\?)/,
-    WorkerRequest: /^\/([\w\d\-]+)\/([\w\d\-]+)\/(\@[\w\d.-]+)\/([\w\d-]+)\/?($|\?)/,
+    WorkerSort: /^\/workers\/([\w\d\-]+)\/?($|\?)/,
+    WorkerSearchByAuthor: /^\/workers\/([\w\d\-]+)\/(\@[\w\d.-]+)\/?($|\?)/,
+    WorkerRequest: /^\/workers\/([\w\d\-]+)\/(\@[\w\d.-]+)\/([\w\d-]+)\/?($|\?)/,
     PostJson: /^\/([\w\d\-\/]+)\/(\@[\w\d\.-]+)\/([\w\d-]+)(\.json)$/,
     UserJson: /^\/(@[\w\.\d-]+)(\.json)$/,
     UserNameJson: /^.*(?=(\.json))/

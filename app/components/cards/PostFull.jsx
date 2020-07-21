@@ -301,6 +301,7 @@ class PostFull extends React.Component {
                 iurl = '/images/noimage.png';
             }
             const prevPost = (<PostSummaryThumb
+              key={pp2.link}
               visitedClassName=""
               mobile={false}
               isNsfw={false}
