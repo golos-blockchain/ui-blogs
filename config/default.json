@@ -48,7 +48,7 @@
       "styleSrc": "'self' 'unsafe-inline' cdnjs.cloudflare.com fonts.googleapis.com",
       "imgSrc": "* data:",
       "fontSrc": "data: fonts.gstatic.com",
-      "connectSrc": "'self' api.imgur.com steemitimages.com wss://api.golos.id wss://api.golos.in wss://api.golos.today wss://api-golos.blckchnd.com wss://api.aleksw.space *.coinmarketcap.com *.googleapis.com app.sharpay.io www.google-analytics.com",
+      "connectSrc": "'self' api.imgur.com wss://api.golos.id wss://api.golos.today wss://api-golos.blckchnd.com wss://api.aleksw.space *.coinmarketcap.com *.googleapis.com app.sharpay.io www.google-analytics.com",
       "reportUri": "/api/v1/csp_violation",
       "objectSrc": "'self'",
       "pluginTypes": "application/pdf",
@@ -57,7 +57,7 @@
     "reportOnly": false,
     "setAllHeaders": true
   },
-  "img_proxy_prefix": "https://steemitimages.com/",
+  "img_proxy_prefix": "https://imgp.golos.io/",
   "lang_server" : "https://lang.golos.id/",
   "ipfs_prefix": false,
   "mixpanel": false,
