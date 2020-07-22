@@ -187,7 +187,7 @@ class PostSummary extends React.Component {
         let thumb = null;
         if(pictures && p.image_link) {
           const prox = $STM_Config.img_proxy_prefix
-          const size = (thumbSize == 'mobile') ? '800x600' : '250x150'
+          const size = (thumbSize == 'mobile') ? '800x600' : '256x512'
 
           let url = (prox ? prox + size + '/' : '');
           if (Date.parse(p.created) > CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME) {
