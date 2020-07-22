@@ -57,7 +57,7 @@
     "reportOnly": false,
     "setAllHeaders": true
   },
-  "img_proxy_prefix": "https://imgp.golos.io/",
+  "img_proxy_prefix": "https://steemitimages.com/",
   "lang_server" : "https://lang.golos.id/",
   "ipfs_prefix": false,
   "mixpanel": false,
