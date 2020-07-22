@@ -1,6 +1,6 @@
 import { fork, call, put, select, takeEvery } from 'redux-saga/effects';
 import {fromJS, Set, Map} from 'immutable'
-import {getAccount, getContent} from 'app/redux/SagaShared'
+import {getAccount, getContent, getWorkerRequest} from 'app/redux/SagaShared'
 import {findSigningKey} from 'app/redux/AuthSaga'
 import g from 'app/redux/GlobalReducer'
 import user from 'app/redux/User'
@@ -50,6 +50,7 @@ const hook = {
     accepted_account_update,
     accepted_withdraw_vesting,
     accepted_donate,
+    accepted_worker_request_vote,
 }
 
 function* preBroadcast_transfer({operation}) {
@@ -284,6 +285,12 @@ function* accepted_donate({operation}) {
     console.log('Donate accepted on ', author, '/', permlink);
     yield call(getContent, {author, permlink})
     yield put(g.actions.donated({username: operation.from, author, permlink, amount: operation.amount}))
+}
+
+function* accepted_worker_request_vote({operation}) {
+    const { voter, author, permlink} = operation;
+    console.log('Worker request vote accepted on ', author, '/', permlink, 'by', voter);
+    yield call(getWorkerRequest, {author, permlink, voter})
 }
 
 function* accepted_withdraw_vesting({operation}) {

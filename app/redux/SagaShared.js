@@ -44,3 +44,22 @@ export function* getContent({author, permlink, resolve, reject}) {
         reject();
     }
 }
+
+export function* getWorkerRequest({author, permlink, voter}) {
+    const query = {
+        limit: 1,
+        start_author: author,
+        start_permlink: permlink
+    };
+    const [ wr ] = yield call([api, api.getWorkerRequestsAsync], query, 'by_created', true);
+    if (wr) {
+        const votes = yield call([api, api.getWorkerRequestVotesAsync], author, permlink, '', 50);
+        wr.votes = votes;
+
+        if (voter) {
+            const [ myVote ] = yield call([api, api.getWorkerRequestVotesAsync], author, permlink, voter, 1);
+            wr.myVote = (myVote && myVote.voter == voter) ? myVote : null
+        }
+        yield put(g.actions.receiveWorkerRequest({wr}))
+    }
+}
