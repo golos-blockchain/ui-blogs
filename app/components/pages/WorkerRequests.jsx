@@ -282,7 +282,7 @@ class WorkerRequests extends React.Component {
                   <b>{formatAsset(req.required_amount_max)}</b>
                 </div>
                 <div>
-                  <span style={{ fontSize: '80%' }}>
+                  <span style={{ fontSize: '85%' }}>
                     но не менее {formatAsset(req.required_amount_min)}
                   </span>
                 </div>
@@ -301,7 +301,7 @@ class WorkerRequests extends React.Component {
                   <b className="Workers__green">{tt('workers.'+req.state)}</b>
                 </div>
                 <div>
-                  <span className="Workers__green" style={{ fontSize: '80%' }}>
+                  <span className="Workers__green" style={{ fontSize: '85%' }}>
                     <TimeAgoWrapper date={req.payment_end_time} />
                   </span>
                 </div>
