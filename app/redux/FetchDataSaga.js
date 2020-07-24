@@ -277,13 +277,17 @@ export function* fetchState(location_change_action) {
                   start_author: author,
                   start_permlink: permlink
                 };
-                let [ wr ] = yield call([api, api.getWorkerRequestsAsync], query, 'by_created', true);
+                const [ wr ] = yield call([api, api.getWorkerRequestsAsync], query, 'by_created', true);
                 state.worker_requests[url] = wr;
-                let votes = yield call([api, api.getWorkerRequestVotesAsync], author, permlink, '', 50);
+
+                const votes = yield call([api, api.getWorkerRequestVotesAsync], author, permlink, '', 50);
                 state.worker_requests[url].votes = votes;
-                const voter = yield select(state => state.offchain.get('account'))
-                let [ myVote ] = yield call([api, api.getWorkerRequestVotesAsync], author, permlink, voter, 1);
-                state.worker_requests[url].myVote = (myVote && myVote.voter == voter) ? myVote : null
+
+                const voter = localStorage.getItem('invite');
+                if (voter) {
+                    const [ myVote ] = yield call([api, api.getWorkerRequestVotesAsync], author, permlink, voter, 1);
+                    state.worker_requests[url].myVote = (myVote && myVote.voter == voter) ? myVote : null
+                }
             }
         } else if (Object.keys(PUBLIC_API).includes(parts[0])) {
 
