@@ -8,6 +8,5 @@ export default `
 /vox-populi/@maxxco6/kto-takaya-anastasiya-gizerskaya
 /ru--kokteijlx/@ilyachema/managa-ili-eshe-odin-sposob-rasslabitsya
 /ru--politika/@ms-boss/chastnaya-armiya-vagnera
-/slotum/@joycasino/obzor-slotum-casino-kazino-slotum
 /ru--prochee/@oldpages/masterokst-zakonno-li-videonablyudenie-v-podezde
 `.trim().split("\n")

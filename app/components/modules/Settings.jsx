@@ -189,6 +189,7 @@ class Settings extends React.Component {
         this.setState({donatePresets});
         const {accountname} = this.props;
         localStorage.setItem('donate.presets-'+accountname, JSON.stringify(donatePresets));
+        this.notify()
     }
 
     notify = () => {

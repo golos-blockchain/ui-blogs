@@ -394,7 +394,7 @@ class PostFull extends React.Component {
         const { ignoring, username } = this.props;
 
         if (ignoring && ignoring.has(username)) {
-            return <span className="error">Вы заблокированы в данном блоге.</span>
+            return <h5 className="error">{tt('g.blocked_from_blog')}</h5>
         }
 
         return (
