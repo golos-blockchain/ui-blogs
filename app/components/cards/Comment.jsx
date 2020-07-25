@@ -229,7 +229,7 @@ class CommentImpl extends PureComponent {
         }
 
         if (negativeCommenters && negativeCommenters.has(username)) {
-            renderedEditor = <span className="error">Вы заблокированы в данном блоге.</span>
+            renderedEditor = <h5 className="error">{tt('g.blocked_from_blog')}</h5>
         }
 
         return (

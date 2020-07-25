@@ -144,6 +144,19 @@ export default createModule({
             },
         },
         {
+            action: 'RECEIVE_WORKER_REQUEST',
+            reducer: (state, { payload: { wr } }) => {
+                wr = fromJS(wr);
+                const post = wr.get('post');
+                const url = post.get('author') + '/' + post.get('permlink');
+                return state.updateIn(['worker_requests', url], Map(), w => {
+                    w = w.delete('votes');
+                    w = w.mergeDeep(wr);
+                    return w;
+                });
+            },
+        },
+        {
             action: 'LINK_REPLY',
             reducer: (state, { payload: op }) => {
                 const {

@@ -2,6 +2,7 @@ import React from 'react';
 import golos from 'golos-classic-js';
 import tt from 'counterpart';
 import { connect } from 'react-redux';
+import transaction from 'app/redux/Transaction';
 
 import Button from 'app/components/elements/Button';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
@@ -23,7 +24,7 @@ class ViewWorkerRequest extends React.Component {
   }
 
   async componentDidMount() {
-    const { author, permlink } = this.props;
+    const { author, permlink, request } = this.props;
     const query = {
       limit: 1,
       start_author: author,
@@ -31,14 +32,12 @@ class ViewWorkerRequest extends React.Component {
     };
     this.setState({
       preloading: false,
-      //myPlanningVote: Math.abs(this.props.request.myVote.vote_percent)
+      myPlanningVote: (request && request.myVote) ? Math.abs(request.myVote.vote_percent) : 10000
     });
   }
 
   componentWillUnmount() {
   }
-
-//        myPlanningVote: Math.abs(myVote[0].vote_percent)
 
   deleteMe = (event) => {
     event.preventDefault();
@@ -70,16 +69,13 @@ class ViewWorkerRequest extends React.Component {
     });
   }
 
-  setVote = (percent) => {
+  setVote = (vote_percent) => {
     const { auth, request } = this.props;
-    golos.broadcast.workerRequestVote(auth.posting_key, auth.account, request.post.author, request.post.permlink,
-      percent, [], (err, result) => {
-        if (err) {
-          alert(ERR(err, 'worker_request_vote'));
-          return;
-        }
-        this.props.fetchState('/workers/created/@' + request.post.author + '/' + request.post.permlink);
-      });
+    const { author, permlink } = request.post;
+    this.props.voteWorkerRequest({author, permlink, vote_percent, accountName: auth.account});
+    this.setState({
+      vote_list_page: 0
+    });
   }
 
   upVote = () => {
@@ -165,7 +161,6 @@ class ViewWorkerRequest extends React.Component {
         </div>
       );
     }
-
     let vote_list = request.votes.map(vote => {
       const { voter, vote_percent } = vote;
       const sign = Math.sign(vote_percent);
@@ -242,10 +237,12 @@ export default connect(
           request
         };
     },
-    dispatch => {
-        return {
-            fetchState: pathname =>
-                dispatch({type: 'FETCH_STATE', payload: {pathname}})
-        };
-    }
+    dispatch => ({
+        voteWorkerRequest: ({author, permlink, vote_percent, accountName}) => {
+            dispatch(transaction.actions.broadcastOperation({
+                type: 'worker_request_vote',
+                operation: {voter: accountName, author, permlink, vote_percent}                 
+            }))
+        },
+    })
 )(ViewWorkerRequest);

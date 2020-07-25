@@ -5,11 +5,8 @@ compress
 horror
 jekasds
 alte
-ekaterinavolkova
-vam
 joycasino
 id-mefklad
-antiekstremist
 `.trim().split("\n")
 
 export const blockedContent = `

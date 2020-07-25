@@ -282,7 +282,7 @@ class WorkerRequests extends React.Component {
                   <b>{formatAsset(req.required_amount_max)}</b>
                 </div>
                 <div>
-                  <span style={{ fontSize: '80%' }}>
+                  <span style={{ fontSize: '85%' }}>
                     но не менее {formatAsset(req.required_amount_min)}
                   </span>
                 </div>
@@ -293,8 +293,18 @@ class WorkerRequests extends React.Component {
               {!['created'].includes(req.state) && <td style={{ textAlign: 'center' }}>
                 <b>{formatAsset(req.paid_out)}</b>
               </td>}
-              {!['created', 'payment'].includes(req.state) && <td style={{ textAlign: 'center' }}>
-                <b className={(req.state == 'payment_complete') ? 'Workers__green' : 'Workers__red'}>{tt('workers.'+req.state)}</b>
+              {!['created', 'payment', 'payment_complete'].includes(req.state) && <td style={{ textAlign: 'center' }}>
+                <b className="Workers__red">{tt('workers.'+req.state)}</b>
+              </td>}
+              {['payment_complete'].includes(req.state) && <td style={{ textAlign: 'center' }}>
+                <div>
+                  <b className="Workers__green">{tt('workers.'+req.state)}</b>
+                </div>
+                <div>
+                  <span className="Workers__green" style={{ fontSize: '85%' }}>
+                    <TimeAgoWrapper date={req.payment_end_time} />
+                  </span>
+                </div>
               </td>}
               <td style={{ textAlign: 'center' }}><span className={(rshares_pct >= 15 ? 'Workers__green' : 'Workers__red')}>
                 {rshares_pct}%
