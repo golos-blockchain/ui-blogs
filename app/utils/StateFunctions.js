@@ -106,7 +106,7 @@ export function contentStats(content) {
     const authorRepLog10 = repLog10(content.get('author_reputation'))
 
     const gray = !hasPendingPayout && (authorRepLog10 < 1 || (authorRepLog10 < 65 && meetsGrayThreshold))
-    const hide = !hasPendingPayout && (authorRepLog10 < 0) // rephide
+    const hide = authorRepLog10 < 0 // rephide
     const pictures = !gray
 
     // Combine tags+category to check nsfw status
