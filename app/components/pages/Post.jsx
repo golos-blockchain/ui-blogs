@@ -207,7 +207,7 @@ class Post extends React.Component {
 
                     <iframe data-aa='1150095' src='//acceptable.a-ads.com/1150095' scrolling='no'
                     style={{width:'100%', maxWidth:'50rem', margin:'0 auto', border:'0px', padding:'0', overflow:'hidden'}}
-                    allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups'></iframe>
+                    allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe>
 
                 </div>
           
