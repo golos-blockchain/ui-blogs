@@ -272,7 +272,7 @@ class PostsIndex extends React.Component {
 
                       <iframe data-aa='1148471' src='//ad.a-ads.com/1148471?size=240x400' scrolling='no'
                       style={{width:'240px', height:'400px', border:'0px', padding:'0', overflow:'hidden'}}
-                      allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups'></iframe>
+                      allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe>
                       
                     </div>
 

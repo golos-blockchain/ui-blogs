@@ -265,7 +265,7 @@ class PostsList extends PureComponent {
 
                   <iframe data-aa='1200986' src='//acceptable.a-ads.com/1200986' scrolling='no'
                   style={{width:'100%', border:'0px', padding:'0', overflow:'hidden'}} 
-                  allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups'></iframe> 
+                  allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe> 
                   
                 </li>))
             }
