@@ -154,6 +154,7 @@ class Witnesses extends Component {
                         {rank < 10 && '0'}
                         {rank++}
                         &nbsp;&nbsp;
+                        {currentProxy && currentProxy.length ? null : (
                         <span className={classUp}>
                             <a
                                 href="#"
@@ -165,6 +166,7 @@ class Witnesses extends Component {
                                 {up}
                             </a>
                         </span>
+                        )}
                     </td>
                     <td style={rank <= 20 ? { fontWeight: 'bold' } : null}>
                         <Link to={'/@' + owner}>{owner}</Link>&nbsp;
@@ -270,7 +272,9 @@ class Witnesses extends Component {
                         <a target="_blank" href="https://t.me/golos_delegates" className="golos-btn btn-secondary btn-round" style={{ float: 'right', marginTop: '0.75rem' }}>{tt('witnesses_jsx.chat_delegates')} <Icon name="new/telegram" /></a>
                         <a target="_blank" href="https://ropox.app/chainprops" className="golos-btn btn-secondary btn-round" style={{ float: 'right', marginTop: '0.75rem' }}>{tt('witnesses_jsx.chain_properties')} <Icon name="extlink" /></a>
                         <h2>{tt('witnesses_jsx.top_witnesses')}</h2>
-                        {currentProxy && currentProxy.length ? null : (
+                        {currentProxy && currentProxy.length ? (
+                            <p>{tt('witnesses_jsx.witness_set')} <a href="#bottom">Отмена прокси.</a></p>
+                            ) : (
                             <p>
                                 {witness_vote_count == 0 && <strong>
                                     {tt('witnesses_jsx.witness_0')}.
@@ -286,7 +290,6 @@ class Witnesses extends Component {
                     </div>
                 </div>
 
-                {currentProxy && currentProxy.length ? null : (
                     <div className="row small-collapse">
                         <div className="column">
                             <table>
@@ -323,7 +326,6 @@ class Witnesses extends Component {
                             </table>
                         </div>
                     </div>
-                )}
 
                 {!showAfter50 &&
                     <div className="row">
@@ -390,7 +392,7 @@ class Witnesses extends Component {
                                 <div className="input-group">
                                     <input className="input-group-field bold" disabled type="text" style={{float: "left", width: "75%", maxWidth: "20rem"}} value={currentProxy} />
                                     <div className="input-group-button">
-                                        <button style={{marginBottom: 0}} className="button" onClick={this._accountWitnessProxy}>{tt('witnesses_jsx.witness_proxy_clear')}</button>
+                                        <button style={{marginBottom: 0}} className="button" onClick={this._accountWitnessProxy}>{tt('witnesses_jsx.witness_proxy_clear')}</button><a name="bottom"></a>
                                     </div>
                                 </div>
                             </form>
