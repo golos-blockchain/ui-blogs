@@ -190,15 +190,16 @@ class CreateAccount extends React.Component {
                         style={{ maxWidth: '36rem', margin: '0 auto' }}
                     >
                         <h2>{tt('g.sign_up')}</h2>
+                        <p className="CreateAccount__account-name-hint">
+                            <Icon name="info_o" /> Возникли сложности? Напишите в <a target="_blank" href="https://t.me/golos_id">телеграм-чат</a> сообщества или на <a href="mailto:info@golos.id">info@golos.id</a>
+                        </p>
+                        <hr />
                         <form
                             onSubmit={this._onSubmit}
                             autoComplete="off"
                             noValidate
                             method="post"
                         >
-                            <div className="CreateAccount__hello">
-                                {tt('createaccount_jsx.dont_close')}
-                            </div>
                             {(showMailForm || invite_enabled) && (
                                 <div>
                                     {showMailForm && <div>

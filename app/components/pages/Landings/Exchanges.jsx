@@ -29,7 +29,7 @@ class Exchanges extends React.Component {
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
                                     <a target="_blank" href="/@allforyou/golos-delistyat-s-kuny-perekhodim-na-rudex">{tt('exchanges_jsx.guide_user')} @allforyou</a>
                                     <br /><br />
-                                    <a target="_blank" href="https://ticker.rudex.org/market/GLS_BTC" className="button">GOLOS-BTC</a>&nbsp;&nbsp;<a target="_blank" href="https://ticker.rudex.org/market/GLS_BTS" className="button">GOLOS-BTS</a>&nbsp;&nbsp;<a target="_blank" href="https://ticker.rudex.org/market/GLS_USDT" className="button">GOLOS-USDT</a>&nbsp;&nbsp;<a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_RUBLE" className="button">GOLOS-RUBLE</a>
+                                    <a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_RUDEX.BTC" className="button">GOLOS-BTC</a>&nbsp;&nbsp;<a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_BTS" className="button">GOLOS-BTS</a>&nbsp;&nbsp;<a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_RUDEX.USDT" className="button">GOLOS-USDT</a>&nbsp;&nbsp;<a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_RUBLE" className="button">GOLOS-RUBLE</a>
                                 </div>
                             </div>
                         </div>
@@ -82,7 +82,7 @@ class Exchanges extends React.Component {
                         </div>
                     </div>
                 </div> 
-                <div className='landing-exchanges-block'>
+                {/* <div className='landing-exchanges-block'>
                     <div className='column large-12 medium-12 small-12'>
                         <div className='column large-12 medium-12 small-12'>
                             <hr/>
@@ -101,7 +101,25 @@ class Exchanges extends React.Component {
                             <hr/>
                         </div>
                     </div>
-                </div>    
+                </div> */}
+                <div className='landing-exchanges-block'>
+                    <div className='column large-12 medium-12 small-12'>
+                        <div className='column large-12 medium-12 small-12'>
+                            <hr/>
+                        </div>
+                        <div className='column large-12 medium-12 small-12'>
+                            <div className='row'>
+                                <div className='column large-12 medium-12 small-12' align='center'>
+                                <p className='landing-exchanges-block-text reg landing-exchanges-block-center'>Продажа чеков с токенами:</p>
+                                <p><a target="_blank" href="https://golos.store" className="golos-btn btn-secondary btn-round"><Icon name="extlink" /> golos.store</a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='column large-12 medium-12 small-12'>
+                            <hr/>
+                        </div>
+                    </div>
+                </div>
                 <div className='landing-exchanges-block'>
                     <div className='column large-12 medium-12 small-12'>
                         <div className='column large-12 medium-12 small-12'>
@@ -111,9 +129,7 @@ class Exchanges extends React.Component {
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
                                 <p className='landing-exchanges-block-text reg landing-exchanges-block-center'>{tt('exchanges_jsx.p2p_bots')}:</p>
-                                </div>
-                                <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
-                                    <a target="_blank" href="https://t.me/TellerBot" className="golos-btn btn-secondary btn-round"><Icon name="new/telegram" /> TellerBot</a>&nbsp;&nbsp;<a target="_blank" href="https://t.me/P2PDEXBitshares_bot" className="golos-btn btn-secondary btn-round"><Icon name="new/telegram" /> DexGarant</a>
+                                <p><a target="_blank" href="https://t.me/TellerBot" className="golos-btn btn-secondary btn-round"><Icon name="new/telegram" /> TellerBot</a>&nbsp;&nbsp;<a target="_blank" href="https://t.me/P2PDEXBitshares_bot" className="golos-btn btn-secondary btn-round"><Icon name="new/telegram" /> DexGarant</a></p>
                                 </div>
                             </div>
                         </div>
@@ -121,7 +137,7 @@ class Exchanges extends React.Component {
                             <hr/>
                         </div>
                     </div>
-                </div>             
+                </div>
                 <div className='landing-exchanges-block'>
                     <div className='column large-12 medium-12 small-12'>
                         <h2>{tt('exchanges_jsx.questions')}?</h2>

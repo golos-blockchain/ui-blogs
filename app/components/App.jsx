@@ -19,8 +19,6 @@ import ScrollButton from '@elements/ScrollButton';
 import { key_utils } from 'golos-classic-js/lib/auth/ecc';
 import MiniHeader from '@modules/MiniHeader';
 import tt from 'counterpart';
-import PageViewsCounter from '@elements/PageViewsCounter';
-
 import LocalizedCurrency from '@elements/LocalizedCurrency';
 import MobileAppButton from 'app/components/elements/MobileBanners/MobileAppButton';
 import DialogManager from 'app/components/elements/common/DialogManager';
@@ -52,7 +50,6 @@ const availableDomains = [
     'dpos.space',
     'golosboard.com',
     'rudex.org',
-    'kuna.io',
     'livecoin.net',
     'steem-engine.com',
     'hive-engine.com',
@@ -64,7 +61,8 @@ const availableDomains = [
     'instagram.com',
     'vk.com',
     'coinmarketcap.com',
-    'sharpay.io'
+    'sharpay.io',
+    'golos.store'
 ];
 
 class App extends React.Component {
@@ -378,7 +376,6 @@ class App extends React.Component {
                 <Modals />
                 <DialogManager />
                 {process.env.BROWSER ? <TooltipManager /> : null}
-                <PageViewsCounter hidden/>
             </div>
 
         );

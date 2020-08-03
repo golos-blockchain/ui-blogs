@@ -20,14 +20,12 @@ import MarkdownViewer from 'app/components/cards/MarkdownViewer';
 import ReplyEditor from 'app/components/elements/ReplyEditor';
 import TagList from 'app/components/elements/TagList';
 import Author from 'app/components/elements/Author';
-import PageViewsCounter from 'app/components/elements/PageViewsCounter';
 import Userpic from 'app/components/elements/Userpic';
 import PostFormLoader from 'app/components/modules/PostForm/loader';
 import CommentFormLoader from 'app/components/modules/CommentForm/loader';
 import { getEditDraftPermLink } from 'app/utils/postForm';
 import Confetti from 'react-dom-confetti';
-import PostSummaryThumb from 'app/components/elements/PostSummaryThumb'
-
+import PostSummaryThumb from 'app/components/elements/PostSummaryThumb';
 import { APP_ICON, SEO_TITLE, LIQUID_TICKER, CONFETTI_CONFIG, CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config';
 
 // function loadFbSdk(d, s, id) {
@@ -588,12 +586,6 @@ class PostFull extends React.Component {
                             <Icon name="chatboxes" className="space-right" />
                             {content.children}
                         </Link>
-                    </span>
-                    <span className="PostFull__views">
-                        <PageViewsCounter
-                            aiPosts={this.props.aiPosts}
-                            sinceDate={isPreViewCount ? 'Dec 2016' : null}
-                        />
                     </span>
                     <span className={"shareMenu"}>
                         <div className="sharpay_widget_simple" data-sharpay="golid" data-height="18" data-form="no" data-hover="lighter" data-font="#8a8a8a" data-align="right" data-limit="3"></div>
