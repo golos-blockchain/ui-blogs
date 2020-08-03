@@ -400,6 +400,10 @@ class UserWallet extends React.Component {
                          </div>
                         : null
                     }
+                    <div>{isMyAccount ? <Link
+                        className="button tiny hollow"
+                        to="/exchanges"
+                    >{tt('g.buy')}</Link> : null}</div>
                 </div>
             </div>
             <div className="UserWallet__balance row">

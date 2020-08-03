@@ -2,7 +2,9 @@ const list = `
 rude
 rudeks
 rudex-gateway
-kunai
+livecoi
+livekoin
+lovecoin
 steem-engin
 steemengine
 kunaexchange

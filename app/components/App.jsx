@@ -50,7 +50,6 @@ const availableDomains = [
     'dpos.space',
     'golosboard.com',
     'rudex.org',
-    'kuna.io',
     'livecoin.net',
     'steem-engine.com',
     'hive-engine.com',
@@ -62,7 +61,8 @@ const availableDomains = [
     'instagram.com',
     'vk.com',
     'coinmarketcap.com',
-    'sharpay.io'
+    'sharpay.io',
+    'golos.store'
 ];
 
 class App extends React.Component {
