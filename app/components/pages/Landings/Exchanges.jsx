@@ -110,7 +110,7 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <p className='landing-exchanges-block-text reg landing-exchanges-block-center'>Продажа чеков с токенами:</p>
+                                <p className='landing-exchanges-block-text reg landing-exchanges-block-center'>{tt('exchanges_jsx.sell_check')}:</p>
                                 <p><a target="_blank" href="https://golos.store" className="golos-btn btn-secondary btn-round"><Icon name="extlink" /> golos.store</a></p>
                                 </div>
                             </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import golos from 'golos-classic-js';
+import tt from 'counterpart';
 import { connect } from 'react-redux';
-
 import Tooltip from 'app/components/elements/Tooltip.jsx';
 import { formatAsset } from 'app/utils/ParsersAndFormatters';
 
@@ -21,10 +21,10 @@ class WorkerFunds extends React.Component {
     return(
       <span className="WorkerFunds">
         <Tooltip t="Текущий баланс фонда воркеров">
-          Состояние фонда:
+          {tt('workers.balance_fund')}:
           &nbsp;
           <span className="WorkerFunds__card">{formatAsset(balance,false)} GOLOS</span>
-          &nbsp;и&nbsp;
+          &nbsp;{tt('g.and')}&nbsp;
           <span className="WorkerFunds__card">{formatAsset(sbd_balance,false)} GBG</span>
         </Tooltip>
       </span>
