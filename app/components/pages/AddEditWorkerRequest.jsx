@@ -1,15 +1,12 @@
 import React from 'react';
 import golos from 'golos-classic-js';
+import tt from 'counterpart';
 import cn from 'classnames';
 import { connect } from 'react-redux';
-
-import {
-    APP_DOMAIN
-} from 'app/client_config';
+import { APP_DOMAIN } from 'app/client_config';
 import Button from 'app/components/elements/Button';
 import { formatAsset, ERR } from 'app/utils/ParsersAndFormatters';
 import { toAsset } from 'app/utils/StateFunctions';
-
 import WorkerFunds from 'app/components/elements/WorkerFunds';
 import { getAuthorPermlink } from 'app/utils/ParsersAndFormatters';
 
@@ -163,17 +160,17 @@ class AddEditWorkerRequest extends React.Component {
 
     let creation_fee = null;
     if (!editCase) {
-      creation_fee = (<b>&nbsp;Будет списано: {formatAsset(this.props.cprops.worker_request_creation_fee)}</b>);
+      creation_fee = (<b>&nbsp;{tt('workers.proposal_fee')}: {formatAsset(this.props.cprops.worker_request_creation_fee)}</b>);
     }
 
     return(
       <div>
-      <h3>{editCase ? 'Изменение' : 'Создание'} заявки</h3>
+      <h3>{editCase ? tt('workers.edit_proposal') : tt('workers.creation_proposal')} {tt('workers.proposal')}</h3>
       <WorkerFunds />
       <form>
         <div className={cn({ error: postError })}>
             <label>
-              Ссылка на пост заявки:<input name="url" disabled={editCase} type="text" value={req.url} onChange={this.handleInputChange} onBlur={this.onPostChanged}/>
+              {tt('workers.link_proposal_post')}:<input name="url" disabled={editCase} type="text" value={req.url} onChange={this.handleInputChange} onBlur={this.onPostChanged}/>
             </label>
             <p>{postError}</p>
         </div>
@@ -181,24 +178,24 @@ class AddEditWorkerRequest extends React.Component {
           <tr>
             <td>
               <label>
-                Минимальная сумма:<input name="required_amount_min" type="text" value={req.required_amount_min} onChange={this.handleInputChange} onBlur={this.onAmountChanged}/>
+                {tt('workers.minimum_amount')}:<input name="required_amount_min" type="text" value={req.required_amount_min} onChange={this.handleInputChange} onBlur={this.onAmountChanged}/>
               </label>
             </td>
             <td>
               <label>
-                Запрашиваемая сумма:<input name="required_amount_max" type="text" value={req.required_amount_max} onChange={this.handleInputChange}  onBlur={this.onAmountChanged}/>
+                {tt('workers.requested_amount')}:<input name="required_amount_max" type="text" value={req.required_amount_max} onChange={this.handleInputChange}  onBlur={this.onAmountChanged}/>
               </label>
             </td>
             <td>
               <label>
-                Выплата в СГ:<input name="vest_reward" type="checkbox" checked={req.vest_reward} onChange={this.handleInputChange}/>
+                {tt('workers.payment_in_GP')}:<input name="vest_reward" type="checkbox" checked={req.vest_reward} onChange={this.handleInputChange}/>
               </label>
             </td>
           </tr>
         </table>
         <p className={cn({ error: amountError })}>{amountError}</p>
         <label>
-          Время голосования (суток):
+          {tt('workers.voting_time')}:
           <div>
             <input name="duration" type="number" min="5" max="30" className="inline" value={req.duration} onChange={this.handleInputChange}  onBlur={this.onVoteEndChanged}/>
           </div>
@@ -206,13 +203,13 @@ class AddEditWorkerRequest extends React.Component {
         <p className={cn({ error: voteEndError })}>{voteEndError}</p>
         <div className={cn({ error: workerError })}>
             <label>
-              Получатель средств:<input name="worker" type="text" value={req.worker} onChange={this.handleInputChange} onBlur={this.onWorkerChanged}/>
+              {tt('workers.recipient_funds')}:<input name="worker" type="text" value={req.worker} onChange={this.handleInputChange} onBlur={this.onWorkerChanged}/>
             </label>
             <p>{workerError}</p>
         </div>
         <div>
-          {(!postError && !workerError && !amountError && !voteEndError) && <Button round="true" type="primary" onClick={this.sendOp}>Отправить</Button>}&nbsp;
-          <Button round="true" type="secondary" onClick={(event) => {event.preventDefault(); this.props.hider('closed');}}>Отмена</Button>
+          {(!postError && !workerError && !amountError && !voteEndError) && <Button round="true" type="primary" onClick={this.sendOp}>{tt('g.submit')}</Button>}&nbsp;
+          <Button round="true" type="secondary" onClick={(event) => {event.preventDefault(); this.props.hider('closed');}}>{tt('g.cancel')}</Button>
           {creation_fee}
         </div>
       </form>

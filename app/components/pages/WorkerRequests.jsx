@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import golos from 'golos-classic-js';
 import tt from 'counterpart';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
@@ -7,7 +7,6 @@ import Reveal from 'react-foundation-components/lib/global/reveal';
 import { connect } from 'react-redux';
 import { Link, browserHistory} from 'react-router';
 import { FormattedPlural } from 'react-intl';
-
 import Icon from 'app/components/elements/Icon';
 import Button from 'app/components/elements/Button';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
@@ -16,7 +15,6 @@ import Author from 'app/components/elements/Author';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
 import { formatAsset, formatDecimal, longToAsset, ERR } from 'app/utils/ParsersAndFormatters';
 import { vestsToSteem, numberWithCommas } from 'app/utils/StateFunctions';
-
 import AddEditWorkerRequest from './AddEditWorkerRequest';
 import ViewWorkerRequest from './ViewWorkerRequest';
 import WorkerFunds from 'app/components/elements/WorkerFunds';
@@ -38,7 +36,7 @@ class WorkerRequests extends React.Component {
       select_author: '',
       select_authors: [],
       select_states: ['created'],
-      selected_state: 'Открытые заявки',
+      selected_state: tt('workers.open_proposals'),
       show_load_more: false,
       showCreateRequest: false,
       showViewRequest: false,
@@ -235,41 +233,41 @@ class WorkerRequests extends React.Component {
 
         return (<div key={req.post.author + "/" + req.post.permlink}>
           <Link to={'/workers/created/@' + req.post.author + "/" + req.post.permlink}><h4 className="Workers__title" data-author={req.post.author} data-permlink={req.post.permlink} onClick={this.viewRequest}>{req.post.title}</h4></Link>
-          <div className="Workers__author float-right">Автор предложения:&nbsp;&nbsp;<Author author={req.post.author} follow={false} /></div>
+          <div className="Workers__author float-right">{tt('workers.author_proposal')}:&nbsp;<Author author={req.post.author} follow={false} /></div>
           <table>
           <thead>
             <tr>
               {['created', 'payment'].includes(req.state) && <th style={{ textAlign: 'center' }}>
-                Запрашиваемая сумма
+                {tt('workers.requested_amount')}
               </th>}
               {'created' == req.state && <th style={{ textAlign: 'center' }}>
-                Окончание голосования
+                {tt('workers.end_of_voting')}
               </th>}
               {!['created'].includes(req.state) && <th style={{ textAlign: 'center' }}>
-                Выплачено
+                {tt('workers.payment_complete')}
               </th>}
               {!['created', 'payment'].includes(req.state) && <th style={{ textAlign: 'center' }}>
-                Статус
+                {tt('workers.status_proposal')}
               </th>}
               <th style={{ textAlign: 'center' }}>
                 <Tooltip t="Процент проголосовавших от суммы всей Силы Голоса системы">
-                  Кворум
+                  {tt('workers.quorum')}
                 </Tooltip>
                 <div>
                   <span style={{ fontSize: '80%' }}>
-                    (>{this.props.approve_min_percent / 100}% от общей СГ)
+                    (>{this.props.approve_min_percent / 100}% {tt('workers.from_the_total_GP')})
                   </span>
                 </div>
               </th>
               <th style={{ width: '580px', fontWeight: 'normal' }}>
                 <span className="Workers__green">
                   <Icon name="new/upvote" />&nbsp;
-                  За: {req.upvote_total} СГ
-                  ({req.upvotes} <FormattedPlural value={req.upvotes} one="голос" few="голоса" many="голосов" other="голосов"/>)
+                  {tt('workers.upvote')}: {req.upvote_total} СГ
+                  ({req.upvotes} <FormattedPlural value={req.upvotes} one={tt('workers.vote')} few={tt('workers.vote_few')} many={tt('workers.votes')} other={tt('workers.votes')}/>)
                 </span>
                 <span className="Workers__red float-right">
-                  Против: {req.downvote_total} СГ
-                  ({req.downvotes} <FormattedPlural value={req.downvotes} one="голос" few="голоса" many="голосов" other="голосов"/>)
+                  {tt('workers.downvote')}: {req.downvote_total} СГ
+                  ({req.downvotes} <FormattedPlural value={req.downvotes} one={tt('workers.vote')} few={tt('workers.vote_few')} many={tt('workers.votes')} other={tt('workers.votes')}/>)
                   &nbsp;<Icon name="new/downvote" />
                 </span>
               </th>
@@ -283,7 +281,7 @@ class WorkerRequests extends React.Component {
                 </div>
                 <div>
                   <span style={{ fontSize: '85%' }}>
-                    но не менее {formatAsset(req.required_amount_min)}
+                    {tt('workers.but_not_less')} {formatAsset(req.required_amount_min)}
                   </span>
                 </div>
               </td>}
@@ -316,7 +314,7 @@ class WorkerRequests extends React.Component {
                   <div className="Workers__progressbar Workers__red_bg" style={{ width: downvote_progress_width + '%' }}>{req.downvote_percent >= 1 ? req.downvote_percent + '%' : '\xa0'}</div>
                 </div>
                 <div>
-                  <div className="Workers__created float-right">Опубликовано <TimeAgoWrapper date={req.created} /></div>
+                  <div className="Workers__created float-right">{tt('workers.published')} <TimeAgoWrapper date={req.created} /></div>
                 </div>
               </td>
           </tr>
@@ -328,17 +326,17 @@ class WorkerRequests extends React.Component {
     const { current_author, current_permlink, selected_state, show_load_more, showCreateRequest, showViewRequest} = this.state;
     const auth = { account: this.props.account, posting_key: this.props.posting_key };
     let list_states = [
-      {link: 'created', value: 'Открытые заявки', onClick: this.onStateSelected},
-      {link: 'payment', value: 'Выплачиваемые', onClick: this.onStateSelected},
-      {link: 'closed', value: 'Закрытые', onClick: this.onStateSelected}
+      {link: 'created', value: tt('workers.open_proposals'), onClick: this.onStateSelected},
+      {link: 'payment', value: tt('workers.payable_proposals'), onClick: this.onStateSelected},
+      {link: 'closed', value: tt('workers.completed_proposals'), onClick: this.onStateSelected}
     ];
     return (
       <div className="App-workers">
-        <div><h2>Заявки на работу</h2></div>
+        <div><h2>{tt('workers.worker_proposals')}</h2></div>
         <Button onClick={this.createRequest} round="true" type="primary">+ {tt('workers.create_request')}</Button>
         <WorkerFunds/>
         <form className="Input__Inline" style={{marginBottom: '1rem'}} onSubmit={this.searchByAuthor}>
-          <input className="Input__Inline" type="text" placeholder="Поиск по автору" onChange={this.handleSearchAuthor}/>
+          <input className="Input__Inline" type="text" placeholder={tt('workers.search_by_author')} onChange={this.handleSearchAuthor}/>
         </form>
         <DropdownMenu className="StatesMenu" items={list_states} selected={selected_state} el="span" />
         {workerRequests}

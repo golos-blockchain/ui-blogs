@@ -3,7 +3,6 @@ import golos from 'golos-classic-js';
 import tt from 'counterpart';
 import { connect } from 'react-redux';
 import transaction from 'app/redux/Transaction';
-
 import Button from 'app/components/elements/Button';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Author from 'app/components/elements/Author';
@@ -121,7 +120,7 @@ class ViewWorkerRequest extends React.Component {
 
     let vote_end = null;
     if (request.state === 'created') {
-      vote_end = (<span>Окончание голосования: <TimeAgoWrapper date={request.vote_end_time} altText="окончено" /></span>);
+      vote_end = (<span>{tt('workers.end_of_voting')}: <TimeAgoWrapper date={request.vote_end_time} altText="окончено" /></span>);
     }
 
     let rshares_pct = parseInt(request.stake_rshares * 100 / request.stake_total);
@@ -171,8 +170,8 @@ class ViewWorkerRequest extends React.Component {
     vote_list = vote_list.slice(20*vote_list_page, 20*vote_list_page+20);
 
     vote_list.push({value: <span>
-      <a className="Workers__votes_pagination" onClick={this.prevVoteListPage}>{vote_list_page > 0 ? '< Назад' : ''}</a>
-      <a className="Workers__votes_pagination" onClick={next_vote_list.length > 0 ? this.nextVoteListPage : null}>{next_vote_list.length > 0 ? 'Ещё >' : ''}</a></span>});
+      <a className="Workers__votes_pagination" onClick={this.prevVoteListPage}>{vote_list_page > 0 ? '< ' + tt('g.back') : ''}</a>
+      <a className="Workers__votes_pagination" onClick={next_vote_list.length > 0 ? this.nextVoteListPage : null}>{next_vote_list.length > 0 ? tt('g.more_list') + ' >' : ''}</a></span>});
 
     return(
       <div>
@@ -181,21 +180,21 @@ class ViewWorkerRequest extends React.Component {
         </a></h5>
         <hr/>
         <p>
-          Автор заявки: <Author author={request.post.author} /><br/>
-          Получатель средств: <Author author={request.worker} />
+          {tt('workers.author_proposal')}: <Author author={request.post.author} /><br/>
+          {tt('workers.recipient_funds')}: <Author author={request.worker} />
         </p>
         <p>
-          Запрашиваемая сумма: <b>{formatAsset(request.required_amount_max)}</b><br/>
-          Минимальная сумма: {formatAsset(request.required_amount_min)}<br/>
-          Выплата в Силу Голоса: {request.vest_reward ? "да" : "нет"}
+          {tt('workers.requested_amount')}: <b>{formatAsset(request.required_amount_max)}</b><br/>
+          {tt('workers.minimum_amount')}: {formatAsset(request.required_amount_min)}<br/>
+          {tt('workers.payment_GP')}: {request.vest_reward ? tt('g.yes') : tt('g.no')}
         </p>
         <p>
-          Статус заявки: {tt("workers."+request.state)}<br/>
+          {tt('workers.status_proposal')}: {tt("workers."+request.state)}<br/>
           {vote_end}
         </p>
         <p style={{marginBottom: '-0rem'}}>
-          Текущий процент проголосовавшей СГ: <b className={ (global_rshares_pct >= (approve_min_percent / 100)) ? 'Workers__green' : 'Workers__red' }>{global_rshares_pct} / {approve_min_percent / 100}%</b><br/>
-          <span title={pending_title}>Расчётная сумма выплаты: <Icon name="info_o" /></span>
+          {tt('workers.percentage_voted_GP')}: <b className={ (global_rshares_pct >= (approve_min_percent / 100)) ? 'Workers__green' : 'Workers__red' }>{global_rshares_pct} / {approve_min_percent / 100}%</b><br/>
+          <span title={pending_title}>{tt('workers.estimated_amount')}: <Icon name="info_o" /></span>
         </p>
         <div style={{marginBottom: '1rem'}}>
           <div className={'Workers__progressbar ' + ((pend >= min_amount) ? 'Workers__green_bg' : 'Workers__red_bg')} style={{ width: Math.abs(rshares_pct) + '%' }}>{(Math.abs(rshares_pct) >= 40) ? progress_bar_text : '\xa0'}</div>
@@ -211,7 +210,7 @@ class ViewWorkerRequest extends React.Component {
               &nbsp;
               <Button round="true" type={(request.myVote && request.myVote.vote_percent < 0) ? "primary" : "secondary"} onClick={this.downVote}><Icon name="new/downvote" /> ({downvotes})</Button>
               &nbsp;
-              <DropdownMenu className="VoteList above" items={vote_list} selected={(upvotes+downvotes) + ' голосов'} el="span" />
+              <DropdownMenu className="VoteList above" items={vote_list} selected={(upvotes+downvotes) + ' ' + tt('workers.votes')} el="span" />
             </div>
           </div>
           {author_menu}
