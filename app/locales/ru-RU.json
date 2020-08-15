@@ -403,12 +403,6 @@
     "curation_rewards": "Кураторские награды",
     "donates_from": "Отправленные донаты",
     "donates_to": "Полученные донаты",
-    "with_claim": " с CLAIM-баланса ",
-    "with_tip": " с TIP-баланса ",
-    "funded_workers": "Профинансировано ",
-    "to_golos_power": " в Силу Голоса",
-    "fortips": " для ",
-    "percen_referral": " - процент от награды в адрес вашего реферала ",
     "referral_link": "Ваша реферальная ссылка",
     "referral_link_title": "В течение года 10%% от вознаграждений пользователей (зарегистрированных после перехода по реферальной ссылке)\nбудут поступать на ваш TIP-баланс.",
     "connection_lost_reconnecting": "Связь потеряна, переподключаемся",
@@ -911,7 +905,14 @@
     "stop_power_down": "Понижение %(VESTING_TOKENS)s остановлено",
     "start_power_down_of": "Понижение %(VESTING_TOKENS)s начато с",
     "receive_interest_of": "Получены проценты ",
-    "transfer": "Отправлено"
+    "transfer": "Отправлено",
+    "percen_referral": " - процент от награды в адрес вашего реферала ",
+    "with_claim": " с CLAIM-баланса ",
+    "funded_workers": "Профинансировано ",
+    "to_golos_power": " в Силу Голоса",
+    "to_tip": " на TIP-баланс ",
+    "from_tip": " с TIP-баланса ",
+    "fortips": " для "
   },
   "user_profile": {
     "unknown_account": "Неизвестный аккаунт",

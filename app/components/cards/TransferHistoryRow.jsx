@@ -116,14 +116,14 @@ class TransferHistoryRow extends React.Component {
         } else if (type === 'donate' && context == 'ref') {
             const donate_meta = JSON.parse(op[1].json_metadata);
             description_start += donate_meta.referrer_interest;
-            description_start += tt('g.percen_referral');
+            description_start += tt('transferhistoryrow_jsx.percen_referral');
             other_account = data.to;
             data_memo = "";
         } else if (type === 'donate') {
             const describe_account = () => {
                 if (context === "from") {
                     other_account = data.to;
-                    return tt('g.fortips');
+                    return tt('transferhistoryrow_jsx.fortips');
                 } else {
                     other_account = data.from;
                     return ' от ';
@@ -135,7 +135,7 @@ class TransferHistoryRow extends React.Component {
                     && data.memo.target.permlink != '') {
                 description_start += data.amount;
                 if (context === "from" && data.to != data.memo.target.author) {
-                    description_start += tt('g.fortips') + data.to;
+                    description_start += tt('transferhistoryrow_jsx.fortips') + data.to;
                 } else if (context === "to") {
                     description_start += ' от ' + data.from;
                 }
@@ -144,7 +144,7 @@ class TransferHistoryRow extends React.Component {
             } else {
                 description_start += data.amount;
                 if (context === "from") {
-                    description_start += tt('g.fortips');
+                    description_start += tt('transferhistoryrow_jsx.fortips');
                     other_account = data.to;
                 } else {
                     description_start += ' от ';
@@ -159,13 +159,13 @@ class TransferHistoryRow extends React.Component {
                 data_memo = '';
             }
         } else if (type === 'claim') {
-            description_start += tt('g.receive') + tt('g.with_claim');
+            description_start += tt('g.receive') + tt('transferhistoryrow_jsx.with_claim');
             description_start += data.amount;
             if (data.to_vesting) {
-                description_start += tt('g.to_golos_power');
+                description_start += tt('transferhistoryrow_jsx.to_golos_power');
             }
             if (data.from != data.to) {
-                description_start += tt('g.fortips');
+                description_start += tt('transferhistoryrow_jsx.fortips');
                 other_account = data.to;
             }
         } else if (type === 'invite') {
@@ -177,22 +177,22 @@ class TransferHistoryRow extends React.Component {
             description_start += tt('invites_jsx.hist_claimed');
             description_start += PrivateKey.fromWif(data.invite_secret).toPublicKey().toString();
         } else if (type === 'transfer_to_tip') {
-            description_start += tt('transferhistoryrow_jsx.transfer') + tt('g.with_tip');
+            description_start += tt('transferhistoryrow_jsx.transfer') + tt('transferhistoryrow_jsx.to_tip');
             description_start += data.amount;
             if (data.from != data.to) {
-                description_start += tt('g.fortips');
+                description_start += tt('transferhistoryrow_jsx.fortips');
                 other_account = data.to;
             }
         } else if (type === 'transfer_from_tip') {
-            description_start += tt('transferhistoryrow_jsx.transfer') + tt('g.with_tip');
+            description_start += tt('transferhistoryrow_jsx.transfer') + tt('transferhistoryrow_jsx.from_tip');
             description_start += data.amount;
-            description_start += tt('g.to_golos_power')
+            description_start += tt('transferhistoryrow_jsx.to_golos_power')
             if (data.from != data.to) {
-                description_start += tt('g.fortips');
+                description_start += tt('transferhistoryrow_jsx.fortips');
                 other_account = data.to;
             }
         } else if (type === 'worker_reward') {
-            description_start += tt('g.funded_workers');
+            description_start += tt('transferhistoryrow_jsx.funded_workers');
             description_start += data.reward;
             description_start += " за ";
             other_account = data.worker_request_author + "/" + data.worker_request_permlink;

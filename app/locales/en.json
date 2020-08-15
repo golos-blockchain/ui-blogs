@@ -233,12 +233,6 @@
     "curation_rewards": "Curation rewards",
     "donates_from": "Donates from",
     "donates_to": "Donates to",
-    "with_claim": " with CLAIM balance ",
-    "with_tip": " with TIP balance ",
-    "funded_workers": "Funded by the community ",
-    "to_golos_power": " to Golos Power",    
-    "fortips": " for ",
-    "percen_referral": " - you get a percentage of the referral fee ",
     "referral_link": "Your referral link",
     "referral_link_title": "When registering users after clicking on the referral link, you will receive 10%% of the donations received by them within a year",
     "connection_lost_reconnecting": "Connection lost, reconnecting",
@@ -884,7 +878,14 @@
     "stop_power_down": "Stop power down",
     "start_power_down_of": "Start power down of",
     "receive_interest_of": "Receive interest of",
-    "transfer": "Transfer"
+    "transfer": "Transfer",  
+    "percen_referral": " - you get a percentage of the referral fee ",
+    "with_claim": " with CLAIM balance ",
+    "funded_workers": "Funded by the community ",
+    "to_golos_power": " to Golos Power",
+    "to_tip": " to TIP balance ",
+    "from_tip": " with TIP balance ",
+    "fortips": " for "
   },
   "reblog_jsx": {
   },
