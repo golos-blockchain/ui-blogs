@@ -38,8 +38,6 @@ export const LOCALE_COOKIE_KEY = 'gls.locale'
 export const LANGUAGES = {
   ru: 'Русский',
   en: 'English',
-  /* in react-intl they use 'uk' instead of 'ua' */
-  uk: 'Українська',
 }
 // First element always is USD, it needs to be correct fetch yahoo exchange rates from server side
 export const CURRENCIES = ['GBG', 'GOLOS']

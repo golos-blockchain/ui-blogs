@@ -912,7 +912,9 @@
     "to_golos_power": " в Силу Голоса",
     "to_tip": " на TIP-баланс ",
     "from_tip": " с TIP-баланса ",
-    "fortips": " для "
+    "to": " для ",
+    "from": " от ",
+    "for": " за "
   },
   "user_profile": {
     "unknown_account": "Неизвестный аккаунт",
@@ -1032,7 +1034,7 @@
     "cancel_power_down": "Отменить понижение Силы Голоса",
     "top_dpos": "Топ-100 пользователей по Силе Голоса",
     "worker_foundation": "Фонд сообщества",
-    "history_viewing": "Сервис просмотра истории",
+    "history_viewing": "Сервисы",
     "history": "ИСТОРИЯ"
   },
   "votesandcomments_jsx": {

@@ -882,10 +882,12 @@
     "percen_referral": " - you get a percentage of the referral fee ",
     "with_claim": " with CLAIM balance ",
     "funded_workers": "Funded by the community ",
-    "to_golos_power": " to Golos Power",
+    "to_golos_power": " for Golos Power",
     "to_tip": " to TIP balance ",
     "from_tip": " with TIP balance ",
-    "fortips": " for "
+    "to": " to ",
+    "from": " from ",
+    "for": " for "
   },
   "reblog_jsx": {
   },
@@ -1072,7 +1074,7 @@
     "cancel_power_down": "Cancel Power Down",
     "top_dpos": "Top 100 users by Golos Power",
     "worker_foundation": "Workers foundation",
-    "history_viewing": "History viewing service",
+    "history_viewing": "Services",
     "history": "HISTORY"
   },
   "generated_password_input": {
