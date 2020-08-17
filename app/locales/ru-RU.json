@@ -906,6 +906,7 @@
     "start_power_down_of": "Понижение %(VESTING_TOKENS)s начато с",
     "receive_interest_of": "Получены проценты ",
     "transfer": "Отправлено",
+    "transferred": "Передано ",
     "percen_referral": " - процент от награды в адрес вашего реферала ",
     "with_claim": " с CLAIM-баланса ",
     "funded_workers": "Профинансировано ",
@@ -997,7 +998,7 @@
     "claim_wrong_secret_cannot_fetch": "Не удается подключиться к серверу для проверки кода",
     "claim_btn": "Забрать",
     "hist_invite": "Создан чек ",
-    "hist_invite2": " на сумму ",
+    "hist_invite2": " на ",
     "hist_claimed": "Погашен чек "
   },
   "userkeys_jsx": {
@@ -1034,7 +1035,7 @@
     "cancel_power_down": "Отменить понижение Силы Голоса",
     "top_dpos": "Топ-100 пользователей по Силе Голоса",
     "worker_foundation": "Фонд сообщества",
-    "history_viewing": "Сервисы",
+    "history_viewing": "Сервисы истории",
     "history": "ИСТОРИЯ"
   },
   "votesandcomments_jsx": {

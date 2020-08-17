@@ -878,7 +878,8 @@
     "stop_power_down": "Stop power down",
     "start_power_down_of": "Start power down of",
     "receive_interest_of": "Receive interest of",
-    "transfer": "Transfer",  
+    "transfer": "Transfer",
+    "transferred": "Transfer ",
     "percen_referral": " - you get a percentage of the referral fee ",
     "with_claim": " with CLAIM balance ",
     "funded_workers": "Funded by the community ",
@@ -1074,7 +1075,7 @@
     "cancel_power_down": "Cancel Power Down",
     "top_dpos": "Top 100 users by Golos Power",
     "worker_foundation": "Workers foundation",
-    "history_viewing": "Services",
+    "history_viewing": "Services history",
     "history": "HISTORY"
   },
   "generated_password_input": {
