@@ -40,7 +40,7 @@ class TransferHistoryRow extends React.Component {
                 }
             }
             else if( data.to === context ) {
-                description_start += tt('g.receive') + " " + data.amount.split(' ')[0] + " " + VESTING_TOKEN + tt('g.from');
+                description_start += tt('g.receive') + data.amount.split(' ')[0] + " " + VESTING_TOKEN + tt('g.from');
                 other_account = data.from;
             } else {
                 description_start += tt('transferhistoryrow_jsx.transferred') + data.amount.split(' ')[0] + " " + VESTING_TOKEN + tt('g.from') + data.from + tt('g.to');
@@ -78,7 +78,7 @@ class TransferHistoryRow extends React.Component {
             if( data.vesting_shares === '0.000000 ' + VEST_TICKER)
                 description_start += tt('transferhistoryrow_jsx.stop_power_down', {VESTING_TOKENS});
             else
-                description_start += tt('transferhistoryrow_jsx.start_power_down_of', {VESTING_TOKENS}) + ' ' +  data.vesting_shares;
+                description_start += tt('transferhistoryrow_jsx.start_power_down_of', {VESTING_TOKENS}) + " " +  data.vesting_shares;
         }
 
         else if( type === 'curation_reward' ) {
@@ -169,10 +169,15 @@ class TransferHistoryRow extends React.Component {
 
         else if (type === 'claim') {
             if( data.to === context ) {
-                description_start += tt('g.receive') + " " + data.amount + tt('transferhistoryrow_jsx.with_claim') + tt('transferhistoryrow_jsx.from');
-                other_account = data.from;
+                if( data.from === context ) {
+                    description_start += tt('g.receive') + data.amount + tt('transferhistoryrow_jsx.with_claim');
+                }
+                else {
+                    description_start += tt('g.receive') + data.amount + tt('transferhistoryrow_jsx.with_claim') + tt('transferhistoryrow_jsx.from');
+                    other_account = data.from;
+                }
             } else {
-                description_start += tt('transferhistoryrow_jsx.transfer') + " " + data.amount + tt('transferhistoryrow_jsx.with_claim') + tt('transferhistoryrow_jsx.to');
+                description_start += tt('transferhistoryrow_jsx.transfer') + data.amount + tt('transferhistoryrow_jsx.with_claim') + tt('transferhistoryrow_jsx.to');
                 other_account = data.to;
             }
             if (data.to_vesting) {
@@ -182,21 +187,31 @@ class TransferHistoryRow extends React.Component {
 
         else if (type === 'transfer_to_tip') {
             if( data.to === context ) {
-                description_start += tt('g.receive') + " " + data.amount + tt('transferhistoryrow_jsx.to_tip') + tt('transferhistoryrow_jsx.from');
-                other_account = data.from;
+                if( data.from === context ) {
+                    description_start += tt('transferhistoryrow_jsx.transfer') + data.amount + tt('transferhistoryrow_jsx.to_tip');
+                }
+                else {
+                    description_start += tt('g.receive') + data.amount + tt('transferhistoryrow_jsx.to_tip') + tt('transferhistoryrow_jsx.from');
+                    other_account = data.from;
+                }
             } else {
-                description_start += tt('transferhistoryrow_jsx.transfer') + " " + data.amount + tt('transferhistoryrow_jsx.to_tip') + tt('transferhistoryrow_jsx.to');
+                description_start += tt('transferhistoryrow_jsx.transfer') + data.amount + tt('transferhistoryrow_jsx.to_tip') + tt('transferhistoryrow_jsx.to');
                 other_account = data.to;
             }
         }
 
         else if (type === 'transfer_from_tip') {
             if( data.to === context ) {
-                description_start += tt('g.receive') + " " + data.amount + tt('transferhistoryrow_jsx.from_tip') + tt('transferhistoryrow_jsx.from');
-                other_account = data.from;
-                description_end += tt('transferhistoryrow_jsx.to_golos_power');
+                if( data.from === context ) {
+                    description_start += tt('transferhistoryrow_jsx.transfer') + data.amount + tt('transferhistoryrow_jsx.from_tip') + tt('transferhistoryrow_jsx.to_golos_power');
+                }
+                else {
+                    description_start += tt('g.receive') + data.amount + tt('transferhistoryrow_jsx.from_tip') + tt('transferhistoryrow_jsx.from');
+                    other_account = data.from;
+                    description_end += tt('transferhistoryrow_jsx.to_golos_power');
+                }
             } else {
-                description_start += tt('transferhistoryrow_jsx.transfer') + " " + data.amount + tt('transferhistoryrow_jsx.from_tip') + tt('transferhistoryrow_jsx.to');
+                description_start += tt('transferhistoryrow_jsx.transfer') + data.amount + tt('transferhistoryrow_jsx.from_tip') + tt('transferhistoryrow_jsx.to');
                 other_account = data.to;
                 description_end += tt('transferhistoryrow_jsx.to_golos_power');
             }
@@ -207,7 +222,7 @@ class TransferHistoryRow extends React.Component {
             other_account = data.worker_request_author + "/" + data.worker_request_permlink;
         }
         else {
-            description_start += JSON.stringify({type, ...data}, null, 2);
+            code_key = JSON.stringify({type, ...data}, null, 2);
         }
 
         return(
