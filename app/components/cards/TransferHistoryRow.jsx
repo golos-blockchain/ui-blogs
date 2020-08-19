@@ -12,7 +12,6 @@ import {PrivateKey} from 'golos-classic-js/lib/auth/ecc';
 class TransferHistoryRow extends React.Component {
 
     render() {
-        const VESTING_TOKEN =  tt('token_names.VESTING_TOKEN')
         const VESTING_TOKENS = tt('token_names.VESTING_TOKENS')
 
         const {op, context, curation_reward, author_reward} = this.props
@@ -20,31 +19,29 @@ class TransferHistoryRow extends React.Component {
 
         const type = op[1].op[0];
         const data = op[1].op[1];
+        const amount = data.amount;
 
         /*  all transfers involve up to 2 accounts, context and 1 other. */
         let description_start = ""
-        let code_key = null;
+        let code_key = "";
         let other_account = null;
         let description_end = "";
         let data_memo = data.memo;
 
         if( type === 'transfer_to_vesting' ) {
-            const amount = data.amount && data.amount.split && data.amount.split(' ')[0]
-            if( data.from === context ) {
-                if( data.to === "" ) {
-                    description_start += tt('transferhistoryrow_jsx.transferred') + data.amount.split(' ')[0] + tt('g.to') + " " + VESTING_TOKEN;
+            if( data.to === context ) {
+                if( data.from === context ) {
+                    description_start += tt('transferhistoryrow_jsx.transferred') + data.amount + tt('transferhistoryrow_jsx.to_golos_power');
                 }
                 else {
-                    description_start += tt('transferhistoryrow_jsx.transferred') + data.amount.split(' ')[0] + " " + VESTING_TOKEN + tt('g.to');
-                    other_account = data.to;
+                    description_start += tt('g.receive') + data.amount + tt('g.from');
+                    other_account = data.from;
+                    description_end += tt('transferhistoryrow_jsx.to_golos_power');
                 }
-            }
-            else if( data.to === context ) {
-                description_start += tt('g.receive') + data.amount.split(' ')[0] + " " + VESTING_TOKEN + tt('g.from');
-                other_account = data.from;
             } else {
-                description_start += tt('transferhistoryrow_jsx.transferred') + data.amount.split(' ')[0] + " " + VESTING_TOKEN + tt('g.from') + data.from + tt('g.to');
+                description_start += tt('transferhistoryrow_jsx.transfer') + data.amount + tt('g.to');
                 other_account = data.to;
+                description_end += tt('transferhistoryrow_jsx.to_golos_power');
             }
         }
 
@@ -177,7 +174,7 @@ class TransferHistoryRow extends React.Component {
                     other_account = data.from;
                 }
             } else {
-                description_start += tt('transferhistoryrow_jsx.transfer') + data.amount + tt('transferhistoryrow_jsx.with_claim') + tt('transferhistoryrow_jsx.to');
+                description_start += tt('transferhistoryrow_jsx.transfer') + data.amount + tt('transferhistoryrow_jsx.with_claim') + tt('g.to');
                 other_account = data.to;
             }
             if (data.to_vesting) {
@@ -188,14 +185,14 @@ class TransferHistoryRow extends React.Component {
         else if (type === 'transfer_to_tip') {
             if( data.to === context ) {
                 if( data.from === context ) {
-                    description_start += tt('transferhistoryrow_jsx.transfer') + data.amount + tt('transferhistoryrow_jsx.to_tip');
+                    description_start += tt('transferhistoryrow_jsx.transferred') + data.amount + tt('transferhistoryrow_jsx.to_tip');
                 }
                 else {
                     description_start += tt('g.receive') + data.amount + tt('transferhistoryrow_jsx.to_tip') + tt('transferhistoryrow_jsx.from');
                     other_account = data.from;
                 }
             } else {
-                description_start += tt('transferhistoryrow_jsx.transfer') + data.amount + tt('transferhistoryrow_jsx.to_tip') + tt('transferhistoryrow_jsx.to');
+                description_start += tt('transferhistoryrow_jsx.transfer') + data.amount + tt('transferhistoryrow_jsx.to_tip') + tt('g.to');
                 other_account = data.to;
             }
         }
@@ -203,7 +200,7 @@ class TransferHistoryRow extends React.Component {
         else if (type === 'transfer_from_tip') {
             if( data.to === context ) {
                 if( data.from === context ) {
-                    description_start += tt('transferhistoryrow_jsx.transfer') + data.amount + tt('transferhistoryrow_jsx.from_tip') + tt('transferhistoryrow_jsx.to_golos_power');
+                    description_start += tt('transferhistoryrow_jsx.transferred') + data.amount + tt('transferhistoryrow_jsx.from_tip') + tt('transferhistoryrow_jsx.to_golos_power');
                 }
                 else {
                     description_start += tt('g.receive') + data.amount + tt('transferhistoryrow_jsx.from_tip') + tt('transferhistoryrow_jsx.from');
@@ -211,7 +208,7 @@ class TransferHistoryRow extends React.Component {
                     description_end += tt('transferhistoryrow_jsx.to_golos_power');
                 }
             } else {
-                description_start += tt('transferhistoryrow_jsx.transfer') + data.amount + tt('transferhistoryrow_jsx.from_tip') + tt('transferhistoryrow_jsx.to');
+                description_start += tt('transferhistoryrow_jsx.transfer') + data.amount + tt('transferhistoryrow_jsx.from_tip') + tt('g.to');
                 other_account = data.to;
                 description_end += tt('transferhistoryrow_jsx.to_golos_power');
             }
@@ -234,7 +231,7 @@ class TransferHistoryRow extends React.Component {
                     </td>
                     <td className="TransferHistoryRow__text" style={{maxWidth: "40rem"}}>
                         {description_start}
-                        {code_key && <span style={{ fontSize: '85%' }}>{code_key}</span>}
+                        {code_key && <span style={{fontSize: "85%"}}>{code_key}</span>}
                         {other_account && <Link to={`/@${other_account}`}>{other_account}</Link>}
                         {description_end}
                     </td>

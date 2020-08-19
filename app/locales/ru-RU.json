@@ -12,14 +12,6 @@
     "TIP_TOKEN": "TIP-баланс",
     "CLAIM_TOKEN": "CLAIM-баланс"
   },
-  "about_jsx": {
-    "about_app": "О %(APP_NAME)s",
-    "about_app_details": "%(APP_NAME)s - это социальная медиа платформа в которой каждый зарабатывает за создание контента. Он использует надежную систему цифровых токенов под названием Голос, который поддерживает реальную ценность для наград через выявление рыночной цены и ликвидности.",
-    "learn_more_at_app_url": "Узнать больше в %(APP_URL)s",
-    "resources": "Ресурсы",
-    "join_our_slack": "Присоединяйтесь к нашему Slack",
-    "mobileBannerAlt": "Доступно в Google Play"
-  },
   "authorrewards_jsx": {
     "estimated_author_rewards_last_week": "Оценочные авторские вознаграждения за неделю",
     "author_rewards_history": "История авторских наград"
@@ -617,7 +609,7 @@
     "APP_NAME_whitepaper": "Бумага о %(APP_NAME)s",
     "buy_LIQUID_TOKEN": "Купить %(LIQUID_TOKEN)s",
     "sell_LIQUID_TOKEN": "Продать %(LIQUID_TOKEN)s",
-    "market": "Купить или Продать",
+    "market": "Внутренняя биржа",
     "currency_market": "Внутренний рынок",
     "stolen_account_recovery": "Возврат украденного аккаунта",
     "change_account_password": "Изменить пароль аккаунта",
@@ -819,14 +811,7 @@
     },
     "profile_about": "О себе",
     "profile_location": "Местоположение",
-    "profile_website": "Веб-сайт",
-    "rounding_numbers": {
-      "info_message": "Отображение наград",
-      "integer": "Округлять до целого числа",
-      "one_decimal": "Один знак после запятой",
-      "two_decimal": "Два знака после запятой",
-      "three_decimal": "Три знака после запятой"
-    }
+    "profile_website": "Веб-сайт"
   },
   "submit_a_story": {
     "title": "Заголовок",
@@ -894,9 +879,9 @@
     "protect_funds_by_requiring_a_3_day_withdraw_waiting_period": "Защитите средства от вывода 3-х дневным периодом ожидания.",
     "withdraw_funds_after_the_required_3_day_waiting_period": "Снять средства после необходимого 3-х дневного периода ожидания.",
     "balance": "Баланс",
-    "private_key_in_memo" : "Не пишите в этом поле свои приватные ключи!",
-    "verified_exchange_no_memo": "Для перевода на биржу нужно указать примечание согласно правилам биржи.",
-    "verified_exchange_liquid_only": "Переводить на биржу можно только токены с GOLOS баланса."
+    "private_key_in_memo" : "Не пишите в этом поле приватные ключи!",
+    "verified_exchange_no_memo": "Для перевода токенов на биржу нужно указать заметку/memo.",
+    "verified_exchange_liquid_only": "Переводить на биржу можно только токены с основного баланса ГОЛОС."
   },
   "transferhistoryrow_jsx": {
     "to_savings": "в сейф",
