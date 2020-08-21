@@ -215,8 +215,8 @@ ul > li.Header__top-logo > a {
     position: relative;
     text-transform: uppercase;
     color: #2572ba;
-    font-family: "Roboto Slab";
-    font-size: 36px !important;
+    font-family: "Open Sans";
+    font-size: 34px !important;
     font-weight: bold;
 
     &:hover {
@@ -229,6 +229,7 @@ ul > li.Header__top-logo > a {
     font-size: 0.7rem;
     color: #2578be;
     text-transform: none;
+    margin-left: 3px;
   }
 }
 
