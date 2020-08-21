@@ -126,9 +126,6 @@ const en =  {
   replies: 'Replies',
   payouts: 'Payouts',
   need_password_or_key: 'You need a private password or key (not a public key)',
-  // BlocktradesDeposit
-  change_deposit_address: 'Change Deposit Address',
-  get_deposit_address: 'Get Deposit Address',
   // for example 'powered by Blocktrades'
   powered_by: 'Powered by',
   send_amount_of_coins_to: 'Send {value} {coinName} to',

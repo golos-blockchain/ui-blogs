@@ -2,14 +2,12 @@ import React from 'react';
 import { renderToNodeStream } from 'react-dom/server';
 import stringToStream from 'string-to-stream';
 import multiStream from 'multistream';
-
 import { ServerStyleSheet } from 'styled-components'
 import Tarantool from 'db/tarantool';
 import ServerHTML from './server-html';
 import { serverRender } from '../shared/UniversalRender';
 import models from 'db/models';
 import secureRandom from 'secure-random';
-
 import ErrorPage from 'server/server-error';
 import {
   DEFAULT_LANGUAGE, LANGUAGES, LOCALE_COOKIE_KEY,
@@ -123,7 +121,6 @@ async function appRender(ctx) {
 
         const analytics = {
             google_analytics_id: $STM_Config.google_analytics_id,
-            facebook_app_id: $STM_Config.facebook_app_id
         };
 
         const props = { body, assets, title, meta, analytics};

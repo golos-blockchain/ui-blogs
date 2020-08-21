@@ -259,6 +259,12 @@ input.share-box {
         margin-left: 15px;
 }
 
+.shareMenu {
+    display: inline-block;
+    vertical-align: middle;
+    height: 1.6em;
+}
+
 /* Small only */
 @media screen and (max-width: 39.9375em) {
   .Post {
@@ -278,11 +284,14 @@ input.share-box {
     font-size: .8em;
   }
   .strikeprev {
-        margin-top: 10px;
+    margin-top: 10px;
+  }
+  .shareMenu {
+    height: auto;
   }
 }
 
-.with-cta-block .PostsList__post_overlay .Post {
+.PostsList__post_overlay .Post {
   margin-bottom: 90px;
 }
 

@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import tt from 'counterpart';
 import { api } from 'golos-classic-js';
 import Icon from 'app/components/elements/Icon';
-import LocalizedCurrency from 'app/components/elements/LocalizedCurrency';
-import { TERMS_OF_SERVICE_URL } from 'app/client_config';
 
 class Footer extends React.Component {
     state = {

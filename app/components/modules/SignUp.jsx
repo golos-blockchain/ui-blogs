@@ -3,8 +3,7 @@ import {connect} from 'react-redux';
 import SvgImage from 'app/components/elements/SvgImage';
 import tt from 'counterpart';
 import { formatCoins } from 'app/utils/FormatCoins';
-import { APP_DOMAIN, PRIVACY_POLICY_URL, TERMS_OF_SERVICE_URL } from 'app/client_config';
-import LocalizedCurrency from 'app/components/elements/LocalizedCurrency';
+import { APP_DOMAIN } from 'app/client_config';
 
 class SignUp extends React.Component {
     constructor() {
@@ -21,14 +20,9 @@ class SignUp extends React.Component {
                     <h3>{tt("g.sign_up")}</h3>
                     <p>
                         {tt("g.we_require_social_account1", {APP_NAME})}
-                        <LocalizedCurrency amount={Number(this.props.signup_bonus)} />
-                        {tt("g.we_require_social_account2", {VESTING_TOKEN})}
                         <br />
                         {tt("g.personal_info_will_be_private")}
                         {' '}
-                        <a href={TERMS_OF_SERVICE_URL} target="_blank">
-                            {tt("g.personal_info_will_be_private_link")}
-                        </a>.
                     </p>
                 </div>
             </div>
@@ -45,9 +39,6 @@ class SignUp extends React.Component {
                       <br />
                     <p className="secondary">
                         {tt('enter_confirm_email_jsx.next_3_strings.by_verifying_you_agree_with') + ' '}
-                        <a href={PRIVACY_POLICY_URL} target="_blank">
-                            {tt('enter_confirm_email_jsx.next_3_strings.by_verifying_you_agree_with_privacy_policy')}
-                        </a>
                         {' ' + tt('enter_confirm_email_jsx.next_3_strings.by_verifying_you_agree_with_privacy_policy_of_website_APP_DOMAIN', {APP_DOMAIN})}.
                     </p>
                 </div>

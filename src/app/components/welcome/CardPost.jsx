@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import Userpic from 'app/components/elements/Userpic';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
-import LocalizedCurrency from 'app/components/elements/LocalizedCurrency';
 import Icon from 'app/components/elements/Icon';
 import { parsePayoutAmount } from 'app/utils/ParsersAndFormatters';
 import extractContent from 'app/utils/ExtractContent';
@@ -170,7 +169,7 @@ export default class CardPost extends Component {
                             {post.net_votes}
                         </FooterVotes>
                         <FooterPayout>
-                            <LocalizedCurrency amount={payout} />
+                            {payout}
                         </FooterPayout>
                     </FooterActions>
                 </Footer>

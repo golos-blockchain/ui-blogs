@@ -43,9 +43,6 @@ export default function ServerHTML({ body, assets, locale, title, meta, analytic
             <link rel="icon" type="image/png" href="/images/favicons/favicon-16x16.png" sizes="16x16" />
             {/*<link rel="icon" type="image/png" href="/images/favicons/favicon-128.png" sizes="128x128" />*/}
 
-            <meta name="google-site-verification" content="BWXQu7f60YN4jwIy-ceP1zZrGkSh9bsOCPE6L2E4Fvg" />
-            <meta name="yandex-verification" content="c7e4c791dd44c201" />
-
             <meta name="application-name" content={LIQUID_TOKEN} />
             <meta name="msapplication-TileColor" content="#FFFFFF" />
             <meta name="msapplication-TileImage" content="/images/favicons/ms-icon-144x144.png" />
@@ -75,8 +72,6 @@ export default function ServerHTML({ body, assets, locale, title, meta, analytic
             {Object.keys(assets.javascript).map((script, i) =>
                 <script src={assets.javascript[script]} key={i} />
             )}
-
-            { config.get('vk_pixel_id') && <script dangerouslySetInnerHTML={ { __html: `(window.Image ? (new Image()) : document.createElement('img')).src = 'https://vk.com/rtrg?p=${config.get('vk_pixel_id')}';` } }></script> }
         </body>
         </html>
     );

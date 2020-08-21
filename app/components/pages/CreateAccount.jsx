@@ -14,7 +14,7 @@ import runTests from 'app/utils/BrowserTests';
 import g from 'app/redux/GlobalReducer';
 import GeneratedPasswordInput from '@elements/GeneratedPasswordInput';
 import CountryCode from '@elements/CountryCode';
-import { APP_DOMAIN, SUPPORT_EMAIL, SMS_SERVICES } from 'app/client_config';
+import { APP_DOMAIN, SUPPORT_EMAIL } from 'app/client_config';
 import { successReg } from 'app/utils/Analytics';
 
 class CreateAccount extends React.Component {

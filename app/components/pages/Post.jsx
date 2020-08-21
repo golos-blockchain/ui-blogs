@@ -12,8 +12,6 @@ import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import { blockedUsers } from 'app/utils/IllegalContent';
 import { buttonClick } from 'app/utils/Analytics';
 
-import CTABlock from '../elements/CTA/CTABlock'
-
 class Post extends React.Component {
     static propTypes = {
         content: PropTypes.object.isRequired,
@@ -181,27 +179,6 @@ class Post extends React.Component {
                         <PostFull post={post} cont={content} aiPosts={aiPosts} />
                     </div>
                 </div>
-
-                {/* Disable promo for registration FIXME
-                {!current_user && <div className="row">
-                <CTABlock post={post}/>
-
-                    <div className="column">
-                        <div className="Post__promo">
-                            {tt('g.next_7_strings_sinngle_block.authors_get_paid_when_people_like_you_upvote_their_post')}.
-                            <br /> {tt('g.next_7_strings_sinngle_block.if_you_enjoyed_what_you_read_earn_amount')}
-                            <br />
-                            <a className="button sign-up" 
-                                href="/create_account"
-                                onClick={() => buttonClick()}
-                            >{tt('g.next_7_strings_sinngle_block.sign_up_now_to_receive')}
-                                <span className="free-money">{tt('g.next_7_strings_sinngle_block.free_steem', {LIQUID_TOKEN})}</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>}
-
-                */}
 
                 <div className="row hfeed">
 

@@ -15,8 +15,6 @@ import tt from 'counterpart';
 import { LIQUID_TICKER, DEBT_TICKER } from 'app/client_config';
 import LocalizedCurrency from 'app/components/elements/LocalizedCurrency';
 import { vestsToSteem, toAsset } from 'app/utils/StateFunctions';
-import { WIKI_URL } from 'app/client_config';
-
 
 const defaultNavigate = (e) => {
     if (e.metaKey || e.ctrlKey) {
