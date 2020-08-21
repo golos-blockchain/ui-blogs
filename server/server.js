@@ -146,24 +146,6 @@ app.use(helmet());
 
 app.use(mount('/static', staticCache(path.join(__dirname, '../app/assets/static'), cacheOpts)));
 
-app.use(
-    mount('/robots.txt', function*() {
-        this.set('Cache-Control', 'public, max-age=86400000');
-        this.type = 'text/plain';
-        this.body = 'User-agent: *\nAllow: /';
-    })
-);
-
-app.use(
-    mount('/.well-known/assetlinks.json', function*() {
-        this.type = 'application/json';
-        const file_content = fs
-            .readFileSync(path.join(__dirname, '../app/assets/.well-known/assetlinks.json'))
-            .toString();
-        this.body = file_content
-    })
-);
-
 // TODO Разобраться
 // app.use(
 //     mount('/service-worker.js', function*() {
@@ -224,11 +206,9 @@ if (env === 'production') {
 app.use(favicon(path.join(__dirname, '../app/assets/images/favicons/favicon.ico')));
 app.use(mount('/favicons', staticCache(path.join(__dirname, '../app/assets/images/favicons'), cacheOpts)));
 app.use(mount('/images', staticCache(path.join(__dirname, '../app/assets/images'), cacheOpts)));
-app.use(mount('/legal', staticCache(path.join(__dirname, '../app/assets/legal'), cacheOpts)));
 app.use(mount('/sitemap.xml', staticCache(path.join(__dirname, '../app/assets/sitemap.xml'), cacheOpts)));
 app.use(mount('/robots.txt', staticCache(path.join(__dirname, '../app/assets/robots.txt'), cacheOpts)));
 app.use(isBot());
-
 
 // Proxy asset folder to webpack development server in development mode
 if (env === 'development') {
