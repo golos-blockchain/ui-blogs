@@ -15,7 +15,6 @@ import g from 'app/redux/GlobalReducer';
 import GeneratedPasswordInput from '@elements/GeneratedPasswordInput';
 import CountryCode from '@elements/CountryCode';
 import { APP_DOMAIN, SUPPORT_EMAIL } from 'app/client_config';
-import { successReg } from 'app/utils/Analytics';
 
 class CreateAccount extends React.Component {
     static propTypes = {
@@ -575,7 +574,6 @@ class CreateAccount extends React.Component {
                     loading: false,
                 });
             } else {
-                successReg();
                 window.location = `/login.html#account=${name}&msg=accountcreated`;
             }
         } catch (err) {

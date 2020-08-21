@@ -20,8 +20,6 @@ import { key_utils } from 'golos-classic-js/lib/auth/ecc';
 import MiniHeader from '@modules/MiniHeader';
 import tt from 'counterpart';
 import PageViewsCounter from '@elements/PageViewsCounter';
-import LocalizedCurrency from '@elements/LocalizedCurrency';
-import MobileAppButton from 'app/components/elements/MobileBanners/MobileAppButton';
 import DialogManager from 'app/components/elements/common/DialogManager';
 import { init as initAnchorHelper } from 'app/utils/anchorHelper';
 

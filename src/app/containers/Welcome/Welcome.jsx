@@ -4,7 +4,6 @@ import user from 'app/redux/User';
 import Hero from 'src/app/components/welcome/Hero';
 import About from 'src/app/components/welcome/About';
 import Differences from 'src/app/components/welcome/Differences';
-import Mobile from 'src/app/components/welcome/Mobile';
 import Reviews from 'src/app/components/welcome/Reviews';
 import Questions from 'src/app/components/welcome/Questions';
 
@@ -103,7 +102,6 @@ class Welcome extends Component {
                 <Hero />
                 <About />
                 <Differences />
-                { /* <Mobile /> TODO Mobile app*/} 
                 <Reviews slides={this.slides} />
                 <Questions
                     questionsLoading={questionsLoading}

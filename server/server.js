@@ -1,6 +1,3 @@
-// newrelic is not working with latest npm
-//if(config.has('newrelic')) require('newrelic');
-
 import path from 'path';
 import fs from 'fs';
 import Koa from 'koa';
@@ -12,7 +9,6 @@ import favicon from 'koa-favicon';
 import staticCache from 'koa-static-cache';
 import useRedirects from './redirects';
 import useGeneralApi from './api/general';
-import useTestnetApi from './testnet_api';
 import useAccountRecoveryApi from './api/account_recovery';
 import useNotificationsApi from './api/notifications';
 import useRegistrationApi from './api/registration';
@@ -211,10 +207,6 @@ useGeneralApi(app);
 useNotificationsApi(app);
 useProxyRoutes(app);
 useRatesRoutes(app);
-
-// if (config.get('is_testnet')) {
-//     useTestnetApi(app);
-// }
 
 // helmet wants some things as bools and some as lists, makes config difficult.
 // our config uses strings, this splits them to lists on whitespace.
