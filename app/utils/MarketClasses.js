@@ -1,24 +1,26 @@
 import {roundDown, roundUp} from "./MarketUtils";
-import { LIQUID_TICKER, DEBT_TICKER } from 'app/client_config'
-const precision = 1000;
 
 class Order {
-    constructor(order, side) {
+    constructor(order, side, sym1, sym2, prec1, prec2) {
         this.side = side;
         this.price = parseFloat(order.real_price);
         this.price = side === 'asks' ? roundUp(this.price, 6) : Math.max(roundDown(this.price, 6), 0.000001);
         this.stringPrice = this.price.toFixed(6);
-        this.steem = parseInt(order.steem, 10);
-        this.sbd = parseInt(order.sbd, 10);
+        this.asset1 = parseInt(order.asset1, 10);
+        this.asset2 = parseInt(order.asset2, 10);
+        this.sym1 = sym1
+        this.sym2 = sym2
+        this.prec1 = prec1
+        this.prec2 = prec2
         this.date = order.created;
     }
 
-    getSteemAmount() {
-        return this.steem / precision;
+    getAsset1Amount() {
+        return this.asset1 / Math.pow(10, this.prec1);
     }
 
-    getStringSteem() {
-        return this.getSteemAmount().toFixed(3);
+    getStringAsset1() {
+        return this.getAsset1Amount().toFixed(this.prec1);
     }
 
     getPrice() {
@@ -29,27 +31,27 @@ class Order {
         return this.stringPrice;
     }
 
-    getStringSBD() {
-        return this.getSBDAmount().toFixed(3);
+    getAsset2Amount() {
+        return this.asset2 / Math.pow(10, this.prec2);
     }
 
-    getSBDAmount() {
-        return this.sbd / precision;
+    getStringAsset2() {
+        return this.getAsset2Amount().toFixed(this.prec2);
     }
 
     add(order) {
         return new Order({
             real_price: this.price,
-            steem: this.steem + order.steem,
-            sbd: this.sbd + order.sbd,
+            asset1: this.asset1 + order.asset1,
+            asset2: this.asset2 + order.asset2,
             date: this.date
         }, this.type);
     }
 
     equals(order) {
         return (
-            this.getStringSBD() === order.getStringSBD() &&
-            this.getStringSteem() === order.getStringSteem() &&
+            this.getStringAsset2() === order.getStringAsset2() &&
+            this.getStringAsset1() === order.getStringAsset1() &&
             this.getStringPrice() === order.getStringPrice()
         );
     }
@@ -57,42 +59,46 @@ class Order {
 
 class TradeHistory {
 
-    constructor(fill) {
+    constructor(fill, sym1, sym2, prec1, prec2) {
         // Norm date (FF bug)
         var zdate = fill.date;
         if(!/Z$/.test(zdate))
           zdate = zdate + 'Z'
 
         this.date = new Date(zdate);
-        this.type = fill.current_pays.indexOf(DEBT_TICKER) !== -1 ? "bid" : "ask";
+        this.type = fill.current_pays.indexOf(sym2) !== -1 ? "bid" : "ask";
         this.color = this.type == "bid" ? "buy-color" : "sell-color";
         if (this.type === "bid") {
-            this.sbd = parseFloat(fill.current_pays.split(" " + DEBT_TICKER)[0]);
-            this.steem = parseFloat(fill.open_pays.split(" " + LIQUID_TICKER)[0]);
+            this.asset2 = parseFloat(fill.current_pays.split(" " + sym2)[0]);
+            this.asset1 = parseFloat(fill.open_pays.split(" " + sym1)[0]);
         } else {
-            this.sbd = parseFloat(fill.open_pays.split(" " + DEBT_TICKER)[0]);
-            this.steem = parseFloat(fill.current_pays.split(" " + LIQUID_TICKER)[0]);
+            this.asset2 = parseFloat(fill.open_pays.split(" " + sym2)[0]);
+            this.asset1 = parseFloat(fill.current_pays.split(" " + sym1)[0]);
         }
 
-        this.price = this.sbd / this.steem;
+        this.sym1 = sym1
+        this.sym2 = sym2
+        this.prec1 = prec1
+        this.prec2 = prec2
+        this.price = this.asset2 / this.asset1;
         this.price = this.type === 'ask' ? roundUp(this.price, 6) : Math.max(roundDown(this.price, 6), 0.000001);
         this.stringPrice = this.price.toFixed(6);
     }
 
-    getSteemAmount() {
-        return this.steem;
+    getAsset1Amount() {
+        return this.asset1;
     }
 
-    getStringSteem() {
-        return this.getSteemAmount().toFixed(3);
+    getStringAsset1() {
+        return this.getAsset1Amount().toFixed(this.prec1);
     }
 
-    getSBDAmount() {
-        return this.sbd;
+    getAsset2Amount() {
+        return this.asset2;
     }
 
-    getStringSBD() {
-        return this.getSBDAmount().toFixed(3);
+    getStringAsset2() {
+        return this.getAsset2Amount().toFixed(this.prec2);
     }
 
     getPrice() {
@@ -105,8 +111,8 @@ class TradeHistory {
 
     equals(order) {
         return (
-            this.getStringSBD() === order.getStringSBD() &&
-            this.getStringSteem() === order.getStringSteem() &&
+            this.getStringAsset2() === order.getStringAsset2() &&
+            this.getStringAsset1() === order.getStringAsset1() &&
             this.getStringPrice() === order.getStringPrice()
         );
     }

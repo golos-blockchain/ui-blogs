@@ -198,19 +198,21 @@ class TransferHistoryRow extends React.Component {
         }
 
         else if (type === 'transfer_from_tip') {
+            let to_what = tt('transferhistoryrow_jsx.to_golos_power');
+            if (data.amount.split(' ')[1] != 'GOLOS') to_what = tt('transferhistoryrow_jsx.to_golos_liquid');
             if( data.to === context ) {
                 if( data.from === context ) {
-                    description_start += tt('transferhistoryrow_jsx.transferred') + data.amount + tt('transferhistoryrow_jsx.from_tip') + tt('transferhistoryrow_jsx.to_golos_power');
+                    description_start += tt('transferhistoryrow_jsx.transferred') + data.amount + tt('transferhistoryrow_jsx.from_tip') + to_what;
                 }
                 else {
                     description_start += tt('g.receive') + data.amount + tt('transferhistoryrow_jsx.from_tip') + tt('transferhistoryrow_jsx.from');
                     other_account = data.from;
-                    description_end += tt('transferhistoryrow_jsx.to_golos_power');
+                    description_end += to_what;
                 }
             } else {
                 description_start += tt('transferhistoryrow_jsx.transfer') + data.amount + tt('transferhistoryrow_jsx.from_tip') + tt('g.to');
                 other_account = data.to;
-                description_end += tt('transferhistoryrow_jsx.to_golos_power');
+                description_end += to_what;
             }
         }
 

@@ -7,6 +7,10 @@ import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
 import Icon from 'app/components/elements/Icon'
 import UserKeys from 'app/components/elements/UserKeys';
+import CreateAsset from 'app/components/elements/CreateAsset';
+import Assets from 'app/components/elements/Assets';
+import UpdateAsset from 'app/components/elements/UpdateAsset';
+import TransferAsset from 'app/components/elements/TransferAsset';
 import Invites from 'app/components/elements/Invites';
 import PasswordReset from 'app/components/elements/PasswordReset';
 import UserWallet from 'app/components/modules/UserWallet';
@@ -131,7 +135,7 @@ export default class UserProfile extends React.Component {
             props: {current_user, wifShown, global_status, follow},
             onPrint
         } = this;
-        let { accountname, section } = this.props.routeParams;
+        let { accountname, section, id, action } = this.props.routeParams;
         // normalize account from cased params
         accountname = accountname.toLowerCase();
         const username = current_user ? current_user.get('username') : null
@@ -208,6 +212,26 @@ export default class UserProfile extends React.Component {
                     current_user={current_user}
                     withdrawVesting={this.props.withdrawVesting} />
                 { isMyAccount && <div><MarkNotificationRead fields="send,receive" account={account.name} /></div> }
+                </div>;
+        } else if( section === 'assets' ) {
+            walletClass = 'active'
+            tab_content = <div>
+                 <WalletSubMenu account_name={account.name} isMyAccount={isMyAccount} />
+
+                <br />
+                {!action && <Assets account={accountImm} isMyAccount={isMyAccount}
+                    showTransfer={this.props.showTransfer} />
+                }
+                {action === 'update' && <UpdateAsset account={accountImm} symbol={id.toUpperCase()} />}
+                {action === 'transfer' && <TransferAsset account={accountImm} symbol={id.toUpperCase()} />}
+                </div>
+        } else if( section === 'create-asset' && isMyAccount ) {
+            walletClass = 'active'
+            tab_content = <div>
+                 <WalletSubMenu account_name={account.name} isMyAccount={isMyAccount} />
+
+                <br />
+                <CreateAsset account={accountImm} />
                 </div>;
         }
         else if( section === 'curation-rewards' ) {
@@ -343,7 +367,7 @@ export default class UserProfile extends React.Component {
         else if( section === 'permissions' && isMyAccount ) {
             walletClass = 'active'
             tab_content = <div>
-                 <WalletSubMenu account_name={account.name} />
+                 <WalletSubMenu account_name={account.name} isMyAccount={isMyAccount} />
 
                 <br />
                 <UserKeys account={accountImm} />
@@ -352,7 +376,7 @@ export default class UserProfile extends React.Component {
         } else if( section === 'invites' && isMyAccount ) {
             walletClass = 'active'
             tab_content = <div>
-                 <WalletSubMenu account_name={account.name} />
+                 <WalletSubMenu account_name={account.name} isMyAccount={isMyAccount} />
 
                 <br />
                 <Invites account={accountImm} />
@@ -360,7 +384,7 @@ export default class UserProfile extends React.Component {
         } else if( section === 'password' ) {
             walletClass = 'active'
             tab_content = <div>
-                    <WalletSubMenu account_name={account.name} />
+                    <WalletSubMenu account_name={account.name} isMyAccount={isMyAccount} />
 
                     <br />
                     <PasswordReset account={accountImm} />
@@ -372,7 +396,7 @@ export default class UserProfile extends React.Component {
         } /*else if( section === 'invites' ) {
             walletClass = 'active'
             tab_content = <div>
-                    <WalletSubMenu account_name={account.name} />
+                    <WalletSubMenu account_name={account.name} isMyAccount={isMyAccount} />
 
                     <br />
                     <UserInvites account={accountImm} />
@@ -388,11 +412,11 @@ export default class UserProfile extends React.Component {
 		}
 
         if (!(section === 'transfers' ||
+              section === 'assets' ||
+              section === 'create-asset' ||
               section === 'permissions' ||
               section === 'password' ||
-              section === 'invites' ||
-              section === 'assets'||
-              section === 'create-asset')) {
+              section === 'invites')) {
             tab_content = <div className="row">
                 <div className="UserProfile__tab_content column">
                     {tab_content}
@@ -545,7 +569,7 @@ export default class UserProfile extends React.Component {
 }
 
 module.exports = {
-    path: '@:accountname(/:section)',
+    path: '@:accountname(/:section)(/:id)(/:action)',
     component: connect(
         state => {
             const wifShown = state.global.get('UserKeys_wifShown')

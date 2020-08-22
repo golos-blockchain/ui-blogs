@@ -25,6 +25,7 @@ export default async function getState(api, url, options, offchain = {}) {
     state.tags = {}
     state.content = {}
     state.prev_posts = []
+    state.assets = {}
     state.worker_requests = {}
     state.accounts = {}
     state.witnesses = {}
@@ -91,6 +92,34 @@ export default async function getState(api, url, options, offchain = {}) {
                                 state.accounts[uname].other_history.push(operation)
                         }
                     })
+                break
+
+                case 'assets':
+                    state.assets = (await api.getAccountsBalances([uname]))[0]
+                    const my_assets = await api.getAssets()
+                    my_assets.forEach(ma => {
+                        const sym = ma.supply.split(' ')[1]
+                        const precision = ma.supply.split(' ')[0].split('.')[1].length
+
+                        if (sym in state.assets) {
+                            state.assets[sym].my = true
+                        } else {
+                            state.assets[sym] = {
+                                balance: '0.' + '0'.repeat(precision) + ' ' + sym,
+                                tip_balance: '0.' + '0'.repeat(precision) + ' ' + sym
+                            }
+                        }
+
+                        state.assets[sym] = {...state.assets[sym], ...ma, precision}
+
+                        if (ma.creator == uname) {
+                            state.assets[sym].my = true
+                        }
+                    })
+                break
+
+                case 'create-asset':
+                    state.cprops = await api.getChainProperties();
                 break
 
                 case 'invites':

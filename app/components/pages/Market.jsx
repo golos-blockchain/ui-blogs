@@ -2,9 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
+import { Link, browserHistory } from 'react-router';
 import tt from 'counterpart';
 import transaction from 'app/redux/Transaction';
+import {longToAsset} from 'app/utils/ParsersAndFormatters';
 import TransactionError from 'app/components/elements/TransactionError';
+import Icon from 'app/components/elements/Icon';
+import DropdownMenu from 'app/components/elements/DropdownMenu';
 import DepthChart from 'app/components/elements/DepthChart';
 import Orderbook from 'app/components/elements/Orderbook';
 import OrderHistory from 'app/components/elements/OrderHistory';
@@ -66,8 +70,20 @@ class Market extends Component {
     shouldComponentUpdate = (nextProps, nextState) => {
         const { props, state } = this;
 
+        if (props.routeParams.sym1 !== nextProps.routeParams.sym1) {
+            return true;
+        }
+
+        if (props.routeParams.sym2 !== nextProps.routeParams.sym2) {
+            return true;
+        }
+
         if (props.user !== nextProps.user && nextProps.user) {
-            props.reload(nextProps.user);
+            props.reload(nextProps.user, nextProps.location.pathname);
+        }
+
+        if (props.user !== nextProps.user && nextProps.user) {
+            props.reload(nextProps.user, nextProps.location.pathname);
         }
 
         for (let key in state) {
@@ -79,7 +95,7 @@ class Market extends Component {
         if (
             props.ticker === undefined ||
             props.ticker.latest !== nextProps.ticker.latest ||
-            props.ticker.sbd_volume !== nextProps.ticker.sbd_volume
+            props.ticker.asset2_volume !== nextProps.ticker.asset2_volume
         ) {
             return true;
         }
@@ -103,11 +119,29 @@ class Market extends Component {
             return true;
         }
 
+        if (
+            nextProps.assets !== undefined &&
+            (props.assets === undefined ||
+                JSON.stringify(props.assets) !==
+                    JSON.stringify(nextProps.assets))
+        ) {
+            return true;
+        }
+
         return false;
     };
 
     buySteem = e => {
         e.preventDefault();
+
+        let {sym1, sym2} = this.props.routeParams
+        sym1 = sym1.toUpperCase()
+        sym2 = sym2.toUpperCase()
+        if (sym2 === "GOLOS"
+            || (sym2 < sym1 && sym1 !== "GOLOS")) {
+            [sym1, sym2] = [sym2, sym1]
+        }
+
         const { placeOrder, user } = this.props;
         if (!user) return;
         const amount_to_sell = parseFloat(
@@ -119,20 +153,30 @@ class Market extends Component {
         const price = (amount_to_sell / min_to_receive).toFixed(6);
         const { lowest_ask } = this.props.ticker;
         placeOrder(
+            (this.props.assets ? this.props.assets : {}),
+            sym1, sym2,
             user,
-            `${amount_to_sell} ${DEBT_TICKER}`,
-            `${min_to_receive} ${LIQUID_TICKER}`,
-            `${DEBT_TICKER} ${price}/${LIQUID_TICKER}`,
+            `${amount_to_sell} ${sym2}`,
+            `${min_to_receive} ${sym1}`,
+            `${sym2} ${price}/${sym1}`,
             !!this.state.buyPriceWarning,
             lowest_ask,
             msg => {
                 this.props.notify(msg);
-                this.props.reload(user);
+                this.props.reload(user, this.props.location.pathname);
             }
         );
     };
     sellSteem = e => {
         e.preventDefault();
+
+        let {sym1, sym2} = this.props.routeParams
+        sym1 = sym1.toUpperCase()
+        sym2 = sym2.toUpperCase()
+        if (sym2 === "GOLOS"
+            || (sym2 < sym1 && sym1 !== "GOLOS")) {
+            [sym1, sym2] = [sym2, sym1]
+        }
 
         const { placeOrder, user } = this.props;
         if (!user) {
@@ -151,15 +195,17 @@ class Market extends Component {
         const { highest_bid } = this.props.ticker;
 
         placeOrder(
+            (this.props.assets ? this.props.assets : {}),
+            sym2, sym1,
             user,
-            `${amount_to_sell} ${LIQUID_TICKER}`,
-            `${min_to_receive} ${DEBT_TICKER}`,
-            `${DEBT_TICKER} ${price}/${LIQUID_TICKER}`,
+            `${amount_to_sell} ${sym1}`,
+            `${min_to_receive} ${sym2}`,
+            `${sym2} ${price}/${sym1}`,
             !!this.state.sellPriceWarning,
             highest_bid,
             msg => {
                 this.props.notify(msg);
-                this.props.reload(user);
+                this.props.reload(user, this.props.location.pathname);
             }
         );
     };
@@ -173,7 +219,7 @@ class Market extends Component {
 
         cancelOrder(user, orderid, msg => {
             this.props.notify(msg);
-            this.props.reload(user);
+            this.props.reload(user, this.props.location.pathname);
         });
     };
 
@@ -208,7 +254,7 @@ class Market extends Component {
         const total = parseFloat(this.refs.buySteemTotal.value);
 
         const valid = amount > 0 && price > 0 && total > 0;
-        const { lowest_ask } = this.props.ticker;
+        let { lowest_ask } = this.props.ticker;
 
         this.setState({
             buyDisabled: !valid,
@@ -221,7 +267,7 @@ class Market extends Component {
         const price = parseFloat(this.refs.sellSteem_price.value);
         const total = parseFloat(this.refs.sellSteem_total.value);
         const valid = amount > 0 && price > 0 && total > 0;
-        const { highest_bid } = this.props.ticker;
+        let { highest_bid } = this.props.ticker;
 
         this.setState({
             sellDisabled: !valid,
@@ -231,6 +277,60 @@ class Market extends Component {
     };
 
     render() {
+        let {sym1, sym2} = this.props.routeParams
+        if (!sym1 || !sym2) {
+            if(process.env.BROWSER) {browserHistory.push('/market/GOLOS/GBG')
+            return(<div></div>)}
+        }
+        sym1 = sym1.toUpperCase()
+        sym2 = sym2.toUpperCase()
+        if (sym2 === "GOLOS"
+            || (sym2 < sym1 && sym1 !== "GOLOS")) {
+            [sym1, sym2] = [sym2, sym1]
+        }
+
+        let assets = this.props.assets ? this.props.assets : {};
+
+        let not_exists = []
+        if (!(sym1 in assets) && sym1 !== "GOLOS" && sym1 !== "GBG") not_exists.push(sym1)
+        if (!(sym2 in assets) && sym2 !== "GOLOS" && sym2 !== "GBG") not_exists.push(sym2)
+        if (not_exists.length) return (<div className="NotFound float-center">
+            <br/>
+            {not_exists.join(', ') + tt('market_jsx.not_exists')}<br/>
+            <Link to="/market/GOLOS/GBG">{tt('market_jsx.asset_problem_go_home')}</Link>
+            <br/>
+            <br/>
+        </div>)
+        let forbids = []
+        if (sym1 in assets && !assets[sym1].symbols_whitelist.includes(sym2)) forbids.push({sym1: sym1, sym2: sym2})
+        if (sym2 in assets && !assets[sym2].symbols_whitelist.includes(sym1)) forbids.push({sym1: sym2, sym2: sym1})
+        let forbid_ps = []
+        for (const forbid of forbids) {
+            forbid_ps.push(<p key={forbid.sym1}>{forbid.sym1 + tt('market_jsx.forbids') + forbid.sym2}</p>)
+        }
+        if (forbids.length) return (<div className="NotFound float-center">
+            <br/>
+            {forbid_ps}
+            <Link to="/market/GOLOS/GBG">{tt('market_jsx.asset_problem_go_home')}</Link>
+            <br/>
+            <br/>
+        </div>)
+
+        let asset_syms = []
+        for (let [key, value] of Object.entries(assets)) {
+            asset_syms.push(key)
+        }
+        let assets_right = {}
+        assets_right['GOLOS'] = {supply: '0.000 GOLOS', symbols_whitelist: ['GBG', ...asset_syms]}
+        assets_right['GBG'] = {supply: '0.000 GBG', symbols_whitelist: ['GOLOS', ...asset_syms]}
+        for (let [key, value] of Object.entries(assets)) {
+            assets_right[key] = value
+        }
+
+        let prec1 = assets_right[sym1].supply.split('.')[1]
+        prec1 = prec1.split(' ')[0].length
+        let prec2 = assets_right[sym2].supply.split('.')[1].split(' ')[0].length
+
         const LIQUID_TOKEN = tt('token_names.LIQUID_TOKEN');
         const LIQUID_TOKEN_UPPERCASE = tt('token_names.LIQUID_TOKEN_UPPERCASE');
 
@@ -255,7 +355,7 @@ class Market extends Component {
             lowest_ask: 0,
             highest_bid: 0,
             percent_change: 0,
-            sbd_volume: 0,
+            asset2_volume: 0,
             feed_price: 0,
         };
 
@@ -265,7 +365,7 @@ class Market extends Component {
                 lowest_ask,
                 highest_bid,
                 percent_change,
-                sbd_volume,
+                asset2_volume,
             } = this.props.ticker;
 
             let { base, quote } = this.props.feed;
@@ -275,7 +375,7 @@ class Market extends Component {
                 lowest_ask: roundUp(parseFloat(lowest_ask), 6),
                 highest_bid: roundDown(parseFloat(highest_bid), 6),
                 percent_change: parseFloat(percent_change),
-                sbd_volume: parseFloat(sbd_volume),
+                asset2_volume: parseFloat(asset2_volume),
                 feed_price:
                     parseFloat(base.split(' ')[0]) /
                     parseFloat(quote.split(' ')[0]),
@@ -289,8 +389,8 @@ class Market extends Component {
             }
 
             return {
-                bids: orders.bids.map(o => new Order(o, 'bids')),
-                asks: orders.asks.map(o => new Order(o, 'asks')),
+                bids: orders.bids.map(o => new Order(o, 'bids', sym1, sym2, prec1, prec2)),
+                asks: orders.asks.map(o => new Order(o, 'asks', sym1, sym2, prec1, prec2)),
             };
         }
 
@@ -342,16 +442,16 @@ class Market extends Component {
                     price: parseFloat(
                         type === 'ask' ? o.real_price : o.real_price
                     ),
-                    steem:
+                    asset1:
                         type === 'ask' ? o.sell_price.base : o.sell_price.quote,
-                    sbd:
+                    asset2:
                         type === 'bid' ? o.sell_price.base : o.sell_price.quote,
                 };
             });
         }
 
         // Logged-in user's open orders
-        function openOrdersTable(openOrders) {
+        function openOrdersTable(sym1, sym2, openOrders) {
             const rows =
                 openOrders &&
                 normalizeOpenOrders(openOrders).map(o => (
@@ -359,10 +459,10 @@ class Market extends Component {
                         <td>{o.created.replace('T', ' ')}</td>
                         <td>{tt(o.type === 'ask' ? 'g.sell' : 'g.buy')}</td>
                         <td>
-                            {DEBT_TICKER} {o.price.toFixed(6)}
+                            {sym2} {o.price.toFixed(6)}
                         </td>
-                        <td>{o.steem}</td>
-                        <td>{o.sbd.replace('SBD', DEBT_TOKEN_SHORT)}</td>
+                        <td>{o.asset1}</td>
+                        <td>{o.asset2.replace('SBD', DEBT_TOKEN_SHORT)}</td>
                         <td>
                             <a
                                 href="#"
@@ -381,8 +481,8 @@ class Market extends Component {
                             <th>{tt('market_jsx.date_created')}</th>
                             <th>{tt('g.type')}</th>
                             <th>{tt('g.price')}</th>
-                            <th className="uppercase">{LIQUID_TOKEN}</th>
-                            <th>{DEBT_TICKER}</th>
+                            <th className="uppercase">{sym1}</th>
+                            <th>{sym2}</th>
                             <th>{tt('market_jsx.action')}</th>
                         </tr>
                     </thead>
@@ -395,14 +495,45 @@ class Market extends Component {
             if (!trades || !trades.length) {
                 return [];
             }
-            const norm = trades => trades.map(t => new TradeHistory(t));
+            const norm = trades => trades.map(t => new TradeHistory(t, sym1, sym2, prec1, prec2));
 
-            return <OrderHistory history={norm(trades)} />;
+            return <OrderHistory 
+                        sym1={sym1}
+                        sym2={sym2}
+                        prec1={prec1}
+                        prec2={prec2}
+                        history={norm(trades)} />;
+        }
+
+        let symbols1 = [];
+        let symbols2 = [];
+        for (let [key, value] of Object.entries(assets_right)) {
+            if (sym1 !== key && sym2 !== key && value.symbols_whitelist.includes(sym2) && assets_right[sym2].symbols_whitelist.includes(key))
+            symbols1.push({key: key, value: key, link: '/market/' + key + '/' + sym2,
+            onClick: (e) => {window.location.href = '/market/' + sym2 + '/' + key}});
+
+            if (sym1 !== key && sym2 !== key && value.symbols_whitelist.includes(sym1) && assets_right[sym1].symbols_whitelist.includes(key))
+            symbols2.push({key: key, value: key, link: '/market/' + sym1 + '/' + key, 
+            onClick: (e) => {window.location.href = '/market/' + sym1 + '/' + key}});
         }
 
         return (
             <div>
                 <div className="row">
+                    <div className="column small-4"><br/><h5>
+                        <DropdownMenu el="div" items={symbols1}>
+                            <span>
+                                {sym1}{symbols1.length > 0 && <Icon name="dropdown-arrow" />}
+                            </span>
+                        </DropdownMenu>
+                        {" / "}
+                        <DropdownMenu el="div" items={symbols2}>
+                            <span>
+                                {sym2}{symbols2.length > 0 && <Icon name="dropdown-arrow" />}
+                            </span>
+                        </DropdownMenu></h5>
+                        <TickerPriceStat ticker={ticker} symbol={sym2} />
+                    </div>
                     <div className="column small-8">
                         {this.state.showDepthChart ? (
                             <DepthChart
@@ -410,9 +541,6 @@ class Market extends Component {
                                 asks={orderbook.asks}
                             />
                         ) : null}
-                    </div>
-                    <div className="column small-4">
-                        <TickerPriceStat ticker={ticker} symbol={DEBT_TICKER} />
                     </div>
                 </div>
 
@@ -425,10 +553,10 @@ class Market extends Component {
                     <div className="small-12 medium-6 columns">
                         <h4 className="buy-color uppercase">
                             {tt('navigation.buy_LIQUID_TOKEN', {
-                                LIQUID_TOKEN,
-                            })}
+                                LIQUID_TOKEN: sym1,
+                            })}  {assets && assets_right[sym1].allow_override_transfer && <Icon name="flag2" size="2x" title={tt('market_jsx..asset_') + sym1 + tt('market_jsx.asset_is_overridable')}/>}
                         </h4>
-                        {account && (
+                        {(((sym2 === "GBG" || sym2 === "GOLOS") && account) || (assets && sym2 in assets)) && (
                             <div style={{ marginBottom: '1rem' }}>
                                 <small>
                                     <a
@@ -438,9 +566,22 @@ class Market extends Component {
                                             const price = parseFloat(
                                                 this.refs.buySteemPrice.value
                                             );
-                                            const total = account.sbd_balance.split(
-                                                ' '
-                                            )[0];
+                                            let total = '';
+                                            if (sym2 === "GBG") {
+                                                total = account.sbd_balance.split(
+                                                    ' '
+                                                )[0];
+                                            }
+                                            else if (sym2 === "GOLOS") {
+                                                total = account.steem_balance.split(
+                                                    ' '
+                                                )[0];
+                                            }
+                                            else {
+                                                total = assets[sym2].balance.split(
+                                                    ' '
+                                                )[0];
+                                            }
                                             this.refs.buySteemTotal.value = total;
                                             if (price >= 0)
                                                 this.refs.buySteemAmount.value = roundDown(
@@ -452,10 +593,15 @@ class Market extends Component {
                                     >
                                         {tt('market_jsx.available')}:
                                     </a>{' '}
-                                    {account.sbd_balance.replace(
+                                    {sym2 === "GBG" && account.sbd_balance.replace(
                                         'GBG',
                                         DEBT_TOKEN_SHORT
                                     )}
+                                    {sym2 === "GOLOS" && account.balance.replace(
+                                        LIQUID_TICKER,
+                                        LIQUID_TOKEN_UPPERCASE
+                                    )}
+                                    {sym2 !== "GOLOS" && sym2 !== "GBG" && assets[sym2].balance}
                                 </small>
                             </div>
                         )}
@@ -494,7 +640,7 @@ class Market extends Component {
                                             }}
                                         />
                                         <span className="input-group-label uppercase">
-                                            {`${DEBT_TOKEN_SHORT}/${LIQUID_TOKEN}`}
+                                            {`${sym2}/${sym1}`}
                                         </span>
                                     </div>
                                 </div>
@@ -530,7 +676,7 @@ class Market extends Component {
                                         />
                                         <span className="input-group-label uppercase">
                                             {' '}
-                                            {LIQUID_TOKEN}
+                                            {sym1}
                                         </span>
                                     </div>
                                 </div>
@@ -565,7 +711,7 @@ class Market extends Component {
                                             }}
                                         />
                                         <span className="input-group-label">
-                                            {DEBT_TOKEN_SHORT}
+                                            {sym2}
                                         </span>
                                     </div>
                                 </div>
@@ -580,7 +726,7 @@ class Market extends Component {
                                         className="button hollow buy-color float-right uppercase"
                                         value={tt(
                                             'navigation.buy_LIQUID_TOKEN',
-                                            { LIQUID_TOKEN }
+                                            { LIQUID_TOKEN: sym1 }
                                         )}
                                     />
 
@@ -609,7 +755,8 @@ class Market extends Component {
                                             >
                                                 {tt('market_jsx.lowest_ask')}:
                                             </a>{' '}
-                                            {ticker.lowest_ask.toFixed(6)}
+                                            {ticker.lowest_ask.toFixed(6)}<br/>
+                                            {(assets && assets_right[sym1].fee_percent) ? (<b>{tt('market_jsx.market_fee_percent_') + sym1 + ': ' + longToAsset(assets_right[sym1].fee_percent, '', 2).trim() + '%'}</b>) : null}
                                         </small>
                                     </div>
                                 </div>
@@ -620,10 +767,10 @@ class Market extends Component {
                     <div className="small-12 medium-6 columns">
                         <h4 className="sell-color uppercase">
                             {tt('navigation.sell_LIQUID_TOKEN', {
-                                LIQUID_TOKEN,
-                            })}
+                                LIQUID_TOKEN: sym1
+                            })} {assets && assets_right[sym2].allow_override_transfer && <Icon name="flag2" size="2x" title={tt('market_jsx..asset_') + sym2 + tt('market_jsx.asset_is_overridable')}/>}
                         </h4>
-                        {account && (
+                        {(((sym1 === "GBG" || sym1 === "GOLOS") && account) || (assets && sym1 in assets)) && (
                             <div style={{ marginBottom: '1rem' }}>
                                 <small>
                                     <a
@@ -647,10 +794,15 @@ class Market extends Component {
                                     >
                                         {tt('market_jsx.available')}:
                                     </a>{' '}
-                                    {account.balance.replace(
+                                    {sym1 === "GBG" && account.sbd_balance.replace(
+                                        'GBG',
+                                        DEBT_TOKEN_SHORT
+                                    )}
+                                    {sym1 === "GOLOS" && account.balance.replace(
                                         LIQUID_TICKER,
                                         LIQUID_TOKEN_UPPERCASE
                                     )}
+                                    {sym1 !== "GOLOS" && sym1 !== "GBG" && assets[sym1].balance}
                                 </small>
                             </div>
                         )}
@@ -694,7 +846,7 @@ class Market extends Component {
                                             }}
                                         />
                                         <span className="input-group-label uppercase">
-                                            {`${DEBT_TOKEN_SHORT}/${LIQUID_TOKEN}`}
+                                            {`${sym2}/${sym1}`}
                                         </span>
                                     </div>
                                 </div>
@@ -729,7 +881,7 @@ class Market extends Component {
                                             }}
                                         />
                                         <span className="input-group-label uppercase">
-                                            {LIQUID_TOKEN}
+                                            {sym1}
                                         </span>
                                     </div>
                                 </div>
@@ -764,7 +916,7 @@ class Market extends Component {
                                             }}
                                         />
                                         <span className="input-group-label">
-                                            {DEBT_TOKEN_SHORT}
+                                            {sym2}
                                         </span>
                                     </div>
                                 </div>
@@ -779,7 +931,7 @@ class Market extends Component {
                                         className="button hollow sell-color float-right uppercase"
                                         value={tt(
                                             'navigation.sell_LIQUID_TOKEN',
-                                            { LIQUID_TOKEN }
+                                            { LIQUID_TOKEN: sym1 }
                                         )}
                                     />
 
@@ -809,6 +961,8 @@ class Market extends Component {
                                                 {tt('market_jsx.highest_bid')}:
                                             </a>{' '}
                                             {ticker.highest_bid.toFixed(6)}
+                                            <br/>
+                                            {(assets && assets_right[sym2].fee_percent) ? (<b>{tt('market_jsx.market_fee_percent_') + sym2 + ': ' + longToAsset(assets_right[sym2].fee_percent, '', 2).trim() + '%'}</b>) : null}
                                         </small>
                                     </div>
                                 </div>
@@ -821,6 +975,10 @@ class Market extends Component {
                     <div className="small-6 columns">
                         <h4>{tt('market_jsx.buy_orders')}</h4>
                         <Orderbook
+                            sym1={sym1}
+                            sym2={sym2}
+                            prec1={prec1}
+                            prec2={prec2}
                             side={'bids'}
                             orders={orderbook.bids}
                             onClick={price => {
@@ -832,6 +990,10 @@ class Market extends Component {
                     <div className="small-6 columns">
                         <h4>{tt('market_jsx.sell_orders')}</h4>
                         <Orderbook
+                            sym1={sym1}
+                            sym2={sym2}
+                            prec1={prec1}
+                            prec2={prec2}
                             side={'asks'}
                             orders={orderbook.asks}
                             onClick={price => {
@@ -850,7 +1012,7 @@ class Market extends Component {
                     <div className="row">
                         <div className="column">
                             <h4>{tt('market_jsx.open_orders')}</h4>
-                            {openOrdersTable(open_orders)}
+                            {openOrdersTable(sym1, sym2, open_orders)}
                         </div>
                     </div>
                 ) : null}
@@ -873,6 +1035,9 @@ export default connect(
             account: username
                 ? state.global.getIn(['accounts', username])
                 : null,
+            assets: (process.env.BROWSER && state.market.get('assets'))
+                ? state.market.get('assets')
+                : {},
             history: state.market.get('history'),
             user: username,
             feed: state.global.get('feed_price').toJS(),
@@ -889,10 +1054,10 @@ export default connect(
                 },
             });
         },
-        reload: username => {
+        reload: (username, pathname) => {
             dispatch({
                 type: 'market/UPDATE_MARKET',
-                payload: { username: username },
+                payload: { username: username, pathname: pathname },
             });
         },
         cancelOrder: (owner, orderid, successCallback) => {
@@ -921,6 +1086,8 @@ export default connect(
             );
         },
         placeOrder: (
+            assets,
+            sym1, sym2,
             owner,
             amount_to_sell,
             min_to_receive,
@@ -933,17 +1100,31 @@ export default connect(
         ) => {
             // create_order jsc 12345 "1.000 SBD" "100.000 STEEM" true 1467122240 false
 
+            let asset_syms = []
+            for (let [key, value] of Object.entries(assets)) {
+                asset_syms.push(key)
+            }
+            let assets_right = {}
+            assets_right['GOLOS'] = {supply: '0.000 GOLOS'}
+            assets_right['GBG'] = {supply: '0.000 GBG'}
+            for (let [key, value] of Object.entries(assets)) {
+                assets_right[key] = value
+            }
+            let prec1 = assets_right[sym1].supply.split('.')[1]
+            prec1 = prec1.split(' ')[0].length
+            let prec2 = assets_right[sym2].supply.split('.')[1].split(' ')[0].length
+
             // Padd amounts to 3 decimal places
             amount_to_sell = amount_to_sell.replace(
                 amount_to_sell.split(' ')[0],
-                String(parseFloat(amount_to_sell).toFixed(3))
+                String(parseFloat(amount_to_sell).toFixed(prec2))
             );
             min_to_receive = min_to_receive.replace(
                 min_to_receive.split(' ')[0],
-                String(parseFloat(min_to_receive).toFixed(3))
+                String(parseFloat(min_to_receive).toFixed(prec1))
             );
 
-            const isSell = amount_to_sell.indexOf(LIQUID_TICKER) > 0;
+            const isSell = amount_to_sell.indexOf(sym1) > 0;
             const confirmStr = tt(
                 isSell
                     ? 'market_jsx.sell_amount_for_atleast'
@@ -958,27 +1139,29 @@ export default connect(
                           (isSell ? 'below' : 'above'),
                       {
                           marketPrice:
-                              DEBT_TICKER +
+                              sym2 +
                               parseFloat(marketPrice).toFixed(4) +
                               '/' +
-                              LIQUID_TOKEN_UPPERCASE,
+                              sym1,
                       }
                   )
                 : null;
 
             const orderid = Math.floor(Date.now() / 1000);
 
+            const operation = {
+                owner,
+                amount_to_sell,
+                min_to_receive,
+                fill_or_kill,
+                expiration,
+                orderid,
+            }
+
             dispatch(
                 transaction.actions.broadcastOperation({
                     type: 'limit_order_create',
-                    operation: {
-                        owner,
-                        amount_to_sell,
-                        min_to_receive,
-                        fill_or_kill,
-                        expiration,
-                        orderid,
-                    },
+                    operation,
                     confirm,
                     warning,
                     successCallback: () => {

@@ -10,14 +10,13 @@ export default class TickerPriceStat extends React.Component {
               </span>
         return (
             <div className="TickerPriceStat">
-                <h3>{symbol}</h3>
                 <div>
                     <b>{tt('market_jsx.last_price')} </b>
                     <span>{symbol} {ticker.latest.toFixed(6)} ({pct_change})</span>
                 </div>
                 <div>
                     <b>{tt('market_jsx.24h_volume')} </b>
-                    <span>{symbol} {ticker.sbd_volume.toFixed(2)}</span>
+                    <span>{symbol} {ticker.asset2_volume.toFixed(2)}</span>
                 </div>
                 <div>
                     <b>{tt('g.bid')} </b>

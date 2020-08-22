@@ -14,8 +14,8 @@ const precision = 1000;
 function orderEqual(a, b) {
     return (
         a.price === b.price &&
-        a.steem === b.steem &&
-        a.sbd === b.sbd
+        a.asset1 === b.asset1 &&
+        a.asset2 === b.asset2
     );
 }
 
@@ -74,6 +74,7 @@ class DepthChart extends React.Component {
         if (!bids.length && !asks.length) {
             return null;
         }
+
         const depth_chart_config = generateDepthChart(bids, asks);
 
         return (
@@ -95,7 +96,7 @@ function generateBidAsk(bidsArray, asksArray) {
 
         let ttl = 0
         return orders.map( o => {
-            ttl += o.sbd;
+            ttl += o.asset2;
             return [o.price * power, ttl]
         }).sort((a, b) => { // Sort here to make sure arrays are in the right direction for HighCharts
             return a[0] - b[0];

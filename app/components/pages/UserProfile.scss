@@ -195,6 +195,31 @@
   }
 }
 
+.Assets__header {
+  display: inline-block;  
+}
+
+.Assets__disabled {
+  color: rgb(150, 150, 150); 
+  cursor: default; 
+}
+
+.Assets__center {
+  text-align: center;
+}
+
+.Assets__cost {
+  font-weight: bold !important;
+}
+
+.Assets__marginTop {
+  margin-top: 13px;
+}
+
+.Assets__noMarginBottom {
+  margin-bottom: 0px;
+}
+
 @media screen and (max-width: 39.9375em) {
 
     .UserProfile__menu-item {

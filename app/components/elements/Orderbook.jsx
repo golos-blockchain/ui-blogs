@@ -1,5 +1,5 @@
 import React from "react";
-import OrderbookRow from "./OrderbookRow";
+import OrderBookRow from "./OrderbookRow";
 import tt from 'counterpart';
 import { DEBT_TOKEN_SHORT } from 'app/client_config';
 
@@ -48,20 +48,22 @@ export default class Orderbook extends React.Component {
 
         let buy = this.props.side === "bids";
 
+        const {sym1, sym2} = this.props;
+
         return (
             <thead>
                 <tr>
-                    <th>{buy ? tt('market_jsx.total_DEBT_TOKEN_SHORT_CURRENCY_SIGN', {DEBT_TOKEN_SHORT}) : tt('g.price')}</th>
-                    <th>{buy ? `${DEBT_TOKEN_SHORT}` : LIQUID_TOKEN}</th>
-                    <th>{buy ? LIQUID_TOKEN : `${DEBT_TOKEN_SHORT}`}</th>
-                    <th>{buy ? tt('g.price') : tt('market_jsx.total_DEBT_TOKEN_SHORT_CURRENCY_SIGN', {DEBT_TOKEN_SHORT})}</th>
+                    <th>{buy ? tt('market_jsx.total_DEBT_TOKEN_SHORT_CURRENCY_SIGN', {DEBT_TOKEN_SHORT: sym2}) : tt('g.price')}</th>
+                    <th>{buy ? sym2 : sym1}</th>
+                    <th>{buy ? sym1 : sym2}</th>
+                    <th>{buy ? tt('g.price') : tt('market_jsx.total_DEBT_TOKEN_SHORT_CURRENCY_SIGN', {DEBT_TOKEN_SHORT: sym2})}</th>
                 </tr>
             </thead>
         );
     }
 
     renderOrdersRows() {
-        const {orders, side} = this.props;
+        const {sym1, sym2, prec1, prec2, orders, side} = this.props;
         const buy = side === "bids";
 
         if (!orders.length) {
@@ -72,13 +74,17 @@ export default class Orderbook extends React.Component {
         let total = 0;
         return orders
         .map((order, index) => {
-            total += order.getSBDAmount();
+            total += order.asset2;
             if (index >= (buy ? buyIndex : sellIndex) && index < ((buy ? buyIndex : sellIndex) + 10)) {
                 return (
-                    <OrderbookRow
+                    <OrderBookRow
+                        sym1={sym1}
+                        sym2={sym2}
+                        prec1={prec1}
+                        prec2={prec2}
                         onClick={this.props.onClick}
                         animate={this.state.animate}
-                        key={side + order.getStringSBD() + order.getStringPrice()}
+                        key={side + order.getStringAsset2() + order.getStringPrice()}
                         index={index}
                         order={order}
                         side={side}
@@ -93,7 +99,8 @@ export default class Orderbook extends React.Component {
     }
 
     render() {
-        const {orders} = this.props;
+        const {orders, sym2} = this.props;
+
         const buy = this.props.side === "bids";
         const {buyIndex, sellIndex} = this.state;
 

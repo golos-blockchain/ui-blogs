@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import NotifiCounter from 'app/components/elements/NotifiCounter';
 import tt from 'counterpart';
 
-export default ({account_name}) => {
+export default ({account_name, isMyAccount}) => {
     return <div className="row">
         <div className="columns small-10 medium-12 medium-expand left-column">
             <ul className="WalletSubMenu menu">
@@ -13,14 +13,17 @@ export default ({account_name}) => {
                     </Link>
                 </li>
                 <li>
+                    <Link to={`/@${account_name}/assets`} activeClassName="active">{tt('g.assets')}</Link>
+                </li>
+                {isMyAccount && <li>
                     <Link to={`/@${account_name}/invites`} activeClassName="active">{tt('g.invites')}</Link>
-                </li>
-                <li>
+                </li>}
+                {isMyAccount && <li>
                     <Link to={`/@${account_name}/permissions`} activeClassName="active">{tt('g.permissions')}</Link>
-                </li>
-                <li>
+                </li>}
+                {isMyAccount && <li>
                     <Link to={`/@${account_name}/password`} activeClassName="active">{tt('g.password')}</Link>
-                </li>
+                </li>}
             </ul>
         </div>
     </div>

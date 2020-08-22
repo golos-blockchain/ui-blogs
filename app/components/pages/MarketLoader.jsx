@@ -29,6 +29,6 @@ class MarketLoader extends Component {
 }
 
 module.exports = {
-    path: 'market',
+    path: 'market(/:sym1)(/:sym2)',
     component: MarketLoader,
 };
