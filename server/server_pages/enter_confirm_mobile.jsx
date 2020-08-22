@@ -11,15 +11,9 @@ import { getRemoteIp, checkCSRF } from "server/utils/misc";
 import MiniHeader from "app/components/modules/MiniHeader";
 import secureRandom from "secure-random";
 import config from "config";
-// import Mixpanel from "mixpanel";
 import tt from 'counterpart';
 import {metrics} from 'server/metrics';
 import {hash} from 'golos-classic-js/lib/auth/ecc';
-
-// FIXME copy paste code, refactor mixpanel out
-// if (config.has("mixpanel") && config.get("mixpanel")) {
-//     mixpanel = Mixpanel.init(config.get("mixpanel"));
-// }
 
 var assets_file = "tmp/webpack-stats-dev.json";
 if (process.env.NODE_ENV === "production") {
@@ -37,7 +31,6 @@ function* confirmMobileHandler() {
       ? this.request.body.AccountSid
       : ''
     ;
-    if (accountSid.localeCompare(config.get('twilio.account_sid')) != 0) return;
 
     const phone = this.request.body && this.request.body.From
       ? this.request.body.From.substr(1)
@@ -116,10 +109,6 @@ export default function useEnterAndConfirmMobilePages(app) {
         if (mid && mid.verified) {
             this.flash = { success: "Phone number has already been verified" };
             if (metrics) metrics.increment('_signup_step_3');
-            // if (mixpanel)
-            //     mixpanel.track("SignupStep3", {
-            //         distinct_id: this.session.uid
-            //     });
             this.redirect("/create_account");
             return;
         }
@@ -182,8 +171,6 @@ export default function useEnterAndConfirmMobilePages(app) {
         this.body = "<!DOCTYPE html>" +
             renderToString(<ServerHTML {...props} />);
         if (metrics) metrics.increment('_signup_step_2');
-        // if (mixpanel)
-        //     mixpanel.track("SignupStep2", { distinct_id: this.session.uid });
     });
 
     router.post("/submit_mobile", koaBody, function*() {
@@ -273,10 +260,6 @@ export default function useEnterAndConfirmMobilePages(app) {
                 if (mid.phone === phoneHash) {
                     this.flash = { success: tt('createaccount_jsx.phone_number_has_been_verified') };
                     if (metrics) metrics.increment('_signup_step_3');
-                    // if (mixpanel)
-                    //     mixpanel.track("SignupStep3", {
-                    //         distinct_id: this.session.uid
-                    //     });
                     this.redirect("/create_account");
                     return;
                 }
@@ -333,7 +316,7 @@ export default function useEnterAndConfirmMobilePages(app) {
                         {tt('createaccount_jsx.thank_you_for_providing_your_phone_number', {phone})}
                         <br /><br />
                         <div className="callout success">
-                        <b>{tt('createaccount_jsx.to_continue_please_send_sms_code', {code: confirmation_code, phone_number: config.get('twilio.sender_id')})}</b>
+                        <b>{tt('createaccount_jsx.to_continue_please_send_sms_code', {code: confirmation_code})}</b>
                         </div>
                     </div>
                 </div>

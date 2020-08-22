@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import Icon from 'app/components/elements/Icon';
 import CardPost from 'src/app/components/welcome/CardPost';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
-import { WIKI_URL } from 'app/client_config';
 
 const Root = styled.section`
     padding: 20px 0;
@@ -92,7 +91,7 @@ export default class Questions extends PureComponent {
                                         </Link>
                                     </div>
                                     <div className="columns">
-                                        <Link href={WIKI_URL}>
+                                        <Link href="https://wiki.golos.id">
                                             <Icon
                                                 name="new/wikipedia"
                                                 size="2x"

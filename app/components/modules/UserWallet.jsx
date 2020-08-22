@@ -16,7 +16,6 @@ import Tooltip from 'app/components/elements/Tooltip';
 import Icon from 'app/components/elements/Icon';
 import tt from 'counterpart';
 import {List} from 'immutable';
-import LocalizedCurrency from 'app/components/elements/LocalizedCurrency';
 import { LIQUID_TICKER, VEST_TICKER, DEBT_TICKER} from 'app/client_config';
 import transaction from 'app/redux/Transaction';
 
@@ -199,16 +198,6 @@ class UserWallet extends React.Component {
             return o;
         }, 0) / assetPrecision;
 
-        // set displayed estimated value
-        const total_sbd = sbd_balance + sbd_balance_savings + savings_sbd_pending + sbdOrders + conversionValue;
-        const total_steem = parseFloat(vesting_steem) + balance_steem + saving_balance_steem + savings_pending + steemOrders;
-
-        // set displayed estimated value
-        const total_value = Number(((total_steem * price_per_golos) + total_sbd).toFixed(2))
-
-        // format spacing on estimated value based on account state
-        const estimate_output = <LocalizedCurrency amount={total_value} />
-        
         /// transfer log
         let idx = 0
         const transfer_log = account.get('transfer_history', [])
@@ -248,15 +237,11 @@ class UserWallet extends React.Component {
             power_menu.push( { value: tt('userwallet_jsx.cancel_power_down'), link:'#', onClick: powerDown.bind(this,true) } );
         }
 
-        if(isMyAccount) {
-            steem_menu.push({ value: tt('g.buy_or_sell'), link: '/exchanges' })
-        }
-
         let dollar_menu = [
             { value: tt('g.transfer'), link: '#', onClick: showTransfer.bind( this, DEBT_TICKER, 'Transfer to Account' ) },
             { value: tt('userwallet_jsx.transfer_to_savings'), link: '#', onClick: showTransfer.bind( this, DEBT_TICKER, 'Transfer to Savings' ) },
-            { value: tt('g.buy_or_sell'), link: '/market' },
             { value: tt('userwallet_jsx.convert_to_LIQUID_TOKEN', {LIQUID_TOKEN}), link: '#', onClick: convertToSteem },
+            { value: tt('g.buy_or_sell'), link: '/market' },
         ]
         const isWithdrawScheduled = new Date(account.get('next_vesting_withdrawal') + 'Z').getTime() > Date.now()
 
@@ -345,7 +330,7 @@ class UserWallet extends React.Component {
                 <div className="column small-12 medium-8">
                     {VESTING_TOKEN.toUpperCase()}<br />
                     <span className="secondary">{powerTip.split(".").map((a, index) => {if (a) {return <div key={index}>{a}.</div>;} return null;})}
-                    <Link to="/workers">{tt('userwallet_jsx.worker_foundation')}</Link> | {tt('userwallet_jsx.top_dpos')} - <a target="_blank" href="https://dpos.space/golos-top/GP/">dpos.space <Icon name="extlink" /></a></span>
+                    <Link to="/workers">{tt('userwallet_jsx.worker_foundation')}</Link> | {tt('userwallet_jsx.top_dpos')} - <a target="_blank" href="https://dpos.space/golos/top/gp">dpos.space <Icon name="extlink" /></a></span>
                 </div>
                 <div className="column small-12 medium-4">
                     {isMyAccount

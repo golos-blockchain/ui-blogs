@@ -17,7 +17,7 @@ import Dropzone from 'react-dropzone';
 import { LinkWithDropdown } from 'react-foundation-components/lib/global/dropdown';
 import VerticalMenu from 'app/components/elements/VerticalMenu';
 import tt from 'counterpart';
-import { SUPPORT_EMAIL, MARKDOWN_STYLING_GUIDE_URL } from 'app/client_config';
+import { SUPPORT_EMAIL } from 'app/client_config';
 import Icon from 'app/components/elements/Icon';
 import { detransliterate } from 'app/utils/ParsersAndFormatters';
 import { replyAction } from './ReplyEditorActions';
@@ -806,7 +806,7 @@ class ReplyEditor extends React.Component {
                                         <div className="float-right">
                                             <a
                                                 target="_blank"
-                                                href={MARKDOWN_STYLING_GUIDE_URL}
+                                                href="/ru--golos/@on0tole/osnovy-oformleniya-postov-na-golose-polnyi-kurs-po-rabote-s-markdown"
                                             >
                                                 {tt(
                                                     'reply_editor.markdown_styling_guide'

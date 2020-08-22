@@ -12,7 +12,6 @@ import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import FoundationDropdown from 'app/components/elements/FoundationDropdown';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
 import tt from 'counterpart';
-import LocalizedCurrency, { localizedCurrency } from 'app/components/elements/LocalizedCurrency';
 import { DEBT_TICKER } from 'app/client_config';
 import CalculatePayout from 'shared/CalculatePayout.js'
 

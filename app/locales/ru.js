@@ -128,9 +128,6 @@ const ru = {
   replies: 'Ответы',
   payouts: 'Выплаты',
   need_password_or_key: 'Вам нужен приватный пароль или ключ (не публичный ключ)',
-  // BlocktradesDeposit
-  change_deposit_address: 'Изменить адрес депозита',
-  get_deposit_address: 'Получить адрес депозита',
   // for example 'powered by Blocktrades'
   powered_by: 'Powered by', // NOTE this might be deleted in future
   send_amount_of_coins_to: 'Отправить {value} {coinName} к',

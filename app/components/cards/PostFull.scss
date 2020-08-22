@@ -39,7 +39,7 @@
 .PostFull__header {
   > h1 {
     overflow: hidden;
-    font: 700 200% "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Arial, sans-serif;
+    font: 700 180% "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Arial, sans-serif;
     .Icon {
       margin: 0 0 0 0.5rem;
       vertical-align: -30%;
@@ -66,7 +66,7 @@
   clear: left;
 
   font-family: Georgia, serif;
-  font-size: 120%;
+  font-size: 110%;
   line-height: 150%;
 
   overflow-wrap: break-word;
@@ -259,6 +259,12 @@ input.share-box {
         margin-left: 15px;
 }
 
+.shareMenu {
+    display: inline-block;
+    vertical-align: middle;
+    height: 1.6em;
+}
+
 /* Small only */
 @media screen and (max-width: 39.9375em) {
   .Post {
@@ -278,11 +284,14 @@ input.share-box {
     font-size: .8em;
   }
   .strikeprev {
-        margin-top: 10px;
+    margin-top: 10px;
+  }
+  .shareMenu {
+    height: auto;
   }
 }
 
-.with-cta-block .PostsList__post_overlay .Post {
+.PostsList__post_overlay .Post {
   margin-bottom: 90px;
 }
 

@@ -9,9 +9,6 @@ import {
     TWITTER_HANDLE,
     SHARE_IMAGE,
     TWITTER_SHARE_IMAGE,
-    ANDROID_APP_NAME,
-    ANDROID_PACKAGE,
-    ANDROID_URL_SCHEME,
 } from 'app/client_config';
 
 function addSiteMeta(metas) {
@@ -22,20 +19,11 @@ function addSiteMeta(metas) {
     metas.push({property: 'og:title', content: SEO_TITLE});
     metas.push({property: 'og:description', content: SITE_DESCRIPTION});
     metas.push({property: 'og:image', content: SHARE_IMAGE});
-    metas.push({property: 'fb:app_id', content: $STM_Config.fb_app});
     metas.push({name: 'twitter:card', content: 'summary'});
     metas.push({name: 'twitter:site', content: TWITTER_HANDLE});
     metas.push({name: 'twitter:title', content: SEO_TITLE});
     metas.push({name: 'twitter:description', site_desc: SITE_DESCRIPTION});
     metas.push({name: 'twitter:image', content: SHARE_IMAGE});
-    metas.push({name: 'al:android:app_name', content: ANDROID_APP_NAME});
-    metas.push({name: 'al:android:package', content: ANDROID_PACKAGE});
-}
-
-function addPlatformMeta(metas, url) {
-    metas.push({property: 'al:android:url', content: `${ANDROID_URL_SCHEME}://${APP_DOMAIN}${url}`});
-    metas.push({property: 'al:android:app_name', content: ANDROID_APP_NAME});
-    metas.push({property: 'al:android:package', content: ANDROID_PACKAGE});
 }
 
 export default function extractMeta(chain_data, rp) {
@@ -65,7 +53,6 @@ export default function extractMeta(chain_data, rp) {
             metas.push({property: 'og:image', content: image});
             metas.push({property: 'og:description',  content: desc});
             metas.push({property: 'og:site_name', content: SEO_TITLE});
-            metas.push({property: 'fb:app_id',       content: $STM_Config.fb_app});
             metas.push({property: 'article:tag',     content: category});
             metas.push({property: 'article:published_time', content: created});
 
@@ -76,7 +63,6 @@ export default function extractMeta(chain_data, rp) {
             metas.push({name: 'twitter:description', content: desc});
             metas.push({name: 'twitter:image',       content: image || TWITTER_SHARE_IMAGE});
 
-            addPlatformMeta(metas, d.link)
         } else {
             addSiteMeta(metas);
         }
@@ -102,7 +88,6 @@ export default function extractMeta(chain_data, rp) {
         metas.push({name: 'twitter:description', content: desc});
         metas.push({name: 'twitter:image',       content: image});
 
-        addPlatformMeta(metas, `/@${accountname}`)
     } else { // site
         addSiteMeta(metas);
     }

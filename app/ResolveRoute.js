@@ -60,7 +60,7 @@ export default function resolveRoute(path)
         return {page: 'ChangePassword'};
     }
     if (path === '/create_account') {
-        return {page: /* $STM_Config.isTestnet ? 'CreateAccountTestnet' : */ 'CreateAccount'};
+        return {page: 'CreateAccount'};
     }
     if (path === '/recover_account_step_1') {
         return {page: 'RecoverAccountStep1'};

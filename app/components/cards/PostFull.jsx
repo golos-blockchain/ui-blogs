@@ -8,7 +8,6 @@ import transaction from 'app/redux/Transaction';
 import { repLog10, parsePayoutAmount } from 'app/utils/ParsersAndFormatters';
 import extractContent from 'app/utils/ExtractContent';
 import { immutableAccessor, objAccessor } from 'app/utils/Accessors';
-import DMCAList from 'app/utils/DMCAList';
 import LEGALList from 'app/utils/LEGALList';
 import { isPostVisited, visitPost } from 'app/utils/helpers';
 import { serverApiRecordEvent } from 'app/utils/ServerApiClient';
@@ -27,27 +26,6 @@ import { getEditDraftPermLink } from 'app/utils/postForm';
 import Confetti from 'react-dom-confetti';
 import PostSummaryThumb from 'app/components/elements/PostSummaryThumb';
 import { APP_ICON, SEO_TITLE, LIQUID_TICKER, CONFETTI_CONFIG, CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config';
-
-// function loadFbSdk(d, s, id) {
-//     return new Promise(resolve => {
-//         window.fbAsyncInit = function () {
-//             window.FB.init({
-//                 appId: $STM_Config.fb_app,
-//                 xfbml: false,
-//                 version: 'v2.6',
-//                 status: true
-//             });
-//             resolve(window.FB);
-//         };
-//
-//         var js, fjs = d.getElementsByTagName(s)[0];
-//         if (d.getElementById(id)) {return;}
-//         js = d.createElement(s);
-//         js.id = id;
-//         js.src = "//connect.facebook.net/en_US/sdk.js";
-//         fjs.parentNode.insertBefore(js, fjs);
-//     });
-// }
 
 function TimeAuthorCategory({ content, authorRepLog10, showTags }) {
     return (
@@ -414,11 +392,7 @@ class PostFull extends React.Component {
         const url = `/${category}/@${author}/${permlink}`;
         let contentBody;
 
-        if (DMCAList.includes(url)) {
-            contentBody = tt(
-                'postfull_jsx.this_post_is_not_available_due_to_a_copyright_claim'
-            );
-        } else if (LEGALList.includes(url)) {
+        if (LEGALList.includes(url)) {
             contentBody = tt(
                 'postfull_jsx.this_post_is_not_available_due_to_breach_of_legislation'
             );

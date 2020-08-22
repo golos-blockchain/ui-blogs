@@ -1,6 +1,3 @@
-// newrelic is not working with latest npm
-//if(config.has('newrelic')) require('newrelic');
-
 import path from 'path';
 import fs from 'fs';
 import Koa from 'koa';
@@ -12,7 +9,6 @@ import favicon from 'koa-favicon';
 import staticCache from 'koa-static-cache';
 import useRedirects from './redirects';
 import useGeneralApi from './api/general';
-import useTestnetApi from './testnet_api';
 import useAccountRecoveryApi from './api/account_recovery';
 import useNotificationsApi from './api/notifications';
 import useRegistrationApi from './api/registration';
@@ -154,17 +150,7 @@ app.use(
     mount('/robots.txt', function*() {
         this.set('Cache-Control', 'public, max-age=86400000');
         this.type = 'text/plain';
-        this.body = 'User-agent: *\nAllow: /';
-    })
-);
-
-app.use(
-    mount('/.well-known/assetlinks.json', function*() {
-        this.type = 'application/json';
-        const file_content = fs
-            .readFileSync(path.join(__dirname, '../app/assets/.well-known/assetlinks.json'))
-            .toString();
-        this.body = file_content
+        this.body = 'User-agent: *\nHost: https://golos.id\nSitemap: https://golos.id/sitemap.xml';
     })
 );
 
@@ -212,10 +198,6 @@ useNotificationsApi(app);
 useProxyRoutes(app);
 useRatesRoutes(app);
 
-// if (config.get('is_testnet')) {
-//     useTestnetApi(app);
-// }
-
 // helmet wants some things as bools and some as lists, makes config difficult.
 // our config uses strings, this splits them to lists on whitespace.
 
@@ -232,11 +214,9 @@ if (env === 'production') {
 app.use(favicon(path.join(__dirname, '../app/assets/images/favicons/favicon.ico')));
 app.use(mount('/favicons', staticCache(path.join(__dirname, '../app/assets/images/favicons'), cacheOpts)));
 app.use(mount('/images', staticCache(path.join(__dirname, '../app/assets/images'), cacheOpts)));
-app.use(mount('/legal', staticCache(path.join(__dirname, '../app/assets/legal'), cacheOpts)));
 app.use(mount('/sitemap.xml', staticCache(path.join(__dirname, '../app/assets/sitemap.xml'), cacheOpts)));
 app.use(mount('/robots.txt', staticCache(path.join(__dirname, '../app/assets/robots.txt'), cacheOpts)));
 app.use(isBot());
-
 
 // Proxy asset folder to webpack development server in development mode
 if (env === 'development') {

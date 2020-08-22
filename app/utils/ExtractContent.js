@@ -66,10 +66,6 @@ export default function extractContent(get, content) {
         [image_link] = Array.from(rtags.images)
     }
 
-    // Was causing broken thumnails.  IPFS was not finding images uploaded to another server until a restart.
-    // if(config.ipfs_prefix && image_link) // allow localhost nodes to see ipfs images
-    //     image_link = image_link.replace(links.ipfsPrefix, config.ipfs_prefix)
-
     let desc
     let desc_complete = false
     if(!desc) {
