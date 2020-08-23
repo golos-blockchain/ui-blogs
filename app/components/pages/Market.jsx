@@ -520,6 +520,14 @@ class Market extends Component {
         return (
             <div>
                 <div className="row">
+                    <div className="column small-8">
+                        {this.state.showDepthChart ? (
+                            <DepthChart
+                                bids={orderbook.bids}
+                                asks={orderbook.asks}
+                            />
+                        ) : null}
+                    </div>
                     <div className="column small-4"><br/><h5>
                         <DropdownMenu el="div" items={symbols1}>
                             <span>
@@ -533,14 +541,6 @@ class Market extends Component {
                             </span>
                         </DropdownMenu></h5>
                         <TickerPriceStat ticker={ticker} symbol={sym2} />
-                    </div>
-                    <div className="column small-8">
-                        {this.state.showDepthChart ? (
-                            <DepthChart
-                                bids={orderbook.bids}
-                                asks={orderbook.asks}
-                            />
-                        ) : null}
                     </div>
                 </div>
 

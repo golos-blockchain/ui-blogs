@@ -130,6 +130,8 @@ class UpdateAsset extends Component {
                             <input
                                 className="input-group-field bold"
                                 type="text"
+                                title={asset.allow_fee ? '' : tt('assets_jsx.fee_not_allowed')}
+                                disabled={!asset.allow_fee}
                                 {...fee_percent.props} maxlength="6" onChange={(e) => this.onChangeFeePercent(e)} onBlur={(e) => this.onBlurFeePercent(e)}
                             />
                         </div>
