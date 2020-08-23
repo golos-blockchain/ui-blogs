@@ -65,8 +65,19 @@ class Assets extends Component {
                 { value: tt('userwallet_jsx.transfer_to_liquid'), link: '#', onClick: showTransfer.bind( this, account_name, sym, item.precision, 'TIP to Vesting' ) },
             ]
 
-            my_assets.push(<tr>
-                <td>{sym}
+            let description = ""
+            let image_url = ""
+            if (item.json_metadata.startsWith('{')) {
+                let json_metadata = JSON.parse(item.json_metadata)
+                description = json_metadata.description
+                image_url = json_metadata.image_url
+            }
+
+            my_assets.push(<tr key={sym}>
+                <td>
+                {description.length ? (<a target="_blank" href={description}>{sym}
+                {image_url.length ? (<img width="48" height="48" src={image_url}/>) : null}</a>) : null}
+                {!description.length ? sym : null}
                     <div>
                     {(isMyAccount && item.creator == account_name) && <Link to={`/@${account_name}/assets/${sym}/update`} className="button tiny">
                         {tt('assets_jsx.update_btn')}

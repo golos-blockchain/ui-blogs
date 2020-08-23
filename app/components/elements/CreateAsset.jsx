@@ -63,7 +63,7 @@ class CreateAsset extends Component {
             return null
         };
 
-        const fields = ['symbol', 'precision', 'max_supply', 'allow_fee:checked', 'allow_override_transfer:checked']
+        const fields = ['symbol', 'precision', 'max_supply', 'allow_fee:checked', 'allow_override_transfer:checked', 'image_url', 'description']
         reactForm({
             name: 'create_asset',
             instance: this, fields,
@@ -129,6 +129,7 @@ class CreateAsset extends Component {
 
     onChangePrecision = (value) => {
         this.state.precision.props.onChange(value)
+        this.state.max_supply.props.onChange(this.state.max_supply.props.value.substr(0, 16 - value))
     }
 
     onChangeMaxSupply = (e) => {
@@ -151,11 +152,21 @@ class CreateAsset extends Component {
         this.state.allow_override_transfer.props.onChange(e.target.checked)
     }
 
+    onChangeDescription = (e) => {
+        let {value} = e.target
+        this.state.description.props.onChange(value)
+    }
+
+    onChangeImageUrl = (e) => {
+        let {value} = e.target
+        this.state.image_url.props.onChange(value)
+    }
+
     handleSubmit = ({updateInitialValues}) => {
         const {createAsset, accountName} = this.props
-        const {symbol, max_supply, precision, allow_fee, allow_override_transfer} = this.state
+        const {symbol, max_supply, precision, allow_fee, allow_override_transfer, description, image_url} = this.state
         this.setState({loading: true});
-        createAsset({symbol, max_supply, precision, allow_fee, allow_override_transfer, accountName,
+        createAsset({symbol, max_supply, precision, allow_fee, allow_override_transfer, image_url, description, accountName,
             errorCallback: (e) => {
                 if (e === 'Canceled') {
                     this.setState({
@@ -177,7 +188,7 @@ class CreateAsset extends Component {
 
     render() {
         const {props: {account, isMyAccount, cprops, min_invite_balance}} = this
-        const {symbol, max_supply, precision, allow_fee, allow_override_transfer, loading, successMessage, errorMessage} = this.state
+        const {symbol, max_supply, precision, allow_fee, allow_override_transfer, image_url, description, loading, successMessage, errorMessage} = this.state
         const {submitting, valid} = this.state.create_asset
 
         return (<div>
@@ -220,16 +231,44 @@ class CreateAsset extends Component {
                 <div className="row">
                     <div className="column small-10">
                         {tt('assets_jsx.max_supply')}
+                        <div className="input-group" style={{marginBottom: "0rem"}}>
+                            <input
+                                className="input-group-field bold"
+                                {...max_supply.props}
+                                type="text"
+                                 onChange={(e) => this.onChangeMaxSuply(e)}
+                            />
+                        </div>
+                    </div>
+                </div>
+<br/>
+                <div className="row">
+                    <div className="column small-10">
+                        {tt('assets_jsx.description')}
+                        <div className="input-group" style={{marginBottom: "0rem"}}>
+                            <input
+                                className="input-group-field bold"
+                                {...description.props}
+                                maxlength="500"
+                                type="text"
+                                 onChange={(e) => this.onChangeDescription(e)}
+                            />
+                        </div>
+                    </div>
+                </div>
+<br/>
+                <div className="row">
+                    <div className="column small-10">
+                        {tt('assets_jsx.image_with_text')}
                         <div className="input-group" style={{marginBottom: "1.25rem"}}>
                             <input
                                 className="input-group-field bold"
+                                {...image_url.props}
+                                maxlength="512"
                                 type="text"
-                                {...max_supply.props} onChange={(e) => this.onChangeMaxSupply(e)}
+                                 onChange={(e) => this.onChangeImageUrl(e)}
                             />
                         </div>
-                        {max_supply.touched && max_supply.blur && max_supply.error &&
-                            <div className="error">{max_supply.error}&nbsp;</div>
-                        }
                     </div>
                 </div>
                 
@@ -313,13 +352,14 @@ export default connect(
     },
     dispatch => ({
         createAsset: ({
-            symbol, max_supply, precision, allow_fee, allow_override_transfer, accountName, successCallback, errorCallback
+            symbol, max_supply, precision, allow_fee, allow_override_transfer, image_url, description, accountName, successCallback, errorCallback
         }) => {
             const operation = {
                 creator: accountName,
                 max_supply: max_supply.value + '.' + '0'.repeat(precision.value) + ' ' + symbol.value,
                 allow_fee: allow_fee.value,
-                allow_override_transfer: allow_override_transfer.value
+                allow_override_transfer: allow_override_transfer.value,
+                json_metadata: JSON.stringify({image_url: image_url.value, description: description.value})
             }
 
             const success = () => {

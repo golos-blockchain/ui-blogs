@@ -43,14 +43,23 @@ class UpdateAsset extends Component {
     }
 
     initForm(props) {
-        const fields = ['fee_percent', 'symbols_whitelist']
+        const fields = ['fee_percent', 'symbols_whitelist', 'description', 'image_url']
         let fee_percent = props.asset.fee_percent
         fee_percent = longToAsset(fee_percent, '', 2).trim()
+        let description = ''
+        let image_url = ''
+        if (props.asset.json_metadata.startsWith('{')) {
+            let json_metadata = JSON.parse(props.asset.json_metadata)
+            description = json_metadata.description
+            image_url = json_metadata.image_url
+        }
         reactForm({
             name: 'update_asset',
             instance: this, fields,
             initialValues: {
                 fee_percent,
+                description,
+                image_url,
                 symbols_whitelist: props.asset.symbols_whitelist.join('\n')
             },
             validation: values => ({
@@ -84,11 +93,21 @@ class UpdateAsset extends Component {
         this.state.symbols_whitelist.props.onChange(lines2.join('\n'))
     }
 
+    onChangeDescription = (e) => {
+        let {value} = e.target
+        this.state.description.props.onChange(value)
+    }
+
+    onChangeImageUrl = (e) => {
+        let {value} = e.target
+        this.state.image_url.props.onChange(value)
+    }
+
     handleSubmit = ({updateInitialValues}) => {
         const {updateAsset, accountName, symbol} = this.props
-        const {fee_percent, symbols_whitelist} = this.state
+        const {fee_percent, symbols_whitelist, description, image_url} = this.state
         this.setState({loading: true});
-        updateAsset({symbol, fee_percent, symbols_whitelist, accountName,
+        updateAsset({symbol, fee_percent, symbols_whitelist, image_url, description, accountName,
             errorCallback: (e) => {
                 if (e === 'Canceled') {
                     this.setState({
@@ -111,7 +130,7 @@ class UpdateAsset extends Component {
     render() {
         const {props: {account, isMyAccount, cprops, symbol, asset}} = this
         if (!asset) return (<div></div>)
-        const {fee_percent, symbols_whitelist, loading, successMessage, errorMessage} = this.state
+        const {fee_percent, symbols_whitelist, description, image_url, loading, successMessage, errorMessage} = this.state
         const {submitting, valid} = this.state.update_asset
         const account_name = account.get('name');
 
@@ -149,6 +168,35 @@ class UpdateAsset extends Component {
                     </div>
                 </div>
 <br/>
+                <div className="row">
+                    <div className="column small-10">
+                        {tt('assets_jsx.description')}
+                        <div className="input-group" style={{marginBottom: "0rem"}}>
+                            <input
+                                className="input-group-field bold"
+                                {...description.props}
+                                maxlength="500"
+                                type="text"
+                                 onChange={(e) => this.onChangeDescription(e)}
+                            />
+                        </div>
+                    </div>
+                </div>
+<br/>
+                <div className="row">
+                    <div className="column small-10">
+                        {tt('assets_jsx.image_with_text')}
+                        <div className="input-group" style={{marginBottom: "1.25rem"}}>
+                            <input
+                                className="input-group-field bold"
+                                {...image_url.props}
+                                maxlength="512"
+                                type="text"
+                                 onChange={(e) => this.onChangeImageUrl(e)}
+                            />
+                        </div>
+                    </div>
+                </div>
 
                 <div className="row">
                     <div className="column small-10">
@@ -194,7 +242,7 @@ export default connect(
     },
     dispatch => ({
         updateAsset: ({
-            symbol, fee_percent, symbols_whitelist, accountName, successCallback, errorCallback
+            symbol, fee_percent, symbols_whitelist, image_url, description, accountName, successCallback, errorCallback
         }) => {
             let sw = symbols_whitelist.value.split('\n')
             let set = new Set()
@@ -206,7 +254,8 @@ export default connect(
                 creator: accountName,
                 symbol,
                 fee_percent: parseInt(fee_percent.value.replace('.','').replace(',','')),
-                symbols_whitelist: [...set]
+                symbols_whitelist: [...set],
+                json_metadata: JSON.stringify({image_url: image_url.value, description: description.value})
             }
 
             const success = () => {

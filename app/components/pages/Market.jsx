@@ -302,8 +302,8 @@ class Market extends Component {
             <br/>
         </div>)
         let forbids = []
-        if (sym1 in assets && !assets[sym1].symbols_whitelist.includes(sym2)) forbids.push({sym1: sym1, sym2: sym2})
-        if (sym2 in assets && !assets[sym2].symbols_whitelist.includes(sym1)) forbids.push({sym1: sym2, sym2: sym1})
+        if (sym1 in assets && (assets[sym1].symbols_whitelist.length && !assets[sym1].symbols_whitelist.includes(sym2))) forbids.push({sym1: sym1, sym2: sym2})
+        if (sym2 in assets && (assets[sym2].symbols_whitelist.length && !assets[sym2].symbols_whitelist.includes(sym1))) forbids.push({sym1: sym2, sym2: sym1})
         let forbid_ps = []
         for (const forbid of forbids) {
             forbid_ps.push(<p key={forbid.sym1}>{forbid.sym1 + tt('market_jsx.forbids') + forbid.sym2}</p>)
@@ -316,13 +316,9 @@ class Market extends Component {
             <br/>
         </div>)
 
-        let asset_syms = []
-        for (let [key, value] of Object.entries(assets)) {
-            asset_syms.push(key)
-        }
         let assets_right = {}
-        assets_right['GOLOS'] = {supply: '0.000 GOLOS', symbols_whitelist: ['GBG', ...asset_syms]}
-        assets_right['GBG'] = {supply: '0.000 GBG', symbols_whitelist: ['GOLOS', ...asset_syms]}
+        assets_right['GOLOS'] = {supply: '0.000 GOLOS', symbols_whitelist: [], fee_percent: 0}
+        assets_right['GBG'] = {supply: '0.000 GBG', symbols_whitelist: [], fee_percent: 0}
         for (let [key, value] of Object.entries(assets)) {
             assets_right[key] = value
         }
@@ -356,6 +352,8 @@ class Market extends Component {
             highest_bid: 0,
             percent_change: 0,
             asset2_volume: 0,
+            asset1_depth: 0,
+            asset2_depth: 0,
             feed_price: 0,
         };
 
@@ -366,6 +364,8 @@ class Market extends Component {
                 highest_bid,
                 percent_change,
                 asset2_volume,
+            asset1_depth,
+            asset2_depth,
             } = this.props.ticker;
 
             let { base, quote } = this.props.feed;
@@ -376,6 +376,8 @@ class Market extends Component {
                 highest_bid: roundDown(parseFloat(highest_bid), 6),
                 percent_change: parseFloat(percent_change),
                 asset2_volume: parseFloat(asset2_volume),
+                asset1_depth: parseFloat(asset1_depth).toFixed(prec1),
+                asset2_depth: parseFloat(asset2_depth).toFixed(prec2),
                 feed_price:
                     parseFloat(base.split(' ')[0]) /
                     parseFloat(quote.split(' ')[0]),
@@ -388,9 +390,11 @@ class Market extends Component {
                 return { bids: [], asks: [] };
             }
 
+            let prec1_ = prec1;
+            let prec2_ = prec2;
             return {
-                bids: orders.bids.map(o => new Order(o, 'bids', sym1, sym2, prec1, prec2)),
-                asks: orders.asks.map(o => new Order(o, 'asks', sym1, sym2, prec1, prec2)),
+                bids: orders.bids.map(o => new Order(o, 'bids', sym1, sym2, prec1_, prec2_)),
+                asks: orders.asks.map(o => new Order(o, 'asks', sym1, sym2, prec1_, prec2_)),
             };
         }
 
@@ -508,11 +512,11 @@ class Market extends Component {
         let symbols1 = [];
         let symbols2 = [];
         for (let [key, value] of Object.entries(assets_right)) {
-            if (sym1 !== key && sym2 !== key && value.symbols_whitelist.includes(sym2) && assets_right[sym2].symbols_whitelist.includes(key))
+            if (sym1 !== key && sym2 !== key && (!value.symbols_whitelist.length || value.symbols_whitelist.includes(sym2)) && (!assets_right[sym2].symbols_whitelist.length || assets_right[sym2].symbols_whitelist.includes(key)))
             symbols1.push({key: key, value: key, link: '/market/' + key + '/' + sym2,
             onClick: (e) => {window.location.href = '/market/' + sym2 + '/' + key}});
 
-            if (sym1 !== key && sym2 !== key && value.symbols_whitelist.includes(sym1) && assets_right[sym1].symbols_whitelist.includes(key))
+            if (sym1 !== key && sym2 !== key && (!value.symbols_whitelist.length || value.symbols_whitelist.includes(sym1)) && (!assets_right[sym1].symbols_whitelist.length || assets_right[sym1].symbols_whitelist.includes(key)))
             symbols2.push({key: key, value: key, link: '/market/' + sym1 + '/' + key, 
             onClick: (e) => {window.location.href = '/market/' + sym1 + '/' + key}});
         }
@@ -756,7 +760,8 @@ class Market extends Component {
                                                 {tt('market_jsx.lowest_ask')}:
                                             </a>{' '}
                                             {ticker.lowest_ask.toFixed(6)}<br/>
-                                            {(assets && assets_right[sym1].fee_percent) ? (<b>{tt('market_jsx.market_fee_percent_') + sym1 + ': ' + longToAsset(assets_right[sym1].fee_percent, '', 2).trim() + '%'}</b>) : null}
+                                            {assets ? (<b>{tt('market_jsx.market_fee_percent_') + sym1 + ': ' + longToAsset(assets_right[sym1].fee_percent, '', 2).trim() + '%'}</b>) : null}
+                                            <br/><b>{tt('market_jsx.market_depth_') + sym1 + ': ' + ticker.asset1_depth}</b>
                                         </small>
                                     </div>
                                 </div>
@@ -960,9 +965,9 @@ class Market extends Component {
                                             >
                                                 {tt('market_jsx.highest_bid')}:
                                             </a>{' '}
-                                            {ticker.highest_bid.toFixed(6)}
-                                            <br/>
-                                            {(assets && assets_right[sym2].fee_percent) ? (<b>{tt('market_jsx.market_fee_percent_') + sym2 + ': ' + longToAsset(assets_right[sym2].fee_percent, '', 2).trim() + '%'}</b>) : null}
+                                            {ticker.highest_bid.toFixed(6)}<br/>
+                                            {assets ? (<b>{tt('market_jsx.market_fee_percent_') + sym2 + ': ' + longToAsset(assets_right[sym2].fee_percent, '', 2).trim() + '%'}</b>) : null}
+                                            <br/><b>{tt('market_jsx.market_depth_') + sym2+ ': ' + ticker.asset2_depth}</b>
                                         </small>
                                     </div>
                                 </div>
@@ -1100,13 +1105,9 @@ export default connect(
         ) => {
             // create_order jsc 12345 "1.000 SBD" "100.000 STEEM" true 1467122240 false
 
-            let asset_syms = []
-            for (let [key, value] of Object.entries(assets)) {
-                asset_syms.push(key)
-            }
             let assets_right = {}
-            assets_right['GOLOS'] = {supply: '0.000 GOLOS'}
-            assets_right['GBG'] = {supply: '0.000 GBG'}
+            assets_right['GOLOS'] = {supply: '0.000 GOLOS', fee_percent: 0}
+            assets_right['GBG'] = {supply: '0.000 GBG', fee_percent: 0}
             for (let [key, value] of Object.entries(assets)) {
                 assets_right[key] = value
             }
