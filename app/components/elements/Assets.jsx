@@ -73,11 +73,14 @@ class Assets extends Component {
                 image_url = json_metadata.image_url
             }
 
+            const tradable_with_golos = !item.symbols_whitelist.length || item.symbols_whitelist.includes('GOLOS')
+
             my_assets.push(<tr key={sym}>
                 <td>
-                {description.length ? (<a target="_blank" href={description}>{sym}
-                {image_url.length ? (<img width="48" height="48" src={image_url}/>) : null}</a>) : null}
-                {!description.length ? sym : null}
+                {description.length ? (<a target="_blank" href={description}>
+                {image_url.length ? (<img width="48" height="48" src={image_url}/>) : null}{sym}</a>) : null}
+                {!description.length ? (<span><img width="48" height="48" src={image_url}/>{sym}</span>) : null}
+                &nbsp;{tradable_with_golos ? <Link to={"/market/GOLOS/"+sym}><Icon name="trade"/></Link> : null}
                     <div>
                     {(isMyAccount && item.creator == account_name) && <Link to={`/@${account_name}/assets/${sym}/update`} className="button tiny">
                         {tt('assets_jsx.update_btn')}

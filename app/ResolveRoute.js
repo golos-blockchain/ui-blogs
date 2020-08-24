@@ -11,7 +11,7 @@ export const routeRegex = {
     WorkerSort: /^\/workers\/([\w\d\-]+)\/?($|\?)/,
     WorkerSearchByAuthor: /^\/workers\/([\w\d\-]+)\/(\@[\w\d.-]+)\/?($|\?)/,
     WorkerRequest: /^\/workers\/([\w\d\-]+)\/(\@[\w\d.-]+)\/([\w\d-]+)\/?($|\?)/,
-    MarketPair: /^\/market\/([\w\d\-]+)\/([\w\d.-]+)\/?($|\?)/,
+    MarketPair: /^\/market\/([\w\d\.]+)\/([\w\d.]+)\/?($|\?)/,
     PostJson: /^\/([\w\d\-\/]+)\/(\@[\w\d\.-]+)\/([\w\d-]+)(\.json)$/,
     UserJson: /^\/(@[\w\.\d-]+)(\.json)$/,
     UserNameJson: /^.*(?=(\.json))/
