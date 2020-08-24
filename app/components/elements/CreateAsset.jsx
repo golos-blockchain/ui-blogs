@@ -235,8 +235,9 @@ class CreateAsset extends Component {
                             <input
                                 className="input-group-field bold"
                                 {...max_supply.props}
+                                maxlength={16 - parseInt(precision.props.value)}
                                 type="text"
-                                 onChange={(e) => this.onChangeMaxSuply(e)}
+                                 onChange={(e) => this.onChangeMaxSupply(e)}
                             />
                         </div>
                     </div>
