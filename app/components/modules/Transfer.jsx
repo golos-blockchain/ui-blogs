@@ -62,18 +62,21 @@ class TransferForm extends Component {
 
     initForm(props) {
         const {transferType} = props.initialValues
+        const {toVesting, uia} = props
         const isWithdraw = transferType && transferType === 'Savings Withdraw'
         const isTIP = transferType && transferType.startsWith('TIP to')
         const isClaim = transferType && transferType === 'Claim'
         const isIssueUIA = (transferType === 'Issue UIA')
+        const prec = uia ? uia.get('max_supply').split('.')[1].split(' ')[0].length : 0
         const insufficientFunds = (asset, amount) => {
-            if (isIssueUIA) return false 
             const {currentAccount, uia} = props
             const balanceValue =
                 !asset || asset === 'GOLOS' ?
                     isWithdraw ? currentAccount.get('savings_balance') : (isTIP ? currentAccount.get('tip_balance') : (isClaim ? currentAccount.get('accumulative_balance') : currentAccount.get('balance'))) :
                 asset === 'GBG' ?
                     isWithdraw ? currentAccount.get('savings_sbd_balance') : currentAccount.get('sbd_balance') :
+                isIssueUIA ?
+                    (parseFloat(uia.get('max_supply')) - parseFloat(uia.get('supply'))).toFixed(prec) + ' ' :
                 uia ?
                     (isTIP ? uia.get('tip_balance') : uia.get('balance')) :
                 null
@@ -81,7 +84,6 @@ class TransferForm extends Component {
             const balance = balanceValue.split(' ')[0]
             return parseFloat(amount) > parseFloat(balance)
         }
-        const {toVesting, uia} = props
         const fields = toVesting ? ['to', 'amount'] : ['to', 'amount', 'asset']
         if(!toVesting && transferType !== 'Transfer to Savings' && transferType !== 'Savings Withdraw' && transferType !== 'Claim')
             fields.push('memo')
@@ -125,11 +127,15 @@ class TransferForm extends Component {
         const isWithdraw = transferType && transferType === 'Savings Withdraw'
         const isTIP = transferType && transferType.startsWith('TIP to')
         const isClaim = transferType && transferType === 'Claim'
+        const isIssueUIA = (transferType === 'Issue UIA')
+        const prec = uia ? uia.get('max_supply').split('.')[1].split(' ')[0].length : 0
         return !asset ||
             asset.value === 'GOLOS' ?
                 isWithdraw ? currentAccount.get('savings_balance') : (isTIP ? currentAccount.get('tip_balance') : (isClaim ? currentAccount.get('accumulative_balance') : currentAccount.get('balance'))) :
             asset.value === 'GBG' ?
                 isWithdraw ? currentAccount.get('savings_sbd_balance') : currentAccount.get('sbd_balance') :
+            isIssueUIA ?
+                (parseFloat(uia.get('max_supply')) - parseFloat(uia.get('supply'))).toFixed(prec) + ' ' + asset.value :
             uia ?
                 (isTIP ? uia.get('tip_balance') : uia.get('balance')) :
             null
@@ -300,7 +306,7 @@ class TransferForm extends Component {
                                     <option value={sym}>{sym}</option>
                                 </select></span>}
                         </div>
-                        {!permlink && !isIssueUIA && <div style={{marginBottom: "0.6rem"}}>
+                        {!permlink && <div style={{marginBottom: "0.6rem"}}>
                             <AssetBalance balanceValue={this.balanceValue()} onClick={this.assetBalanceClick} />
                         </div>}
                         {(asset && asset.touched && asset.error ) || (amount.touched && amount.error) ?

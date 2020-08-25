@@ -550,16 +550,22 @@ class Market extends Component {
 
                 <div className="row">
                     <div className="column small-12">
+{assets && assets_right[sym1].allow_override_transfer && (<div className="callout error"><b>{tt('market_jsx..asset_') + sym1 + tt('market_jsx.asset_is_overridable')}</b></div>)}
+{assets && assets_right[sym2].allow_override_transfer && (<div className="callout error"><b>{tt('market_jsx..asset_') + sym2 + tt('market_jsx.asset_is_overridable')}</b></div>)}
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="column small-12">
                         <TransactionError opType="limit_order_create" />
                     </div>
                 </div>
                 <div className="row">
                     <div className="small-12 medium-6 columns">
-                        <h4 className="buy-color uppercase">
+                        <h4 className="buy-color uppercase inline">
                             {tt('navigation.buy_LIQUID_TOKEN', {
                                 LIQUID_TOKEN: sym1,
-                            })}  {assets && assets_right[sym1].allow_override_transfer && <Icon name="flag2" size="2x" title={tt('market_jsx..asset_') + sym1 + tt('market_jsx.asset_is_overridable')}/>}
-                        </h4>
+                            })}  
+                        </h4>&nbsp;&nbsp;&nbsp;<div className="inline"><small>{tt('market_jsx.market_depth_') + ': '}<b>{ticker.asset2_depth + ' ' + sym2}</b></small></div>
                         {(((sym2 === "GBG" || sym2 === "GOLOS") && account) || (assets && sym2 in assets)) && (
                             <div style={{ marginBottom: '1rem' }}>
                                 <small>
@@ -761,7 +767,7 @@ class Market extends Component {
                                             </a>{' '}
                                             {ticker.lowest_ask.toFixed(6)}<br/>
                                             {assets ? (<b>{tt('market_jsx.market_fee_percent_') + sym1 + ': ' + longToAsset(assets_right[sym1].fee_percent, '', 2).trim() + '%'}</b>) : null}
-                                            <br/><b>{tt('market_jsx.market_depth_') + sym1 + ': ' + ticker.asset1_depth}</b>
+                                            <br/>
                                         </small>
                                     </div>
                                 </div>
@@ -770,11 +776,11 @@ class Market extends Component {
                     </div>
 
                     <div className="small-12 medium-6 columns">
-                        <h4 className="sell-color uppercase">
+                        <h4 className="sell-color uppercase inline">
                             {tt('navigation.sell_LIQUID_TOKEN', {
                                 LIQUID_TOKEN: sym1
-                            })} {assets && assets_right[sym2].allow_override_transfer && <Icon name="flag2" size="2x" title={tt('market_jsx..asset_') + sym2 + tt('market_jsx.asset_is_overridable')}/>}
-                        </h4>
+                            })}
+                        </h4>&nbsp;&nbsp;&nbsp;<div className="inline"><small>{tt('market_jsx.market_depth_') + ': '} <b>{ticker.asset1_depth + ' ' + sym1}</b></small></div>
                         {(((sym1 === "GBG" || sym1 === "GOLOS") && account) || (assets && sym1 in assets)) && (
                             <div style={{ marginBottom: '1rem' }}>
                                 <small>
@@ -967,7 +973,6 @@ class Market extends Component {
                                             </a>{' '}
                                             {ticker.highest_bid.toFixed(6)}<br/>
                                             {assets ? (<b>{tt('market_jsx.market_fee_percent_') + sym2 + ': ' + longToAsset(assets_right[sym2].fee_percent, '', 2).trim() + '%'}</b>) : null}
-                                            <br/><b>{tt('market_jsx.market_depth_') + sym2+ ': ' + ticker.asset2_depth}</b>
                                         </small>
                                     </div>
                                 </div>

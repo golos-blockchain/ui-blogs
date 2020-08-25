@@ -120,7 +120,7 @@ class Assets extends Component {
         }
         return (<div>
             <div className="row">
-                <div className="column small-10">
+                <div className="column small-12">
                     <h4 className="Assets__header">{this.state.show_full_list ? tt('assets_jsx.all_assets') : tt('assets_jsx.my_assets')}</h4>
                     {isMyAccount && <Link to={`/@${account_name}/create-asset`} className="button float-right">
                         {tt('assets_jsx.create_btn')}
@@ -128,7 +128,7 @@ class Assets extends Component {
                 </div>
             </div>
             <div className="row">
-                <div className="column small-10">
+                <div className="column small-12">
                 <table>
                 <tbody>
                 {my_assets}
@@ -137,7 +137,7 @@ class Assets extends Component {
                 </div>
             </div>
             <div className="row">
-                <div className="column small-10 Assets__center">
+                <div className="column small-12 Assets__center">
               {show_load_more && <Button onClick={this.loadMore} round="true" type="secondary">{this.state.show_full_list ? tt('assets_jsx.anti_load_more') : tt('g.load_more')}</Button>}
                 </div>
             </div>
