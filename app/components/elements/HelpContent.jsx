@@ -5,12 +5,6 @@ import { renderToString } from 'react-dom/server';
 
 let faqMarkdown;
 
-if (process.env.BROWSER) {
-    faqMarkdown = require('../../help/en/faq.md');
-} else if (!faqMarkdown) {
-    faqMarkdown = require('fs').readFileSync('app/help/en/faq.md', 'utf-8');
-}
-
 const faq = splitIntoSections(faqMarkdown);
 
 export default class HelpContent extends React.PureComponent {

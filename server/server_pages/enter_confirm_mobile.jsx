@@ -6,7 +6,6 @@ import models from "db/models";
 import ServerHTML from "server/server-html";
 import AnalyticsScripts from "../analylics";
 import SignupProgressBar from "app/components/elements/SignupProgressBar";
-import CountryCode from "app/components/elements/CountryCode";
 import { getRemoteIp, checkCSRF } from "server/utils/misc";
 import MiniHeader from "app/components/modules/MiniHeader";
 import secureRandom from "secure-random";
@@ -140,8 +139,7 @@ export default function useEnterAndConfirmMobilePages(app) {
                         <br />
                         <input type="hidden" name="csrf" value={this.csrf} />
                         <label>
-                            <span style={{color: 'red'}}>*</span> {tt('createaccount_jsx.country_code')}
-                            <CountryCode name="country" value={country} />
+                            <span style={{color: 'red'}}>*</span>
                         </label>
                         <br />
                         <label>
