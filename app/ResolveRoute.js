@@ -102,12 +102,15 @@ export default function resolveRoute(path)
     if (match) {
         return {page: 'PostsIndex', params: ['home', match[1]]};
     }
-    match = path.match(routeRegex.UserProfile1) ||
-        // @user/"posts" is deprecated in favor of "comments" as of oct-2016 (#443)
-        path.match(routeRegex.UserProfile2) ||
-        path.match(routeRegex.UserAssetEndPoints);
+    match = path.match(routeRegex.UserAssetEndPoints);
     if (match) {
         return {page: 'UserProfile', params: [match[1], 'assets', match[2], match[3]]};
+    }
+    match = path.match(routeRegex.UserProfile1) ||
+        // @user/"posts" is deprecated in favor of "comments" as of oct-2016 (#443)
+        path.match(routeRegex.UserProfile2);
+    if (match) {
+        return {page: 'UserProfile', params: match.slice(1)};
     }
     match = path.match(routeRegex.PostNoCategory);
     if (match) {
