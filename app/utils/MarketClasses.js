@@ -45,7 +45,7 @@ class Order {
             asset1: this.asset1 + order.asset1,
             asset2: this.asset2 + order.asset2,
             date: this.date
-        }, this.type);
+        }, this.type, this.sym1, this.sym2, this.prec1, this.prec2);
     }
 
     equals(order) {
