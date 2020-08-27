@@ -547,16 +547,18 @@ class Market extends Component {
                     <div className="column small-4"><br/><h5>
                         <DropdownMenu el="div" items={symbols1}>
                             <span>
-                                {sym1 === "GOLOS" ? (<img src="/images/golos.png" width="36" height="36" style={{marginBottom: "4px"}} />) : 
-                                sym1 === "GBG" ? (<img src="/images/gold-golos.png" width="36" height="36" style={{marginBottom: "4px"}} />) : sym1}
+                                {sym1 === "GOLOS" ? (<img src="/images/golos.png" width="36" height="36" style={{marginBottom: "4px"}} />) : null}
+                                {sym1 === "GBG" ? (<img src="/images/gold-golos.png" width="36" height="36" style={{marginBottom: "4px"}} />) : null}
+                                {sym1}
                                 {symbols1.length > 0 && <Icon name="dropdown-arrow" />}
                             </span>
                         </DropdownMenu>
                         {" / "}
                         <DropdownMenu el="div" items={symbols2}>
                             <span>
-                                {sym2 === "GOLOS" ? (<img src="/images/golos.png" width="36" height="36" style={{marginBottom: "4px"}} />) : 
-                                sym2 === "GBG" ? (<img src="/images/gold-golos.png" width="36" height="36" style={{marginBottom: "4px"}}/>) : sym2}
+                                {sym2 === "GOLOS" ? (<img src="/images/golos.png" width="36" height="36" style={{marginBottom: "4px"}} />) : null}
+                                {sym2 === "GBG" ? (<img src="/images/gold-golos.png" width="36" height="36" style={{marginBottom: "4px"}} />) : null}
+                                {sym2}
                                 {symbols2.length > 0 && <Icon name="dropdown-arrow" />}
                             </span>
                         </DropdownMenu></h5>
