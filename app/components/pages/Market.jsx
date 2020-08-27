@@ -317,8 +317,8 @@ class Market extends Component {
         </div>)
 
         let assets_right = {}
-        assets_right['GOLOS'] = {supply: '0.000 GOLOS', symbols_whitelist: [], fee_percent: 0}
-        assets_right['GBG'] = {supply: '0.000 GBG', symbols_whitelist: [], fee_percent: 0}
+        assets_right['GOLOS'] = {supply: '0.000 GOLOS', symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+        assets_right['GBG'] = {supply: '0.000 GBG', symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
         for (let [key, value] of Object.entries(assets)) {
             assets_right[key] = value
         }
@@ -512,12 +512,24 @@ class Market extends Component {
         let symbols1 = [];
         let symbols2 = [];
         for (let [key, value] of Object.entries(assets_right)) {
+            let description = ""
+            let image_url = ""
+            if (value.json_metadata.startsWith('{')) {
+                let json_metadata = JSON.parse(value.json_metadata)
+                description = json_metadata.description
+                image_url = json_metadata.image_url
+            }
+
             if (sym1 !== key && sym2 !== key && (!value.symbols_whitelist.length || value.symbols_whitelist.includes(sym2)) && (!assets_right[sym2].symbols_whitelist.length || assets_right[sym2].symbols_whitelist.includes(key)))
-            symbols1.push({key: key, value: key, link: '/market/' + key + '/' + sym2,
+            symbols1.push({key: key, value: key,
+                label: (<span style={{lineHeight: "28px"}}><img src={image_url} width="28" height="28"/>&nbsp;{key}</span>),
+                link: '/market/' + key + '/' + sym2,
             onClick: (e) => {window.location.href = '/market/' + sym2 + '/' + key}});
 
             if (sym1 !== key && sym2 !== key && (!value.symbols_whitelist.length || value.symbols_whitelist.includes(sym1)) && (!assets_right[sym1].symbols_whitelist.length || assets_right[sym1].symbols_whitelist.includes(key)))
-            symbols2.push({key: key, value: key, link: '/market/' + sym1 + '/' + key, 
+            symbols2.push({key: key, value: key,
+                label: (<span style={{lineHeight: "28px"}}><img src={image_url} width="28" height="28"/>&nbsp;{key}</span>),
+                link: '/market/' + sym1 + '/' + key, 
             onClick: (e) => {window.location.href = '/market/' + sym1 + '/' + key}});
         }
 
@@ -535,13 +547,19 @@ class Market extends Component {
                     <div className="column small-4"><br/><h5>
                         <DropdownMenu el="div" items={symbols1}>
                             <span>
-                                {sym1}{symbols1.length > 0 && <Icon name="dropdown-arrow" />}
+                                {sym1 === "GOLOS" ? (<img src="/images/golos.png" width="36" height="36" style={{marginBottom: "4px"}} />) : null}
+                                {sym1 === "GBG" ? (<img src="/images/gold-golos.png" width="36" height="36" style={{marginBottom: "4px"}} />) : null}
+                                {sym1}
+                                {symbols1.length > 0 && <Icon name="dropdown-arrow" />}
                             </span>
                         </DropdownMenu>
                         {" / "}
                         <DropdownMenu el="div" items={symbols2}>
                             <span>
-                                {sym2}{symbols2.length > 0 && <Icon name="dropdown-arrow" />}
+                                {sym2 === "GOLOS" ? (<img src="/images/golos.png" width="36" height="36" style={{marginBottom: "4px"}} />) : null}
+                                {sym2 === "GBG" ? (<img src="/images/gold-golos.png" width="36" height="36" style={{marginBottom: "4px"}} />) : null}
+                                {sym2}
+                                {symbols2.length > 0 && <Icon name="dropdown-arrow" />}
                             </span>
                         </DropdownMenu></h5>
                         <TickerPriceStat ticker={ticker} symbol={sym2} />
@@ -1111,8 +1129,8 @@ export default connect(
             // create_order jsc 12345 "1.000 SBD" "100.000 STEEM" true 1467122240 false
 
             let assets_right = {}
-            assets_right['GOLOS'] = {supply: '0.000 GOLOS', fee_percent: 0}
-            assets_right['GBG'] = {supply: '0.000 GBG', fee_percent: 0}
+            assets_right['GOLOS'] = {supply: '0.000 GOLOS', fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+            assets_right['GBG'] = {supply: '0.000 GBG', fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
             for (let [key, value] of Object.entries(assets)) {
                 assets_right[key] = value
             }
