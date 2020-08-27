@@ -568,8 +568,8 @@ class Market extends Component {
 
                 <div className="row">
                     <div className="column small-12">
-{assets && assets_right[sym1].allow_override_transfer && (<div className="callout error"><b>{tt('market_jsx..asset_') + sym1 + tt('market_jsx.asset_is_overridable')}</b></div>)}
-{assets && assets_right[sym2].allow_override_transfer && (<div className="callout error"><b>{tt('market_jsx..asset_') + sym2 + tt('market_jsx.asset_is_overridable')}</b></div>)}
+{assets && assets_right[sym1].allow_override_transfer && (<div className="callout error text-center"><Icon name="info_o" /> {tt('market_jsx.asset_') + sym1 + tt('market_jsx.asset_is_overridable')}</div>)}
+{assets && assets_right[sym2].allow_override_transfer && (<div className="callout error text-center"><Icon name="info_o" /> {tt('market_jsx.asset_') + sym2 + tt('market_jsx.asset_is_overridable')}</div>)}
                     </div>
                 </div>
                 <div className="row">
@@ -583,56 +583,7 @@ class Market extends Component {
                             {tt('navigation.buy_LIQUID_TOKEN', {
                                 LIQUID_TOKEN: sym1,
                             })}  
-                        </h4>&nbsp;&nbsp;&nbsp;<div className="inline"><small>{tt('market_jsx.market_depth_') + ': '}<b>{ticker.asset2_depth + ' ' + sym2}</b></small></div>
-                        {(((sym2 === "GBG" || sym2 === "GOLOS") && account) || (assets && sym2 in assets)) && (
-                            <div style={{ marginBottom: '1rem' }}>
-                                <small>
-                                    <a
-                                        href="#"
-                                        onClick={e => {
-                                            e.preventDefault();
-                                            const price = parseFloat(
-                                                this.refs.buySteemPrice.value
-                                            );
-                                            let total = '';
-                                            if (sym2 === "GBG") {
-                                                total = account.sbd_balance.split(
-                                                    ' '
-                                                )[0];
-                                            }
-                                            else if (sym2 === "GOLOS") {
-                                                total = account.steem_balance.split(
-                                                    ' '
-                                                )[0];
-                                            }
-                                            else {
-                                                total = assets[sym2].balance.split(
-                                                    ' '
-                                                )[0];
-                                            }
-                                            this.refs.buySteemTotal.value = total;
-                                            if (price >= 0)
-                                                this.refs.buySteemAmount.value = roundDown(
-                                                    parseFloat(total) / price,
-                                                    3
-                                                ).toFixed(3);
-                                            validateBuySteem();
-                                        }}
-                                    >
-                                        {tt('market_jsx.available')}:
-                                    </a>{' '}
-                                    {sym2 === "GBG" && account.sbd_balance.replace(
-                                        'GBG',
-                                        DEBT_TOKEN_SHORT
-                                    )}
-                                    {sym2 === "GOLOS" && account.balance.replace(
-                                        LIQUID_TICKER,
-                                        LIQUID_TOKEN_UPPERCASE
-                                    )}
-                                    {sym2 !== "GOLOS" && sym2 !== "GBG" && assets[sym2].balance}
-                                </small>
-                            </div>
-                        )}
+                        </h4>&nbsp;&nbsp;&nbsp;<div className="inline"><small>({tt('market_jsx.market_depth_') + ': '}<b>{ticker.asset2_depth + ' ' + sym2}</b>)</small></div>
                         <form className="Market__orderform" onSubmit={buySteem}>
                             <div className="row">
                                 <div className="column small-3 large-2">
@@ -759,6 +710,54 @@ class Market extends Component {
                                     />
 
                                     <div>
+                                        {(((sym2 === "GBG" || sym2 === "GOLOS") && account) || (assets && sym2 in assets)) && (
+                                        <small>
+                                            <a
+                                                href="#"
+                                                onClick={e => {
+                                                    e.preventDefault();
+                                                    const price = parseFloat(
+                                                        this.refs.buySteemPrice.value
+                                                    );
+                                                    let total = '';
+                                                    if (sym2 === "GBG") {
+                                                        total = account.sbd_balance.split(
+                                                            ' '
+                                                        )[0];
+                                                    }
+                                                    else if (sym2 === "GOLOS") {
+                                                        total = account.steem_balance.split(
+                                                            ' '
+                                                        )[0];
+                                                    }
+                                                    else {
+                                                        total = assets[sym2].balance.split(
+                                                            ' '
+                                                        )[0];
+                                                    }
+                                                    this.refs.buySteemTotal.value = total;
+                                                    if (price >= 0)
+                                                        this.refs.buySteemAmount.value = roundDown(
+                                                            parseFloat(total) / price,
+                                                            3
+                                                        ).toFixed(3);
+                                                    validateBuySteem();
+                                                }}
+                                            >
+                                                {tt('market_jsx.available')}:
+                                            </a>{' '}
+                                            {sym2 === "GBG" && account.sbd_balance.replace(
+                                                'GBG',
+                                                DEBT_TOKEN_SHORT
+                                            )}
+                                            {sym2 === "GOLOS" && account.balance.replace(
+                                                LIQUID_TICKER,
+                                                LIQUID_TOKEN_UPPERCASE
+                                            )}
+                                            {sym2 !== "GOLOS" && sym2 !== "GBG" && assets[sym2].balance}
+                                        </small>
+                                        )}
+                                        <br/>
                                         <small>
                                             <a
                                                 href="#"
@@ -785,7 +784,6 @@ class Market extends Component {
                                             </a>{' '}
                                             {ticker.lowest_ask.toFixed(6)}<br/>
                                             {assets ? (<b>{tt('market_jsx.market_fee_percent_') + sym1 + ': ' + longToAsset(assets_right[sym1].fee_percent, '', 2).trim() + '%'}</b>) : null}
-                                            <br/>
                                         </small>
                                     </div>
                                 </div>
@@ -798,43 +796,7 @@ class Market extends Component {
                             {tt('navigation.sell_LIQUID_TOKEN', {
                                 LIQUID_TOKEN: sym1
                             })}
-                        </h4>&nbsp;&nbsp;&nbsp;<div className="inline"><small>{tt('market_jsx.market_depth_') + ': '} <b>{ticker.asset1_depth + ' ' + sym1}</b></small></div>
-                        {(((sym1 === "GBG" || sym1 === "GOLOS") && account) || (assets && sym1 in assets)) && (
-                            <div style={{ marginBottom: '1rem' }}>
-                                <small>
-                                    <a
-                                        href="#"
-                                        onClick={e => {
-                                            e.preventDefault();
-                                            const price = parseFloat(
-                                                this.refs.sellSteem_price.value
-                                            );
-                                            const amount = account.balance.split(
-                                                ' '
-                                            )[0];
-                                            this.refs.sellSteem_amount.value = amount;
-                                            if (price >= 0)
-                                                this.refs.sellSteem_total.value = roundDown(
-                                                    price * parseFloat(amount),
-                                                    3
-                                                );
-                                            validateSellSteem();
-                                        }}
-                                    >
-                                        {tt('market_jsx.available')}:
-                                    </a>{' '}
-                                    {sym1 === "GBG" && account.sbd_balance.replace(
-                                        'GBG',
-                                        DEBT_TOKEN_SHORT
-                                    )}
-                                    {sym1 === "GOLOS" && account.balance.replace(
-                                        LIQUID_TICKER,
-                                        LIQUID_TOKEN_UPPERCASE
-                                    )}
-                                    {sym1 !== "GOLOS" && sym1 !== "GBG" && assets[sym1].balance}
-                                </small>
-                            </div>
-                        )}
+                        </h4>&nbsp;&nbsp;&nbsp;<div className="inline"><small>({tt('market_jsx.market_depth_') + ': '} <b>{ticker.asset1_depth + ' ' + sym1}</b>)</small></div>
 
                         <form
                             className="Market__orderform"
@@ -965,6 +927,41 @@ class Market extends Component {
                                     />
 
                                     <div>
+                                        {(((sym1 === "GBG" || sym1 === "GOLOS") && account) || (assets && sym1 in assets)) && (
+                                        <small>
+                                            <a
+                                                href="#"
+                                                onClick={e => {
+                                                    e.preventDefault();
+                                                    const price = parseFloat(
+                                                        this.refs.sellSteem_price.value
+                                                    );
+                                                    const amount = account.balance.split(
+                                                        ' '
+                                                    )[0];
+                                                    this.refs.sellSteem_amount.value = amount;
+                                                    if (price >= 0)
+                                                        this.refs.sellSteem_total.value = roundDown(
+                                                            price * parseFloat(amount),
+                                                            3
+                                                        );
+                                                    validateSellSteem();
+                                                }}
+                                            >
+                                                {tt('market_jsx.available')}:
+                                            </a>{' '}
+                                            {sym1 === "GBG" && account.sbd_balance.replace(
+                                                'GBG',
+                                                DEBT_TOKEN_SHORT
+                                            )}
+                                            {sym1 === "GOLOS" && account.balance.replace(
+                                                LIQUID_TICKER,
+                                                LIQUID_TOKEN_UPPERCASE
+                                            )}
+                                            {sym1 !== "GOLOS" && sym1 !== "GBG" && assets[sym1].balance}
+                                        </small>
+                                        )}
+                                        <br/>
                                         <small>
                                             <a
                                                 href="#"
@@ -1129,7 +1126,7 @@ export default connect(
             // create_order jsc 12345 "1.000 SBD" "100.000 STEEM" true 1467122240 false
 
             let assets_right = {}
-            assets_right['GOLOS'] = {supply: '0.000 GOLOS', fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+            assets_right['GOLOS'] = {supply: '0.000 GOLOS', fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
             assets_right['GBG'] = {supply: '0.000 GBG', fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
             for (let [key, value] of Object.entries(assets)) {
                 assets_right[key] = value

@@ -100,7 +100,7 @@ class Assets extends Component {
                             label={item.balance}
                             menu={balance_menu}
                         /> : item.balance}
-                    <br/>{tt('assets_jsx.balance')}
+                    <br/><span className="Assets__hint">{tt('assets_jsx.balance')}</span>
                 </td>
                 <td title={item.allow_override_transfer ? tt('assets_jsx.overridable_no_tip') : ''} className={item.allow_override_transfer ? 'Assets__disabled' : ''}>
 
@@ -110,7 +110,8 @@ class Assets extends Component {
                             label={item.tip_balance}
                             menu={tip_menu}
                         /> : item.tip_balance}
-                <br/>{tt('assets_jsx.tip_balance')}</td>
+                <br/><span className="Assets__hint">{tt('assets_jsx.tip_balance')}</span>
+                </td>
                 <td>
                     {tt('assets_jsx.creator')}: <Author author={item.creator} follow={false} /><br/>
                     {tt('assets_jsx.supply_count')}:<br/>
@@ -138,7 +139,7 @@ class Assets extends Component {
             </div>
             <div className="row">
                 <div className="column small-12 Assets__center">
-              {show_load_more && <Button onClick={this.loadMore} round="true" type="secondary">{this.state.show_full_list ? tt('assets_jsx.anti_load_more') : tt('g.load_more')}</Button>}
+              {show_load_more && <Button onClick={this.loadMore} round="true" type="secondary">{this.state.show_full_list ? tt('assets_jsx.anti_load_more') : tt('assets_jsx.load_more')}</Button>}
                 </div>
             </div>
 
