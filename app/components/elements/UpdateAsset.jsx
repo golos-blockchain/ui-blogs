@@ -10,10 +10,7 @@ import user from 'app/redux/User';
 import tt from 'counterpart';
 import {cleanReduxInput} from 'app/utils/ReduxForms'
 import reactForm from 'app/utils/ReactForm';
-import {PrivateKey} from 'golos-classic-js/lib/auth/ecc';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
-import CopyToClipboard from 'react-copy-to-clipboard';
-import Icon from 'app/components/elements/Icon';
 import { Link } from 'react-router';
 
 class UpdateAsset extends Component {
