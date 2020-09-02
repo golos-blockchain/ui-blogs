@@ -75,8 +75,7 @@ class TransferForm extends Component {
                     isWithdraw ? currentAccount.get('savings_balance') : (isTIP ? currentAccount.get('tip_balance') : (isClaim ? currentAccount.get('accumulative_balance') : currentAccount.get('balance'))) :
                 asset === 'GBG' ?
                     isWithdraw ? currentAccount.get('savings_sbd_balance') : currentAccount.get('sbd_balance') :
-                isIssueUIA ?
-                    (parseFloat(uia.get('max_supply')) - parseFloat(uia.get('supply'))).toFixed(prec) + ' ' :
+                isIssueUIA ? uia.get('can_issue') :
                 uia ?
                     (isTIP ? uia.get('tip_balance') : uia.get('balance')) :
                 null
@@ -135,7 +134,7 @@ class TransferForm extends Component {
             asset.value === 'GBG' ?
                 isWithdraw ? currentAccount.get('savings_sbd_balance') : currentAccount.get('sbd_balance') :
             isIssueUIA ?
-                (parseFloat(uia.get('max_supply')) - parseFloat(uia.get('supply'))).toFixed(prec) + ' ' + asset.value :
+                uia.get('can_issue') :
             uia ?
                 (isTIP ? uia.get('tip_balance') : uia.get('balance')) :
             null

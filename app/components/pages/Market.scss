@@ -144,3 +144,12 @@ tr {
   height: 250px;
 }
 
+.Market__votes_pagination {
+  display: inline-block !important;
+  width: 100px;
+  font-size: 16px;
+}
+
+.Market__pairs .VerticalMenu>li>a {
+  padding: .4rem 1rem;
+}

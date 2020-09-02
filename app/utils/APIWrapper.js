@@ -29,8 +29,8 @@ export function getAccountsBalances(names) {
     return api.getAccountsBalancesAsync(names)
 }
 
-export function getAssets(creator='', names=[]) {
-    return api.getAssetsAsync(creator, names)
+export function getAssets(creator='', names=[], from='', limit=5000) {
+    return api.getAssetsAsync(creator, names, from, limit)
 }
 
 export function getAccountHistory(account, from, limit, filter_ops) {

@@ -37,6 +37,8 @@ class Market extends Component {
         buyPriceWarning: false,
         sellPriceWarning: false,
         showDepthChart: false,
+        sym1_list_page: 0,
+        sym2_list_page: 0
     };
 
     componentDidMount() {
@@ -276,6 +278,32 @@ class Market extends Component {
         });
     };
 
+      nextSym1ListPage = () => {
+        this.setState({
+          sym1_list_page: this.state.sym1_list_page+1
+        });
+      }
+
+      prevSym1ListPage = () => {
+        if (this.state.sym1_list_page == 0) return;
+        this.setState({
+          sym1_list_page: this.state.sym1_list_page-1
+        });
+      }
+
+      nextSym2ListPage = () => {
+        this.setState({
+          sym2_list_page: this.state.sym2_list_page+1
+        });
+      }
+
+      prevSym2ListPage = () => {
+        if (this.state.sym2_list_page == 0) return;
+        this.setState({
+          sym2_list_page: this.state.sym2_list_page-1
+        });
+      }
+
     render() {
         let {sym1, sym2} = this.props.routeParams
         if (!sym1 || !sym2) {
@@ -289,7 +317,8 @@ class Market extends Component {
             [sym1, sym2] = [sym2, sym1]
         }
 
-        let assets = this.props.assets ? this.props.assets : {};
+        let assets = this.props.assets
+        if (!assets) return(<div></div>)
 
         let not_exists = []
         if (!(sym1 in assets) && sym1 !== "GOLOS" && sym1 !== "GBG") not_exists.push(sym1)
@@ -317,15 +346,14 @@ class Market extends Component {
         </div>)
 
         let assets_right = {}
-        assets_right['GOLOS'] = {supply: '0.000 GOLOS', symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-        assets_right['GBG'] = {supply: '0.000 GBG', symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+        assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+        assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
         for (let [key, value] of Object.entries(assets)) {
             assets_right[key] = value
         }
 
-        let prec1 = assets_right[sym1].supply.split('.')[1]
-        prec1 = prec1.split(' ')[0].length
-        let prec2 = assets_right[sym2].supply.split('.')[1].split(' ')[0].length
+        let prec1 = assets_right[sym1].precision
+        let prec2 = assets_right[sym2].precision
 
         const LIQUID_TOKEN = tt('token_names.LIQUID_TOKEN');
         const LIQUID_TOKEN_UPPERCASE = tt('token_names.LIQUID_TOKEN_UPPERCASE');
@@ -344,6 +372,8 @@ class Market extends Component {
             sellDisabled,
             buyPriceWarning,
             sellPriceWarning,
+            sym1_list_page,
+            sym2_list_page
         } = this.state;
 
         let ticker = {
@@ -390,11 +420,9 @@ class Market extends Component {
                 return { bids: [], asks: [] };
             }
 
-            let prec1_ = prec1;
-            let prec2_ = prec2;
             return {
-                bids: orders.bids.map(o => new Order(o, 'bids', sym1, sym2, prec1_, prec2_)),
-                asks: orders.asks.map(o => new Order(o, 'asks', sym1, sym2, prec1_, prec2_)),
+                bids: orders.bids.map(o => new Order(o, 'bids', sym1, sym2, prec1, prec2)),
+                asks: orders.asks.map(o => new Order(o, 'asks', sym1, sym2, prec1, prec2)),
             };
         }
 
@@ -522,16 +550,30 @@ class Market extends Component {
 
             if (sym1 !== key && sym2 !== key && (!value.symbols_whitelist.length || value.symbols_whitelist.includes(sym2)) && (!assets_right[sym2].symbols_whitelist.length || assets_right[sym2].symbols_whitelist.includes(key)))
             symbols1.push({key: key, value: key,
-                label: (<span className={"Market__bg-" + key} style={{lineHeight: "28px"}}><img src={image_url} width="28" height="28"/>&nbsp;{key}</span>),
+                label: (<span className={"Market__bg-" + key} style={{lineHeight: "28px"}}><img src={image_url} width="28" height="28"/>&nbsp;&nbsp;&nbsp;{key}</span>),
                 link: '/market/' + key + '/' + sym2,
             onClick: (e) => {window.location.href = '/market/' + sym2 + '/' + key}});
 
             if (sym1 !== key && sym2 !== key && (!value.symbols_whitelist.length || value.symbols_whitelist.includes(sym1)) && (!assets_right[sym1].symbols_whitelist.length || assets_right[sym1].symbols_whitelist.includes(key)))
             symbols2.push({key: key, value: key,
-                label: (<span className={"Market__bg-" + key} style={{lineHeight: "28px"}}><img src={image_url} width="28" height="28"/>&nbsp;{key}</span>),
+                label: (<span className={"Market__bg-" + key} style={{lineHeight: "28px"}}><img src={image_url} width="28" height="28"/>&nbsp;&nbsp;&nbsp;{key}</span>),
                 link: '/market/' + sym1 + '/' + key, 
             onClick: (e) => {window.location.href = '/market/' + sym1 + '/' + key}});
         }
+
+        let next_sym1_list = symbols1.slice(10*(sym1_list_page+1), 10*(sym1_list_page+1)+10);
+        symbols1 = symbols1.slice(10*sym1_list_page, 10*sym1_list_page+10);
+
+        symbols1.push({value: <span>
+          <a className="Market__votes_pagination" onClick={this.prevSym1ListPage}>{sym1_list_page > 0 ? '< ' + tt('g.back') : ''}</a>
+          <a className="Market__votes_pagination" onClick={next_sym1_list.length > 0 ? this.nextSym1ListPage : null}>{next_sym1_list.length > 0 ? tt('g.more_list') + ' >' : ''}</a></span>});
+
+        let next_sym2_list = symbols2.slice(10*(sym2_list_page+1), 10*(sym2_list_page+1)+10);
+        symbols2 = symbols2.slice(10*sym2_list_page, 10*sym2_list_page+10);
+
+        symbols2.push({value: <span>
+          <a className="Market__votes_pagination" onClick={this.prevSym2ListPage}>{sym2_list_page > 0 ? '< ' + tt('g.back') : ''}</a>
+          <a className="Market__votes_pagination" onClick={next_sym2_list.length > 0 ? this.nextSym2ListPage : null}>{next_sym2_list.length > 0 ? tt('g.more_list') + ' >' : ''}</a></span>});
 
         return (
             <div>
@@ -544,7 +586,7 @@ class Market extends Component {
                             />
                         ) : null}
                     </div>
-                    <div className="column small-4"><br/><h5>
+                    <div className="column small-4 Market__pairs"><br/><h5>
                         <DropdownMenu el="div" items={symbols1}>
                             <span>
                                 {sym1 === "GOLOS" ? (<img src="/images/golos.png" width="36" height="36" style={{marginBottom: "4px"}} />) : null}
@@ -645,11 +687,12 @@ class Market extends Component {
                                                     this.refs.buySteemAmount
                                                         .value
                                                 );
-                                                if (price >= 0 && amount >= 0)
+                                                if (price >= 0 && amount >= 0) {
                                                     this.refs.buySteemTotal.value = roundUp(
                                                         price * amount,
                                                         3
                                                     );
+                                                }
                                                 validateBuySteem();
                                             }}
                                         />
@@ -1126,14 +1169,13 @@ export default connect(
             // create_order jsc 12345 "1.000 SBD" "100.000 STEEM" true 1467122240 false
 
             let assets_right = {}
-            assets_right['GOLOS'] = {supply: '0.000 GOLOS', fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-            assets_right['GBG'] = {supply: '0.000 GBG', fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+            assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+            assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
             for (let [key, value] of Object.entries(assets)) {
                 assets_right[key] = value
             }
-            let prec1 = assets_right[sym1].supply.split('.')[1]
-            prec1 = prec1.split(' ')[0].length
-            let prec2 = assets_right[sym2].supply.split('.')[1].split(' ')[0].length
+            let prec1 = assets_right[sym1].precision
+            let prec2 = assets_right[sym2].precision
 
             // Padd amounts to 3 decimal places
             amount_to_sell = amount_to_sell.replace(

@@ -30,7 +30,7 @@ export function* fetchMarket(location_change_action) {
     let sym1 = parts[2]
     let sym2 = parts[3]
 
-    const assets = yield call([api, api.getAssets])
+    const assets = yield call([api, api.getAssets], '', [], '', 5000)
     let kv_assets = {}
     for (const asset of assets) {
         kv_assets[asset.supply.split(" ")[1]] = asset
