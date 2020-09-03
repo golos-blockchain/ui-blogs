@@ -351,6 +351,11 @@ class Market extends Component {
         for (let [key, value] of Object.entries(assets)) {
             assets_right[key] = value
         }
+        for (let [key, value] of Object.entries(assets_right)) {
+            if (!value.json_metadata) {
+                return (<div></div>);
+            }
+        }
 
         let prec1 = assets_right[sym1].precision
         let prec2 = assets_right[sym2].precision
