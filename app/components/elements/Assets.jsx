@@ -78,10 +78,10 @@ class Assets extends Component {
             my_assets.push(<tr key={sym}>
                 <td>
                 {description.length ? (<a target="_blank" href={description}>
-                {image_url.length ? (<img width="48" height="48" src={image_url}/>) : null}{sym}</a>) : null}
-                {!description.length ? (<span><img width="48" height="48" src={image_url}/>{sym}</span>) : null}
+                {image_url.length ? (<img className="Assets__marginBottom Assets__marginRight" width="36" height="36" src={image_url}/>) : null}{sym}</a>) : null}
+                {!description.length ? (<span><img className="Assets__marginBottom Assets__marginRight" width="36" height="36" src={image_url}/>{sym}</span>) : null}
                 &nbsp;{tradable_with_golos ? <Link to={"/market/GOLOS/"+sym}><Icon name="trade"/></Link> : null}
-                    <div>
+                    <div className="Assets__marginTop2">
                     {(isMyAccount && item.creator == account_name) && <Link to={`/@${account_name}/assets/${sym}/update`} className="button tiny">
                         {tt('assets_jsx.update_btn')}
                     </Link>}
