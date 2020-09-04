@@ -29,9 +29,14 @@ export default createModule({
             reducer: (state, action) => {
                 const assets = state.get('assets')
                 if (assets) {
+                    let action_assets = Object.entries(action.payload)
+                    let state_assets = Object.entries(assets)
+                    let more_assets = action_assets.length > state_assets.length ? action_assets : state_assets
+                    let lower_assets = action_assets.length > state_assets.length ? assets : action.payload
+
                     let new_assets = {}
-                    for (let [key, value] of Object.entries(assets)) {
-                        new_assets[key] = {...value, ...action.payload[key]}
+                    for (let [key, value] of more_assets) {
+                        new_assets[key] = {...value, ...lower_assets[key]}
                     }
                     return state.set('assets', new_assets);
                 }
