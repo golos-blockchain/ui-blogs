@@ -12,6 +12,7 @@ import {cleanReduxInput} from 'app/utils/ReduxForms'
 import reactForm from 'app/utils/ReactForm';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import Slider from 'golos-ui/Slider';
+import {api} from 'golos-classic-js';
 
 class CreateAsset extends Component {
     static propTypes = {
@@ -57,6 +58,16 @@ class CreateAsset extends Component {
                 return tt('assets_jsx.symbol_exists');
             }
             if (parts.length > 1 && parts[1].length < 3) return tt('assets_jsx.subsymbol_too_short');
+            const assets = this.props.assets.toJS()
+            if (symbol in assets) return tt('assets_jsx.symbol_exists');
+            if (parts.length > 1) {
+                if (parts[0] in assets) {
+                    const username = props.account.get('name')
+                    if (assets[parts[0]].creator != username) return tt('assets_jsx.top_symbol_not_your');
+                } else {
+                    return tt('assets_jsx.top_symbol_not_exists');
+                }
+            }
             return null
         };
 
@@ -203,7 +214,7 @@ class CreateAsset extends Component {
                             <input
                                 className="input-group-field bold"
                                 type="text"
-                                {...symbol.props} maxlength="14" onChange={(e) => this.onChangeSymbol(e)}
+                                {...symbol.props} maxLength="14" onChange={(e) => this.onChangeSymbol(e)}
                             />
                         </div>
                         {this.state.assetCost != '' && <div className="Assets__cost">{this.state.assetCost}</div>
@@ -232,7 +243,7 @@ class CreateAsset extends Component {
                             <input
                                 className="input-group-field bold"
                                 {...max_supply.props}
-                                maxlength={16 - parseInt(precision.props.value)}
+                                maxLength={16 - parseInt(precision.props.value)}
                                 type="text"
                                  onChange={(e) => this.onChangeMaxSupply(e)}
                             />
@@ -247,7 +258,7 @@ class CreateAsset extends Component {
                             <input
                                 className="input-group-field bold"
                                 {...description.props}
-                                maxlength="500"
+                                maxLength="500"
                                 type="text"
                                  onChange={(e) => this.onChangeDescription(e)}
                             />
@@ -262,7 +273,7 @@ class CreateAsset extends Component {
                             <input
                                 className="input-group-field bold"
                                 {...image_url.props}
-                                maxlength="512"
+                                maxLength="512"
                                 type="text"
                                  onChange={(e) => this.onChangeImageUrl(e)}
                             />
@@ -346,7 +357,8 @@ export default connect(
         const isMyAccount = username === accountName
         const cprops = state.global.get('cprops');
         const asset_creation_fee = cprops ? cprops.get('asset_creation_fee') : '0.000 GOLOS'
-        return {...ownProps, isMyAccount, accountName, asset_creation_fee}
+        return {...ownProps, isMyAccount, accountName, asset_creation_fee,
+            assets: state.global.get('assets')}
     },
     dispatch => ({
         createAsset: ({

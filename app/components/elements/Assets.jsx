@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
+import {longToAsset} from 'app/utils/ParsersAndFormatters';
 import g from 'app/redux/GlobalReducer'
 import {connect} from 'react-redux';
 import { Link } from 'react-router';
@@ -115,7 +116,8 @@ class Assets extends Component {
                 <td>
                     {tt('assets_jsx.creator')}: <Author author={item.creator} follow={false} /><br/>
                     {tt('assets_jsx.supply_count')}:<br/>
-                    {item.supply}
+                    {item.supply}<br/>
+                    <small>{tt('market_jsx.market_fee_percent_').trim() + ': ' + longToAsset(item.fee_percent, '', 2).trim() + '%'}</small>
                 </td>
             </tr>);
         }

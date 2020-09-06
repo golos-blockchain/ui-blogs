@@ -94,6 +94,7 @@ export default async function getState(api, url, options, offchain = {}) {
                     })
                 break
 
+                case 'create-asset':
                 case 'assets':
                     state.assets = (await api.getAccountsBalances([uname]))[0]
                     const my_assets = await api.getAssets()
@@ -116,9 +117,7 @@ export default async function getState(api, url, options, offchain = {}) {
                             state.assets[sym].my = true
                         }
                     })
-                break
 
-                case 'create-asset':
                     state.cprops = await api.getChainProperties();
                 break
 

@@ -306,7 +306,7 @@ class TransferForm extends Component {
                                 </select></span>}
                         </div>
                         {!permlink && <div style={{marginBottom: "0.6rem"}}>
-                            <AssetBalance balanceValue={this.balanceValue()} onClick={this.assetBalanceClick} />
+                            <AssetBalance balanceText={!isIssueUIA ? tt('transfer_jsx.balance') : tt('transfer_jsx.can_issue')} balanceValue={this.balanceValue()} onClick={this.assetBalanceClick} />
                         </div>}
                         {(asset && asset.touched && asset.error ) || (amount.touched && amount.error) ?
                         <div className="error">
@@ -348,8 +348,8 @@ class TransferForm extends Component {
     }
 }
 
-const AssetBalance = ({onClick, balanceValue}) =>
-    <a onClick={onClick} style={{borderBottom: '#A09F9F 1px dotted', cursor: 'pointer'}}>{tt('transfer_jsx.balance') + ": " + balanceValue}</a>
+const AssetBalance = ({onClick, balanceText, balanceValue}) =>
+    <a onClick={onClick} style={{borderBottom: '#A09F9F 1px dotted', cursor: 'pointer'}}>{balanceText + ": " + balanceValue}</a>
 
 import {connect} from 'react-redux'
 

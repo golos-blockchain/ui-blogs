@@ -129,6 +129,7 @@ export function* fetchState(location_change_action) {
                         })
                     break
 
+                    case 'create-asset':
                     case 'assets':
                         state.assets = (yield call([api, api.getAccountsBalances], [uname]))[0]
                         const my_assets = yield call([api, api.getAssets], '', [], '', 5000)
@@ -151,9 +152,7 @@ export function* fetchState(location_change_action) {
                                 state.assets[sym].my = true
                             }
                         })
-                    break
 
-                    case 'create-asset':
                         state.cprops = yield call([api, api.getChainPropertiesAsync])
                     break
 
