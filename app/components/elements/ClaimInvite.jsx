@@ -12,7 +12,6 @@ import {cleanReduxInput} from 'app/utils/ReduxForms'
 import reactForm from 'app/utils/ReactForm';
 import {PrivateKey} from 'golos-classic-js/lib/auth/ecc';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
-import {api} from 'golos-classic-js'
 
 class ClaimInvite extends Component {
     static propTypes = {

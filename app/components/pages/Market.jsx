@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { Link, browserHistory } from 'react-router';
 import tt from 'counterpart';
+import {api} from 'golos-classic-js'
 import transaction from 'app/redux/Transaction';
 import {longToAsset} from 'app/utils/ParsersAndFormatters';
 import TransactionError from 'app/components/elements/TransactionError';
@@ -36,6 +37,8 @@ class Market extends Component {
         sellDisabled: true,
         buyPriceWarning: false,
         sellPriceWarning: false,
+        buySteemFeePct: '0%',
+        sellSteemFeePct: '0%',
         showDepthChart: false,
         sym1_list_page: 0,
         sym2_list_page: 0
@@ -261,6 +264,38 @@ class Market extends Component {
         this.setState({
             buyDisabled: !valid,
             buyPriceWarning: valid && this.percentDiff(lowest_ask, price) > 15,
+        }, async () => {
+            if (valid) {
+                let {sym1, sym2} = this.props.routeParams
+                sym1 = sym1.toUpperCase()
+                sym2 = sym2.toUpperCase()
+                if (sym2 === "GOLOS"
+                    || (sym2 < sym1 && sym1 !== "GOLOS")) {
+                    [sym1, sym2] = [sym2, sym1]
+                }
+
+                let assets = this.props.assets;
+                let assets_right = {}
+                assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+                assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+                for (let [key, value] of Object.entries(assets)) {
+                    assets_right[key] = value
+                }
+
+                const market_price = {quote: amount.toFixed(assets_right[sym1].precision) + ' ' + sym1, base: total.toFixed(assets_right[sym2].precision) + ' ' + sym2};
+                const res = await api.getFillableOrders(market_price);
+                if (res && res.length) {
+                    this.refs.buySteemFee.value = amount * assets_right[sym1].fee_percent / 10000
+                    this.setState( {
+                        buySteemFeePct: longToAsset(assets_right[sym1].fee_percent, '', 2) + '%'
+                    })
+                } else {
+                    this.refs.buySteemFee.value = '0.0'
+                    this.setState( {
+                        buySteemFeePct: '0%'
+                    })
+                }
+            }
         });
     };
 
@@ -275,6 +310,38 @@ class Market extends Component {
             sellDisabled: !valid,
             sellPriceWarning:
                 valid && this.percentDiff(highest_bid, price) < -15,
+        }, async () => {
+            if (valid) {
+                let {sym1, sym2} = this.props.routeParams
+                sym1 = sym1.toUpperCase()
+                sym2 = sym2.toUpperCase()
+                if (sym2 === "GOLOS"
+                    || (sym2 < sym1 && sym1 !== "GOLOS")) {
+                    [sym1, sym2] = [sym2, sym1]
+                }
+
+                let assets = this.props.assets;
+                let assets_right = {}
+                assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+                assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+                for (let [key, value] of Object.entries(assets)) {
+                    assets_right[key] = value
+                }
+
+                const market_price = {base: amount.toFixed(assets_right[sym1].precision) + ' ' + sym1, quote: total.toFixed(assets_right[sym2].precision) + ' ' + sym2};
+                const res = await api.getFillableOrders(market_price);
+                if (res && res.length) {
+                    this.refs.sellSteem_fee.value = total * assets_right[sym2].fee_percent / 10000
+                    this.setState( {
+                        sellSteemFeePct: longToAsset(assets_right[sym2].fee_percent, '', 2) + '%'
+                    })
+                } else {
+                    this.refs.sellSteem_fee.value = '0.0'
+                    this.setState( {
+                        sellSteemFeePct: '0%'
+                    })
+                }
+            }
         });
     };
 
@@ -633,10 +700,10 @@ class Market extends Component {
                         </h4>&nbsp;&nbsp;&nbsp;<div className="inline"><small>({tt('market_jsx.market_depth_') + ': '}<b>{ticker.asset2_depth + ' ' + sym2}</b>)</small></div>
                         <form className="Market__orderform" onSubmit={buySteem}>
                             <div className="row">
-                                <div className="column small-3 large-2">
+                                <div className="column small-3 large-3">
                                     <label>{tt('g.price')}</label>
                                 </div>
-                                <div className="column small-9 large-8">
+                                <div className="column small-9 large-7">
                                     <div className="input-group">
                                         <input
                                             className={
@@ -673,10 +740,10 @@ class Market extends Component {
                             </div>
 
                             <div className="row">
-                                <div className="column small-3 large-2">
+                                <div className="column small-3 large-3">
                                     <label>{tt('g.amount')}</label>
                                 </div>
-                                <div className="column small-9 large-8">
+                                <div className="column small-9 large-7">
                                     <div className="input-group">
                                         <input
                                             className="input-group-field"
@@ -710,10 +777,10 @@ class Market extends Component {
                             </div>
 
                             <div className="row">
-                                <div className="column small-3 large-2">
+                                <div className="column small-3 large-3">
                                     <label>{tt('market_jsx.total')}</label>
                                 </div>
-                                <div className="column small-9 large-8">
+                                <div className="column small-9 large-7">
                                     <div className="input-group">
                                         <input
                                             className="input-group-field"
@@ -739,6 +806,26 @@ class Market extends Component {
                                         />
                                         <span className="input-group-label">
                                             {sym2}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className="column small-4 large-3">
+                                    <label>{tt('market_jsx.market_fee_percent_') + this.state.buySteemFeePct}</label>
+                                </div>
+                                <div className="column small-9 large-7">
+                                    <div className="input-group">
+                                        <input
+                                            className="input-group-field"
+                                            type="text"
+                                            disabled
+                                            ref="buySteemFee"
+                                            placeholder="0.0"
+                                        />
+                                        <span className="input-group-label">
+                                            {sym1}
                                         </span>
                                     </div>
                                 </div>
@@ -831,7 +918,6 @@ class Market extends Component {
                                                 {tt('market_jsx.lowest_ask')}:
                                             </a>{' '}
                                             {ticker.lowest_ask.toFixed(6)}<br/>
-                                            {assets ? (<b>{tt('market_jsx.market_fee_percent_') + sym1 + ': ' + longToAsset(assets_right[sym1].fee_percent, '', 2).trim() + '%'}</b>) : null}
                                         </small>
                                     </div>
                                 </div>
@@ -851,11 +937,11 @@ class Market extends Component {
                             onSubmit={sellSteem}
                         >
                             <div className="row">
-                                <div className="column small-3 large-2">
+                                <div className="column small-3 large-3">
                                     <label>{tt('g.price')}</label>
                                 </div>
 
-                                <div className="column small-9 large-8">
+                                <div className="column small-9 large-7">
                                     <div className="input-group">
                                         <input
                                             className={
@@ -892,10 +978,10 @@ class Market extends Component {
                             </div>
 
                             <div className="row">
-                                <div className="column small-3 large-2">
+                                <div className="column small-3 large-3">
                                     <label>{tt('g.amount')}</label>
                                 </div>
-                                <div className="column small-9 large-8">
+                                <div className="column small-9 large-7">
                                     <div className="input-group">
                                         <input
                                             className="input-group-field"
@@ -927,10 +1013,10 @@ class Market extends Component {
                             </div>
 
                             <div className="row">
-                                <div className="column small-3 large-2">
+                                <div className="column small-3 large-3">
                                     <label>{tt('market_jsx.total')}</label>
                                 </div>
-                                <div className="column small-9 large-8">
+                                <div className="column small-9 large-7">
                                     <div className="input-group">
                                         <input
                                             className="input-group-field"
@@ -953,6 +1039,26 @@ class Market extends Component {
                                                     );
                                                 validateSellSteem();
                                             }}
+                                        />
+                                        <span className="input-group-label">
+                                            {sym2}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className="column small-4 large-3">
+                                    <label>{tt('market_jsx.market_fee_percent_') + this.state.sellSteemFeePct}</label>
+                                </div>
+                                <div className="column small-9 large-7">
+                                    <div className="input-group">
+                                        <input
+                                            className="input-group-field"
+                                            type="text"
+                                            disabled
+                                            ref="sellSteem_fee"
+                                            placeholder="0.0"
                                         />
                                         <span className="input-group-label">
                                             {sym2}
@@ -1035,7 +1141,6 @@ class Market extends Component {
                                                 {tt('market_jsx.highest_bid')}:
                                             </a>{' '}
                                             {ticker.highest_bid.toFixed(6)}<br/>
-                                            {assets ? (<b>{tt('market_jsx.market_fee_percent_') + sym2 + ': ' + longToAsset(assets_right[sym2].fee_percent, '', 2).trim() + '%'}</b>) : null}
                                         </small>
                                     </div>
                                 </div>
