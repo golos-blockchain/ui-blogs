@@ -4,8 +4,8 @@ class Order {
     constructor(order, side, sym1, sym2, prec1, prec2) {
         this.side = side;
         this.price = parseFloat(order.real_price);
-        this.price = side === 'asks' ? roundUp(this.price, 6) : Math.max(roundDown(this.price, 6), 0.000001);
-        this.stringPrice = this.price.toFixed(6);
+        this.price = side === 'asks' ? roundUp(this.price, 8) : Math.max(roundDown(this.price, 8), 0.00000001);
+        this.stringPrice = this.price.toFixed(8);
         this.asset1 = parseInt(order.asset1, 10);
         this.asset2 = parseInt(order.asset2, 10);
         this.sym1 = sym1
@@ -81,8 +81,8 @@ class TradeHistory {
         this.prec1 = prec1
         this.prec2 = prec2
         this.price = this.asset2 / this.asset1;
-        this.price = this.type === 'ask' ? roundUp(this.price, 6) : Math.max(roundDown(this.price, 6), 0.000001);
-        this.stringPrice = this.price.toFixed(6);
+        this.price = this.type === 'ask' ? roundUp(this.price, 8) : Math.max(roundDown(this.price, 8), 0.00000001);
+        this.stringPrice = this.price.toFixed(8);
     }
 
     getAsset1Amount() {

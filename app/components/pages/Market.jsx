@@ -60,14 +60,14 @@ class Market extends Component {
 
             if (this.refs.buySteemPrice) {
                 this.refs.buySteemPrice.value = parseFloat(lowest_ask).toFixed(
-                    6
+                    8
                 );
             }
 
             if (this.refs.sellSteem_price) {
                 this.refs.sellSteem_price.value = parseFloat(
                     highest_bid
-                ).toFixed(6);
+                ).toFixed(8);
             }
         }
     }
@@ -155,7 +155,7 @@ class Market extends Component {
         const min_to_receive = parseFloat(
             ReactDOM.findDOMNode(this.refs.buySteemAmount).value
         );
-        const price = (amount_to_sell / min_to_receive).toFixed(6);
+        const price = (amount_to_sell / min_to_receive).toFixed(8);
         const { lowest_ask } = this.props.ticker;
         placeOrder(
             (this.props.assets ? this.props.assets : {}),
@@ -196,7 +196,7 @@ class Market extends Component {
             ReactDOM.findDOMNode(this.refs.sellSteem_amount).value
         );
 
-        const price = (min_to_receive / amount_to_sell).toFixed(6);
+        const price = (min_to_receive / amount_to_sell).toFixed(8);
         const { highest_bid } = this.props.ticker;
 
         placeOrder(
@@ -231,17 +231,33 @@ class Market extends Component {
     setFormPrice = price => {
         const p = parseFloat(price);
 
-        this.refs.sellSteem_price.value = p.toFixed(6);
-        this.refs.buySteemPrice.value = p.toFixed(6);
+        this.refs.sellSteem_price.value = p.toFixed(8);
+        this.refs.buySteemPrice.value = p.toFixed(8);  
+
+        let {sym1, sym2} = this.props.routeParams
+        sym1 = sym1.toUpperCase()
+        sym2 = sym2.toUpperCase()
+        if (sym2 === "GOLOS"
+            || (sym2 < sym1 && sym1 !== "GOLOS")) {
+            [sym1, sym2] = [sym2, sym1]
+        }
+
+        let assets = this.props.assets;
+        let assets_right = {}
+        assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+        assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+        for (let [key, value] of Object.entries(assets)) {
+            assets_right[key] = value
+        }
 
         const samount = parseFloat(this.refs.sellSteem_amount.value);
         if (samount >= 0) {
-            this.refs.sellSteem_total.value = roundDown(p * samount, 3);
+            this.refs.sellSteem_total.value = roundDown(p * samount, assets_right[sym1].precision).toFixed(assets_right[sym1].precision);;
         }
 
         const bamount = parseFloat(this.refs.buySteemAmount.value);
         if (bamount >= 0) {
-            this.refs.buySteemTotal.value = roundUp(p * bamount, 3);
+            this.refs.buySteemTotal.value = roundUp(p * bamount, assets_right[sym2].precision).toFixed(assets_right[sym2].precision);;
         }
 
         this.validateBuySteem();
@@ -474,8 +490,8 @@ class Market extends Component {
 
             ticker = {
                 latest: parseFloat(latest),
-                lowest_ask: roundUp(parseFloat(lowest_ask), 6),
-                highest_bid: roundDown(parseFloat(highest_bid), 6),
+                lowest_ask: roundUp(parseFloat(lowest_ask), 8),
+                highest_bid: roundDown(parseFloat(highest_bid), 8),
                 percent_change: parseFloat(percent_change),
                 asset2_volume: parseFloat(asset2_volume),
                 asset1_depth: parseFloat(asset1_depth).toFixed(prec1),
@@ -563,7 +579,7 @@ class Market extends Component {
                         <td>{o.created.replace('T', ' ')}</td>
                         <td>{tt(o.type === 'ask' ? 'g.sell' : 'g.buy')}</td>
                         <td>
-                            {sym2} {o.price.toFixed(6)}
+                            {sym2} {o.price.toFixed(8)}
                         </td>
                         <td>{o.asset1}</td>
                         <td>{o.asset2.replace('SBD', DEBT_TOKEN_SHORT)}</td>
@@ -716,6 +732,22 @@ class Market extends Component {
                                             ref="buySteemPrice"
                                             placeholder="0.0"
                                             onChange={e => {
+                                                let {sym1, sym2} = this.props.routeParams
+                                                sym1 = sym1.toUpperCase()
+                                                sym2 = sym2.toUpperCase()
+                                                if (sym2 === "GOLOS"
+                                                    || (sym2 < sym1 && sym1 !== "GOLOS")) {
+                                                    [sym1, sym2] = [sym2, sym1]
+                                                }
+
+                                                let assets = this.props.assets;
+                                                let assets_right = {}
+                                                assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+                                                assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+                                                for (let [key, value] of Object.entries(assets)) {
+                                                    assets_right[key] = value
+                                                }
+
                                                 const amount = parseFloat(
                                                     this.refs.buySteemAmount
                                                         .value
@@ -727,8 +759,8 @@ class Market extends Component {
                                                 if (amount >= 0 && price >= 0)
                                                     this.refs.buySteemTotal.value = roundUp(
                                                         price * amount,
-                                                        3
-                                                    );
+                                                        assets_right[sym2].precision
+                                                    ).toFixed(assets_right[sym2].precision);
                                                 validateBuySteem();
                                             }}
                                         />
@@ -751,19 +783,36 @@ class Market extends Component {
                                             ref="buySteemAmount"
                                             placeholder="0.0"
                                             onChange={e => {
+                                                let {sym1, sym2} = this.props.routeParams
+                                                sym1 = sym1.toUpperCase()
+                                                sym2 = sym2.toUpperCase()
+                                                if (sym2 === "GOLOS"
+                                                    || (sym2 < sym1 && sym1 !== "GOLOS")) {
+                                                    [sym1, sym2] = [sym2, sym1]
+                                                }
+
+                                                let assets = this.props.assets;
+                                                let assets_right = {}
+                                                assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+                                                assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+                                                for (let [key, value] of Object.entries(assets)) {
+                                                    assets_right[key] = value
+                                                }
+
                                                 const price = parseFloat(
                                                     this.refs.buySteemPrice
                                                         .value
-                                                );
+                                                )
                                                 const amount = parseFloat(
                                                     this.refs.buySteemAmount
                                                         .value
                                                 );
                                                 if (price >= 0 && amount >= 0) {
+                                                    let res = price * amount
                                                     this.refs.buySteemTotal.value = roundUp(
-                                                        price * amount,
-                                                        3
-                                                    );
+                                                        res,
+                                                        assets_right[sym2].precision
+                                                    ).toFixed(assets_right[sym2].precision)
                                                 }
                                                 validateBuySteem();
                                             }}
@@ -788,6 +837,22 @@ class Market extends Component {
                                             ref="buySteemTotal"
                                             placeholder="0.0"
                                             onChange={e => {
+                                                let {sym1, sym2} = this.props.routeParams
+                                                sym1 = sym1.toUpperCase()
+                                                sym2 = sym2.toUpperCase()
+                                                if (sym2 === "GOLOS"
+                                                    || (sym2 < sym1 && sym1 !== "GOLOS")) {
+                                                    [sym1, sym2] = [sym2, sym1]
+                                                }
+
+                                                let assets = this.props.assets;
+                                                let assets_right = {}
+                                                assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+                                                assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+                                                for (let [key, value] of Object.entries(assets)) {
+                                                    assets_right[key] = value
+                                                }
+
                                                 const price = parseFloat(
                                                     this.refs.buySteemPrice
                                                         .value
@@ -799,8 +864,8 @@ class Market extends Component {
                                                 if (total >= 0 && price >= 0)
                                                     this.refs.buySteemAmount.value = roundUp(
                                                         total / price,
-                                                        3
-                                                    );
+                                                        assets_right[sym1].precision
+                                                    ).toFixed(assets_right[sym1].precision);;
                                                 validateBuySteem();
                                             }}
                                         />
@@ -850,6 +915,22 @@ class Market extends Component {
                                             <a
                                                 href="#"
                                                 onClick={e => {
+                                                    let {sym1, sym2} = this.props.routeParams
+                                                    sym1 = sym1.toUpperCase()
+                                                    sym2 = sym2.toUpperCase()
+                                                    if (sym2 === "GOLOS"
+                                                        || (sym2 < sym1 && sym1 !== "GOLOS")) {
+                                                        [sym1, sym2] = [sym2, sym1]
+                                                    }
+
+                                                    let assets = this.props.assets;
+                                                    let assets_right = {}
+                                                    assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+                                                    assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+                                                    for (let [key, value] of Object.entries(assets)) {
+                                                        assets_right[key] = value
+                                                    }
+
                                                     e.preventDefault();
                                                     const price = parseFloat(
                                                         this.refs.buySteemPrice.value
@@ -874,8 +955,8 @@ class Market extends Component {
                                                     if (price >= 0)
                                                         this.refs.buySteemAmount.value = roundDown(
                                                             parseFloat(total) / price,
-                                                            3
-                                                        ).toFixed(3);
+                                                            assets_right[sym1].precision
+                                                        ).toFixed(assets_right[sym1].precision);
                                                     validateBuySteem();
                                                 }}
                                             >
@@ -896,7 +977,23 @@ class Market extends Component {
                                         <small>
                                             <a
                                                 href="#"
-                                                onClick={e => {
+                                                onClick={e => {  
+                                                    let {sym1, sym2} = this.props.routeParams
+                                                    sym1 = sym1.toUpperCase()
+                                                    sym2 = sym2.toUpperCase()
+                                                    if (sym2 === "GOLOS"
+                                                        || (sym2 < sym1 && sym1 !== "GOLOS")) {
+                                                        [sym1, sym2] = [sym2, sym1]
+                                                    }
+
+                                                    let assets = this.props.assets;
+                                                    let assets_right = {}
+                                                    assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+                                                    assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+                                                    for (let [key, value] of Object.entries(assets)) {
+                                                        assets_right[key] = value
+                                                    }
+
                                                     e.preventDefault();
                                                     const amount = parseFloat(
                                                         this.refs.buySteemAmount
@@ -906,18 +1003,18 @@ class Market extends Component {
                                                         ticker.lowest_ask
                                                     );
                                                     this.refs.buySteemPrice.value =
-                                                        ticker.lowest_ask;
+                                                        ticker.lowest_ask.toFixed(8);
                                                     if (amount >= 0)
                                                         this.refs.buySteemTotal.value = roundUp(
                                                             amount * price,
-                                                            3
-                                                        ).toFixed(3);
+                                                            assets_right[sym2].precision
+                                                        ).toFixed(assets_right[sym2].precision);
                                                     validateBuySteem();
                                                 }}
                                             >
                                                 {tt('market_jsx.lowest_ask')}:
                                             </a>{' '}
-                                            {ticker.lowest_ask.toFixed(6)}<br/>
+                                            {ticker.lowest_ask.toFixed(8)}<br/>
                                         </small>
                                     </div>
                                 </div>
@@ -954,6 +1051,22 @@ class Market extends Component {
                                             ref="sellSteem_price"
                                             placeholder="0.0"
                                             onChange={e => {
+                                                let {sym1, sym2} = this.props.routeParams
+                                                sym1 = sym1.toUpperCase()
+                                                sym2 = sym2.toUpperCase()
+                                                if (sym2 === "GOLOS"
+                                                    || (sym2 < sym1 && sym1 !== "GOLOS")) {
+                                                    [sym1, sym2] = [sym2, sym1]
+                                                }
+
+                                                let assets = this.props.assets;
+                                                let assets_right = {}
+                                                assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+                                                assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+                                                for (let [key, value] of Object.entries(assets)) {
+                                                    assets_right[key] = value
+                                                }
+
                                                 const amount = parseFloat(
                                                     this.refs.sellSteem_amount
                                                         .value
@@ -965,8 +1078,8 @@ class Market extends Component {
                                                 if (amount >= 0 && price >= 0)
                                                     this.refs.sellSteem_total.value = roundDown(
                                                         price * amount,
-                                                        3
-                                                    );
+                                                        assets_right[sym2].precision
+                                                    ).toFixed(assets_right[sym2].precision);
                                                 validateSellSteem();
                                             }}
                                         />
@@ -989,6 +1102,22 @@ class Market extends Component {
                                             ref="sellSteem_amount"
                                             placeholder="0.0"
                                             onChange={() => {
+                                                let {sym1, sym2} = this.props.routeParams
+                                                sym1 = sym1.toUpperCase()
+                                                sym2 = sym2.toUpperCase()
+                                                if (sym2 === "GOLOS"
+                                                    || (sym2 < sym1 && sym1 !== "GOLOS")) {
+                                                    [sym1, sym2] = [sym2, sym1]
+                                                }
+
+                                                let assets = this.props.assets;
+                                                let assets_right = {}
+                                                assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+                                                assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+                                                for (let [key, value] of Object.entries(assets)) {
+                                                    assets_right[key] = value
+                                                }
+
                                                 const price = parseFloat(
                                                     this.refs.sellSteem_price
                                                         .value
@@ -1000,8 +1129,8 @@ class Market extends Component {
                                                 if (price >= 0 && amount >= 0)
                                                     this.refs.sellSteem_total.value = roundDown(
                                                         price * amount,
-                                                        3
-                                                    );
+                                                        assets_right[sym2].precision
+                                                    ).toFixed(assets_right[sym2].precision);
                                                 validateSellSteem();
                                             }}
                                         />
@@ -1024,6 +1153,22 @@ class Market extends Component {
                                             ref="sellSteem_total"
                                             placeholder="0.0"
                                             onChange={e => {
+                                                let {sym1, sym2} = this.props.routeParams
+                                                sym1 = sym1.toUpperCase()
+                                                sym2 = sym2.toUpperCase()
+                                                if (sym2 === "GOLOS"
+                                                    || (sym2 < sym1 && sym1 !== "GOLOS")) {
+                                                    [sym1, sym2] = [sym2, sym1]
+                                                }
+
+                                                let assets = this.props.assets;
+                                                let assets_right = {}
+                                                assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+                                                assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+                                                for (let [key, value] of Object.entries(assets)) {
+                                                    assets_right[key] = value
+                                                }
+
                                                 const price = parseFloat(
                                                     this.refs.sellSteem_price
                                                         .value
@@ -1035,8 +1180,8 @@ class Market extends Component {
                                                 if (price >= 0 && total >= 0)
                                                     this.refs.sellSteem_amount.value = roundUp(
                                                         total / price,
-                                                        3
-                                                    );
+                                                        assets_right[sym1].precision
+                                                    ).toFixed(assets_right[sym1].precision);
                                                 validateSellSteem();
                                             }}
                                         />
@@ -1086,6 +1231,22 @@ class Market extends Component {
                                             <a
                                                 href="#"
                                                 onClick={e => {
+                                                    let {sym1, sym2} = this.props.routeParams
+                                                    sym1 = sym1.toUpperCase()
+                                                    sym2 = sym2.toUpperCase()
+                                                    if (sym2 === "GOLOS"
+                                                        || (sym2 < sym1 && sym1 !== "GOLOS")) {
+                                                        [sym1, sym2] = [sym2, sym1]
+                                                    }
+
+                                                    let assets = this.props.assets;
+                                                    let assets_right = {}
+                                                    assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+                                                    assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+                                                    for (let [key, value] of Object.entries(assets)) {
+                                                        assets_right[key] = value
+                                                    }
+
                                                     e.preventDefault();
                                                     const price = parseFloat(
                                                         this.refs.sellSteem_price.value
@@ -1097,8 +1258,8 @@ class Market extends Component {
                                                     if (price >= 0)
                                                         this.refs.sellSteem_total.value = roundDown(
                                                             price * parseFloat(amount),
-                                                            3
-                                                        );
+                                                            assets_right[sym2].precision
+                                                        ).toFixed(assets_right[sym2].precision);
                                                     validateSellSteem();
                                                 }}
                                             >
@@ -1120,6 +1281,22 @@ class Market extends Component {
                                             <a
                                                 href="#"
                                                 onClick={e => {
+                                                    let {sym1, sym2} = this.props.routeParams
+                                                    sym1 = sym1.toUpperCase()
+                                                    sym2 = sym2.toUpperCase()
+                                                    if (sym2 === "GOLOS"
+                                                        || (sym2 < sym1 && sym1 !== "GOLOS")) {
+                                                        [sym1, sym2] = [sym2, sym1]
+                                                    }
+
+                                                    let assets = this.props.assets;
+                                                    let assets_right = {}
+                                                    assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+                                                    assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+                                                    for (let [key, value] of Object.entries(assets)) {
+                                                        assets_right[key] = value
+                                                    }
+
                                                     e.preventDefault();
                                                     const amount = parseFloat(
                                                         this.refs
@@ -1128,19 +1305,19 @@ class Market extends Component {
                                                     );
                                                     const price =
                                                         ticker.highest_bid;
-                                                    this.refs.sellSteem_price.value = price;
+                                                    this.refs.sellSteem_price.value = price.toFixed(8);
                                                     if (amount >= 0)
                                                         this.refs.sellSteem_total.value = roundDown(
                                                             parseFloat(price) *
                                                                 amount,
-                                                            3
-                                                        );
+                                                            assets_right[sym2].precision
+                                                        ).toFixed(assets_right[sym2].precision);
                                                     validateSellSteem();
                                                 }}
                                             >
                                                 {tt('market_jsx.highest_bid')}:
                                             </a>{' '}
-                                            {ticker.highest_bid.toFixed(6)}<br/>
+                                            {ticker.highest_bid.toFixed(8)}<br/>
                                         </small>
                                     </div>
                                 </div>
