@@ -301,7 +301,7 @@ class Market extends Component {
                 const market_price = {quote: amount.toFixed(assets_right[sym1].precision) + ' ' + sym1, base: total.toFixed(assets_right[sym2].precision) + ' ' + sym2};
                 const res = await api.getFillableOrders(market_price);
                 if (res && res.length) {
-                    this.refs.buySteemFee.value = amount * assets_right[sym1].fee_percent / 10000
+                    this.refs.buySteemFee.value = (amount * assets_right[sym1].fee_percent / 10000).toFixed(assets_right[sym1].precision)
                     this.setState( {
                         buySteemFeePct: longToAsset(assets_right[sym1].fee_percent, '', 2) + '%'
                     })
@@ -347,7 +347,7 @@ class Market extends Component {
                 const market_price = {base: amount.toFixed(assets_right[sym1].precision) + ' ' + sym1, quote: total.toFixed(assets_right[sym2].precision) + ' ' + sym2};
                 const res = await api.getFillableOrders(market_price);
                 if (res && res.length) {
-                    this.refs.sellSteem_fee.value = total * assets_right[sym2].fee_percent / 10000
+                    this.refs.sellSteem_fee.value = (total * assets_right[sym2].fee_percent / 10000).toFixed(assets_right[sym2].precision)
                     this.setState( {
                         sellSteemFeePct: longToAsset(assets_right[sym2].fee_percent, '', 2) + '%'
                     })
