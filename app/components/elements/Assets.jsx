@@ -32,6 +32,17 @@ class Assets extends Component {
       });
     }
 
+    muteAsset = (e) => {
+        const sym = e.currentTarget.dataset.sym;
+        let mutedUIA = [];
+        mutedUIA = localStorage.getItem('mutedUIA');
+        if (mutedUIA) try { mutedUIA = JSON.parse(mutedUIA) } catch (ex) {}
+        if (!mutedUIA) mutedUIA = [];
+        mutedUIA.push(sym);
+        localStorage.setItem('mutedUIA', JSON.stringify(mutedUIA));
+        window.location.reload()
+    }
+
     render() {
         const {account, isMyAccount} = this.props
         const account_name = account.get('name');
@@ -45,6 +56,13 @@ class Assets extends Component {
             });
         };
 
+        let mutedUIA = [];
+        if (process.env.BROWSER && isMyAccount) {
+            mutedUIA = localStorage.getItem('mutedUIA');
+            if (mutedUIA) try { mutedUIA = JSON.parse(mutedUIA) } catch (ex) {}
+            if (!mutedUIA) mutedUIA = [];
+        }
+
         let show_load_more = false;
         let my_assets = [];
         for (const [sym, item] of Object.entries(this.props.assets.toJS())) {
@@ -52,6 +70,7 @@ class Assets extends Component {
                 show_load_more = true;
                 if (!this.state.show_full_list) continue;
             }
+            if (mutedUIA.includes(sym)) continue;
 
             let balance_menu = [
                 { value: tt('g.transfer'), link: '#', onClick: showTransfer.bind( this, '', sym, item.precision, 'Transfer to Account' ) },
@@ -82,6 +101,7 @@ class Assets extends Component {
                 {image_url.length ? (<img className="Assets__marginBottom Assets__marginRight" width="36" height="36" src={image_url}/>) : null}{sym}</a>) : null}
                 {!description.length ? (<span><img className="Assets__marginBottom Assets__marginRight" width="36" height="36" src={image_url}/>{sym}</span>) : null}
                 &nbsp;{tradable_with_golos ? <Link to={"/market/GOLOS/"+sym}><Icon name="trade"/></Link> : null}
+                <span><a data-sym={sym} onClick={this.muteAsset}><Icon name="eye" title={tt('assets_jsx.mute_asset')} /></a></span>
                     <div className="Assets__marginTop2">
                     {(isMyAccount && item.creator == account_name) && <Link to={`/@${account_name}/assets/${sym}/update`} className="button tiny">
                         {tt('assets_jsx.update_btn')}

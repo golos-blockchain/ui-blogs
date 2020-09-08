@@ -756,7 +756,8 @@
     "transfer_asset_btn2": "Transfer",
     "transfer_asset": "Transferring asset",
     "transfer_new_owner": "To who",
-    "cannot_transfer_to_oneself": "Cannot transfer to yourselfr."
+    "cannot_transfer_to_oneself": "Cannot transfer to yourself.",
+    "mute_asset": "Do not show asset anymore"
   },
   "invites_jsx": {
     "create_invite": "Create new invite check",
@@ -1039,6 +1040,7 @@
     "always_show": "Always show",
     "muted_users": "Muted Users",
     "muted_in_new_users": "Users Whose Posts Hidden In New",
+    "muted_uia": "Assets Which Are Hidden In My Assets",
     "update": "Update",
     "profile_image_url": "Profile picture url",
     "cover_image_url": "Cover image url",

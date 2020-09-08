@@ -803,6 +803,7 @@
     "always_show": "Отображать",
     "muted_users": "Заблокированные пользователи",
     "muted_in_new_users": "Пользователи, чьи посты скрыты в Новом",
+    "muted_uia": "Активы, скрытые в Моих активах",
     "update": "Обновить",
     "profile_image_url": "Вставьте ссылку на фото профиля или загрузите его",
     "cover_image_url": "Вставьте ссылку на обложку или загрузите её",
@@ -1011,7 +1012,8 @@
     "transfer_asset_btn2": "Передать",
     "transfer_asset": "Передача актива",
     "transfer_new_owner": "Кому",
-    "cannot_transfer_to_oneself": "Нельзя передать актив самому себе."
+    "cannot_transfer_to_oneself": "Нельзя передать актив самому себе.",
+    "mute_asset": "Больше не показывать актив"
   },
   "invites_jsx": {
     "create_invite": "Создание чека",
