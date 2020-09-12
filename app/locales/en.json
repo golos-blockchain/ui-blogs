@@ -106,7 +106,7 @@
     "payouts": "Payouts",
     "permissions": "Permissions",
     "invites": "Invite checks",
-    "assets": "UIA Assets",
+    "assets": "UIA assets",
     "phone": "phone",
     "post": "Post",    
     "posting": "Posting key",
@@ -757,7 +757,8 @@
     "transfer_asset": "Transferring asset",
     "transfer_new_owner": "To who",
     "cannot_transfer_to_oneself": "Cannot transfer to yourself.",
-    "mute_asset": "Do not show asset anymore"
+    "trade_asset": "Go to trading on the internal exchange",
+    "mute_asset": "Do not show asset"
   },
   "invites_jsx": {
     "create_invite": "Create new invite check",

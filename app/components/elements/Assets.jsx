@@ -100,8 +100,7 @@ class Assets extends Component {
                 {description.length ? (<a target="_blank" href={description}>
                 {image_url.length ? (<img className="Assets__marginBottom Assets__marginRight" width="36" height="36" src={image_url}/>) : null}{sym}</a>) : null}
                 {!description.length ? (<span><img className="Assets__marginBottom Assets__marginRight" width="36" height="36" src={image_url}/>{sym}</span>) : null}
-                &nbsp;{tradable_with_golos ? <Link to={"/market/GOLOS/"+sym}><Icon name="trade"/></Link> : null}
-                <span><a data-sym={sym} onClick={this.muteAsset}><Icon name="eye" title={tt('assets_jsx.mute_asset')} /></a></span>
+                &nbsp;&nbsp;<span><a data-sym={sym} onClick={this.muteAsset}><Icon name="eye_gray" size="0_95x" title={tt('assets_jsx.mute_asset')} /></a></span>
                     <div className="Assets__marginTop2">
                     {(isMyAccount && item.creator == account_name) && <Link to={`/@${account_name}/assets/${sym}/update`} className="button tiny">
                         {tt('assets_jsx.update_btn')}
@@ -121,7 +120,8 @@ class Assets extends Component {
                             label={item.balance}
                             menu={balance_menu}
                         /> : item.balance}
-                    <br/><span className="Assets__hint">{tt('assets_jsx.balance')}</span>
+                    <br/>
+                    {tradable_with_golos ? <Link to={"/market/GOLOS/"+sym}><Icon name="trade" title={tt('assets_jsx.trade_asset')} /></Link> : null}&nbsp;<small>{tt('assets_jsx.balance')}</small>
                 </td>
                 <td title={item.allow_override_transfer ? tt('assets_jsx.overridable_no_tip') : ''} className={item.allow_override_transfer ? 'Assets__disabled' : ''}>
 
@@ -131,13 +131,15 @@ class Assets extends Component {
                             label={item.tip_balance}
                             menu={tip_menu}
                         /> : item.tip_balance}
-                <br/><span className="Assets__hint">{tt('assets_jsx.tip_balance')}</span>
+                <br/><small>{tt('assets_jsx.tip_balance')}</small>
                 </td>
                 <td>
+                    <span className="Assets__info">
                     {tt('assets_jsx.creator')}: <Author author={item.creator} follow={false} /><br/>
+                    {tt('market_jsx.market_fee_percent_').trim() + ': ' + longToAsset(item.fee_percent, '', 2).trim() + '%'}<br/>
                     {tt('assets_jsx.supply_count')}:<br/>
-                    {item.supply}<br/>
-                    <small>{tt('market_jsx.market_fee_percent_').trim() + ': ' + longToAsset(item.fee_percent, '', 2).trim() + '%'}</small>
+                    {item.supply}
+                    </span>
                 </td>
             </tr>);
         }

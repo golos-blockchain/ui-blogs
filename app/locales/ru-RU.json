@@ -583,7 +583,7 @@
   "market_jsx": {
     "action": "Действие",
     "date_created": "Дата создания",
-    "last_price": "Последняя цена",
+    "last_price": "Цена",
     "24h_volume": "Объём за 24 часа",
     "spread": "Разница (спред)",
     "total": "Итого",
@@ -1013,7 +1013,8 @@
     "transfer_asset": "Передача актива",
     "transfer_new_owner": "Кому",
     "cannot_transfer_to_oneself": "Нельзя передать актив самому себе.",
-    "mute_asset": "Больше не показывать актив"
+    "trade_asset": "Перейти к торгам на внутренней бирже",
+    "mute_asset": "Не показывать этот актив"
   },
   "invites_jsx": {
     "create_invite": "Создание чека",
