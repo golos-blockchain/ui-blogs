@@ -13,7 +13,6 @@ import { formatAsset } from 'app/utils/ParsersAndFormatters';
 import runTests from 'app/utils/BrowserTests';
 import g from 'app/redux/GlobalReducer';
 import GeneratedPasswordInput from '@elements/GeneratedPasswordInput';
-import CountryCode from '@elements/CountryCode';
 import { APP_DOMAIN, SUPPORT_EMAIL } from 'app/client_config';
 
 class CreateAccount extends React.Component {

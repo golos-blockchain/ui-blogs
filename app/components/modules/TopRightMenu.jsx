@@ -131,7 +131,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     }
     additional_menu.push(
         { link: '/market', icon: 'trade', value: tt("navigation.market") },
-        { link: '/~witnesses', icon: 'new/like', value: tt("navigation.witnesses") },
+        { link: '/~witnesses', icon: 'new/like', value: tt("navigation.witnesses"), target: 'blank' },
         { link: '/workers', icon: 'voters', value: tt("navigation.workers") },
         { link: '/exchanges', icon: 'editor/coin', value: tt("navigation.buy_sell") },
         { link: 'https://explorer.golos.id/', icon: 'new/search', value: tt("navigation.explorer"), target: 'blank' },

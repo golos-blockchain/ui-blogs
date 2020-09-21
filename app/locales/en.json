@@ -899,6 +899,11 @@
   },
   "header_jsx": {
     "home": "home",
+    "created": "New",
+    "responses": "Discussion",
+    "trending": "Trending",
+    "promoted": "Promoted",
+    "donates": "Donates",
     "new_topic_posts" : "New %(topic)s posts",
     "sort_order_topic_posts": "%(sort_order)s %(topic)s posts",
     "new_posts": "New posts",
