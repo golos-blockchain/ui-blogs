@@ -1392,7 +1392,7 @@ export default connect(
                 : null,
             assets: (process.env.BROWSER && state.market.get('assets'))
                 ? state.market.get('assets')
-                : {},
+                : null,
             history: state.market.get('history'),
             user: username,
             feed: state.global.get('feed_price').toJS(),
