@@ -62,6 +62,7 @@ const icons = new Map([
     ['team', require('app/assets/icons/team.svg')],
     ['rocket', require('app/assets/icons/rocket.svg')],
     ['blockchain', require('app/assets/icons/blockchain.svg')],
+    ['shuffle', require('app/assets/icons/shuffle.svg')],
     ['hf/hf1', require('app/assets/icons/hf/hf1.svg')],
     ['hf/hf2', require('app/assets/icons/hf/hf2.svg')],
     ['hf/hf3', require('app/assets/icons/hf/hf3.svg')],

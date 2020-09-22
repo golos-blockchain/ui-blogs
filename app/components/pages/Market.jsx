@@ -683,7 +683,9 @@ class Market extends Component {
                                 {symbols1.length > 0 && <Icon name="dropdown-arrow" />}
                             </span>
                         </DropdownMenu>
-                        {" / "}
+                        &nbsp;
+                        <a href={"/market/"+sym2+"/"+sym1}><Icon name="shuffle" /></a>
+                        &nbsp;
                         <DropdownMenu el="div" items={symbols2}>
                             <span>
                                 {sym2 === "GOLOS" ? (<img src="/images/golos.png" width="36" height="36" style={{marginBottom: "4px"}} />) : null}
