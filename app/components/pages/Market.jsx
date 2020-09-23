@@ -58,16 +58,24 @@ class Market extends Component {
         if (!this.props.ticker && np.ticker) {
             const { lowest_ask, highest_bid } = np.ticker;
 
+            let {sym1, sym2} = this.props.routeParams
+            sym1 = sym1.toUpperCase()
+            sym2 = sym2.toUpperCase()
+
+            let assets = this.props.assets;
+            let assets_right = {}
+            assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+            assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+            for (let [key, value] of Object.entries(assets)) {
+                assets_right[key] = value
+            }
+
             if (this.refs.buySteemPrice) {
-                this.refs.buySteemPrice.value = parseFloat(lowest_ask).toFixed(
-                    8
-                );
+                this.refs.buySteemPrice.value = parseFloat(lowest_ask).toFixed(assets_right[sym2].precision);
             }
 
             if (this.refs.sellSteem_price) {
-                this.refs.sellSteem_price.value = parseFloat(
-                    highest_bid
-                ).toFixed(8);
+                this.refs.sellSteem_price.value = parseFloat(highest_bid).toFixed(assets_right[sym2].precision);
             }
         }
     }
@@ -144,6 +152,14 @@ class Market extends Component {
         sym1 = sym1.toUpperCase()
         sym2 = sym2.toUpperCase()
 
+        let assets = this.props.assets;
+        let assets_right = {}
+        assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+        assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+        for (let [key, value] of Object.entries(assets)) {
+            assets_right[key] = value
+        }
+
         const { placeOrder, user } = this.props;
         if (!user) return;
         const amount_to_sell = parseFloat(
@@ -152,7 +168,7 @@ class Market extends Component {
         const min_to_receive = parseFloat(
             ReactDOM.findDOMNode(this.refs.buySteemAmount).value
         );
-        const price = (amount_to_sell / min_to_receive).toFixed(8);
+        const price = (amount_to_sell / min_to_receive).toFixed(assets_right[sym2].precision);
         const { lowest_ask } = this.props.ticker;
         placeOrder(
             (this.props.assets ? this.props.assets : {}),
@@ -176,6 +192,14 @@ class Market extends Component {
         sym1 = sym1.toUpperCase()
         sym2 = sym2.toUpperCase()
 
+        let assets = this.props.assets;
+        let assets_right = {}
+        assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+        assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+        for (let [key, value] of Object.entries(assets)) {
+            assets_right[key] = value
+        }
+
         const { placeOrder, user } = this.props;
         if (!user) {
             return;
@@ -189,7 +213,7 @@ class Market extends Component {
             ReactDOM.findDOMNode(this.refs.sellSteem_amount).value
         );
 
-        const price = (min_to_receive / amount_to_sell).toFixed(8);
+        const price = (min_to_receive / amount_to_sell).toFixed(assets_right[sym2].precision);
         const { highest_bid } = this.props.ticker;
 
         placeOrder(
@@ -224,9 +248,6 @@ class Market extends Component {
     setFormPrice = price => {
         const p = parseFloat(price);
 
-        this.refs.sellSteem_price.value = p.toFixed(8);
-        this.refs.buySteemPrice.value = p.toFixed(8);  
-
         let {sym1, sym2} = this.props.routeParams
         sym1 = sym1.toUpperCase()
         sym2 = sym2.toUpperCase()
@@ -242,6 +263,9 @@ class Market extends Component {
         for (let [key, value] of Object.entries(assets)) {
             assets_right[key] = value
         }
+
+        this.refs.sellSteem_price.value = p.toFixed(assets_right[sym2].precision);
+        this.refs.buySteemPrice.value = p.toFixed(assets_right[sym2].precision);  
 
         const samount = parseFloat(this.refs.sellSteem_amount.value);
         if (samount >= 0) {
@@ -721,10 +745,6 @@ class Market extends Component {
                                                 let {sym1, sym2} = this.props.routeParams
                                                 sym1 = sym1.toUpperCase()
                                                 sym2 = sym2.toUpperCase()
-                                                if (sym2 === "GOLOS"
-                                                    || (sym2 < sym1 && sym1 !== "GOLOS")) {
-                                                    [sym1, sym2] = [sym2, sym1]
-                                                }
 
                                                 let assets = this.props.assets;
                                                 let assets_right = {}
@@ -772,10 +792,6 @@ class Market extends Component {
                                                 let {sym1, sym2} = this.props.routeParams
                                                 sym1 = sym1.toUpperCase()
                                                 sym2 = sym2.toUpperCase()
-                                                if (sym2 === "GOLOS"
-                                                    || (sym2 < sym1 && sym1 !== "GOLOS")) {
-                                                    [sym1, sym2] = [sym2, sym1]
-                                                }
 
                                                 let assets = this.props.assets;
                                                 let assets_right = {}
@@ -826,10 +842,6 @@ class Market extends Component {
                                                 let {sym1, sym2} = this.props.routeParams
                                                 sym1 = sym1.toUpperCase()
                                                 sym2 = sym2.toUpperCase()
-                                                if (sym2 === "GOLOS"
-                                                    || (sym2 < sym1 && sym1 !== "GOLOS")) {
-                                                    [sym1, sym2] = [sym2, sym1]
-                                                }
 
                                                 let assets = this.props.assets;
                                                 let assets_right = {}
@@ -963,10 +975,6 @@ class Market extends Component {
                                                     let {sym1, sym2} = this.props.routeParams
                                                     sym1 = sym1.toUpperCase()
                                                     sym2 = sym2.toUpperCase()
-                                                    if (sym2 === "GOLOS"
-                                                        || (sym2 < sym1 && sym1 !== "GOLOS")) {
-                                                        [sym1, sym2] = [sym2, sym1]
-                                                    }
 
                                                     let assets = this.props.assets;
                                                     let assets_right = {}
@@ -985,7 +993,7 @@ class Market extends Component {
                                                         ticker.lowest_ask
                                                     );
                                                     this.refs.buySteemPrice.value =
-                                                        ticker.lowest_ask.toFixed(8);
+                                                        ticker.lowest_ask.toFixed(assets_right[sym2].precision);
                                                     if (amount >= 0)
                                                         this.refs.buySteemTotal.value = roundUp(
                                                             amount * price,
@@ -1036,10 +1044,6 @@ class Market extends Component {
                                                 let {sym1, sym2} = this.props.routeParams
                                                 sym1 = sym1.toUpperCase()
                                                 sym2 = sym2.toUpperCase()
-                                                if (sym2 === "GOLOS"
-                                                    || (sym2 < sym1 && sym1 !== "GOLOS")) {
-                                                    [sym1, sym2] = [sym2, sym1]
-                                                }
 
                                                 let assets = this.props.assets;
                                                 let assets_right = {}
@@ -1087,10 +1091,6 @@ class Market extends Component {
                                                 let {sym1, sym2} = this.props.routeParams
                                                 sym1 = sym1.toUpperCase()
                                                 sym2 = sym2.toUpperCase()
-                                                if (sym2 === "GOLOS"
-                                                    || (sym2 < sym1 && sym1 !== "GOLOS")) {
-                                                    [sym1, sym2] = [sym2, sym1]
-                                                }
 
                                                 let assets = this.props.assets;
                                                 let assets_right = {}
@@ -1138,10 +1138,6 @@ class Market extends Component {
                                                 let {sym1, sym2} = this.props.routeParams
                                                 sym1 = sym1.toUpperCase()
                                                 sym2 = sym2.toUpperCase()
-                                                if (sym2 === "GOLOS"
-                                                    || (sym2 < sym1 && sym1 !== "GOLOS")) {
-                                                    [sym1, sym2] = [sym2, sym1]
-                                                }
 
                                                 let assets = this.props.assets;
                                                 let assets_right = {}
@@ -1275,10 +1271,6 @@ class Market extends Component {
                                                     let {sym1, sym2} = this.props.routeParams
                                                     sym1 = sym1.toUpperCase()
                                                     sym2 = sym2.toUpperCase()
-                                                    if (sym2 === "GOLOS"
-                                                        || (sym2 < sym1 && sym1 !== "GOLOS")) {
-                                                        [sym1, sym2] = [sym2, sym1]
-                                                    }
 
                                                     let assets = this.props.assets;
                                                     let assets_right = {}
@@ -1296,7 +1288,7 @@ class Market extends Component {
                                                     );
                                                     const price =
                                                         ticker.highest_bid;
-                                                    this.refs.sellSteem_price.value = price.toFixed(8);
+                                                    this.refs.sellSteem_price.value = price.toFixed(assets_right[sym2].precision);
                                                     if (amount >= 0)
                                                         this.refs.sellSteem_total.value = roundDown(
                                                             parseFloat(price) *
@@ -1498,7 +1490,7 @@ export default connect(
                 expiration,
                 orderid,
             }
-
+alert(JSON.stringify(operation))
             dispatch(
                 transaction.actions.broadcastOperation({
                     type: 'limit_order_create',
