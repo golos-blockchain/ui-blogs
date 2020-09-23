@@ -5,14 +5,14 @@ export default class TickerPriceStat extends React.Component {
 
     render() {
         const {ticker, symbol} = this.props;
-        const pct_change = <span className={'Market__ticker-pct-' + (ticker.percent_change < 0 ? 'down' : 'up')}>
-                {ticker.percent_change < 0 ? '' : '+'}{ticker.percent_change.toFixed(3)}%
+        const pct_change = <span className={'Market__ticker-pct-' + (ticker.percent_change1 < 0 ? 'down' : 'up')}>
+                {ticker.percent_change1 < 0 ? '' : '+'}{ticker.percent_change1.toFixed(3)}%
               </span>
         return (
             <div className="TickerPriceStat">
                 <div>
                     <b>{tt('market_jsx.last_price')} </b>
-                    <span>{symbol} {ticker.latest.toFixed(8)} ({pct_change})</span>
+                    <span>{symbol} {ticker.latest1.toFixed(8)} ({pct_change})</span>
                 </div>
                 <div>
                     <b>{tt('market_jsx.24h_volume')} </b>

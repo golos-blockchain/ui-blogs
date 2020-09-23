@@ -99,7 +99,8 @@ class Market extends Component {
 
         if (
             props.ticker === undefined ||
-            props.ticker.latest !== nextProps.ticker.latest ||
+            props.ticker.latest1 !== nextProps.ticker.latest1 ||
+            props.ticker.latest2 !== nextProps.ticker.latest2 ||
             props.ticker.asset2_volume !== nextProps.ticker.asset2_volume
         ) {
             return true;
@@ -142,10 +143,6 @@ class Market extends Component {
         let {sym1, sym2} = this.props.routeParams
         sym1 = sym1.toUpperCase()
         sym2 = sym2.toUpperCase()
-        if (sym2 === "GOLOS"
-            || (sym2 < sym1 && sym1 !== "GOLOS")) {
-            [sym1, sym2] = [sym2, sym1]
-        }
 
         const { placeOrder, user } = this.props;
         if (!user) return;
@@ -178,10 +175,6 @@ class Market extends Component {
         let {sym1, sym2} = this.props.routeParams
         sym1 = sym1.toUpperCase()
         sym2 = sym2.toUpperCase()
-        if (sym2 === "GOLOS"
-            || (sym2 < sym1 && sym1 !== "GOLOS")) {
-            [sym1, sym2] = [sym2, sym1]
-        }
 
         const { placeOrder, user } = this.props;
         if (!user) {
@@ -395,10 +388,6 @@ class Market extends Component {
         }
         sym1 = sym1.toUpperCase()
         sym2 = sym2.toUpperCase()
-        if (sym2 === "GOLOS"
-            || (sym2 < sym1 && sym1 !== "GOLOS")) {
-            [sym1, sym2] = [sym2, sym1]
-        }
 
         let assets = this.props.assets
         if (!assets) return(<div></div>)
@@ -465,37 +454,32 @@ class Market extends Component {
         } = this.state;
 
         let ticker = {
-            latest: 0,
+            latest1: 0,
+            latest2: 0,
             lowest_ask: 0,
             highest_bid: 0,
-            percent_change: 0,
+            percent_change1: 0,
+            percent_change2: 0,
             asset2_volume: 0,
             asset1_depth: 0,
             asset2_depth: 0,
             feed_price: 0,
         };
 
-        if (this.props.ticker !== undefined) {
-            let {
-                latest,
-                lowest_ask,
-                highest_bid,
-                percent_change,
-                asset2_volume,
-            asset1_depth,
-            asset2_depth,
-            } = this.props.ticker;
-
+        const ticker0 = this.props.ticker;
+        if (ticker0 !== undefined) {
             let { base, quote } = this.props.feed;
 
             ticker = {
-                latest: parseFloat(latest),
-                lowest_ask: roundUp(parseFloat(lowest_ask), 8),
-                highest_bid: roundDown(parseFloat(highest_bid), 8),
-                percent_change: parseFloat(percent_change),
-                asset2_volume: parseFloat(asset2_volume),
-                asset1_depth: parseFloat(asset1_depth).toFixed(prec1),
-                asset2_depth: parseFloat(asset2_depth).toFixed(prec2),
+                latest1: parseFloat(ticker0.latest1),
+                latest2: parseFloat(ticker0.latest2),
+                lowest_ask: roundUp(parseFloat(ticker0.lowest_ask), 8),
+                highest_bid: roundDown(parseFloat(ticker0.highest_bid), 8),
+                percent_change1: parseFloat(ticker0.percent_change1),
+                percent_change2: parseFloat(ticker0.percent_change2),
+                asset2_volume: parseFloat(ticker0.asset2_volume),
+                asset1_depth: parseFloat(ticker0.asset1_depth).toFixed(prec1),
+                asset2_depth: parseFloat(ticker0.asset2_depth).toFixed(prec2),
                 feed_price:
                     parseFloat(base.split(' ')[0]) /
                     parseFloat(quote.split(' ')[0]),
@@ -920,10 +904,6 @@ class Market extends Component {
                                                     let {sym1, sym2} = this.props.routeParams
                                                     sym1 = sym1.toUpperCase()
                                                     sym2 = sym2.toUpperCase()
-                                                    if (sym2 === "GOLOS"
-                                                        || (sym2 < sym1 && sym1 !== "GOLOS")) {
-                                                        [sym1, sym2] = [sym2, sym1]
-                                                    }
 
                                                     let assets = this.props.assets;
                                                     let assets_right = {}
@@ -944,7 +924,7 @@ class Market extends Component {
                                                         )[0];
                                                     }
                                                     else if (sym2 === "GOLOS") {
-                                                        total = account.steem_balance.split(
+                                                        total = account.balance.split(
                                                             ' '
                                                         )[0];
                                                     }
@@ -1236,10 +1216,6 @@ class Market extends Component {
                                                     let {sym1, sym2} = this.props.routeParams
                                                     sym1 = sym1.toUpperCase()
                                                     sym2 = sym2.toUpperCase()
-                                                    if (sym2 === "GOLOS"
-                                                        || (sym2 < sym1 && sym1 !== "GOLOS")) {
-                                                        [sym1, sym2] = [sym2, sym1]
-                                                    }
 
                                                     let assets = this.props.assets;
                                                     let assets_right = {}
@@ -1253,9 +1229,22 @@ class Market extends Component {
                                                     const price = parseFloat(
                                                         this.refs.sellSteem_price.value
                                                     );
-                                                    const amount = account.balance.split(
-                                                        ' '
-                                                    )[0];
+                                                    let amount = '';
+                                                    if (sym1 === "GBG") {
+                                                        amount = account.sbd_balance.split(
+                                                            ' '
+                                                        )[0];
+                                                    }
+                                                    else if (sym1 === "GOLOS") {
+                                                        amount = account.balance.split(
+                                                            ' '
+                                                        )[0];
+                                                    }
+                                                    else {
+                                                        amount = assets[sym1].balance.split(
+                                                            ' '
+                                                        )[0];
+                                                    }
                                                     this.refs.sellSteem_amount.value = amount;
                                                     if (price >= 0)
                                                         this.refs.sellSteem_total.value = roundDown(
