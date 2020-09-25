@@ -244,6 +244,21 @@ class Market extends Component {
             this.props.reload(user, this.props.location.pathname);
         });
     };
+    cancelOrdersClick = (e) => {
+        e.preventDefault();
+        const { cancelOrders, user } = this.props;
+
+        if (!user) {
+            return;
+        }
+
+        let {sym1, sym2} = this.props.routeParams
+        cancelOrders(
+            (this.props.assets ? this.props.assets : {}),
+            user, sym1, sym2, () => {
+            this.props.reload(user, this.props.location.pathname);
+        });
+    };
 
     setFormPrice = price => {
         const p = parseFloat(price);
@@ -302,10 +317,6 @@ class Market extends Component {
                 let {sym1, sym2} = this.props.routeParams
                 sym1 = sym1.toUpperCase()
                 sym2 = sym2.toUpperCase()
-                if (sym2 === "GOLOS"
-                    || (sym2 < sym1 && sym1 !== "GOLOS")) {
-                    [sym1, sym2] = [sym2, sym1]
-                }
 
                 let assets = this.props.assets;
                 let assets_right = {}
@@ -316,6 +327,7 @@ class Market extends Component {
                 }
 
                 const market_price = {quote: amount.toFixed(assets_right[sym1].precision) + ' ' + sym1, base: total.toFixed(assets_right[sym2].precision) + ' ' + sym2};
+
                 const res = await api.getFillableOrders(market_price);
                 if (res && res.length) {
                     this.refs.buySteemFee.value = (amount * assets_right[sym1].fee_percent / 10000).toFixed(assets_right[sym1].precision)
@@ -348,10 +360,6 @@ class Market extends Component {
                 let {sym1, sym2} = this.props.routeParams
                 sym1 = sym1.toUpperCase()
                 sym2 = sym2.toUpperCase()
-                if (sym2 === "GOLOS"
-                    || (sym2 < sym1 && sym1 !== "GOLOS")) {
-                    [sym1, sym2] = [sym2, sym1]
-                }
 
                 let assets = this.props.assets;
                 let assets_right = {}
@@ -415,6 +423,9 @@ class Market extends Component {
 
         let assets = this.props.assets
         if (!assets) return(<div></div>)
+        for (let [key, value] of Object.entries(assets)) {
+            if (!value.symbols_whitelist) return (<div></div>)
+        }
 
         let not_exists = []
         if (!(sym1 in assets) && sym1 !== "GOLOS" && sym1 !== "GBG") not_exists.push(sym1)
@@ -463,6 +474,7 @@ class Market extends Component {
             sellSteem,
             buySteem,
             cancelOrderClick,
+            cancelOrdersClick,
             setFormPrice,
             validateBuySteem,
             validateSellSteem,
@@ -560,7 +572,7 @@ class Market extends Component {
         function normalizeOpenOrders(openOrders) {
             return openOrders.map(o => {
                 const type =
-                    o.sell_price.base.indexOf(LIQUID_TICKER) > 0
+                    o.sell_price.base.indexOf(sym1) > 0
                         ? 'ask'
                         : 'bid';
 
@@ -611,7 +623,13 @@ class Market extends Component {
                             <th>{tt('g.price')}</th>
                             <th className="uppercase">{sym1}</th>
                             <th>{sym2}</th>
-                            <th>{tt('market_jsx.action')}</th>
+                            <th>{tt('market_jsx.action')}<br/>
+                            {openOrders && openOrders.length ? <a
+                                href="#"
+                                onClick={e => cancelOrdersClick(e)}
+                            >
+                                {tt('g.cancel_all')}
+                            </a> : null}</th>
                         </tr>
                     </thead>
                     <tbody>{rows}</tbody>
@@ -1423,6 +1441,40 @@ export default connect(
                 })
             );
         },
+        cancelOrders: (assets, owner, symbol1, symbol2, successCallback) => {
+            let assets_right = {}
+            assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+            assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+            for (let [key, value] of Object.entries(assets)) {
+                assets_right[key] = value
+            }
+            let prec1 = assets_right[symbol1].precision
+            let prec2 = assets_right[symbol2].precision
+
+            const confirm = tt('market_jsx.order_cancel_all_confirm', {
+                symbol1,
+                symbol2,
+                user: owner,
+            });
+            let operation= {
+                owner,
+                orderid: 0,
+                extensions: [[ 0, { direction: {base: '1.' + '0'.repeat(prec1) + ' ' + symbol1, quote: '1.' + '0'.repeat(prec2) + ' ' + symbol2} }]]
+            }
+            dispatch(
+                transaction.actions.broadcastOperation({
+                    type: 'limit_order_cancel_ex',
+                    operation,
+                    confirm,
+                    successCallback: () => {
+                        successCallback();
+                    },
+                    errorCallback: (e) => {
+                        console.log(e);
+                    }
+                })
+            );
+        },
         placeOrder: (
             assets,
             sym1, sym2,
@@ -1490,7 +1542,7 @@ export default connect(
                 expiration,
                 orderid,
             }
-alert(JSON.stringify(operation))
+
             dispatch(
                 transaction.actions.broadcastOperation({
                     type: 'limit_order_create',
