@@ -168,7 +168,7 @@ class Market extends Component {
         const min_to_receive = parseFloat(
             ReactDOM.findDOMNode(this.refs.buySteemAmount).value
         );
-        const price = (amount_to_sell / min_to_receive).toFixed(assets_right[sym2].precision);
+        const price = (amount_to_sell / min_to_receive).toFixed(8);
         const { lowest_ask } = this.props.ticker;
         placeOrder(
             (this.props.assets ? this.props.assets : {}),
@@ -213,7 +213,7 @@ class Market extends Component {
             ReactDOM.findDOMNode(this.refs.sellSteem_amount).value
         );
 
-        const price = (min_to_receive / amount_to_sell).toFixed(assets_right[sym2].precision);
+        const price = (min_to_receive / amount_to_sell).toFixed(8);
         const { highest_bid } = this.props.ticker;
 
         placeOrder(
