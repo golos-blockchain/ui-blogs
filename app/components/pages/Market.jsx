@@ -266,10 +266,6 @@ class Market extends Component {
         let {sym1, sym2} = this.props.routeParams
         sym1 = sym1.toUpperCase()
         sym2 = sym2.toUpperCase()
-        if (sym2 === "GOLOS"
-            || (sym2 < sym1 && sym1 !== "GOLOS")) {
-            [sym1, sym2] = [sym2, sym1]
-        }
 
         let assets = this.props.assets;
         let assets_right = {}
@@ -284,7 +280,7 @@ class Market extends Component {
 
         const samount = parseFloat(this.refs.sellSteem_amount.value);
         if (samount >= 0) {
-            this.refs.sellSteem_total.value = roundDown(p * samount, assets_right[sym1].precision).toFixed(assets_right[sym1].precision);;
+            this.refs.sellSteem_total.value = roundDown(p * samount, assets_right[sym1].precision).toFixed(assets_right[sym2].precision);;
         }
 
         const bamount = parseFloat(this.refs.buySteemAmount.value);
@@ -666,7 +662,7 @@ class Market extends Component {
             symbols1.push({key: key, value: key,
                 label: (<span className={"Market__bg-" + key} style={{lineHeight: "28px"}}><img src={image_url} width="28" height="28"/>&nbsp;&nbsp;&nbsp;{key}</span>),
                 link: '/market/' + key + '/' + sym2,
-            onClick: (e) => {window.location.href = '/market/' + sym2 + '/' + key}});
+            onClick: (e) => {window.location.href = '/market/' + key + '/' + sym2}});
 
             if (sym1 !== key && sym2 !== key && (!value.symbols_whitelist.length || value.symbols_whitelist.includes(sym1)) && (!assets_right[sym1].symbols_whitelist.length || assets_right[sym1].symbols_whitelist.includes(key)))
             symbols2.push({key: key, value: key,
