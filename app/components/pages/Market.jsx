@@ -289,7 +289,7 @@ class Market extends Component {
 
         const bamount = parseFloat(this.refs.buySteemAmount.value);
         if (bamount >= 0) {
-            this.refs.buySteemTotal.value = roundUp(p * bamount, assets_right[sym2].precision).toFixed(assets_right[sym2].precision);;
+            this.refs.buySteemTotal.value = roundDown(p * bamount, assets_right[sym2].precision).toFixed(assets_right[sym2].precision);;
         }
 
         this.validateBuySteem();
@@ -781,7 +781,7 @@ class Market extends Component {
                                                         .value
                                                 );
                                                 if (amount >= 0 && price >= 0)
-                                                    this.refs.buySteemTotal.value = roundUp(
+                                                    this.refs.buySteemTotal.value = roundDown(
                                                         price * amount,
                                                         assets_right[sym2].precision
                                                     ).toFixed(assets_right[sym2].precision);
@@ -838,7 +838,7 @@ class Market extends Component {
                                                 }
                                                 if (price >= 0 && amount >= 0) {
                                                     let res = price * amount
-                                                    this.refs.buySteemTotal.value = roundUp(
+                                                    this.refs.buySteemTotal.value = roundDown(
                                                         res,
                                                         assets_right[sym2].precision
                                                     ).toFixed(assets_right[sym2].precision)
@@ -1031,7 +1031,7 @@ class Market extends Component {
                                                     this.refs.buySteemPrice.value =
                                                         ticker.lowest_ask.toFixed(8);
                                                     if (amount >= 0)
-                                                        this.refs.buySteemTotal.value = roundUp(
+                                                        this.refs.buySteemTotal.value = roundDown(
                                                             amount * price,
                                                             assets_right[sym2].precision
                                                         ).toFixed(assets_right[sym2].precision);
