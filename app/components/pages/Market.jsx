@@ -721,7 +721,7 @@ class Market extends Component {
                                 {symbols2.length > 0 && <Icon name="dropdown-arrow" />}
                             </span>
                         </DropdownMenu></h5>
-                        <TickerPriceStat ticker={ticker} symbol={sym2} />
+                        <TickerPriceStat ticker={ticker} symbol={sym2} precision={assets_right[sym2].precision} />
                     </div>
                 </div>
 
@@ -777,10 +777,19 @@ class Market extends Component {
                                                     this.refs.buySteemAmount
                                                         .value
                                                 );
-                                                const price = parseFloat(
+                                                let price = parseFloat(
                                                     this.refs.buySteemPrice
                                                         .value
                                                 );
+                                                let new_price = price.toFixed(assets_right[sym2].precision);
+                                                if (new_price.length < price.toString().length) {
+                                                    this.refs.buySteemPrice
+                                                            .value = new_price;
+                                                    price = parseFloat(
+                                                        this.refs.buySteemPrice
+                                                            .value
+                                                    );
+                                                }
                                                 if (amount >= 0 && price >= 0)
                                                     this.refs.buySteemTotal.value = roundDown(
                                                         price * amount,
@@ -1094,10 +1103,19 @@ class Market extends Component {
                                                     this.refs.sellSteem_amount
                                                         .value
                                                 );
-                                                const price = parseFloat(
+                                                let price = parseFloat(
                                                     this.refs.sellSteem_price
                                                         .value
                                                 );
+                                                let new_price = price.toFixed(assets_right[sym2].precision);
+                                                if (new_price.length < price.toString().length) {
+                                                    this.refs.sellSteem_price
+                                                            .value = new_price;
+                                                    price = parseFloat(
+                                                        this.refs.sellSteem_price
+                                                            .value
+                                                    );
+                                                }
                                                 if (amount >= 0 && price >= 0)
                                                     this.refs.sellSteem_total.value = roundDown(
                                                         price * amount,
