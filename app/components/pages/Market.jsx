@@ -71,11 +71,11 @@ class Market extends Component {
             }
 
             if (this.refs.buySteemPrice) {
-                this.refs.buySteemPrice.value = parseFloat(lowest_ask).toFixed(8);
+                this.refs.buySteemPrice.value = parseFloat(lowest_ask).toFixed(assets_right[sym2].precision);
             }
 
             if (this.refs.sellSteem_price) {
-                this.refs.sellSteem_price.value = parseFloat(highest_bid).toFixed(8);
+                this.refs.sellSteem_price.value = parseFloat(highest_bid).toFixed(assets_right[sym2].precision);
             }
         }
     }
@@ -280,8 +280,8 @@ class Market extends Component {
             assets_right[key] = value
         }
 
-        this.refs.sellSteem_price.value = p.toFixed(8);
-        this.refs.buySteemPrice.value = p.toFixed(8);  
+        this.refs.sellSteem_price.value = p.toFixed(assets_right[sym2].precision);
+        this.refs.buySteemPrice.value = p.toFixed(assets_right[sym2].precision);  
 
         const samount = parseFloat(this.refs.sellSteem_amount.value);
         if (samount >= 0) {
@@ -600,7 +600,7 @@ class Market extends Component {
                         <td>{o.created.replace('T', ' ')}</td>
                         <td>{tt(o.type === 'ask' ? 'g.sell' : 'g.buy')}</td>
                         <td>
-                            {sym2} {o.price.toFixed(8)}
+                            {sym2} {o.price.toFixed(assets_right[sym2].precision)}
                         </td>
                         <td>{o.asset1}</td>
                         <td>{o.asset2.replace('SBD', DEBT_TOKEN_SHORT)}</td>
@@ -1030,7 +1030,7 @@ class Market extends Component {
                                                         ticker.lowest_ask
                                                     );
                                                     this.refs.buySteemPrice.value =
-                                                        ticker.lowest_ask.toFixed(8);
+                                                        ticker.lowest_ask.toFixed(assets_right[sym2].precision);
                                                     if (amount >= 0)
                                                         this.refs.buySteemTotal.value = roundDown(
                                                             amount * price,
@@ -1041,7 +1041,7 @@ class Market extends Component {
                                             >
                                                 {tt('market_jsx.lowest_ask')}:
                                             </a>{' '}
-                                            {ticker.lowest_ask.toFixed(8)}<br/>
+                                            {ticker.lowest_ask.toFixed(assets_right[sym2].precision)}<br/>
                                         </small>
                                     </div>
                                 </div>
@@ -1343,7 +1343,7 @@ class Market extends Component {
                                                     );
                                                     const price =
                                                         ticker.highest_bid;
-                                                    this.refs.sellSteem_price.value = price.toFixed(8);
+                                                    this.refs.sellSteem_price.value = price.toFixed(assets_right[sym2].precision);
                                                     if (amount >= 0)
                                                         this.refs.sellSteem_total.value = roundDown(
                                                             parseFloat(price) *
@@ -1355,7 +1355,7 @@ class Market extends Component {
                                             >
                                                 {tt('market_jsx.highest_bid')}:
                                             </a>{' '}
-                                            {ticker.highest_bid.toFixed(8)}<br/>
+                                            {ticker.highest_bid.toFixed(assets_right[sym2].precision)}<br/>
                                         </small>
                                     </div>
                                 </div>
@@ -1562,7 +1562,7 @@ export default connect(
                       {
                           marketPrice:
                               sym2 +
-                              parseFloat(marketPrice).toFixed(8) +
+                              parseFloat(marketPrice).toFixed(assets_right[sym2].precision) +
                               '/' +
                               sym1,
                       }
