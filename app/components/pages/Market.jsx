@@ -259,7 +259,6 @@ class Market extends Component {
 
         let {sym1, sym2} = this.props.routeParams
         cancelOrders(
-            (this.props.assets ? this.props.assets : {}),
             user, sym1, sym2, () => {
             this.props.reload(user, this.props.location.pathname);
         });
@@ -1496,25 +1495,20 @@ export default connect(
                 })
             );
         },
-        cancelOrders: (assets, owner, symbol1, symbol2, successCallback) => {
-            let assets_right = {}
-            assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-            assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-            for (let [key, value] of Object.entries(assets)) {
-                assets_right[key] = value
-            }
-            let prec1 = assets_right[symbol1].precision
-            let prec2 = assets_right[symbol2].precision
-
+        cancelOrders: (owner, symbol1, symbol2, successCallback) => {
             const confirm = tt('market_jsx.order_cancel_all_confirm', {
                 symbol1,
                 symbol2,
                 user: owner,
             });
-            let operation= {
+            let operation = {
                 owner,
                 orderid: 0,
-                extensions: [[ 0, { direction: {base: '1.' + '0'.repeat(prec1) + ' ' + symbol1, quote: '1.' + '0'.repeat(prec2) + ' ' + symbol2} }]]
+                extensions: [[0, {
+                    base: symbol1,
+                    quote: symbol2,
+                    reverse: true,
+                }]]
             }
             dispatch(
                 transaction.actions.broadcastOperation({
