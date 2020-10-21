@@ -213,12 +213,12 @@ export default async function getState(api, url, options, offchain = {}) {
             if (reply.parent_permlink === permlink) {
                 state.content[curl].replies.push(link)
             }
-            const donates = await api.getDonates({author: reply.account, permlink: reply.permlink}, '', '', 20, 0);
+            const donates = await api.getDonates(false, {author: reply.account, permlink: reply.permlink}, '', '', 20, 0);
             state.content[link].donate_list = donates;
             state.content[link].confetti_active = false;
         }
 
-        const donates = await api.getDonates({author: account, permlink: permlink}, '', '', 20, 0);
+        const donates = await api.getDonates(false, {author: account, permlink: permlink}, '', '', 20, 0);
         state.content[curl].donate_list = donates;
         state.content[curl].confetti_active = false;
 
@@ -248,6 +248,8 @@ export default async function getState(api, url, options, offchain = {}) {
             }
         }
         state.prev_posts = prev_posts.slice(0, 3);
+
+        state.assets = (await api.getAccountsBalances([offchain.account]))[0]
     } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
         const witnesses = await api.getWitnessesByVote('', 100)
         witnesses.forEach( witness => {

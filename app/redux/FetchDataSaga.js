@@ -249,12 +249,12 @@ export function* fetchState(location_change_action) {
                 if (reply.parent_permlink === permlink) {
                     state.content[curl].replies.push(link)
                 }
-                const donates =  yield call([api, api.getDonatesAsync], {author: reply.author, permlink: reply.permlink}, '', '', 20, 0, true)
+                const donates =  yield call([api, api.getDonatesAsync], false, {author: reply.author, permlink: reply.permlink}, '', '', 20, 0, true)
                 state.content[link].donate_list = donates
                 state.content[link].confetti_active = false
             }
 
-            const donates =  yield call([api, api.getDonatesAsync], {author: account, permlink: permlink}, '', '', 20, 0, true)
+            const donates =  yield call([api, api.getDonatesAsync], false, {author: account, permlink: permlink}, '', '', 20, 0, true)
             state.content[curl].donate_list = donates
             state.content[curl].confetti_active = false
 
@@ -284,6 +284,10 @@ export function* fetchState(location_change_action) {
                 }
             }
             state.prev_posts = prev_posts.slice(0, 3);
+
+            if (localStorage.getItem('invite')) {
+                state.assets = (yield call([api, api.getAccountsBalances], [localStorage.getItem('invite')]))[0]
+            }
         } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
             state.witnesses = {};
             const witnesses =  yield call([api, api.getWitnessesByVoteAsync], '', 100)

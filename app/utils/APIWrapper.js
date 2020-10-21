@@ -81,8 +81,8 @@ export function getAllContentReplies(author, permlink, voteLimit) {
     return api.getAllContentRepliesAsync(author, permlink, voteLimit)
 }
 
-export function getDonates(target, from, to, voteLimit, offset) {
-    return api.getDonatesAsync(target, from, to, voteLimit, offset, true)
+export function getDonates(uia, target, from, to, voteLimit, offset) {
+    return api.getDonatesAsync(uia, target, from, to, voteLimit, offset, true)
 }
 
 export function gedDiscussionsBy(type, args) {

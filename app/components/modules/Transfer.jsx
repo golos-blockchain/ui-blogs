@@ -13,6 +13,7 @@ import tt from 'counterpart';
 import { LIQUID_TICKER, DEBT_TICKER , VESTING_TOKEN2 } from 'app/client_config';
 import Slider from 'golos-ui/Slider';
 import VerifiedExchangeList from 'app/utils/VerifiedExchangeList';
+import DropdownMenu from 'app/components/elements/DropdownMenu';
 
 /** Warning .. This is used for Power UP too. */
 class TransferForm extends Component {
@@ -43,6 +44,11 @@ class TransferForm extends Component {
         const {initialValues: {disableTo}} = this.props
         onChange(value, true)
         setTimeout(() => {
+            let permlink = (this.flag && typeof this.flag.permlink === `string`) ? this.flag.permlink : null;
+            if (permlink) {
+                const transferFormParent = document.getElementById('transferFormParent');
+                if (transferFormParent) transferFormParent.parentNode.style.minWidth = '700px';
+            }
             const {advanced} = this.state
             if (advanced && !disableTo)
                 ReactDOM.findDOMNode(this.refs.to).focus()
@@ -67,9 +73,8 @@ class TransferForm extends Component {
         const isTIP = transferType && transferType.startsWith('TIP to')
         const isClaim = transferType && transferType === 'Claim'
         const isIssueUIA = (transferType === 'Issue UIA')
-        const prec = uia ? uia.get('max_supply').split('.')[1].split(' ')[0].length : 0
         const insufficientFunds = (asset, amount) => {
-            const {currentAccount, uia} = props
+            const {currentAccount, uia} = this.props
             const balanceValue =
                 !asset || asset === 'GOLOS' ?
                     isWithdraw ? currentAccount.get('savings_balance') : (isTIP ? currentAccount.get('tip_balance') : (isClaim ? currentAccount.get('accumulative_balance') : currentAccount.get('balance'))) :
@@ -101,7 +106,7 @@ class TransferForm extends Component {
                 amount:
                     ! parseFloat(values.amount) || /^0$/.test(values.amount) ? tt('g.required') :
                     insufficientFunds(values.asset, values.amount) ? tt('transfer_jsx.insufficient_funds') :
-                    (countDecimals(values.amount) > 3 && !uia) ? tt('transfer_jsx.use_only_3_digits_of_precison') :
+                    (countDecimals(values.amount) > 3 && !this.props.uia) ? tt('transfer_jsx.use_only_3_digits_of_precison') :
                     null,
                 asset:
                     props.toVesting ? null :
@@ -119,6 +124,15 @@ class TransferForm extends Component {
 
     errorCallback = estr => { this.setState({ trxError: estr, loading: false }) }
 
+    golosBalanceValue() {
+        const {transferType} = this.props.initialValues
+        const {currentAccount} = this.props
+        const isWithdraw = transferType && transferType === 'Savings Withdraw'
+        const isClaim = transferType && transferType === 'Claim'
+        const isTIP = transferType && transferType.startsWith('TIP to')
+        return isWithdraw ? currentAccount.get('savings_balance') : (isTIP ? currentAccount.get('tip_balance') : (isClaim ? currentAccount.get('accumulative_balance') : currentAccount.get('balance')))
+    }
+
     balanceValue() {
         const {transferType} = this.props.initialValues
         const {currentAccount, uia} = this.props
@@ -127,7 +141,6 @@ class TransferForm extends Component {
         const isTIP = transferType && transferType.startsWith('TIP to')
         const isClaim = transferType && transferType === 'Claim'
         const isIssueUIA = (transferType === 'Issue UIA')
-        const prec = uia ? uia.get('max_supply').split('.')[1].split(' ')[0].length : 0
         return !asset ||
             asset.value === 'GOLOS' ?
                 isWithdraw ? currentAccount.get('savings_balance') : (isTIP ? currentAccount.get('tip_balance') : (isClaim ? currentAccount.get('accumulative_balance') : currentAccount.get('balance'))) :
@@ -166,7 +179,23 @@ class TransferForm extends Component {
         this.state.amount.props.onChange(formatAmount(amount));
     };
 
+    onTipAssetChanged = (e) => {
+        e.preventDefault();
+        //this.setState({
+        //    tipAssetOverride: e.currentTarget.parentNode.dataset.value
+        //});
+        this.state.asset.props.onChange(e.currentTarget.parentNode.dataset.value);
+        let transferDefaults = this.props.initialValues
+        const val = e.currentTarget.parentNode.dataset.link.split(',')
+        transferDefaults.asset = val[0];
+        transferDefaults.precision = parseInt(val[1]);
+        this.props.setTransferDefaults({ transferDefaults });
+    };
+
     render() {
+        if (!this.props.initialValues) {
+            return (<div>f</div>);
+        }
         const LIQUID_TOKEN = tt('token_names.LIQUID_TOKEN')
         const VESTING_TOKEN =  tt('token_names.VESTING_TOKEN')
         const VESTING_TOKENS = tt('token_names.VESTING_TOKENS')
@@ -183,7 +212,7 @@ class TransferForm extends Component {
 		const powerTip3 = tt('tips_js.converted_VESTING_TOKEN_can_be_sent_to_yourself_but_can_not_transfer_again', {LIQUID_TOKEN, VESTING_TOKEN})
         const {to, amount, asset, memo} = this.state
         const {loading, trxError, advanced} = this.state
-        const {currentUser, sym, toVesting, transferToSelf, dispatchSubmit} = this.props
+        const {currentAccount, currentUser, sym, toVesting, transferToSelf, dispatchSubmit} = this.props
         const { transferType,
                 precision,
                 disableMemo = false,
@@ -202,6 +231,17 @@ class TransferForm extends Component {
             else {
               donatePresets = ['5','10','25','50','100'];
             };
+        }
+        let tipBalanceValue = this.balanceValue().split(".")[0] + " " + asset.value;
+        let myAssets = [];
+        myAssets.push({key: 'GOLOS', value: 'GOLOS', link: 'GOLOS,3', label: this.golosBalanceValue().split(".")[0] + " GOLOS", onClick: this.onTipAssetChanged});
+        if (this.props.uias)
+        for (const [sym, obj] of Object.entries(this.props.uias.toJS())) {
+            const prec = obj.tip_balance.split(' ')[0].split('.')[1].length;
+            myAssets.push({key: sym, value: sym, link: sym + ',' + prec, label: obj.tip_balance.split('.')[0] + ' ' + sym, onClick: this.onTipAssetChanged});
+        }
+        if (myAssets.length > 1) {
+            tipBalanceValue = (<DropdownMenu selected={tipBalanceValue.split(' ')[1]} el="span" items={myAssets} />)
         }
         const form = (
             <form onSubmit={handleSubmit(({data}) => {
@@ -229,15 +269,15 @@ class TransferForm extends Component {
                 {permlink && (<div className="DonatePresets column">
                 <div>
                 <div className="PresetSelector__container">
-                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[0] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[0]}<br/>GOLOS</button>
-                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[1] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[1]}<br/>GOLOS</button>
-                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[2] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[2]}<br/>GOLOS</button>
-                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[3] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[3]}<br/>GOLOS</button>
-                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[4] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[4]}<br/>GOLOS</button>
+                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[0] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[0]}<br/>{asset.value}</button>
+                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[1] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[1]}<br/>{asset.value}</button>
+                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[2] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[2]}<br/>{asset.value}</button>
+                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[3] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[3]}<br/>{asset.value}</button>
+                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[4] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[4]}<br/>{asset.value}</button>
                 </div>
                 <div className="TipBalance">
                 <b>{tt('token_names.TIP_TOKEN')}:</b><br/>
-                {this.balanceValue().split(".")[0] + " GOLOS"}
+                {tipBalanceValue}
                 </div>
                 </div>
                 <Slider
@@ -301,7 +341,7 @@ class TransferForm extends Component {
                                     <option value={DEBT_TICKER}>{DEBT_TICKER}</option>
                                 </select>
                             </span>}
-                            {isUIA && <span className="input-group-label" style={{paddingLeft: 0, paddingRight: 0}}><select value={sym} disabled={true} style={{minWidth: "5rem", height: "inherit", backgroundColor: "transparent", border: "none"}}>
+                            {isUIA && !permlink && <span className="input-group-label" style={{paddingLeft: 0, paddingRight: 0}}><select value={sym} disabled={true} style={{minWidth: "5rem", height: "inherit", backgroundColor: "transparent", border: "none"}}>
                                     <option value={sym}>{sym}</option>
                                 </select></span>}
                         </div>
@@ -336,7 +376,7 @@ class TransferForm extends Component {
             </form>
         )
         return (
-           <div>
+           <div id="transferFormParent">
                <div className="row">
                    <h3>{toVesting ?
                     tt('transfer_jsx.convert_to_VESTING_TOKEN', {VESTING_TOKEN2}) : 
@@ -380,11 +420,16 @@ export default connect(
             uia = uias.get(initialValues.asset)
         }
 
-        return {...ownProps, currentUser, currentAccount, uia, toVesting, sym: initialValues.asset, transferToSelf, initialValues}
+        return {...ownProps, currentUser, currentAccount, uias, uia, toVesting, sym: initialValues.asset, transferToSelf, initialValues}
     },
 
     // mapDispatchToProps
     dispatch => ({
+        setTransferDefaults: ({
+            transferDefaults
+        }) => {
+            dispatch(user.actions.setTransferDefaults(transferDefaults))
+        },
         dispatchSubmit: ({
             flag,
             to, amount, isUIA, asset, precision, memo, transferType,
