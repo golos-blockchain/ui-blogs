@@ -215,11 +215,13 @@ export default async function getState(api, url, options, offchain = {}) {
             }
             const donates = await api.getDonates(false, {author: reply.account, permlink: reply.permlink}, '', '', 20, 0);
             state.content[link].donate_list = donates;
+            state.content[link].donate_uia_list = await api.getDonates(true, {author: reply.account, permlink: reply.permlink}, '', '', 20, 0);
             state.content[link].confetti_active = false;
         }
 
         const donates = await api.getDonates(false, {author: account, permlink: permlink}, '', '', 20, 0);
         state.content[curl].donate_list = donates;
+        state.content[curl].donate_uia_list = await api.getDonates(true, {author: account, permlink: permlink}, '', '', 20, 0);
         state.content[curl].confetti_active = false;
 
         let args = { truncate_body: 1024, select_categories: [category] };

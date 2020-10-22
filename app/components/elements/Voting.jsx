@@ -189,7 +189,8 @@ class Voting extends React.Component {
         const classUp = 'Voting__button Voting__button-up' + (myVote > 0 ? ' Voting__button--upvoted' : '') + (votingUpActive ? ' votingUp' : '');
         // There is an "active cashout" if: (a) there is a pending payout, OR (b) there is a valid cashout_time AND it's NOT a comment with 0 votes.
         const cashout_active = pending_payout > 0 || (cashout_time.indexOf('1969') !== 0 && !(is_comment && total_votes == 0));
-        const payoutItems = [];
+        let donateItems = [];
+        let donateUiaItems = [];
 
         let donates = post_obj.get('donate_list');
         if (donates !== undefined) {
@@ -197,15 +198,35 @@ class Voting extends React.Component {
             let i = 0;
             donates.forEach((donate) => {
                 const amount = donate.amount.split(".")[0] + " GOLOS";
-                payoutItems.push({key: i, value: donate.from, link: '/@' + donate.from, data: amount});
+                donateItems.push({key: i, value: donate.from, link: '/@' + donate.from, data: amount});
                 i++;
             });
         }
 
-        const payoutEl = <DropdownMenu className="Voting__donates_list" el="div" items={payoutItems}>
+        let donates_uia = post_obj.get('donate_uia_list');
+        if (donates_uia !== undefined) {
+            donates_uia = donates_uia.toJS();
+            let i = 0;
+            donates_uia.forEach((donate) => {
+                const amount = donate.amount.split(".")[0] + " " + donate.amount.split(" ")[1];
+                donateUiaItems.push({key: i, value: donate.from, link: '/@' + donate.from, data: amount});
+                i++;
+            });
+        }
+
+        const donatesEl = <DropdownMenu className="Voting__donates_list" el="div" items={donateItems}>
             <span title={tt('g.rewards_tip')}>
                 <Icon size="0_95x" name="tips" />&nbsp;{post_obj.get('donates').toString().split(".")[0] + " GOLOS"}
-                {payoutItems.length > 0 && <Icon name="dropdown-arrow" />}
+                {donateItems.length > 0 && <Icon name="dropdown-arrow" />}
+            </span>
+        </DropdownMenu>;
+
+        let donatesUiaSum = post_obj.get('donates_uia');
+        let donatesUiaEl = null;
+        if (donatesUiaSum > 0) donatesUiaEl = <DropdownMenu className="Voting__donates_list" el="div" items={donateUiaItems}>
+            <span className="Voting__donates_uia_sum" title={tt('g.rewards_tip')}>
+                +&nbsp;{post_obj.get('donates_uia').toString() + " UIA"}
+                {donateUiaItems.length > 0 && <Icon name="dropdown-arrow" />}
             </span>
         </DropdownMenu>;
 
@@ -250,7 +271,8 @@ class Voting extends React.Component {
                     {voters_list}
                     {downVote}
                 </span>
-                {payoutEl}
+                {donatesEl}
+                {donatesUiaEl}
             </span>
         );
     }
