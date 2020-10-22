@@ -269,11 +269,11 @@ class TransferForm extends Component {
                 {permlink && (<div className="DonatePresets column">
                 <div>
                 <div className="PresetSelector__container">
-                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[0] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[0]}<br/>{asset.value}</button>
-                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[1] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[1]}<br/>{asset.value}</button>
-                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[2] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[2]}<br/>{asset.value}</button>
-                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[3] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[3]}<br/>{asset.value}</button>
-                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[4] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[4]}<br/>{asset.value}</button>
+                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[0] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[0]}</button>
+                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[1] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[1]}</button>
+                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[2] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[2]}</button>
+                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[3] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[3]}</button>
+                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[4] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[4]}</button>
                 </div>
                 <div className="TipBalance">
                 <b>{tt('token_names.TIP_TOKEN')}:</b><br/>
@@ -344,6 +344,7 @@ class TransferForm extends Component {
                             {isUIA && !permlink && <span className="input-group-label" style={{paddingLeft: 0, paddingRight: 0}}><select value={sym} disabled={true} style={{minWidth: "5rem", height: "inherit", backgroundColor: "transparent", border: "none"}}>
                                     <option value={sym}>{sym}</option>
                                 </select></span>}
+                            {permlink && <span style={{paddingLeft: "10px", paddingTop: "7px", backgroundColor: "transparent", border: "none"}}>{sym}</span>}
                         </div>
                         {!permlink && <div style={{marginBottom: "0.6rem"}}>
                             <AssetBalance balanceText={!isIssueUIA ? tt('transfer_jsx.balance') : tt('transfer_jsx.can_issue')} balanceValue={this.balanceValue()} onClick={this.assetBalanceClick} />
