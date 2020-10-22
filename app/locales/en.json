@@ -260,7 +260,7 @@
     "tags_filter": "Filter",
     "no_tags_selected": "No tags selected",
     "filter": "Filter",
-    "show_more_topics": "Show more topics",
+    "show_more_topics": "Go to tag rating",
     "personal_info_will_be_private": "Your personal information will be kept",
     "personal_info_will_be_private_link": "Private",
     "subscribe_to_get_sms_confirm": "Subscribe to get a notification when SMS confirmation is available",
@@ -332,7 +332,7 @@
     "sign_up": "Sign Up",
     "welcome": "Welcome",
     "feedback": "Feedback",
-    "wiki": "Wiki",
+    "wiki": "Documentation (Wiki)",
     "faq": "FAQ",
     "sale_agreement": "Sale Agreement",
     "telegram_support": "%(APP_NAME_UP)s Support"

@@ -104,14 +104,6 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
       </li>
     ;
 
-    // const messengerItem = <li className={scn}>
-    //     <a href="#" title={tt('g.search')} className="number">
-    //       <Icon name="new/messenger" size="1_5x" />
-    //       18
-    //     </a>
-    //   </li>
-    // ;
-
     let invite = username;
     if (process.env.BROWSER) {
         if (invite) {
@@ -135,6 +127,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
         { link: '/workers', icon: 'voters', value: tt("navigation.workers") },
         { link: '/exchanges', icon: 'editor/coin', value: tt("navigation.buy_sell") },
         { link: 'https://explorer.golos.id/', icon: 'new/search', value: tt("navigation.explorer"), target: 'blank' },
+        { link: 'https://wiki.golos.id/', icon: 'new/wikipedia', value: tt("navigation.wiki"), target: 'blank' },
         { link: 'https://dpos.space/golos-donates/', icon: 'new/monitor', value: 'Сервисы dpos.space', target: 'blank' },
         { link: 'https://golos.cf/', icon: 'new/monitor', value: 'Сервисы golos.cf', target: 'blank' }
     );
