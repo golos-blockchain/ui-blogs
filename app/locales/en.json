@@ -769,6 +769,7 @@
     "public_key": "Public key",
     "private_key": "Private key",
     "amount": "Amount",
+    "is_referral": "For referrals",
     "create_btn": "Create check",
     "meet_minimum": "Too low amount",
     "success": "Created! Save it",

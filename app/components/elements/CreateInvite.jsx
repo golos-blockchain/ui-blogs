@@ -68,7 +68,7 @@ class CreateInvite extends Component {
             }
         };
 
-        const fields = ['public_key', 'private_key', 'amount']
+        const fields = ['public_key', 'private_key', 'amount', 'is_referral:checked']
         reactForm({
             name: 'invite',
             instance: this, fields,
@@ -84,6 +84,7 @@ class CreateInvite extends Component {
                     meetsMinimum(values.amount) ? tt('invites_jsx.meet_minimum') :
                     countDecimals(values.amount) > 3 ? tt('transfer_jsx.use_only_3_digits_of_precison') :
                     null,
+                is_referral: null,
             })
         })
         this.handleSubmitForm =
@@ -124,11 +125,15 @@ class CreateInvite extends Component {
         this.state.amount.props.onChange(formatAmount(value))
     }
 
+    onChangeIsReferral = (e) => {
+        this.state.is_referral.props.onChange(e.target.checked)
+    }
+
     handleSubmit = ({updateInitialValues}) => {
         const {createInvite, accountName} = this.props
-        const {public_key, amount} = this.state
+        const {public_key, amount, is_referral} = this.state
         this.setState({loading: true});
-        createInvite({public_key, amount, accountName, 
+        createInvite({public_key, amount, is_referral, accountName, 
             errorCallback: (e) => {
                 if (e === 'Canceled') {
                     this.setState({
@@ -156,7 +161,7 @@ class CreateInvite extends Component {
 
     render() {
         const {props: {account, isMyAccount, cprops, min_invite_balance}} = this
-        const {public_key, private_key, amount, loading, successMessage, errorMessage} = this.state
+        const {public_key, private_key, amount, is_referral, loading, successMessage, errorMessage} = this.state
         const {submitting, valid} = this.state.invite
 
         return (<div>
@@ -238,7 +243,25 @@ class CreateInvite extends Component {
                         </div> : null}
                     </div>
                 </div>
-                
+
+                <div className="row">
+                    <div className="column small-10">
+                        <div className="input-group" style={{marginBottom: "1.25rem"}}>
+                            <label>
+                                <input
+                                    className="input-group-field bold"
+                                    type="checkbox"
+                                    {...is_referral.props} onChange={(e) => this.onChangeIsReferral(e)}
+                                />
+                                {tt('invites_jsx.is_referral')}
+                            </label>
+                        </div>
+                        {is_referral.touched && is_referral.blur && is_referral.error &&
+                            <div className="error">{is_referral.error}&nbsp;</div>
+                        }
+                    </div>
+                </div>
+
                 <div className="row">
                     <div className="column small-10">
                         {loading && <span><LoadingIndicator type="circle" /><br /></span>}
@@ -277,12 +300,17 @@ export default connect(
     },
     dispatch => ({
         createInvite: ({
-            public_key, amount, accountName, successCallback, errorCallback
+            public_key, amount, is_referral, accountName, successCallback, errorCallback
         }) => {
-            const operation = {
+            let operation = {
                 creator: accountName,
                 balance: parseFloat(amount.value, 10).toFixed(3) + ' GOLOS',
                 invite_key: public_key.value
+            }
+            if (is_referral.value) {
+                operation.extensions = [[0, {
+                    is_referral: true,
+                }]];
             }
 
             const success = () => {
