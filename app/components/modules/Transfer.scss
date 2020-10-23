@@ -54,6 +54,11 @@
   padding-bottom: 0.25em;
   margin-bottom: 1rem;
   text-align: center;
+
+  .VerticalMenu {
+    width: 180px;
+    min-width: 180px;
+  }
 }
 
 .PresetSelector__container {

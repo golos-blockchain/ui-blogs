@@ -45,10 +45,6 @@ class TransferForm extends Component {
         onChange(value, true)
         setTimeout(() => {
             let permlink = (this.flag && typeof this.flag.permlink === `string`) ? this.flag.permlink : null;
-            if (permlink) {
-                const transferFormParent = document.getElementById('transferFormParent');
-                if (transferFormParent) transferFormParent.parentNode.style.minWidth = '700px';
-            }
             const {advanced} = this.state
             if (advanced && !disableTo)
                 ReactDOM.findDOMNode(this.refs.to).focus()
@@ -237,11 +233,15 @@ class TransferForm extends Component {
         myAssets.push({key: 'GOLOS', value: 'GOLOS', link: 'GOLOS,3', label: this.golosBalanceValue().split(".")[0] + " GOLOS", onClick: this.onTipAssetChanged});
         if (this.props.uias)
         for (const [sym, obj] of Object.entries(this.props.uias.toJS())) {
-            const prec = obj.tip_balance.split(' ')[0].split('.')[1].length;
-            myAssets.push({key: sym, value: sym, link: sym + ',' + prec, label: obj.tip_balance.split('.')[0] + ' ' + sym, onClick: this.onTipAssetChanged});
+            const parts = obj.tip_balance.split(' ');
+            if (parseFloat(parts[0]) == 0) {
+                continue;
+            }
+            const prec = parts[0].split('.')[1].length;
+            myAssets.push({key: sym, value: sym, link: sym + ',' + prec, label: parts[0].split('.')[0] + ' ' + sym, onClick: this.onTipAssetChanged});
         }
         if (myAssets.length > 1) {
-            tipBalanceValue = (<DropdownMenu selected={tipBalanceValue.split(' ')[1]} el="span" items={myAssets} />)
+            tipBalanceValue = (<DropdownMenu className="TipAssetMenu" selected={tipBalanceValue.split(' ')[1]} el="span" items={myAssets} />)
         }
         const form = (
             <form onSubmit={handleSubmit(({data}) => {
