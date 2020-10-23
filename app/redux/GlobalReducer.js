@@ -268,13 +268,14 @@ export default createModule({
                 new_state = new_state.setIn(
                     ['content', author + '/' + permlink, 'confetti_active'],
                     true);
+                const donateListKey = amount.endsWith('GOLOS') ? 'donate_list' : 'donate_uia_list';
                 new_state = new_state.updateIn(
-                    ['content', author + '/' + permlink, 'donate_list'],
+                    ['content', author + '/' + permlink, donateListKey],
                     List(),
                     donateList =>
                         donateList.withMutations(donateList => {
                             const idx = donateList.findIndex(
-                                v => v.get('from') === username
+                                v => v.get('from') === username && v.get('amount').split(' ')[1] === amount.split(' ')[1]
                             );
 
                             if (idx === -1) {
@@ -288,7 +289,7 @@ export default createModule({
                                 const newAmount = parseInt(amount.split(".")[0]);
                                 const donate = Map({
                                     from: username,
-                                    amount: (oldAmount + newAmount).toString(),
+                                    amount: (oldAmount + newAmount).toString() + ".000 " + amount.split(" ")[1],
                                 });
                                 donateList.set(idx, donate);
                             }

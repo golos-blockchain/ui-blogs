@@ -45,6 +45,10 @@ class TransferForm extends Component {
         onChange(value, true)
         setTimeout(() => {
             let permlink = (this.flag && typeof this.flag.permlink === `string`) ? this.flag.permlink : null;
+            if (permlink) {
+                const transferFormParent = document.getElementById('transferFormParent');
+                if (transferFormParent) transferFormParent.parentNode.style.minWidth = '650px';
+            }
             const {advanced} = this.state
             if (advanced && !disableTo)
                 ReactDOM.findDOMNode(this.refs.to).focus()
