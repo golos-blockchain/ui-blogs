@@ -11,11 +11,7 @@ import HorizontalMenu from 'app/components/elements/HorizontalMenu';
 import normalizeProfile from 'app/utils/NormalizeProfile';
 import tt from 'counterpart';
 import {detransliterate, capitalizeFirstLetter} from 'app/utils/ParsersAndFormatters';
-import {
-    APP_NAME_UP,
-    APP_ICON,
-    SEO_TITLE
-} from 'app/client_config';
+import {APP_NAME_UP, APP_ICON, SEO_TITLE} from 'app/client_config';
 
 function sortOrderToLink(so, topic, account) {
     // to prevent probmes check if topic is not the same as account name
@@ -95,9 +91,11 @@ class Header extends React.Component {
                 const topic = (route.params.length > 1 ? detransliterate(route.params[1]) + ' ' : '')
                 topic_original_link = route.params[1]
                 let prefix = route.params[0];
-                if(prefix == 'created') prefix = tt('g.new')
-                if(prefix == 'payout') prefix = tt('voting_jsx.pending_payout')
-                if(prefix == 'payout_comments') prefix = tt('voting_jsx.pending_payout')
+                if(prefix == 'created') prefix = tt('header_jsx.created')
+                if(prefix == 'responses') prefix = tt('header_jsx.responses')
+                if(prefix == 'trending') prefix = tt('header_jsx.trending')
+                if(prefix == 'promoted') prefix = tt('header_jsx.promoted')
+                if(prefix == 'donates') prefix = tt('header_jsx.donates')
                 page_title = `${prefix} ${topic}${type}`;
             }
         } else if (route.page === 'Post') {
@@ -105,10 +103,6 @@ class Header extends React.Component {
             topic = route.params[0];
         } else if (route.page == 'SubmitPost') {
             page_title = tt('header_jsx.create_a_post');
-        } else if (route.page == 'Privacy') {
-            page_title = tt('navigation.privacy_policy');
-        } else if (route.page == 'Tos') {
-            page_title = tt('navigation.terms_of_service');
         } else if (route.page == 'ChangePassword') {
             page_title = tt('header_jsx.change_account_password');
         } else if (route.page == 'CreateAccount') {
@@ -166,8 +160,6 @@ class Header extends React.Component {
             ['trending', tt('main_menu.trending')],
             ['donates', tt('main_menu.donates')],
             ['promoted', tt('g.promoted')],
-            //['payout', 'payout (posts)'],
-            //['payout_comments', 'payout (comments)'],
         ];
         if (current_account_name) sort_orders.unshift(['home', tt('header_jsx.home')]);
         const sort_order_menu = sort_orders.filter(so => so[0] !== sort_order).map(so => ({link: sortOrderToLink(so[0], topic_original_link, current_account_name), value: capitalizeFirstLetter(so[1])}));
@@ -179,8 +171,6 @@ class Header extends React.Component {
             ['trending', tt('main_menu.trending')],
             ['promoted', tt('g.promoted')],
             ['donates', tt('main_menu.donates')],
-            //['payout', 'payout (posts)'],
-            //['payout_comments', 'payout (comments)'],
         ];
         if (current_account_name) sort_orders_horizontal.unshift(['home', tt('header_jsx.home')]);
         const sort_order_menu_horizontal = sort_orders_horizontal.map(so => {

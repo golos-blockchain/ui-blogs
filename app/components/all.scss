@@ -37,9 +37,6 @@
 @import "./elements/Voting";
 @import "./elements/WitnessSettings";
 @import "./elements/common/YoutubePlayer/YoutubePlayer";
-@import "./elements/about/WhatIsGolos/WhatIsGolos";
-@import "./elements/about/LandingTeam/LandingTeam";
-@import "./elements/about/LandingPartners/LandingPartners";
 @import "./elements/common/Button/index";
 @import "./elements/common/Input/index";
 @import "./elements/common/RadioGroup/index";
@@ -81,16 +78,12 @@
 
 // pages
 @import "./pages/CreateAccount";
-@import "./pages/Landing";
-@import "./pages/Landings/Hardfork";
 @import "./pages/Landings/Start";
 @import "./pages/Landings/Exchanges";
 @import "./pages/LeavePage";
 @import "./pages/Post";
 @import "./pages/PostsIndex";
 @import "./pages/SubmitPost";
-@import "./pages/Privacy";
 @import "./pages/TagsIndex";
 @import "./pages/Topics";
-@import "./pages/Tos";
 @import "./pages/UserProfile";

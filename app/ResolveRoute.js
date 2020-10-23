@@ -34,29 +34,17 @@ export default function resolveRoute(path)
     if (path === '/start'){
         return {page: 'Start'}
     }
-    if (path === '/about') {
-        return {page: 'Landing', hideSubMenu: true};
-    }
     if (path === '/faq') {
         return {page: 'Faq'};
     }
     if (path === '/login.html') {
         return {page: 'Login'};
     }
-    if (path === '/privacy.html') {
-        return {page: 'Privacy'};
-    }
-    if (path === '/support.html') {
-        return {page: 'Support'};
-    }
     if (path === '/xss/test' && process.env.NODE_ENV === 'development') {
         return {page: 'XSSTest'};
     }
     if (path.match(/^\/tags\/?/)) {
         return {page: 'Tags'};
-    }
-    if (path === '/tos.html') {
-        return {page: 'Tos'};
     }
     if (path === '/change_password') {
         return {page: 'ChangePassword'};

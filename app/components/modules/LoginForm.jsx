@@ -144,6 +144,7 @@ class LoginForm extends Component {
                 &nbsp;
                 {tt('loginform_jsx.however_you_can_use_it_to')}
                 <a onClick={this.showChangePassword}>{tt('loginform_jsx.update_your_password')}</a>
+                &nbsp;
                 {tt('loginform_jsx.to_obtain_a_more_secure_set_of_keys')}
             </span>
         } else if (error === 'active_login_blocked') {

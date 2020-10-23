@@ -39,7 +39,6 @@ import WalletSubMenu from 'app/components/elements/WalletSubMenu';
 import Userpic from 'app/components/elements/Userpic';
 import Callout from 'app/components/elements/Callout';
 import normalizeProfile from 'app/utils/NormalizeProfile';
-// import UserInvites from 'app/components/elements/UserInvites';
 
 export default class UserProfile extends React.Component {
     constructor(props) {
@@ -397,9 +396,7 @@ export default class UserProfile extends React.Component {
             walletClass = 'active'
             tab_content = <div>
                     <WalletSubMenu account_name={account.name} isMyAccount={isMyAccount} />
-
                     <br />
-                    <UserInvites account={accountImm} />
                 </div>
         }*/
 
