@@ -273,13 +273,7 @@ class UserWallet extends React.Component {
         return (<div className="UserWallet">
             <div className="row">
                 <div className="columns small-10 medium-12 medium-expand">
-                    {isMyAccount
-                        ? <WalletSubMenu account_name={account.get('name')} />
-                        : <div>
-                            <br />
-                            <h4>{tt('g.balances')}</h4><br />
-                          </div>
-                    }
+                    <WalletSubMenu account_name={account.get('name')} isMyAccount={isMyAccount} />
                 </div>
             </div>
             <div className="UserWallet__balance row">

@@ -25,6 +25,14 @@ export function getAccounts(names) {
     return api.getAccountsAsync(names)
 }
 
+export function getAccountsBalances(names) {
+    return api.getAccountsBalancesAsync(names)
+}
+
+export function getAssets(creator='', names=[], from='', limit=5000) {
+    return api.getAssetsAsync(creator, names, from, limit)
+}
+
 export function getAccountHistory(account, from, limit, filter_ops) {
     return api.getAccountHistoryAsync(account, from, limit, {filter_ops})
 }
@@ -73,8 +81,8 @@ export function getAllContentReplies(author, permlink, voteLimit) {
     return api.getAllContentRepliesAsync(author, permlink, voteLimit)
 }
 
-export function getDonates(target, from, to, voteLimit, offset) {
-    return api.getDonatesAsync(target, from, to, voteLimit, offset, true)
+export function getDonates(uia, target, from, to, voteLimit, offset) {
+    return api.getDonatesAsync(uia, target, from, to, voteLimit, offset, true)
 }
 
 export function gedDiscussionsBy(type, args) {

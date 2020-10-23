@@ -1,19 +1,21 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
-import {countDecimals, formatAmount} from 'app/utils/ParsersAndFormatters';
-import {validate_account_name} from 'app/utils/ChainValidation'
+import {countDecimals, formatAsset, formatAmount} from 'app/utils/ParsersAndFormatters';
 import g from 'app/redux/GlobalReducer'
 import {connect} from 'react-redux';
+import { browserHistory } from 'react-router';
 import transaction from 'app/redux/Transaction'
 import user from 'app/redux/User';
 import tt from 'counterpart';
 import {cleanReduxInput} from 'app/utils/ReduxForms'
 import reactForm from 'app/utils/ReactForm';
-import {PrivateKey} from 'golos-classic-js/lib/auth/ecc';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
+import { Link } from 'react-router';
+import Slider from 'golos-ui/Slider';
+import {validate_account_name} from 'app/utils/ChainValidation';
 
-class ClaimInvite extends Component {
+class TransferAsset extends Component {
     static propTypes = {
         // HTML
         account: PropTypes.object.isRequired,
@@ -24,10 +26,11 @@ class ClaimInvite extends Component {
 
     constructor(props) {
         super()
-        this.shouldComponentUpdate = shouldComponentUpdate(this, 'ClaimInvite')
+        this.shouldComponentUpdate = shouldComponentUpdate(this, 'TransferAsset')
         this.state = {
             errorMessage: '',
             successMessage: '',
+            assetCost: '',
         }
         this.initForm(props)
     }
@@ -39,38 +42,29 @@ class ClaimInvite extends Component {
     }
 
     initForm(props) {
-        const fields = ['invite_secret'];
-        const validateSecret = (secret) => {
-            try {
-                PrivateKey.fromWif(secret);
-                return null;
-            } catch (e) {
-                return tt('invites_jsx.claim_wrong_secret');
-            }
-        };
+        const fields = ['new_owner']
         reactForm({
-            name: 'invite',
+            name: 'transfer_asset',
             instance: this, fields,
-            initialValues: {},
+            initialValues: {
+            },
             validation: values => ({
-                invite_secret:
-                    ! values.invite_secret ? tt('g.required') : validateSecret(values.invite_secret)
+                new_owner: ! values.new_owner ? tt('g.required') : (values.new_owner == props.accountName ? tt('assets_jsx.cannot_transfer_to_oneself') : validate_account_name(values.new_owner))
             })
         })
         this.handleSubmitForm =
-            this.state.invite.handleSubmit(args => this.handleSubmit(args))
+            this.state.transfer_asset.handleSubmit(args => this.handleSubmit(args))
     }
 
-    onChangeInviteSecret = (e) => {
-        const {value} = e.target
-        this.state.invite_secret.props.onChange(value.trim())
+    onChangeNewOwner = (value) => {
+        this.state.new_owner.props.onChange(value)
     }
 
     handleSubmit = ({updateInitialValues}) => {
-        const {claimInvite, accountName} = this.props
-        const {invite_secret} = this.state
+        const {transferAsset, accountName, symbol} = this.props
+        const {new_owner} = this.state
         this.setState({loading: true});
-        claimInvite({invite_secret, accountName,
+        transferAsset({symbol, new_owner, accountName,
             errorCallback: (e) => {
                 if (e === 'Canceled') {
                     this.setState({
@@ -78,49 +72,45 @@ class ClaimInvite extends Component {
                         errorMessage: ''
                     })
                 } else {
-                    console.log('claimInvite ERROR', e)
+                    console.log('transferAsset ERROR', e)
                     this.setState({
                         loading: false,
-                        errorMessage: e.includes('Missing') ? tt('invites_jsx.claim_wrong_secret_fatal') : tt('g.server_returned_error')
+                        errorMessage: tt('g.server_returned_error')
                     })
                 }
             },
             successCallback: () => {
-                this.setState({
-                    loading: false,
-                    errorMessage: '',
-                    successMessage: tt('invites_jsx.success_claim'),
-                })
-                // remove successMessage after a while
-                setTimeout(() => this.setState({successMessage: ''}), 4000)
+                browserHistory.push(`/@${accountName}/assets`);
             }})
     }
 
     render() {
-        const {props: {account, isMyAccount}} = this
-        const {invite_secret, loading, successMessage, errorMessage} = this.state
-        const {submitting, valid} = this.state.invite
+        const {props: {account, isMyAccount, cprops, symbol, asset}} = this
+        if (!asset) return (<div></div>)
+        const {new_owner, loading, successMessage, errorMessage} = this.state
+        const {submitting, valid} = this.state.transfer_asset
+        const account_name = account.get('name');
 
         return (<div>
             <form onSubmit={this.handleSubmitForm}>
                 <div className="row">
                     <div className="column small-10">
-                        <h4>{tt('invites_jsx.claim_invite')}</h4>
+                        <h4>{tt('assets_jsx.transfer_asset') + ' ' + symbol}</h4>
                     </div>
                 </div>
 
                 <div className="row">
                     <div className="column small-10">
-                        {tt('invites_jsx.private_key')}
-                        <div className="input-group" style={{marginBottom: "1.25rem"}}>
+                        {tt('assets_jsx.transfer_new_owner')}
+                        <div className="input-group">
                             <input
                                 className="input-group-field bold"
                                 type="text"
-                                {...invite_secret.props} onChange={(e) => this.onChangeInviteSecret(e)}
+                                {...new_owner.props} maxlength="16" onChange={(e) => this.onChangeNewOwner(e)}
                             />
                         </div>
-                        {invite_secret.touched && invite_secret.blur && invite_secret.error &&
-                            <div className="error">{invite_secret.error}&nbsp;</div>
+                        {new_owner.touched && new_owner.blur && new_owner.error &&
+                            <div className="error">{new_owner.error}&nbsp;</div>
                         }
                     </div>
                 </div>
@@ -128,7 +118,7 @@ class ClaimInvite extends Component {
                 <div className="row">
                     <div className="column small-10">
                         {loading && <span><LoadingIndicator type="circle" /><br /></span>}
-                        {!loading && <input type="submit" className="button" value={tt('invites_jsx.claim_btn')} disabled={submitting || !valid} />}
+                        {!loading && <input type="submit" className="button" value={tt('assets_jsx.transfer_asset_btn2')} disabled={submitting || !valid} />}
                         {' '}{
                             errorMessage
                                 ? <small className="error">{errorMessage}</small>
@@ -136,14 +126,22 @@ class ClaimInvite extends Component {
                                 ? <small className="success uppercase">{successMessage}</small>
                                 : null
                         }
+                        <Link to={`/@${account_name}/assets/${symbol}/update`} className="button hollow no-border Assets__noMarginBottom">
+                            {tt('assets_jsx.update_btn')}
+                        </Link>
                     </div>
                 </div>
-                <br/>
             </form>
-            <hr />
+            <div className="row">
+                <div className="column small-10">
+                    <hr />
+                </div>
+            </div>
         </div>)
     }
 }
+const AssetBalance = ({onClick, balanceValue}) =>
+    <a onClick={onClick} style={{borderBottom: '#A09F9F 1px dotted', cursor: 'pointer'}}>{tt('transfer_jsx.balance') + ": " + balanceValue}</a>
 
 export default connect(
     (state, ownProps) => {
@@ -152,16 +150,21 @@ export default connect(
         const current = state.user.get('current')
         const username = current && current.get('username')
         const isMyAccount = username === accountName
-        return {...ownProps, isMyAccount, accountName}
+        const cprops = state.global.get('cprops');
+        let asset = null
+        let assets = state.global.get('assets')
+        asset = assets && assets.toJS()[ownProps.symbol]
+        return {...ownProps, isMyAccount, accountName,
+            asset}
     },
     dispatch => ({
-        claimInvite: ({
-            invite_secret, accountName, successCallback, errorCallback
+        transferAsset: ({
+            symbol, new_owner, accountName, successCallback, errorCallback
         }) => {
             const operation = {
-                initiator: accountName,
-                receiver: accountName,
-                invite_secret: invite_secret.value
+                creator: accountName,
+                symbol,
+                new_owner: new_owner.value
             }
 
             const success = () => {
@@ -170,7 +173,7 @@ export default connect(
             }
 
             dispatch(transaction.actions.broadcastOperation({
-                type: 'invite_claim',
+                type: 'asset_transfer',
                 accountName,
                 operation,
                 successCallback: success,
@@ -178,4 +181,4 @@ export default connect(
             }))
         }
     })
-)(ClaimInvite)
+)(TransferAsset)

@@ -1,3 +1,11 @@
+li[data-value="GOLOS"] {
+background-color: rgb(234, 240, 255);
+}
+
+li[data-value="GBG"] {
+background-color: rgb(254, 243, 222);
+}
+
 $buy-color: #009600;
 $sell-color: #960000;
 
@@ -133,6 +141,16 @@ tr {
 }
 
 .DepthChart > div {
-  height: 250px;
+  margin-top: 25px;
+  height: 300px;
 }
 
+.Market__votes_pagination {
+  display: inline-block !important;
+  width: 100px;
+  font-size: 16px;
+}
+
+.Market__pairs .VerticalMenu>li>a {
+  padding: .4rem 1rem;
+}

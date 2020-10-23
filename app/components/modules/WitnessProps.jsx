@@ -77,6 +77,10 @@ class WitnessProps extends React.Component {
             ['account_idleness_time', 'time'],
             ['claim_idleness_time', 'time'],
         ],
+        [
+            ['asset_creation_fee', 'gbg'],
+            ['invite_transfer_interval_sec', 'time'],
+        ],
     ];
 
     wprops_22 = [
@@ -131,7 +135,7 @@ class WitnessProps extends React.Component {
         props.comments_per_window = parseInt(props.comments_per_window);
         updateChainProperties({
             owner: account.name,
-            props: [4, props],
+            props: [5, props],
             errorCallback: (e) => {
                 if (e === 'Canceled') {
                     this.setState({
