@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from 'prop-types'
 
-export default class OrderRow extends React.Component {
+export default class OrderBookRow extends React.Component {
 
     static propTypes = {
         order: PropTypes.object,
@@ -61,12 +61,12 @@ export default class OrderRow extends React.Component {
     }
 
     render() {
-        const {order, side, total} = this.props;
+        const {order, prec1, prec2, side, total} = this.props;
         const bid = side === "bids";
 
-        const totalTD = <td>{total.toFixed(3)}</td>;
-        const sbd = <td>{order.getStringSBD()}</td>;
-        const steem = <td>{order.getStringSteem()}</td>;
+        const totalTD = <td>{(total / Math.pow(10,prec2)).toFixed(prec2)}</td>;
+        const asset2 = <td>{order.getStringAsset2()}</td>;
+        const asset1 = <td>{order.getStringAsset1()}</td>;
         const price = <td><strong>{order.getStringPrice()}</strong></td>;
 
         return (
@@ -75,8 +75,8 @@ export default class OrderRow extends React.Component {
                 className={this.state.animate ? "animate" : ""}
             >
               {bid ? totalTD : price}
-              {bid ? sbd : steem}
-              {bid ? steem : sbd}
+              {bid ? asset2 : asset1}
+              {bid ? asset1 : asset2}
               {bid ? price : totalTD}
             </tr>
         )

@@ -60,7 +60,7 @@ export default class OrderhistoryRow extends React.Component {
     }
 
     render() {
-        let {order, buy, total} = this.props;
+        let {order, prec1, prec2, buy, total} = this.props;
 
         let className = this.state.animate ? "animate " : "";
 
@@ -75,8 +75,8 @@ export default class OrderhistoryRow extends React.Component {
                 <td><TimeAgoWrapper date={order.date} /></td>
                 <td>{arrow}</td>
                 <td className={order.color}>{order.getStringPrice()}</td>
-                <td>{order.getSteemAmount().toFixed(3)}</td>
-                <td>{order.getSBDAmount().toFixed(3)}</td>
+                <td>{order.getStringAsset1()}</td>
+                <td>{order.getStringAsset2()}</td>
             </tr>
         )
     }

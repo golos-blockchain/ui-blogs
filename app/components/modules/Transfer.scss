@@ -5,6 +5,8 @@
 
   border: 1px solid #0078C4 !important;
   color: #0078C4 !important;
+  font-size: 1.1em;
+  min-width: 68px;
 }
 
 .PresetSelector:nth-child(n+3):nth-last-child(n+3) {
@@ -52,6 +54,11 @@
   padding-bottom: 0.25em;
   margin-bottom: 1rem;
   text-align: center;
+
+  .VerticalMenu {
+    width: 180px;
+    min-width: 180px;
+  }
 }
 
 .PresetSelector__container {

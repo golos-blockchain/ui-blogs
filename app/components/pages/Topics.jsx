@@ -155,6 +155,10 @@ export default class Topics extends React.Component {
                 <li className="Topics__filter__expand" key="filter__expand_action">{expandFilterButton}</li>
                 <li className="Topics__title" key={'*'}>{tt('g.tags_and_topics')}</li>
                 {categories}
+                {!expanded && <li className="show-more">
+                        <Link to={`/tags`}>{tt('g.show_more_topics')}</Link>
+                    </li>
+                }
             </ul>
         );
     }

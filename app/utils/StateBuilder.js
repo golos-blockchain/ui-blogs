@@ -25,6 +25,7 @@ export default async function getState(api, url, options, offchain = {}) {
     state.tags = {}
     state.content = {}
     state.prev_posts = []
+    state.assets = {}
     state.worker_requests = {}
     state.accounts = {}
     state.witnesses = {}
@@ -91,6 +92,33 @@ export default async function getState(api, url, options, offchain = {}) {
                                 state.accounts[uname].other_history.push(operation)
                         }
                     })
+                break
+
+                case 'create-asset':
+                case 'assets':
+                    state.assets = (await api.getAccountsBalances([uname]))[0]
+                    const my_assets = await api.getAssets()
+                    my_assets.forEach(ma => {
+                        const sym = ma.supply.split(' ')[1]
+                        const precision = ma.supply.split(' ')[0].split('.')[1].length
+
+                        if (sym in state.assets) {
+                            state.assets[sym].my = true
+                        } else {
+                            state.assets[sym] = {
+                                balance: '0.' + '0'.repeat(precision) + ' ' + sym,
+                                tip_balance: '0.' + '0'.repeat(precision) + ' ' + sym
+                            }
+                        }
+
+                        state.assets[sym] = {...state.assets[sym], ...ma, precision}
+
+                        if (ma.creator == uname) {
+                            state.assets[sym].my = true
+                        }
+                    })
+
+                    state.cprops = await api.getChainProperties();
                 break
 
                 case 'invites':
@@ -185,13 +213,15 @@ export default async function getState(api, url, options, offchain = {}) {
             if (reply.parent_permlink === permlink) {
                 state.content[curl].replies.push(link)
             }
-            const donates = await api.getDonates({author: reply.account, permlink: reply.permlink}, '', '', 20, 0);
+            const donates = await api.getDonates(false, {author: reply.account, permlink: reply.permlink}, '', '', 20, 0);
             state.content[link].donate_list = donates;
+            state.content[link].donate_uia_list = await api.getDonates(true, {author: reply.account, permlink: reply.permlink}, '', '', 20, 0);
             state.content[link].confetti_active = false;
         }
 
-        const donates = await api.getDonates({author: account, permlink: permlink}, '', '', 20, 0);
+        const donates = await api.getDonates(false, {author: account, permlink: permlink}, '', '', 20, 0);
         state.content[curl].donate_list = donates;
+        state.content[curl].donate_uia_list = await api.getDonates(true, {author: account, permlink: permlink}, '', '', 20, 0);
         state.content[curl].confetti_active = false;
 
         let args = { truncate_body: 1024, select_categories: [category] };
@@ -220,6 +250,8 @@ export default async function getState(api, url, options, offchain = {}) {
             }
         }
         state.prev_posts = prev_posts.slice(0, 3);
+
+        state.assets = (await api.getAccountsBalances([offchain.account]))[0]
     } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
         const witnesses = await api.getWitnessesByVote('', 100)
         witnesses.forEach( witness => {

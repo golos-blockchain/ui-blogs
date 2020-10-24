@@ -11,6 +11,7 @@ function fractional_part_len(value) {
 }
 
 // 123456 or '123456' -> '134.456 GOLOS'
+// also usable for percents but sym should be trimmed
 export const longToAsset = (value, sym = 'GOLOS', decPlaces = 3) => {
     let prec = Math.pow(10, decPlaces);
     let val_int = parseInt(value);

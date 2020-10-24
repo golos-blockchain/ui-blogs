@@ -74,6 +74,7 @@ export function* fetchState(location_change_action) {
         state.current_route = location
         state.content = {}
         state.prev_posts = []
+        state.assets = {}
         state.worker_requests = {}
         state.accounts = {}
 
@@ -126,6 +127,33 @@ export function* fetchState(location_change_action) {
                                     state.accounts[uname].other_history.push(operation)
                             }
                         })
+                    break
+
+                    case 'create-asset':
+                    case 'assets':
+                        state.assets = (yield call([api, api.getAccountsBalances], [uname]))[0]
+                        const my_assets = yield call([api, api.getAssets], '', [], '', 5000)
+                        my_assets.forEach(ma => {
+                            const sym = ma.supply.split(' ')[1]
+                            const precision = ma.supply.split(' ')[0].split('.')[1].length
+
+                            if (sym in state.assets) {
+                                state.assets[sym].my = true
+                            } else {
+                                state.assets[sym] = {
+                                    balance: '0.' + '0'.repeat(precision) + ' ' + sym,
+                                    tip_balance: '0.' + '0'.repeat(precision) + ' ' + sym
+                                }
+                            }
+
+                            state.assets[sym] = {...state.assets[sym], ...ma, precision}
+
+                            if (ma.creator == uname) {
+                                state.assets[sym].my = true
+                            }
+                        })
+
+                        state.cprops = yield call([api, api.getChainPropertiesAsync])
                     break
 
                     case 'invites':
@@ -221,13 +249,15 @@ export function* fetchState(location_change_action) {
                 if (reply.parent_permlink === permlink) {
                     state.content[curl].replies.push(link)
                 }
-                const donates =  yield call([api, api.getDonatesAsync], {author: reply.author, permlink: reply.permlink}, '', '', 20, 0, true)
+                const donates =  yield call([api, api.getDonatesAsync], false, {author: reply.author, permlink: reply.permlink}, '', '', 20, 0, true)
                 state.content[link].donate_list = donates
+                state.content[link].donate_uia_list = yield call([api, api.getDonatesAsync], true, {author: reply.author, permlink: reply.permlink}, '', '', 20, 0, true)
                 state.content[link].confetti_active = false
             }
 
-            const donates =  yield call([api, api.getDonatesAsync], {author: account, permlink: permlink}, '', '', 20, 0, true)
+            const donates =  yield call([api, api.getDonatesAsync], false, {author: account, permlink: permlink}, '', '', 20, 0, true)
             state.content[curl].donate_list = donates
+            state.content[curl].donate_uia_list = yield call([api, api.getDonatesAsync], true, {author: account, permlink: permlink}, '', '', 20, 0, true)
             state.content[curl].confetti_active = false
 
             let args = { truncate_body: 128, select_categories: [category] };
@@ -256,6 +286,10 @@ export function* fetchState(location_change_action) {
                 }
             }
             state.prev_posts = prev_posts.slice(0, 3);
+
+            if (localStorage.getItem('invite')) {
+                state.assets = (yield call([api, api.getAccountsBalances], [localStorage.getItem('invite')]))[0]
+            }
         } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
             state.witnesses = {};
             const witnesses =  yield call([api, api.getWitnessesByVoteAsync], '', 100)
