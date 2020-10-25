@@ -298,7 +298,7 @@ class UserWallet extends React.Component {
                 <div className="column small-12 medium-8">
                     {CLAIM_TOKEN.toUpperCase()}<br />
                     <span className="secondary">{tt('tips_js.claim_balance_hint')} {tt('tips_js.claim_expiration_hint')} 
-                    &nbsp;<Icon name="clock" />&nbsp;<b><TimeAgoWrapper date={account.get('claim_expiration')} /></b>.</span>
+                    &nbsp;<Icon name="clock" />&nbsp;<b><TimeAgoWrapper date={(typeof getClaimExpiration !== 'undefined' && getClaimExpiration(account)) || account.get('claim_expiration')} /></b>.</span>
                 </div>
                 <div className="column small-12 medium-4">
                     {isMyAccount
