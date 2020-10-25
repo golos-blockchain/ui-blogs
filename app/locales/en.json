@@ -929,7 +929,8 @@
     "from_tip": " with TIP balance ",
     "to": " to ",
     "from": " from ",
-    "for": " for "
+    "for": " for ",
+    "burned": " burned out of circulation"
   },
   "reblog_jsx": {
   },
