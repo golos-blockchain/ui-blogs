@@ -247,7 +247,7 @@ class CreateInvite extends Component {
                 <div className="row">
                     <div className="column small-10">
                         <div className="input-group" style={{marginBottom: "1.25rem"}}>
-                            <label>
+                            <label title={tt('invites_jsx.referral_invite')}>
                                 <input
                                     className="input-group-field bold"
                                     type="checkbox"

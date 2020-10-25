@@ -220,6 +220,9 @@ class TransferHistoryRow extends React.Component {
             description_start += tt('transferhistoryrow_jsx.funded_workers') + data.reward + tt('transferhistoryrow_jsx.for');
             other_account = data.worker_request_author + "/" + data.worker_request_permlink;
         }
+        else if (type === 'internal_transfer' && data.from == 'bittrex') {
+            description_start += data.amount + tt('transferhistoryrow_jsx.burned');
+        }
         else {
             code_key = JSON.stringify({type, ...data}, null, 2);
         }

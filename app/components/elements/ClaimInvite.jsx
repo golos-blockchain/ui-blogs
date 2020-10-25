@@ -140,7 +140,6 @@ class ClaimInvite extends Component {
                 </div>
                 <br/>
             </form>
-            <hr />
         </div>)
     }
 }
