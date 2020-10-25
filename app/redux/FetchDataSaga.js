@@ -103,6 +103,7 @@ export function* fetchState(location_change_action) {
                                 case 'withdraw_vesting':
                                 case 'interest':
                                 case 'transfer':
+                                case 'internal_transfer':
                                 case 'liquidity_reward':
                                 case 'author_reward':
                                 case 'curation_reward':
