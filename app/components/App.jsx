@@ -239,7 +239,7 @@ class App extends React.Component {
         const warning = flash.get('warning');
         const success = flash.get('success');
         let callout = null;
-        const showInfoBox = false && this.isShowInfoBox();
+        const showInfoBox = true && this.isShowInfoBox();
 
         if (this.state.showCallout && (alert || warning || success)) {
             callout = (
@@ -274,10 +274,10 @@ class App extends React.Component {
                                 }}
                             />
                             <Link className="link"
-                                to="/@lex/referalnaya-programma-i-para-slov-o-fonde-soobshestva"
+                                to="/@lex/anons-24-khf-golos-blockchain"
                             >
                                 <Icon className="logo-icon" name={APP_ICON} />&nbsp;
-                                Ограничения с домена golos.id были сняты, а также новости о реферальной программе и фонде сообщества.
+                                Принятие 24-го хардфорка блокчейна Голос планируется на 20:00 по МСК, в процессе и обновление публичных нод.
                             </Link>
                         </div>
                     </div>
