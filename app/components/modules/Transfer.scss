@@ -5,8 +5,8 @@
 
   border: 1px solid #0078C4 !important;
   color: #0078C4 !important;
-  font-size: 1.1em;
-  min-width: 68px;
+  font-size: 1em;
+  min-width: 55px;
 }
 
 .PresetSelector:nth-child(n+3):nth-last-child(n+3) {
@@ -54,6 +54,7 @@
   padding-bottom: 0.25em;
   margin-bottom: 1rem;
   text-align: center;
+  width: 220px;
 
   .VerticalMenu {
     width: 180px;

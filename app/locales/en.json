@@ -770,6 +770,7 @@
     "private_key": "Private key",
     "amount": "Amount",
     "is_referral": "For referrals",
+    "referral_invite": "During the year 10%% of user rewards (registered with this invite)\nwill be credited to your TIP balance.",
     "create_btn": "Create check",
     "meet_minimum": "Too low amount",
     "success": "Created! Save it",
