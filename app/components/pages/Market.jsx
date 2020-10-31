@@ -592,12 +592,19 @@ class Market extends Component {
 
         // Logged-in user's open orders
         function openOrdersTable(sym1, sym2, openOrders) {
+            let need_reverse = false;
+            let sym1_ = sym1.toUpperCase()
+            let sym2_ = sym2.toUpperCase()
+            if (sym2_ === "GOLOS"
+                || (sym2_ < sym1_ && sym1_ !== "GOLOS")) {
+                need_reverse = true;
+            }
             const rows =
                 openOrders &&
                 normalizeOpenOrders(openOrders).map(o => (
                     <tr key={o.orderid}>
                         <td>{o.created.replace('T', ' ')}</td>
-                        <td>{tt(o.type === 'ask' ? 'g.sell' : 'g.buy')}</td>
+                        <td>{tt(need_reverse ? (o.type === 'bid' ? 'g.sell' : 'g.buy') : (o.type === 'ask' ? 'g.sell' : 'g.buy'))}</td>
                         <td>
                             {sym2} {o.price.toFixed(assets_right[sym2].precision)}
                         </td>
