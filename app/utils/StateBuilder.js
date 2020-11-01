@@ -214,15 +214,27 @@ export default async function getState(api, url, options, offchain = {}) {
             if (reply.parent_permlink === permlink) {
                 state.content[curl].replies.push(link)
             }
-            const donates = await api.getDonates(false, {author: reply.account, permlink: reply.permlink}, '', '', 20, 0);
-            state.content[link].donate_list = donates;
-            state.content[link].donate_uia_list = await api.getDonates(true, {author: reply.account, permlink: reply.permlink}, '', '', 20, 0);
+            state.content[link].donate_list = [];
+            if (state.content[link].donates != '0.000 GOLOS') {
+                const donates = await api.getDonates(false, {author: reply.account, permlink: reply.permlink}, '', '', 20, 0);
+                state.content[link].donate_list = donates;
+            }
+            state.content[link].donate_uia_list = [];
+            if (state.content[link].donates_uia != 0) {
+                state.content[link].donate_uia_list = await api.getDonates(true, {author: reply.account, permlink: reply.permlink}, '', '', 20, 0);
+            }
             state.content[link].confetti_active = false;
         }
 
-        const donates = await api.getDonates(false, {author: account, permlink: permlink}, '', '', 20, 0);
-        state.content[curl].donate_list = donates;
-        state.content[curl].donate_uia_list = await api.getDonates(true, {author: account, permlink: permlink}, '', '', 20, 0);
+        state.content[curl].donate_list = [];
+        if (state.content[curl].donates != '0.000 GOLOS') {
+            const donates = await api.getDonates(false, {author: account, permlink: permlink}, '', '', 20, 0);
+            state.content[curl].donate_list = donates;
+        }
+        state.content[curl].donate_uia_list = [];
+        if (state.content[curl].donates_uia != 0) {
+            state.content[curl].donate_uia_list = await api.getDonates(true, {author: account, permlink: permlink}, '', '', 20, 0);
+        }
         state.content[curl].confetti_active = false;
 
         let args = { truncate_body: 1024, select_categories: [category] };
