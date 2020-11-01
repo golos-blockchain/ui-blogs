@@ -250,15 +250,27 @@ export function* fetchState(location_change_action) {
                 if (reply.parent_permlink === permlink) {
                     state.content[curl].replies.push(link)
                 }
-                const donates =  yield call([api, api.getDonatesAsync], false, {author: reply.author, permlink: reply.permlink}, '', '', 20, 0, true)
-                state.content[link].donate_list = donates
-                state.content[link].donate_uia_list = yield call([api, api.getDonatesAsync], true, {author: reply.author, permlink: reply.permlink}, '', '', 20, 0, true)
+                state.content[link].donate_list = [];
+                if (state.content[link].donates != '0.000 GOLOS') {
+                    const donates =  yield call([api, api.getDonatesAsync], false, {author: reply.author, permlink: reply.permlink}, '', '', 20, 0, true)
+                    state.content[link].donate_list = donates;
+                }
+                state.content[link].donate_uia_list = [];
+                if (state.content[link].donates_uia != 0) {
+                    state.content[link].donate_uia_list = yield call([api, api.getDonatesAsync], true, {author: reply.author, permlink: reply.permlink}, '', '', 20, 0, true)
+                }
                 state.content[link].confetti_active = false
             }
 
-            const donates =  yield call([api, api.getDonatesAsync], false, {author: account, permlink: permlink}, '', '', 20, 0, true)
-            state.content[curl].donate_list = donates
-            state.content[curl].donate_uia_list = yield call([api, api.getDonatesAsync], true, {author: account, permlink: permlink}, '', '', 20, 0, true)
+            state.content[curl].donate_list = [];
+            if (state.content[curl].donates != '0.000 GOLOS') {
+                const donates = yield call([api, api.getDonatesAsync], false, {author: account, permlink: permlink}, '', '', 20, 0, true)
+                state.content[curl].donate_list = donates;
+            }
+            state.content[curl].donate_uia_list = [];
+            if (state.content[curl].donates_uia != 0) {
+                state.content[curl].donate_uia_list = yield call([api, api.getDonatesAsync], true, {author: account, permlink: permlink}, '', '', 20, 0, true)
+            }
             state.content[curl].confetti_active = false
 
             let args = { truncate_body: 128, select_categories: [category] };
