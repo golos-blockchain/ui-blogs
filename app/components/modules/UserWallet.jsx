@@ -272,7 +272,7 @@ class UserWallet extends React.Component {
         const sbdMessage = <span>{tt('userwallet_jsx.tokens_worth_about_1_of_LIQUID_TICKER', {TOKEN_WORTH, LIQUID_TICKER, sbdInterest})}</span>
 
         let EMISSION_STAKE = toAsset(gprops.accumulative_emission_per_day).amount * toAsset(account.get('vesting_shares')).amount / toAsset(gprops.total_vesting_shares).amount;
-        EMISSION_STAKE = formatDecimal(EMISSION_STAKE, 0, false, ' ')[0] + ' ' + LIQUID_TICKER;
+        EMISSION_STAKE = numberWithCommas(EMISSION_STAKE.toFixed(3)) + ' ' + LIQUID_TICKER;
 
         return (<div className="UserWallet">
             <div className="row">
