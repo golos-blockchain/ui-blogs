@@ -181,9 +181,10 @@
 
 .Voting__votes_pagination {
   display: inline-block !important;
-  width: 100px;
+  text-align: center;
   color: #0078C4 !important;
-  font-size: 120% !important;
+  font-weight: normal !important;
+  font-size: 110% !important;
 }
 
 .DropdownMenu.Voting__donates_list {

@@ -9,7 +9,6 @@ import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Reveal from 'react-foundation-components/lib/global/reveal';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
 import {numberWithCommas, toAsset, vestsToSteem} from 'app/utils/StateFunctions';
-import {formatDecimal} from 'app/utils/ParsersAndFormatters';
 import FoundationDropdownMenu from 'app/components/elements/FoundationDropdownMenu';
 import WalletSubMenu from 'app/components/elements/WalletSubMenu';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
@@ -348,18 +347,18 @@ class UserWallet extends React.Component {
                     {received_vesting_shares != 0 ? (
                             <div style={{ paddingRight: isMyAccount ? '0.85rem' : null }} >
                                 <Tooltip t={tt('g.received_vesting', {VESTING_TOKEN})}>
-                                    <a href="#" onClick={showDelegateVestingInfo.bind(this, 'received')}>
+                                    <small><a href="#" onClick={showDelegateVestingInfo.bind(this, 'received')}>
                                         + {received_vesting_shares_str}
-                                    </a>
+                                    </a></small>
                                 </Tooltip>
                             </div>
                         ) : null}
                     {delegated_vesting_shares != 0 ? (
                             <div style={{ paddingRight: isMyAccount ? '0.85rem' : null }} >
                                 <Tooltip t={tt('g.delegated_vesting', {VESTING_TOKEN})}>
-                                    <a href="#" onClick={showDelegateVestingInfo.bind(this, 'delegated')}>
+                                    <small><a href="#" onClick={showDelegateVestingInfo.bind(this, 'delegated')}>
                                         - {delegated_vesting_shares_str}
-                                    </a>
+                                    </a></small>
                                 </Tooltip>
                             </div>
                         ) : null}
