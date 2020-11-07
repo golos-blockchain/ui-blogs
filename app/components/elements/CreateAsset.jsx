@@ -47,7 +47,7 @@ class CreateAsset extends Component {
             let minValue = parseFloat(props.asset_creation_fee)
             if (symbol.length == 3) minValue *= 50
             if (symbol.length == 4) minValue *= 10
-            return parseFloat(minValue) >= parseFloat(balanceValue.split(' ')[0])
+            return parseFloat(minValue) > parseFloat(balanceValue.split(' ')[0])
         }
 
         const validateSymbol = (symbol) => {
