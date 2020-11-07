@@ -126,7 +126,18 @@ export default function useGeneralApi(app) {
             }
 
             let mid;
-            if (!account.invite_code) {
+            if (account.invite_code) {
+                mid = yield models.Identity.findOne(
+                    {attributes: ['id'], where: {user_id, provider: (account.email ? 'email' : 'invite_code'), verified: false}, order: 'id DESC'}
+                );
+                if (!mid) {
+                    console.log(`api /accounts: try to skip use_invite step by user ${this.session.uid} #${user_id}`);
+                    throw new Error('Not passed entering use_invite step');
+                }
+                else {
+                  console.log(`api /accounts: found use_invite step for user ${this.session.uid} #${user_id}`)
+                }
+            } else {
                 mid = yield models.Identity.findOne(
                     {attributes: ['id'], where: {user_id, provider: (account.email ? 'email' : 'invite_code'), verified: true}, order: 'id DESC'}
                 );
