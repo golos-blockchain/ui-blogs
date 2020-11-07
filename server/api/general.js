@@ -128,7 +128,7 @@ export default function useGeneralApi(app) {
             let mid;
             if (account.invite_code) {
                 mid = yield models.Identity.findOne(
-                    {attributes: ['id'], where: {user_id, provider: (account.email ? 'email' : 'invite_code'), verified: false}, order: 'id DESC'}
+                    {attributes: ['id'], where: {user_id, provider: 'invite_code', verified: false}, order: 'id DESC'}
                 );
                 if (!mid) {
                     console.log(`api /accounts: try to skip use_invite step by user ${this.session.uid} #${user_id}`);
@@ -139,7 +139,7 @@ export default function useGeneralApi(app) {
                 }
             } else {
                 mid = yield models.Identity.findOne(
-                    {attributes: ['id'], where: {user_id, provider: (account.email ? 'email' : 'invite_code'), verified: true}, order: 'id DESC'}
+                    {attributes: ['id'], where: {user_id, provider: 'email', verified: true}, order: 'id DESC'}
                 );
                 if (!mid) {
                     console.log(`api /accounts: not confirmed sms for user ${this.session.uid} #${user_id}`);
