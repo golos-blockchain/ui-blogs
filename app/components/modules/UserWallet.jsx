@@ -301,7 +301,7 @@ class UserWallet extends React.Component {
             <div className="UserWallet__balance row zebra">
                 <div className="column small-12 medium-8">
                     {CLAIM_TOKEN.toUpperCase()}<br />
-                    <span className="secondary">{tt('tips_js.claim_balance_hint1')}<b>{tt('tips_js.claim_balance_hint2_EMISSION_STAKE', {EMISSION_STAKE})}</b>{tt('tips_js.claim_balance_hint3')} {tt('tips_js.claim_expiration_hint')} 
+                    <span className="secondary">{tt('tips_js.claim_balance_hint')} {tt('tips_js.claim_expiration_hint')} 
                     &nbsp;<Icon name="clock" />&nbsp;<b><TimeAgoWrapper date={(typeof getClaimExpiration !== 'undefined' && getClaimExpiration(account)) || account.get('claim_expiration')} /></b>.</span>
                 </div>
                 <div className="column small-12 medium-4">
@@ -341,6 +341,10 @@ class UserWallet extends React.Component {
                           />
                         : power_balance_str
                     }
+                    <br />
+                    <Tooltip t={tt('tips_js.vesting_emission_per_day_title')}>
+                    <small>{tt('tips_js.vesting_emission_per_day', {EMISSION_STAKE})}</small>
+                    </Tooltip>
                     {received_vesting_shares != 0 ? (
                             <div style={{ paddingRight: isMyAccount ? '0.85rem' : null }} >
                                 <Tooltip t={tt('g.received_vesting', {VESTING_TOKEN})}>
