@@ -7,7 +7,7 @@ import Button from 'app/components/elements/Button';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Author from 'app/components/elements/Author';
 import PercentSelect from 'app/components/elements/PercentSelect';
-import DropdownMenu from 'app/components/elements/DropdownMenu';
+import PagedDropdownMenu from 'app/components/elements/PagedDropdownMenu';
 import Icon from 'app/components/elements/Icon';
 import { formatDecimal, formatAsset, ERR, assetToLong } from 'app/utils/ParsersAndFormatters';
 
@@ -170,8 +170,8 @@ class ViewWorkerRequest extends React.Component {
     vote_list = vote_list.slice(20*vote_list_page, 20*vote_list_page+20);
 
     vote_list.push({value: <span>
-      <a className="Workers__votes_pagination" onClick={this.prevVoteListPage}>{vote_list_page > 0 ? '< ' + tt('g.back') : ''}</a>
-      <a className="Workers__votes_pagination" onClick={next_vote_list.length > 0 ? this.nextVoteListPage : null}>{next_vote_list.length > 0 ? tt('g.more_list') + ' >' : ''}</a></span>});
+      <a className="Voting__votes_pagination" onClick={this.prevVoteListPage}>{vote_list_page > 0 ? '< ' + tt('g.back') : ''}</a>
+      <a className="Voting__votes_pagination" onClick={next_vote_list.length > 0 ? this.nextVoteListPage : null}>{next_vote_list.length > 0 ? tt('g.more_list') + ' >' : ''}</a></span>});
 
     return(
       <div>
@@ -210,7 +210,7 @@ class ViewWorkerRequest extends React.Component {
               &nbsp;
               <Button round="true" type={(request.myVote && request.myVote.vote_percent < 0) ? "primary" : "secondary"} onClick={this.downVote}><Icon name="new/downvote" /> ({downvotes})</Button>
               &nbsp;
-              <DropdownMenu className="VoteList above" items={vote_list} selected={(upvotes+downvotes) + ' ' + tt('workers.votes')} el="span" />
+              <PagedDropdownMenu className="VoteList above" items={vote_list} selected={(upvotes+downvotes) + ' ' + tt('workers.votes')} el="span" />
             </div>
           </div>
           {author_menu}
