@@ -8,7 +8,7 @@ import TransactionError from 'app/components/elements/TransactionError';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Reveal from 'react-foundation-components/lib/global/reveal';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
-import {numberWithCommas, vestsToSteem} from 'app/utils/StateFunctions';
+import {numberWithCommas, toAsset, vestsToSteem} from 'app/utils/StateFunctions';
 import FoundationDropdownMenu from 'app/components/elements/FoundationDropdownMenu';
 import WalletSubMenu from 'app/components/elements/WalletSubMenu';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
@@ -270,6 +270,9 @@ class UserWallet extends React.Component {
         const sbdInterest = this.props.sbd_interest / 100
         const sbdMessage = <span>{tt('userwallet_jsx.tokens_worth_about_1_of_LIQUID_TICKER', {TOKEN_WORTH, LIQUID_TICKER, sbdInterest})}</span>
 
+        let EMISSION_STAKE = toAsset(gprops.accumulative_emission_per_day).amount * toAsset(account.get('vesting_shares')).amount / toAsset(gprops.total_vesting_shares).amount;
+        EMISSION_STAKE = numberWithCommas(EMISSION_STAKE.toFixed(3)) + ' ' + LIQUID_TICKER;
+
         return (<div className="UserWallet">
             <div className="row">
                 <div className="columns small-10 medium-12 medium-expand">
@@ -337,21 +340,25 @@ class UserWallet extends React.Component {
                           />
                         : power_balance_str
                     }
+                    <br />
+                    <Tooltip t={tt('tips_js.vesting_emission_per_day_title')}>
+                    <small>{tt('tips_js.vesting_emission_per_day', {EMISSION_STAKE})}</small>
+                    </Tooltip>
                     {received_vesting_shares != 0 ? (
                             <div style={{ paddingRight: isMyAccount ? '0.85rem' : null }} >
                                 <Tooltip t={tt('g.received_vesting', {VESTING_TOKEN})}>
-                                    <a href="#" onClick={showDelegateVestingInfo.bind(this, 'received')}>
+                                    <small><a href="#" onClick={showDelegateVestingInfo.bind(this, 'received')}>
                                         + {received_vesting_shares_str}
-                                    </a>
+                                    </a></small>
                                 </Tooltip>
                             </div>
                         ) : null}
                     {delegated_vesting_shares != 0 ? (
                             <div style={{ paddingRight: isMyAccount ? '0.85rem' : null }} >
                                 <Tooltip t={tt('g.delegated_vesting', {VESTING_TOKEN})}>
-                                    <a href="#" onClick={showDelegateVestingInfo.bind(this, 'delegated')}>
+                                    <small><a href="#" onClick={showDelegateVestingInfo.bind(this, 'delegated')}>
                                         - {delegated_vesting_shares_str}
-                                    </a>
+                                    </a></small>
                                 </Tooltip>
                             </div>
                         ) : null}

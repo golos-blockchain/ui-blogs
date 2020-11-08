@@ -179,6 +179,14 @@
   }
 }
 
+.Voting__votes_pagination {
+  display: inline-block !important;
+  text-align: center;
+  color: #0078C4 !important;
+  font-weight: normal !important;
+  font-size: 110% !important;
+}
+
 .DropdownMenu.Voting__donates_list {
   margin-right: .7rem;
   margin-left: .1rem;

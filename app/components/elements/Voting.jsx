@@ -8,6 +8,7 @@ import Icon from 'app/components/elements/Icon';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import { parsePayoutAmount } from 'app/utils/ParsersAndFormatters';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
+import PagedDropdownMenu from 'app/components/elements/PagedDropdownMenu';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import FoundationDropdown from 'app/components/elements/FoundationDropdown';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
@@ -52,7 +53,8 @@ class Voting extends React.Component {
           showWeight: false,
           showWeightDown: false,
           myVote: null,
-          weight: 10000
+          weight: 10000,
+          voteListPage: 0,
         };
 
         this.voteUp = e => {
@@ -126,10 +128,23 @@ class Voting extends React.Component {
         }
     }
 
+    nextVoteListPage = () => {
+        this.setState({
+          voteListPage: this.state.voteListPage + 1,
+        });
+    }
+
+    prevVoteListPage = () => {
+        if (this.state.voteListPage == 0) return;
+        this.setState({
+          voteListPage: this.state.voteListPage - 1,
+        });
+    }
+
     render() {
         const {active_votes, showList, voting, flag, net_vesting_shares, is_comment, post_obj} = this.props;
         const {username} = this.props;
-        const {votingUp, votingDown, showWeight, showWeightDown, weight, myVote} = this.state;
+        const {votingUp, votingDown, showWeight, showWeightDown, weight, myVote, voteListPage} = this.state;
         if(flag && !username) return null
 
         const votingUpActive = voting && votingUp;
@@ -235,18 +250,26 @@ class Voting extends React.Component {
         if (showList && total_votes > 0 && active_votes) {
             const avotes = active_votes.toJS();
             avotes.sort((a, b) => Math.abs(parseInt(a.rshares)) > Math.abs(parseInt(b.rshares)) ? -1 : 1)
-            for( let v = 0; v < avotes.length && voters.length < MAX_VOTES_DISPLAY; ++v ) {
+            let has_more_votes = false;
+            for( let v = voteListPage*MAX_VOTES_DISPLAY; v < avotes.length; ++v ) {
+                if (voters.length >= MAX_VOTES_DISPLAY) {
+                    has_more_votes = true;
+                    break;
+                }
                 const {percent, voter} = avotes[v]
                 const sign = Math.sign(percent)
                 //const voterPercent= percent / 100 + '%';
                 if(sign === 0) continue
                 voters.push({value: (sign > 0 ? '+ ' : '- ') + voter, link: '/@' + voter})
             }
-            if (total_votes > voters.length) {
-                voters.push({value: <span>&hellip; {tt('g.and')} {(total_votes - voters.length)} {tt('g.more')}</span>});
-            }
+            if (voteListPage > 0 || has_more_votes)
+            voters.push({value: <span>
+              <a className="Voting__votes_pagination" onClick={this.prevVoteListPage}>{voteListPage > 0 ? '< ' + tt('g.back') : ''}</a>
+              <a className="Voting__votes_pagination" onClick={has_more_votes ? this.nextVoteListPage : null}>{has_more_votes ? tt('g.more_list') + ' >' : ''}</a></span>});
+            //voters.push({value: <span>&hellip; {tt('g.and')} {(total_votes - voters.length)} {tt('g.more')}</span>});
         }
-        voters_list = <DropdownMenu selected={total_votes} className="Voting__voters_list" items={voters} el="div" noArrow={true} />;
+
+        voters_list = <PagedDropdownMenu selected={total_votes} className="Voting__voters_list" items={voters} el="div" noArrow={true} />;
 
         let voteUpClick = this.voteUp;
         let dropdown = null;
