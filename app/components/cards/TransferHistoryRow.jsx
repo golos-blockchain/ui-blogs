@@ -221,7 +221,7 @@ class TransferHistoryRow extends React.Component {
                         {other_account && <Link to={`/@${other_account}`}>{other_account}</Link>}
                         {description_end}
                     </td>
-                    <td className="show-for-medium" style={{maxWidth: "30rem", whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden", fontSize: "90%"}} title={data_memo}>
+                    <td className="show-for-medium" style={{maxWidth: "30rem", whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden", fontSize: "85%"}} title={data_memo}>
                         <Memo text={data_memo} data={data} username={context} />
                     </td>
                 </tr>
