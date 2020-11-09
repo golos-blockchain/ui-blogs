@@ -373,7 +373,7 @@
     "account_updated": "Аккаунт обновлен",
     "password_must_be_characters_or_more": "Пароль должен содержать %(amount)s символ(а) или больше",
     "need_password_or_key": "Вам нужен приватный (не публичный) ключ ...",
-    "login_to_see_memo": "Авторизуйтесь, чтобы увидеть примечание",
+    "login_to_see_memo": "Авторизуйтесь с паролем, это зашифрованная заметка",
     "new_password": "Новый пароль",
     "incorrect_password": "Неправильный пароль",
     "username_does_not_exist": "Такого имени не существует",
