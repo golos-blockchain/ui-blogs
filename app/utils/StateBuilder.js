@@ -64,28 +64,22 @@ export default async function getState(api, url, options, offchain = {}) {
                     state.cprops = await api.getChainProperties();
                     history.forEach(operation => {
                         switch (operation[1].op[0]) {
-                            case 'transfer_to_vesting':
-                            case 'withdraw_vesting':
-                            case 'interest':
+                            case 'claim':
+                            case 'donate':
                             case 'transfer':
-                            case 'internal_transfer':
-                            case 'liquidity_reward':
                             case 'author_reward':
                             case 'curation_reward':
-                            case 'worker_reward':
                             case 'transfer_to_tip':
                             case 'transfer_from_tip':
-                            case 'claim':
-                            case 'transfer_to_savings':
-                            case 'transfer_from_savings':
-                            case 'cancel_transfer_from_savings':
-                            case 'escrow_transfer':
-                            case 'escrow_approve':
-                            case 'escrow_dispute':
-                            case 'escrow_release':
-                            case 'donate':
+                            case 'transfer_to_vesting':
+                            case 'withdraw_vesting':
+                            case 'asset_issue':
                             case 'invite':
                             case 'invite_claim':
+                            case 'transfer_to_savings':
+                            case 'transfer_from_savings':
+                            case 'worker_reward':
+                            case 'internal_transfer':
                                 state.accounts[uname].transfer_history.push(operation)
                             break
 
