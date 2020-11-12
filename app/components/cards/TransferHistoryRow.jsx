@@ -210,18 +210,18 @@ class TransferHistoryRow extends React.Component {
 
         return(
                 <tr key={op[0]} className="Trans">
-                    <td>
+                    <td style={{fontSize: "85%"}}>
                         <Tooltip t={new Date(op[1].timestamp).toLocaleString()}>
                             <TimeAgoWrapper date={op[1].timestamp} />
                         </Tooltip>
                     </td>
-                    <td className="TransferHistoryRow__text" style={{maxWidth: "40rem"}}>
+                    <td className="TransferHistoryRow__text" style={{maxWidth: "35rem"}}>
                         {description_start}
                         {code_key && <span style={{fontSize: "85%"}}>{code_key}</span>}
                         {other_account && <Link to={`/@${other_account}`}>{other_account}</Link>}
                         {description_end}
                     </td>
-                    <td className="show-for-medium" style={{maxWidth: "30rem", whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden", fontSize: "85%"}} title={data_memo}>
+                    <td className="show-for-medium" style={{maxWidth: "25rem", wordWrap: "break-word", fontSize: "85%"}}>
                         <Memo text={data_memo} data={data} username={context} />
                     </td>
                 </tr>
