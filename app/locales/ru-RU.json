@@ -1026,7 +1026,8 @@
     "transfer_new_owner": "Кому",
     "cannot_transfer_to_oneself": "Нельзя передать актив самому себе.",
     "trade_asset": "Перейти к торгам на внутренней бирже",
-    "mute_asset": "Не показывать этот актив"
+    "mute_asset": "Не показывать этот актив",
+    "mute_asset_confirm_TICKER": "Подтвердить скрытие %(TICKER)s? Вернуть актив можно будет в разделе Настройки вашего профиля."
   },
   "invites_jsx": {
     "create_invite": "Создание чека",
