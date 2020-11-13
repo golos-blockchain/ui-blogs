@@ -760,7 +760,8 @@
     "transfer_new_owner": "To who",
     "cannot_transfer_to_oneself": "Cannot transfer to yourself.",
     "trade_asset": "Go to trading on the internal exchange",
-    "mute_asset": "Do not show asset"
+    "mute_asset": "Do not show asset",
+    "mute_asset_confirm_TICKER": "Confirm muting of %(TICKER)s? You will be able to unmute this asset in Settings of your profile."
   },
   "invites_jsx": {
     "create_invite": "Create new invite check",
