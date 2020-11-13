@@ -5,6 +5,7 @@ import {longToAsset} from 'app/utils/ParsersAndFormatters';
 import g from 'app/redux/GlobalReducer'
 import {connect} from 'react-redux';
 import { Link } from 'react-router';
+import DialogManager from 'app/components/elements/common/DialogManager';
 import Icon from 'app/components/elements/Icon';
 import Author from 'app/components/elements/Author';
 import Button from 'app/components/elements/Button';
@@ -32,13 +33,16 @@ class Assets extends Component {
       });
     }
 
-    muteAsset = (e) => {
+    muteAsset = async (e) => {
         const sym = e.currentTarget.dataset.sym;
         let mutedUIA = [];
         mutedUIA = localStorage.getItem('mutedUIA');
         if (mutedUIA) try { mutedUIA = JSON.parse(mutedUIA) } catch (ex) {}
         if (!mutedUIA) mutedUIA = [];
         mutedUIA.push(sym);
+        if (!await DialogManager.dangerConfirm(tt('assets_jsx.mute_asset_confirm_TICKER', {TICKER: sym}))) {
+            return;
+        }
         localStorage.setItem('mutedUIA', JSON.stringify(mutedUIA));
         window.location.reload()
     }
