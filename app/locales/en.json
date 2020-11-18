@@ -840,7 +840,7 @@
   },
   "tips_js": {
     "tip_balance_hint": "Balance that you use to reward users and that you use to earn rewards for yourself. Tokens from it can also be sent to increase the Golos Power.",
-    "claim_balance_hint1": "Balance of your share of the emission of Golos blockchain tokens, which you can use to top up your TIP balance or increase the Golos Power.",
+    "claim_balance_hint": "Balance of your share of the emission of Golos blockchain tokens, which you can use to top up your TIP balance or increase the Golos Power.",
     "claim_expiration_hint": "The tokens request window will end",
     "tradeable_tokens_that_may_be_transferred_anywhere_at_anytime": "Tradable digital tokens that can be transferred anywhere at any time.",
     "LIQUID_TOKEN_can_be_converted_to_VESTING_TOKEN_in_a_process_called_powering_up": "For example, converted to Golos Power or sent to the TIP balance for rewards.",
@@ -1055,7 +1055,7 @@
     "always_show": "Always show",
     "muted_users": "Muted Users",
     "muted_in_new_users": "Users Whose Posts Hidden In New",
-    "muted_uia": "Assets Which Are Hidden In My Assets",
+    "muted_uia": "Tokens hidden on the UIA Assets page",
     "update": "Update",
     "profile_image_url": "Profile picture url",
     "cover_image_url": "Cover image url",
