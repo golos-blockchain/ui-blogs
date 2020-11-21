@@ -269,6 +269,8 @@ class PostsIndex extends React.Component {
                     />
 
                     <div className="sticky-right-ad">
+                    <a target="_blank" href="https://coins.black/xchange_SBERRUB_to_GLS/?summ=1000&schet2=&lock2=true"><img src='https://i.imgur.com/tN2U24r.jpg' width='240' height='160' /></a>
+                    <br/ >
 
                       <iframe data-aa='1148471' src='//ad.a-ads.com/1148471?size=240x400' scrolling='no'
                       style={{width:'240px', height:'400px', border:'0px', padding:'0', overflow:'hidden'}}

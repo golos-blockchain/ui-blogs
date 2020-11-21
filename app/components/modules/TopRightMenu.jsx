@@ -83,16 +83,16 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     const donatesLink = `/@${username}/donates-to`;
 
     const faqItem = <li className={scn}>
-        <a href="/faq" title={tt('navigation.faq')}>
+        <Link to="/faq" title={tt('navigation.faq')}>
           {vertical ? <span>{tt('navigation.faq')}</span> : <Icon name="info_o" size="1_5x" />}
-        </a>
+        </Link>
       </li>
     ;
 
     const exchangesItem = <li className={scn}>
-        <a href="/exchanges" title={tt('navigation.buy_sell')}>
+        <Link to="/exchanges" title={tt('navigation.buy_sell')}>
           {vertical ? <span>{tt('navigation.buy_sell')}</span> : <Icon name="tips" size="1_25x" />}
-        </a>
+        </Link>
       </li>
     ;
     
