@@ -246,13 +246,13 @@ class PostsIndex extends React.Component {
 
                 <div className="coinmarketcap-currency-widget"
                     data-currencyid="4834" // GOLOS
-                    data-base="USD"
+                    data-base="RUB"
                     data-secondary="BTC"
                     data-ticker="false"
                     data-rank="false"
-                    data-marketcap="true"
-                    data-volume="true"
-                    data-statsticker="true"
+                    data-marketcap="false"
+                    data-volume="false"
+                    data-statsticker="false"
                     data-stats="USD">
                 </div>
 

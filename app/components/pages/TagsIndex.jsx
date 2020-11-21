@@ -16,7 +16,7 @@ export default class TagsIndex extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {order: props.order || 'name', selected: cookie.load(SELECT_TAGS_KEY) || []};
+        this.state = {order: props.order || 'posts', selected: cookie.load(SELECT_TAGS_KEY) || []};
         this.onChangeSort = this.onChangeSort.bind(this)
     }
 
