@@ -83,23 +83,22 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     const donatesLink = `/@${username}/donates-to`;
 
     const faqItem = <li className={scn}>
-        <a href="/faq" title={tt('navigation.faq')}>
+        <Link to="/faq" title={tt('navigation.faq')}>
           {vertical ? <span>{tt('navigation.faq')}</span> : <Icon name="info_o" size="1_5x" />}
-        </a>
+        </Link>
+      </li>
+    ;
+
+    const exchangesItem = <li className={scn}>
+        <Link to="/exchanges" title={tt('navigation.buy_sell')}>
+          {vertical ? <span>{tt('navigation.buy_sell')}</span> : <Icon name="tips" size="1_25x" />}
+        </Link>
       </li>
     ;
     
     const searchItem = <li className={scn}>
         <a target="blank" href="/static/search.html" title={tt('g.search')}>
           {vertical ? <span>{tt('g.search')}</span> : <Icon name="new/search" size="1_25x" />}
-        </a>
-      </li>
-    ;
-
-    const notificationItem = <li className={scn}>
-        <a href="#" title={tt('g.search')} className="number">
-          <Icon name="new/bell" size="1_25x" />
-          20
         </a>
       </li>
     ;
@@ -161,17 +160,13 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
                 {link: '#', onClick: showLogin, value: tt('g.login')}
         ];
 
-        if ($STM_Config.is_sandbox) {
-          // TODO Figured it out, how it works?
-          //user_menu.splice(2, 0, {link: '#', icon: 'chatboxes', onClick: showMessages, value: tt('g.messages')});
-        }
-      
         const voting_power_percent = account.get('voting_power') / 100
 
         return (
             <ul className={mcn + mcl}>
                 <LocaleSelect />
                 {faqItem}
+                {exchangesItem}
                 {searchItem}
                 <li className="delim show-for-medium" />
                 {submitStory}
@@ -199,10 +194,6 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
                         <div className="TopRightMenu__notificounter"><NotifiCounter fields="total" /></div>
                     </li>}
                 </LinkWithDropdown>
-                {/* <li className={"delim " + scn} /> */}
-                {/* {notificationItem} */}
-                {/* <li className={"delim " + scn} />
-                {messengerItem} */}
                 {navAdditional}
             </ul>
         );
@@ -226,6 +217,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
         <ul className={mcn + mcl}>
             <LocaleSelect />
             {faqItem}
+            {exchangesItem}
             {searchItem}
             <li className="delim show-for-medium" />
             {!probablyLoggedIn && !externalTransfer && <li className={scn}>

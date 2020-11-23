@@ -101,7 +101,7 @@ class Assets extends Component {
 
             my_assets.push(<tr key={sym}>
                 <td>
-                {description.length ? (<a target="_blank" href={description}>
+                {description.length ? (<a target="_blank" href={description} rel="nofollow noopener">
                 {image_url.length ? (<img className="Assets__marginBottom Assets__marginRight" width="36" height="36" src={image_url}/>) : null}{sym}</a>) : null}
                 {!description.length ? (<span><img className="Assets__marginBottom Assets__marginRight" width="36" height="36" src={image_url}/>{sym}</span>) : null}
                 &nbsp;&nbsp;<span><a data-sym={sym} onClick={this.muteAsset}><Icon name="eye_gray" size="0_95x" title={tt('assets_jsx.mute_asset')} /></a></span>

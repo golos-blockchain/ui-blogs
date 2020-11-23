@@ -196,6 +196,7 @@ class PostsIndex extends React.Component {
         const account = this.props.username && this.props.accounts.get(this.props.username) || null
         const json_metadata = account ? account.toJS().json_metadata : {}
         const metaData = account ? o2j.ifStringParseJSON(json_metadata) : {}
+        const active_user = this.props.username || ''
 
         let promo_posts = []
         if (['created', 'hot', 'responses', 'trending'].includes(order) && posts && posts.size) {
@@ -246,13 +247,13 @@ class PostsIndex extends React.Component {
 
                 <div className="coinmarketcap-currency-widget"
                     data-currencyid="4834" // GOLOS
-                    data-base="USD"
+                    data-base="RUB"
                     data-secondary="BTC"
                     data-ticker="false"
                     data-rank="false"
-                    data-marketcap="true"
-                    data-volume="true"
-                    data-statsticker="true"
+                    data-marketcap="false"
+                    data-volume="false"
+                    data-statsticker="false"
                     data-stats="USD">
                 </div>
 
@@ -269,6 +270,7 @@ class PostsIndex extends React.Component {
                     />
 
                     <div className="sticky-right-ad">
+                    <p align="center"><a target="_blank" href={"https://coins.black/xchange_SBERRUB_to_GLS/?summ=1000&schet2=" + active_user + "&lock2=true"}><img src='https://i.imgur.com/tN2U24r.jpg' width='220' height='150' /></a></p>
 
                       <iframe data-aa='1148471' src='//ad.a-ads.com/1148471?size=240x400' scrolling='no'
                       style={{width:'240px', height:'400px', border:'0px', padding:'0', overflow:'hidden'}}

@@ -24,6 +24,27 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
+                                <a target="_blank" href="https://coins.black/"><img src='https://i.imgur.com/UGblBpa.png' width='266' height='75' /></a>
+                                </div>
+                                <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
+                                    <a target="_blank" href="https://coins.black/xchange_SBERRUB_to_GLS/?summ=1000&schet2=&lock2=true" className="button">{tt('g.buy')} GOLOS</a>
+                                    <br />{tt('exchanges_jsx.other_options')}...
+                                </div>
+                            </div>
+                        </div>
+                        <div className='column large-12 medium-12 small-12'>
+                            <hr/>
+                        </div>
+                    </div>
+                </div>
+                <div className='landing-exchanges-block'>
+                    <div className='column large-12 medium-12 small-12'>
+                        <div className='column large-12 medium-12 small-12'>
+                            <hr/>
+                        </div>
+                        <div className='column large-12 medium-12 small-12'>
+                            <div className='row'>
+                                <div className='column large-12 medium-12 small-12' align='center'>
                                 <a target="_blank" href="https://rudex.org/"><img src='https://i.imgur.com/RyCrpvb.png' width='266' height='75' /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
@@ -110,8 +131,9 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <p className='landing-exchanges-block-text reg landing-exchanges-block-center'>{tt('exchanges_jsx.sell_check')}:</p>
-                                <p><a target="_blank" href="https://golos.store" className="golos-btn btn-secondary btn-round"><Icon name="extlink" /> golos.store</a></p>
+                                <p className='landing-exchanges-block-text reg landing-exchanges-block-center'>Кроме того, возможна:</p>
+                                <p>- покупка/продажа токенов за <a target="_blank" href="/@ecurrex-ru/vvod-i-vyvod-rublei-na-golos">ЮMoney</a> и <a target="_blank" href="/@ecurrex-ru/vvod-rublei-na-golos-cherez-qiwi">QIWI</a>, подробнее в сервисе <a target="_blank" href="/@ecurrex-ru">@ecurrex-ru <Icon name="extlink" /></a></p>
+                                <p>- покупка чеков с токенами GOLOS на <a target="_blank" href="https://golos.store">golos.store <Icon name="extlink" /></a></p>
                                 </div>
                             </div>
                         </div>

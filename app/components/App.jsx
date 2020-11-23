@@ -61,7 +61,8 @@ const availableDomains = [
     'vk.com',
     'coinmarketcap.com',
     'sharpay.io',
-    'golos.store'
+    'golos.store',
+    'coins.black'
 ];
 
 class App extends React.Component {

@@ -203,6 +203,7 @@ class CreateAsset extends Component {
             <form onSubmit={this.handleSubmitForm}>
                 <div className="row">
                     <div className="column small-10">
+                        <span className="float-right"><a target="_blank" href="/@allforyou/sozdaem-i-ispolzuem-uia-na-golose">Подробнее о создании UIA актива</a></span>
                         <h4>{tt('assets_jsx.create_asset')}</h4>
                     </div>
                 </div>
