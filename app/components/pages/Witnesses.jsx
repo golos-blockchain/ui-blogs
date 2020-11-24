@@ -270,7 +270,7 @@ class Witnesses extends Component {
                 <div className="row">
                     <div className="column">
                         <a target="_blank" href="https://t.me/golos_delegates" className="golos-btn btn-secondary btn-round" style={{ float: 'right', marginTop: '0.75rem' }}>{tt('witnesses_jsx.chat_delegates')} <Icon name="new/telegram" /></a>
-                        <a target="_blank" href="https://ropox.app/chainprops" className="golos-btn btn-secondary btn-round" style={{ float: 'right', marginTop: '0.75rem' }}>{tt('witnesses_jsx.chain_properties')} <Icon name="extlink" /></a>
+                        {/* <a target="_blank" href="https://ropox.app/chainprops" className="golos-btn btn-secondary btn-round" style={{ float: 'right', marginTop: '0.75rem' }}>{tt('witnesses_jsx.chain_properties')} <Icon name="extlink" /></a> */}
                         <h2>{tt('witnesses_jsx.top_witnesses')}</h2>
                         {currentProxy && currentProxy.length ? (
                             <p>{tt('witnesses_jsx.witness_set')} <a href="#bottom">Отмена прокси.</a></p>
