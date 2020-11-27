@@ -24,7 +24,7 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <a target="_blank" href="https://coins.black/"><img src='https://i.imgur.com/UGblBpa.png' width='266' height='75' /></a>
+                                <a target="_blank" href="https://coins.black/"><img src='https://i.imgur.com/1FvfDHw.png' width='275' height='67' /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
                                     <a target="_blank" href="https://coins.black/xchange_SBERRUB_to_GLS/?summ=1000&schet2=&lock2=true" className="button">{tt('g.buy')} GOLOS</a>
@@ -45,7 +45,7 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <a target="_blank" href="https://rudex.org/"><img src='https://i.imgur.com/RyCrpvb.png' width='266' height='75' /></a>
+                                <a target="_blank" href="https://rudex.org/"><img src='https://i.imgur.com/RyCrpvb.png' width='275' height='77' /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
                                     <a target="_blank" href="/@allforyou/golos-delistyat-s-kuny-perekhodim-na-rudex">{tt('exchanges_jsx.guide_user')} @allforyou</a>
@@ -67,7 +67,7 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <a target="_blank" href="https://livecoin.net/"><img src='https://i.imgur.com/7RrhYFw.png' width='308' height='75' /></a>
+                                <a target="_blank" href="https://livecoin.net/"><img src='https://i.imgur.com/7RrhYFw.png' width='275' height='67' /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
                                     <a target="_blank" href="/@cognition/obzor-kriptovalyutnoi-birzhi-livecoin">{tt('exchanges_jsx.guide_user')} @cognition</a>

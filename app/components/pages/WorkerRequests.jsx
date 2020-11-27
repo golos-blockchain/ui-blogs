@@ -333,6 +333,10 @@ class WorkerRequests extends React.Component {
     return (
       <div className="App-workers">
         <div><h2>{tt('workers.worker_proposals')}</h2></div>
+        <div className="column secondary">
+          {tt('workers.workers_info')} <a target="_blank" href="/@lex/interfeis-dlya-zayavok-vorkerov">{tt('g.more_hint')}</a> <Icon name="extlink" size="1_5x" />
+          <hr />
+        </div>
         <Button onClick={this.createRequest} round="true" type="primary">+ {tt('workers.create_request')}</Button>
         <WorkerFunds/>
         <form className="Input__Inline" style={{marginBottom: '1rem'}} onSubmit={this.searchByAuthor}>
