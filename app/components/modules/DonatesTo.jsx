@@ -84,7 +84,7 @@ class DonatesTo extends React.Component {
             <div className="row">
                 <div className="column small-12">
                     {/** history */}
-                    {process.env.BROWSER && (<span style={{ float: 'right' }} title={tt('g.referral_link_title')}><Icon name="hf/hf5" size="2x" /> {tt('g.referral_link')} - <Link to={"/welcome?invite=" + account.name}>{window.location.origin + "/welcome?invite=" + account.name}</Link><CopyToClipboard text={window.location.origin + "/welcome?invite=" + account.name}><Icon name="copy" size="2x" /></CopyToClipboard></span>)}
+                    {process.env.BROWSER && (<span style={{float: 'right', fontSize: '85%'}} title={tt('g.referral_link_title')}><Icon name="hf/hf5" size="2x" /> {tt('g.referral_link')} (?) - <Link to={"/welcome?invite=" + account.name}>{window.location.origin + "/welcome?invite=" + account.name}</Link><CopyToClipboard text={window.location.origin + "/welcome?invite=" + account.name}><span style={{cursor: 'pointer'}}><Icon name="copy" size="2x" /></span></CopyToClipboard></span>)}
                     <h4 className="uppercase">{incoming ? tt('g.donates_from') : tt('g.donates_to')}</h4>
                     {navButtons}
                     <table>

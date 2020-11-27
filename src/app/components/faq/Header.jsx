@@ -29,7 +29,7 @@ const Title = styled.h1`
     max-width: 600px;
     color: #393636;
     font-family: 'Open Sans', sans-serif;
-    font-size: 34px;
+    font-size: 30px;
     font-weight: 900;
     letter-spacing: 0.37px;
     line-height: 41px;

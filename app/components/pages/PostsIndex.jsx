@@ -228,7 +228,7 @@ class PostsIndex extends React.Component {
                             />
 
                         <div className="strike">
-                            <span><Link target="_blank" to="https://wiki.golos.id/users/welcome#prodvinut-post">{tt('g.promote_block')}</Link></span>
+                            <span><a target="_blank" href="https://wiki.golos.id/users/welcome#prodvinut-post">{tt('g.promote_block')}</a></span>
                         </div>
                       </div> : null }
 

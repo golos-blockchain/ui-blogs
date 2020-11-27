@@ -93,6 +93,7 @@
     "memo": "Memo",
     "messages": "Messages",
     "more": "more",
+    "more_hint": "More",
     "mute": "Mute",
     "new": "new",
     "newer": "Newer",
@@ -201,7 +202,7 @@
     "recover_password": "Recover Account",
     "current_password": "Current Password",
     "generated_password": "Generated Password",
-    "backup_password_by_storing_it": "Back it up by storing in your password manager or a text file",
+    "backup_password_by_storing_it": "Back it up by storing in your password manager or a text file.",
     "click_to_generate_password": "Click to generate password",
     "re_enter_generate_password": "Re-enter Generated Password",
     "understand_that_APP_NAME_cannot_recover_password": "I understand that %(APP_NAME)s cannot recover lost passwords",
@@ -305,8 +306,6 @@
     "guide_user": "Instructions for the exchange from",
     "total_supply": "Information about the total supply of tokens",
     "other_options": "for RUB / UAH / USD and many other options",
-    "p2p_bots": "Bots in Telegram for P2P-exchange",
-    "sell_check": "Selling cheques with tokens",
     "questions": "Any questions",
     "community_chat": "You can get answers in the community chat",
     "delegate_chat": "and in the delegates chat"
@@ -669,6 +668,7 @@
     "please_remove_following_html_elements": "Please remove the following HTML elements from your post: "
   },
   "witnesses_jsx": {
+    "witness_info": "Witnesses - are users who are elected by the community vote and are engaged in supporting the nodes that ensure the operation of the blockchain and many other issues related to the development of the project.",
     "witness_thread": "witness thread",
     "top_witnesses": "Witness Voting",
     "what_is_api": "API-nodes have higher demands on server resources, it is through them come the queries to the blockchain for sending/receiving information, they are important for the development of a variety of clients and services...",
@@ -725,6 +725,7 @@
     }
   },
   "assets_jsx": {
+    "assets_info": "User Issued Assets (tokens) that can be exchanged, traded on an internal exchange, and used in various blockchain services.",
     "create_asset": "Creating asset",
     "symbol": "Ticker",
     "symbol_too_short": "At least 3 characters",
@@ -766,7 +767,7 @@
   },
   "invites_jsx": {
     "create_invite": "Create new invite check",
-    "create_invite_info": "Cheques (invite codes) are a universal tool for transferring a fixed number of GOLOS tokens to other people outside the blockchain. There are two ways to redeem the code: transfer its balance to your account or register a new account using it.",
+    "create_invite_info": "Cheques (invite codes) are a universal tool for transferring of GOLOS tokens to other people outside the blockchain. There are two ways to redeem the code: transfer its balance to your account or register a new account using it.",
     "generate_new": "Generate new",
     "public_key": "Public key",
     "private_key": "Private key",
@@ -1247,6 +1248,7 @@
     "footer_message": "We will never ask for your private keys or money. If someone introduces themselves as members of the Golos Blockchain team and asks for such information, please contact us."
   },
   "workers": {
+    "workers_info": "For any work useful for the Golos Blockchain, you can get a reward by submitting an application, describing in detail what was done (development, design, advertising, documentation), anything if this initiative is supported by the community.",
     "worker_proposals": "Worker proposals",
     "create_request": "Create a proposal",
     "created": "Voting",

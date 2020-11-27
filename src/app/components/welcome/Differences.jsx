@@ -22,7 +22,6 @@ const Description = styled.div`
     font-family: 'Open Sans', 'sans-serif';
     font-size: 14px;
     line-height: 1.57;
-    color: #9fa3a7;
 `;
 
 const Block = styled.div`

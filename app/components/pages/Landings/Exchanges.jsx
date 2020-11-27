@@ -24,7 +24,7 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <a target="_blank" href="https://coins.black/"><img src='https://i.imgur.com/UGblBpa.png' width='266' height='75' /></a>
+                                <a target="_blank" href="https://coins.black/"><img src='https://i.imgur.com/1FvfDHw.png' width='275' height='67' /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
                                     <a target="_blank" href="https://coins.black/xchange_SBERRUB_to_GLS/?summ=1000&schet2=&lock2=true" className="button">{tt('g.buy')} GOLOS</a>
@@ -45,7 +45,7 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <a target="_blank" href="https://rudex.org/"><img src='https://i.imgur.com/RyCrpvb.png' width='266' height='75' /></a>
+                                <a target="_blank" href="https://rudex.org/"><img src='https://i.imgur.com/RyCrpvb.png' width='275' height='77' /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
                                     <a target="_blank" href="/@allforyou/golos-delistyat-s-kuny-perekhodim-na-rudex">{tt('exchanges_jsx.guide_user')} @allforyou</a>
@@ -67,7 +67,7 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <a target="_blank" href="https://livecoin.net/"><img src='https://i.imgur.com/7RrhYFw.png' width='308' height='75' /></a>
+                                <a target="_blank" href="https://livecoin.net/"><img src='https://i.imgur.com/7RrhYFw.png' width='275' height='67' /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
                                     <a target="_blank" href="/@cognition/obzor-kriptovalyutnoi-birzhi-livecoin">{tt('exchanges_jsx.guide_user')} @cognition</a>
@@ -103,26 +103,6 @@ class Exchanges extends React.Component {
                         </div>
                     </div>
                 </div> 
-                {/* <div className='landing-exchanges-block'>
-                    <div className='column large-12 medium-12 small-12'>
-                        <div className='column large-12 medium-12 small-12'>
-                            <hr/>
-                        </div>
-                        <div className='column large-12 medium-12 small-12'>
-                            <div className='row'>
-                                <div className='column large-12 medium-12 small-12' align='center'>
-                                <a target="_blank" href="https://hive-engine.com/"><img src='https://i.imgur.com/z5JfS8K.png' width='344' height='55' /></a>
-                                </div>
-                                <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
-                                    <a target="_blank" href="https://hive-engine.com/?p=market&t=SWAP.GOLOS" className="button">GOLOS-HIVE</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='column large-12 medium-12 small-12'>
-                            <hr/>
-                        </div>
-                    </div>
-                </div> */}
                 <div className='landing-exchanges-block'>
                     <div className='column large-12 medium-12 small-12'>
                         <div className='column large-12 medium-12 small-12'>
@@ -132,26 +112,9 @@ class Exchanges extends React.Component {
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
                                 <p className='landing-exchanges-block-text reg landing-exchanges-block-center'>Кроме того, возможна:</p>
-                                <p>- покупка/продажа токенов за <a target="_blank" href="/@ecurrex-ru/vvod-i-vyvod-rublei-na-golos">ЮMoney</a> и <a target="_blank" href="/@ecurrex-ru/vvod-rublei-na-golos-cherez-qiwi">QIWI</a>, подробнее в сервисе <a target="_blank" href="/@ecurrex-ru">@ecurrex-ru <Icon name="extlink" /></a></p>
+                                <p>- покупка/продажа токенов за <a target="_blank" href="/@ecurrex-ru/vvod-i-vyvod-rublei-na-golos">ЮMoney</a> или <a target="_blank" href="/@ecurrex-ru/vvod-rublei-na-golos-cherez-qiwi">QIWI</a>, подробнее в сервисе <a target="_blank" href="/@ecurrex-ru">@ecurrex-ru <Icon name="extlink" /></a></p>
                                 <p>- покупка чеков с токенами GOLOS на <a target="_blank" href="https://golos.store">golos.store <Icon name="extlink" /></a></p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='column large-12 medium-12 small-12'>
-                            <hr/>
-                        </div>
-                    </div>
-                </div>
-                <div className='landing-exchanges-block'>
-                    <div className='column large-12 medium-12 small-12'>
-                        <div className='column large-12 medium-12 small-12'>
-                            <hr/>
-                        </div>
-                        <div className='column large-12 medium-12 small-12'>
-                            <div className='row'>
-                                <div className='column large-12 medium-12 small-12' align='center'>
-                                <p className='landing-exchanges-block-text reg landing-exchanges-block-center'>{tt('exchanges_jsx.p2p_bots')}:</p>
-                                <p><a target="_blank" href="https://t.me/TellerBot" className="golos-btn btn-secondary btn-round"><Icon name="new/telegram" /> TellerBot</a>&nbsp;&nbsp;<a target="_blank" href="https://t.me/P2PDEXBitshares_bot" className="golos-btn btn-secondary btn-round"><Icon name="new/telegram" /> DexGarant</a></p>
+                                <p>- торговля через P2P-сделки в телеграм-ботах <a target="_blank" href="https://t.me/TellerBot"><Icon name="new/telegram" /> TellerBot</a> или <a target="_blank" href="https://t.me/P2PDEXBitshares_bot"><Icon name="new/telegram" /> DexGarant</a></p>
                                 </div>
                             </div>
                         </div>

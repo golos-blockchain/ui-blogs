@@ -444,7 +444,7 @@ class UserWallet extends React.Component {
             <div className="row">
                 <div className="column small-12">
                     {/** history */}
-                    <span className="secondary" style={{ float: 'right' }}><Icon name="new/search" /> {tt('userwallet_jsx.history_viewing')}: <Link target="_blank" to={"https://golos.cf/@" + account.get('name')}>golos.cf <Icon name="extlink" /></Link> / <Link target="_blank" to={"https://explorer.golos.id/#account/" + account.get('name')}>explorer <Icon name="extlink" /></Link></span>
+                    <span className="secondary" style={{ float: 'right' }}><Icon name="new/search" /> {tt('userwallet_jsx.history_viewing')}: <a target="_blank" href={"https://golos.cf/@" + account.get('name')}>golos.cf <Icon name="extlink" /></a> / <a target="_blank" href={"https://explorer.golos.id/#account/" + account.get('name')}>explorer <Icon name="extlink" /></a></span>
                     <h4>{tt('userwallet_jsx.history')}</h4>
                     <table>
                         <tbody>

@@ -168,7 +168,7 @@ class CreateInvite extends Component {
             <form onSubmit={this.handleSubmitForm}>
                 <div className="row">
                     <div className="column small-10 secondary">
-                        {tt('invites_jsx.create_invite_info')}
+                        {tt('invites_jsx.create_invite_info')} <a target="_blank" href="/@lex/cheki-kak-instrument-peredachi-tokenov">{tt('g.more_hint')}</a> <Icon name="extlink" size="1_5x" />
                     <hr />
                     </div>
                 </div>
@@ -253,7 +253,7 @@ class CreateInvite extends Component {
                                     type="checkbox"
                                     {...is_referral.props} onChange={(e) => this.onChangeIsReferral(e)}
                                 />
-                                {tt('invites_jsx.is_referral')}
+                                {tt('invites_jsx.is_referral')} (?)
                             </label>
                         </div>
                         {is_referral.touched && is_referral.blur && is_referral.error &&
