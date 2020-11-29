@@ -34,12 +34,6 @@ injectGlobal`
     }
 `;
 
-const availableLinks = [
-    'https://twitter.com/goloschain',
-    'https://t.me/golos_id',
-    'https://vk.com/golosclassic'
-];
-
 const availableDomains = [
     'golos.id',
     'golos.in',
@@ -155,7 +149,6 @@ class App extends React.Component {
             a &&
             a.hostname &&
             a.hostname !== window.location.hostname &&
-            !availableLinks.includes(a.href) &&
             !availableDomains.some(domain =>
                 new RegExp(`${domain}$`).test(a.hostname)
             )
