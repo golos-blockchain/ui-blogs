@@ -51,7 +51,8 @@ const availableDomains = [
     'coinmarketcap.com',
     'sharpay.io',
     'golos.store',
-    'coins.black'
+    'coins.black',
+    'golos.chatbro.com'
 ];
 
 class App extends React.Component {
@@ -308,6 +309,7 @@ class App extends React.Component {
                             onClick={() => this.setState({ showBanner: false })}
                         />
                         <div className="text-center">
+                            <br />
                             <h2>
                                 {tt('submit_a_story.welcome_to_the_blockchain')}
                             </h2>
@@ -330,7 +332,6 @@ class App extends React.Component {
                                 {' '}
                                 <b>{tt('submit_a_story.learn_more')}</b>{' '}
                             </a>
-                            <br />
                             <br />
                         </div>
                     </div>

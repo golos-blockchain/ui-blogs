@@ -25,6 +25,7 @@
     "APP_NAME_account": "%(APP_NAME)s account",
     "24_hour": "24 hour",
     "30_day": "30 day",
+    "to_ask": "To ask",
     "add": "Add",
     "age": "age",
     "all_langs": "All languages",
@@ -1249,6 +1250,7 @@
   },
   "workers": {
     "workers_info": "For any work useful for the Golos Blockchain, you can get a reward by submitting an application, describing in detail what was done (development, design, advertising, documentation), anything if this initiative is supported by the community.",
+    "chat_workers": "Workers Chat",
     "worker_proposals": "Worker proposals",
     "create_request": "Create a proposal",
     "created": "Voting",
