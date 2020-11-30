@@ -227,7 +227,7 @@ class LoginForm extends Component {
            <div className="LoginForm">
                {message}
                <center>
-                   <h3>{tt('loginform_jsx.returning_users')}<span className="OpAction">{title}</span></h3>
+                   <h3><span className="OpAction">{title}</span></h3>
                </center>
                <br />
                {form}

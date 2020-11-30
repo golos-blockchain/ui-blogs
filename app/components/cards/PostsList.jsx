@@ -258,7 +258,7 @@ class PostsList extends PureComponent {
               </li>
             ))
 
-            if (i % this.props.adsPerPost == 0) {
+            {/* if (i % this.props.adsPerPost == 0) {
               // Show ads each 10 posts
               result.push((
                 <li key={i}>
@@ -268,7 +268,7 @@ class PostsList extends PureComponent {
                   allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe> 
                   
                 </li>))
-            }
+            } */}
 
             i += 1
           }
