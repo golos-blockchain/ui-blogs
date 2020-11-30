@@ -332,6 +332,7 @@ class WorkerRequests extends React.Component {
     ];
     return (
       <div className="App-workers">
+        <a target="_blank" href="https://t.me/golos_workers" className="golos-btn btn-secondary btn-round" style={{ float: 'right', marginTop: '0.75rem' }}><Icon name="new/telegram" /> {tt('workers.chat_workers')}</a>
         <div><h2>{tt('workers.worker_proposals')}</h2></div>
         <div className="column secondary">
           {tt('workers.workers_info')} <a target="_blank" href="/@lex/interfeis-dlya-zayavok-vorkerov">{tt('g.more_hint')}</a> <Icon name="extlink" size="1_5x" />

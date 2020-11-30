@@ -83,7 +83,7 @@ export default class Questions extends PureComponent {
                             <div className="columns small-12 medium-12 large-2">
                                 <div className="row small-up-2 medium-up-2 large-up-1">
                                     <div className="columns">
-                                        <Link href="/faq">
+                                        <Link target="_blank" href="/faq">
                                             <Icon
                                                 name="new/monitor"
                                                 size="2x"
@@ -91,7 +91,7 @@ export default class Questions extends PureComponent {
                                         </Link>
                                     </div>
                                     <div className="columns">
-                                        <Link href="https://wiki.golos.id">
+                                        <Link target="_blank" href="https://wiki.golos.id">
                                             <Icon
                                                 name="new/wikipedia"
                                                 size="2x"
@@ -99,7 +99,7 @@ export default class Questions extends PureComponent {
                                         </Link>
                                     </div>
                                     <div className="columns">
-                                        <Link href="https://t.me/golos_id">
+                                        <Link target="_blank" href="https://t.me/goloshelp">
                                             <Icon
                                                 name="new/telegram"
                                                 size="2x"

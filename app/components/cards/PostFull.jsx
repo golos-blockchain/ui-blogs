@@ -32,7 +32,7 @@ function TimeAuthorCategory({ content, authorRepLog10, showTags }) {
         <span className="PostFull__time_author_category vcard">
             <Icon name="clock" className="space-right" />
             <TimeAgoWrapper date={content.created} className="updated" />
-            {} {tt('g.by')}{' '}
+            {' '}
             <Author author={content.author} authorRepLog10={authorRepLog10} donateUrl={content.url} />
             {showTags && (
                 <span>

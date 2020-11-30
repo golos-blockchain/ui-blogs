@@ -16,8 +16,7 @@
     "hidden": "hidden",
     "unavailable" : "User is not found",
     "due_to_illegal_content": "or was hidden due to illegal content",
-    "terms_of_service": "Terms of service",
-    "terms_of_service_section": ", section 5.5.7"
+    "terms_of_service": "Terms of service"
   },
   "g": {
     "golos_fest" : "Golos.id News",
@@ -25,6 +24,7 @@
     "APP_NAME_account": "%(APP_NAME)s account",
     "24_hour": "24 hour",
     "30_day": "30 day",
+    "to_ask": "To ask",
     "add": "Add",
     "age": "age",
     "all_langs": "All languages",
@@ -51,7 +51,6 @@
     "buy": "Buy",
     "buy_VESTING_TOKEN": "Buy %(VESTING_TOKEN)s",
     "buy_or_sell": "Buy or Sell",
-    "by": "by",
     "cancel": "Cancel",
     "cancel_all": "Cancel All",
     "change_password": "Change Password",
@@ -242,20 +241,6 @@
     "server_returned_error": "server returned error",
     "APP_NAME_support": "%(APP_NAME)s Support",
     "please_email_questions_to": "Please email your questions to",
-    "next_7_strings_sinngle_block": {
-      "authors_get_paid_when_people_like_you_upvote_their_post": "Authors get paid when people like you upvote their post",
-      "if_you_enjoyed_what_you_read_earn_amount": "Join our amazing community to comment and reward others.",
-      "when_you": "when you",
-      "when_you_link_text": "Sign Up",
-      "and_vote_for_it": "and vote for it",
-      "sign_up_now_to_receive": "Sign up now to receive ",
-      "free_steem": "FREE %(LIQUID_TOKEN)ss!"
-    },
-    "next_3_strings_together": {
-      "show_more": "Show more",
-      "show_less": "Show fewer",
-      "value_posts": "low value posts"
-    },
     "show_less_low_value_posts": "Show fewer low value posts",
     "show_more_low_value_posts": "Show more low value posts",
     "select_topic": "Select Topic",
@@ -272,11 +257,6 @@
     "terms_and_conditions": "Terms and Conditions",
     "cryptography_test_failed": "Cryptography test failed",
     "unable_to_log_you_in": "We will be unable to log you in with this browser",
-    "next_3_blocks": {
-      "the_latest_versions_of": "The latest versions of",
-      "and": "and",
-      "are_well_tested_and_known_to_work_with": "are well tested and known to work with %(APP_DOMAIN)s."
-    },
     "account_creation_succes": "Your account has been successfully created!",
     "account_recovery_succes": "Your account has been successfully recovered!",
     "password_update_succes": "The password for %(accountName)s was successfully updated",
@@ -414,10 +394,6 @@
     "main_tag_hint": "First tag is main. Post will be posted in that category.",
     "title_is_required": "Title is not specified",
     "title_is_not_valid": "Title is not valid"
-  },
-  "tags_page": {
-    "replies": "Replies",
-    "payouts": "Payouts"
   },
   "postfull_jsx": {
     "this_post_is_not_available_due_to_breach_of_legislation": "This post is not available due to breach of legislation.",
@@ -618,7 +594,6 @@
     "without_country_code": "Without country code",
     "examples": "Enter number without country code, for example: 541-754-3010 | 89-636-48018",
     "land_lines_cannot_receive_sms_messages": "* Land lines cannot send or receive SMS messages",
-    "message_and_data_rates_may_apply": "* Message and data rates may apply",
     "why_send_sms": "Why send SMS?",
     "mobile_description": {
       "one": "Right now, the registration on media-blockchain %(APP_NAME)s costs money for the system. In order for the community to grow quicker, we take those costs on board and pay out 5 %(APP_NAME)s tokens to each new member.",
@@ -702,13 +677,7 @@
     "witness_proxy_current": "Your current proxy is",
     "witness_proxy_set": "Set proxy",
     "witness_proxy_clear": "Clear proxy",
-    "proxy_update_error": "Your proxy was not updated",
-    "you_have_votes_remaining": "",
-    "you_have_votes_remaining_count": {
-      "zero": "You have no votes remaining",
-      "one": "You have 1 vote remaining",
-      "other": "You have %(count)s votes remaining"
-    }
+    "proxy_update_error": "Your proxy was not updated"
   },
   "votesandcomments_jsx": {
     "no_responses_yet_click_to_respond": "No responses yet. Click to respond.",
@@ -812,34 +781,6 @@
     "your_existing_DEBT_TOKEN_are_liquid_and_transferable": "Your existing %(DEBT_TOKEN)s are liquid and transferable. Instead you may wish to trade %(DEBT_TOKEN)s directly in this site under %(link)s or transfer to an external market.",
     "DEBT_TOKEN_will_be_unavailable": "This action will take place 3.5 days from now and can not be canceled. These %(DEBT_TOKEN)s will immediately become unavailable"
   },
-  "user_profile_permissions": {
-    "author_rewards_last_week": "Author rewards last week",
-    "confirm": "Confirm",
-    "canceled": "Canceled",
-    "asset": "Asset",
-    "this_memo_is_private": "This Memo is Private",
-    "this_memo_is_public": "This Memo is Public",
-    "power_up": "Power Up",
-    "power_down": "Power Down",
-    "transfer": "Transfer",
-    "deposit": "Deposit",
-    "basic": "Basic",
-    "advanced": "Advanced",
-    "convert_to_VESTING_TOKEN": "Convert to %(VESTING_TOKEN)s",
-    "transfer_to_account": "Transfer to Account",
-    "about_APP_NAME": "About %(APP_NAME)s",
-    "APP_NAME_is_a_social_media_platform_where_everyone_gets_paid_for_creating_and_curating_content": "%(APP_NAME)s is a social media platform where everyone gets paid for creating and curating content",
-    "APP_NAME_is_a_social_media_platform_where_everyone_gets_paid": "%(APP_NAME)s is a social media platform where everyone gets paid for creating and curating content. It leverages a robust digital points system, called %(LIQUID_TOKEN)s, that supports real value for digital rewards through market price discovery and liquidity.",
-    "learn_more_at_LANDING_PAGE_URL": "Learn more at %(LANDING_PAGE_URL)s",
-    "resources": "Resources",
-    "join_our_slack": "Join our Slack",
-    "trending_24_hour": "trending (24 hour)",
-    "home": "home",
-    "posting": "Posting",
-    "owner": "Owner",
-    "active_or_owner": "Active or Owner",
-    "sign": "Sign"
-  },
   "tips_js": {
     "tip_balance_hint": "Balance that you use to reward users and that you use to earn rewards for yourself. Tokens from it can also be sent to increase the Golos Power.",
     "claim_balance_hint": "Balance of your share of the emission of Golos blockchain tokens, which you can use to top up your TIP balance or increase the Golos Power.",
@@ -939,8 +880,6 @@
     "issue": "Issue of tokens ",
     "to_account": " to account "
   },
-  "reblog_jsx": {
-  },
   "savingswithdrawhistory_jsx": {
     "cancel_this_withdraw_request": "Cancel this withdraw request?",
     "pending_savings_withdrawals": "PENDING SAVINGS WITHDRAWS",
@@ -1012,7 +951,6 @@
     "to_comment_and_reward_others": " to comment and reward others.",
     "sign_up_now_to_receive": "Sign up now to receive ",
     "free_money": "FREE MONEY!",
-    "returning_users": "Returning Users: ",
     "join_our": "Join our"
   },
   "mobilevalidation_js": {
@@ -1126,10 +1064,6 @@
     "history_viewing": "Services history",
     "history": "HISTORY"
   },
-  "generated_password_input": {
-    "i_have_read_and_agree_to_the": "I have read and agree to the",
-    "terms_of_service": "Terms of service"
-  },
   "user_saga_js": {
     "image_upload" : {
       "uploading": "Uploading",
@@ -1233,13 +1167,10 @@
     "from": "From",
     "to": "To"
   },
-  "messages_jsx": {
-    "start_conversation": "Start conversation"
-  },
   "faq_jsq": {
     "page_title": "Frequently Asked Questions",
     "page_description" : "This page contains popular user questions and official Golos Blockchain communication channels.",
-    "telegram": "telegram",
+    "telegram": "to ask",
     "email": "email",
     "wiki": "wiki golos",
     "twitter": "twitter",
@@ -1249,6 +1180,7 @@
   },
   "workers": {
     "workers_info": "For any work useful for the Golos Blockchain, you can get a reward by submitting an application, describing in detail what was done (development, design, advertising, documentation), anything if this initiative is supported by the community.",
+    "chat_workers": "Workers Chat",
     "worker_proposals": "Worker proposals",
     "create_request": "Create a proposal",
     "created": "Voting",

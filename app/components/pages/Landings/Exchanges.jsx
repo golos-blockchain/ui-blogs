@@ -28,7 +28,8 @@ class Exchanges extends React.Component {
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
                                     <a target="_blank" href="https://coins.black/xchange_SBERRUB_to_GLS/?summ=1000&schet2=&lock2=true" className="button">{tt('g.buy')} GOLOS</a>
-                                    <br />{tt('exchanges_jsx.other_options')}...
+                                    <br />{tt('exchanges_jsx.other_options')}<br />
+                                    <a target="_blank" href="/@on0tole/pryamaya-pokupka-tokenov-golos-za-rubli-i-ne-tolko">{tt('g.more_hint')}</a> <Icon name="extlink" />
                                 </div>
                             </div>
                         </div>

@@ -251,3 +251,14 @@ ul > li.Header__top-logo > a {
   margin-right: 4rem;
   color: #ec5840;
 }
+
+.question {
+  float: right;
+  margin-top: 0.5rem;
+  a {
+    color: gray;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 14px;
+  }
+}

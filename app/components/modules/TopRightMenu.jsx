@@ -89,13 +89,6 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
       </li>
     ;
 
-    const exchangesItem = <li className={scn}>
-        <Link to="/exchanges" title={tt('navigation.buy_sell')}>
-          {vertical ? <span>{tt('navigation.buy_sell')}</span> : <Icon name="tips" size="1_25x" />}
-        </Link>
-      </li>
-    ;
-    
     const searchItem = <li className={scn}>
         <a target="blank" href="/static/search.html" title={tt('g.search')}>
           {vertical ? <span>{tt('g.search')}</span> : <Icon name="new/search" size="1_25x" />}
@@ -166,7 +159,6 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
             <ul className={mcn + mcl}>
                 <LocaleSelect />
                 {faqItem}
-                {exchangesItem}
                 {searchItem}
                 <li className="delim show-for-medium" />
                 {submitStory}
@@ -217,7 +209,6 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
         <ul className={mcn + mcl}>
             <LocaleSelect />
             {faqItem}
-            {exchangesItem}
             {searchItem}
             <li className="delim show-for-medium" />
             {!probablyLoggedIn && !externalTransfer && <li className={scn}>

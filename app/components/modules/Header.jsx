@@ -179,16 +179,6 @@ class Header extends React.Component {
                 return {link: sortOrderToLink(so[0], topic_original_link, current_account_name), value: so[1], active};
             });
 
-        let sort_order_extra_menu = null;
-        if (sort_order === 'trending' || sort_order === 'trending30') {
-            const items = [
-                {link: `/trending/${topic_original_link}`, value: tt('g.24_hour'), active: sort_order === 'trending'},
-                {link: `/trending30/${topic_original_link}`, value: tt('g.30_day'), active: sort_order === 'trending30'}
-            ];
-            // hide extra menu until crowdsale start because they make no sense
-            sort_order_extra_menu = <HorizontalMenu items={items} />
-        }
-
         return (
             <header className="Header noPrint">
                 <div className="Header__top header">
@@ -215,6 +205,7 @@ class Header extends React.Component {
                     <div className={'Header__sub-nav show-for-medium hide-for-small ' + (this.state.subheader_hidden ? ' hidden' : '')}>
                         <div className="row">
                             <div className="columns">
+                                <span className="question"><a target="_blank" href="https://golos.chatbro.com"><Icon name="new/telegram" />&nbsp;&nbsp;{tt('g.to_ask')}</a></span>
                                 <HorizontalMenu items={sort_order_menu_horizontal} />
                             </div>
                         </div>
