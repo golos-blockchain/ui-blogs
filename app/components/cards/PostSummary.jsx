@@ -156,9 +156,10 @@ class PostSummary extends React.Component {
         // author and category
         let author_category = <span className="vcard">
             <a href={title_link_url} onClick={e => navigate(e, onClick, post, title_link_url)}><TimeAgoWrapper date={p.created} className="updated" /></a>
+            {' '}
             {blockEye && <MuteAuthorInNew author={p.author} />}
             <Author author={p.author} authorRepLog10={authorRepLog10} follow={false} mute={false} />
-            {tt('g.in')} <TagList post={p} single />
+            {} {tt('g.in')} <TagList post={p} single />
         </span>
 
         const content_footer = <div className="PostSummary__footer">
