@@ -11,7 +11,7 @@ const Row = styled.div`
 
 const Header = styled.div`
     font-family: ${a => a.theme.fontFamilyBold};
-    font-size: 36px;
+    font-size: 30px;
     line-height: 1.06;
     letter-spacing: 0.6px;
     color: #333;
@@ -72,9 +72,10 @@ export default class About extends PureComponent {
             <Root>
                 <Row className="row align-middle">
                     <div className="columns">
-                        <Header>Golos.id <span className="secondary">(зеркало <a target="_blank" href="https://golos.in/">golos.in</a>)</span></Header>
+                        <Header>Наши веб-клиенты: <a target="_blank" href="https://golos.id/">golos.id</a> и <a target="_blank" href="https://golos.in/">golos.in</a></Header>
                         <SubHeader>
-                            Это интересные истории, полезные статьи, творческий контент, которые благодаря блокчейн-технологиям останутся в веках с подтверждённым авторством.
+                            Интересные истории, полезные статьи, творческий контент, которые благодаря блокчейн-технологиям останутся в веках с подтверждённым авторством.<br /><br />
+                            Пишите, общайтесь, получайте вознаграждения и награждайте других.
                         </SubHeader>
                         <div className="row small-up-1 medium-up-2 large-up-4">
                             {this._renderItem(
@@ -94,7 +95,7 @@ export default class About extends PureComponent {
                             )}
                             {this._renderItem(
                                 'Информация принадлежит вам,',
-                                'а не сайту',
+                                'а не владельцу сайта',
                                 'teamwork'
                             )}
                         </div>

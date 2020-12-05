@@ -113,8 +113,7 @@ export const CATEGORIES = [
     'экономика',
     'юмор',
     'прочее',
-    'en',
-    'nsfw'
+    'en'
 ];
 
 export const CONFETTI_CONFIG = {
