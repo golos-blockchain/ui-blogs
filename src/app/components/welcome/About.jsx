@@ -72,9 +72,9 @@ export default class About extends PureComponent {
             <Root>
                 <Row className="row align-middle">
                     <div className="columns">
-                        <Header>Наши веб-клиенты: <a target="_blank" href="https://golos.id/">golos.id</a> и <a target="_blank" href="https://golos.in/">golos.in</a></Header>
+                        <Header>Основные веб-клиенты: <a target="_blank" href="https://golos.id/">golos.id</a> и <a target="_blank" href="https://golos.in/">golos.in</a></Header>
                         <SubHeader>
-                            Интересные истории, полезные статьи, творческий контент, которые благодаря блокчейн-технологиям останутся в веках с подтверждённым авторством.<br /><br />
+                            Голос - это интересные истории, полезные статьи, творческий контент, которые благодаря блокчейн-технологиям останутся в веках с подтверждённым авторством и без цензуры.<br /><br />
                             Пишите, общайтесь, получайте вознаграждения и награждайте других.
                         </SubHeader>
                         <div className="row small-up-1 medium-up-2 large-up-4">
@@ -94,8 +94,8 @@ export default class About extends PureComponent {
                                 'book'
                             )}
                             {this._renderItem(
-                                'Информация принадлежит вам,',
-                                'а не владельцу сайта',
+                                'Информация в неизменном блокчейне,',
+                                'а не у сайта',
                                 'teamwork'
                             )}
                         </div>

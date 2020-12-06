@@ -177,7 +177,7 @@ class PostsIndex extends React.Component {
                     {tt('user_profile.if_you_recently_added_new_users_to_follow')}<br /><br />
                     <Link to="/trending">{tt('user_profile.explore_APP_NAME', {APP_NAME})}</Link><br />
                     <Link to="/welcome">{tt('submit_a_story.welcome_to_the_blockchain')}</Link><br />
-                    <a href="https://golos.id/ru--golos/@bitcoinfo/samyi-polnyi-f-a-q-o-golose-spisok-luchshykh-postov-raskryvayushikh-vse-aspekty-proekta-bonusy-v-vide-kreativa">{tt('user_profile.full_faq', {APP_NAME})}</a>
+                    <a href="/@bitcoinfo/samyi-polnyi-f-a-q-o-golose-spisok-luchshykh-postov-raskryvayushikh-vse-aspekty-proekta-bonusy-v-vide-kreativa">{tt('user_profile.full_faq', {APP_NAME})}</a>
                 </div>;
                 markNotificationRead = <MarkNotificationRead fields="feed" account={account_name} />
             } else {
