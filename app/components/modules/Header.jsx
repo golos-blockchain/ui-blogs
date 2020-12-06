@@ -187,7 +187,7 @@ class Header extends React.Component {
                             <ul className="menu">
                                 <li className="Header__top-logo">
                                     <Link to={logo_link}>
-                                        <img src={require("app/assets/images/golos-NG.png")} height="46" width="50" />
+                                        <img src={require("app/assets/images/golos-NG.png")} height="40" width="44" />
                                     </Link>
                                 </li>
                                 <li className="Header__top-steemit show-for-large noPrint">

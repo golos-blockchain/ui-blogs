@@ -15,7 +15,7 @@ class Start extends React.Component {
     render() {
         let {simple} = this.state
         let simpleAnswer = <p className='landing-start-block-text'>
-            <b>{'Голос'}</b> — это блог-платформа на <span data-tip='База данных, которая представляет собой непрерывную/неизменную цепь из блоков и хранится одновременно на множестве серверов.'>блокчейне</span><ReactTooltip type='light' effect="solid" /> Golos. Публикуя интересные посты, участвуя в обсуждениях и помогая продвижению проекта - вы можете получить вознаграждения от других пользователей.
+            <b>{'Голос'}</b> — это управляемая сообществом блог-платформа на <span data-tip='База данных, которая представляет собой непрерывную/неизменную цепь из блоков и хранится одновременно на множестве серверов.'>блокчейне</span><ReactTooltip type='light' effect="solid" /> Golos. Публикуя интересные посты, участвуя в обсуждениях и помогая продвижению проекта - вы можете получить вознаграждения от других пользователей.
         </p>
 
         let difAnswer = <p className='landing-start-block-text'>
@@ -101,7 +101,7 @@ class Start extends React.Component {
                             <div className='column large-3 medium-3 small-6'>
                                     <Icon name='blockchain' size='10x'/>
                                 <h5>Инновационная модель</h5>
-                                <p className='landing-start-block-icon-text'>Golos Блоги работают на блокчейне, а
+                                <p className='landing-start-block-icon-text'>Блог-платформа работает на блокчейне, а
                                     значит информация там неизменна и без цензуры</p>
                             </div>
                         </div>
