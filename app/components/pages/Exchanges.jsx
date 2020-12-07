@@ -1,6 +1,6 @@
 import React from 'react';
 import tt from 'counterpart';
-import Icon from '../../elements/Icon'
+import Icon from 'app/components/elements/Icon'
 
 class Exchanges extends React.Component {
     render() {
