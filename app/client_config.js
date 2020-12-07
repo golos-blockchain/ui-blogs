@@ -42,7 +42,7 @@ export const FRACTION_DIGITS_MARKET = 3 // accurate amount of deciaml digits (ex
 
 // meta info
 export const TWITTER_HANDLE = '@goloschain'
-export const SHARE_IMAGE = 'https://' + APP_DOMAIN + '/images/golos-share.png'
+export const SHARE_IMAGE = 'https://' + APP_DOMAIN + '/images/golos-twshare.png'
 export const TWITTER_SHARE_IMAGE = 'https://' + APP_DOMAIN + '/images/golos-twshare.png'
 export const SITE_DESCRIPTION = 'Голос - платформа блогов на блокчейне. Вознаграждение пользователей осуществляется за счет эмиссии токенов, при этом распределением управляет само сообщество.'
 
@@ -113,8 +113,7 @@ export const CATEGORIES = [
     'экономика',
     'юмор',
     'прочее',
-    'en',
-    'nsfw'
+    'en'
 ];
 
 export const CONFETTI_CONFIG = {

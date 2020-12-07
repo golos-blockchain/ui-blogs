@@ -102,7 +102,7 @@ export default class Differences extends PureComponent {
             <Root>
                 <Row className="row align-middle">
                     <div className="columns">
-                        <MainHeader>Наши преимущества</MainHeader>
+                        <MainHeader>Интересные особенности</MainHeader>
                         <div className="row small-up-1 medium-up-2 large-up-3">
                             {this._renderItems()}
                         </div>

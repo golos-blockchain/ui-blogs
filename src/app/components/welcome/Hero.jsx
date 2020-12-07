@@ -51,7 +51,7 @@ export default class Hero extends PureComponent {
                             Добро пожаловать <br /> на Голос
                         </Greeting>
                         <Congratulations>
-                            Мы рады видеть вас в сообществе!
+                            управляемую сообществом блог-платформу на блокчейне
                         </Congratulations>
                     </div>
                     <div className="column small-12 medium-5">
