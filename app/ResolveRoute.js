@@ -28,11 +28,14 @@ export default function resolveRoute(path)
     if (path === '/welcome') {
         return {page: 'Welcome', hideSubMenu: true};
     }
+    if (path === '/start'){
+        return {page: 'Start'}
+    }
     if (path === '/exchanges'){
         return {page: 'Exchanges'}
     }
-    if (path === '/start'){
-        return {page: 'Start'}
+    if (path === '/services'){
+        return {page: 'Services'}
     }
     if (path === '/faq') {
         return {page: 'Faq'};

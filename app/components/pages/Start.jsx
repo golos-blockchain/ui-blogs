@@ -1,5 +1,5 @@
 import React from 'react';
-import Icon from '../../elements/Icon'
+import Icon from 'app/components/elements/Icon';
 import ReactTooltip from 'react-tooltip'
 
 class Start extends React.Component {
