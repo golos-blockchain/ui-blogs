@@ -149,8 +149,7 @@ function traverse(node, state, depth = 0) {
 function link(state, child) {
     let url = child.getAttribute('href');
 
-    url = url.replace(/(?:https?:)\/\/(golos.io|golos.blog)/, 'https://golos.id');
-    
+    url = url.replace(/(?:https?:)\/\/(golos.io|golos.blog)/, 'https://golos.id')    
     child.setAttribute('href', url);
 
     if (url) {
