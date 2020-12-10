@@ -262,3 +262,15 @@ ul > li.Header__top-logo > a {
     font-size: 14px;
   }
 }
+
+.help-wiki {
+  float: right;
+  margin-top: 1.3rem;
+  border-bottom: 1px solid $medium-gray;
+  a {
+    color: gray;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 11px;
+  }  
+}
