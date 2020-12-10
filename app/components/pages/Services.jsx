@@ -66,6 +66,7 @@ class Services extends React.Component {
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
                                 <h4><a target="_blank" href="https://t.me/golosclassicbot"><Icon name="new/telegram" /> golosclassicbot</a></h4>
+                                Разработчик телеграм-бота <a target="_blank" href="/@rudex">@rudex</a>
                                 </div>
                                 <div className='column large-12 medium-12 small-12'>
                                     <br />Легко настраиваемый бот, который позволяет получать уведомления о разных событиях, связанных с выбранным пользователем (упоминания, комментарии, переводы, подписка)... <a target="_blank" href="/@vict0r/samyi-priyatnyi-bot-na-golose">{tt('g.more_hint')}</a> <Icon name="extlink" />
