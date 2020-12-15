@@ -114,7 +114,6 @@ class Exchanges extends React.Component {
                                 <div className='column large-12 medium-12 small-12' align='center'>
                                 <p className='landing-exchanges-block-text reg landing-exchanges-block-center'>Кроме того, возможна:</p>
                                 <p>- покупка/продажа токенов за <a target="_blank" href="/@ecurrex-ru/vvod-i-vyvod-rublei-na-golos">ЮMoney</a> или <a target="_blank" href="/@ecurrex-ru/vvod-rublei-na-golos-cherez-qiwi">QIWI</a>, подробнее в сервисе <a target="_blank" href="/@ecurrex-ru">@ecurrex-ru <Icon name="extlink" /></a></p>
-                                <p>- покупка чеков с токенами GOLOS на <a target="_blank" href="https://golos.store">golos.store <Icon name="extlink" /></a></p>
                                 <p>- торговля через P2P-сделки в телеграм-ботах <a target="_blank" href="https://t.me/TellerBot"><Icon name="new/telegram" /> TellerBot</a> или <a target="_blank" href="https://t.me/P2PDEXBitshares_bot"><Icon name="new/telegram" /> DexGarant</a></p>
                                 </div>
                             </div>
