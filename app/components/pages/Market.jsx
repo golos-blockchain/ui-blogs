@@ -1423,7 +1423,6 @@ const DEFAULT_EXPIRE = 0xffffffff;
 export default connect(
     state => {
         const username = state.user.getIn(['current', 'username']);
-
         return {
             orderbook: state.market.get('orderbook'),
             open_orders: process.env.BROWSER
