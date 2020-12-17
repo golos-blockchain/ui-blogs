@@ -16,8 +16,7 @@
     "hidden": "hidden",
     "unavailable" : "User is not found",
     "due_to_illegal_content": "or was hidden due to illegal content",
-    "terms_of_service": "Terms of service",
-    "terms_of_service_section": ", section 5.5.7"
+    "terms_of_service": "Terms of service"
   },
   "g": {
     "golos_fest" : "Golos.id News",
@@ -25,6 +24,7 @@
     "APP_NAME_account": "%(APP_NAME)s account",
     "24_hour": "24 hour",
     "30_day": "30 day",
+    "to_ask": "To ask",
     "add": "Add",
     "age": "age",
     "all_langs": "All languages",
@@ -51,7 +51,6 @@
     "buy": "Buy",
     "buy_VESTING_TOKEN": "Buy %(VESTING_TOKEN)s",
     "buy_or_sell": "Buy or Sell",
-    "by": "by",
     "cancel": "Cancel",
     "cancel_all": "Cancel All",
     "change_password": "Change Password",
@@ -93,6 +92,7 @@
     "memo": "Memo",
     "messages": "Messages",
     "more": "more",
+    "more_hint": "More detail",
     "mute": "Mute",
     "new": "new",
     "newer": "Newer",
@@ -108,6 +108,7 @@
     "permissions": "Permissions",
     "invites": "Invite checks",
     "assets": "UIA assets",
+    "help_wallet": "Wallet functions",
     "phone": "phone",
     "post": "Post",    
     "posting": "Posting key",
@@ -201,7 +202,7 @@
     "recover_password": "Recover Account",
     "current_password": "Current Password",
     "generated_password": "Generated Password",
-    "backup_password_by_storing_it": "Back it up by storing in your password manager or a text file",
+    "backup_password_by_storing_it": "Back it up by storing in your password manager or a text file.",
     "click_to_generate_password": "Click to generate password",
     "re_enter_generate_password": "Re-enter Generated Password",
     "understand_that_APP_NAME_cannot_recover_password": "I understand that %(APP_NAME)s cannot recover lost passwords",
@@ -241,20 +242,6 @@
     "server_returned_error": "server returned error",
     "APP_NAME_support": "%(APP_NAME)s Support",
     "please_email_questions_to": "Please email your questions to",
-    "next_7_strings_sinngle_block": {
-      "authors_get_paid_when_people_like_you_upvote_their_post": "Authors get paid when people like you upvote their post",
-      "if_you_enjoyed_what_you_read_earn_amount": "Join our amazing community to comment and reward others.",
-      "when_you": "when you",
-      "when_you_link_text": "Sign Up",
-      "and_vote_for_it": "and vote for it",
-      "sign_up_now_to_receive": "Sign up now to receive ",
-      "free_steem": "FREE %(LIQUID_TOKEN)ss!"
-    },
-    "next_3_strings_together": {
-      "show_more": "Show more",
-      "show_less": "Show fewer",
-      "value_posts": "low value posts"
-    },
     "show_less_low_value_posts": "Show fewer low value posts",
     "show_more_low_value_posts": "Show more low value posts",
     "select_topic": "Select Topic",
@@ -271,11 +258,6 @@
     "terms_and_conditions": "Terms and Conditions",
     "cryptography_test_failed": "Cryptography test failed",
     "unable_to_log_you_in": "We will be unable to log you in with this browser",
-    "next_3_blocks": {
-      "the_latest_versions_of": "The latest versions of",
-      "and": "and",
-      "are_well_tested_and_known_to_work_with": "are well tested and known to work with %(APP_DOMAIN)s."
-    },
     "account_creation_succes": "Your account has been successfully created!",
     "account_recovery_succes": "Your account has been successfully recovered!",
     "password_update_succes": "The password for %(accountName)s was successfully updated",
@@ -304,8 +286,7 @@
     "temporarily_disabled": "Token deposit/withdraw is temporarily disabled",
     "guide_user": "Instructions for the exchange from",
     "total_supply": "Information about the total supply of tokens",
-    "p2p_bots": "Bots in Telegram for P2P-exchange",
-    "sell_check": "Selling cheques with tokens",
+    "other_options": "for RUB / UAH / USD and many other options",
     "questions": "Any questions",
     "community_chat": "You can get answers in the community chat",
     "delegate_chat": "and in the delegates chat"
@@ -334,6 +315,7 @@
     "sign_up": "Sign Up",
     "welcome": "Welcome",
     "feedback": "Feedback",
+    "services": "Useful services/bots",
     "wiki": "Documentation (Wiki)",
     "faq": "FAQ",
     "sale_agreement": "Sale Agreement",
@@ -355,9 +337,9 @@
     "update_post": "Update Post",
     "markdown_is_supported": "Styling with Markdown is supported",
     "markdown_not_supported": "Markdown is not supported here",
-    "welcome_to_the_blockchain": "Golos.id — blog platform on the blockchain",
+    "welcome_to_the_blockchain": "Welcome to the Golos!",
     "you_hasnt_started_bloggin_yet":  "Looks like you hasn't started blogging yet!",
-    "your_voice_is_worth_something": "Sign up, to publish your stories and get rewarded for it!",
+    "your_voice_is_worth_something": "decentralized blog platform on a public blockchain",
     "learn_more": "Learn More",
     "get_sp_when_sign_up": "Get %(signupBonus)s of %(VESTING_TOKEN)s when you sign up today.",
     "get_sp_when_sign_up1": "Get ",
@@ -414,10 +396,6 @@
     "main_tag_hint": "First tag is main. Post will be posted in that category.",
     "title_is_required": "Title is not specified",
     "title_is_not_valid": "Title is not valid"
-  },
-  "tags_page": {
-    "replies": "Replies",
-    "payouts": "Payouts"
   },
   "postfull_jsx": {
     "this_post_is_not_available_due_to_breach_of_legislation": "This post is not available due to breach of legislation.",
@@ -618,7 +596,6 @@
     "without_country_code": "Without country code",
     "examples": "Enter number without country code, for example: 541-754-3010 | 89-636-48018",
     "land_lines_cannot_receive_sms_messages": "* Land lines cannot send or receive SMS messages",
-    "message_and_data_rates_may_apply": "* Message and data rates may apply",
     "why_send_sms": "Why send SMS?",
     "mobile_description": {
       "one": "Right now, the registration on media-blockchain %(APP_NAME)s costs money for the system. In order for the community to grow quicker, we take those costs on board and pay out 5 %(APP_NAME)s tokens to each new member.",
@@ -668,6 +645,7 @@
     "please_remove_following_html_elements": "Please remove the following HTML elements from your post: "
   },
   "witnesses_jsx": {
+    "witness_info": "Witnesses - are users who are elected by the community vote and are engaged in supporting the nodes that ensure the operation of the blockchain and many other issues related to the development of the project.",
     "witness_thread": "witness thread",
     "top_witnesses": "Witness Voting",
     "what_is_api": "API-nodes have higher demands on server resources, it is through them come the queries to the blockchain for sending/receiving information, they are important for the development of a variety of clients and services...",
@@ -701,13 +679,7 @@
     "witness_proxy_current": "Your current proxy is",
     "witness_proxy_set": "Set proxy",
     "witness_proxy_clear": "Clear proxy",
-    "proxy_update_error": "Your proxy was not updated",
-    "you_have_votes_remaining": "",
-    "you_have_votes_remaining_count": {
-      "zero": "You have no votes remaining",
-      "one": "You have 1 vote remaining",
-      "other": "You have %(count)s votes remaining"
-    }
+    "proxy_update_error": "Your proxy was not updated"
   },
   "votesandcomments_jsx": {
     "no_responses_yet_click_to_respond": "No responses yet. Click to respond.",
@@ -724,6 +696,7 @@
     }
   },
   "assets_jsx": {
+    "assets_info": "User Issued Assets (tokens) that can be exchanged, traded on an internal exchange, and used in various blockchain services.",
     "create_asset": "Creating asset",
     "symbol": "Ticker",
     "symbol_too_short": "At least 3 characters",
@@ -765,12 +738,13 @@
   },
   "invites_jsx": {
     "create_invite": "Create new invite check",
-    "create_invite_info": "Cheques (invite codes) are a universal tool for transferring a fixed number of GOLOS tokens to other people outside the blockchain. There are two ways to redeem the code: transfer its balance to your account or register a new account using it.",
+    "create_invite_info": "Cheques (invite codes) are a universal tool for transferring of GOLOS tokens to other people outside the blockchain. There are two ways to redeem the code: transfer its balance to your account or register a new account using it.",
     "generate_new": "Generate new",
     "public_key": "Public key",
     "private_key": "Private key",
     "amount": "Amount",
     "is_referral": "For referrals",
+    "referral_invite": "During the year 10%% of user rewards (registered with this invite)\nwill be credited to your TIP balance.",
     "create_btn": "Create check",
     "meet_minimum": "Too low amount",
     "success": "Created! Save it",
@@ -809,45 +783,17 @@
     "your_existing_DEBT_TOKEN_are_liquid_and_transferable": "Your existing %(DEBT_TOKEN)s are liquid and transferable. Instead you may wish to trade %(DEBT_TOKEN)s directly in this site under %(link)s or transfer to an external market.",
     "DEBT_TOKEN_will_be_unavailable": "This action will take place 3.5 days from now and can not be canceled. These %(DEBT_TOKEN)s will immediately become unavailable"
   },
-  "user_profile_permissions": {
-    "author_rewards_last_week": "Author rewards last week",
-    "confirm": "Confirm",
-    "canceled": "Canceled",
-    "asset": "Asset",
-    "this_memo_is_private": "This Memo is Private",
-    "this_memo_is_public": "This Memo is Public",
-    "power_up": "Power Up",
-    "power_down": "Power Down",
-    "transfer": "Transfer",
-    "deposit": "Deposit",
-    "basic": "Basic",
-    "advanced": "Advanced",
-    "convert_to_VESTING_TOKEN": "Convert to %(VESTING_TOKEN)s",
-    "transfer_to_account": "Transfer to Account",
-    "about_APP_NAME": "About %(APP_NAME)s",
-    "APP_NAME_is_a_social_media_platform_where_everyone_gets_paid_for_creating_and_curating_content": "%(APP_NAME)s is a social media platform where everyone gets paid for creating and curating content",
-    "APP_NAME_is_a_social_media_platform_where_everyone_gets_paid": "%(APP_NAME)s is a social media platform where everyone gets paid for creating and curating content. It leverages a robust digital points system, called %(LIQUID_TOKEN)s, that supports real value for digital rewards through market price discovery and liquidity.",
-    "learn_more_at_LANDING_PAGE_URL": "Learn more at %(LANDING_PAGE_URL)s",
-    "resources": "Resources",
-    "join_our_slack": "Join our Slack",
-    "trending_24_hour": "trending (24 hour)",
-    "home": "home",
-    "posting": "Posting",
-    "owner": "Owner",
-    "active_or_owner": "Active or Owner",
-    "sign": "Sign"
-  },
   "tips_js": {
     "tip_balance_hint": "Balance that you use to reward users and that you use to earn rewards for yourself. Tokens from it can also be sent to increase the Golos Power.",
-    "claim_balance_hint1": "Balance of your share ",
-    "claim_balance_hint2_EMISSION_STAKE": "(for your current GP it is ~%(EMISSION_STAKE)s daily)",
-    "claim_balance_hint3": " of the emission of Golos blockchain tokens, which you can use to top up your TIP balance or increase the Golos Power.",
+    "claim_balance_hint": "Balance of your share of the emission of Golos blockchain tokens, which you can use to top up your TIP balance or increase the Golos Power.",
     "claim_expiration_hint": "The tokens request window will end",
     "tradeable_tokens_that_may_be_transferred_anywhere_at_anytime": "Tradable digital tokens that can be transferred anywhere at any time.",
     "LIQUID_TOKEN_can_be_converted_to_VESTING_TOKEN_in_a_process_called_powering_up": "For example, converted to Golos Power or sent to the TIP balance for rewards.",
     "tokens_worth_about_AMOUNT_of_LIQUID_TOKEN": "Tokens worth about %(TOKEN_WORTH)s in %(LIQUID_TICKER)s.",
     "influence_tokens_which_give_you_more_control_over": "The more Golos Power you have, the higher the percentage goes to the CLAIM balance and the higher the impact on the project development by selecting delegates and supporting applications for funding from the workers foundation.",
     "the_more_you_hold_the_more_you_influence_post_rewards": "The more you hold the more you influence post rewards and earn for accurate voting.",
+    "vesting_emission_per_day": "~ %(EMISSION_STAKE)s daily",
+    "vesting_emission_per_day_title": "Amount that, depending on the Golos Power, is transferred daily to the CLAIM balance\n(your share of the blockchain token issue per day)",
     "the_estimated_value_is_based_on_an_average_value_of_steem_in_US_dollars": "The estimated cost is calculated on an 7-day average cost of %(LIQUID_TOKEN)s.",
     "VESTING_TOKEN_is_non_transferrable_and_requires_convert_back_to_LIQUID_TOKEN": "%(VESTING_TOKEN2)s is non-transferrable and requires 2 months (8 payments) to convert back to %(LIQUID_TOKEN)s.",
     "converted_VESTING_TOKEN_can_be_sent_to_yourself_but_can_not_transfer_again": "Converted %(VESTING_TOKEN)s can be sent to yourself or someone else but can not transfer again without converting back to %(LIQUID_TOKEN)s.",
@@ -933,9 +879,8 @@
     "to": " to ",
     "from": " from ",
     "for": " for ",
-    "burned": " burned out of circulation"
-  },
-  "reblog_jsx": {
+    "issue": "Issue of tokens ",
+    "to_account": " to account "
   },
   "savingswithdrawhistory_jsx": {
     "cancel_this_withdraw_request": "Cancel this withdraw request?",
@@ -1008,7 +953,6 @@
     "to_comment_and_reward_others": " to comment and reward others.",
     "sign_up_now_to_receive": "Sign up now to receive ",
     "free_money": "FREE MONEY!",
-    "returning_users": "Returning Users: ",
     "join_our": "Join our"
   },
   "mobilevalidation_js": {
@@ -1053,7 +997,7 @@
     "always_show": "Always show",
     "muted_users": "Muted Users",
     "muted_in_new_users": "Users Whose Posts Hidden In New",
-    "muted_uia": "Assets Which Are Hidden In My Assets",
+    "muted_uia": "Tokens hidden on the UIA Assets page",
     "update": "Update",
     "profile_image_url": "Profile picture url",
     "cover_image_url": "Cover image url",
@@ -1122,10 +1066,6 @@
     "history_viewing": "Services history",
     "history": "HISTORY"
   },
-  "generated_password_input": {
-    "i_have_read_and_agree_to_the": "I have read and agree to the",
-    "terms_of_service": "Terms of service"
-  },
   "user_saga_js": {
     "image_upload" : {
       "uploading": "Uploading",
@@ -1146,7 +1086,7 @@
   "chain_errors": {
     "only_comment_once_every": "You may only comment once every 20 seconds",
     "only_post_once_every": "You may only post once every 5 minutes",
-    "exceeded_maximum_allowed_bandwidth": "Account exceeded maximum allowed bandwidth per vesting share",
+    "exceeded_maximum_allowed_bandwidth": "Insufficient account bandwidth. Replenish the Golos Power or write to info@golos.id",
     "already_voted": "You have already voted in a similar way",
     "only_vote_once_every": "Can only vote once every 3 seconds",
     "account_does_not_have_sufficient_power_for_withdraw": "Account does not have sufficient Golos Power for withdraw",
@@ -1229,13 +1169,10 @@
     "from": "From",
     "to": "To"
   },
-  "messages_jsx": {
-    "start_conversation": "Start conversation"
-  },
   "faq_jsq": {
     "page_title": "Frequently Asked Questions",
     "page_description" : "This page contains popular user questions and official Golos Blockchain communication channels.",
-    "telegram": "telegram",
+    "telegram": "to ask",
     "email": "email",
     "wiki": "wiki golos",
     "twitter": "twitter",
@@ -1244,6 +1181,8 @@
     "footer_message": "We will never ask for your private keys or money. If someone introduces themselves as members of the Golos Blockchain team and asks for such information, please contact us."
   },
   "workers": {
+    "workers_info": "For any work useful for the Golos Blockchain, you can get a reward by submitting an application, describing in detail what was done (development, design, advertising, documentation), anything if this initiative is supported by the community.",
+    "chat_workers": "Workers Chat",
     "worker_proposals": "Worker proposals",
     "create_request": "Create a proposal",
     "created": "Voting",

@@ -5,6 +5,9 @@
     margin-bottom: 1rem;
     padding-bottom: .7rem;
     border-bottom: 1px solid #cacaca;
+    @media screen and (max-width: 39.9375em) {
+      width: 20rem;
+    }
 
     > span {
       display: inline-block;

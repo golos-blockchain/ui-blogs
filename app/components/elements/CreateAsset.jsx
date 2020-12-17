@@ -8,6 +8,7 @@ import { browserHistory } from 'react-router';
 import transaction from 'app/redux/Transaction'
 import user from 'app/redux/User';
 import tt from 'counterpart';
+import Icon from 'app/components/elements/Icon';
 import {cleanReduxInput} from 'app/utils/ReduxForms'
 import reactForm from 'app/utils/ReactForm';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
@@ -203,6 +204,7 @@ class CreateAsset extends Component {
             <form onSubmit={this.handleSubmitForm}>
                 <div className="row">
                     <div className="column small-10">
+                        <span className="float-right secondary" style={{marginTop: '0.5rem' }}><a target="_blank" href="/@allforyou/sozdaem-i-ispolzuem-uia-na-golose">Подробнее о создании UIA актива</a> <Icon name="extlink" size="1_5x" /></span>
                         <h4>{tt('assets_jsx.create_asset')}</h4>
                     </div>
                 </div>

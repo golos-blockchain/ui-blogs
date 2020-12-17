@@ -111,36 +111,23 @@ class Footer extends React.Component {
             },
         );
 
-        const gprops = this.props.props;
-        let ad_width = '728px';
-        let ad_width2 = '728';
-        let bonfire = null;
-        if (gprops) {
-            const t = Date.parse(gprops.toJS().time + 'Z') - 1603645200000;
-            if (t > 0 && t < 7200000) {
-                ad_width = '528px';
-                ad_width2 = '528';
-                bonfire = (<img src={require('app/assets/images/bonfire.gif')} title="Токены аккаунта bittrex были выведены из оборота блокчейна на радость поджигателям"/>);
-            }
-        }
         return (
             <section className="Footer">
                 <div className="Footer__menus">
                     <div className="row" id="footer">
                         {this._renderMenus(menuItems)}
                         
-                        <iframe data-aa='1148805' src={'//ad.a-ads.com/1148805?size=' + ad_width2 + 'x90'} scrolling='no'
-                        style={{width:ad_width, height:'90px', border:'0px', padding:'0', overflow:'hidden'}}
+                        <iframe data-aa='1148805' src='//ad.a-ads.com/1148805?size=728x90' scrolling='no'
+                        style={{width:'728px', height:'90px', border:'0px', padding:'0', overflow:'hidden'}}
                         allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe>
 
-                        {bonfire}
                     </div>
                 </div>
                 <div className="Footer__description">
                     <div className="row">
                         <div className="small-12 medium-12 columns">
-                            <span className="text-left">
-                                © 2016-2020 {tt('g.about_project')}
+                            <span className="text-center">
+                                © 2016 {tt('g.about_project')}
                             </span>
                         </div>
                     </div>
@@ -176,5 +163,5 @@ export default connect(state => {
                 parseFloat(quote.split(' ')[0]);
     }
 
-    return { pricePerGolos, props: state.global.get('props') };
+    return { pricePerGolos };
 })(Footer);

@@ -806,7 +806,7 @@ class ReplyEditor extends React.Component {
                                         <div className="float-right">
                                             <a
                                                 target="_blank"
-                                                href="/ru--golos/@on0tole/osnovy-oformleniya-postov-na-golose-polnyi-kurs-po-rabote-s-markdown"
+                                                href="/@on0tole/osnovy-oformleniya-postov-na-golose-polnyi-kurs-po-rabote-s-markdown"
                                             >
                                                 {tt(
                                                     'reply_editor.markdown_styling_guide'

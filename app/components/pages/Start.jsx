@@ -1,5 +1,5 @@
 import React from 'react';
-import Icon from '../../elements/Icon'
+import Icon from 'app/components/elements/Icon';
 import ReactTooltip from 'react-tooltip'
 
 class Start extends React.Component {
@@ -15,7 +15,7 @@ class Start extends React.Component {
     render() {
         let {simple} = this.state
         let simpleAnswer = <p className='landing-start-block-text'>
-            <b>{'Golos.id'}</b> — это блог-платформа на <span data-tip='База данных, которая представляет собой непрерывную цепь из блоков и хранится одновременно на множестве серверов.'>блокчейне</span><ReactTooltip type='light' effect="solid" /> GOLOS. Публикуя интересные посты и комментарии, вы можете получить вознаграждения от других пользователей. Участвуйте в ранжировании контента, голосуя "за" или "против" постов.
+            <b>{'Голос'}</b> — это управляемая сообществом блог-платформа на <span data-tip='База данных, которая представляет собой непрерывную/неизменную цепь из блоков и хранится одновременно на множестве серверов.'>блокчейне</span><ReactTooltip type='light' effect="solid" /> Golos. Публикуя интересные посты, участвуя в обсуждениях и помогая продвижению проекта - вы можете получить вознаграждения от других пользователей.
         </p>
 
         let difAnswer = <p className='landing-start-block-text'>
@@ -90,7 +90,7 @@ class Start extends React.Component {
                             <div className='column large-3 medium-3 small-6'>
                                 <Icon name='money' size='10x'/>
                                 <h5>Выгодно для блогинга</h5>
-                                <p className='landing-start-block-icon-text'>Каждый может получить вознаграждения за интересные пост и комментарии, а также за репосты</p>
+                                <p className='landing-start-block-icon-text'>Каждый может получить вознаграждения за интересные посты, комментарии, и даже за репосты</p>
                             </div>
                             <div className='column large-3 medium-3 small-6'>
                                 <Icon name='rocket' size='10x'/>
@@ -101,8 +101,8 @@ class Start extends React.Component {
                             <div className='column large-3 medium-3 small-6'>
                                     <Icon name='blockchain' size='10x'/>
                                 <h5>Инновационная модель</h5>
-                                <p className='landing-start-block-icon-text'>Golos.id работает на блокчейне, а
-                                    значит информация пользователей принадлежит только им</p>
+                                <p className='landing-start-block-icon-text'>Блог-платформа работает на блокчейне, а
+                                    значит информация там неизменна и без цензуры</p>
                             </div>
                         </div>
                     </div>
@@ -158,7 +158,7 @@ class Start extends React.Component {
                             <div className='column large-12 medium-12 small-12'>
                                 <p className='landing-start-block-text landing-start-block-center'>
                                     У нас есть собственная <a target="_blank" href='https://wiki.golos.id/'>Википедия</a>,
-                                    в которой собрана информация о блог-платформе и блокчейне. Кроме того, получить ответы на многие вопросы можно у сообщества в чате <a target="_blank" href='https://t.me/golos_id'>t.me/golos_id</a></p>
+                                    в которой собрана информация о блог-платформе и блокчейне. Кроме того, получить ответы на вопросы можно в чате <a target="_blank" href='https://t.me/goloshelp'>t.me/goloshelp</a></p>
                             </div>
                         </div>
                     </div>

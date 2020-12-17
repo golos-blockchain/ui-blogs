@@ -34,34 +34,26 @@ injectGlobal`
     }
 `;
 
-const availableLinks = [
-    'https://twitter.com/goloschain',
-    'https://t.me/golos_id',
-    'https://vk.com/golosclassic'
-];
-
 const availableDomains = [
     'golos.id',
     'golos.in',
     'golos.today',
-    'ropox.app',
+    'golos.live',
+    'golostalk.com',
     'golos.cf',
     'dpos.space',
-    'golosboard.com',
     'rudex.org',
     'livecoin.net',
     'steem-engine.com',
-    'hive-engine.com',
     'github.com',
-    'play.google.com',
     't.me',
-    'facebook.com',
     'twitter.com',
-    'instagram.com',
     'vk.com',
     'coinmarketcap.com',
     'sharpay.io',
-    'golos.store'
+    'coins.black',
+    'golos.chatbro.com',
+    'accounts.google.com'
 ];
 
 class App extends React.Component {
@@ -159,7 +151,6 @@ class App extends React.Component {
             a &&
             a.hostname &&
             a.hostname !== window.location.hostname &&
-            !availableLinks.includes(a.href) &&
             !availableDomains.some(domain =>
                 new RegExp(`${domain}$`).test(a.hostname)
             )
@@ -274,10 +265,10 @@ class App extends React.Component {
                                 }}
                             />
                             <Link className="link"
-                                to="/@lex/referalnaya-programma-i-para-slov-o-fonde-soobshestva"
+                                to="/@lex/anons-24-khf-golos-blockchain"
                             >
                                 <Icon className="logo-icon" name={APP_ICON} />&nbsp;
-                                Ограничения с домена golos.id были сняты, а также новости о реферальной программе и фонде сообщества.
+                                Принятие 24-го хардфорка блокчейна Голос планируется на 20:00 по МСК, в процессе и обновление публичных нод.
                             </Link>
                         </div>
                     </div>
@@ -319,6 +310,7 @@ class App extends React.Component {
                             onClick={() => this.setState({ showBanner: false })}
                         />
                         <div className="text-center">
+                            <br />
                             <h2>
                                 {tt('submit_a_story.welcome_to_the_blockchain')}
                             </h2>
@@ -341,7 +333,6 @@ class App extends React.Component {
                                 {' '}
                                 <b>{tt('submit_a_story.learn_more')}</b>{' '}
                             </a>
-                            <br />
                             <br />
                         </div>
                     </div>

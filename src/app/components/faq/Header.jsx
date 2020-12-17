@@ -29,7 +29,7 @@ const Title = styled.h1`
     max-width: 600px;
     color: #393636;
     font-family: 'Open Sans', sans-serif;
-    font-size: 34px;
+    font-size: 30px;
     font-weight: 900;
     letter-spacing: 0.37px;
     line-height: 41px;
@@ -159,9 +159,10 @@ export default class Header extends PureComponent {
                                 <ButtonLabel>{tt('faq_jsq.blog')}</ButtonLabel>
                             </WhiteButton>
                             <WhiteButton
-                                href="https://twitter.com/goloschain"
+                                href="https://t.me/goloshelp"
                                 target="_blank">
-                                <ButtonLabel>{tt('faq_jsq.twitter')}</ButtonLabel>
+                                <Icon name="telegram" size="16px" />
+                                <ButtonLabel>{tt('faq_jsq.telegram')}</ButtonLabel>
                             </WhiteButton>
                         </ButtonsBlock>
                     </MainBlock>

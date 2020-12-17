@@ -179,16 +179,6 @@ class Header extends React.Component {
                 return {link: sortOrderToLink(so[0], topic_original_link, current_account_name), value: so[1], active};
             });
 
-        let sort_order_extra_menu = null;
-        if (sort_order === 'trending' || sort_order === 'trending30') {
-            const items = [
-                {link: `/trending/${topic_original_link}`, value: tt('g.24_hour'), active: sort_order === 'trending'},
-                {link: `/trending30/${topic_original_link}`, value: tt('g.30_day'), active: sort_order === 'trending30'}
-            ];
-            // hide extra menu until crowdsale start because they make no sense
-            sort_order_extra_menu = <HorizontalMenu items={items} />
-        }
-
         return (
             <header className="Header noPrint">
                 <div className="Header__top header">
@@ -197,13 +187,13 @@ class Header extends React.Component {
                             <ul className="menu">
                                 <li className="Header__top-logo">
                                     <Link to={logo_link}>
-                                        <Icon name={APP_ICON} size="2x" />
+                                        <img src={require("app/assets/images/golos-NG.png")} height="40" width="44" />
                                     </Link>
                                 </li>
                                 <li className="Header__top-steemit show-for-large noPrint">
                                     <Link to={logo_link}>{APP_NAME_UP}<span className="beta">blockchain</span></Link>
                                 </li>
-                                {selected_sort_order && route && route.page !== 'Landing' && <DropdownMenu className="Header__sort-order-menu show-for-small-only" items={sort_order_menu} selected={selected_sort_order[1]} el="li" />}
+                                {selected_sort_order && <DropdownMenu className="Header__sort-order-menu show-for-small-only" items={sort_order_menu} selected={selected_sort_order[1]} el="li" />}
                             </ul>
                         </div>
                         <div className="columns shrink">
@@ -215,6 +205,7 @@ class Header extends React.Component {
                     <div className={'Header__sub-nav show-for-medium hide-for-small ' + (this.state.subheader_hidden ? ' hidden' : '')}>
                         <div className="row">
                             <div className="columns">
+                                <span className="question"><a target="_blank" href="https://golos.chatbro.com"><Icon name="new/telegram" />&nbsp;&nbsp;{tt('g.to_ask')}</a></span>
                                 <HorizontalMenu items={sort_order_menu_horizontal} />
                             </div>
                         </div>

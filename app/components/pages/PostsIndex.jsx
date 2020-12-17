@@ -176,8 +176,7 @@ class PostsIndex extends React.Component {
                     <br /><br />
                     {tt('user_profile.if_you_recently_added_new_users_to_follow')}<br /><br />
                     <Link to="/trending">{tt('user_profile.explore_APP_NAME', {APP_NAME})}</Link><br />
-                    <Link to="/welcome">{tt('submit_a_story.welcome_to_the_blockchain')}</Link><br />
-                    <a href="https://golos.id/ru--golos/@bitcoinfo/samyi-polnyi-f-a-q-o-golose-spisok-luchshykh-postov-raskryvayushikh-vse-aspekty-proekta-bonusy-v-vide-kreativa">{tt('user_profile.full_faq', {APP_NAME})}</a>
+                    <Link to="/welcome">{tt('submit_a_story.welcome_to_the_blockchain')}</Link>
                 </div>;
                 markNotificationRead = <MarkNotificationRead fields="feed" account={account_name} />
             } else {
@@ -196,6 +195,7 @@ class PostsIndex extends React.Component {
         const account = this.props.username && this.props.accounts.get(this.props.username) || null
         const json_metadata = account ? account.toJS().json_metadata : {}
         const metaData = account ? o2j.ifStringParseJSON(json_metadata) : {}
+        const active_user = this.props.username || ''
 
         let promo_posts = []
         if (['created', 'hot', 'responses', 'trending'].includes(order) && posts && posts.size) {
@@ -227,7 +227,7 @@ class PostsIndex extends React.Component {
                             />
 
                         <div className="strike">
-                            <span><Link target="_blank" to="https://wiki.golos.id/users/welcome#prodvinut-post">{tt('g.promote_block')}</Link></span>
+                            <span><a target="_blank" href="https://wiki.golos.id/users/welcome#prodvinut-post">{tt('g.promote_block')}</a></span>
                         </div>
                       </div> : null }
 
@@ -249,9 +249,9 @@ class PostsIndex extends React.Component {
                     data-base="RUB"
                     data-secondary="BTC"
                     data-ticker="false"
-                    data-rank="true"
-                    data-marketcap="true"
-                    data-volume="true"
+                    data-rank="false"
+                    data-marketcap="false"
+                    data-volume="false"
                     data-statsticker="false"
                     data-stats="USD">
                 </div>
@@ -269,6 +269,8 @@ class PostsIndex extends React.Component {
                     />
 
                     <div className="sticky-right-ad">
+                    <p align="center"><a target="_blank" href={"https://coins.black/xchange_SBERRUB_to_GLS/?summ=1000&schet2=" + active_user + "&lock2=true"}><img src='https://i.imgur.com/tN2U24r.jpg' width='220' height='150' /></a>
+                    <span className="strike"><a target="_blank" href="/@on0tole/pryamaya-pokupka-tokenov-golos-za-rubli-i-ne-tolko">{tt('g.more_hint')}</a></span></p>
 
                       <iframe data-aa='1148471' src='//ad.a-ads.com/1148471?size=240x400' scrolling='no'
                       style={{width:'240px', height:'400px', border:'0px', padding:'0', overflow:'hidden'}}

@@ -142,7 +142,7 @@ class ChangePassword extends React.Component {
                     </div>
                     <br />
                     <label>
-                        <div className="float-right"><a href="/recover_account_step_1">{tt('g.recover_password')}</a></div>
+                        {/* <div className="float-right"><a href="/recover_account_step_1">{tt('g.recover_password')}</a></div> */}
                         {tt('g.current_password')}
                         <br />
                         <input {...cleanReduxInput(password)} type="password" disabled={loading} />
@@ -161,7 +161,7 @@ class ChangePassword extends React.Component {
                                 <div className="overflow-ellipsis"><code style={{display: 'block', padding: '0.2rem 0.5rem', background: 'white', color: '#c7254e', wordWrap: 'break-word', fontSize: '100%', textAlign: 'center'}}>{newWif}</code></div>
                             </div>
                             <label className="ChangePassword__backup_text">
-                                {tt('g.backup_password_by_storing_it')}.
+                                {tt('g.backup_password_by_storing_it')}
                             </label>
                         </span>
                         ||
@@ -198,17 +198,6 @@ class ChangePassword extends React.Component {
                 </form>
             </span>
         )
-                    // {enable2fa && <p>
-                    //     <h4>Enable Steemit Account Recovery</h4>
-                    //     <input type="checkbox" {...twofa} />
-                    //     {twofa.touched && twofa.error && <div className="error">{twofa.error}</div>}
-                    //     <br />
-                    //     <p>
-                    //         This feature will add a Steemit account as an additional owner on your account.  This is a service that can be used by yourself and Steemit to recover your account should it get compromised or you loose your password.
-                    //     </p>
-                    //     <small><a href="//@steemit" target="_blank">@Steemit</a></small>
-                    // </p>}
-                    // <br />
     }
 }
 

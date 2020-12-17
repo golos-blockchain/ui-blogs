@@ -54,11 +54,6 @@ export default class ExplorePost extends Component {
                       <span>{this.state.copied_second ? tt('explorepost_jsx.copied') : tt('explorepost_jsx.copy')}</span>
                     </CopyToClipboard>
                 </div>
-                {/* <hr />
-                <h5>{tt('explorepost_jsx.alternative_sources')}</h5>
-                <ul>
-                    <li><a href={} onClick={} target="_blank"><Icon name="extlink" /></a></li>
-                </ul> */}
             </span>
         )
     }

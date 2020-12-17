@@ -59,7 +59,7 @@
     "use_caution_sending_to_this_account": "Перевод невозможен, уточнить причины этого можно в телеграм-группе @golos_id"
   },
   "confirmtransactionform_jsx": {
-    "ok": "ОК",
+    "ok": "Да",
     "confirm": "Подтвердить"
   },
   "converttosteem_jsx": {
@@ -102,7 +102,7 @@
     "ctyptography_test_failed": "Криптографический тест не пройден",
     "you_need_to": "Вам нужно ",
     "before_creating_account": " прежде чем вы сможете создать другой аккаунт.",
-    "APP_NAME_can_only_register_one_account_per_verified_user": "Пожалуйста, имейте ввиду, что в %(APP_NAME)s можно регистрировать только один аккаунт для каждого пользователя.",
+    "APP_NAME_can_only_register_one_account_per_verified_user": "Для информации, в сообществе %(APP_NAME)s по разному относятся к тем, кто беспричинно использует много аккаунтов.",
     "we_will_be_unable_to_create_account_with_this_browser": "У нас не получится создать %(APP_NAME)s аккаунт используя этот браузер",
     "couldnt_create_account_server_returned_error": "Не получилось создать аккаунт. Сервер вернул эту ошибку",
     "form_requires_javascript_to_be_enabled": "Эта форма требует активированный javascript в браузере",
@@ -118,7 +118,6 @@
     "without_country_code": "Без кода страны",
     "examples": "Введите номер без указания кода страны, например: 9001234567 | 9261234567",
     "land_lines_cannot_receive_sms_messages": "* Городские телефоны не могут отправлять и принимать текстовые сообщения",
-    "message_and_data_rates_may_apply": "",
     "why_send_sms": "Подробнее об отправке смс сообщения",
     "mobile_description": {
       "one": "Мы заинтересованы в регистрации реальных людей, а не ботов. Именно поэтому мы просим подтвердить вашу почту.",
@@ -173,8 +172,7 @@
     "hidden": "скрыт",
     "unavailable" : "Пользователь не найден",
     "due_to_illegal_content": "или был скрыт за нарушение правил",
-    "terms_of_service": "Условий пользования",
-    "terms_of_service_section": ""
+    "terms_of_service": "Условий пользования"
   },
   "g": {
     "golos_fest" : "Новости",
@@ -182,6 +180,7 @@
     "APP_NAME_account": "%(APP_NAME)s аккаунт",
     "24_hour": "24 часа",
     "30_day": "30 дней",
+    "to_ask": "Задать вопрос",
     "add": "Добавить",
     "auto": "автоматически",
     "age": "возраст",
@@ -205,7 +204,6 @@
     "buy": "Купить",
     "buy_VESTING_TOKEN": "Купить %(VESTING_TOKEN2)s",
     "buy_or_sell": "Купить или Продать",
-    "by": "",
     "cancel": "Отмена",
     "cancel_all": "Отменить все",
     "change_password": "Сменить пароль",
@@ -249,13 +247,14 @@
     "memo": "Ключ заметок",
     "messages": "Сообщения",
     "more": "больше",
+    "more_hint": "Подробнее",
     "mute": "Заблокировать",
     "new": "Новое",
     "newer": "Новее",
     "next": "Следующий",
     "no": "Нет",
     "nothing_yet": "Пока ничего нет",
-    "ok": "ОК",
+    "ok": "Да",
     "older": "Старее",
     "or": "или",
     "order_placed": "Заказ размещен",
@@ -265,6 +264,7 @@
     "permissions": "Разрешения",
     "invites": "Инвайт-чеки",
     "assets": "Активы UIA",
+    "help_wallet": "Функции кошелька",
     "phone": "телефон",
     "post": "Пост",
     "posting": "Постинг ключ",
@@ -363,7 +363,7 @@
     "recover_password": "Восстановить аккаунт",
     "current_password": "Текущий пароль",
     "generated_password": "Сгенерированный пароль",
-    "backup_password_by_storing_it": "Важно! Мы не храним пароли и не сможем восстановить ваш пароль, если он будет утерян. Поэтому обязательно сохраните его в текстовом файле или сделайте копию в менеджере паролей. А еще лучше, распечатайте его.",
+    "backup_password_by_storing_it": "Важно! Мы не храним пароли и не сможем восстановить ваш пароль, если он будет утерян. Поэтому обязательно сохраните его в текстовом файле или сделайте копию в менеджере паролей.",
     "click_to_generate_password": "Нажмите, чтобы сгенерировать пароль",
     "re_enter_generate_password": "Введите сгенерированный пароль",
     "understand_that_APP_NAME_cannot_recover_password": "Я понимаю, что %(APP_NAME)s не сможет восстановить потерянные пароли",
@@ -373,7 +373,7 @@
     "account_updated": "Аккаунт обновлен",
     "password_must_be_characters_or_more": "Пароль должен содержать %(amount)s символ(а) или больше",
     "need_password_or_key": "Вам нужен приватный (не публичный) ключ ...",
-    "login_to_see_memo": "Авторизуйтесь, чтобы увидеть примечание",
+    "login_to_see_memo": "Авторизуйтесь с паролем, это зашифрованная заметка",
     "new_password": "Новый пароль",
     "incorrect_password": "Неправильный пароль",
     "username_does_not_exist": "Такого имени не существует",
@@ -403,20 +403,6 @@
     "server_returned_error": "ошибка сервера",
     "APP_NAME_support": "%(APP_NAME)s поддержка",
     "please_email_questions_to": "Пожалуйста, присылайте ваши вопросы на электронную почту",
-    "next_7_strings_sinngle_block": {
-      "authors_get_paid_when_people_like_you_upvote_their_post": "Авторы получают вознаграждение, когда пользователи голосуют за их посты",
-      "if_you_enjoyed_what_you_read_earn_amount": "Голосующие читатели также получают вознаграждение за свой голос.",
-      "when_you": "зарегистрируйтесь",
-      "when_you_link_text": "Регистрация",
-      "and_vote_for_it": "и проголосовать за него",
-      "sign_up_now_to_receive": "Зарегистрируйтесь сейчас, чтобы получить ",
-      "free_steem": "БЕСПЛАТНЫЕ %(LIQUID_TOKEN)sa"
-    },
-    "next_3_strings_together": {
-      "show_more": "Показать больше",
-      "show_less": "Показать меньше",
-      "value_posts": "постов с более низким вознаграждением"
-    },
     "show_less_low_value_posts": "Показать постов с более низким вознаграждением",
     "show_more_low_value_posts": "Показать постов с более низким вознаграждением",
     "select_topic": "Выбрать категорию",
@@ -433,11 +419,6 @@
     "terms_and_conditions": "Условия и соглашения",
     "cryptography_test_failed": "Криптографический тест провален",
     "unable_to_log_you_in": "У нас не получится залогинить вас в этом браузере",
-    "next_3_blocks": {
-      "the_latest_versions_of": "Последние версии",
-      "and": "и",
-      "are_well_tested_and_known_to_work_with": "хорошо тестированы и работают с %(APP_URL)s."
-    },
     "account_creation_succes": "Ваш аккаунт был успешно создан!",
     "account_recovery_succes": "Ваш аккаунт был успешно восстановлен!",
     "password_update_succes": "Пароль для %(accountName)s был успешно обновлен",
@@ -459,7 +440,7 @@
     "for_the_post": "за пост",
     "night_mode": "Ночной режим",
     "social_network": "Социальные сети",
-    "about_project": "Голос — сообщество блогеров, социальная платформа разработанная на блокчейне GOLOS",
+    "about_project": "Голос — децентрализованная блог-платформа разработанная на блокчейне Golos",
     "account_creation_fee": "Размер комиссии за создание аккаунта без делегирования",
     "maximum_block_size": "Максимальный размер блока",
     "sbd_interest_rate": "Процент начисляемый на GBG",
@@ -531,8 +512,7 @@
     "temporarily_disabled": "Ввод/вывод токенов временно отключён",
     "guide_user": "Инструкция по интерфейсу биржи от",
     "total_supply": "Информация об общем количестве токенов",
-    "p2p_bots": "Боты в Телеграм для P2P-сделок",
-    "sell_check": "Продажа чеков с токенами",
+    "other_options": "за RUB / UAH / USD и многие другие варианты",
     "questions": "Есть вопросы",
     "community_chat": "Получить ответы можно как в чате сообщества",
     "delegate_chat": "так и в чате делегатов"
@@ -568,7 +548,6 @@
     "to_comment_and_reward_others": " комментировать и вознаграждать других.",
     "sign_up_now_to_receive": "Зарегистрируйтесь сейчас, чтобы получить ",
     "free_money": "ЛЕГКИЕ ДЕНЬГИ!",
-    "returning_users": "",
     "join_our": "Присоединяйтесь к нашему"
   },
   "main_menu": {
@@ -644,7 +623,8 @@
     "sign_up": "СОЗДАТЬ АККАУНТ",
     "welcome": "Добро пожаловать",
     "feedback": "Обратная связь",
-    "wiki": "Документация (Wiki)",
+    "services": "Полезные сервисы/боты",
+    "wiki": "База знаний (Wiki)",
     "faq": "Вопросы и ответы",
     "sale_agreement": "Договор купли-продажи",
     "telegram_support": "%(APP_NAME_UP)s Техподдержка"
@@ -699,7 +679,7 @@
     "deadline_for_recovery_is": "Крайним сроком для восстановления является",
     "i_understand_dont_show_again": "Понимаю, больше не показывать",
     "insufficent_balance": "Недостаточный баланс",
-    "in_week_convert_DEBT_TOKEN_to_LIQUID_TOKEN": "В 3-5 дней перевести %(amount)s %(DEBT_TOKEN)s в %(LIQUID_TOKEN)s",
+    "in_week_convert_DEBT_TOKEN_to_LIQUID_TOKEN": "Конвертировать %(amount)s %(DEBT_TOKEN)s в %(LIQUID_TOKEN)s",
     "account_name_is_not_available": "Имя аккаунта недоступно",
     "prev_posts": "Вам может быть интересно"
   },
@@ -733,7 +713,6 @@
     "crowdsale": "Краудсейл",
     "following": "Подписки"
   },
-  "reblog_jsx": {},
   "recoveraccountstep1_jsx": {
     "not_valid": "Недействительно",
     "account_name_is_not_found": "Имя аккаунта не найдено",
@@ -812,7 +791,7 @@
     "always_show": "Отображать",
     "muted_users": "Заблокированные пользователи",
     "muted_in_new_users": "Пользователи, чьи посты скрыты в Новом",
-    "muted_uia": "Активы, скрытые в Моих активах",
+    "muted_uia": "Токены, скрытые на странице Активы UIA",
     "update": "Обновить",
     "profile_image_url": "Вставьте ссылку на фото профиля или загрузите его",
     "cover_image_url": "Вставьте ссылку на обложку или загрузите её",
@@ -838,7 +817,7 @@
     "markdown_not_supported": "Markdown здесь не поддерживается",
     "welcome_to_the_blockchain": "Добро пожаловать на Голос!",
     "you_hasnt_started_bloggin_yet": "Похоже, что вы еще не завели блог!",
-    "your_voice_is_worth_something": "Зарегистрируйтесь, чтобы публиковать посты и получать вознаграждения.",
+    "your_voice_is_worth_something": "управляемую сообществом блог-платформу на блокчейне",
     "learn_more": "Узнать больше",
     "get_sp_when_sign_up": "Получи %(signupBonus)s %(VESTING_TOKEN)s подписавшись сегодня.",
     "get_sp_when_sign_up1": "Получи ",
@@ -851,21 +830,17 @@
     "APP_NAME_password_backup_required": "%(APP_NAME)s резервное копирование пароля (обязательно!)",
     "after_printing_write_down_your_user_name": "После печати запишите ваше имя пользователя"
   },
-  "tags_page": {
-    "replies": "Ответы",
-    "payouts": "Выплаты"
-  },
   "tips_js": {
     "tip_balance_hint": "Баланс, с которого вы вознаграждаете пользователей, и на который получаете вознаграждения сами. Токены с него можно также отправить на увеличение Силы Голоса.",
-    "claim_balance_hint1": "Баланс вашей доли ",
-    "claim_balance_hint2_EMISSION_STAKE": "(при текущей СГ ~%(EMISSION_STAKE)s ежедневно)",
-    "claim_balance_hint3": " от эмиссии токенов блокчейна, которую вы можете получить для пополнения TIP-баланса, либо увеличения Силы Голоса.",
+    "claim_balance_hint": "Баланс вашей доли от эмиссии токенов блокчейна, которую вы можете получить для пополнения TIP-баланса, либо увеличения Силы Голоса.",
     "claim_expiration_hint": "Окно востребования токенов закончится",
     "tradeable_tokens_that_may_be_transferred_anywhere_at_anytime": "Торгуемые цифровые токены, которые могут переданы куда угодно в любой момент.",
     "LIQUID_TOKEN_can_be_converted_to_VESTING_TOKEN_in_a_process_called_powering_up": "Например, сконвертированы в %(VESTING_TOKEN2)s или отправлены на TIP-баланс для вознаграждений.",
     "tokens_worth_about_AMOUNT_of_LIQUID_TOKEN": "Перемещаемые цифровые токены, цена которых всегда равна %(amount)s в %(LIQUID_TOKEN)s.",
-    "influence_tokens_which_give_you_more_control_over": "Чем больше у вас СГ, тем больший процент от эмиссии поступает на CLAIM-баланс и выше влияние на развитие проекта путём выбора делегатов и поддержки заявок финансирования из фонда воркеров.",
+    "influence_tokens_which_give_you_more_control_over": "Чем больше у вас СГ, тем больший процент от эмиссии поступает на CLAIM-баланс и выше влияние на развитие проекта путём выбора делегатов и поддержки заявок воркеров через финансирование из фонда.",
     "the_more_you_hold_the_more_you_influence_post_rewards": "Чем больше у вас %(VESTING_TOKENS)s, тем сильней вы влияете на вознаграждения, выбор делегатов и поддержку заявок воркеров.'",
+    "vesting_emission_per_day": "~ %(EMISSION_STAKE)s ежедневно",
+    "vesting_emission_per_day_title": "Сумма, которая в зависимости от Силы Голоса ежедневно поступает на CLAIM-баланс\n(ваша доля от эмиссии токенов блокчейна в сутки)",
     "the_estimated_value_is_based_on_an_average_value_of_steem_in_US_dollars": "Рассчитывается из 7-ми дневной средней стоимости токенов Голос.",
     "VESTING_TOKEN_is_non_transferrable_and_requires_convert_back_to_LIQUID_TOKEN": "Вам потребуются 8 недель (вывод раз в неделю равными долями), чтобы перевести её обратно в ликвидные токены Голос.",
     "converted_VESTING_TOKEN_can_be_sent_to_yourself_but_can_not_transfer_again": "Конвертированная %(VESTING_TOKEN)s может быть отправлена себе или кому-то еще, но не может быть передана вновь без конвертирования назад в %(LIQUID_TOKEN)s.",
@@ -924,7 +899,8 @@
     "to": " для ",
     "from": " от ",
     "for": " за ",
-    "burned": " выведены из оборота блокчейна"
+    "issue": "Эмиссия токенов ",
+    "to_account": " на аккаунт "
   },
   "user_profile": {
     "unknown_account": "Неизвестный аккаунт",
@@ -960,36 +936,8 @@
       "other": "%(count)s постов"
     }
   },
-  "user_profile_permissions": {
-    "author_rewards_last_week": "Оценочные авторские вознаграждения за прошлую неделю",
-    "confirm": "Подтвердить",
-    "canceled": "Отменено",
-    "asset": "Актив",
-    "this_memo_is_private": "Эта заметка является приватной",
-    "this_memo_is_public": "Эта заметка является публичной",
-    "power_up": "Увеличить %(VESTING_TOKEN2)s",
-    "power_down": "Уменьшить %(VESTING_TOKEN2)s",
-    "cancel_power_down": "Отменить понижение %(VESTING_TOKENS)s",
-    "transfer": "Передать",
-    "deposit": "Купить",
-    "basic": "Базовый",
-    "advanced": "Продвинутый",
-    "convert_to_VESTING_TOKEN": "Перевести в %(VESTING_TOKEN2)s",
-    "transfer_to_account": "Передать пользователю",
-    "about_APP_NAME": "О %(APP_NAME)s",
-    "APP_NAME_is_a_social_media_platform_where_everyone_gets_paid_for_creating_and_curating_content": "%(APP_NAME)s - это социальная медиа платформа в которой можно получить вознагарждение за интересный контент",
-    "APP_NAME_is_a_social_media_platform_where_everyone_gets_paid": "%(APP_NAME)s - это социальная медиа платформа в которой каждый зарабатывает за создание контента. Он использует надежную систему цифровых токенов под названием %(LIQUID_TOKEN)s, который поддерживает реальную ценность для цифровых наград через выявление рыночной цены и ликвидности.",
-    "learn_more_at_LANDING_PAGE_URL": "Узнать больше в %(LANDING_PAGE_URL)s",
-    "resources": "Ресурсы",
-    "join_our_slack": "Присоединяйтесь к нашему Slack",
-    "trending_24_hour": "популярное (24 часа)",
-    "home": "Лента",
-    "posting": "Постинг",
-    "owner": "Владелец",
-    "active_or_owner": "активный или владельца",
-    "sign": "Войти"
-  },
   "assets_jsx": {
+    "assets_info": "User Issued Assets - эмитированные пользователями активы (токены), которыми можно вознаграждать других, торговать на внутренней бирже, обмениваться, использовать в различных сервисах на блокчейне.",
     "create_asset": "Создание актива",
     "symbol": "Тикер",
     "symbol_too_short": "Не менее 3 символов",
@@ -1031,12 +979,13 @@
   },
   "invites_jsx": {
     "create_invite": "Создание чека",
-    "create_invite_info": "Чеки (инвайт-коды) — инструмент для передачи фиксированного количества токенов другим людям вне блокчейна. Погасить код можно двумя способами: перевести его баланс на аккаунт или зарегистрировать с его помощью новый аккаунт.",
+    "create_invite_info": "Чеки (инвайт-коды) — инструмент для передачи токенов другим людям вне блокчейна. Использовать чек можно двумя способами: перевести его баланс на аккаунт (форма для этого ниже) или зарегистрировать с его помощью новый аккаунт.",
     "generate_new": "Сгенерировать новый",
     "public_key": "Публичный ключ",
     "private_key": "Приватный ключ (код для погашения)",
     "amount": "Сумма",
     "is_referral": "Для рефералов",
+    "referral_invite": "В течение года 10%% от вознаграждений пользователей (зарегистрированных с помощью такого инвайта)\nбудут поступать на ваш TIP-баланс.",
     "create_btn": "Создать чек",
     "meet_minimum": "Слишком маленькая сумма",
     "success": "Чек создан, сохраните его!",
@@ -1060,7 +1009,7 @@
     "the_active_key_is_used_to_make_transfers_and_place_orders": "Активный ключ используется для переводов, голосования за делегатов и заказов на внутренней бирже.",
     "the_owner_key_is_required_to_change_other_keys": "Ключ владельца это главный ключ ко всему аккаунту, он необходим для изменения других ключей.",
     "the_private_key_or_password_should_be_kept_offline": "Приватный ключ владельца (если вы его получали) и главный пароль должны храниться в оффлайне.",
-    "the_memo_key_is_used_to_create_and_read_memos": "Memo ключ для создания и чтения заметок (используется очень редко)."
+    "the_memo_key_is_used_to_create_and_read_memos": "Memo ключ для зашифрованных заметок (используется редко)."
   },
   "userwallet_jsx": {
     "conversion_complete_tip": "Завершается",
@@ -1073,7 +1022,7 @@
     "transfer_to_liquid": "Пополнить основной баланс",
     "power_down": "Уменьшить Силу Голоса",
     "market": "Внутренняя биржа",
-    "convert_to_LIQUID_TOKEN": "Конвертация в ГОЛОС",
+    "convert_to_LIQUID_TOKEN": "Конвертация в GOLOS",
     "withdraw_LIQUID_TOKEN": "Вывести GOLOS на основной баланс",
     "withdraw_DEBT_TOKENS": "Вывести GBG на основной баланс",
     "tokens_worth_about_1_of_LIQUID_TICKER": "Торгуемые на внутренней бирже токены, цена которых стремится к стоимости %(TOKEN_WORTH)s в токенах ГОЛОС.",
@@ -1136,6 +1085,7 @@
     "payouts_declined": "Выплаты отключены"
   },
   "witnesses_jsx": {
+    "witness_info": "Делегаты - это избираемые голосованием сообщества пользователи, которые поддерживают работу своих нод блокчейна и принимают решения об обновлении кода, также занимаются и другими вопросами, связанными с развитием проекта.",
     "witness_thread": "пост делегата",
     "top_witnesses": "Топ делегатов",
     "what_is_api": "API-ноды имеют повышенные требования к ресурсам сервера, именно через них происходят запросы к блокчейну на получение/отправку информации, они важны для развития различных клиентов и сервисов...",
@@ -1152,12 +1102,6 @@
     "witness_deactive": "Делегат приостановил подпись блоков",
     "no_price_feed": "Делегат не опубликовал прайс фид",
     "version": "Версия",
-    "you_have_votes_remaining": "У вас осталось ",
-    "you_have_votes_remaining_count": {
-      "zero": "0 голосов",
-      "one": "1 голос",
-      "other": "%(count)s голосов"
-    },
     "you_can_vote_for_maximum_of_witnesses": "Вы можете голосовать максимум за 30 делегатов",
     "chat_delegates": "Чат делегатов",
     "chain_properties": "Параметры сети",
@@ -1176,10 +1120,6 @@
     "witness_proxy_set": "Установить прокси",
     "witness_proxy_clear": "Отменить прокси",
     "proxy_update_error": "Ваш прокси не был обновлен"
-  },
-  "generated_password_input": {
-    "i_have_read_and_agree_to_the": "Я прочитал и согласен с",
-    "terms_of_service": "Условиями пользования"
   },
   "user_saga_js": {
     "image_upload" : {
@@ -1201,7 +1141,7 @@
   "chain_errors": {
     "only_comment_once_every": "Комментировать можно не чаще, чем раз в 20 секунд",
     "only_post_once_every": "Публиковать посты можно не чаще, чем раз в 5 минут",
-    "exceeded_maximum_allowed_bandwidth": "Недостаточно пропускной способности аккаунта. Пополните Силу Голоса либо дождитесь восстановления",
+    "exceeded_maximum_allowed_bandwidth": "Недостаточно пропускной способности аккаунта. Пополните Силу Голоса или напишите на info@golos.id",
     "already_voted": "Вы уже голосовали за этот пост",
     "only_vote_once_every": "Голосовать можно не чаще, чем раз в 3 секунды",
     "account_does_not_have_sufficient_power_for_withdraw": "Количество Силы Голоса недостаточно для понижения",
@@ -1285,13 +1225,10 @@
     "from": "От кого",
     "to": "Кому"
   },
-  "messages_jsx": {
-    "start_conversation": "Написать сообщение"
-  },
   "faq_jsq": {
     "page_title": "Часто задаваемые вопросы",
     "page_description" : "На этой странице собраны популярные вопросы пользователей и официальные каналы коммуникаций Golos Blockchain",
-    "telegram": "телеграм",
+    "telegram": "спросить",
     "email": "почта",
     "wiki": "база знаний",
     "twitter": "наш твиттер",
@@ -1300,6 +1237,8 @@
     "footer_message": "Мы никогда не попросим ваши приватные ключи или деньги. Если кто-то представляется членами команды Golos Blockchain и интересуется подобной информацией, напишите нам."
   },
   "workers": {
+    "workers_info": "За любую полезную работу для блокчейна Голос можно получить вознаграждение подав заявку, описав подробно что было сделано (разработка кода, дизайн, реклама, документация). Словом, всё что угодно, если эту активность поддержит сообщество.",
+    "chat_workers": "Чат воркеров",
     "worker_proposals": "Заявки на работу",
     "create_request": "Создать заявку",
     "created": "Голосование",

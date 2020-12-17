@@ -680,7 +680,7 @@ class Market extends Component {
         return (
             <div>
                 <div className="row">
-                    <div className="column small-8">
+                    <div className="column small-8 show-for-medium">
                         {this.state.showDepthChart ? (
                             <DepthChart
                                 bids={orderbook.bids}
@@ -688,7 +688,7 @@ class Market extends Component {
                             />
                         ) : null}
                     </div>
-                    <div className="column small-4 Market__pairs"><br/><h5>
+                    <div className="column Market__pairs"><br/><h5>
                         <DropdownMenu el="div" items={symbols1}>
                             <span>
                                 {sym1 === "GOLOS" ? (<img src="/images/golos.png" width="36" height="36" style={{marginBottom: "4px"}} />) : null}

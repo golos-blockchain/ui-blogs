@@ -83,23 +83,15 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     const donatesLink = `/@${username}/donates-to`;
 
     const faqItem = <li className={scn}>
-        <a href="/faq" title={tt('navigation.faq')}>
+        <Link to="/faq" title={tt('navigation.faq')}>
           {vertical ? <span>{tt('navigation.faq')}</span> : <Icon name="info_o" size="1_5x" />}
-        </a>
-      </li>
-    ;
-    
-    const searchItem = <li className={scn}>
-        <a target="blank" href="/static/search.html" title={tt('g.search')}>
-          {vertical ? <span>{tt('g.search')}</span> : <Icon name="new/search" size="1_25x" />}
-        </a>
+        </Link>
       </li>
     ;
 
-    const notificationItem = <li className={scn}>
-        <a href="#" title={tt('g.search')} className="number">
-          <Icon name="new/bell" size="1_25x" />
-          20
+    const searchItem = <li className={scn}>
+        <a target="blank" href="/static/search.html" title={tt('g.search')}>
+          {vertical ? <span>{tt('g.search')}</span> : <Icon name="new/search" size="1_25x" />}
         </a>
       </li>
     ;
@@ -126,10 +118,9 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
         { link: '/~witnesses', icon: 'new/like', value: tt("navigation.witnesses"), target: 'blank' },
         { link: '/workers', icon: 'voters', value: tt("navigation.workers") },
         { link: '/exchanges', icon: 'editor/coin', value: tt("navigation.buy_sell") },
-        { link: 'https://explorer.golos.id/', icon: 'new/search', value: tt("navigation.explorer"), target: 'blank' },
+        { link: '/services', icon: 'new/monitor', value: tt("navigation.services") },
         { link: 'https://wiki.golos.id/', icon: 'new/wikipedia', value: tt("navigation.wiki"), target: 'blank' },
-        { link: 'https://dpos.space/golos-donates/', icon: 'new/monitor', value: 'Сервисы dpos.space', target: 'blank' },
-        { link: 'https://golos.cf/', icon: 'new/monitor', value: 'Сервисы golos.cf', target: 'blank' }
+        { link: 'https://explorer.golos.id/', icon: 'new/search', value: tt("navigation.explorer"), target: 'blank' }        
     );
     const navAdditional = <LinkWithDropdown
         closeOnClickOutside
@@ -161,11 +152,6 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
                 {link: '#', onClick: showLogin, value: tt('g.login')}
         ];
 
-        if ($STM_Config.is_sandbox) {
-          // TODO Figured it out, how it works?
-          //user_menu.splice(2, 0, {link: '#', icon: 'chatboxes', onClick: showMessages, value: tt('g.messages')});
-        }
-      
         const voting_power_percent = account.get('voting_power') / 100
 
         return (
@@ -199,10 +185,6 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
                         <div className="TopRightMenu__notificounter"><NotifiCounter fields="total" /></div>
                     </li>}
                 </LinkWithDropdown>
-                {/* <li className={"delim " + scn} /> */}
-                {/* {notificationItem} */}
-                {/* <li className={"delim " + scn} />
-                {messengerItem} */}
                 {navAdditional}
             </ul>
         );

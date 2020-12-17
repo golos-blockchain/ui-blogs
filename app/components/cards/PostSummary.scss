@@ -64,6 +64,7 @@ ul.PostsList__summaries {
     height: 190px;
   }
   .PostSummary__text {
+    font-family: Source Serif Pro;
     display: block;
     bottom: 0px;
     width: 100%;
@@ -201,14 +202,14 @@ ul.PostsList__summaries {
     font-weight: bold;
     @include hoverUnderline;
   }
-  padding-left: 1rem;
-  margin-left: 1rem;
+  padding-left: .5rem;
+  margin-left: .7rem;
   border-left: 1px solid #cacaca;
 
   .Reblog__button {
     margin-left: .5rem;
-    margin-right: 1rem;
-    padding-right: 1rem;
+    margin-right: .5rem;
+    padding-right: .5rem;
   }
 }
 
@@ -218,8 +219,8 @@ ul.PostsList__summaries {
 
 .MuteAuthorInNew__button {
   cursor: pointer;
-  margin-left: 6px;
-  margin-right: 7px;
+  margin-left: .5rem;
+  margin-right: .6rem;
 }
 
 .MuteAuthorInNew__button.loading {

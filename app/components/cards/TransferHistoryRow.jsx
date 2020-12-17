@@ -28,21 +28,22 @@ class TransferHistoryRow extends React.Component {
         let description_end = "";
         let data_memo = data.memo;
 
-        if( type === 'transfer_to_vesting' ) {
+        if (type === 'claim') {
             if( data.to === context ) {
                 if( data.from === context ) {
-                    description_start += tt('transferhistoryrow_jsx.transferred') + data.amount + tt('transferhistoryrow_jsx.to_golos_power');
+                    description_start += tt('g.receive') + data.amount + tt('transferhistoryrow_jsx.with_claim');
                 }
                 else {
-                    description_start += tt('g.receive') + data.amount + tt('g.from');
+                    description_start += tt('g.receive') + data.amount + tt('transferhistoryrow_jsx.with_claim') + tt('transferhistoryrow_jsx.from');
                     other_account = data.from;
-                    description_end += tt('transferhistoryrow_jsx.to_golos_power');
                 }
             } else {
-                description_start += tt('transferhistoryrow_jsx.transfer') + data.amount + tt('g.to');
+                description_start += tt('transferhistoryrow_jsx.transfer') + data.amount + tt('transferhistoryrow_jsx.with_claim') + tt('g.to');
                 other_account = data.to;
-                description_end += tt('transferhistoryrow_jsx.to_golos_power');
             }
+            if (data.to_vesting) {
+                description_end += tt('transferhistoryrow_jsx.to_golos_power');
+            }         
         }
 
         else if(/^transfer$|^transfer_to_savings$|^transfer_from_savings$/.test(type)) {
@@ -67,15 +68,28 @@ class TransferHistoryRow extends React.Component {
                 description_end += ` (${tt('g.request')} ${data.request_id})`
         }
 
-        else if (type === 'cancel_transfer_from_savings') {
-            description_start += `${tt('transferhistoryrow_jsx.cancel_transfer_from_savings')} (${tt('g.request')} ${data.request_id})`;
-        }
-
         else if( type === 'withdraw_vesting' ) {
             if( data.vesting_shares === '0.000000 ' + VEST_TICKER)
                 description_start += tt('transferhistoryrow_jsx.stop_power_down', {VESTING_TOKENS});
             else
                 description_start += tt('transferhistoryrow_jsx.start_power_down_of', {VESTING_TOKENS}) + " " +  data.vesting_shares;
+        }
+
+        else if( type === 'transfer_to_vesting' ) {
+            if( data.to === context ) {
+                if( data.from === context ) {
+                    description_start += tt('transferhistoryrow_jsx.transferred') + data.amount + tt('transferhistoryrow_jsx.to_golos_power');
+                }
+                else {
+                    description_start += tt('g.receive') + data.amount + tt('g.from');
+                    other_account = data.from;
+                    description_end += tt('transferhistoryrow_jsx.to_golos_power');
+                }
+            } else {
+                description_start += tt('transferhistoryrow_jsx.transfer') + data.amount + tt('g.to');
+                other_account = data.to;
+                description_end += tt('transferhistoryrow_jsx.to_golos_power');
+            }
         }
 
         else if( type === 'curation_reward' ) {
@@ -86,24 +100,6 @@ class TransferHistoryRow extends React.Component {
         else if (type === 'author_reward') {
             description_start += `${author_reward} ${VESTING_TOKENS}` + tt('transferhistoryrow_jsx.for');
             other_account = data.author + "/" + data.permlink;
-        }
-
-        else if (type === 'interest') {
-            description_start += `${tt('transferhistoryrow_jsx.receive_interest_of')} ${data.interest}`;
-        }
-
-        else if (type === 'fill_convert_request') {
-            description_start += `Fill convert request: ${data.amount_in} for ${data.amount_out}`;
-        }
-
-        else if (type === 'fill_order') {
-            if(data.open_owner == context) {
-                // my order was filled by data.current_owner
-                description_start += `Paid ${data.open_pays} for ${data.current_pays}`;
-            } else {
-                // data.open_owner filled my order
-                description_start += `Paid ${data.current_pays} for ${data.open_pays}`;
-            }
         }
 
         else if (type === 'donate' && context == 'ref') {
@@ -153,35 +149,6 @@ class TransferHistoryRow extends React.Component {
             }
         }
 
-        else if (type === 'invite') {
-            description_start += tt('invites_jsx.hist_invite');
-            code_key = data.invite_key;
-            description_end += tt('invites_jsx.hist_invite2') + data.balance;            
-        }
-
-        else if (type === 'invite_claim') {
-            description_start += tt('invites_jsx.hist_claimed');
-            code_key = PrivateKey.fromWif(data.invite_secret).toPublicKey().toString();
-        }
-
-        else if (type === 'claim') {
-            if( data.to === context ) {
-                if( data.from === context ) {
-                    description_start += tt('g.receive') + data.amount + tt('transferhistoryrow_jsx.with_claim');
-                }
-                else {
-                    description_start += tt('g.receive') + data.amount + tt('transferhistoryrow_jsx.with_claim') + tt('transferhistoryrow_jsx.from');
-                    other_account = data.from;
-                }
-            } else {
-                description_start += tt('transferhistoryrow_jsx.transfer') + data.amount + tt('transferhistoryrow_jsx.with_claim') + tt('g.to');
-                other_account = data.to;
-            }
-            if (data.to_vesting) {
-                description_end += tt('transferhistoryrow_jsx.to_golos_power');
-            }         
-        }
-
         else if (type === 'transfer_to_tip') {
             if( data.to === context ) {
                 if( data.from === context ) {
@@ -216,31 +183,45 @@ class TransferHistoryRow extends React.Component {
             }
         }
 
+        else if (type === 'invite') {
+            description_start += tt('invites_jsx.hist_invite');
+            code_key = data.invite_key;
+            description_end += tt('invites_jsx.hist_invite2') + data.balance;            
+        }
+
+        else if (type === 'invite_claim') {
+            description_start += tt('invites_jsx.hist_claimed');
+            code_key = PrivateKey.fromWif(data.invite_secret).toPublicKey().toString();
+        }
+
         else if (type === 'worker_reward') {
             description_start += tt('transferhistoryrow_jsx.funded_workers') + data.reward + tt('transferhistoryrow_jsx.for');
             other_account = data.worker_request_author + "/" + data.worker_request_permlink;
         }
-        else if (type === 'internal_transfer' && data.from == 'bittrex') {
-            description_start += data.amount + tt('transferhistoryrow_jsx.burned');
+
+        else if (type === 'asset_issue') {
+            description_start += tt('transferhistoryrow_jsx.issue') + data.amount + tt('transferhistoryrow_jsx.to_account');
+            other_account = data.to;
         }
+
         else {
             code_key = JSON.stringify({type, ...data}, null, 2);
         }
 
         return(
                 <tr key={op[0]} className="Trans">
-                    <td>
+                    <td style={{fontSize: "85%"}}>
                         <Tooltip t={new Date(op[1].timestamp).toLocaleString()}>
                             <TimeAgoWrapper date={op[1].timestamp} />
                         </Tooltip>
                     </td>
-                    <td className="TransferHistoryRow__text" style={{maxWidth: "40rem"}}>
+                    <td className="TransferHistoryRow__text" style={{maxWidth: "35rem"}}>
                         {description_start}
                         {code_key && <span style={{fontSize: "85%"}}>{code_key}</span>}
                         {other_account && <Link to={`/@${other_account}`}>{other_account}</Link>}
                         {description_end}
                     </td>
-                    <td className="show-for-medium" style={{maxWidth: "20rem", whiteSpace: "nowrap", textOverflow: "ellipsis", overflow: "hidden"}} title={data_memo}>
+                    <td className="show-for-medium" style={{maxWidth: "25rem", wordWrap: "break-word", fontSize: "85%"}}>
                         <Memo text={data_memo} data={data} username={context} />
                     </td>
                 </tr>

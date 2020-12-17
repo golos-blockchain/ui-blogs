@@ -101,7 +101,7 @@ class Assets extends Component {
 
             my_assets.push(<tr key={sym}>
                 <td>
-                {description.length ? (<a target="_blank" href={description}>
+                {description.length ? (<a target="_blank" href={description} rel="nofollow noopener">
                 {image_url.length ? (<img className="Assets__marginBottom Assets__marginRight" width="36" height="36" src={image_url}/>) : null}{sym}</a>) : null}
                 {!description.length ? (<span><img className="Assets__marginBottom Assets__marginRight" width="36" height="36" src={image_url}/>{sym}</span>) : null}
                 &nbsp;&nbsp;<span><a data-sym={sym} onClick={this.muteAsset}><Icon name="eye_gray" size="0_95x" title={tt('assets_jsx.mute_asset')} /></a></span>
@@ -148,6 +148,12 @@ class Assets extends Component {
             </tr>);
         }
         return (<div>
+            <div className="row">
+                <div className="column secondary">
+                    {tt('assets_jsx.assets_info')} <a target="_blank" href="/@allforyou/torguem-na-vnutrennei-birzhe-golosa">{tt('g.more_hint')}</a> <Icon name="extlink" size="1_5x" />
+                <hr />
+                </div>
+            </div>
             <div className="row">
                 <div className="column small-12">
                     <h4 className="Assets__header">{this.state.show_full_list ? tt('assets_jsx.all_assets') : tt('assets_jsx.my_assets')}</h4>

@@ -2,20 +2,20 @@ version: '3'
 services:
   web:
     restart: always
-    build: .
-    image: blckchnd/golos-ui-web
+    #build: .
+    image: golosblockchain/web-ui:latest
     command: bash -c "cd db && ../node_modules/.bin/sequelize db:migrate && cd .. && yarn run production"
 
     environment:
       SDC_TARANTOOL_HOSTNAME: datastore
       SDC_DATABASE_URL: mysql://golosdev:golosdev@db:3306/golosdev
-      SDC_CLIENT_WEBSOCKET_URL: ${SDC_CLIENT_WEBSOCKET_URL}
-      SDC_SERVER_WEBSOCKET_URL: ${SDC_SERVER_WEBSOCKET_URL}
-      SDC_SITE_DOMAIN: ${SDC_SITE_DOMAIN}
       SDC_REGISTRAR_ACCOUNT: ${SDC_REGISTRAR_ACCOUNT}
       SDC_REGISTRAR_SIGNINGKEY: ${SDC_REGISTRAR_SIGNINGKEY}
       SDC_GMAIL_SEND_USER: ${SDC_GMAIL_SEND_USER}
       SDC_GMAIL_SEND_PASS: ${SDC_GMAIL_SEND_PASS}
+      SDC_CLIENT_WEBSOCKET_URL: ${SDC_CLIENT_WEBSOCKET_URL}
+      SDC_SERVER_WEBSOCKET_URL: ${SDC_SERVER_WEBSOCKET_URL}
+      SDC_SITE_DOMAIN: ${SDC_SITE_DOMAIN}
 
     ports:
       - 127.0.0.1:8080:8080
@@ -40,11 +40,11 @@ services:
       - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d/:ro
 
   datafeed:
-    image: golosnotify/datafeed
-    restart: unless-stopped
-    build:
-      context: https://github.com/golos-blockchain/golosnotify.git
-      dockerfile: Dockerfile-datafeed
+    restart: unless-stopped   
+    #build:
+      #context: https://github.com/golos-blockchain/golosnotify.git
+      #dockerfile: Dockerfile-datafeed
+    image: golosblockchain/web-ui:datafeed    
 
     environment:
       NODE_URL: ${SDC_SERVER_WEBSOCKET_URL}
@@ -55,10 +55,10 @@ services:
       - db
 
   datastore:
-    image: golosnotify/datastore
-    build:
-      context: https://github.com/golos-blockchain/golosnotify.git
-      dockerfile: Dockerfile-datastore
+    #build:
+      #context: https://github.com/golos-blockchain/golosnotify.git
+      #dockerfile: Dockerfile-datastore
+    image: golosblockchain/web-ui:datastore    
     volumes:
       - ./data/tarantool:/var/lib/tarantool
     ports:

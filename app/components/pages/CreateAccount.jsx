@@ -189,7 +189,7 @@ class CreateAccount extends React.Component {
                     >
                         <h2>{tt('g.sign_up')}</h2>
                         <p className="CreateAccount__account-name-hint">
-                            <Icon name="info_o" /> Возникли сложности? Напишите в <a target="_blank" href="https://t.me/golos_id">телеграм-чат</a> сообщества или на <a href="mailto:info@golos.id">info@golos.id</a>
+                            <Icon name="info_o" /> Возникли сложности? Напишите в <a target="_blank" href="https://t.me/goloshelp">телеграм-чат</a> или на <a href="mailto:info@golos.id">info@golos.id</a>
                         </p>
                         <hr />
                         <form
@@ -233,7 +233,7 @@ class CreateAccount extends React.Component {
                                             <span style={{ color: 'red' }}>
                                                 *
                                             </span>{' '}
-                                            {'Введите вашу gmail.com почту'}
+                                            {'Введите вашу gmail.com почту'} (создать её можно <a target="_blank" href="https://accounts.google.com/signup/v2/webcreateaccount?hl=ru&flowName=GlifWebSignIn&flowEntry=SignUp">по ссылке</a>) 
                                             <input
                                                 type="text"
                                                 name="email"

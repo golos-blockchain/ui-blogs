@@ -119,7 +119,7 @@ class PromotePost extends Component {
                                </div>
                            </div>
                        </div>
-                       <div>{`${tt('transfer_jsx.balance')}: ${balance} ${DEBT_TOKEN_SHORT} `} <span className="secondary">({tt('promote_post_jsx.buy_gbg')} <a href="/market">{tt('promote_post_jsx.market')}</a>)</span></div>
+                       <div>{`${tt('transfer_jsx.balance')}: ${balance} ${DEBT_TOKEN_SHORT} `} <span className="secondary">({tt('promote_post_jsx.buy_gbg')} <a target="_blank" href="/market/GBG/GOLOS">{tt('promote_post_jsx.market')}</a>)</span></div>
                        <br />
                        {loading && <span><LoadingIndicator type="circle" /><br /></span>}
                        {!loading && <span>

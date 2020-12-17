@@ -96,7 +96,7 @@ export default class PinPost extends React.Component {
         const loading = this.state.loading ? ' loading' : ''
         return (
           <span className={'Reblog__button PinPost__button-'+ state + loading}>
-            <a href="#" onClick={this.pin} title={this.state.active ? 'Пост закреплён' : 'Закрепить пост'}>
+            <a href="#" onClick={this.pin} title={this.state.active ? 'Пост закреплён в блоге автора' : 'Закрепить пост в блоге'}>
               <Icon name="pin" />
             </a>
           </span>
