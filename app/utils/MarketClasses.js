@@ -60,9 +60,6 @@ class Order {
 class TradeHistory {
 
     constructor(fill, sym1, sym2, prec1, prec2) {
-        this.fill =fill;
-        this.id = fill.id;
-
         // Norm date (FF bug)
         var zdate = fill.date;
         if(!/Z$/.test(zdate))

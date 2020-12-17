@@ -2,7 +2,6 @@ import React from "react";
 import OrderHistoryRow from "./OrderhistoryRow.jsx";
 import tt from 'counterpart';
 import { DEBT_TOKEN_SHORT } from 'app/client_config';
-import { Order, TradeHistory } from 'app/utils/MarketClasses';
 
 export default class OrderHistory extends React.Component {
 
@@ -28,28 +27,15 @@ export default class OrderHistory extends React.Component {
             return null;
         }
 
-        let ids = [];
-        let historyNew = [];
-        for (let h of history) {
-            if (historyNew.length && historyNew[historyNew.length -1].date.getTime() == h.date.getTime()) {
-                historyNew[historyNew.length -1].asset1 += h.asset1;
-                historyNew[historyNew.length -1].asset2 += h.asset2;
-                continue;
-            }
-            if (ids.includes(h.id)) continue;
-            ids.push(h.id);
-            historyNew.push(new TradeHistory(Object.assign({},h.fill), h.sym1, h.sym2, h.prec1, h.prec2));
-        }
-
         let {historyIndex} = this.state;
 
         const {prec1, prec2} = this.props;
 
-        let last_id = Number.MAX_VALUE
-        return historyNew.map((order, index) => {
+        let last_time = Number.MAX_VALUE
+        return history.map((order, index) => {
             if (index >= historyIndex && index < (historyIndex + 10)) {
-                if (order.id >= last_id) return null
-                last_id = order.id
+                if (order.date.getTime() >= last_time) return null
+                last_time = order.date.getTime()
                 return (
                     <OrderHistoryRow
                         prec1={prec1}
