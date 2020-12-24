@@ -8,6 +8,7 @@ lovecoin
 steem-engin
 steemengine
 kunaexchange
+livecoin
 `.trim().split('\n');
 
 export default list;

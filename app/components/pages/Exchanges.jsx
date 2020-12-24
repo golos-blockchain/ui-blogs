@@ -71,9 +71,12 @@ class Exchanges extends React.Component {
                                 <a target="_blank" href="https://livecoin.net/"><img src='https://i.imgur.com/7RrhYFw.png' width='275' height='67' /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
-                                    <a target="_blank" href="/@cognition/obzor-kriptovalyutnoi-birzhi-livecoin">{tt('exchanges_jsx.guide_user')} @cognition</a>
+                                    {/* <a target="_blank" href="/@cognition/obzor-kriptovalyutnoi-birzhi-livecoin">{tt('exchanges_jsx.guide_user')} @cognition</a>
                                     <br /><br />
-                                    <a target="_blank" href="https://www.livecoin.net/trading/GOLOS_BTC" className="button">GOLOS-BTC</a>&nbsp;&nbsp;<a target="_blank" href="https://www.livecoin.net/trading/GOLOS_USDT" className="button">GOLOS-USDT</a>
+                                    <a target="_blank" href="https://www.livecoin.net/trading/GOLOS_BTC" className="button">GOLOS-BTC</a>&nbsp;&nbsp;<a target="_blank" href="https://www.livecoin.net/trading/GOLOS_USDT" className="button">GOLOS-USDT</a> */}
+                                    {tt('exchanges_jsx.pause')}
+                                    <br /><br />
+                                    <a href="#" className="button disabled">GOLOS-BTC</a>&nbsp;&nbsp;<a href="#" className="button disabled">GOLOS-USDT</a>
                                 </div>
                             </div>
                         </div>
