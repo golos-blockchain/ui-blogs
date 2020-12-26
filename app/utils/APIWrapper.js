@@ -38,7 +38,7 @@ export function getAccountHistory(account, from, limit, filter_ops) {
 }
 
 export function getRepliesByLastUpdate(startAuthor, startPermlink, limit, voteLimit) {
-    return api.getRepliesByLastUpdateAsync(startAuthor, startPermlink, limit, voteLimit)
+    return api.getRepliesByLastUpdateAsync(startAuthor, startPermlink, limit, voteLimit, 0, ['fm-'])
 }
 
 export function getDiscussionsByComments(query) {
@@ -50,11 +50,11 @@ export function getBlogAuthors(blogAccount) {
 }
 
 export function getBlogEntries(account, entryId, limit) {
-    return api.getBlogEntriesAsync(account, entryId, limit)
+    return api.getBlogEntriesAsync(account, entryId, limit, ['fm-'])
 }
 
 export function getFeedEntries(account, entryId, limit) {
-    return api.getFeedEntriesAsync(account, entryId, limit)
+    return api.getFeedEntriesAsync(account, entryId, limit, ['fm-'])
 }
 
 export function getAccountReputations(lowerBoundName, limit) {

@@ -156,7 +156,7 @@ export function* fetchState(location_change_action) {
                     break
 
                     case 'recent-replies':
-                        const replies = yield call([api, api.getRepliesByLastUpdateAsync], uname, '', 50, constants.DEFAULT_VOTE_LIMIT)
+                        const replies = yield call([api, api.getRepliesByLastUpdateAsync], uname, '', 50, constants.DEFAULT_VOTE_LIMIT, 0, ['fm-'])
                         state.accounts[uname].recent_replies = []
 
                         replies.forEach(reply => {
@@ -168,7 +168,7 @@ export function* fetchState(location_change_action) {
 
                     case 'posts':
                     case 'comments':
-                        const comments = yield call([api, api.getDiscussionsByCommentsAsync], { start_author: uname, limit: 20 })
+                        const comments = yield call([api, api.getDiscussionsByCommentsAsync], { start_author: uname, limit: 20, filter_tag_masks: ['fm-'] })
                         state.accounts[uname].comments = []
 
                         comments.forEach(comment => {
@@ -179,7 +179,7 @@ export function* fetchState(location_change_action) {
                     break
 
                     case 'feed':
-                        const feedEntries = yield call([api, api.getFeedEntriesAsync], uname, 0, 20)
+                        const feedEntries = yield call([api, api.getFeedEntriesAsync], uname, 0, 20, ['fm-'])
                         state.accounts[uname].feed = []
 
                         for (let key in feedEntries) {
@@ -198,7 +198,7 @@ export function* fetchState(location_change_action) {
 
                     case 'blog':
                       default:
-                      const blogEntries = yield call([api, api.getBlogEntriesAsync], uname, 0, 20)
+                      const blogEntries = yield call([api, api.getBlogEntriesAsync], uname, 0, 20, ['fm-'])
                       state.accounts[uname].blog = []
 
                       let pinnedPosts = getPinnedPosts(account)
