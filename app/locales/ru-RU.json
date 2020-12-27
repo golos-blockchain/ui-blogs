@@ -878,7 +878,7 @@
     "balance": "Баланс",
     "can_issue": "Можно выпустить",
     "private_key_in_memo" : "Не пишите в этом поле приватные ключи!",
-    "verified_exchange_no_memo": "Для перевода токенов на биржу нужно указать заметку/memo.",
+    "verified_exchange_no_memo": "Для перевода токенов на этот аккаунт нужно указать заметку/memo.",
     "verified_exchange_liquid_only": "Переводить на биржу можно только токены с основного баланса ГОЛОС."
   },
   "transferhistoryrow_jsx": {
