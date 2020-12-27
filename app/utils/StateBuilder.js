@@ -137,7 +137,7 @@ export default async function getState(api, url, options, offchain = {}) {
 
                 case 'posts':
                 case 'comments':
-                    const comments = await api.getDiscussionsByComments({ start_author: uname, limit: 20 })
+                    const comments = await api.getDiscussionsByComments({ start_author: uname, limit: 20, filter_tag_masks: ['fm-'] })
                     state.accounts[uname].comments = []
 
                     comments.forEach(comment => {
