@@ -58,29 +58,38 @@ export default class EmojiPicker extends React.Component {
             }
         }
 
-        const updateTop = async() => {
+        const updateTop = async () => {
+        console.log('call')
             const database = new Database();
-            let emojis = await database.getTopFavoriteEmoji(5);
             this._topEmojis = [];
-            for (let emoji of emojis) {
-                this._topEmojis.push(<span>&nbsp;<span className="emoji-short" data-emoji={emoji.unicode} onClick={this.selectEmoji}>{emoji.unicode}</span></span>);
+            try {
+                let emojis = await database.getTopFavoriteEmoji(5);
+                for (let emoji of emojis) {
+                    this._topEmojis.push(<span>&nbsp;<span className="emoji-short" data-emoji={emoji.unicode} onClick={this.selectEmoji}>{emoji.unicode}</span></span>);
+                }
+            } catch (ex) {}
+            if (this._topEmojis.length < 5) {
+                for (let emoji of ['😀', '😂', '😦', '😢', '👍🏻', '👎🏻', '❤️']) {
+                    this._topEmojis.push(<span>&nbsp;<span className="emoji-short" data-emoji={emoji} onClick={this.selectEmoji}>{emoji}</span></span>);
+                }
             }
             this.setState({reRender: Math.random()});
+            this._topUpdater = setTimeout(updateTop, 5000);
         };
 
-        this._topUpdater = setInterval(updateTop, 5000);
-        loadTop();
+        this._topUpdater = setTimeout(updateTop, 100);
     }
 
     componentWillUnmount() {
         document.body.removeEventListener('click', this.onBodyClick);
-        if (this._topUpdater) clearInterval(this._topUpdater);
+        if (this._topUpdater) clearTimeout(this._topUpdater);
     }
 
     render() {
         return (
             <span>
                 {this._topEmojis}
+                &nbsp;
                 <span className="emoji-picker-opener" onClick={this.toggle}>🔻</span>
                 <div className="emoji-picker-tooltip" role="tooltip">
                 </div>
