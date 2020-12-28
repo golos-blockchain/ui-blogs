@@ -1277,5 +1277,39 @@
     "payment_in_GP": "Выплата в СГ",
     "voting_time": "Время голосования (суток)",
     "proposal_fee": "Будет списано"
+  },
+  "emoji_i18n": {
+    "categoriesLabel": "Categories",
+    "emojiUnsupportedMessage": "Your browser does not support color emoji.",
+    "favoritesLabel": "Favorites",
+    "loadingMessage": "Loading…",
+    "networkErrorMessage": "Could not load emoji. Try refreshing.",
+    "regionLabel": "Emoji picker",
+    "searchDescription": "When search results are available, press up or down to select and enter to choose.",
+    "searchLabel": "Search",
+    "searchResultsLabel": "Search results",
+    "skinToneDescription": "When expanded, press up or down to select and enter to choose.",
+    "skinToneLabel": "Choose a skin tone (currently {skinTone})",
+    "skinTonesLabel": "Skin tones",
+    "skinTones": [
+      "Default",
+      "Light",
+      "Medium-Light",
+      "Medium",
+      "Medium-Dark",
+      "Dark"
+    ],
+    "categories": {
+      "custom": "Custom",
+      "smileys-emotion": "Эмоции",
+      "people-body": "Жесты и люди",
+      "animals-nature": "Животные и растения",
+      "food-drink": "Еда и напитки",
+      "travel-places": "Путешествия и погода",
+      "activities": "Занятия",
+      "objects": "Одежда и предметы",
+      "symbols": "Символы и знаки",
+      "flags": "Флаги"
+    }
   }
 }
