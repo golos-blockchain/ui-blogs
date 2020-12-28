@@ -165,6 +165,10 @@ export default class MarkdownEditor extends PureComponent {
         this._simplemde.value(value);
     }
 
+    replaceSelection(text) {
+        this._cm.replaceSelection(text);
+    }
+
     _onChange = () => {
         this.props.onChangeNotify();
         this._processTextLazy();

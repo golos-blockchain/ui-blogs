@@ -1,0 +1,17 @@
+.emoji-picker-tooltip:not(.shown) {
+    display: none;
+}
+
+emoji-picker {
+    height: 170px;
+}
+
+.emoji-picker-opener {
+    cursor: pointer;
+}
+
+.emoji-short {
+    cursor: pointer;
+    font-size: 1.2em;
+}
+
