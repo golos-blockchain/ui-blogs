@@ -627,6 +627,7 @@
     "services": "Полезные сервисы/боты",
     "wiki": "База знаний (Wiki)",
     "faq": "Вопросы и ответы",
+    "forum": "Форум GolosTalk",
     "sale_agreement": "Договор купли-продажи",
     "telegram_support": "%(APP_NAME_UP)s Техподдержка"
   },

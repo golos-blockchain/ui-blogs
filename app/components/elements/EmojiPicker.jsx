@@ -69,7 +69,7 @@ export default class EmojiPicker extends React.Component {
                 }
             } catch (ex) {}
             if (this._topEmojis.length < 5) {
-                for (let emoji of ['😀', '😂', '😦', '😢', '👍🏻', '👎🏻', '❤️']) {
+                for (let emoji of ['🙂', '😃', '😢', '😍', '🎄', '👍️']) {
                     this._topEmojis.push(<span>&nbsp;<span className="emoji-short" data-emoji={emoji} onClick={this.selectEmoji}>{emoji}</span></span>);
                 }
             }

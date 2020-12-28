@@ -319,6 +319,7 @@
     "services": "Useful services/bots",
     "wiki": "Documentation (Wiki)",
     "faq": "FAQ",
+    "forum": "Forum GolosTalk",
     "sale_agreement": "Sale Agreement",
     "telegram_support": "%(APP_NAME_UP)s Support"
   },

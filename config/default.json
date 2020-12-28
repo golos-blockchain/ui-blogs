@@ -37,7 +37,7 @@
       "styleSrc": "'self' 'unsafe-inline' cdnjs.cloudflare.com fonts.googleapis.com",
       "imgSrc": "* data:",
       "fontSrc": "data: fonts.gstatic.com",
-      "connectSrc": "'self' api.imgur.com api.golos.id wss://api.golos.id api.golos.today wss://api.golos.today api.aleksw.space wss://api.aleksw.space wss://api-golos.blckchnd.com *.coinmarketcap.com app.sharpay.io www.google-analytics.com",
+      "connectSrc": "'self' api.imgur.com api.golos.id wss://api.golos.id api.golos.today wss://api.golos.today api.aleksw.space wss://api.aleksw.space *.coinmarketcap.com app.sharpay.io www.google-analytics.com cdn.jsdelivr.net",
       "reportUri": "/api/v1/csp_violation",
       "objectSrc": "'self'",
       "pluginTypes": "application/pdf",
