@@ -51,7 +51,7 @@ class Exchanges extends React.Component {
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
                                     <a target="_blank" href="/@allforyou/golos-delistyat-s-kuny-perekhodim-na-rudex">{tt('exchanges_jsx.guide_user')} @allforyou</a>
                                     <br /><br />
-                                    <a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_RUDEX.BTC" className="button">GOLOS-BTC</a>&nbsp;&nbsp;<a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_BTS" className="button">GOLOS-BTS</a>&nbsp;&nbsp;<a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_RUDEX.USDT" className="button">GOLOS-USDT</a>&nbsp;&nbsp;<a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_RUBLE" className="button">GOLOS-RUBLE</a>
+                                    <a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_RUDEX.BTC" className="button">GOLOS-BTC</a>&nbsp;&nbsp;<a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_RUDEX.USDT" className="button">GOLOS-USDT</a>&nbsp;&nbsp;<a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_BTS" className="button">GOLOS-BTS</a>&nbsp;&nbsp;<a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_RUBLE" className="button">GOLOS-RUBLE</a>
                                 </div>
                             </div>
                         </div>
@@ -71,9 +71,12 @@ class Exchanges extends React.Component {
                                 <a target="_blank" href="https://livecoin.net/"><img src='https://i.imgur.com/7RrhYFw.png' width='275' height='67' /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
-                                    <a target="_blank" href="/@cognition/obzor-kriptovalyutnoi-birzhi-livecoin">{tt('exchanges_jsx.guide_user')} @cognition</a>
+                                    {/* <a target="_blank" href="/@cognition/obzor-kriptovalyutnoi-birzhi-livecoin">{tt('exchanges_jsx.guide_user')} @cognition</a>
                                     <br /><br />
-                                    <a target="_blank" href="https://www.livecoin.net/trading/GOLOS_BTC" className="button">GOLOS-BTC</a>&nbsp;&nbsp;<a target="_blank" href="https://www.livecoin.net/trading/GOLOS_USDT" className="button">GOLOS-USDT</a>
+                                    <a target="_blank" href="https://www.livecoin.net/trading/GOLOS_BTC" className="button">GOLOS-BTC</a>&nbsp;&nbsp;<a target="_blank" href="https://www.livecoin.net/trading/GOLOS_USDT" className="button">GOLOS-USDT</a> */}
+                                    {tt('exchanges_jsx.pause')}
+                                    <br /><br />
+                                    <a href="#" className="button disabled">GOLOS-BTC</a>&nbsp;&nbsp;<a href="#" className="button disabled">GOLOS-USDT</a>
                                 </div>
                             </div>
                         </div>
@@ -113,7 +116,7 @@ class Exchanges extends React.Component {
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
                                 <p className='landing-exchanges-block-text reg landing-exchanges-block-center'>Кроме того, возможна:</p>
-                                <p>- покупка/продажа токенов за <a target="_blank" href="/@ecurrex-ru/vvod-i-vyvod-rublei-na-golos">ЮMoney</a> или <a target="_blank" href="/@ecurrex-ru/vvod-rublei-na-golos-cherez-qiwi">QIWI</a>, подробнее в сервисе <a target="_blank" href="/@ecurrex-ru">@ecurrex-ru <Icon name="extlink" /></a></p>
+                                <p>- покупка/продажа токенов через ADVcash и PAYEER, подробнее на <a target="_blank" href="/@ecurrex-ru">@ecurrex-ru <Icon name="extlink" /></a></p>
                                 <p>- торговля через P2P-сделки в телеграм-ботах <a target="_blank" href="https://t.me/TellerBot"><Icon name="new/telegram" /> TellerBot</a> или <a target="_blank" href="https://t.me/P2PDEXBitshares_bot"><Icon name="new/telegram" /> DexGarant</a></p>
                                 </div>
                             </div>
