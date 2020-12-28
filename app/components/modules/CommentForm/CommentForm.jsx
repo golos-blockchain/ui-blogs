@@ -102,6 +102,13 @@ class CommentForm extends React.Component {
         this._unmount = true;
     }
 
+    insertEmoji = (emoji) => {
+        setTimeout(() => {
+            this.refs.editor.focus();
+            this.refs.editor.replaceSelection(emoji);
+        }, 1);
+    }
+
     render() {
         const { editMode } = this.props;
 
@@ -135,6 +142,7 @@ class CommentForm extends React.Component {
                             editMode={editMode}
                             errorText={postError}
                             postDisabled={!allowPost}
+                            insertEmoji={this.insertEmoji}
                             onPostClick={this._postSafe}
                             onCancelClick={this._onCancelClick}
                         />

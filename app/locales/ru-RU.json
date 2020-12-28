@@ -627,6 +627,7 @@
     "services": "Полезные сервисы/боты",
     "wiki": "База знаний (Wiki)",
     "faq": "Вопросы и ответы",
+    "forum": "Форум GolosTalk",
     "sale_agreement": "Договор купли-продажи",
     "telegram_support": "%(APP_NAME_UP)s Техподдержка"
   },
@@ -878,7 +879,7 @@
     "balance": "Баланс",
     "can_issue": "Можно выпустить",
     "private_key_in_memo" : "Не пишите в этом поле приватные ключи!",
-    "verified_exchange_no_memo": "Для перевода токенов на биржу нужно указать заметку/memo.",
+    "verified_exchange_no_memo": "Для перевода токенов на этот аккаунт нужно указать заметку/memo.",
     "verified_exchange_liquid_only": "Переводить на биржу можно только токены с основного баланса ГОЛОС."
   },
   "transferhistoryrow_jsx": {
@@ -1278,5 +1279,39 @@
     "payment_in_GP": "Выплата в СГ",
     "voting_time": "Время голосования (суток)",
     "proposal_fee": "Будет списано"
+  },
+  "emoji_i18n": {
+    "categoriesLabel": "Categories",
+    "emojiUnsupportedMessage": "Your browser does not support color emoji.",
+    "favoritesLabel": "Favorites",
+    "loadingMessage": "Loading…",
+    "networkErrorMessage": "Could not load emoji. Try refreshing.",
+    "regionLabel": "Emoji picker",
+    "searchDescription": "When search results are available, press up or down to select and enter to choose.",
+    "searchLabel": "Search",
+    "searchResultsLabel": "Search results",
+    "skinToneDescription": "When expanded, press up or down to select and enter to choose.",
+    "skinToneLabel": "Choose a skin tone (currently {skinTone})",
+    "skinTonesLabel": "Skin tones",
+    "skinTones": [
+      "Default",
+      "Light",
+      "Medium-Light",
+      "Medium",
+      "Medium-Dark",
+      "Dark"
+    ],
+    "categories": {
+      "custom": "Custom",
+      "smileys-emotion": "Эмоции",
+      "people-body": "Жесты и люди",
+      "animals-nature": "Животные и растения",
+      "food-drink": "Еда и напитки",
+      "travel-places": "Путешествия и погода",
+      "activities": "Занятия",
+      "objects": "Одежда и предметы",
+      "symbols": "Символы и знаки",
+      "flags": "Флаги"
+    }
   }
 }

@@ -180,11 +180,9 @@ class Post extends React.Component {
                 </div>
 
                 <div className="row hfeed">
-
                     <iframe data-aa='1150095' src='//acceptable.a-ads.com/1150095' scrolling='no'
                     style={{width:'100%', maxWidth:'50rem', margin:'0 auto', border:'0px', padding:'0', overflow:'hidden'}}
                     allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe>
-
                 </div>
           
                 <div id="comments" className="Post_comments row hfeed">
@@ -199,7 +197,13 @@ class Post extends React.Component {
                             {negativeGroup}
                         </div>
                     </div>
-                </div>                
+                </div>
+
+                <p align="center">
+                    <a target="_blank" href="https://golostalk.com"><img src='https://i.imgur.com/2GyvTNY.jpg' width='800' height='100' /></a>
+                    <span className="strike"><a target="_blank" href="/@lex/zapusk-foruma-golostalk-com">{tt('g.more_hint')}</a></span>
+                </p>
+
             </div>
         );
     }
