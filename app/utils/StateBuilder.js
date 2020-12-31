@@ -231,7 +231,7 @@ export default async function getState(api, url, options, offchain = {}) {
         }
         state.content[curl].confetti_active = false;
 
-        let args = { truncate_body: 1024, select_categories: [category] };
+        let args = { truncate_body: 1024, select_categories: [category], filter_tag_masks: ['fm-'] };
         let prev_posts = await api.gedDiscussionsBy('created', {limit: 4, start_author: account, start_permlink: permlink, select_authors: [account], ...args});
         prev_posts = prev_posts.slice(1);
         let p_ids = [];
