@@ -279,17 +279,20 @@ class Market extends Component {
             assets_right[key] = value
         }
 
-        this.refs.sellSteem_price.value = p.toFixed(assets_right[sym2].precision);
-        this.refs.buySteemPrice.value = p.toFixed(assets_right[sym2].precision);  
+        const p1 = roundUp(p, (assets_right[sym2].precision));
+        const p2 = roundUp(p, assets_right[sym2].precision);
+
+        this.refs.sellSteem_price.value = p1;
+        this.refs.buySteemPrice.value = p2;  
 
         const samount = parseFloat(this.refs.sellSteem_amount.value);
         if (samount >= 0) {
-            this.refs.sellSteem_total.value = roundDown(p * samount, assets_right[sym1].precision).toFixed(assets_right[sym2].precision);;
+            this.refs.sellSteem_total.value = roundDown(p1 * samount, assets_right[sym1].precision).toFixed(assets_right[sym2].precision);;
         }
 
         const bamount = parseFloat(this.refs.buySteemAmount.value);
         if (bamount >= 0) {
-            this.refs.buySteemTotal.value = roundDown(p * bamount, assets_right[sym2].precision).toFixed(assets_right[sym2].precision);;
+            this.refs.buySteemTotal.value = roundDown(p2 * bamount, assets_right[sym2].precision).toFixed(assets_right[sym2].precision);;
         }
 
         this.validateBuySteem();
