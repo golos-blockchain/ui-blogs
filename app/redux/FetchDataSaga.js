@@ -267,7 +267,7 @@ export function* fetchState(location_change_action) {
             }
             state.content[curl].confetti_active = false
 
-            let args = { truncate_body: 128, select_categories: [category] };
+            let args = { truncate_body: 128, select_categories: [category], filter_tag_masks: ['fm-'] };
             let prev_posts = yield call([api, api[PUBLIC_API.created]], {limit: 4, start_author: account, start_permlink: permlink, select_authors: [account], ...args});
             prev_posts = prev_posts.slice(1);
             let p_ids = [];
@@ -384,7 +384,8 @@ export function* fetchData(action) {
             limit: constants.FETCH_DATA_BATCH_SIZE,
             truncate_body: constants.FETCH_DATA_TRUNCATE_BODY,
             start_author: author,
-            start_permlink: permlink
+            start_permlink: permlink,
+            filter_tag_masks: ['fm-']
         }
     ];
     if (category.length && (!category.startsWith('tag-') || category.length > 4)) {

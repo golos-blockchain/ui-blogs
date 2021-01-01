@@ -714,8 +714,8 @@ class Market extends Component {
 
                 <div className="row">
                     <div className="column small-12">
-{assets && assets_right[sym1].allow_override_transfer && (<div className="callout error text-center"><Icon name="info_o" /> {tt('market_jsx.asset_') + sym1 + tt('market_jsx.asset_is_overridable')}</div>)}
-{assets && assets_right[sym2].allow_override_transfer && (<div className="callout error text-center"><Icon name="info_o" /> {tt('market_jsx.asset_') + sym2 + tt('market_jsx.asset_is_overridable')}</div>)}
+{assets && assets_right[sym1].allow_override_transfer && (<p className="text-center"><Icon name="info_o" /> <small>{tt('market_jsx.asset_') + sym1 + tt('market_jsx.asset_is_overridable')} <a target="_blank" href="https://wiki.golos.id/users/faq#chto-takoe-otzyvnye-uia-tokeny">{tt('g.more_hint')} ></a></small></p>)}
+{assets && assets_right[sym2].allow_override_transfer && (<p className="text-center"><Icon name="info_o" /> <small>{tt('market_jsx.asset_') + sym2 + tt('market_jsx.asset_is_overridable')} <a target="_blank" href="https://wiki.golos.id/users/faq#chto-takoe-otzyvnye-uia-tokeny">{tt('g.more_hint')} ></a></small></p>)}
                     </div>
                 </div>
                 <div className="row">
