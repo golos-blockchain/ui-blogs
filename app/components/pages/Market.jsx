@@ -279,24 +279,23 @@ class Market extends Component {
             assets_right[key] = value
         }
 
-        const p1 = roundUp(p, (assets_right[sym2].precision));
-        const p2 = roundUp(p, assets_right[sym2].precision);
-
-        this.refs.sellSteem_price.value = p1;
-        this.refs.buySteemPrice.value = p2;  
+        this.refs.sellSteem_price.value = p.toFixed(assets_right[sym2].precision);
+        this.refs.buySteemPrice.value = p.toFixed(assets_right[sym2].precision);  
 
         const samount = parseFloat(this.refs.sellSteem_amount.value);
         if (samount >= 0) {
-            this.refs.sellSteem_total.value = roundDown(p1 * samount, assets_right[sym1].precision).toFixed(assets_right[sym2].precision);;
+            this.refs.sellSteem_total.value = roundDown(p * samount, assets_right[sym1].precision).toFixed(assets_right[sym2].precision);;
         }
 
         const bamount = parseFloat(this.refs.buySteemAmount.value);
         if (bamount >= 0) {
-            this.refs.buySteemTotal.value = roundDown(p2 * bamount, assets_right[sym2].precision).toFixed(assets_right[sym2].precision);;
+            this.refs.buySteemTotal.value = roundDown(p * bamount, assets_right[sym2].precision).toFixed(assets_right[sym2].precision);;
         }
 
         this.validateBuySteem();
+        this.fixBuyTotal();
         this.validateSellSteem();
+        this.fixSellTotal();
     };
 
     percentDiff = (marketPrice, userPrice) => {
@@ -368,6 +367,99 @@ class Market extends Component {
                 })
             }
         });
+    };
+
+    toFixedAccur = (str, decs) => {
+        let parts = str.split('.');
+        return parts[0] + (parts[1] ? '.' + parts[1].substring(0, decs) : '');
+    }
+
+    fixBuyTotal = () => {
+        const amount = parseFloat(this.refs.buySteemAmount.value);
+        const price = parseFloat(this.refs.buySteemPrice.value);
+        let total = parseFloat(this.refs.buySteemTotal.value);
+        if (isNaN(total)) return;
+
+        let {sym1, sym2} = this.props.routeParams
+        sym1 = sym1.toUpperCase()
+        sym2 = sym2.toUpperCase()
+
+        let assets = this.props.assets;
+        let assets_right = {}
+        assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+        assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+        for (let [key, value] of Object.entries(assets)) {
+            assets_right[key] = value
+        }
+
+        total = (total + parseFloat(1) / Math.pow(10, assets_right[sym2].precision)).toString();
+        this.refs.buySteemTotal.value = this.toFixedAccur(total, assets_right[sym2].precision);
+    };
+
+    fixSellTotal = () => {
+        const amount = parseFloat(this.refs.sellSteem_amount.value);
+        const price = parseFloat(this.refs.sellSteem_price.value);
+        let total = parseFloat(this.refs.sellSteem_total.value);
+        if (isNaN(total)) return;
+
+        let {sym1, sym2} = this.props.routeParams
+        sym1 = sym1.toUpperCase()
+        sym2 = sym2.toUpperCase()
+
+        let assets = this.props.assets;
+        let assets_right = {}
+        assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+        assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+        for (let [key, value] of Object.entries(assets)) {
+            assets_right[key] = value
+        }
+
+        total = (total + parseFloat(1) / Math.pow(10, assets_right[sym2].precision)).toString();
+        this.refs.sellSteem_total.value = this.toFixedAccur(total, assets_right[sym2].precision);
+    };
+
+    fixBuyAmount = () => {
+        let amount = parseFloat(this.refs.buySteemAmount.value);
+        if (isNaN(amount)) return;
+        const price = parseFloat(this.refs.buySteemPrice.value);
+        let total = parseFloat(this.refs.buySteemTotal.value);
+
+        let {sym1, sym2} = this.props.routeParams
+        sym1 = sym1.toUpperCase()
+        sym2 = sym2.toUpperCase()
+
+        let assets = this.props.assets;
+        let assets_right = {}
+        assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+        assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+        for (let [key, value] of Object.entries(assets)) {
+            assets_right[key] = value
+        }
+
+        amount = (total / price).toFixed(assets_right[sym1].precision);
+        this.refs.buySteemAmount.value = amount;
+    };
+
+    fixSellAmount = () => {
+        let amount = parseFloat(this.refs.sellSteem_amount.value);
+        if (isNaN(amount)) return;
+        const price = parseFloat(this.refs.sellSteem_price.value);
+        let total = parseFloat(this.refs.sellSteem_total.value);
+
+        let {sym1, sym2} = this.props.routeParams
+        sym1 = sym1.toUpperCase()
+        sym2 = sym2.toUpperCase()
+
+        let assets = this.props.assets;
+        let assets_right = {}
+        assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
+        assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
+        for (let [key, value] of Object.entries(assets)) {
+            assets_right[key] = value
+        }
+
+        amount = (total / price).toFixed(assets_right[sym1].precision);
+        this.refs.sellSteem_amount.value = amount;
     };
 
       nextSym1ListPage = () => {
@@ -461,6 +553,10 @@ class Market extends Component {
             cancelOrdersClick,
             setFormPrice,
             validateBuySteem,
+            fixBuyTotal,
+            fixSellTotal,
+            fixBuyAmount,
+            fixSellAmount,
             validateSellSteem,
         } = this;
 
@@ -786,6 +882,7 @@ class Market extends Component {
                                                         assets_right[sym2].precision
                                                     ).toFixed(assets_right[sym2].precision);
                                                 validateBuySteem();
+                                                fixBuyTotal();
                                             }}
                                         />
                                         <span className="input-group-label uppercase">
@@ -844,6 +941,7 @@ class Market extends Component {
                                                     ).toFixed(assets_right[sym2].precision)
                                                 }
                                                 validateBuySteem();
+                                                fixBuyTotal();
                                             }}
                                         />
                                         <span className="input-group-label uppercase">
@@ -901,6 +999,7 @@ class Market extends Component {
                                                         assets_right[sym1].precision
                                                     ).toFixed(assets_right[sym1].precision);;
                                                 validateBuySteem();
+                                                fixBuyAmount();
                                             }}
                                         />
                                         <span className="input-group-label">
@@ -988,6 +1087,7 @@ class Market extends Component {
                                                             assets_right[sym1].precision
                                                         ).toFixed(assets_right[sym1].precision);
                                                     validateBuySteem();
+                                                    fixBuyTotal();
                                                 }}
                                             >
                                                 {tt('market_jsx.available')}:
@@ -1112,6 +1212,7 @@ class Market extends Component {
                                                         assets_right[sym2].precision
                                                     ).toFixed(assets_right[sym2].precision);
                                                 validateSellSteem();
+                                                fixSellTotal();
                                             }}
                                         />
                                         <span className="input-group-label uppercase">
@@ -1168,6 +1269,7 @@ class Market extends Component {
                                                         assets_right[sym2].precision
                                                     ).toFixed(assets_right[sym2].precision);
                                                 validateSellSteem();
+                                                fixSellTotal();
                                             }}
                                         />
                                         <span className="input-group-label uppercase">
@@ -1224,6 +1326,7 @@ class Market extends Component {
                                                         assets_right[sym1].precision
                                                     ).toFixed(assets_right[sym1].precision);
                                                 validateSellSteem();
+                                                fixSellAmount();
                                             }}
                                         />
                                         <span className="input-group-label">
@@ -1311,6 +1414,7 @@ class Market extends Component {
                                                             assets_right[sym2].precision
                                                         ).toFixed(assets_right[sym2].precision);
                                                     validateSellSteem();
+                                                    fixSellTotal();
                                                 }}
                                             >
                                                 {tt('market_jsx.available')}:
@@ -1359,6 +1463,7 @@ class Market extends Component {
                                                             assets_right[sym2].precision
                                                         ).toFixed(assets_right[sym2].precision);
                                                     validateSellSteem();
+                                                    fixSellTotal();
                                                 }}
                                             >
                                                 {tt('market_jsx.highest_bid')}:
