@@ -127,7 +127,7 @@ class Footer extends React.Component {
                     <div className="row">
                         <div className="small-12 medium-12 columns">
                             <span className="text-center">
-                                © 2016 {tt('g.about_project')}
+                                © 2016-2021 {tt('g.about_project')}
                             </span>
                         </div>
                     </div>
