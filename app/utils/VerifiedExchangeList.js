@@ -1,6 +1,5 @@
 const VerifiedExchangeList = `
 rudex
-livecoin
 steem-engine
 `
     .trim()

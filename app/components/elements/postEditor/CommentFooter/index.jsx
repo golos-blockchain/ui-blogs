@@ -34,7 +34,7 @@ export default class CommentFooter extends React.PureComponent {
     }
 
     onEmojiSelect = (emoji) => {
-        if (this.props.insertEmoji) this.props.insertEmoji(' ' + emoji);
+        if (this.props.insertEmoji) this.props.insertEmoji(emoji);
     };
 
     render() {
