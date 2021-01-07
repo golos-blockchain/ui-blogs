@@ -126,8 +126,8 @@ export function* fetchState(location_change_action) {
 
                     case 'create-asset':
                     case 'assets':
-                        state.assets = (yield call([api, api.getAccountsBalances], [uname]))[0]
-                        const my_assets = yield call([api, api.getAssets], '', [], '', 5000)
+                        state.assets = (yield call([api, api.getAccountsBalancesAsync], [uname]))[0]
+                        const my_assets = yield call([api, api.getAssetsAsync], '', [], '', 5000)
                         my_assets.forEach(ma => {
                             const sym = ma.supply.split(' ')[1]
                             const precision = ma.supply.split(' ')[0].split('.')[1].length
