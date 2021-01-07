@@ -74,8 +74,10 @@ export function* fetchMarket(location_change_action) {
 export function* fetchOpenOrders(set_user_action) {
     const {username} = set_user_action.payload // pathname only from reloadMarket 
 
+    let isMarket = window && window.location.href.includes('/market')
+
     let pair = ["GOLOS", "GBG"] // for UserWallet (/@account/transfers)
-    if (window && window.location.href.includes('/market')) {
+    if (isMarket) {
         let parts = window.location.href.split('/')
         pair = [parts[4], parts[5]]
     }
@@ -83,9 +85,11 @@ export function* fetchOpenOrders(set_user_action) {
     try {
         const state = yield call([api, api.getOpenOrdersAsync], username, pair);
         yield put(MarketReducer.actions.receiveOpenOrders(state));
-        const assets = (yield call([api, api.getAccountsBalancesAsync], [username]))[0]
-        yield put(MarketReducer.actions.upsertAssets(assets));
-        yield call(getAccount, username, true);
+        if (isMarket) {
+            const assets = (yield call([api, api.getAccountsBalancesAsync], [username]))[0]
+            yield put(MarketReducer.actions.upsertAssets(assets));
+            yield call(getAccount, username, true);
+        }
     } catch (error) {
         console.error('~~ Saga fetchOpenOrders error ~~>', error);
         yield put({type: 'global/CHAIN_API_ERROR', error: error.message});
