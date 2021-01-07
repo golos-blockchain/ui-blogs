@@ -105,7 +105,7 @@ export function contentStats(content) {
     const hasPendingPayout = parsePayoutAmount(content.get('pending_payout_value')) >= 0.02
     const authorRepLog10 = repLog10(content.get('author_reputation'))
 
-    const gray = !hasPendingPayout && (authorRepLog10 < 1 || (authorRepLog10 < 65 && meetsGrayThreshold))
+    const gray = !hasPendingPayout && (authorRepLog10 < 1 || (authorRepLog10 < 77 && meetsGrayThreshold))
     const hide = authorRepLog10 < 0 // rephide
     const pictures = !gray
 
