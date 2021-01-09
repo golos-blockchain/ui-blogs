@@ -298,6 +298,7 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
         yield put(
             user.actions.setUser({
                 username,
+                operationType,
                 vesting_shares: account.get('vesting_shares'),
                 received_vesting_shares: account.get('received_vesting_shares'),
                 delegated_vesting_shares: account.get('delegated_vesting_shares')

@@ -72,7 +72,7 @@ export function* fetchMarket(location_change_action) {
 }
 
 export function* fetchOpenOrders(set_user_action) {
-    const {username} = set_user_action.payload // pathname only from reloadMarket 
+    const {username, operationType} = set_user_action.payload // pathname only from reloadMarket 
 
     let isMarket = window && window.location.href.includes('/market')
 
@@ -83,9 +83,9 @@ export function* fetchOpenOrders(set_user_action) {
     }
 
     try {
-        const state = yield call([api, api.getOpenOrdersAsync], username, pair);
-        yield put(MarketReducer.actions.receiveOpenOrders(state));
-        if (isMarket) {
+        if (!operationType) {
+            const state = yield call([api, api.getOpenOrdersAsync], username, pair);
+            yield put(MarketReducer.actions.receiveOpenOrders(state));
             const assets = (yield call([api, api.getAccountsBalancesAsync], [username]))[0]
             yield put(MarketReducer.actions.upsertAssets(assets));
             yield call(getAccount, username, true);
