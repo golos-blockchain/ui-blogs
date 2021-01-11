@@ -68,12 +68,12 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <a target="_blank" href="https://steem-engine.com/"><img src='https://i.imgur.com/KpqwZy6.png' width='182' height='125' /></a>
+                                <a target="_blank" href="https://steem-engine.net/"><img src='https://i.imgur.com/KpqwZy6.png' width='182' height='125' /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
                                     <a target="_blank" href="/@allforyou/zavodim-i-vyvodim-golosa-s-birzhi-steem-engine">{tt('exchanges_jsx.guide_user')} @allforyou</a>
                                     <br /><br />
-                                    <a target="_blank" href="https://steem-engine.com/?p=market&t=GOLOSP" className="button">GOLOS-STEEM</a>
+                                    <a target="_blank" href="https://steem-engine.net/?p=market&t=GOLOSP" className="button">GOLOS-STEEM</a>
                                 </div>
                             </div>
                         </div>

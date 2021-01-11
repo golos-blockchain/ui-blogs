@@ -42,7 +42,7 @@ const availableDomains = [
     'golos.cf',
     'dpos.space',
     'rudex.org',
-    'steem-engine.com',
+    'steem-engine.net',
     'github.com',
     't.me',
     'twitter.com',

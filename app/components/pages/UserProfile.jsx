@@ -187,14 +187,6 @@ export default class UserProfile extends React.Component {
 
         // const global_status = this.props.global.get('status');
 
-
-        // let balance_steem = parseFloat(account.balance.split(' ')[0]);
-        // let vesting_steem = vestingSteem(account, gprops).toFixed(3);
-        // const steem_balance_str = numberWithCommas(balance_steem.toFixed(3)) + " STEEM";
-        // const power_balance_str = numberWithCommas(vesting_steem) + " STEEM POWER";
-        // const sbd_balance = parseFloat(account.sbd_balance)
-        // const sbd_balance_str = numberWithCommas('$' + sbd_balance.toFixed(3));
-
         let rewardsClass = "", walletClass = "";
         if( section === 'transfers' ) {
             // transfers, check if url has query params
