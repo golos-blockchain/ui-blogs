@@ -41,11 +41,11 @@ export default function transactionErrorReducer(
                 if (
                     errorStr.includes(
                         'Account registered by another account requires 10x ' +
-                            'account creation fee worth of Steem Power'
+                            'account creation fee worth of Golos Power'
                     )
                 ) {
                     errorKey =
-                        'Account requires 10x the account creation fee in Steem Power ' +
+                        'Account requires 10x the account creation fee in Golos Power ' +
                         '(approximately 300 SP) before it can power down.';
                 } else if (
                     errorStr.includes(
@@ -122,7 +122,7 @@ export default function transactionErrorReducer(
                 errorKey = errorStr = tt('chain_errors.missing_active_authority');
             } else if (
                 errorKey.includes(
-                    'Voting weight is too small, please accumulate more voting power or steem power'
+                    'Voting weight is too small, please accumulate more voting power or Golos Power'
                 )
             ) {
                 errorKey = errorStr = tt('chain_errors.voting_weight_is_too_small');
