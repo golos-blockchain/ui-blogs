@@ -92,21 +92,23 @@ export function contentStats(content) {
         }
     });
 
-    // take negative rshares, divide by 2, truncate 10 digits (plus neg sign), count digits.
-    // creates a cheap log10, stake-based flag weight. 1 = approx $400 of downvoting stake; 2 = $4,000; etc
+    // take negative rshares, divide by 2, truncate 10 digits (plus neg sign), count digits
+    // creates a cheap log10, stake-based flag weight
     const flagWeight = Math.max(String(neg_rshares.div(2)).length - 11, 0)
 
-    // post must have non-trivial negative rshares to be grayed out. (more than 10 digits)
-    const grayThreshold = -9999999999
+    // post must have non-trivial negative rshares to be grayed out
+
+    const grayThreshold = -5000000000000 // dislikes ~100k Golos Power
     const meetsGrayThreshold = net_rshares_adj.compare(grayThreshold) < 0
+    const hideThreshold = -500000000000000 // dislikes ~10kk Golos Power
+    const meetsHideThreshold = net_rshares_adj.compare(hideThreshold) < 0
 
     const hasPositiveRshares = Long.fromString(String(content.get('net_rshares'))).gt(Long.ZERO)
     const allowDelete = !hasPositiveRshares && content.get('children') === 0
-    const hasPendingPayout = parsePayoutAmount(content.get('pending_payout_value')) >= 0.02
     const authorRepLog10 = repLog10(content.get('author_reputation'))
 
-    const gray = !hasPendingPayout && (authorRepLog10 < 1 || (authorRepLog10 < 77 && meetsGrayThreshold))
-    const hide = authorRepLog10 < 0 // rephide
+    const gray = authorRepLog10 < 1 || (authorRepLog10 < 75 && meetsGrayThreshold)
+    const hide = authorRepLog10 < 0 || meetsHideThreshold
     const pictures = !gray
 
     // Combine tags+category to check nsfw status
@@ -137,8 +139,7 @@ export function contentStats(content) {
         isNsfw,
         flagWeight,
         total_votes,
-        up_votes,
-        hasPendingPayout
+        up_votes
     }
 }
 

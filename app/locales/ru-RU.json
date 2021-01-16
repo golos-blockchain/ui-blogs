@@ -1,14 +1,14 @@
 {
   "token_names": {
     "LIQUID_TOKEN": "Голос",
-    "LIQUID_TOKEN_UPPERCASE " : "ГОЛОС",
-    "VESTING_TOKEN" : "Сила Голоса",
-    "VESTING_TOKEN_UPPERCASE" : "СИЛА ГОЛОСА",
-    "VESTING_TOKEN2" : "Силу Голоса",
-    "VESTING_TOKENS" : "Силы Голоса",
-    "DEBT_TOKEN" : "Золотой",
-    "DEBT_TOKENS" : "Золотые",
-    "TOKEN_WORTH" : "~1 мг золота",
+    "LIQUID_TOKEN_UPPERCASE": "ГОЛОС",
+    "VESTING_TOKEN": "Сила Голоса",
+    "VESTING_TOKEN_UPPERCASE": "СИЛА ГОЛОСА",
+    "VESTING_TOKEN2": "Силу Голоса",
+    "VESTING_TOKENS": "Силы Голоса",
+    "DEBT_TOKEN": "Золотой",
+    "DEBT_TOKENS": "Золотые",
+    "TOKEN_WORTH": "~1 мг золота",
     "TIP_TOKEN": "TIP-баланс",
     "CLAIM_TOKEN": "CLAIM-баланс"
   },
@@ -63,7 +63,7 @@
     "confirm": "Подтвердить"
   },
   "converttosteem_jsx": {
-    "confirm_title" : "Подтвердите конвертацию",
+    "confirm_title": "Подтвердите конвертацию",
     "this_is_a_price_feed_conversion": "Отсрочка в 3.5 дня необходима для снижения злоупотреблений спекуляцией, конвертация пройдёт по средней ценовой котировке",
     "convert_to_LIQUID_TOKEN": "Конвертация",
     "your_existing_DEBT_TOKEN_are_liquid_and_transferable": "Перед запуском рекомендуем проверить курс обмена GOLOS-GBG на внутренней бирже (опции %(link)s).",
@@ -168,15 +168,9 @@
     "copy": "Скопировать",
     "alternative_sources": "Альтернативные источники"
   },
-  "illegal_content": {
-    "hidden": "скрыт",
-    "unavailable" : "Пользователь не найден",
-    "due_to_illegal_content": "или был скрыт за нарушение правил",
-    "terms_of_service": "Условий пользования"
-  },
   "g": {
-    "golos_fest" : "Новости",
-    "APP_NAME" : "Голос",
+    "golos_fest": "Новости",
+    "APP_NAME": "Голос",
     "APP_NAME_account": "%(APP_NAME)s аккаунт",
     "24_hour": "24 часа",
     "30_day": "30 дней",
@@ -185,7 +179,7 @@
     "auto": "автоматически",
     "age": "возраст",
     "please": "Пожалуйста",
-    "active" : "Активный ключ",
+    "active": "Активный ключ",
     "advanced": "Расширенные опции",
     "all_langs": "Показать всё",
     "amount": "Количество",
@@ -195,7 +189,7 @@
     "at_least": "не менее",
     "back": "Назад",
     "more_list": "Ещё",
-    "back_to_top" : "Наверх",
+    "back_to_top": "Наверх",
     "balances": "Балансы",
     "bid": "Покупка",
     "blog": "Блог",
@@ -211,13 +205,13 @@
     "close": "Закрыть",
     "collapse": "Свернуть",
     "comments": "Комментарии",
-    "confirm_ignore" : "Вы действительно хотите заблокировать этого пользователя?",
-    "confirm_follow" : "Вы уверены, что хотите подписаться на этого пользователя?",
+    "confirm_ignore": "Вы действительно хотите заблокировать этого пользователя?",
+    "confirm_follow": "Вы уверены, что хотите подписаться на этого пользователя?",
     "confirm_unfollow": "Вы действительно хотите отменить подписку на этого пользователя?",
     "continue": "продолжить",
     "convert": "Конвертировать",
     "created": "Сначала новые",
-    "old" : "Сначала старые",
+    "old": "Сначала старые",
     "date": "Дата",
     "delete": "Удалить",
     "dismiss": "Скрыть",
@@ -258,7 +252,7 @@
     "older": "Старее",
     "or": "или",
     "order_placed": "Заказ размещен",
-    "owner" : "Ключ владельца",
+    "owner": "Ключ владельца",
     "password": "Пароль",
     "payouts": "Выплаты",
     "permissions": "Разрешения",
@@ -349,7 +343,7 @@
     "reset_usernames_password": "Сбросить пароль пользователя %(username)s",
     "this_will_update_usernames_authtype_key": "Это обновит %(username)s %(authType)s ключ",
     "passwords_do_not_match": "Пароли не совпадают",
-    "no_topics_by_order_found" : "В разделе %(order)s пока нет постов!",
+    "no_topics_by_order_found": "В разделе %(order)s пока нет постов!",
     "you_need_private_password_or_key_not_a_public_key": "Вам нужен приватный (не публичный) ключ ...",
     "the_rules_of_APP_NAME": {
       "one": "1. Не теряйте свой пароль.",
@@ -435,6 +429,7 @@
     "received_vesting": "%(VESTING_TOKEN)s делегированная на этот аккаунт",
     "delegated_vesting": "%(VESTING_TOKEN)s делегированная с этого аккаунта",
     "load_more": "Показать еще",
+    "hide_content": "Информация не найдена или была скрыта за нарушение правил.",
     "donate_for_post": "отблагодарил вас за пост",
     "you_donate_for_post": "Вы отблагодарили",
     "for_the_post": "за пост",
@@ -752,7 +747,7 @@
     "decline_payout": "Отказаться от выплаты",
     "check_this_to_auto_upvote_your_post": "Отметьте, чтобы проголосовать за свой пост",
     "markdown_styling_guide": "Руководство стилизации в Markdown",
-    "placeholder" : "Заголовок",
+    "placeholder": "Заголовок",
     "feedback_welcome": {
       "dear_users": "Уважаемые пользователи!",
       "message1": "Вы находитесь на странице «обратной связи» с командой Голоса. Здесь вы можете оставить свои отзывы и предложения о работе нашей платформы, а также сообщить нам об обнаружении бага. Ваше сообщение будет опубликовано в открытом доступе.",
@@ -763,7 +758,7 @@
     },
     "update_post": "Обновить пост",
     "feedback_placeholder": "Написать...",
-    "unable_to_contact_the_server" : "Не удалось связаться с сервером",
+    "unable_to_contact_the_server": "Не удалось связаться с сервером",
     "please_insert_only_image_files":"Вставляйте только файлы изображений",
     "questions_or_requests": "Подробные вопросы или пожелания вы всегда можете отправить нам на электронную почту:",
     "support_by_telegram": "Кроме того, для оперативной технической помощи мы ввели службу поддержки пользователей Голоса в Телеграме"
@@ -866,8 +861,8 @@
     "submit": "Передать",
     "issue": "Выпустить",
     "basic": "Основные",
-    "memo" : "Заметка",
-    "memo_placeholder" : "Вы можете оставить комментарий к переводу",
+    "memo": "Заметка",
+    "memo_placeholder": "Вы можете оставить комментарий к переводу",
     "advanced": "Расширенные опции",
     "convert_to_VESTING_TOKEN": "Перевести в %(VESTING_TOKEN2)s",
     "balance_subject_to_3_day_withdraw_waiting_period": "Вывод токенов из сейфа на обычный баланс занимает 3 дня.",
@@ -878,7 +873,7 @@
     "issue_uia": "Выпустить токены",
     "balance": "Баланс",
     "can_issue": "Можно выпустить",
-    "private_key_in_memo" : "Не пишите в этом поле приватные ключи!",
+    "private_key_in_memo": "Не пишите в этом поле приватные ключи!",
     "verified_exchange_no_memo": "Для перевода токенов на этот аккаунт нужно указать заметку/memo.",
     "verified_exchange_liquid_only": "Переводить на биржу можно только токены с основного баланса ГОЛОС."
   },
@@ -1124,7 +1119,7 @@
     "proxy_update_error": "Ваш прокси не был обновлен"
   },
   "user_saga_js": {
-    "image_upload" : {
+    "image_upload": {
       "uploading": "Загрузка",
       "error": {
         "account_is_not_found": "Пользователь не найден",
@@ -1150,12 +1145,12 @@
     "missing_active_authority": "Введён неверный активный ключ",
     "voting_weight_is_too_small": "Вашей мощности голосования недостаточно. Пожалуйста, дождитесь её восстановления"
   },
-  "delegatevestingshares_jsx" :{
-    "form_title" : "Делегировать %(VESTING_TOKEN2)s",
+  "delegatevestingshares_jsx":{
+    "form_title": "Делегировать %(VESTING_TOKEN2)s",
     "button_title": "Делегировать"
   },
   "post_editor": {
-    "new_editor": "Новый редактор",
+    "new_editor": "Markdown редактор",
     "html_editor": "HTML редактор",
     "preview_mode": "Режим предпросмотра",
     "edit_mode": "Вернуться в режим редактирования",
@@ -1229,7 +1224,7 @@
   },
   "faq_jsq": {
     "page_title": "Часто задаваемые вопросы",
-    "page_description" : "На этой странице собраны популярные вопросы пользователей и официальные каналы коммуникаций Golos Blockchain",
+    "page_description": "На этой странице собраны популярные вопросы пользователей и официальные каналы коммуникаций Golos Blockchain",
     "telegram": "спросить",
     "email": "почта",
     "wiki": "база знаний",

@@ -1,26 +1,20 @@
 {
   "token_names": {
     "LIQUID_TOKEN": "Golos",
-    "LIQUID_TOKEN_UPPERCASE" : "GOLOS",
-    "VESTING_TOKEN" : "Golos Power",
-    "VESTING_TOKEN_UPPERCASE" : "GOLOS POWER",
-    "VESTING_TOKEN2" : "Golos Power",
-    "VESTING_TOKENS" : "Golos Power",
-    "DEBT_TOKEN" : "GOLD BACKED GOLOS",
-    "DEBT_TOKENS" : "GOLD BACKED GOLOS",
-    "TOKEN_WORTH" : "~1 mg of gold",
+    "LIQUID_TOKEN_UPPERCASE": "GOLOS",
+    "VESTING_TOKEN": "Golos Power",
+    "VESTING_TOKEN_UPPERCASE": "GOLOS POWER",
+    "VESTING_TOKEN2": "Golos Power",
+    "VESTING_TOKENS": "Golos Power",
+    "DEBT_TOKEN": "GOLD BACKED GOLOS",
+    "DEBT_TOKENS": "GOLD BACKED GOLOS",
+    "TOKEN_WORTH": "~1 mg of gold",
     "TIP_TOKEN": "TIP balance",
     "CLAIM_TOKEN": "CLAIM balance"
   },
-  "illegal_content": {
-    "hidden": "hidden",
-    "unavailable" : "User is not found",
-    "due_to_illegal_content": "or was hidden due to illegal content",
-    "terms_of_service": "Terms of service"
-  },
   "g": {
-    "golos_fest" : "Golos.id News",
-    "APP_NAME" : "Golos",
+    "golos_fest": "Golos.id News",
+    "APP_NAME": "Golos",
     "APP_NAME_account": "%(APP_NAME)s account",
     "24_hour": "24 hour",
     "30_day": "30 day",
@@ -33,8 +27,8 @@
     "announcement_text": "Golos.id: Грантовая программа поддержки молодых авторов и уникального контента",
     "at_least": "at least",
     "please": "Please",    
-    "active" : "Active key",    
-    "owner" : "Owner key",
+    "active": "Active key",    
+    "owner": "Owner key",
     "read_only_mode": "Из-за технического обслуживания серверов мы работаем в режиме чтения. Извините за неудобство.",
     "read_only_mode_notify": "Ведутся технические работы",
     "are_you_sure": "Are you sure?",
@@ -42,11 +36,10 @@
     "auto": "auto",
     "back": "Back",
     "more_list": "More",
-    "back_to_top" : "Back to top",
+    "back_to_top": "Back to top",
     "balances": "Balances",
     "bid": "Bid",
     "blog": "Blog",
-    "blocked_user_content": "Контент удален по жалобе заинтересованного лица",
     "browse": "Browse",
     "buy": "Buy",
     "buy_VESTING_TOKEN": "Buy %(VESTING_TOKEN)s",
@@ -188,7 +181,7 @@
     "reset_usernames_password": "Reset %(username)s's Password",
     "this_will_update_usernames_authtype_key": "This will update %(username)s %(authType)s key",
     "passwords_do_not_match": "Passwords do not match",
-    "no_topics_by_order_found" : "No topics by %(order)s found!",
+    "no_topics_by_order_found": "No topics by %(order)s found!",
     "you_need_private_password_or_key_not_a_public_key": "You need a private password or key (not a public key)",
     "the_rules_of_APP_NAME": {
         "one": "The first rule of %(APP_NAME)s is: Do not lose your password.",
@@ -274,6 +267,7 @@
     "received_vesting": "%(VESTING_TOKEN)s delegated to this account",
     "delegated_vesting": "%(VESTING_TOKEN)s delegated from this account",    
     "load_more": "Load more",
+    "hide_content": "Information was not found or was hidden for violating the rules.",
     "donate_for_post": "thanked you for the post",
     "you_donate_for_post": "You thanked",
     "for_the_post": "for the post",    
@@ -375,9 +369,9 @@
       "message5": "THANK YOU! Your feedback is important for us!"
     },
     "feedback_placeholder": "Write...",
-    "placeholder" : "Tile",
+    "placeholder": "Tile",
     "update_post": "Update Post",
-    "unable_to_contact_the_server" : "Unable to contact the server",
+    "unable_to_contact_the_server": "Unable to contact the server",
     "please_insert_only_image_files":"Please insert only image files",
     "questions_or_requests": "You can always send detailed questions or requests to us by e-mail:",
     "support_by_telegram": "In addition, for operational technical assistance, we have introduced a Golos Support Service in Telegram"
@@ -401,10 +395,10 @@
   },
   "postfull_jsx": {
     "this_post_is_not_available_due_to_breach_of_legislation": "This post is not available due to breach of legislation.",
-    "share_on_facebook" : "Share on Facebook",
-    "share_on_twitter" : "Share on Twitter",
-    "share_on_vk" : "Share on Vkontakte",
-    "share_on_lj" : "Share on LiveJournal",
+    "share_on_facebook": "Share on Facebook",
+    "share_on_twitter": "Share on Twitter",
+    "share_on_vk": "Share on Vkontakte",
+    "share_on_lj": "Share on LiveJournal",
     "share": "Share",
     "transfer_amount_to_VESTING_TOKEN": "Transfer %(amount)s to %(VESTING_TOKEN)s",
     "transfer_amount_VESTING_TOKEN_to": "Transfer %(amount)s %(VESTING_TOKEN)s to",
@@ -779,7 +773,7 @@
     "after_printing_write_down_your_user_name": "After printing, write down your user name"
   },
   "converttosteem_jsx": {
-    "confirm_title" : "Confirm Convert",
+    "confirm_title": "Confirm Convert",
     "this_is_a_price_feed_conversion": "This is a price feed conversion. The 3.5 day delay is necessary to prevent abuse from gaming the price feed average",
     "convert_to_LIQUID_TOKEN": "Convert to %(LIQUID_TOKEN)s",
     "your_existing_DEBT_TOKEN_are_liquid_and_transferable": "Your existing %(DEBT_TOKEN)s are liquid and transferable. Instead you may wish to trade %(DEBT_TOKEN)s directly in this site under %(link)s or transfer to an external market.",
@@ -905,7 +899,7 @@
     "trending": "Trending",
     "promoted": "Promoted",
     "donates": "Donates",
-    "new_topic_posts" : "New %(topic)s posts",
+    "new_topic_posts": "New %(topic)s posts",
     "sort_order_topic_posts": "%(sort_order)s %(topic)s posts",
     "new_posts": "New posts",
     "sort_order_posts": "%(sort_order)s posts",
@@ -1027,9 +1021,9 @@
     "public": "Public",
     "power_up": "Power Up",
     "submit": "Submit",
-    "basic" : "Basic",
-    "memo" : "Memo",
-    "memo_placeholder" : "You may comment your transfer here",
+    "basic": "Basic",
+    "memo": "Memo",
+    "memo_placeholder": "You may comment your transfer here",
     "advanced": "Advanced",
     "convert_to_VESTING_TOKEN": "Convert to %(VESTING_TOKEN2)s",
     "balance_subject_to_3_day_withdraw_waiting_period": "Balance subject to 3 day withdraw waiting period.",
@@ -1038,7 +1032,7 @@
     "protect_funds_by_requiring_a_3_day_withdraw_waiting_period": "Protect funds by requiring a 3 day withdraw waiting period.",
     "withdraw_funds_after_the_required_3_day_waiting_period": "Withdraw funds after the required 3 day waiting period.",
     "balance": "Balance",
-    "private_key_in_memo" : "Do not write your private keys in this field!",
+    "private_key_in_memo": "Do not write your private keys in this field!",
     "verified_exchange_no_memo": "You must include a memo for your exchange transfer, according to exchanger's rules.",
     "verified_exchange_liquid_only": "You may exchange tokens from GOLOS balance only."
   },
@@ -1069,7 +1063,7 @@
     "history": "HISTORY"
   },
   "user_saga_js": {
-    "image_upload" : {
+    "image_upload": {
       "uploading": "Uploading",
       "error": {
         "account_is_not_found": "Account is not found",
@@ -1095,12 +1089,12 @@
     "missing_active_authority": "Missing Active Authority",
     "voting_weight_is_too_small": "Voting weight is too small, please accumulate more voting power or steem power"
   },
-  "delegatevestingshares_jsx" :{
-    "form_title" : "Delegate %(VESTING_TOKEN2)s",
+  "delegatevestingshares_jsx":{
+    "form_title": "Delegate %(VESTING_TOKEN2)s",
     "button_title": "Delegate"
   },
   "post_editor": {
-    "new_editor": "New editor",
+    "new_editor": "Markdown editor",
     "html_editor": "HTML editor",
     "preview_mode": "Preview mode",
     "edit_mode": "Go back to edit mode",
@@ -1173,7 +1167,7 @@
   },
   "faq_jsq": {
     "page_title": "Frequently Asked Questions",
-    "page_description" : "This page contains popular user questions and official Golos Blockchain communication channels.",
+    "page_description": "This page contains popular user questions and official Golos Blockchain communication channels.",
     "telegram": "to ask",
     "email": "email",
     "wiki": "wiki golos",

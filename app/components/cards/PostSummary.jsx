@@ -84,7 +84,7 @@ class PostSummary extends React.Component {
         const myPost = username === content.get('author')
 
         if(blockedUsers.includes(content.get('author'))) {
-			return null
+			return null;
 		}
 
         let reblogged_by;

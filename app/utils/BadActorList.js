@@ -1,4 +1,4 @@
-const list = `
+const BadActorList = `
 rude
 rudeks
 rudex-gateway
@@ -9,6 +9,8 @@ steem-engin
 steemengine
 kunaexchange
 livecoin
-`.trim().split('\n');
+`
+.trim()
+.split('\n');
 
-export default list;
+export default BadActorList;
