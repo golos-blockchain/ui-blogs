@@ -2,7 +2,7 @@ const VerifiedExchangeList = `
 rudex
 steem-engine
 `
-    .trim()
-    .split('\n');
+.trim()
+.split('\n');
 
 export default VerifiedExchangeList;
