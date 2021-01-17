@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { VKIcon, FacebookIcon, MailruIcon } from 'react-share';
 import tt from 'counterpart';
 import cn from 'classnames';
 import { api } from 'golos-classic-js';
 import { PrivateKey } from 'golos-classic-js/lib/auth/ecc';
 import LoadingIndicator from '@elements/LoadingIndicator';
 import Icon from 'app/components/elements/Icon';
+import Tooltip from 'app/components/elements/Tooltip';
 import user from 'app/redux/User';
 import { validate_account_name } from 'app/utils/ChainValidation';
 import { formatAsset } from 'app/utils/ParsersAndFormatters';
@@ -14,6 +16,7 @@ import runTests from 'app/utils/BrowserTests';
 import g from 'app/redux/GlobalReducer';
 import GeneratedPasswordInput from '@elements/GeneratedPasswordInput';
 import { APP_DOMAIN, SUPPORT_EMAIL } from 'app/client_config';
+import { jsPDF } from 'jspdf';
 
 class CreateAccount extends React.Component {
     static propTypes = {
@@ -70,6 +73,53 @@ class CreateAccount extends React.Component {
         clearTimeout(this._timeoutId);
         clearTimeout(this._waitTimeout);
     }
+
+    useSocialLogin = (socName) => {
+        let fetchState = {
+            checking: true,
+            success: true,
+            status: 'done',
+            message: (<div>{tt('createaccount_jsx.authorized_with_') + socName + '.'}{this._renderSocialButtons()}</div>),
+            showCheckInfo: false,
+        };
+        this.setState({ fetchState, email: '' });
+    };
+
+    useVk = (e) => {
+        e.preventDefault();
+        this.setState({
+            authType: 'ВКонтакте'
+        });
+        window.open('/api/v1/auth/vk', '_blank');
+        this.useSocialLogin(this.state.authType);
+    };
+
+    useFacebook = (e) => {
+        e.preventDefault();
+        this.setState({
+            authType: 'Facebook'
+        });
+        window.open('/api/v1/auth/facebook', '_blank');
+        this.useSocialLogin(this.state.authType);
+    };
+
+    useMailru = (e) => {
+        e.preventDefault();
+        this.setState({
+            authType: 'Mail.Ru'
+        });
+        window.open('/api/v1/auth/mailru', '_blank');
+        this.useSocialLogin(this.state.authType);
+    };
+
+    useYandex = (e) => {
+        e.preventDefault();
+        this.setState({
+            authType: 'Яндекс'
+        });
+        window.open('/api/v1/auth/yandex', '_blank');
+        this.useSocialLogin(this.state.authType);
+    };
 
     render() {
         if (!process.env.BROWSER) {
@@ -252,6 +302,7 @@ class CreateAccount extends React.Component {
                                             </div>
                                         </label>
                                     </div>}
+                                    {this._renderSocialButtons()}
                                 </div>
                             )}
                             {phoneStep}
@@ -520,6 +571,27 @@ class CreateAccount extends React.Component {
         );
     }
 
+    _renderSocialButtons() {
+        return (
+            <div>
+                <Tooltip t='VK'>
+                    <VKIcon onClick={this.useVk} style={{cursor: 'pointer', marginRight: '5px'}} size={32} />
+                </Tooltip>
+                <Tooltip t='Facebook'>
+                    <FacebookIcon onClick={this.useFacebook} style={{cursor: 'pointer', marginRight: '5px'}} size={32} />
+                </Tooltip>
+                <Tooltip t='Mail.Ru'>
+                    <MailruIcon onClick={this.useMailru} style={{cursor: 'pointer', marginRight: '5px'}} size={32} />
+                </Tooltip>
+                <Tooltip t='Yandex'>
+                    <span onClick={this.useYandex} style={{cursor: 'pointer', marginRight: '5px', color: 'white' }}>
+                        <img src='/images/yandex.png' style={{ verticalAlign: 'top', paddingTop: '4px' }} />
+                    </span>
+                </Tooltip>
+            </div>
+        );
+    }
+
     _onHowMuchClick = () => {
         this.setState({
             showHowMuchHelp: !this.state.showHowMuchHelp,
@@ -532,6 +604,42 @@ class CreateAccount extends React.Component {
         });
     };
 
+    createPdf = (username, privateKeys) => {
+        this.keysPDFFileName = 'keys-' + username + '.pdf';
+        this.keysPDF = new jsPDF();
+        let pdf = this.keysPDF;
+
+        /*"pdf_title": "Ключи от аккаунта @",
+        "pdf_desc": "Это приватные ключи, которые дают доступ к вашему аккаунту. Храните этот файл в надежном месте.",
+        "pdf_password_desc": "Пароль (используйте для входа на форум): ",
+        "pdf_posting_desc": "Posting-ключ (также подходит в качестве пароля на форуме): ",
+        "pdf_active_desc": "Active-ключ: ",
+        "pdf_owner_desc": "Owner-ключ: ",
+        "pdf_memo_desc": "Memo-ключ: "*/
+
+        pdf.setFontSize(28);
+        pdf.text(10, 20, tt('createaccount_jsx.pdf_title') + username);
+
+        pdf.setFontSize(10);
+        pdf.text(10, 30, tt('createaccount_jsx.pdf_desc'));
+
+        pdf.setFontSize(12);
+        pdf.text(10, 40, tt('createaccount_jsx.pdf_password_desc'));
+        pdf.text(10, 45, privateKeys.password);
+
+        pdf.text(10, 55, tt('createaccount_jsx.pdf_posting_desc'));
+        pdf.text(10, 60, privateKeys.posting);
+
+        pdf.text(10, 70, tt('createaccount_jsx.pdf_active_desc'));
+        pdf.text(10, 75, privateKeys.active);
+
+        pdf.text(10, 85, tt('createaccount_jsx.pdf_owner_desc'));
+        pdf.text(10, 90, privateKeys.owner);
+
+        pdf.text(10, 100, tt('createaccount_jsx.pdf_memo_desc'));
+        pdf.text(10, 105, privateKeys.memo);
+    };
+
     _onSubmit = async e => {
         e.preventDefault();
         this.setState({ serverError: '', loading: true });
@@ -539,16 +647,23 @@ class CreateAccount extends React.Component {
         if (!name || !password || !passwordValid) return;
 
         let publicKeys;
+        let privateKeys = {};
         try {
             const pk = PrivateKey.fromWif(password);
-            publicKeys = [1, 2, 3, 4].map(() => pk.toPublicKey().toString());
+            publicKeys = ['owner', 'active', 'posting', 'memo'].map(role => {
+                const priv = pk;
+                privateKeys[role] = priv.toString();
+                return priv.toPublicKey().toString();
+            });
         } catch (err) {
-            publicKeys = ['owner', 'active', 'posting', 'memo'].map(role =>
-                PrivateKey.fromSeed(`${name}${role}${password}`)
-                    .toPublicKey()
-                    .toString()
-            );
+            publicKeys = ['owner', 'active', 'posting', 'memo'].map(role => {
+                const priv = PrivateKey.fromSeed(`${name}${role}${password}`);
+                privateKeys[role] = priv.toString();
+                return priv.toPublicKey().toString();
+            });
         }
+
+        this.createPdf(name, {password, ...privateKeys});
 
         try {
             // createAccount
@@ -573,6 +688,7 @@ class CreateAccount extends React.Component {
                     loading: false,
                 });
             } else {
+                this.keysPDF.save(this.keysPDFFileName);
                 window.location = `/login.html#account=${name}&msg=accountcreated`;
             }
         } catch (err) {

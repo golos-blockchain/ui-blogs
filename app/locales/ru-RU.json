@@ -134,7 +134,15 @@
     "after_verification": "После получения смс о подтверждения вашего номера обновите страницу регистрации",
     "re_send": "Повторная отправка",
     "phone_number_has_been_verified": "Спасибо, ваша почта подтверждена. Пожалуйста, продолжите регистрацию.",
-    "this_phone_number_has_already_been_used": "Указанная почта уже зарегистрирована на платформе"
+    "authorized_with_": "Авторизовано с помощью ",
+    "this_phone_number_has_already_been_used": "Указанная почта уже зарегистрирована на платформе",
+    "pdf_title": "Keys Of @",
+    "pdf_desc": "There are private keys, which are authorizing your account. Store this file in secure place.",
+    "pdf_password_desc": "Password (use it to log in on Golos): ",
+    "pdf_posting_desc": "Posting Key (also can be used as Golos password): ",
+    "pdf_active_desc": "Active Key: ",
+    "pdf_owner_desc": "Owner Key: ",
+    "pdf_memo_desc": "Memo Key: "
   },
   "curationrewards_jsx": {
     "curation_rewards_last_24_hours": "Кураторские награды за последние 24 часа",

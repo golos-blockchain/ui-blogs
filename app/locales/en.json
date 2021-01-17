@@ -612,7 +612,15 @@
     "you_can_change_your_number": "You can change your number at any time if we didn't receive your sms with verification code. ",
     "re_send": "Re-send",
     "phone_number_has_been_verified": "Phone number has been verified, please continue the registration.",
-    "this_phone_number_has_already_been_used": "This phone number has already been used"
+    "authorized_with_": "Аuthorized with ",
+    "this_phone_number_has_already_been_used": "This phone number has already been used",
+    "pdf_title": "Keys Of @",
+    "pdf_desc": "There are private keys, which are authorizing your account. Store this file in secure place.",
+    "pdf_password_desc": "Password (use it to log in on Golos): ",
+    "pdf_posting_desc": "Posting Key (also can be used as Golos password): ",
+    "pdf_active_desc": "Active Key: ",
+    "pdf_owner_desc": "Owner Key: ",
+    "pdf_memo_desc": "Memo Key: "
   },
   "voting_jsx": {
     "stop_seeing_content_from_this_user": "Stop seeing content from this user",
