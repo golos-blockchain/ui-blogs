@@ -7,6 +7,11 @@ import { hash } from 'golos-classic-js/lib/auth/ecc';
 import { api } from 'golos-classic-js';
 import secureRandom from 'secure-random';
 import gmailSend from 'gmail-send'
+import passport from 'koa-passport';
+const VKontakteStrategy = require('passport-vk').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
+const MailruStrategy = require('passport-mail').Strategy;
+const YandexStrategy = require('passport-yandex').Strategy;
 
 function digits(text) {
     const digitArray = text.match(/\d+/g);
@@ -24,9 +29,71 @@ function digits(text) {
  * @param {*} app
  */
 export default function useRegistrationApi(app) {
+    app.use(passport.initialize());
+    app.use(passport.session());
+
+    passport.serializeUser(function(user, done) {
+        done(null, user);
+    });
+    passport.deserializeUser(function(user, done) {
+        done(null, user);
+    });
+
     const router = koa_router({ prefix: '/api/v1' });
     app.use(router.routes());
     const koaBody = koa_body();
+
+    const strategies = {
+        vk: VKontakteStrategy, facebook: FacebookStrategy,
+        mailru: MailruStrategy, yandex: YandexStrategy
+    };
+    for (const [grantId, grant] of Object.entries(config.grant)) {
+        const strategy = strategies[grantId];
+        if (!strategy) continue;
+        try {
+            passport.use(new strategy(
+                {
+                    clientID: grant.key,
+                    clientSecret: grant.secret,
+                    callbackURL: `/api/v1/auth/${grantId}/callback`,
+                    passReqToCallback: true
+                },
+                async (req, accessToken, refreshToken, params, profile, done) => {
+                    console.log(req)
+                    req.session.soc_id = profile.id;
+                    req.session.soc_id_type = grantId + '_id';
+
+                    let user;
+                    if (req.session.user) {
+                        user = await models.User.findOne({
+                            attributes: ['id'],
+                            where: { id: req.session.user },
+                        });
+                    }
+                    if (!user) {
+                        user = await models.User.create({
+                            uid: req.session.uid,
+                            remote_ip: getRemoteIp(req),
+                        });
+                        req.session.user = user.id;
+                    }
+                    const emailHash = hash.sha256('' + req.session.soc_id, 'hex');
+                    let mid = await models.Identity.create({
+                        provider: 'social-' + grantId,
+                        user_id: req.session.user,
+                        uid: req.session.uid,
+                        email: emailHash,
+                        verified: false,
+                        confirmation_code: '1234'
+                    });
+                    done(null, {profile});
+                }
+            ));
+        } catch (ex) {
+            console.error(`ERROR: Wrong config.grant.${grantId} settings. Fix them or just disable registration with ${grantId}. Error is following:`)
+            throw ex;
+        }
+    }
 
     router.post('/verify_code', koaBody, function*() {
         if (rateLimitReq(this, this.req, 10)) return;
@@ -357,5 +424,44 @@ export default function useRegistrationApi(app) {
         this.body = JSON.stringify({
             status: 'done',
         });
+    });
+
+    router.get('/auth/vk', passport.authenticate('vkontakte'));
+    router.get('/auth/vk/callback', passport.authenticate('vkontakte', {
+        successRedirect: '/api/v1/auth/success',
+        failureRedirect: '/api/v1/auth/failure'
+    }));
+
+    router.get('/auth/facebook', passport.authenticate('facebook'));
+    router.get('/auth/facebook/callback', passport.authenticate('facebook', {
+        successRedirect: '/api/v1/auth/success',
+        failureRedirect: '/api/v1/auth/failure'
+    }));
+
+    router.get('/auth/mailru', passport.authenticate('mailru'));
+    router.get('/auth/mailru/callback', passport.authenticate('mailru', {
+        successRedirect: '/api/v1/auth/success',
+        failureRedirect: '/api/v1/auth/failure'
+    }));
+
+    router.get('/auth/yandex', passport.authenticate('yandex'));
+    router.get('/auth/yandex/callback', passport.authenticate('yandex', {
+        successRedirect: '/api/v1/auth/success',
+        failureRedirect: '/api/v1/auth/failure'
+    }));
+
+    router.get('/auth/failure', function*() {
+        this.status = 200;
+        this.statusText = 'OK';
+        this.body = {
+            status: 'cannot_authorize',
+            statusText: 'Cannot register - cannot authorize with social network.'
+        };
+    });
+
+    router.get('/auth/success', function*() {
+        this.status = 200;
+        this.statusText = 'OK';
+        this.body = '<script>window.close();</script>';
     });
 }

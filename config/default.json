@@ -15,13 +15,25 @@
       "secret": ""
     },
     "vk": {
-      "key": "",
-      "secret": "",
+      "key": "7729925",
+      "secret": "XDpHjeomxnZJOIwnp0SM",
       "callback": "/handle_vk_callback",
       "scope": [
         "identity",
         "email"
       ]
+    },
+    "facebook": {
+      "key": "400946054546292",
+      "secret": "62fefc26e01cce7c56aed3e2b0c2f5bf"
+    },
+    "mailru": {
+      "key": "783069",
+      "secret": "61f78ffeb9411b6289150d46a93ee034"
+    },
+    "yandex": {
+      "key": "9e9787bd59204b95812bc7e438939616",
+      "secret": "ca10592646784980a11179cc72146344"
     },
     "server": {
       "host": "golos.id",

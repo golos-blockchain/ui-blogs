@@ -125,6 +125,8 @@ export default function useGeneralApi(app) {
                 throw new Error('You are on the waiting list. We will get back to you at the earliest possible opportunity.');
             }
 
+            let json_metadata = '';
+
             let mid;
             if (account.invite_code) {
                 mid = yield models.Identity.findOne(
@@ -137,6 +139,19 @@ export default function useGeneralApi(app) {
                 else {
                   console.log(`api /accounts: found use_invite step for user ${this.session.uid} #${user_id}`)
                 }
+            } else if (this.session.soc_id && this.session.soc_id_type) {
+                mid = yield models.Identity.findOne(
+                    {attributes: ['id'], where: {user_id, provider: 'social-' + this.session.soc_id_type.replace('_id', ''), verified: false}, order: 'id DESC'}
+                );
+                if (!mid) {
+                    console.log(`api /accounts: not authorized with social site for user ${this.session.uid} #${user_id}`);
+                    throw new Error('Not authorized with social site');
+                }
+                else {
+                  console.log(`api /accounts: is authorized with social site for user ${this.session.uid} #${user_id}`)
+                }
+                json_metadata = {[this.session.soc_id_type]: this.session.soc_id};
+                json_metadata = JSON.stringify(json_metadata);
             } else {
                 mid = yield models.Identity.findOne(
                     {attributes: ['id'], where: {user_id, provider: 'email', verified: true}, order: 'id DESC'}
@@ -214,6 +229,7 @@ export default function useGeneralApi(app) {
                 posting: account.posting_key,
                 memo: account.memo_key,
                 delegation,
+                json_metadata,
                 extensions,
                 invite_secret: account.invite_code ? account.invite_code : ''
             });
