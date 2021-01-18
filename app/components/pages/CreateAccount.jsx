@@ -79,10 +79,13 @@ class CreateAccount extends React.Component {
             checking: true,
             success: true,
             status: 'done',
-            message: (<div>{tt('createaccount_jsx.authorized_with_') + socName + '.'}{this._renderSocialButtons()}</div>),
+            message: (<div>
+                {tt('createaccount_jsx.authorized_with_') + socName + '.'}
+                {this._renderSocialButtons()}
+            </div>),
             showCheckInfo: false,
         };
-        this.setState({ fetchState, email: '' });
+        this.setState({ fetchState, email: '', invite_enabled: false });
     };
 
     useVk = (e) => {
@@ -223,6 +226,7 @@ class CreateAccount extends React.Component {
             loading ||
             !name ||
             nameError ||
+            inviteError ||
             !passwordValid ||
             !allBoxChecked ||
             !okStatus;
@@ -256,26 +260,7 @@ class CreateAccount extends React.Component {
                                     </div>}
                                     {invite_enabled && <div>
                                         <label>
-                                            <span style={{ color: 'red' }}>
-                                                *
-                                            </span>{' '}
-                                            {tt('createaccount_jsx.enter_invite_code')}
-                                            <input
-                                                type="text"
-                                                name="invite_code"
-                                                autoComplete="off"
-                                                disabled={fetchState.checking}
-                                                onChange={this.onInviteCodeChange}
-                                                value={invite_code}
-                                            />
-                                            <div
-                                                className={cn({
-                                                    error: inviteError,
-                                                    success: inviteHint,
-                                                })}
-                                            >
-                                                <p>{inviteError || inviteHint}</p>
-                                            </div>
+                                            {this._renderInviteCodeField(true)}
                                         </label>
                                     </div>}
                                     {!invite_enabled && <div>
@@ -346,6 +331,11 @@ class CreateAccount extends React.Component {
                                 ? this._renderCheckInfo()
                                 : null}
 
+                            {this.state.authType && <div>
+                                <label>
+                                    {this._renderInviteCodeField(false)}
+                                </label>
+                            </div>}
                             <div className={nameError ? 'error' : ''}>
                                 <label>
                                     {tt('createaccount_jsx.enter_account_name')}
@@ -574,6 +564,7 @@ class CreateAccount extends React.Component {
     _renderSocialButtons() {
         return (
             <div>
+                {!this.state.authType && tt('createaccount_jsx.or_use_socsite')}<br/>
                 <Tooltip t='VK'>
                     <VKIcon onClick={this.useVk} style={{cursor: 'pointer', marginRight: '5px'}} size={32} />
                 </Tooltip>
@@ -588,6 +579,40 @@ class CreateAccount extends React.Component {
                         <img src='/images/yandex.png' style={{ verticalAlign: 'top', paddingTop: '4px' }} />
                     </span>
                 </Tooltip>
+            </div>
+        );
+    }
+
+    _renderInviteCodeField = (required) => {
+        const {
+            fetchState,
+            invite_code,
+            inviteHint,
+            inviteError,
+        } = this.state;
+        return (
+            <div>
+                {required ? (<span style={{ color: 'red' }}>
+                    *
+                </span>) : null}
+                {required ? ' ' : null}
+                {tt(required ? 'createaccount_jsx.enter_invite_code' : 'createaccount_jsx.enter_invite_code_optional')}
+                <input
+                    type="text"
+                    name="invite_code"
+                    autoComplete="off"
+                    disabled={required ? fetchState.checking : false}
+                    onChange={this.onInviteCodeChange}
+                    value={invite_code}
+                />
+                <div
+                    className={cn({
+                        error: inviteError,
+                        success: inviteHint,
+                    })}
+                >
+                    <p>{inviteError || inviteHint}</p>
+                </div>
             </div>
         );
     }
@@ -747,7 +772,7 @@ class CreateAccount extends React.Component {
         let inviteHint = null;
 
         if (!value) {
-            inviteError = tt('createaccount_jsx.invite_secret_cannot_be_empty');
+            if (this.state.invite_enabled) inviteError = tt('createaccount_jsx.invite_secret_cannot_be_empty');
         } else {
             let pk;
             try {

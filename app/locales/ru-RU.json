@@ -74,6 +74,8 @@
     "i_have_invite_code": "У меня есть инвайт-код",
     "i_have_not_invite_code": "У меня нет инвайт-кода",
     "enter_invite_code": "Введите ваш инвайт-код",
+    "enter_invite_code_optional": "Вы также можете использовать инвайт-код, если он у вас есть:",
+    "or_use_socsite": "...или авторизуйтесь через соцсеть",
     "invite_secret_cannot_be_empty": "Инвайт-код не может быть пустым",
     "invite_new_account_will_receive": "Созданный аккаунт получит %(amount)s в Силу Голоса",
     "enter_account_name": "Введите имя пользователя",

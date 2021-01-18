@@ -128,7 +128,7 @@ export default function useGeneralApi(app) {
             let json_metadata = '';
 
             let mid;
-            if (account.invite_code) {
+            if (account.invite_code && !this.session.soc_id) {
                 mid = yield models.Identity.findOne(
                     {attributes: ['id'], where: {user_id, provider: 'invite_code', verified: false}, order: 'id DESC'}
                 );
@@ -234,7 +234,7 @@ export default function useGeneralApi(app) {
                 invite_secret: account.invite_code ? account.invite_code : ''
             });
 
-            if (account.invite_code) {
+            if (account.invite_code || this.session.soc_id) {
                 yield mid.update({ verified: true });
             }
 
