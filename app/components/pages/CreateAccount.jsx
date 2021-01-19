@@ -331,11 +331,6 @@ class CreateAccount extends React.Component {
                                 ? this._renderCheckInfo()
                                 : null}
 
-                            {this.state.authType && <div>
-                                <label>
-                                    {this._renderInviteCodeField(false)}
-                                </label>
-                            </div>}
                             <div className={nameError ? 'error' : ''}>
                                 <label>
                                     {tt('createaccount_jsx.enter_account_name')}
