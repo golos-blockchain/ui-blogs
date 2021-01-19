@@ -78,7 +78,7 @@ export function getContentReplies(author, permlink, voteLimit) {
 }
 
 export function getAllContentReplies(author, permlink, voteLimit) {
-    return api.getAllContentRepliesAsync(author, permlink, voteLimit)
+    return api.getAllContentRepliesAsync(author, permlink, voteLimit, 0, [], [], true)
 }
 
 export function getDonates(uia, target, from, to, voteLimit, offset) {
