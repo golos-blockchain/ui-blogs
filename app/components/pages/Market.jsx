@@ -264,33 +264,9 @@ class Market extends Component {
         });
     };
     cancelSpecificOrdersClick = (orderids, e) => {
-        const wif = prompt(tt('loginform_jsx.login_with_active_key_USERNAME', {USERNAME: this.props.user}));
-        if (!wif) {
-            return;
-        }
-        let OPERATIONS = [];
-        for (const oid of orderids) {
-            OPERATIONS.push(
-                ['limit_order_cancel',
-                    {
-                        owner: this.props.user,
-                        orderid: oid
-                    }
-                ]);
-        }
-        broadcast.send(
-            {
-                extensions: [], 
-                operations: OPERATIONS
-            }, [wif], (err, res) => {
-                if (err) {
-                    alert(err)
-                    return;
-                }
-                else {
-                    this.props.notify(tt('market_jsx.orders_canceled'));
-                    this.props.reload(this.props.user, this.props.location.pathname);
-                }
+        this.props.cancelSpecificOrders(this.props.user, orderids, () => {
+            this.props.notify(tt('market_jsx.orders_canceled'));
+            this.props.reload(this.props.user, this.props.location.pathname);
         });
     };
 
@@ -1642,6 +1618,35 @@ export default connect(
                 transaction.actions.broadcastOperation({
                     type: 'limit_order_cancel_ex',
                     operation,
+                    confirm,
+                    successCallback: () => {
+                        successCallback();
+                    },
+                    errorCallback: (e) => {
+                        console.log(e);
+                    }
+                })
+            );
+        },
+        cancelSpecificOrders: (owner, orderids, successCallback) => {
+            const confirm = tt('market_jsx.order_cancel_confirm_few', {
+                order_cnt: orderids.length,
+                user: owner,
+            });
+            let OPERATIONS = [];
+            for (const oid of orderids) {
+                OPERATIONS.push(
+                    ['limit_order_cancel',
+                        {
+                            owner,
+                            orderid: oid
+                        }
+                    ]);
+            }
+            dispatch(
+                transaction.actions.broadcastOperation({
+                    type: 'limit_order_cancel',
+                    trx: OPERATIONS,
                     confirm,
                     successCallback: () => {
                         successCallback();

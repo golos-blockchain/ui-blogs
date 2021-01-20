@@ -447,6 +447,7 @@
     "price_warning_above": "This price is well above the current market price of %(marketPrice)s, are you sure?",
     "price_warning_below": "This price is well below the current market price of %(marketPrice)s, are you sure?",
     "order_cancel_confirm": "Cancel order %(order_id)s from %(user)s?",
+    "order_cancel_confirm_few": "Cancel %(order_cnt)s order(-s) from %(user)s?",
     "order_cancel_all_confirm": "Cancel all orders between %(symbol1)s and %(symbol2)s from %(user)s?",
     "order_cancelled": "Order %(order_id)s cancelled.",
     "higher": "Higher",

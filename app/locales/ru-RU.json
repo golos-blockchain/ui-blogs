@@ -598,6 +598,7 @@
     "price_warning_above": "Эта цена намного выше текущей рыночной цены %(marketPrice)s, вы уверены?",
     "price_warning_below": "Эта цена намного ниже текущей рыночной цены %(marketPrice)s, вы уверены?",
     "order_cancel_confirm": "Отменить заказ %(order_id)s от %(user)s?",
+    "order_cancel_confirm_few": "Отменить %(order_cnt)s заказ(-а) от %(user)s?",
     "order_cancel_all_confirm": "Отменить все заказы между %(symbol1)s и %(symbol2)s от %(user)s?",
     "order_cancelled": "Заказ %(order_id)s отменен.",
     "higher": "Дороже",

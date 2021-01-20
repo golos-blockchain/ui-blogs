@@ -130,14 +130,24 @@ function* error_account_witness_vote({operation: {account, witness, approve}}) {
 /** Keys, username, and password are not needed for the initial call.  This will check the login and may trigger an action to prompt for the password / key. */
 function* broadcastOperation(
     {payload:
-        {type, operation, confirm, warning, keys, username, password, hideErrors, successCallback, errorCallback}}) {
-    const operationParam = {type, operation, keys, username, password, successCallback, errorCallback}
+        {type, operation, trx, confirm, warning, keys, username, password, hideErrors, successCallback, errorCallback}}) {
+    let op;
+    if (trx) {
+        if (!trx.length) {
+            return;
+        }
+        op = trx[0];
+    } else {
+        op = operation;
+    }
+    const operationParam = {type, operation: op, trx, keys, username, password, successCallback, errorCallback}
     const conf = typeof confirm === 'function' ? confirm() : confirm
     if(conf) {
         yield put(tr.actions.confirmOperation({confirm, warning, operation: operationParam, errorCallback}))
         return
     }
-    const payload = {operations: [[type, operation]], keys, username, hideErrors, successCallback, errorCallback}
+    const operations = trx || [[type, operation]];
+    const payload = {operations, keys, username, hideErrors, successCallback, errorCallback}
     try {
         if (!keys || keys.length === 0) {
             payload.keys = []
@@ -148,7 +158,7 @@ function* broadcastOperation(
             else {
                 if (!password) {
                     yield put(user.actions.showLogin({
-                      operation: {type, operation, username, successCallback, errorCallback, saveLogin: true},
+                      operation: {type, operation: op, trx, username, successCallback, errorCallback, saveLogin: true},
                       loginDefault: { username, authType: (type == 'transfer' || type == 'account_witness_vote' || type == 'account_witness_proxy') ? 'active' : '' }
                     }))
                     return
@@ -157,8 +167,8 @@ function* broadcastOperation(
         }
         yield call(broadcastPayload, {payload})
         let eventType = type.replace(/^([a-z])/, g => g.toUpperCase()).replace(/_([a-z])/g, g => g[1].toUpperCase());
-        if (eventType === 'Comment' && !operation.parent_author) eventType = 'Post';
-        const page = eventType === 'Vote' ? `@${operation.author}/${operation.permlink}` : '';
+        if (eventType === 'Comment' && !op.parent_author) eventType = 'Post';
+        const page = eventType === 'Vote' ? `@${op.author}/${op.permlink}` : '';
         serverApiRecordEvent(eventType, page);
     } catch(error) {
         console.error('TransactionSaga', error)
