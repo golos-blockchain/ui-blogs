@@ -1,11 +1,6 @@
 {
   "database_url": "SDC_DATABASE_URL",
-  "disable_signups": "SDC_DISABLE_SIGNUPS",
   "grant": {
-    "reddit": {
-      "key": "SDC_REDDIT_API_KEY",
-      "secret": "SDC_REDDIT_API_SECRET"
-    },
     "vk": {
       "key": "SDC_VK_API_KEY",
       "secret": "SDC_VK_API_SECRET"
@@ -18,15 +13,15 @@
   "google_analytics_id": "SDC_GOOGLE_ANALYTICS_ID",
   "helmet": {
     "directives": {
-      "childSrc": "SDC_HELMET_CHILDSRC",
-      "connectSrc": "SDC_HELMET_CONNECTSRC",
       "defaultSrc": "SDC_HELMET_DEFAULTSRC",
-      "fontSrc": "SDC_HELMET_FONTSRC",
-      "frameAncestors": "SDC_HELMET_FRAMEANCESTORS",
-      "imgSrc": "SDC_HELMET_IMGSRC",
-      "objectSrc": "SDC_HELMET_OBJECTSRC",
+      "childSrc": "SDC_HELMET_CHILDSRC",
       "scriptSrc": "SDC_HELMET_SCRIPTSRC",
-      "styleSrc": "SDC_HELMET_STYLESRC"
+      "styleSrc": "SDC_HELMET_STYLESRC",
+      "imgSrc": "SDC_HELMET_IMGSRC",
+      "fontSrc": "SDC_HELMET_FONTSRC",
+      "connectSrc": "SDC_HELMET_CONNECTSRC",
+      "objectSrc": "SDC_HELMET_OBJECTSRC",
+      "frameAncestors": "SDC_HELMET_FRAMEANCESTORS"      
     }
   },
   "img_proxy_prefix": "SDC_IMAGE_PROXY_PREFIX",
@@ -34,27 +29,11 @@
     "gcm_key": "SDC_NOTIFY_GCM_KEY"
   },
   "read_only_mode": "SDC_READONLY_MODE",
-  "recaptcha": {
-    "secret_key": "SDC_RECAPTCHA_SECRET_KEY",
-    "site_key": "SDC_RECAPTCHA_SITE_KEY"
-  },
   "registrar": {
     "account": "SDC_REGISTRAR_ACCOUNT",
     "fee": "SDC_REGISTRAR_AMOUNT",
     "signing_key": "SDC_REGISTRAR_SIGNINGKEY",
     "delegation": "SDC_REGISTRAR_DELEGATION"
-  },
-  "requestAccountRecovery": {
-    "recovery_account": "SDC_RECOVERY_ACCOUNT",
-    "signing_key": "SDC_RECOVERY_SIGNINGKEY"
-  },
-  "postmark": {
-    "from": "SDC_POSTMARK_FROM",
-    "key": "SDC_POSTMARK_API_KEY",
-    "templates": {
-      "confirm_email": "SDC_POSTMARK_CONFIRMTEMPLATE",
-      "waiting_list_invite": "SDC_POSTMARK_WAITINGTEMPLATE"
-    }
   },
   "server_session_secret": "SDC_SESSION_SECRETKEY",
   "site_domain": "SDC_SITE_DOMAIN",
@@ -79,9 +58,6 @@
     "name": "SDC_METRICS_NAME",
     "host": "SDC_METRICS_HOST"
   },
-  "is_sandbox": "SDC_IS_SANDBOX",
-  "openexchangerates_app_id": "SDC_OPENEXCHANGERATES_APP_ID",
-  "wss_push_service_url": "SDC_SERVICE_PUSH_CLIENT_URL",
   "gmail_send": {
       "user": "SDC_GMAIL_SEND_USER",
       "pass": "SDC_GMAIL_SEND_PASS"

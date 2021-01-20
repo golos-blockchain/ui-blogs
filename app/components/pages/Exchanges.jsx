@@ -90,9 +90,9 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <p className='landing-exchanges-block-text reg landing-exchanges-block-center'>Кроме того, возможна:</p>
-                                <p>- покупка/продажа токенов через <a target="_blank" href="/@ecurrex-ru/ymrub-umer-da-zdravstvuet-ymrub">ADVcash и PAYEER</a>, подробнее на <a target="_blank" href="/@ecurrex-ru">@ecurrex-ru <Icon name="extlink" /></a></p>
-                                <p>- торговля через P2P-сделки в телеграм-ботах <a target="_blank" href="https://t.me/TellerBot"><Icon name="new/telegram" /> TellerBot</a> или <a target="_blank" href="https://t.me/P2PDEXBitshares_bot"><Icon name="new/telegram" /> DexGarant</a></p>
+                                <p className='landing-exchanges-block-text reg landing-exchanges-block-center'>Кроме того, возможна покупка/продажа токенов:</p>
+                                <p>- через <a target="_blank" href="/@ecurrex-ru">@ecurrex-ru</a> (напр. с <a target="_blank" href="/@ecurrex-ru/ymrub-umer-da-zdravstvuet-ymrub">ADVcash и PAYEER</a>), обсуждение сервиса <a target="_blank" href="https://golostalk.com/services/@ecurrex-ru/ecurrex-tokeny-ymxxx">на форуме <Icon name="extlink" /></a></p>
+                                <p>- через P2P-сделки в телеграм-ботах <a target="_blank" href="https://t.me/TellerBot"><Icon name="new/telegram" /> TellerBot</a> или <a target="_blank" href="https://t.me/P2PDEXBitshares_bot"><Icon name="new/telegram" /> DexGarant</a></p>
                                 </div>
                             </div>
                         </div>

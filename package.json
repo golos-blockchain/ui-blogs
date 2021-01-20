@@ -88,7 +88,6 @@
     "numeral": "^2.0.6",
     "pluralize": "^2.0.0",
     "polished": "^1.9.2",
-    "postmark": "^1.4.1",
     "prop-types": "^15.6.1",
     "purest": "^3.0.0",
     "qr-image": "^3.2.0",

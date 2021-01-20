@@ -1,27 +1,9 @@
 {
   "database_url": "mysql://golosdev:golosdev@127.0.0.1:3306/golosdev",
-  "disable_signups": false,
   "grant": {
-    "reddit": {
-      "callback": "/handle_reddit_callback",
-      "custom_params": {
-        "duration": "temporary",
-        "state": "void"
-      },
-      "key": "",
-      "scope": [
-        "identity"
-      ],
-      "secret": ""
-    },
     "vk": {
       "key": "",
-      "secret": "",
-      "callback": "/handle_vk_callback",
-      "scope": [
-        "identity",
-        "email"
-      ]
+      "secret": ""
     },
     "server": {
       "host": "golos.id",
@@ -51,27 +33,11 @@
     "gcm_key": "google secret key"
   },
   "read_only_mode": false,
-  "recaptcha": {
-    "secret_key": false,
-    "site_key": false
-  },
   "registrar": {
     "account": "-",
     "fee": "1.000 GOLOS",
     "signing_key": "5Hv..",
     "delegation": "33060.000000 GESTS"
-  },
-  "requestAccountRecovery": {
-    "recovery_account": "golos",
-    "signing_key": "5J..."
-  },
-  "postmark": {
-    "from": "noreply@example.com",
-    "key": "postmark server key",
-    "templates": {
-      "confirm_email": false,
-      "waiting_list_invite": false
-    }
   },
   "server_session_secret": "exiKdyF+IwRIXJDmtGIl4vWUz4i3eVSISpfZoeYc0s4=",
   "session_cookie_key": "gls.session",
@@ -97,9 +63,6 @@
     "name": "golos",
     "host": "127.0.0.1"
   },
-  "is_sandbox": false,
-  "openexchangerates_app_id": "3dba19241aa74249bef8b3e9d4562178",
-  "wss_push_service_url": "url",
   "ads_per_post": 20,
   "gmail_send": {
       "user": false,

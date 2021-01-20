@@ -101,7 +101,7 @@ class CreateAccount extends React.Component {
             allBoxChecked,
         } = this.state;
 
-        if (serverBusy || $STM_Config.disable_signups) {
+        if (serverBusy) {
             return this._renderInvitationError();
         }
 
