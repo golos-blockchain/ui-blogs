@@ -458,7 +458,9 @@
     "asset_is_overridable": " can revoke tokes from users balances!",
     "asset_": "Token issuer ",
     "market_fee_percent_": "Trade fee ",
-    "market_depth_": "market depth"
+    "market_depth_": "market depth",
+    "your_order": "Your order",
+    "orders_canceled": "Selected orders successfully cancelled."
   },
   "recoveraccountstep1_jsx": {
     "not_valid": "Not valid",
@@ -944,6 +946,7 @@
     "login_to_post": "Login to Post",
     "login_to_comment": "Login to Comment",
     "login_to_your_steem_account": "Login to your Steem Account",
+    "login_with_active_key_USERNAME": "Login with your Active key, please\n\nUsername:\n%(USERNAME)s\n\nActive-key:\n",
     "posting": "Posting",
     "active_or_owner": "Active or Owner",
     "this_password_is_bound_to_your_account_owner_key": "This password is bound to your account's owner key and can not be used to login to this site.",

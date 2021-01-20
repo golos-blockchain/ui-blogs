@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { Link, browserHistory } from 'react-router';
 import tt from 'counterpart';
-import {api} from 'golos-classic-js'
+import {api, broadcast} from 'golos-classic-js'
 import transaction from 'app/redux/Transaction';
 import {longToAsset} from 'app/utils/ParsersAndFormatters';
 import TransactionError from 'app/components/elements/TransactionError';
@@ -261,6 +261,36 @@ class Market extends Component {
         cancelOrders(
             user, sym1, sym2, () => {
             this.props.reload(user, this.props.location.pathname);
+        });
+    };
+    cancelSpecificOrdersClick = (orderids, e) => {
+        const wif = prompt(tt('loginform_jsx.login_with_active_key_USERNAME', {USERNAME: this.props.user}));
+        if (!wif) {
+            return;
+        }
+        let OPERATIONS = [];
+        for (const oid of orderids) {
+            OPERATIONS.push(
+                ['limit_order_cancel',
+                    {
+                        owner: this.props.user,
+                        orderid: oid
+                    }
+                ]);
+        }
+        broadcast.send(
+            {
+                extensions: [], 
+                operations: OPERATIONS
+            }, [wif], (err, res) => {
+                if (err) {
+                    alert(err)
+                    return;
+                }
+                else {
+                    this.props.notify(tt('market_jsx.orders_canceled'));
+                    this.props.reload(this.props.user, this.props.location.pathname);
+                }
         });
     };
 
@@ -582,6 +612,7 @@ class Market extends Component {
             feed_price: 0,
         };
 
+        const user = this.props.user;
         const ticker0 = this.props.ticker;
         if (ticker0 !== undefined) {
             let { base, quote } = this.props.feed;
@@ -609,8 +640,8 @@ class Market extends Component {
             }
 
             return {
-                bids: orders.bids.map(o => new Order(o, 'bids', sym1, sym2, prec1, prec2)),
-                asks: orders.asks.map(o => new Order(o, 'asks', sym1, sym2, prec1, prec2)),
+                bids: orders.bids.map(o => new Order(o, 'bids', sym1, sym2, prec1, prec2, user)),
+                asks: orders.asks.map(o => new Order(o, 'asks', sym1, sym2, prec1, prec2, user)),
             };
         }
 
@@ -1490,6 +1521,7 @@ class Market extends Component {
                             onClick={price => {
                                 setFormPrice(price);
                             }}
+                            cancelSpecificOrdersClick={this.cancelSpecificOrdersClick}
                         />
                     </div>
 
@@ -1505,6 +1537,7 @@ class Market extends Component {
                             onClick={price => {
                                 setFormPrice(price);
                             }}
+                            cancelSpecificOrdersClick={this.cancelSpecificOrdersClick}
                         />
                     </div>
                 </div>
