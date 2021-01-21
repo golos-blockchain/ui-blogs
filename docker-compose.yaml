@@ -9,18 +9,19 @@ services:
     environment:
       SDC_TARANTOOL_HOSTNAME: datastore
       SDC_DATABASE_URL: mysql://golosdev:golosdev@db:3306/golosdev
+      SDC_CLIENT_WEBSOCKET_URL: ${SDC_CLIENT_WEBSOCKET_URL}
+      SDC_SERVER_WEBSOCKET_URL: ${SDC_SERVER_WEBSOCKET_URL}
       SDC_REGISTRAR_ACCOUNT: ${SDC_REGISTRAR_ACCOUNT}
       SDC_REGISTRAR_SIGNINGKEY: ${SDC_REGISTRAR_SIGNINGKEY}
       SDC_GMAIL_SEND_USER: ${SDC_GMAIL_SEND_USER}
       SDC_GMAIL_SEND_PASS: ${SDC_GMAIL_SEND_PASS}
-      SDC_CLIENT_WEBSOCKET_URL: ${SDC_CLIENT_WEBSOCKET_URL}
-      SDC_SERVER_WEBSOCKET_URL: ${SDC_SERVER_WEBSOCKET_URL}
-      SDC_SITE_DOMAIN: ${SDC_SITE_DOMAIN}
 
     ports:
       - 127.0.0.1:8080:8080
     depends_on:
       - db
+    volumes:
+      - ./default.json:/var/app/config/default.json
 
   db:
     restart: always

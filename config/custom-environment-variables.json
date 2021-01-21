@@ -5,9 +5,17 @@
       "key": "SDC_VK_API_KEY",
       "secret": "SDC_VK_API_SECRET"
     },
-    "server": {
-      "host": "SDC_GRANT_HOST",
-      "protocol": "SDC_GRANT_PROTOCOL"
+    "facebook": {
+      "key": "SDC_FB_API_KEY",
+      "secret": "SDC_FB_API_SECRET"
+    },
+    "mailru": {
+      "key": "SDC_MAIL_API_KEY",
+      "secret": "SDC_NAIL_API_SECRET"
+    },
+    "yandex": {
+      "key": "SDC_YANDEX_API_KEY",
+      "secret": "SDC_YANDEX_API_SECRET"
     }
   },
   "google_analytics_id": "SDC_GOOGLE_ANALYTICS_ID",

@@ -5,9 +5,17 @@
       "key": "",
       "secret": ""
     },
-    "server": {
-      "host": "golos.id",
-      "protocol": "https"
+    "facebook": {
+      "key": "",
+      "secret": ""
+    },
+    "mailru": {
+      "key": "",
+      "secret": ""
+    },
+    "yandex": {
+      "key": "",
+      "secret": ""
     }
   },
   "google_analytics_id": "UA-146157213-1",
