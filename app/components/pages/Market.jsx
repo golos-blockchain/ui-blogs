@@ -1088,11 +1088,18 @@ class Market extends Component {
                                                         )[0];
                                                     }
                                                     this.refs.buySteemTotal.value = total;
-                                                    if (price >= 0)
-                                                        this.refs.buySteemAmount.value = roundDown(
+                                                    if (price >= 0) {
+                                                        let amount = roundDown(
                                                             parseFloat(total) / price,
                                                             assets_right[sym1].precision
-                                                        ).toFixed(assets_right[sym1].precision);
+                                                        );
+                                                        this.refs.buySteemAmount.value = amount.toFixed(assets_right[sym1].precision);
+                                                        let res = price * amount
+                                                        this.refs.buySteemTotal.value = roundDown(
+                                                            res,
+                                                            assets_right[sym2].precision
+                                                        ).toFixed(assets_right[sym2].precision)
+                                                    }
                                                     validateBuySteem();
                                                     fixBuyTotal();
                                                 }}
