@@ -90,38 +90,42 @@ class CreateAccount extends React.Component {
 
     useVk = (e) => {
         e.preventDefault();
+        const authType = 'ВКонтакте'
         this.setState({
-            authType: 'ВКонтакте'
+            authType
         });
         window.open('/api/v1/auth/vk', '_blank');
-        this.useSocialLogin(this.state.authType);
+        this.useSocialLogin(authType);
     };
 
     useFacebook = (e) => {
         e.preventDefault();
+        const authType = 'Facebook'
         this.setState({
-            authType: 'Facebook'
+            authType
         });
         window.open('/api/v1/auth/facebook', '_blank');
-        this.useSocialLogin(this.state.authType);
+        this.useSocialLogin(authType);
     };
 
     useMailru = (e) => {
         e.preventDefault();
+        const authType = 'Facebook'
         this.setState({
-            authType: 'Mail.Ru'
+            authType
         });
         window.open('/api/v1/auth/mailru', '_blank');
-        this.useSocialLogin(this.state.authType);
+        this.useSocialLogin(authType);
     };
 
     useYandex = (e) => {
         e.preventDefault();
+        const authType = 'Яндекс'
         this.setState({
-            authType: 'Яндекс'
+            authType
         });
         window.open('/api/v1/auth/yandex', '_blank');
-        this.useSocialLogin(this.state.authType);
+        this.useSocialLogin(authType);
     };
 
     render() {
