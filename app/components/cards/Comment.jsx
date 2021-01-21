@@ -15,7 +15,6 @@ import Author from 'app/components/elements/Author';
 import Voting from 'app/components/elements/Voting';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Userpic from 'app/components/elements/Userpic';
-import IllegalContentMessage from 'app/components/elements/IllegalContentMessage';
 import Confetti from 'react-dom-confetti';
 
 import { LIQUID_TICKER, CONFETTI_CONFIG } from 'app/client_config';
@@ -166,7 +165,6 @@ class CommentImpl extends PureComponent {
         let controls = null;
 
         if (blockedUsers.includes(comment.author)) {
-            body = <IllegalContentMessage />;
             return null;
         } else if (!this.state.collapsed && !hideBody) {
             body = (

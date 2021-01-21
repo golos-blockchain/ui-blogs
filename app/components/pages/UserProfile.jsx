@@ -26,8 +26,6 @@ import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import PostsList from 'app/components/cards/PostsList';
 import {isFetchingOrRecentlyUpdated} from 'app/utils/StateFunctions';
 import {repLog10} from 'app/utils/ParsersAndFormatters';
-import { blockedUsers, blockedUsersContent } from 'app/utils/IllegalContent';
-import IllegalContentMessage from 'app/components/elements/IllegalContentMessage';
 import Tooltip from 'app/components/elements/Tooltip';
 import { LinkWithDropdown } from 'react-foundation-components/lib/global/dropdown';
 import VerticalMenu from 'app/components/elements/VerticalMenu';
@@ -50,30 +48,6 @@ export default class UserProfile extends React.Component {
 
         this.loadMore = this.loadMore.bind(this);
         this._onLinkRef = this._onLinkRef.bind(this);
-    }
-
-    componentWillReceiveProps(next) {
-      // if (!this.externalTransferRequest) {
-      //   return
-      // }
-      // // we've got an external transfer request shaped properly
-      // // start login track ...
-      // console.log(`^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ will receive props`)
-      // const { accountname, section } = next.routeParams;
-      // console.log(`Acc from route from NEXT : ${accountname}`)
-      // // track logged in person
-      // const loginBefore = this.props.current_user;
-      // const loginNow = next.current_user;
-      // const loginNowName = loginNow && loginNow.get('username')
-      // console.log(`Acc LOGGED IN : ${loginNowName}`)
-      // const loginMismatch = Boolean(((loginNowName && accountname)) && (loginNowName !== accountname))
-      // console.log(`MISMATCH : ${loginMismatch}`)
-      //
-      //
-      // // console.log(`was : ${String(loginBefore)} is : ${String(loginNow)}`)
-      //
-      //
-      // // console.log(next)
     }
 
     shouldComponentUpdate(np) {
@@ -186,14 +160,6 @@ export default class UserProfile extends React.Component {
         let tab_content = null;
 
         // const global_status = this.props.global.get('status');
-
-
-        // let balance_steem = parseFloat(account.balance.split(' ')[0]);
-        // let vesting_steem = vestingSteem(account, gprops).toFixed(3);
-        // const steem_balance_str = numberWithCommas(balance_steem.toFixed(3)) + " STEEM";
-        // const power_balance_str = numberWithCommas(vesting_steem) + " STEEM POWER";
-        // const sbd_balance = parseFloat(account.sbd_balance)
-        // const sbd_balance_str = numberWithCommas('$' + sbd_balance.toFixed(3));
 
         let rewardsClass = "", walletClass = "";
         if( section === 'transfers' ) {
@@ -399,14 +365,6 @@ export default class UserProfile extends React.Component {
                     <br />
                 </div>
         }*/
-
-		if (blockedUsers.includes(accountname)) {
-			tab_content = <IllegalContentMessage />;
-        }
-
-        if (blockedUsersContent.includes(accountname)) {
-			tab_content = <div>{tt('g.blocked_user_content')}</div>;
-		}
 
         if (!(section === 'transfers' ||
               section === 'assets' ||

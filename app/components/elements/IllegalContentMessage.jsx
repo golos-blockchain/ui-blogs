@@ -6,9 +6,7 @@ const IllegalContentMessage = () =>  {
 		<div className="row">
 			<div className="column small-12">
 				<br />
-				<p>
-				{tt('illegal_content.unavailable')}&nbsp;{tt('illegal_content.due_to_illegal_content')}.
-				</p>
+				<p>{tt('g.hide_content')}</p>
 			</div>
 		</div>
 	)

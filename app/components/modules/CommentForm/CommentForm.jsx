@@ -34,7 +34,7 @@ class CommentForm extends React.Component {
         const { editMode, reply, params } = this.props;
 
         this.state = {
-            text: reply ? `@${params.author} ` : '',
+            text: reply ? `@${params.author}, ` : '',
             emptyBody: true,
             postError: null,
             uploadingCount: 0,
