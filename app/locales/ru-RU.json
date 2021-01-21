@@ -74,6 +74,8 @@
     "i_have_invite_code": "У меня есть инвайт-код",
     "i_have_not_invite_code": "У меня нет инвайт-кода",
     "enter_invite_code": "Введите ваш инвайт-код",
+    "enter_invite_code_optional": "Вы также можете использовать инвайт-код, если он у вас есть:",
+    "or_use_socsite": "...или авторизуйтесь через соцсеть",
     "invite_secret_cannot_be_empty": "Инвайт-код не может быть пустым",
     "invite_new_account_will_receive": "Созданный аккаунт получит %(amount)s в Силу Голоса",
     "enter_account_name": "Введите имя пользователя",
@@ -134,7 +136,15 @@
     "after_verification": "После получения смс о подтверждения вашего номера обновите страницу регистрации",
     "re_send": "Повторная отправка",
     "phone_number_has_been_verified": "Спасибо, ваша почта подтверждена. Пожалуйста, продолжите регистрацию.",
-    "this_phone_number_has_already_been_used": "Указанная почта уже зарегистрирована на платформе"
+    "authorized_with_": "Авторизовано с помощью ",
+    "this_phone_number_has_already_been_used": "Указанная почта уже зарегистрирована на платформе",
+    "pdf_title": "Keys Of @",
+    "pdf_desc": "There are private keys, which are authorizing your account. Store this file in secure place.",
+    "pdf_password_desc": "Password (use it to log in on Golos): ",
+    "pdf_posting_desc": "Posting Key (also can be used as Golos password): ",
+    "pdf_active_desc": "Active Key: ",
+    "pdf_owner_desc": "Owner Key: ",
+    "pdf_memo_desc": "Memo Key: "
   },
   "curationrewards_jsx": {
     "curation_rewards_last_24_hours": "Кураторские награды за последние 24 часа",
@@ -523,6 +533,7 @@
     "login_to_vote": "Авторизуйтесь, чтобы проголосовать",
     "login_to_post": "Авторизуйтесь, чтобы написать пост",
     "login_to_comment": "Пожалуйста, авторизуйтесь для выполнения следующих действий",
+    "login_with_active_key_USERNAME": "Пожалуйста, авторизуйтесь Вашим активным ключом\n\nИмя:\n%(USERNAME)s\n\nActive-ключ:\n",
     "login_to_your_steem_account": "Войти в свой Голос аккаунт",
     "posting": "Постинг",
     "active_or_owner": "Активного",
@@ -582,6 +593,7 @@
     "price_warning_above": "Эта цена намного выше текущей рыночной цены %(marketPrice)s, вы уверены?",
     "price_warning_below": "Эта цена намного ниже текущей рыночной цены %(marketPrice)s, вы уверены?",
     "order_cancel_confirm": "Отменить заказ %(order_id)s от %(user)s?",
+    "order_cancel_confirm_few": "Отменить %(order_cnt)s заказ(-а) от %(user)s?",
     "order_cancel_all_confirm": "Отменить все заказы между %(symbol1)s и %(symbol2)s от %(user)s?",
     "order_cancelled": "Заказ %(order_id)s отменен.",
     "higher": "Дороже",
@@ -593,7 +605,9 @@
     "asset_is_overridable": " может отзывать токены с баланса пользователей!",
     "asset_": "Эмитент актива ",
     "market_fee_percent_": "Комиссия рынка ",
-    "market_depth_": "глубина рынка"
+    "market_depth_": "глубина рынка",
+    "your_order": "Ваш заказ",
+    "orders_canceled": "Ордеры успешно отменены."
   },
   "navigation": {
     "about": "О проекте",

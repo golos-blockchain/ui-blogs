@@ -53,10 +53,12 @@ export default class Orderbook extends React.Component {
         return (
             <thead>
                 <tr>
+                    {!buy ? <th></th> : null}
                     <th>{buy ? tt('market_jsx.total_DEBT_TOKEN_SHORT_CURRENCY_SIGN', {DEBT_TOKEN_SHORT: sym2}) : tt('g.price')}</th>
                     <th>{buy ? sym2 : sym1}</th>
                     <th>{buy ? sym1 : sym2}</th>
                     <th>{buy ? tt('g.price') : tt('market_jsx.total_DEBT_TOKEN_SHORT_CURRENCY_SIGN', {DEBT_TOKEN_SHORT: sym2})}</th>
+                    {buy ? <th></th> : null}
                 </tr>
             </thead>
         );
@@ -83,6 +85,7 @@ export default class Orderbook extends React.Component {
                         prec1={prec1}
                         prec2={prec2}
                         onClick={this.props.onClick}
+                        cancelSpecificOrdersClick={this.props.cancelSpecificOrdersClick}
                         animate={this.state.animate}
                         key={side + order.getStringAsset2() + order.getStringPrice()}
                         index={index}

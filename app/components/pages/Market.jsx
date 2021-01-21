@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { Link, browserHistory } from 'react-router';
 import tt from 'counterpart';
-import {api} from 'golos-classic-js'
+import {api, broadcast} from 'golos-classic-js'
 import transaction from 'app/redux/Transaction';
 import {longToAsset} from 'app/utils/ParsersAndFormatters';
 import TransactionError from 'app/components/elements/TransactionError';
@@ -261,6 +261,12 @@ class Market extends Component {
         cancelOrders(
             user, sym1, sym2, () => {
             this.props.reload(user, this.props.location.pathname);
+        });
+    };
+    cancelSpecificOrdersClick = (orderids, e) => {
+        this.props.cancelSpecificOrders(this.props.user, orderids, () => {
+            this.props.notify(tt('market_jsx.orders_canceled'));
+            this.props.reload(this.props.user, this.props.location.pathname);
         });
     };
 
@@ -582,6 +588,7 @@ class Market extends Component {
             feed_price: 0,
         };
 
+        const user = this.props.user;
         const ticker0 = this.props.ticker;
         if (ticker0 !== undefined) {
             let { base, quote } = this.props.feed;
@@ -609,8 +616,8 @@ class Market extends Component {
             }
 
             return {
-                bids: orders.bids.map(o => new Order(o, 'bids', sym1, sym2, prec1, prec2)),
-                asks: orders.asks.map(o => new Order(o, 'asks', sym1, sym2, prec1, prec2)),
+                bids: orders.bids.map(o => new Order(o, 'bids', sym1, sym2, prec1, prec2, user)),
+                asks: orders.asks.map(o => new Order(o, 'asks', sym1, sym2, prec1, prec2, user)),
             };
         }
 
@@ -663,9 +670,9 @@ class Market extends Component {
                         type === 'ask' ? o.real_price : o.real_price
                     ),
                     asset1:
-                        type === 'ask' ? o.sell_price.base : o.sell_price.quote,
+                        type === 'ask' ? o.asset1 : o.asset2,
                     asset2:
-                        type === 'bid' ? o.sell_price.base : o.sell_price.quote,
+                        type === 'bid' ? o.asset1 : o.asset2,
                 };
             });
         }
@@ -1081,11 +1088,18 @@ class Market extends Component {
                                                         )[0];
                                                     }
                                                     this.refs.buySteemTotal.value = total;
-                                                    if (price >= 0)
-                                                        this.refs.buySteemAmount.value = roundDown(
+                                                    if (price >= 0) {
+                                                        let amount = roundDown(
                                                             parseFloat(total) / price,
                                                             assets_right[sym1].precision
-                                                        ).toFixed(assets_right[sym1].precision);
+                                                        );
+                                                        this.refs.buySteemAmount.value = amount.toFixed(assets_right[sym1].precision);
+                                                        let res = price * amount
+                                                        this.refs.buySteemTotal.value = roundDown(
+                                                            res,
+                                                            assets_right[sym2].precision
+                                                        ).toFixed(assets_right[sym2].precision)
+                                                    }
                                                     validateBuySteem();
                                                     fixBuyTotal();
                                                 }}
@@ -1490,6 +1504,7 @@ class Market extends Component {
                             onClick={price => {
                                 setFormPrice(price);
                             }}
+                            cancelSpecificOrdersClick={this.cancelSpecificOrdersClick}
                         />
                     </div>
 
@@ -1505,6 +1520,7 @@ class Market extends Component {
                             onClick={price => {
                                 setFormPrice(price);
                             }}
+                            cancelSpecificOrdersClick={this.cancelSpecificOrdersClick}
                         />
                     </div>
                 </div>
@@ -1609,6 +1625,35 @@ export default connect(
                 transaction.actions.broadcastOperation({
                     type: 'limit_order_cancel_ex',
                     operation,
+                    confirm,
+                    successCallback: () => {
+                        successCallback();
+                    },
+                    errorCallback: (e) => {
+                        console.log(e);
+                    }
+                })
+            );
+        },
+        cancelSpecificOrders: (owner, orderids, successCallback) => {
+            const confirm = tt('market_jsx.order_cancel_confirm_few', {
+                order_cnt: orderids.length,
+                user: owner,
+            });
+            let OPERATIONS = [];
+            for (const oid of orderids) {
+                OPERATIONS.push(
+                    ['limit_order_cancel',
+                        {
+                            owner,
+                            orderid: oid
+                        }
+                    ]);
+            }
+            dispatch(
+                transaction.actions.broadcastOperation({
+                    type: 'limit_order_cancel',
+                    trx: OPERATIONS,
                     confirm,
                     successCallback: () => {
                         successCallback();
