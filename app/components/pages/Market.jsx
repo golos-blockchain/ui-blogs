@@ -11,6 +11,7 @@ import TransactionError from 'app/components/elements/TransactionError';
 import Icon from 'app/components/elements/Icon';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
 import DepthChart from 'app/components/elements/DepthChart';
+import PriceChart from 'app/components/elements/PriceChart';
 import Orderbook from 'app/components/elements/Orderbook';
 import OrderHistory from 'app/components/elements/OrderHistory';
 import { Order, TradeHistory } from 'app/utils/MarketClasses';
@@ -138,6 +139,15 @@ class Market extends Component {
             (props.assets === undefined ||
                 JSON.stringify(props.assets) !==
                     JSON.stringify(nextProps.assets))
+        ) {
+            return true;
+        }
+
+        if (
+            nextProps.history !== undefined &&
+            (props.history === undefined ||
+                JSON.stringify(props.history) !==
+                    JSON.stringify(nextProps.history))
         ) {
             return true;
         }
@@ -731,20 +741,6 @@ class Market extends Component {
             );
         }
 
-        function tradeHistoryTable(trades) {
-            if (!trades || !trades.length) {
-                return [];
-            }
-            const norm = trades => trades.map(t => new TradeHistory(t, sym1, sym2, prec1, prec2));
-
-            return <OrderHistory 
-                        sym1={sym1}
-                        sym2={sym2}
-                        prec1={prec1}
-                        prec2={prec2}
-                        history={norm(trades)} />;
-        }
-
         let symbols1 = [];
         let symbols2 = [];
         for (let [key, value] of Object.entries(assets_right)) {
@@ -783,16 +779,33 @@ class Market extends Component {
           <a className="Market__votes_pagination" onClick={this.prevSym2ListPage}>{sym2_list_page > 0 ? '< ' + tt('g.back') : ''}</a>
           <a className="Market__votes_pagination" onClick={next_sym2_list.length > 0 ? this.nextSym2ListPage : null}>{next_sym2_list.length > 0 ? tt('g.more_list') + ' >' : ''}</a></span>});
 
+        const normalizeTrades = trades => trades.map(t => new TradeHistory(t, sym1, sym2, prec1, prec2));
+
+        const trades = this.props.history ? normalizeTrades(this.props.history) : [];
+
+        let tradeHistoryTable = [];
+        if (trades && trades.length) {
+            tradeHistoryTable = (<OrderHistory 
+                sym1={sym1}
+                sym2={sym2}
+                prec1={prec1}
+                prec2={prec2}
+                history={trades} />);
+        }
+
         return (
             <div>
                 <div className="row">
                     <div className="column small-8 show-for-medium">
-                        {this.state.showDepthChart ? (
+                        {/*this.state.showDepthChart ? (
                             <DepthChart
                                 bids={orderbook.bids}
                                 asks={orderbook.asks}
                             />
-                        ) : null}
+                        ) : null*/}
+                        <PriceChart
+                            trades={trades}
+                        />
                     </div>
                     <div className="column Market__pairs"><br/><h5>
                         <DropdownMenu el="div" items={symbols1}>
@@ -1527,7 +1540,7 @@ class Market extends Component {
                 <div className="row ">
                     <div className="small-12 column">
                         <h4>{tt('market_jsx.trade_history')}</h4>
-                        {tradeHistoryTable(this.props.history)}
+                        {tradeHistoryTable}
                     </div>
                 </div>
                 {account ? (
