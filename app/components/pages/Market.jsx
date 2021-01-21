@@ -670,9 +670,9 @@ class Market extends Component {
                         type === 'ask' ? o.real_price : o.real_price
                     ),
                     asset1:
-                        type === 'ask' ? o.sell_price.base : o.sell_price.quote,
+                        type === 'ask' ? o.asset1 : o.asset2,
                     asset2:
-                        type === 'bid' ? o.sell_price.base : o.sell_price.quote,
+                        type === 'bid' ? o.asset1 : o.asset2,
                 };
             });
         }
