@@ -68,37 +68,12 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <a target="_blank" href="https://livecoin.net/"><img src='https://i.imgur.com/7RrhYFw.png' width='275' height='67' /></a>
-                                </div>
-                                <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
-                                    {/* <a target="_blank" href="/@cognition/obzor-kriptovalyutnoi-birzhi-livecoin">{tt('exchanges_jsx.guide_user')} @cognition</a>
-                                    <br /><br />
-                                    <a target="_blank" href="https://www.livecoin.net/trading/GOLOS_BTC" className="button">GOLOS-BTC</a>&nbsp;&nbsp;<a target="_blank" href="https://www.livecoin.net/trading/GOLOS_USDT" className="button">GOLOS-USDT</a> */}
-                                    {tt('exchanges_jsx.pause')}
-                                    <br /><br />
-                                    <a href="#" className="button disabled">GOLOS-BTC</a>&nbsp;&nbsp;<a href="#" className="button disabled">GOLOS-USDT</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='column large-12 medium-12 small-12'>
-                            <hr/>
-                        </div>
-                    </div>
-                </div>
-                <div className='landing-exchanges-block'>
-                    <div className='column large-12 medium-12 small-12'>
-                        <div className='column large-12 medium-12 small-12'>
-                            <hr/>
-                        </div>
-                        <div className='column large-12 medium-12 small-12'>
-                            <div className='row'>
-                                <div className='column large-12 medium-12 small-12' align='center'>
-                                <a target="_blank" href="https://steem-engine.com/"><img src='https://i.imgur.com/KpqwZy6.png' width='182' height='125' /></a>
+                                <a target="_blank" href="https://steem-engine.net/"><img src='https://i.imgur.com/KpqwZy6.png' width='182' height='125' /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
                                     <a target="_blank" href="/@allforyou/zavodim-i-vyvodim-golosa-s-birzhi-steem-engine">{tt('exchanges_jsx.guide_user')} @allforyou</a>
                                     <br /><br />
-                                    <a target="_blank" href="https://steem-engine.com/?p=market&t=GOLOSP" className="button">GOLOS-STEEM</a>
+                                    <a target="_blank" href="https://steem-engine.net/?p=market&t=GOLOSP" className="button">GOLOS-STEEM</a>
                                 </div>
                             </div>
                         </div>
@@ -115,9 +90,9 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <p className='landing-exchanges-block-text reg landing-exchanges-block-center'>Кроме того, возможна:</p>
-                                <p>- покупка/продажа токенов через ADVcash и PAYEER, подробнее на <a target="_blank" href="/@ecurrex-ru">@ecurrex-ru <Icon name="extlink" /></a></p>
-                                <p>- торговля через P2P-сделки в телеграм-ботах <a target="_blank" href="https://t.me/TellerBot"><Icon name="new/telegram" /> TellerBot</a> или <a target="_blank" href="https://t.me/P2PDEXBitshares_bot"><Icon name="new/telegram" /> DexGarant</a></p>
+                                <p className='landing-exchanges-block-text reg landing-exchanges-block-center'>Кроме того, возможна покупка/продажа токенов:</p>
+                                <p>- через <a target="_blank" href="/@ecurrex-ru">@ecurrex-ru</a> (напр. с <a target="_blank" href="/@ecurrex-ru/ymrub-umer-da-zdravstvuet-ymrub">ADVcash и PAYEER</a>), обсуждение сервиса <a target="_blank" href="https://golostalk.com/services/@ecurrex-ru/ecurrex-tokeny-ymxxx">на форуме <Icon name="extlink" /></a></p>
+                                <p>- через P2P-сделки в телеграм-ботах <a target="_blank" href="https://t.me/TellerBot"><Icon name="new/telegram" /> TellerBot</a> или <a target="_blank" href="https://t.me/P2PDEXBitshares_bot"><Icon name="new/telegram" /> DexGarant</a></p>
                                 </div>
                             </div>
                         </div>

@@ -46,12 +46,6 @@ export default function useGeneralApi(app) {
         if (!checkCSRF(this, account.csrf)) return;
         console.log('-- /accounts -->', this.session.uid, this.session.user, account);
 
-        if ($STM_Config.disable_signups) {
-            this.body = JSON.stringify({error: 'New signups are temporary disabled.'});
-            this.status = 401;
-            return;
-        }
-
         const remote_ip = getRemoteIp(this.req);
 
         const user_id = this.session.user;
