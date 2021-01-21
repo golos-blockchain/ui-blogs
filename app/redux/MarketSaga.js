@@ -80,11 +80,11 @@ export function* fetchOpenOrders(set_user_action) {
 
     try {
         if (!operationType) {
-            const state = yield call([api, api.getOpenOrdersAsync], username, pair);
-            yield put(MarketReducer.actions.receiveOpenOrders(state));
             const assets = (yield call([api, api.getAccountsBalancesAsync], [username]))[0]
             yield put(MarketReducer.actions.upsertAssets(assets));
             yield call(getAccount, username, true);
+            const state = yield call([api, api.getOpenOrdersAsync], username, pair);
+            yield put(MarketReducer.actions.receiveOpenOrders(state));
         }
     } catch (error) {
         console.error('~~ Saga fetchOpenOrders error ~~>', error);
