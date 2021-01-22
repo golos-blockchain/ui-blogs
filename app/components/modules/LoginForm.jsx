@@ -321,8 +321,8 @@ export default connect(
             const {password, saveLogin} = data
             const username = data.username.trim().toLowerCase()
             if (loginBroadcastOperation) {
-                const {type, operation, successCallback, errorCallback} = loginBroadcastOperation.toJS()
-                dispatch(transaction.actions.broadcastOperation({type, operation, username, password, successCallback, errorCallback}))
+                const {type, operation, trx, successCallback, errorCallback} = loginBroadcastOperation.toJS()
+                dispatch(transaction.actions.broadcastOperation({type, operation, trx, username, password, successCallback, errorCallback}))
                 // Avoid saveLogin, this could be a user-provided content page and the login might be an active key.  Security will reject that...
                 dispatch(user.actions.usernamePasswordLogin({username, password, saveLogin: true, afterLoginRedirectToWelcome, operationType: type}))
                 dispatch(user.actions.closeLogin())

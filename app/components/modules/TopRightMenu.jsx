@@ -65,6 +65,11 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     const lcn = vertical ? '' : 'show-for-large';
     const scn = vertical ? '' : 'show-for-medium';
     const nav = navigate || defaultNavigate;
+    const forumlink = <li className={lcn + ' submit-story'}>
+        <a target="blank" href="https://golostalk.com" className={'button small forumlink'}>
+            <Icon name="voters" size="0_95x" />{tt('g.forumlink')}
+        </a>
+    </li>;
     const submitStory = <li className={scn + ' submit-story'}>
         <a href="/submit" onClick={nav} className={'button small alert'}>
             <Icon name="new/add" size="0_95x" />{tt('g.submit_a_story')}
@@ -161,6 +166,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
                 {faqItem}
                 {searchItem}
                 <li className="delim show-for-medium" />
+                {forumlink}
                 {submitStory}
                 {!vertical && submitStoryPencil}
                 <li className="delim show-for-medium" />

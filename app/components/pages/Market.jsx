@@ -4,13 +4,13 @@ import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { Link, browserHistory } from 'react-router';
 import tt from 'counterpart';
-import {api} from 'golos-classic-js'
+import {api, broadcast} from 'golos-classic-js'
 import transaction from 'app/redux/Transaction';
 import {longToAsset} from 'app/utils/ParsersAndFormatters';
 import TransactionError from 'app/components/elements/TransactionError';
 import Icon from 'app/components/elements/Icon';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
-import DepthChart from 'app/components/elements/DepthChart';
+import PriceChart from 'app/components/elements/PriceChart';
 import Orderbook from 'app/components/elements/Orderbook';
 import OrderHistory from 'app/components/elements/OrderHistory';
 import { Order, TradeHistory } from 'app/utils/MarketClasses';
@@ -39,20 +39,9 @@ class Market extends Component {
         sellPriceWarning: false,
         buySteemFeePct: '0%',
         sellSteemFeePct: '0%',
-        showDepthChart: false,
         sym1_list_page: 0,
         sym2_list_page: 0
     };
-
-    componentDidMount() {
-        this._depthChartTimeout = setTimeout(() => {
-            this.setState({ showDepthChart: true });
-        }, 500);
-    }
-
-    componentWillUnmount() {
-        clearTimeout(this._depthChartTimeout);
-    }
 
     componentWillReceiveProps(np) {
         if (!this.props.ticker && np.ticker) {
@@ -138,6 +127,15 @@ class Market extends Component {
             (props.assets === undefined ||
                 JSON.stringify(props.assets) !==
                     JSON.stringify(nextProps.assets))
+        ) {
+            return true;
+        }
+
+        if (
+            nextProps.history !== undefined &&
+            (props.history === undefined ||
+                JSON.stringify(props.history) !==
+                    JSON.stringify(nextProps.history))
         ) {
             return true;
         }
@@ -261,6 +259,12 @@ class Market extends Component {
         cancelOrders(
             user, sym1, sym2, () => {
             this.props.reload(user, this.props.location.pathname);
+        });
+    };
+    cancelSpecificOrdersClick = (orderids, e) => {
+        this.props.cancelSpecificOrders(this.props.user, orderids, () => {
+            this.props.notify(tt('market_jsx.orders_canceled'));
+            this.props.reload(this.props.user, this.props.location.pathname);
         });
     };
 
@@ -582,6 +586,7 @@ class Market extends Component {
             feed_price: 0,
         };
 
+        const user = this.props.user;
         const ticker0 = this.props.ticker;
         if (ticker0 !== undefined) {
             let { base, quote } = this.props.feed;
@@ -609,8 +614,8 @@ class Market extends Component {
             }
 
             return {
-                bids: orders.bids.map(o => new Order(o, 'bids', sym1, sym2, prec1, prec2)),
-                asks: orders.asks.map(o => new Order(o, 'asks', sym1, sym2, prec1, prec2)),
+                bids: orders.bids.map(o => new Order(o, 'bids', sym1, sym2, prec1, prec2, user)),
+                asks: orders.asks.map(o => new Order(o, 'asks', sym1, sym2, prec1, prec2, user)),
             };
         }
 
@@ -663,9 +668,9 @@ class Market extends Component {
                         type === 'ask' ? o.real_price : o.real_price
                     ),
                     asset1:
-                        type === 'ask' ? o.sell_price.base : o.sell_price.quote,
+                        type === 'ask' ? o.asset1 : o.asset2,
                     asset2:
-                        type === 'bid' ? o.sell_price.base : o.sell_price.quote,
+                        type === 'bid' ? o.asset1 : o.asset2,
                 };
             });
         }
@@ -724,20 +729,6 @@ class Market extends Component {
             );
         }
 
-        function tradeHistoryTable(trades) {
-            if (!trades || !trades.length) {
-                return [];
-            }
-            const norm = trades => trades.map(t => new TradeHistory(t, sym1, sym2, prec1, prec2));
-
-            return <OrderHistory 
-                        sym1={sym1}
-                        sym2={sym2}
-                        prec1={prec1}
-                        prec2={prec2}
-                        history={norm(trades)} />;
-        }
-
         let symbols1 = [];
         let symbols2 = [];
         for (let [key, value] of Object.entries(assets_right)) {
@@ -776,16 +767,27 @@ class Market extends Component {
           <a className="Market__votes_pagination" onClick={this.prevSym2ListPage}>{sym2_list_page > 0 ? '< ' + tt('g.back') : ''}</a>
           <a className="Market__votes_pagination" onClick={next_sym2_list.length > 0 ? this.nextSym2ListPage : null}>{next_sym2_list.length > 0 ? tt('g.more_list') + ' >' : ''}</a></span>});
 
+        const normalizeTrades = trades => trades.map(t => new TradeHistory(t, sym1, sym2, prec1, prec2));
+
+        const trades = this.props.history ? normalizeTrades(this.props.history) : [];
+
+        let tradeHistoryTable = [];
+        if (trades && trades.length) {
+            tradeHistoryTable = (<OrderHistory 
+                sym1={sym1}
+                sym2={sym2}
+                prec1={prec1}
+                prec2={prec2}
+                history={trades} />);
+        }
+
         return (
             <div>
                 <div className="row">
                     <div className="column small-8 show-for-medium">
-                        {this.state.showDepthChart ? (
-                            <DepthChart
-                                bids={orderbook.bids}
-                                asks={orderbook.asks}
-                            />
-                        ) : null}
+                        <PriceChart
+                            trades={trades}
+                        />
                     </div>
                     <div className="column Market__pairs"><br/><h5>
                         <DropdownMenu el="div" items={symbols1}>
@@ -1081,11 +1083,18 @@ class Market extends Component {
                                                         )[0];
                                                     }
                                                     this.refs.buySteemTotal.value = total;
-                                                    if (price >= 0)
-                                                        this.refs.buySteemAmount.value = roundDown(
+                                                    if (price >= 0) {
+                                                        let amount = roundDown(
                                                             parseFloat(total) / price,
                                                             assets_right[sym1].precision
-                                                        ).toFixed(assets_right[sym1].precision);
+                                                        );
+                                                        this.refs.buySteemAmount.value = amount.toFixed(assets_right[sym1].precision);
+                                                        let res = price * amount
+                                                        this.refs.buySteemTotal.value = roundDown(
+                                                            res,
+                                                            assets_right[sym2].precision
+                                                        ).toFixed(assets_right[sym2].precision)
+                                                    }
                                                     validateBuySteem();
                                                     fixBuyTotal();
                                                 }}
@@ -1490,6 +1499,7 @@ class Market extends Component {
                             onClick={price => {
                                 setFormPrice(price);
                             }}
+                            cancelSpecificOrdersClick={this.cancelSpecificOrdersClick}
                         />
                     </div>
 
@@ -1505,13 +1515,14 @@ class Market extends Component {
                             onClick={price => {
                                 setFormPrice(price);
                             }}
+                            cancelSpecificOrdersClick={this.cancelSpecificOrdersClick}
                         />
                     </div>
                 </div>
                 <div className="row ">
                     <div className="small-12 column">
                         <h4>{tt('market_jsx.trade_history')}</h4>
-                        {tradeHistoryTable(this.props.history)}
+                        {tradeHistoryTable}
                     </div>
                 </div>
                 {account ? (
@@ -1609,6 +1620,35 @@ export default connect(
                 transaction.actions.broadcastOperation({
                     type: 'limit_order_cancel_ex',
                     operation,
+                    confirm,
+                    successCallback: () => {
+                        successCallback();
+                    },
+                    errorCallback: (e) => {
+                        console.log(e);
+                    }
+                })
+            );
+        },
+        cancelSpecificOrders: (owner, orderids, successCallback) => {
+            const confirm = tt('market_jsx.order_cancel_confirm_few', {
+                order_cnt: orderids.length,
+                user: owner,
+            });
+            let OPERATIONS = [];
+            for (const oid of orderids) {
+                OPERATIONS.push(
+                    ['limit_order_cancel',
+                        {
+                            owner,
+                            orderid: oid
+                        }
+                    ]);
+            }
+            dispatch(
+                transaction.actions.broadcastOperation({
+                    type: 'limit_order_cancel',
+                    trx: OPERATIONS,
                     confirm,
                     successCallback: () => {
                         successCallback();

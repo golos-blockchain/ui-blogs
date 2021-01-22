@@ -46,19 +46,15 @@ export function* fetchMarket(location_change_action) {
             const state = yield call([api, api.getOrderBookExtendedAsync], 500, [sym1, sym2]);
             yield put(MarketReducer.actions.receiveOrderbook(state));
 
-            let trades;
-            if(last_trade == null ) {
-                trades = yield call([api, api.getRecentTradesAsync], 25, [sym1, sym2]);
-                yield put(MarketReducer.actions.receiveTradeHistory(trades));
-            } else {
+            let trades = yield call([api, api.getRecentTradesAsync], 25, [sym1, sym2]);
+            let trades2 = [];
+            if (trades.length > 0) {
+                let last_trade = new Date((new Date(Date.parse(trades[0]['date']))).getTime() + 1000)
                 let start = last_trade.toISOString().slice(0, -5)
-                trades = yield call([api, api.getTradeHistoryAsync], start, "1969-12-31T23:59:59", 1000, [sym1, sym2]);
-                trades = trades.reverse()
-                yield put(MarketReducer.actions.appendTradeHistory(trades));
+                trades2 = yield call([api, api.getTradeHistoryAsync], "2020-01-01T00:00:00", start, 1000, [sym1, sym2]);
+                trades2 = trades2.reverse()
             }
-            if(trades.length > 0) {
-              last_trade = new Date((new Date(Date.parse(trades[0]['date']))).getTime() + 1000)
-            }
+            yield put(MarketReducer.actions.receiveTradeHistory([...trades, ...trades2]));
 
             const state3 = yield call([api, api.getTickerAsync], [sym1, sym2]);
             yield put(MarketReducer.actions.receiveTicker(state3, [sym1, sym2]));
@@ -84,11 +80,11 @@ export function* fetchOpenOrders(set_user_action) {
 
     try {
         if (!operationType) {
-            const state = yield call([api, api.getOpenOrdersAsync], username, pair);
-            yield put(MarketReducer.actions.receiveOpenOrders(state));
             const assets = (yield call([api, api.getAccountsBalancesAsync], [username]))[0]
             yield put(MarketReducer.actions.upsertAssets(assets));
             yield call(getAccount, username, true);
+            const state = yield call([api, api.getOpenOrdersAsync], username, pair);
+            yield put(MarketReducer.actions.receiveOpenOrders(state));
         }
     } catch (error) {
         console.error('~~ Saga fetchOpenOrders error ~~>', error);
