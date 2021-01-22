@@ -558,7 +558,7 @@ class CreateAccount extends React.Component {
 
     _renderSocialButtons() {
         return (
-            <div>
+            <div align="center">
                 {!this.state.authType && tt('createaccount_jsx.or_use_socsite')}<br/>
                 <Tooltip t='VK'>
                     <VKIcon onClick={this.useVk} style={{cursor: 'pointer', marginRight: '5px'}} size={32} />
@@ -566,14 +566,14 @@ class CreateAccount extends React.Component {
                 <Tooltip t='Facebook'>
                     <FacebookIcon onClick={this.useFacebook} style={{cursor: 'pointer', marginRight: '5px'}} size={32} />
                 </Tooltip>
-                <Tooltip t='Mail.Ru'>
-                    <MailruIcon onClick={this.useMailru} style={{cursor: 'pointer', marginRight: '5px'}} size={32} />
-                </Tooltip>
                 <Tooltip t='Yandex'>
-                    <span onClick={this.useYandex} style={{cursor: 'pointer', marginRight: '5px', color: 'white' }}>
-                        <img src='/images/yandex.png' style={{ verticalAlign: 'top', paddingTop: '4px' }} />
+                    <span onClick={this.useYandex} style={{cursor: 'pointer', marginRight: '5px' }}>
+                        <img src='https://i.imgur.com/SDxA8fI.png' style={{ verticalAlign: 'top' }} />
                     </span>
                 </Tooltip>
+                <Tooltip t='Mail.Ru'>
+                    <MailruIcon onClick={this.useMailru} style={{cursor: 'pointer', marginRight: '5px'}} size={32} />
+                </Tooltip>                
             </div>
         );
     }

@@ -67,7 +67,7 @@ export default class OrderBookRow extends React.Component {
         const bid = side === "bids";
         const activeColor = order.getAsset2CurAmount() ? (bid ? 'green' : '#960000') : undefined;
         const activeTitle = order.getAsset2CurAmount() ? tt('market_jsx.your_order') : undefined;
-        const activeCancel = order.getAsset2CurAmount() ? <td style={{color: 'red'}} onClick={this.props.cancelSpecificOrdersClick.bind(this, order.idsToCancel)} title={tt('g.cancel')}><Icon size='0_75x' name='cross' /></td> : <td></td>;
+        const activeCancel = order.getAsset2CurAmount() ? <td style={{color: 'red'}} onClick={this.props.cancelSpecificOrdersClick.bind(this, order.idsToCancel)} title={tt('g.cancel')}><Icon size='0_6x' name='cross' /></td> : <td></td>;
 
         const totalTD = <td>{(total / Math.pow(10,prec2)).toFixed(prec2)}</td>;
         const asset2 = (<td>
