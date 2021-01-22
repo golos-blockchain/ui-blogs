@@ -80,6 +80,7 @@
     "libsodium": "0.4.8",
     "libsodium-wrappers": "0.4.8",
     "lightbox-react": "^0.3.7",
+    "lightweight-charts": "^3.2.0",
     "lodash": "^4.17.11",
     "minimist": "^1.2.0",
     "multistream": "^2.1.1",
