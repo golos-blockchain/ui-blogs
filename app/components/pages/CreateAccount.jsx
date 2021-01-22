@@ -110,7 +110,7 @@ class CreateAccount extends React.Component {
 
     useMailru = (e) => {
         e.preventDefault();
-        const authType = 'Facebook'
+        const authType = 'Mail.Ru'
         this.setState({
             authType
         });
