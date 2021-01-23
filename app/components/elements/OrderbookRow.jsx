@@ -71,11 +71,11 @@ export default class OrderBookRow extends React.Component {
 
         const totalTD = <td>{(total / Math.pow(10,prec2)).toFixed(prec2)}</td>;
         const asset2 = (<td>
-            {order.getAsset2CurAmount() ? <span title={activeTitle} style={{color: activeColor}}>{'(' + order.getStringAsset2Cur() + ') '}</span> : null}
+            {order.getAsset2CurAmount() ? <small><span title={activeTitle} style={{color: activeColor}}>{'(' + order.getStringAsset2Cur() + ') '}</span></small> : null}
             {order.getStringAsset2()}
         </td>);
         const asset1 = (<td>
-            {order.getAsset1CurAmount() ? <span title={activeTitle} style={{color: activeColor}}>{'(' + order.getStringAsset1Cur() + ') '}</span> : null}
+            {order.getAsset1CurAmount() ? <small><span title={activeTitle} style={{color: activeColor}}>{'(' + order.getStringAsset1Cur() + ') '}</span></small> : null}
             {order.getStringAsset1()}
         </td>);
         const price = <td><strong title={activeTitle} style={{color: activeColor}}>{order.getStringPrice()}</strong></td>;
