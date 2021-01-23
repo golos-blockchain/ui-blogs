@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { VKIcon, FacebookIcon, MailruIcon } from 'react-share';
 import tt from 'counterpart';
 import cn from 'classnames';
 import { api } from 'golos-classic-js';
@@ -565,18 +564,24 @@ class CreateAccount extends React.Component {
             <div align="center">
                 {!this.state.authType && tt('createaccount_jsx.or_use_socsite')}<br/>
                 <Tooltip t='VK'>
-                    <VKIcon onClick={this.useVk} style={{cursor: 'pointer', marginRight: '5px'}} size={32} />
+                    <span onClick={this.useVk} style={{cursor: 'pointer', marginRight: '5px' }}>
+                        <img src='https://i.imgur.com/NT939Ct.png' />
+                    </span>
                 </Tooltip>
                 <Tooltip t='Facebook'>
-                    <FacebookIcon onClick={this.useFacebook} style={{cursor: 'pointer', marginRight: '5px'}} size={32} />
+                    <span onClick={this.useFacebook} style={{cursor: 'pointer', marginRight: '5px' }}>
+                        <img src='https://i.imgur.com/cx5ywN3.png' />
+                    </span>
                 </Tooltip>
                 <Tooltip t='Yandex'>
                     <span onClick={this.useYandex} style={{cursor: 'pointer', marginRight: '5px' }}>
-                        <img src='https://i.imgur.com/SDxA8fI.png' style={{ verticalAlign: 'top' }} />
+                        <img src='https://i.imgur.com/SDxA8fI.png' />
                     </span>
                 </Tooltip>
                 <Tooltip t='Mail.Ru'>
-                    <MailruIcon onClick={this.useMailru} style={{cursor: 'pointer', marginRight: '5px'}} size={32} />
+                    <span onClick={this.useMailru} style={{cursor: 'pointer', marginRight: '5px' }}>
+                        <img src='https://i.imgur.com/OtkGX9J.png' />
+                    </span>
                 </Tooltip>                
             </div>
         );

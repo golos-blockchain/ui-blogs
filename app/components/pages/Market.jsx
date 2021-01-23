@@ -1044,7 +1044,7 @@ class Market extends Component {
                                         )}
                                     />
 
-                                    <div>
+                                    <div className="Market__balance">
                                         {(((sym2 === "GBG" || sym2 === "GOLOS") && account) || (assets && sym2 in assets)) && (
                                         <small>
                                             <a
@@ -1378,7 +1378,7 @@ class Market extends Component {
                                         )}
                                     />
 
-                                    <div>
+                                    <div className="Market__balance">
                                         {(((sym1 === "GBG" || sym1 === "GOLOS") && account) || (assets && sym1 in assets)) && (
                                         <small>
                                             <a
