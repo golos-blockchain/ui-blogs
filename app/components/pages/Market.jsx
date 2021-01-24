@@ -827,7 +827,7 @@ class Market extends Component {
                                 {symbols2.length > 0 && <Icon name="dropdown-arrow" />}
                             </span>
                         </DropdownMenu></h5>
-                        <TickerPriceStat ticker={ticker} symbol={sym2} precision={assets_right[sym2].precision} />
+                        <TickerPriceStat ticker={ticker} trades={trades} symbol={sym2} precision={assets_right[sym2].precision} />
                     </div>
                 </div>
 
