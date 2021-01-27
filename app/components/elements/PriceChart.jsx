@@ -38,8 +38,7 @@ class PriceChart extends React.Component {
             return;
         }
         this.chart = createChart(document.getElementById('PriceChart'), {
-            width: 600,
-            height: 350,
+            height: 300,
             localization: {
                 locale: tt.getLocale() === 'ru' ? 'ru-RU' : 'en-US'
             },
@@ -56,7 +55,7 @@ class PriceChart extends React.Component {
                 precision: 3,
                 minMove: 0.001
             },
-            lastValueVisible: false
+            lastValueVisible: true
         });
 
         let timeFrom0 = trades[trades.length - 1].date;
@@ -126,7 +125,7 @@ class PriceChart extends React.Component {
     render() {
         return (
             <div>
-                <div style={{height: '15px'}} />
+                <div style={{height: '25px'}} />
                 <div id="PriceChart">
                 </div>
             </div>

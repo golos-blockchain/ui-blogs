@@ -10,7 +10,6 @@ import {longToAsset} from 'app/utils/ParsersAndFormatters';
 import TransactionError from 'app/components/elements/TransactionError';
 import Icon from 'app/components/elements/Icon';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
-import DepthChart from 'app/components/elements/DepthChart';
 import PriceChart from 'app/components/elements/PriceChart';
 import Orderbook from 'app/components/elements/Orderbook';
 import OrderHistory from 'app/components/elements/OrderHistory';
@@ -40,20 +39,9 @@ class Market extends Component {
         sellPriceWarning: false,
         buySteemFeePct: '0%',
         sellSteemFeePct: '0%',
-        showDepthChart: false,
         sym1_list_page: 0,
         sym2_list_page: 0
     };
-
-    componentDidMount() {
-        this._depthChartTimeout = setTimeout(() => {
-            this.setState({ showDepthChart: true });
-        }, 500);
-    }
-
-    componentWillUnmount() {
-        clearTimeout(this._depthChartTimeout);
-    }
 
     componentWillReceiveProps(np) {
         if (!this.props.ticker && np.ticker) {
@@ -797,12 +785,6 @@ class Market extends Component {
             <div>
                 <div className="row">
                     <div className="column small-8 show-for-medium">
-                        {/*this.state.showDepthChart ? (
-                            <DepthChart
-                                bids={orderbook.bids}
-                                asks={orderbook.asks}
-                            />
-                        ) : null*/}
                         <PriceChart
                             trades={trades}
                         />
@@ -1062,7 +1044,7 @@ class Market extends Component {
                                         )}
                                     />
 
-                                    <div>
+                                    <div className="Market__balance">
                                         {(((sym2 === "GBG" || sym2 === "GOLOS") && account) || (assets && sym2 in assets)) && (
                                         <small>
                                             <a
@@ -1396,7 +1378,7 @@ class Market extends Component {
                                         )}
                                     />
 
-                                    <div>
+                                    <div className="Market__balance">
                                         {(((sym1 === "GBG" || sym1 === "GOLOS") && account) || (assets && sym1 in assets)) && (
                                         <small>
                                             <a

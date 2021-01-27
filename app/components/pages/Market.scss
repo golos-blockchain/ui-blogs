@@ -97,6 +97,10 @@ input.sell-color:hover {
   }
 }
 
+.Market__balance {
+  margin-left: -1.5rem;
+}
+
 .Market {
   &__ticker-pct-up {
     color: #080;
@@ -138,11 +142,6 @@ table.Market__trade-history > tbody > tr.animate {
 
 tr {
   transition: background-color 750ms linear;
-}
-
-.DepthChart > div {
-  margin-top: 25px;
-  height: 300px;
 }
 
 .Market__votes_pagination {

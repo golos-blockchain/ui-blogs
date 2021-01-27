@@ -67,15 +67,15 @@ export default class OrderBookRow extends React.Component {
         const bid = side === "bids";
         const activeColor = order.getAsset2CurAmount() ? (bid ? 'green' : '#960000') : undefined;
         const activeTitle = order.getAsset2CurAmount() ? tt('market_jsx.your_order') : undefined;
-        const activeCancel = order.getAsset2CurAmount() ? <td style={{color: 'red'}} onClick={this.props.cancelSpecificOrdersClick.bind(this, order.idsToCancel)} title={tt('g.cancel')}><Icon size='0_75x' name='cross' /></td> : <td></td>;
+        const activeCancel = order.getAsset2CurAmount() ? <td style={{color: 'red'}} onClick={this.props.cancelSpecificOrdersClick.bind(this, order.idsToCancel)} title={tt('g.cancel')}><Icon size='0_6x' name='cross' /></td> : <td></td>;
 
         const totalTD = <td>{(total / Math.pow(10,prec2)).toFixed(prec2)}</td>;
         const asset2 = (<td>
-            {order.getAsset2CurAmount() ? <span title={activeTitle} style={{color: activeColor}}>{'(' + order.getStringAsset2Cur() + ') '}</span> : null}
+            {order.getAsset2CurAmount() ? <small><span title={activeTitle} style={{color: activeColor}}>{'(' + order.getStringAsset2Cur() + ') '}</span></small> : null}
             {order.getStringAsset2()}
         </td>);
         const asset1 = (<td>
-            {order.getAsset1CurAmount() ? <span title={activeTitle} style={{color: activeColor}}>{'(' + order.getStringAsset1Cur() + ') '}</span> : null}
+            {order.getAsset1CurAmount() ? <small><span title={activeTitle} style={{color: activeColor}}>{'(' + order.getStringAsset1Cur() + ') '}</span></small> : null}
             {order.getStringAsset1()}
         </td>);
         const price = <td><strong title={activeTitle} style={{color: activeColor}}>{order.getStringPrice()}</strong></td>;
