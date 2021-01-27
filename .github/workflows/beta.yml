@@ -1,0 +1,22 @@
+name: Build golos-ui-beta docker image
+
+on:
+  push:
+    branches:
+      - beta
+
+jobs:
+  build_beta:
+    name: Build golos-ui-beta image
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          repository: vizlex/golos-ui-test
+          dockerfile: ./Dockerfile
+          tags: latest
