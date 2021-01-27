@@ -19,7 +19,7 @@ mkdir tmp
 #### Using Docker
 Run all services (production mode):
 ```
-docker-compose up
+sudo docker-compose up
 ```
 
 #### Install dependencies
