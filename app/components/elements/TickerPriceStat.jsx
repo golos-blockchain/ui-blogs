@@ -1,22 +1,41 @@
 import React from 'react';
 import tt from 'counterpart';
+import { Asset } from 'golos-classic-js/lib/utils';
 
 export default class TickerPriceStat extends React.Component {
 
     render() {
-        const {ticker, symbol, precision} = this.props;
-        const pct_change = <span className={'Market__ticker-pct-' + (ticker.percent_change1 < 0 ? 'down' : 'up')}>
-                {ticker.percent_change1 < 0 ? '' : '+'}{ticker.percent_change1.toFixed(3)}%
+        const {ticker, trades, symbol, precision} = this.props;
+
+        let open = parseFloat(0);
+        let latest = parseFloat(0);
+        let asset2_volume = Asset(0, precision, symbol);
+        const newDate = Date.now() -1*24*3600*1000;
+        const now = new Date(newDate);
+        if (trades.length) {
+            latest = trades[0].price;
+            for (let trade of trades) {
+                if (trade.date < now) break;
+                open = trade.price;
+                const asset2 = trade.asset2 * Math.pow(10, precision);
+                asset2_volume.amount += asset2;
+            }
+        }
+
+        let percent_change1 = open ? ((latest - open) / open * 100) : 0.0;
+
+        const pct_change = <span className={'Market__ticker-pct-' + (percent_change1 < 0 ? 'down' : 'up')}>
+                {percent_change1 < 0 ? '' : '+'}{percent_change1.toFixed(3)}%
               </span>
         return (
             <div className="TickerPriceStat">
                 <div>
                     <b>{tt('market_jsx.last_price')} </b>
-                    <span>{symbol} {ticker.latest1.toFixed(precision)} ({pct_change})</span>
+                    <span>{symbol} {latest.toFixed(precision)} ({pct_change})</span>
                 </div>
                 <div>
                     <b>{tt('market_jsx.24h_volume')} </b>
-                    <span>{symbol} {ticker.asset2_volume.toFixed(2)}</span>
+                    <span>{symbol} {asset2_volume.toString().split(' ')[0]}</span>
                 </div>
                 <div>
                     <b>{tt('g.bid')} </b>
