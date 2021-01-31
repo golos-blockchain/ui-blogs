@@ -1708,7 +1708,7 @@ export default connect(
                           (isSell ? 'below' : 'above'),
                       {
                           marketPrice:
-                              sym2 +
+                              sym2 + ' ' +
                               parseFloat(marketPrice).toFixed(assets_right[sym2].precision) +
                               '/' +
                               sym1,
