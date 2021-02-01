@@ -49,9 +49,32 @@ class Exchanges extends React.Component {
                                 <a target="_blank" href="https://rudex.org/"><img src='https://i.imgur.com/RyCrpvb.png' width='275' height='77' /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
-                                    <a target="_blank" href="/@allforyou/golos-delistyat-s-kuny-perekhodim-na-rudex">{tt('exchanges_jsx.guide_user')} @allforyou</a>
+                                    <a target="_blank" href="/@allforyou/golos-delistyat-s-kuny-perekhodim-na-rudex">{tt('exchanges_jsx.guide_user')}</a> <Icon name="extlink" />
                                     <br /><br />
                                     <a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_RUDEX.BTC" className="button">GOLOS-BTC</a>&nbsp;&nbsp;<a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_RUDEX.USDT" className="button">GOLOS-USDT</a>&nbsp;&nbsp;<a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_BTS" className="button">GOLOS-BTS</a>&nbsp;&nbsp;<a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_RUBLE" className="button">GOLOS-RUBLE</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='column large-12 medium-12 small-12'>
+                            <hr/>
+                        </div>
+                    </div>
+                </div>
+                <div className='landing-exchanges-block'>
+                    <div className='column large-12 medium-12 small-12'>
+                        <div className='column large-12 medium-12 small-12'>
+                            <hr/>
+                        </div>
+                        <div className='column large-12 medium-12 small-12'>
+                            <div className='row'>
+                                <div className='column large-12 medium-12 small-12' align='center'>
+                                <a target="_blank" href="/market"><img src='https://i.imgur.com/QvsAZmu.png' width='285' height='77' /></a>
+                                </div>
+                                <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
+                                    <p><a target="_blank" href="/@allforyou/torguem-na-vnutrennei-birzhe-golosa">Внутренняя биржа</a>, на которой также возможно покупать/продавать токены GOLOS через пользовательские шлюзы, напр. к <small>YMRUB, DOGECOIN, PRIZM</small> и другим активам.</p>
+                                    <p><Icon name="line" /> <a target="_blank" href="/@ecurrex-ru/ymrub-umer-da-zdravstvuet-ymrub">YMRUB</a> <small>(эквивалент рубля, с поддержкой ADVcash и PAYEER)</small>, обсуждение сервиса <a target="_blank" href="https://golostalk.com/services/@ecurrex-ru/ecurrex-tokeny-ymxxx">на форуме</a></p>
+                                    <p><Icon name="line" /> <a target="_blank" href="@golos.doge/doge-dogecoin-na-golose-avtomaticheskii-shlyuz-vvod-vyvod-i-torgi-na-vnutrennei-birzhe">DOGECOIN</a> <small>(позволяющий вести обмен через популярные биржи)</small> от эмитента <a target="_blank" href="/@golos.doge">@golos.doge</a></p>
+                                    <p><Icon name="line" /> <a target="_blank" href="/@ecurrex-ru/prizm-na-golose">YMPZM</a> <small>(шлюз к блокчейну PRIZM)</small> от эмитента <a target="_blank" href="/@ecurrex-ru">@ecurrex-ru</a></p>
                                 </div>
                             </div>
                         </div>
@@ -71,7 +94,7 @@ class Exchanges extends React.Component {
                                 <a target="_blank" href="https://steem-engine.net/"><img src='https://i.imgur.com/KpqwZy6.png' width='182' height='125' /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
-                                    <a target="_blank" href="/@allforyou/zavodim-i-vyvodim-golosa-s-birzhi-steem-engine">{tt('exchanges_jsx.guide_user')} @allforyou</a>
+                                    <a target="_blank" href="/@allforyou/zavodim-i-vyvodim-golosa-s-birzhi-steem-engine">{tt('exchanges_jsx.guide_user')}</a> <Icon name="extlink" />
                                     <br /><br />
                                     <a target="_blank" href="https://steem-engine.net/?p=market&t=GOLOSP" className="button">GOLOS-STEEM</a>
                                 </div>
@@ -90,9 +113,8 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <p className='landing-exchanges-block-text reg landing-exchanges-block-center'>Кроме того, возможна покупка/продажа токенов:</p>
-                                <p>- через <a target="_blank" href="/@ecurrex-ru">@ecurrex-ru</a> (напр. с <a target="_blank" href="/@ecurrex-ru/ymrub-umer-da-zdravstvuet-ymrub">ADVcash и PAYEER</a>), обсуждение сервиса <a target="_blank" href="https://golostalk.com/services/@ecurrex-ru/ecurrex-tokeny-ymxxx">на форуме <Icon name="extlink" /></a></p>
-                                <p>- через P2P-сделки в телеграм-ботах <a target="_blank" href="https://t.me/TellerBot"><Icon name="new/telegram" /> TellerBot</a> или <a target="_blank" href="https://t.me/P2PDEXBitshares_bot"><Icon name="new/telegram" /> DexGarant</a></p>
+                                <p className='landing-exchanges-block-text reg landing-exchanges-block-center'>Возможен обмен токенов:</p>
+                                <p>через P2P-сделки в телеграм-ботах <a target="_blank" href="https://t.me/TellerBot"><Icon name="new/telegram" /> TellerBot</a> или <a target="_blank" href="https://t.me/P2PDEXBitshares_bot"><Icon name="new/telegram" /> DexGarant</a></p>
                                 </div>
                             </div>
                         </div>
