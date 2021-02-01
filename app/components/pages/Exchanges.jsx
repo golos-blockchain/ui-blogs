@@ -68,7 +68,7 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <a target="_blank" href="/market"><img src='https://i.imgur.com/B81WnJk.png' width='275' height='77' /></a>
+                                <a target="_blank" href="/market"><img src='https://i.imgur.com/QvsAZmu.png' width='285' height='77' /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
                                     <p><a target="_blank" href="/@allforyou/torguem-na-vnutrennei-birzhe-golosa">Внутренняя биржа</a>, на которой также возможно покупать/продавать токены GOLOS через пользовательские шлюзы, напр. к <small>YMRUB, DOGECOIN, PRIZM</small> и другим активам.</p>
