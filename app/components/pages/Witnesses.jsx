@@ -270,7 +270,7 @@ class Witnesses extends Component {
                 <div className="row">
                     <div className="column">
                         <a target="_blank" href="https://t.me/golos_delegates" className="golos-btn btn-secondary btn-round" style={{ float: 'right', marginTop: '0.75rem' }}><Icon name="new/telegram" /> {tt('witnesses_jsx.chat_delegates')}</a>
-                        <a target="_blank" href="https://props.golos.today/chainprops" className="golos-btn btn-secondary btn-round" style={{ float: 'right', marginTop: '0.75rem' }}>{tt('witnesses_jsx.chain_properties')} <Icon name="extlink" /></a>
+                        <a target="_blank" href="https://props.golos.today/chainprops" className="golos-btn btn-secondary btn-round" style={{ float: 'right', marginTop: '0.75rem' }}><Icon name="extlink" /> {tt('witnesses_jsx.chain_properties')}</a>
                         <h2>{tt('witnesses_jsx.top_witnesses')}</h2>
                         <div className="column secondary">
                             {tt('witnesses_jsx.witness_info')} <a target="_blank" href="https://wiki.golos.id/witnesses/basics">{tt('g.more_hint')}</a> <Icon name="extlink" size="1_5x" />

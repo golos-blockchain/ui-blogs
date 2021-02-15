@@ -1,6 +1,0 @@
-User-agent: *
-Disallow: /favicons
-Disallow: /assets/
-Disallow: /xss/test
-Host: https://golos.id
-Sitemap: https://golos.id/sitemap.xml
