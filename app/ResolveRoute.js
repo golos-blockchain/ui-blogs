@@ -83,7 +83,7 @@ export default function resolveRoute(path)
     if (path === '/leave_page') {
         return {page: 'LeavePage'};
     }
-    if (path === '/search') {
+    if (path === '/search' || path.startsWith('/search/')) {
         return {page: 'Search'};
     }
     match = path.match(routeRegex.WorkerRequest)

@@ -6,6 +6,8 @@ import Icon from 'app/components/elements/Icon';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Remarkable from 'remarkable';
 import remarkableStripper from 'app/utils/RemarkableStripper';
+import { detransliterate } from 'app/utils/ParsersAndFormatters';
+import truncate from 'lodash/truncate';
 import Pagination from 'rc-pagination';
 if (typeof(document) !== 'undefined') require('rc-pagination/assets/index.css');
 let Multiselect;
@@ -16,16 +18,18 @@ const remarkable = new Remarkable({ html: true, linkify: false })
 class Search extends React.Component {
     constructor(props) {
         super(props);
+        const {routeParams} = props;
         this.state = {
             query: '',
             queryOp: 'match',
             page: 1,
-            where: tt('search.where_anywhere'),
+            where: tt('search.where_posts'),
             dateFrom: '',
             dateTo: '',
             authorLookup: [],
-            author: '',
-            tagLookup: []
+            author: routeParams.author || '',
+            tagLookup: [],
+            tags: []
         };
     }
 
@@ -116,6 +120,13 @@ class Search extends React.Component {
                 }
             });
         }
+        if (this.state.tags.length) {
+            filters.push({
+                "terms": {
+                    "tags": this.state.tags
+                }
+            });
+        }
 
         let url = new URL($STM_Config.elastic_search.url);
         url += 'blog/post/_search?pretty';
@@ -131,7 +142,7 @@ class Search extends React.Component {
                                 "match_phrase_prefix": {
                                     "category": "fm-"
                                 }
-                            }
+                            },
                         }
                     },
                     "must": [
@@ -148,7 +159,7 @@ class Search extends React.Component {
                     "body": {}
                 }
             },
-            "fields": ["author", "permlink", "category", "title", "body", "root_title", "root_author", "root_permlink", "created"]
+            "fields": ["author", "tags", "permlink", "category", "title", "body", "root_title", "root_author", "root_permlink", "created"]
         };
         const response = await fetch(url, {
             method: 'post',
@@ -222,13 +233,41 @@ class Search extends React.Component {
             });
         });
     };
+    handleAuthorSelect = (selectedList, selectedItem) => {
+        document.getElementById('search_input').style.display = 'none';
+        document.activeElement.blur();
+        this._reloadWithSettings({
+            author: selectedItem
+        });
+    };
+    handleAuthorRemove = (selectedList, removedItem) => {
+        document.getElementById('search_input').style.display = 'inline-block';
+        this._reloadWithSettings({
+            author: ''
+        });
+    };
 
+    makeTag = (text) => {
+        return /^[а-яё]/.test(text)
+            ? '' + detransliterate(text, true)
+            : text;
+    };
     handleTagLookup = (value) => {
         setTimeout(() => {
             this.setState({
-                tagLookup: [value]
+                tagLookup: [{text: value, value: this.makeTag(value)}]
             });
         }, 1);
+    };
+    handleTagSelect = (selectedList, selectedItem) => {
+        this._reloadWithSettings({
+            tags: [...this.state.tags, selectedItem.value]
+        });
+    };
+    handleTagRemove = (selectedList, selectedItem) => {
+        this._reloadWithSettings({
+            tags: this.state.tags.filter(item => item !== selectedItem.value)
+        });
     };
 
     render() {
@@ -254,7 +293,7 @@ class Search extends React.Component {
                     url += '#@' + author + '/' + permlink;
                 }
                 let body = hit.highlight && hit.highlight.body;
-                body = body ? body[0].split('</em> <em>').join(' ') : hit.fields.body[0].substring(0, 100);
+                body = body ? body[0].split('</em> <em>').join(' ') : truncate(hit.fields.body[0], {length: 200});
 
                 return (<div className='golossearch-results'>
                         <Link to={url}><h6 dangerouslySetInnerHTML={{__html: title}}></h6></Link>
@@ -320,19 +359,24 @@ class Search extends React.Component {
                     closeOnSelect='true'
                     closeIcon="cancel"
                     placeholder={tt('g.author')}
+                    selectedValues={this.state.author ? [this.state.author] : undefined}
                     onSearch={this.handleAuthorLookup}
+                    onSelect={this.handleAuthorSelect}
+                    onRemove={this.handleAuthorRemove}
                     /> : null}
                 &nbsp;&nbsp;
                 {Multiselect ? <Multiselect
                     className='esearch-tags'
                     options={this.state.tagLookup}
-                    isObject={false}
+                    displayValue='text'
                     selectionLimit="3"
                     emptyRecordMsg='Тэги'
                     closeOnSelect='true'
                     closeIcon="cancel"
                     placeholder='Тэги'
                     onSearch={this.handleTagLookup}
+                    onSelect={this.handleTagSelect}
+                    onRemove={this.handleTagRemove}
                     /> : null}
               </div>
               {display}
@@ -349,6 +393,6 @@ class Search extends React.Component {
 
 
 module.exports = {
-    path: '/search',
+    path: '/search(/:author)',
     component: Search
 };
