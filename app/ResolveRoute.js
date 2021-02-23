@@ -83,6 +83,9 @@ export default function resolveRoute(path)
     if (path === '/leave_page') {
         return {page: 'LeavePage'};
     }
+    if (path === '/search') {
+        return {page: 'Search'};
+    }
     match = path.match(routeRegex.WorkerRequest)
         || path.match(routeRegex.WorkerSearchByAuthor)
         || path.match(routeRegex.WorkerSort);

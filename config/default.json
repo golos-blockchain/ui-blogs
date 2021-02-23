@@ -72,6 +72,11 @@
     "host": "127.0.0.1"
   },
   "ads_per_post": 20,
+  "elastic_search": {
+    "url": "http://betasearch.golos.today",
+    "login": "golosclient",
+    "password": "golosclient"
+  },
   "gmail_send": {
       "user": false,
       "pass": false
