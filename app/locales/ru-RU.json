@@ -184,7 +184,11 @@
     "where_posts": "В постах",
     "where_comments": "В комментариях",
     "where_anywhere": "Искать везде",
-    "alltime": "За все время"
+    "alltime": "За все время",
+    "search_in": "Искать в ",
+    "yandex": "Яндекс",
+    "or": " или ",
+    "google": "Google"
   },
   "g": {
     "golos_fest": "Новости",

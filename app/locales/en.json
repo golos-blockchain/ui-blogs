@@ -18,7 +18,11 @@
     "where_posts": "In posts",
     "where_comments": "In comments",
     "where_anywhere": "Everywhere",
-    "alltime": "For all time"
+    "alltime": "For all time",
+    "search_in": "Search with ",
+    "yandex": "Yandex",
+    "or": " or ",
+    "google": "Google"
   },
   "g": {
     "golos_fest": "Golos.id News",

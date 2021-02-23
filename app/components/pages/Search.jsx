@@ -121,9 +121,10 @@ class Search extends React.Component {
             });
         }
         if (this.state.tags.length) {
+            for (let tag of this.state.tags)
             filters.push({
-                "terms": {
-                    "tags": this.state.tags
+                "term": {
+                    "tags": tag
                 }
             });
         }
@@ -295,6 +296,8 @@ class Search extends React.Component {
                 let body = hit.highlight && hit.highlight.body;
                 body = body ? body[0].split('</em> <em>').join(' ') : truncate(hit.fields.body[0], {length: 200});
 
+                if (this.state.author && author !== this.state.author) return null;
+
                 return (<div className='golossearch-results'>
                         <Link to={url}><h6 dangerouslySetInnerHTML={{__html: title}}></h6></Link>
                         <Link to={url}><div style={{color: 'rgb(180, 180, 180)'}}>
@@ -333,22 +336,22 @@ class Search extends React.Component {
         return (<div className="App-search">
               <div className='esearch-box'>
                   <input className='esearch-input' placeholder={tt('search.placeholder')} type='text' onKeyUp={this.search} onChange={this.onChange} />
+                    <select onChange={this.handleWhereChange}>
+                        <option value={tt('search.where_posts')}>{tt('search.where_posts')}</option>
+                        <option value={tt('search.where_comments')}>{tt('search.where_comments')}</option>
+                        <option value={tt('search.where_anywhere')}>{tt('search.where_anywhere')}</option>
+                    </select>
+                    &nbsp;&nbsp;
                   <input type="submit" className="button" value={tt('g.search')} onClick={this.search} />
               </div>
               <div className='esearch-settings'>
-                <select onChange={this.handleWhereChange}>
-                    <option value={tt('search.where_posts')}>{tt('search.where_posts')}</option>
-                    <option value={tt('search.where_comments')}>{tt('search.where_comments')}</option>
-                    <option value={tt('search.where_anywhere')}>{tt('search.where_anywhere')}</option>
-                </select>
-                &nbsp;&nbsp;
                 <input type='date' value={this.state.dateFrom} onChange={this.handleDateFromChange} />
                 &nbsp;—&nbsp;
                 <input type='date' value={this.state.dateTo} onChange={this.handleDateToChange} />
                 &nbsp;&nbsp;
-                <span className='button small hollow esearch-btn-alltime' onClick={this.handleDateClear}>
-                    <Icon name="cross" size="0_95x" />&nbsp;&nbsp;{tt('search.alltime')}
-                </span>
+                {(this.state.dateFrom || this.state.dateTo) ? <span className='button small hollow esearch-btn-alltime' title={tt('search.alltime')} onClick={this.handleDateClear}>
+                    <Icon name="cross" size="0_95x" />
+                </span> : null}
                 &nbsp;&nbsp;
                 {Multiselect ? <Multiselect
                     className='esearch-author'
@@ -382,9 +385,11 @@ class Search extends React.Component {
               {display}
               <br/>
               <br/>
-              <a href='/static/search.html'>
-                <img style={{width: '500px'}} src='images/yandex_google.jpg' title='Yandex / Google' />
-              </a>
+              <hr/>
+              {tt('search.search_in')}
+              <a href={'https://yandex.ru/search/site/?searchid=2415103&text=' + this.state.query}>{tt('search.yandex')}</a>
+              {tt('search.or')}
+              <a href={'https://www.google.ru/search?lr=&q=' + this.state.query + ' site:golos.id'}>{tt('search.google')}</a>
               <br/>
               <br/>
           </div>);
