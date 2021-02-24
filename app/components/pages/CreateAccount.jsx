@@ -271,7 +271,7 @@ class CreateAccount extends React.Component {
                                             <span style={{ color: 'red' }}>
                                                 *
                                             </span>{' '}
-                                            {'Введите вашу gmail.com почту'} (создать её можно <a target="_blank" href="https://accounts.google.com/signup/v2/webcreateaccount?hl=ru&flowName=GlifWebSignIn&flowEntry=SignUp">по ссылке</a>) 
+                                            {'Введите вашу gmail.com почту'} (создать <a target="_blank" href="https://accounts.google.com/signup/v2/webcreateaccount?hl=ru&flowName=GlifWebSignIn&flowEntry=SignUp">по ссылке</a>) 
                                             <input
                                                 type="text"
                                                 name="email"

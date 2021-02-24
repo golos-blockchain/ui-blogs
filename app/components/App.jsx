@@ -52,7 +52,8 @@ const availableDomains = [
     'sharpay.io',
     'coins.black',
     'golos.chatbro.com',
-    'accounts.google.com'
+    'yandex.ru',
+    'google.com'
 ];
 
 class App extends React.Component {
