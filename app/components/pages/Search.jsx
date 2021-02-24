@@ -10,6 +10,8 @@ import remarkableStripper from 'app/utils/RemarkableStripper';
 import { detransliterate } from 'app/utils/ParsersAndFormatters';
 import truncate from 'lodash/truncate';
 import Pagination from 'rc-pagination';
+import localeEn from 'rc-pagination/lib/locale/en_US';
+import localeRu from 'rc-pagination/lib/locale/ru_RU';
 if (typeof(document) !== 'undefined') require('rc-pagination/assets/index.css');
 let Multiselect;
 if (typeof(document) !== 'undefined') Multiselect = require('multiselect-react-dropdown').Multiselect;
@@ -320,6 +322,7 @@ class Search extends React.Component {
                 onChange={this.changePage}
                 total={totalPosts}
                 style={{ float: 'right', margin: 0 }}
+                locale={tt.getLocale() === 'ru' ? localeRu : localeEn}
               />
               <br/>
               <br/>
@@ -331,6 +334,7 @@ class Search extends React.Component {
                 onChange={this.changePage}
                 total={totalPosts}
                 style={{ float: 'right', margin: 0 }}
+                locale={tt.getLocale() === 'ru' ? localeRu : localeEn}
               />
               </div>);
         }
