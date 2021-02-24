@@ -229,7 +229,7 @@ class Search extends React.Component {
     };
 
     handleAuthorLookup = (value) => {
-        golos.api.lookupAccounts(value, 6, (err, data) => {
+        golos.api.lookupAccounts(value.toLowerCase(), 6, (err, data) => {
             this.setState({
                 authorLookup: data
             });
@@ -257,7 +257,7 @@ class Search extends React.Component {
     handleTagLookup = (value) => {
         setTimeout(() => {
             this.setState({
-                tagLookup: [{text: value, value: this.makeTag(value)}]
+                tagLookup: [{text: value.toLowerCase(), value: this.makeTag(value.toLowerCase())}]
             });
         }, 1);
     };
