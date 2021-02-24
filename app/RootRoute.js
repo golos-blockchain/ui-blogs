@@ -56,6 +56,8 @@ export default {
             cb(null, [require('@pages/NodesLoader')]);
         } else if (route.page === 'LeavePage') {
             cb(null, [require('@pages/LeavePage')]);
+        } else if (route.page === 'Search') {
+            cb(null, [require('@pages/Search')]);
         } else if (route.page === 'SubmitPost') {
             if (process.env.BROWSER) cb(null, [require('@pages/SubmitPost')]);
             else cb(null, [require('@pages/SubmitPostServerRender')]);

@@ -1,0 +1,54 @@
+.App-search {
+    margin-left: 90px;
+    margin-right: 90px;
+}
+
+.esearch-box {
+    margin-top: 50px;
+}
+
+.esearch-input {
+    width: calc(100% - 280px);
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.esearch-settings {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.esearch-box select {
+    margin-top: 1px;
+    width: 180px;
+}
+
+.esearch-settings input {
+    width: 180px;
+    display: inline-block;
+}
+
+.esearch-btn-alltime {
+    margin-top: -2px;
+    margin-bottom: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.multiselect-container {
+    display: inline-block;
+    width: auto !important;
+}
+
+.golossearch-results h6 {
+    margin-bottom: 0px;
+}
+
+.golossearch-results em {
+    background-color: yellow;
+    font-style: normal;
+}
+
+.gsc-search-box table {
+    margin-bottom: 0px;
+}
