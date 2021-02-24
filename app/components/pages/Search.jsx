@@ -137,19 +137,15 @@ class Search extends React.Component {
             "size": 20,
             "query": {
                 "bool": {
-                    "should": {
-                        "bool": {
-                            "must_not": {
-                                "match_phrase_prefix": {
-                                    "category": "fm-"
-                                }
-                            },
-                        }
-                    },
                     "must": [
                         ...main,
                         ...filters
-                    ]
+                    ],
+                    "must_not": {
+                        "match_phrase_prefix": {
+                            "category": "fm-"
+                        }
+                    }
                 }
             },
             ...sort,
