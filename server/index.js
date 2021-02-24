@@ -20,7 +20,8 @@ global.$STM_Config = {
     site_domain: config.get('site_domain'),
     google_analytics_id: config.get('google_analytics_id'),
     chain_id: config.get('chain_id'),
-    ads_per_post: config.get('ads_per_post')
+    ads_per_post: config.get('ads_per_post'),
+    elastic_search: config.get('elastic_search')
 };
 
 const WebpackIsomorphicTools = require('webpack-isomorphic-tools');

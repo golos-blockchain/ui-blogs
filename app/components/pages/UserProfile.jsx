@@ -338,7 +338,8 @@ export default class UserProfile extends React.Component {
                 <UserKeys account={accountImm} />
                 { isMyAccount && <div><MarkNotificationRead fields="send,receive" account={account.name} /></div>}
                 </div>;
-        } else if( section === 'invites' && isMyAccount ) {
+        } 
+        else if( section === 'invites' && isMyAccount ) {
             walletClass = 'active'
             tab_content = <div>
                  <WalletSubMenu account_name={account.name} isMyAccount={isMyAccount} />
@@ -346,7 +347,8 @@ export default class UserProfile extends React.Component {
                 <br />
                 <Invites account={accountImm} />
                 </div>;
-        } else if( section === 'password' ) {
+        } 
+        else if( section === 'password' ) {
             walletClass = 'active'
             tab_content = <div>
                     <WalletSubMenu account_name={account.name} isMyAccount={isMyAccount} />
@@ -358,13 +360,7 @@ export default class UserProfile extends React.Component {
         else if( section === 'witness' ) {
             tab_content = <WitnessProps 
                 account={account} />
-        } /*else if( section === 'invites' ) {
-            walletClass = 'active'
-            tab_content = <div>
-                    <WalletSubMenu account_name={account.name} isMyAccount={isMyAccount} />
-                    <br />
-                </div>
-        }*/
+        } 
 
         if (!(section === 'transfers' ||
               section === 'assets' ||
@@ -414,7 +410,8 @@ export default class UserProfile extends React.Component {
                     <Link className="UserProfile__menu-item" to={`/@${accountname}/recent-replies`} activeClassName="active">
                         {tt('g.replies')} {isMyAccount && <NotifiCounter fields="comment_reply" />}
                     </Link>
-                    {/*<li><Link to={`/@${accountname}/feed`} activeClassName="active">Feed</Link></li>*/}
+                    <Link target="_blank" className="UserProfile__menu-item" to={`/search/@${accountname}`}>{tt('g.search')}
+                    </Link>
                     <LinkWithDropdown
                         closeOnClickOutside
                         dropdownPosition="bottom"

@@ -12,6 +12,18 @@
     "TIP_TOKEN": "TIP balance",
     "CLAIM_TOKEN": "CLAIM balance"
   },
+  "search": {
+    "placeholder": "Search for posts and comments",
+    "results": "Results: ",
+    "where_posts": "In posts",
+    "where_comments": "In comments",
+    "where_anywhere": "Everywhere",
+    "alltime": "For all time",
+    "search_in": "Search with ",
+    "yandex": "Yandex",
+    "or": " or ",
+    "google": "Google"
+  },
   "g": {
     "golos_fest": "Golos.id News",
     "APP_NAME": "Golos",
@@ -20,6 +32,7 @@
     "30_day": "30 day",
     "to_ask": "To ask",
     "add": "Add",
+    "author": "Author",
     "age": "age",
     "all_langs": "All languages",
     "amount": "Amount",
@@ -311,6 +324,7 @@
     "sign_up": "Sign Up",
     "welcome": "Welcome",
     "feedback": "Feedback",
+    "search": "Search by content",
     "services": "Useful services/bots",
     "wiki": "Documentation (Wiki)",
     "faq": "FAQ",
