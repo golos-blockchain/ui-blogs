@@ -1,6 +1,7 @@
 import React from 'react';
 import golos from 'golos-classic-js';
 import { Link } from 'react-router';
+import { browserHistory } from 'react-router';
 import tt from 'counterpart';
 import Icon from 'app/components/elements/Icon';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
@@ -18,16 +19,21 @@ const remarkable = new Remarkable({ html: true, linkify: false })
 class Search extends React.Component {
     constructor(props) {
         super(props);
-        const {routeParams} = props;
+        const { routeParams } = props;
+        let query = routeParams.query || '';
+        let author = '';
+        if (query.startsWith('@')) {
+            author = query.substring(1);
+            query = '';
+        }
         this.state = {
-            query: '',
-            queryOp: 'match',
+            query,
             page: 1,
             where: tt('search.where_posts'),
             dateFrom: '',
             dateTo: '',
             authorLookup: [],
-            author: routeParams.author || '',
+            author,
             tagLookup: [],
             tags: []
         };
@@ -38,15 +44,8 @@ class Search extends React.Component {
     }
 
     onChange = (e) => {
-        let query = e.target.value;
-        let queryTrimmed = query.trim();
-        let queryOp = 'match';
-        if (queryTrimmed.length >= 3 && queryTrimmed[0] === '"' && queryTrimmed[queryTrimmed.length - 1] === '"') {
-            queryOp = 'match_phrase';
-        }
         this.setState({
-            query,
-            queryOp
+            query: e.target.value
         });
     };
 
@@ -54,16 +53,21 @@ class Search extends React.Component {
         let sort = {};
         let main = [];
         if (this.state.query) {
+            let queryTrimmed = this.state.query.trim();
+            let queryOp = 'match';
+            if (queryTrimmed.length >= 3 && queryTrimmed[0] === '"' && queryTrimmed[queryTrimmed.length - 1] === '"') {
+                queryOp = 'match_phrase';
+            }
             main = [{
                 "bool": {
                     "should": [
                         {
-                            [this.state.queryOp]: {
+                            [queryOp]: {
                                 "title": this.state.query
                             }
                         },
                         {
-                            [this.state.queryOp]: {
+                            [queryOp]: {
                                 "body": this.state.query
                             }
                         } 
@@ -115,7 +119,7 @@ class Search extends React.Component {
         }
         if (this.state.author) {
             filters.push({
-                "term": {
+                "match_phrase": {
                     "author": this.state.author
                 }
             });
@@ -185,6 +189,7 @@ class Search extends React.Component {
         if (e.type === 'keyup' && e.keyCode != 13) {
             return;
         }
+        browserHistory.push('/search/' + this.state.query);
         this.fetchSearch(1);
     };
 
@@ -296,11 +301,11 @@ class Search extends React.Component {
 
                 return (<div className='golossearch-results'>
                         <Link to={url}><h6 dangerouslySetInnerHTML={{__html: title}}></h6></Link>
-                        <Link to={url}><div style={{color: 'rgb(180, 180, 180)'}}>
+                        <Link to={url}><span style={{color: 'rgb(180, 180, 180)'}}>
                             <TimeAgoWrapper date={hit.fields.created[0]} />
                             &nbsp;—&nbsp;@
                             {hit.fields.author[0]}
-                        </div></Link>
+                        </span></Link>
                         <div dangerouslySetInnerHTML={{__html: remarkableStripper.render(body)}}></div>
                         <br/>
                     </div>);
@@ -331,7 +336,7 @@ class Search extends React.Component {
         }
         return (<div className="App-search">
               <div className='esearch-box'>
-                  <input className='esearch-input' placeholder={tt('search.placeholder')} type='text' onKeyUp={this.search} onChange={this.onChange} />
+                  <input value={this.state.query} className='esearch-input' placeholder={tt('search.placeholder')} type='text' onKeyUp={this.search} onChange={this.onChange} />
                     <select onChange={this.handleWhereChange}>
                         <option value={tt('search.where_posts')}>{tt('search.where_posts')}</option>
                         <option value={tt('search.where_comments')}>{tt('search.where_comments')}</option>
@@ -394,6 +399,6 @@ class Search extends React.Component {
 
 
 module.exports = {
-    path: '/search(/:author)',
+    path: '/search(/:query)',
     component: Search
 };
