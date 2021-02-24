@@ -107,7 +107,7 @@ export function contentStats(content) {
     const allowDelete = !hasPositiveRshares && content.get('children') === 0
     const authorRepLog10 = repLog10(content.get('author_reputation'))
 
-    const gray = authorRepLog10 < 1 || (authorRepLog10 < 75 && meetsGrayThreshold)
+    const gray = authorRepLog10 < 0 || (authorRepLog10 < 75 && meetsGrayThreshold)
     const hide = authorRepLog10 < 0 || meetsHideThreshold
     const pictures = !gray
 

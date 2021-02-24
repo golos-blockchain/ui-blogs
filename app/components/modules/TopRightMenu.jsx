@@ -88,16 +88,14 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     const donatesLink = `/@${username}/donates-to`;
 
     const faqItem = <li className={scn}>
-        <Link to="/faq" title={tt('navigation.faq')}>
-          {vertical ? <span>{tt('navigation.faq')}</span> : <Icon name="info_o" size="1_5x" />}
+        <Link to="/faq" title={tt('navigation.faq')}><Icon name="info_o" size="1_5x" />
         </Link>
       </li>
     ;
 
     const searchItem = <li className={scn}>
-        <a target="blank" href="/search" title={tt('g.search')}>
-          {vertical ? <span>{tt('g.search')}</span> : <Icon name="new/search" size="1_25x" />}
-        </a>
+        <Link to="/search" title={tt('navigation.search')}><Icon name="new/search" size="1_25x" />
+        </Link>
       </li>
     ;
 
@@ -120,13 +118,13 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     }
     additional_menu.push(
         { link: '/market/GOLOS/GBG', icon: 'trade', value: tt("navigation.market") },
-        { link: 'https://golostalk.com/', icon: 'new/messenger', value: tt("navigation.forum"), target: 'blank' },
+        { link: '/search', icon: 'new/search', value: tt("navigation.search") },
         { link: '/~witnesses', icon: 'new/like', value: tt("navigation.witnesses"), target: 'blank' },
         { link: '/workers', icon: 'voters', value: tt("navigation.workers") },
         { link: '/exchanges', icon: 'editor/coin', value: tt("navigation.buy_sell") },
         { link: '/services', icon: 'new/monitor', value: tt("navigation.services") },
         { link: 'https://wiki.golos.id/', icon: 'new/wikipedia', value: tt("navigation.wiki"), target: 'blank' },
-        { link: 'https://explorer.golos.id/', icon: 'new/search', value: tt("navigation.explorer"), target: 'blank' }        
+        { link: 'https://explorer.golos.id/', icon: 'cog', value: tt("navigation.explorer"), target: 'blank' }        
     );
     const navAdditional = <LinkWithDropdown
         closeOnClickOutside

@@ -321,7 +321,7 @@ class Search extends React.Component {
                 onShowSizeChange={this.onShowSizeChange}
                 onChange={this.changePage}
                 total={totalPosts}
-                style={{ float: 'right', margin: 0 }}
+                style={{ float: 'right', margin: 10 }}
                 locale={tt.getLocale() === 'ru' ? localeRu : localeEn}
               />
               <br/>
@@ -391,12 +391,12 @@ class Search extends React.Component {
               <br/>
               <br/>
               <hr/>
+              <center><p className='another-search'>
               {tt('search.search_in')}
-              <a href={'https://yandex.ru/search/site/?searchid=2415103&text=' + this.state.query}>{tt('search.yandex')}</a>
+              <a target='_blank' href={'https://yandex.ru/search/site/?searchid=2415103&text=' + this.state.query}>{tt('search.yandex')}</a>
               {tt('search.or')}
-              <a href={'https://www.google.ru/search?lr=&q=' + this.state.query + ' site:golos.id'}>{tt('search.google')}</a>
-              <br/>
-              <br/>
+              <a target='_blank' href={'https://www.google.com/search?lr=&q=' + this.state.query + ' site:golos.id'}>{tt('search.google')}</a>
+              </p></center>
           </div>);
     }
 }

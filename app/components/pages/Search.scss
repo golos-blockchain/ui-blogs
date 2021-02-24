@@ -1,6 +1,6 @@
 .App-search {
-    margin-left: 90px;
-    margin-right: 90px;
+    margin-left: 100px;
+    margin-right: 100px;
 }
 
 .esearch-box {
@@ -42,6 +42,15 @@
 
 .golossearch-results h6 {
     margin-bottom: 0px;
+    font-size: 1.2em;
+}
+
+.golossearch-results h1,h2,h3 {
+    font-size: 100%;
+}
+
+.golossearch-results img {
+    display: none;
 }
 
 .golossearch-results em {
@@ -51,4 +60,22 @@
 
 .gsc-search-box table {
     margin-bottom: 0px;
+}
+
+.another-search {
+    font-size: 1.5em;
+    margin: 30px;
+}
+
+@media screen and (max-width: 39.9375em) {
+    .App-search {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    .esearch-input {
+        width: 100%;
+    }
+    .esearch-settings input {
+        width: 150px;
+    }
 }
