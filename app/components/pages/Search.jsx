@@ -302,12 +302,12 @@ class Search extends React.Component {
                 if (this.state.author && author !== this.state.author) return null;
 
                 return (<div className='golossearch-results'>
-                        <Link to={url}><h6 dangerouslySetInnerHTML={{__html: title}}></h6></Link>
-                        <Link to={url}><span style={{color: 'rgb(180, 180, 180)'}}>
+                        <Link target="_blank" to={url}><h6 dangerouslySetInnerHTML={{__html: title}}></h6></Link>
+                        <span style={{color: 'rgb(180, 180, 180)'}}>
                             <TimeAgoWrapper date={hit.fields.created[0]} />
                             &nbsp;—&nbsp;@
                             {hit.fields.author[0]}
-                        </span></Link>
+                        </span>
                         <div dangerouslySetInnerHTML={{__html: remarkableStripper.render(body)}}></div>
                         <br/>
                     </div>);
