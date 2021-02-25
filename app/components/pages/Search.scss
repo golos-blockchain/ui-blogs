@@ -39,21 +39,24 @@
     width: auto !important;
 }
 
-.golossearch-results {
-    h1, h2, h3 {
-        font-size: 100%;
-    }
-    h6 {
-        margin-bottom: 0px;
-        font-size: 1.2em;
-    }
-    img {
-        display: none;
-    }
-    em {
-        background-color: yellow;
-        font-style: normal;
-    }
+.golossearch-results h6 {
+    margin-bottom: 0px;
+    font-size: 1.2em;
+}
+
+.golossearch-results em {
+    background-color: yellow;
+    font-style: normal;
+}
+
+.golossearch-results img  {
+    display: none;
+}
+
+.golossearch-results h1,
+.golossearch-results h2,
+.golossearch-results h3 {
+    font-size: 100%;
 }
 
 .gsc-search-box table {
@@ -74,5 +77,8 @@
     }
     .esearch-settings input {
         width: 150px;
+    }
+    .another-search {
+        font-size: 1.3em;
     }
 }
