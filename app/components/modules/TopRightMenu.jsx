@@ -118,6 +118,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     }
     additional_menu.push(
         { link: '/market/GOLOS/GBG', icon: 'trade', value: tt("navigation.market") },
+        { link: 'https://golostalk.com/', icon: 'chatboxes', value: tt("navigation.forum"), target: 'blank' },
         { link: '/search', icon: 'new/search', value: tt("navigation.search") },
         { link: '/~witnesses', icon: 'new/like', value: tt("navigation.witnesses"), target: 'blank' },
         { link: '/workers', icon: 'voters', value: tt("navigation.workers") },
