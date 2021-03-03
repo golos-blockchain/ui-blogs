@@ -10,7 +10,7 @@ class Services extends React.Component {
                     <div className='column large-12 medium-12 small-12'>
                         <h2>{tt('navigation.services')}</h2>
                     </div>
-                    <img className="float-center" src={require("app/assets/images/landing/golos_is_usefull.png")} height="175" width="700" />
+                    <img className="float-center" src={require("app/assets/images/landing/golos_is_usefull.png")} width="500" />
                     <div className='row landing-services-block-center'>
                         На данной странице собраны наиболее популярные сервисы и боты, которые могут оказаться полезными пользователям для взаимодействия с блокчейном Голос.
                     </div>

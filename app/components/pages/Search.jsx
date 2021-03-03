@@ -307,12 +307,12 @@ class Search extends React.Component {
                 body = sanitize(body, {allowedTags: ['em', 'img']});
 
                 return (<div className='golossearch-results'>
-                        <Link to={url}><h6 dangerouslySetInnerHTML={{__html: title}}></h6></Link>
-                        <Link to={url}><span style={{color: 'rgb(180, 180, 180)'}}>
+                        <Link target="_blank" to={url}><h6 dangerouslySetInnerHTML={{__html: title}}></h6></Link>
+                        <span style={{color: 'rgb(180, 180, 180)'}}>
                             <TimeAgoWrapper date={hit.fields.created[0]} />
                             &nbsp;—&nbsp;@
                             {hit.fields.author[0]}
-                        </span></Link>
+                        </span>
                         <div dangerouslySetInnerHTML={{__html: body}}></div>
                         <br/>
                     </div>);
@@ -344,6 +344,7 @@ class Search extends React.Component {
               </div>);
         }
         return (<div className="App-search">
+                <img className="float-center" src={require("app/assets/images/landing/docs.png")} width="500" />
               <div className='esearch-box'>
                   <input value={this.state.query} className='esearch-input' placeholder={tt('search.placeholder')} type='text' onKeyUp={this.search} onChange={this.onChange} />
                     <select onChange={this.handleWhereChange}>
@@ -368,10 +369,10 @@ class Search extends React.Component {
                     options={this.state.authorLookup}
                     isObject={false}
                     selectionLimit="3"
-                    emptyRecordMsg={tt('g.author')}
+                    emptyRecordMsg={tt('search.author')}
                     closeOnSelect='true'
                     closeIcon="cancel"
-                    placeholder={tt('g.author')}
+                    placeholder={tt('search.author')}
                     selectedValues={this.state.author ? [this.state.author] : undefined}
                     onSearch={this.handleAuthorLookup}
                     onSelect={this.handleAuthorSelect}
@@ -383,10 +384,10 @@ class Search extends React.Component {
                     options={this.state.tagLookup}
                     displayValue='text'
                     selectionLimit="3"
-                    emptyRecordMsg='Тэги'
+                    emptyRecordMsg={tt('search.tags')}
                     closeOnSelect='true'
                     closeIcon="cancel"
-                    placeholder='Тэги'
+                    placeholder={tt('search.tags')}
                     onSearch={this.handleTagLookup}
                     onSelect={this.handleTagSelect}
                     onRemove={this.handleTagRemove}
@@ -398,7 +399,7 @@ class Search extends React.Component {
               <hr/>
               <center><p className='another-search'>
               {tt('search.search_in')}
-              <a target='_blank' href={'https://yandex.ru/search/site/?searchid=2415103&text=' + this.state.query}>{tt('search.yandex')}</a>
+              <a target='_blank' href={'https://yandex.ru/search/?lr=35&text=' + this.state.query + ' site:golos.id'}>{tt('search.yandex')}</a>
               {tt('search.or')}
               <a target='_blank' href={'https://www.google.com/search?lr=&q=' + this.state.query + ' site:golos.id'}>{tt('search.google')}</a>
               </p></center>

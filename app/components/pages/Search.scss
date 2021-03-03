@@ -1,14 +1,13 @@
 .App-search {
-    margin-left: 100px;
-    margin-right: 100px;
+    margin: 60px 100px 0px 100px;
 }
 
 .esearch-box {
-    margin-top: 50px;
+    margin-top: 15px;
 }
 
 .esearch-input {
-    width: calc(100% - 280px);
+    width: calc(99% - 280px);
     display: inline-block;
     margin-right: 10px;
 }
@@ -45,17 +44,19 @@
     font-size: 1.2em;
 }
 
-.golossearch-results h1,h2,h3 {
-    font-size: 100%;
-}
-
-.golossearch-results img {
-    display: none;
-}
-
 .golossearch-results em {
     background-color: yellow;
     font-style: normal;
+}
+
+.golossearch-results img  {
+    display: none;
+}
+
+.golossearch-results h1,
+.golossearch-results h2,
+.golossearch-results h3 {
+    font-size: 100%;
 }
 
 .gsc-search-box table {
@@ -69,13 +70,15 @@
 
 @media screen and (max-width: 39.9375em) {
     .App-search {
-        margin-left: 10px;
-        margin-right: 10px;
+        margin: 10px;
     }
     .esearch-input {
         width: 100%;
     }
     .esearch-settings input {
         width: 150px;
+    }
+    .another-search {
+        font-size: 1.3em;
     }
 }
