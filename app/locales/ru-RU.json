@@ -297,7 +297,8 @@
     "price": "Цена",
     "print": "Распечатать",
     "promote": "Продвинуть",
-    "promote_block": "блок продвигаемого контента",
+    "promote_block": "Блок продвигаемого контента",
+    "more_post": "Перейти к расширенному поиску постов",
     "promoted": "Промо",
     "re": "RE",
     "recent_password": "Недавний пароль",
@@ -369,7 +370,7 @@
     "reset_usernames_password": "Сбросить пароль пользователя %(username)s",
     "this_will_update_usernames_authtype_key": "Это обновит %(username)s %(authType)s ключ",
     "passwords_do_not_match": "Пароли не совпадают",
-    "no_topics_by_order_found": "В разделе %(order)s пока нет постов!",
+    "no_topics_by_order_found": "В категории %(order)s за последние 7 дней постов нет...",
     "you_need_private_password_or_key_not_a_public_key": "Вам нужен приватный (не публичный) ключ ...",
     "the_rules_of_APP_NAME": {
       "one": "1. Не теряйте свой пароль.",
