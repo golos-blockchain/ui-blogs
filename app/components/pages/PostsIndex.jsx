@@ -185,7 +185,7 @@ class PostsIndex extends React.Component {
         } else {
             posts = this.getPosts(order, category);
             if (posts && posts.size === 0) {
-                emptyText = <div>{tt('g.no_topics_by_order_found', {order: tt('g.' + topics_order) + (category ? ` #` + category : '')})}</div>;
+                emptyText = <div>{tt('g.no_topics_by_order_found', {order: (category ? ` #` + category : '')})}</div>;
             }
         }
 
@@ -241,6 +241,7 @@ class PostsIndex extends React.Component {
                             loadMore={this.loadMore}
                             showSpam={showSpam}
                         /> }
+                <span className="strike"><a target="_blank" href="/search">{tt('g.more_post')}</a></span>
                 </div>
                 <div className="PostsIndex__topics column shrink show-for-large">
 

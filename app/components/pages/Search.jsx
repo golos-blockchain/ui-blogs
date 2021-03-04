@@ -7,6 +7,7 @@ import Icon from 'app/components/elements/Icon';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Remarkable from 'remarkable';
 import remarkableStripper from 'app/utils/RemarkableStripper';
+import sanitize from 'sanitize-html';
 import { detransliterate } from 'app/utils/ParsersAndFormatters';
 import truncate from 'lodash/truncate';
 import Pagination from 'rc-pagination';
@@ -156,7 +157,7 @@ class Search extends React.Component {
             },
             ...sort,
             "highlight": {
-                "fragment_size" : 350,
+                "fragment_size" : 400,
                 "fields": {
                     "title": {},
                     "body": {}
@@ -195,8 +196,9 @@ class Search extends React.Component {
         this.fetchSearch(1);
     };
 
-    changePage = (page) => {
-        this.fetchSearch(page);
+    changePage = async (page) => {
+        await this.fetchSearch(page);
+        window.scrollTo(0, 0);
     };
 
     _reloadWithSettings = (newState) => {
@@ -297,9 +299,12 @@ class Search extends React.Component {
                     url += '#@' + author + '/' + permlink;
                 }
                 let body = hit.highlight && hit.highlight.body;
-                body = body ? body[0].split('</em> <em>').join(' ') : truncate(hit.fields.body[0], {length: 200});
+                body = body ? body[0].split('</em> <em>').join(' ') : truncate(hit.fields.body[0], {length: 250});
 
                 if (this.state.author && author !== this.state.author) return null;
+
+                body = remarkableStripper.render(body);
+                body = sanitize(body, {allowedTags: ['em', 'img']});
 
                 return (<div className='golossearch-results'>
                         <Link target="_blank" to={url}><h6 dangerouslySetInnerHTML={{__html: title}}></h6></Link>
@@ -308,7 +313,7 @@ class Search extends React.Component {
                             &nbsp;—&nbsp;@
                             {hit.fields.author[0]}
                         </span>
-                        <div dangerouslySetInnerHTML={{__html: remarkableStripper.render(body)}}></div>
+                        <div dangerouslySetInnerHTML={{__html: body}}></div>
                         <br/>
                     </div>);
             });
