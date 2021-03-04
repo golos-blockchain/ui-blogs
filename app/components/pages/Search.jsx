@@ -157,7 +157,7 @@ class Search extends React.Component {
             },
             ...sort,
             "highlight": {
-                "fragment_size" : 350,
+                "fragment_size" : 400,
                 "fields": {
                     "title": {},
                     "body": {}
@@ -299,7 +299,7 @@ class Search extends React.Component {
                     url += '#@' + author + '/' + permlink;
                 }
                 let body = hit.highlight && hit.highlight.body;
-                body = body ? body[0].split('</em> <em>').join(' ') : truncate(hit.fields.body[0], {length: 200});
+                body = body ? body[0].split('</em> <em>').join(' ') : truncate(hit.fields.body[0], {length: 250});
 
                 if (this.state.author && author !== this.state.author) return null;
 
