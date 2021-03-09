@@ -51,21 +51,11 @@
     "port": "SDC_TARANTOOL_PORT",
     "username": "SDC_TARANTOOL_USERNAME"
   },
-  "chainproxy": {
-    "host": "SDC_CHAIN_PROXY_HOSTNAME",
-    "password": "SDC_CHAIN_PROXY_PASSWORD",
-    "port": "SDC_CHAIN_PROXY_PORT",
-    "username": "SDC_CHAIN_PROXY_USERNAME"
-  },
   "upload_image": "SDC_UPLOAD_IMAGE_URL",
   "session_cookie_key": "SDC_SESSION_COOKIE_KEY",
   "ws_connection_client": "SDC_CLIENT_WEBSOCKET_URL",
   "ws_connection_server": "SDC_SERVER_WEBSOCKET_URL",
   "chain_id" : "SDC_CHAIN_ID",
-  "metrics": {
-    "name": "SDC_METRICS_NAME",
-    "host": "SDC_METRICS_HOST"
-  },
   "gmail_send": {
       "user": "SDC_GMAIL_SEND_USER",
       "pass": "SDC_GMAIL_SEND_PASS"

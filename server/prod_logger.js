@@ -1,5 +1,4 @@
 var bytes = require('bytes');
-var metrics = require('./metrics').metrics;
 
 module.exports = prod_logger;
 
@@ -44,7 +43,6 @@ function log(ctx, start, len, err, asset) {
     if (!asset || err || ctx.status > 400) {
         console.log(`${upstream}[reqid ${ctx.request.header['x-request-id']}] ${(ctx.session.uid || '')} ${ctx.method} ${ctx.originalUrl} ${status} ${time(start)} ${length}`);
     }
-    if (metrics) metrics.increment('_http_code_' + status);
 }
 
 function time(start) {

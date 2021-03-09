@@ -30,7 +30,6 @@ import {routeRegex} from "app/ResolveRoute";
 import {contentStats} from 'app/utils/StateFunctions'
 import {APP_NAME, IGNORE_TAGS, PUBLIC_API, SEO_TITLE} from 'app/client_config';
 import constants from 'app/redux/constants';
-import proxify from 'db/proxify';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -58,16 +57,9 @@ export async function serverRender({
     location,
     offchain,
     ErrorPage,
-    tarantool,
-    chainproxy,
-    metrics
+    tarantool
 }) {
     let error, redirect, renderProps;
-
-    const ctx = {
-        chainproxy,
-        metrics
-    }
 
     try {
         [error, redirect, renderProps] = await runRouter(location, RootRoute);
