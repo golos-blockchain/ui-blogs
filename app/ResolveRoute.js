@@ -86,6 +86,9 @@ export default function resolveRoute(path)
     if (path === '/search' || path.startsWith('/search/')) {
         return {page: 'Search'};
     }
+    if (path === '/msgs' || path.startsWith('/msgs/')) {
+        return {page: 'Messages'};
+    }
     match = path.match(routeRegex.WorkerRequest)
         || path.match(routeRegex.WorkerSearchByAuthor)
         || path.match(routeRegex.WorkerSort);

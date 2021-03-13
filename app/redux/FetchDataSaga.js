@@ -339,6 +339,22 @@ export function* fetchState(location_change_action) {
             const trending_tags = yield call([api, api.getTrendingTagsAsync], '', 250)
             trending_tags.forEach (tag => tags[tag.name] = tag)
             state.tags = tags
+        } else if (parts[0] == 'msgs') {
+            state.contacts = [];
+            state.messages = [];
+            if (localStorage.getItem('invite')) {
+                accounts.add(localStorage.getItem('invite'));
+
+                state.contacts = yield call([api, api.getContactsAsync], localStorage.getItem('invite'), 'unknown', 100, 0);
+
+                if (parts[1]) {
+                    const to = parts[1].replace('@', '');
+                    state.messages = yield call([api, api.getThreadAsync], localStorage.getItem('invite'), to, {});
+                }
+            }
+            for (let contact of state.contacts) {
+                accounts.add(contact.contact);
+            }
         }
 
         if (accounts.size > 0) {

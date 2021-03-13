@@ -128,3 +128,18 @@ export default function normalizeProfile(account) {
         cover_image,
     };
 }
+
+/**
+ * Returns profile image if set, or default avatar image.
+ */
+export function getProfileImage(account) {
+    if (account && account.json_metadata) {
+        try {
+            const md = JSON.parse(account.json_metadata);
+            return md.profile.profile_image;
+        } catch (e) {
+            console.error(e);
+        }
+    }
+    return require('app/assets/images/user.png');
+}

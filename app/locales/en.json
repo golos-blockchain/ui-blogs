@@ -26,6 +26,11 @@
     "or": " or ",
     "google": "Google"
   },
+  "messages": {
+    "last_seen": "last seen ",
+    "search": "Search people",
+    "type_a_message_NAME": "Type a message, @%(NAME)s"
+  },
   "g": {
     "golos_fest": "Golos.id News",
     "APP_NAME": "Golos",

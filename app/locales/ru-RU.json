@@ -192,6 +192,11 @@
     "or": " или ",
     "google": "Google"
   },
+  "messages": {
+    "last_seen": "был(а) ",
+    "search": "Поиск людей",
+    "type_a_message_NAME": "Напишите сообщение, @%(NAME)s"
+  },
   "g": {
     "golos_fest": "Новости",
     "APP_NAME": "Голос",

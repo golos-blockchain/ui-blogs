@@ -219,7 +219,7 @@ class App extends React.Component {
 
         const route = resolveRoute(location.pathname);
         const lp = false; //location.pathname === '/';
-        const miniHeader = location.pathname === '/create_account';
+        let miniHeader = location.pathname === '/create_account';
         const params_keys = Object.keys(params);
         const ip =
             location.pathname === '/' ||
@@ -342,24 +342,29 @@ class App extends React.Component {
 
         const themeClass = nightmodeEnabled ? ' theme-dark' : ' theme-light';
 
+        const noHeader = location.pathname.startsWith('/msgs');
+        const noFooter = location.pathname.startsWith('/submit')
+            || location.pathname.startsWith('/msgs');
         return (
             <div
                 className={
                     'App' + ' ' + themeClass +
                     (lp ? ' LP' : '') +
                     (ip ? ' index-page' : '') +
-                    (miniHeader ? ' mini-' : '')
+                    (miniHeader ? ' mini-' : '') +
+                    (noHeader ? ' no-header' : '')
                 }
                 onMouseMove={this.onEntropyEvent}
             >
-                {miniHeader ? <MiniHeader /> : <Header />}
-                <div className={cn('App__content', {
+                {noHeader ? null : (miniHeader ? <MiniHeader /> : <Header />)}
+                <div className={cn('App__content' +
+                    (noHeader ? ' no-header' : ''), {
                     'App__content_hide-sub-menu': route.hideSubMenu,
                 })}>
                     {welcome_screen}
                     {callout}
                     {children}
-                    {location.pathname.startsWith('/submit') ? null : <Footer />}
+                    {noFooter ? null : <Footer />}
                     <ScrollButton />
                 </div>
                 <Dialogs />
