@@ -349,6 +349,7 @@ export function* fetchState(location_change_action) {
 
                 if (parts[1]) {
                     const to = parts[1].replace('@', '');
+                    accounts.add(to);
                     state.messages = yield call([api, api.getThreadAsync], localStorage.getItem('invite'), to, {});
                 }
             }

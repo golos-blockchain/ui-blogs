@@ -3,29 +3,113 @@ import golos from 'golos-classic-js';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { browserHistory } from 'react-router';
+import max from 'lodash/max';
 import tt from 'counterpart';
 import Icon from 'app/components/elements/Icon';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Messenger from 'app/components/modules/messages/Messenger';
+import transaction from 'app/redux/Transaction';
 import { getProfileImage } from 'app/utils/NormalizeProfile';
 
 class Messages extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            searchContacts: null,
+        };
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.messages.length > this.props.messages.length) {
+            setTimeout(() => {
+                const scroll = document.getElementsByClassName('scrollable')[1];
+                if (scroll) scroll.scrollTo(0,scroll.scrollHeight);
+            }, 1);
+        }
+    }
+
+    onConversationSearch = async (event) => {
+        const query = event.target.value;
+        if (!query) {
+            this.setState({
+                searchContacts: null
+            });
+            return;
+        }
+        const accountNames = await golos.api.lookupAccounts(query, 6);
+
+        const accountsArr = await golos.api.getAccounts([...accountNames]);
+
+        let contacts = [];
+        for (let account of accountsArr) {
+            if (account.memo_key === 'GLS1111111111111111111111111111111114T1Anm'
+                || account.name === this.props.account.name) {
+                continue;
+            }
+            account.contact = account.name;
+            account.avatar = getProfileImage(account);
+            contacts.push(account);
+        }
+        if (contacts.length === 0) {
+            contacts = [{contact: 'Ничего не найдено'}];
+        }
+        this.setState({
+            searchContacts: contacts
+        });
+    };
+
+    onSendMessage = (message, event) => {
+        const { to, account, accounts, currentUser, messages } = this.props;
+        const private_key = currentUser.getIn(['private_keys', 'memo_private']);
+        
+        this.props.sendMessage(account, private_key, accounts[to], message);
+    };
+
+    _renderMessagesTopCenter = () => {
+        let messagesTopCenter = [];
+        const { to, accounts } = this.props;
+        if (accounts[to]) {
+            messagesTopCenter.push(<div style={{fontSize: '14px', width: '100%', textAlign: 'center'}}>
+                <a href={'/@' + to}>{to}</a>
+            </div>);
+            const dates = [
+                accounts[to].last_custom_json_bandwidth_update,
+                accounts[to].last_post,
+                accounts[to].last_comment,
+                accounts[to].created,
+            ];
+            let lastSeen = max(dates);
+            if (!lastSeen.startsWith('19')) {
+                messagesTopCenter.push(<div style={{fontSize: '12px', fontWeight: 'normal'}}>
+                    {
+                        <span>
+                            {tt('messages.last_seen')}
+                            <TimeAgoWrapper date={`${lastSeen}`} />
+                        </span>
+                    }
+                </div>);
+            }
+        }
+        return messagesTopCenter;
+    };
+
     render() {
-        if (!this.props.contacts) return (<div></div>);
+        const { contacts, account, to } = this.props;
+        if (!contacts || !account) return (<div></div>);
         return (<Messenger
             account={this.props.account}
-			contacts={this.props.contacts}
+            to={to}
+            contacts={this.state.searchContacts || this.props.contacts}
             conversationTopLeft={[
                 <a href='/'>
                     <h4>GOLOS</h4>
                 </a>
             ]}
             conversationLinkPattern='/msgs/@*'
-            messages={this.props.messages} />);
+            onConversationSearch={this.onConversationSearch}
+            messages={this.props.messages}
+            messagesTopCenter={this._renderMessagesTopCenter()}
+            onSendMessage={this.onSendMessage} />);
     }
 }
 
@@ -54,8 +138,6 @@ function normalizeContacts(contacts, accounts, currentUser) {
 
         try {
             const private_key = currentUser.getIn(['private_keys', 'memo_private']);
-            console.log(private_key)
-            console.log(public_key)
             let message = golos.messages.decode(private_key, public_key, contact.last_message);
 
             contact.last_message.message = JSON.parse(message).body;
@@ -100,19 +182,56 @@ function normalizeMessages(messages, accounts, currentUser) {
 module.exports = {
     path: '/msgs(/:to)',
     component: connect(
-        state => {
+        (state, ownProps) => {
             const currentUser = state.user.get('current');
             const accounts = state.global.get('accounts');
             const contacts = state.global.get('contacts');
             const messages = state.global.get('messages');
 
+            let to = ownProps.routeParams.to;
+            if (to) to = to.replace('@', '');
             return {
+                to,
                 contacts: normalizeContacts(contacts, accounts, currentUser),
                 messages: normalizeMessages(messages, accounts, currentUser),
-                account: currentUser && accounts.toJS()[currentUser.get('username')]
+                account: currentUser && accounts.toJS()[currentUser.get('username')],
+                currentUser,
+                accounts: accounts ?  accounts.toJS() : {},
             };
         },
-        {
-        }
+        dispatch => ({
+            sendMessage: (senderAcc, senderPrivMemoKey, toAcc, body) => {
+                let message = {
+                    app: 'golos-id',
+                    version: 1,
+                    body,
+                };
+                message = JSON.stringify(message);
+
+                const data = golos.messages.encode(senderPrivMemoKey, toAcc.memo_key, message);
+
+                const json = JSON.stringify(['private_message', {
+                    from: senderAcc.name,
+                    to: toAcc.name,
+                    nonce: data.nonce.toString(),
+                    from_memo_key: senderAcc.memo_key,
+                    to_memo_key: toAcc.memo_key,
+                    checksum: data.checksum,
+                    update: false,
+                    encrypted_message: data.message,
+                }]);
+                dispatch(transaction.actions.broadcastOperation({
+                    type: 'custom_json',
+                    operation: {
+                        id: 'private_message',
+                        required_posting_auths: [senderAcc.name],
+                        json,
+                        message: message,
+                    },
+                    successCallback: null,
+                    errorCallback: null,
+                }));
+            }
+        })
     )(Messages),
 };

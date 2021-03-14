@@ -119,6 +119,21 @@ function* preBroadcast_custom_json({operation}) {
         } catch(e) {
             console.error('TransactionSaga unrecognized follow custom_json format', operation.json);
         }
+    } else if (operation.id === 'private_message') {
+        yield put(g.actions.update({
+            key: ['messages'],
+            notSet: Map(),
+            updater: m => {
+                //m = m.asMutable()
+                m = m.insert(0, {
+                    from: json[1].from,
+                    receive_date: new Date().toISOString().split('.')[0],
+                    message: JSON.parse(operation.message).body
+                })
+                delete operation.message
+                return m//.asImmutable()
+            }
+        }))
     }
     return operation
 }

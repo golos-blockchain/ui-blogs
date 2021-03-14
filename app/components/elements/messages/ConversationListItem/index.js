@@ -1,13 +1,10 @@
 import React from 'react';
-import shave from 'shave';
+//import shave from 'shave';
+import truncate from 'lodash/truncate';
 
 import './ConversationListItem.css';
 
 export default class ConversationListItem extends React.Component {
-    componentDidMount() {
-        //shave('.conversation-snippet', 20);
-    }
-
     makeLink = () => {
         const { conversationLinkPattern } = this.props;
         if (conversationLinkPattern) {
@@ -36,7 +33,7 @@ export default class ConversationListItem extends React.Component {
                 <img className='conversation-photo' src={avatar} alt='conversation' />
                 <div className='conversation-info'>
                     <h1 className='conversation-title'>{contact}</h1>
-                    <p className='conversation-snippet'>{last_message && last_message.message.substring(0, 20)}</p>
+                    <p className='conversation-snippet'>{last_message && truncate(last_message.message, {length: 35})}</p>
                 </div>
             </a>
         );
