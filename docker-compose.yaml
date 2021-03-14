@@ -1,66 +1,60 @@
-version: '3'
+version: "3"
 services:
-  web:
-    restart: always
-    #build: .
-    image: golosblockchain/web-ui:latest
-    command: bash -c "cd db && ../node_modules/.bin/sequelize db:migrate && cd .. && yarn run production"
 
+  web:
+    image: golosblockchain/web-ui:latest
+    build: .
+    restart: always
+    command: bash -c "cd db && ../node_modules/.bin/sequelize db:migrate && cd .. && yarn run production"
+    volumes:
+      - ./default.json:/var/app/config/default.json
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
     environment:
       SDC_TARANTOOL_HOSTNAME: datastore
       SDC_DATABASE_URL: mysql://golosdev:golosdev@db:3306/golosdev
-      SDC_CLIENT_WEBSOCKET_URL: ${SDC_CLIENT_WEBSOCKET_URL}
-      SDC_SERVER_WEBSOCKET_URL: ${SDC_SERVER_WEBSOCKET_URL}
-      SDC_REGISTRAR_ACCOUNT: ${SDC_REGISTRAR_ACCOUNT}
-      SDC_REGISTRAR_SIGNINGKEY: ${SDC_REGISTRAR_SIGNINGKEY}
-      SDC_GMAIL_SEND_USER: ${SDC_GMAIL_SEND_USER}
-      SDC_GMAIL_SEND_PASS: ${SDC_GMAIL_SEND_PASS}
-
-    ports:
-      - 127.0.0.1:8080:8080
-    depends_on:
-      - db
-    volumes:
-      - ./default.json:/var/app/config/default.json
+      SDC_CLIENT_WEBSOCKET_URL: https://api.golos.id
+      SDC_SERVER_WEBSOCKET_URL: https://api.golos.id
+      SDC_REGISTRAR_ACCOUNT: your-account
+      SDC_REGISTRAR_SIGNINGKEY: active-key
+      SDC_GMAIL_SEND_USER: your-mail@gmail.com
+      SDC_GMAIL_SEND_PASS: your-password
 
   db:
-    restart: always
     image: mysql:5.7.22
-
-    environment:
-      MYSQL_DATABASE: 'golosdev'
-      MYSQL_USER: 'golosdev'
-      MYSQL_PASSWORD: 'golosdev'
-      MYSQL_ROOT_PASSWORD: 'golosdev'
-
-    ports:
-      - 127.0.0.1:3306:3306
+    restart: always
     command: --default-authentication-plugin=mysql_native_password
     volumes:
       - ./data/mysql:/var/lib/mysql
       - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d/:ro
-
-  datafeed:
-    restart: unless-stopped   
-    #build:
-      #context: https://github.com/golos-blockchain/golosnotify.git
-      #dockerfile: Dockerfile-datafeed
-    image: golosblockchain/web-ui:datafeed    
-
+    ports:
+      - "3306:3306"
     environment:
-      NODE_URL: ${SDC_SERVER_WEBSOCKET_URL}
-      TARANTOOL_HOST: datastore
-
-    depends_on:
-      - datastore
-      - db
+      MYSQL_DATABASE: golosdev
+      MYSQL_USER: golosdev
+      MYSQL_PASSWORD: golosdev
+      MYSQL_ROOT_PASSWORD: golosdev
 
   datastore:
-    #build:
-      #context: https://github.com/golos-blockchain/golosnotify.git
-      #dockerfile: Dockerfile-datastore
-    image: golosblockchain/web-ui:datastore    
+    image: golosblockchain/web-ui:datastore
+    build:
+      context: https://github.com/golos-blockchain/golosnotify.git
+      dockerfile: Dockerfile-datastore
     volumes:
       - ./data/tarantool:/var/lib/tarantool
     ports:
-      - 127.0.0.1:3001:3001
+      - "3001:3001"
+
+  datafeed:
+    image: golosblockchain/web-ui:datafeed
+    build:
+      context: https://github.com/golos-blockchain/golosnotify.git
+      dockerfile: Dockerfile-datafeed
+    restart: unless-stopped
+    depends_on:
+      - datastore
+    environment:
+      NODE_URL: https://api.golos.id
+      TARANTOOL_HOST: datastore

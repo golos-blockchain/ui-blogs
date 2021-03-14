@@ -27,7 +27,7 @@
       "styleSrc": "'self' 'unsafe-inline' cdnjs.cloudflare.com fonts.googleapis.com",
       "imgSrc": "* data:",
       "fontSrc": "data: fonts.gstatic.com",
-      "connectSrc": "'self' api.imgur.com api.golos.id wss://api.golos.id api.golos.today wss://api.golos.today betasearch.golos.today api.aleksw.space wss://api.aleksw.space *.coinmarketcap.com app.sharpay.io www.google-analytics.com cdn.jsdelivr.net",
+      "connectSrc": "'self' api.imgur.com api.golos.id wss://api.golos.id search.golos.today *.coinmarketcap.com app.sharpay.io www.google-analytics.com cdn.jsdelivr.net",
       "reportUri": "/api/v1/csp_violation",
       "objectSrc": "'self'",
       "pluginTypes": "application/pdf",
@@ -42,9 +42,9 @@
   },
   "read_only_mode": false,
   "registrar": {
-    "account": "-",
+    "account": "id-demiurge",
     "fee": "1.000 GOLOS",
-    "signing_key": "5Hv..",
+    "signing_key": "5Hv...",
     "delegation": "33060.000000 GESTS"
   },
   "server_session_secret": "exiKdyF+IwRIXJDmtGIl4vWUz4i3eVSISpfZoeYc0s4=",
@@ -63,7 +63,7 @@
   "chain_id": "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12",
   "ads_per_post": 20,
   "elastic_search": {
-    "url": "https://betasearch.golos.today",
+    "url": "https://search.golos.today",
     "login": "golosclient",
     "password": "golosclient"
   },
