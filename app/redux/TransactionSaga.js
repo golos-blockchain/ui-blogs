@@ -62,7 +62,7 @@ function* preBroadcast_transfer({operation}) {
             const memo_private = yield select(
                 state => state.user.getIn(['current', 'private_keys', 'memo_private'])
             )
-            if(!memo_private) throw new Error('Unable to encrypte memo, missing memo private key')
+            if(!memo_private) throw new Error('Unable to encrypt memo, missing memo private key')
             const account = yield call(getAccount, operation.to)
             if(!account) throw new Error(`Unknown to account ${operation.to}`)
             const memo_key = account.get('memo_key')
@@ -127,6 +127,7 @@ function* preBroadcast_custom_json({operation}) {
                 //m = m.asMutable()
                 m = m.insert(0, {
                     from: json[1].from,
+                    read_date: '1970-01-01T00:00:00',
                     receive_date: new Date().toISOString().split('.')[0],
                     message: JSON.parse(operation.message).body
                 })

@@ -9,6 +9,7 @@ import Icon from 'app/components/elements/Icon';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Messenger from 'app/components/modules/messages/Messenger';
 import transaction from 'app/redux/Transaction';
+import user from 'app/redux/User';
 import { getProfileImage } from 'app/utils/NormalizeProfile';
 
 function normalizeContacts(contacts, accounts, currentUser) {
@@ -64,6 +65,9 @@ function normalizeMessages(messages, accounts, currentUser) {
             public_key = msg.from_memo_key;
         } else {
             public_key = msg.to_memo_key;
+            if (msg.read_date.startsWith('19')) {
+                msg.unread = true;
+            }
         }
 
         try {
@@ -89,8 +93,12 @@ class Messages extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.messages.size !== this.props.messages.size
-            || nextProps.contacts.size !== this.props.contacts.size) {
+            || nextProps.contacts.size !== this.props.contacts.size
+            || nextProps.memo_private !== this.props.memo_private) {
             const { contacts, messages, accounts, currentUser } = nextProps;
+            if (!this.props.checkMemo(currentUser)) {
+                return;
+            }
             this.setState({
                 contacts: normalizeContacts(contacts, accounts, currentUser),
                 messages: normalizeMessages(messages, accounts, currentUser),
@@ -198,16 +206,33 @@ module.exports = {
 
             let to = ownProps.routeParams.to;
             if (to) to = to.replace('@', '');
+
+            let memo_private = null;
+            if (currentUser) {
+                memo_private = currentUser.getIn(['private_keys', 'memo_private']);
+            }
+
             return {
                 to,
                 contacts: contacts,
                 messages: messages,
                 account: currentUser && accounts.toJS()[currentUser.get('username')],
                 currentUser,
+                memo_private,
                 accounts: accounts ?  accounts.toJS() : {},
             };
         },
         dispatch => ({
+            checkMemo: (currentUser) => {
+                const private_key = currentUser.getIn(['private_keys', 'memo_private']);
+                if (!private_key) {
+                    dispatch(user.actions.showLogin({
+                        loginDefault: { username: currentUser.get('username'), authType: 'memo' }
+                    }));
+                    return false;
+                }
+                return true;
+            },
             sendMessage: (senderAcc, senderPrivMemoKey, toAcc, body) => {
                 let message = {
                     app: 'golos-id',

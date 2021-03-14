@@ -13,6 +13,9 @@ export default class Message extends React.Component {
         } = this.props;
 
         const friendlyDate = data.date.toLocaleString();
+
+        const unread = data.unread ? (<div className='unread'>●</div>) : null;
+
         return (
             <div className={[
                 'message',
@@ -22,15 +25,17 @@ export default class Message extends React.Component {
             ].join(' ')}>
                 {
                     showTimestamp &&
-                        <div className="timestamp">
+                        <div className='timestamp'>
                             { friendlyDate }
                         </div>
                 }
 
-                <div className="bubble-container">
-                    <div className="bubble" title={friendlyDate}>
+                <div className='bubble-container'>
+                    {isMine ? unread : null}
+                    <div className='bubble' title={friendlyDate}>
                         { data.message }
                     </div>
+                    {!isMine ? unread : null}
                 </div>
             </div>
         );
