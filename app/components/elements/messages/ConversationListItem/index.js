@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 //import shave from 'shave';
 import truncate from 'lodash/truncate';
 
@@ -29,13 +30,13 @@ export default class ConversationListItem extends React.Component {
         const link = this.makeLink();
 
         return (
-            <a href={link} onClick={this.onClick} className={'conversation-list-item' + (selected ? ' selected' : '')}>
+            <Link to={link} className={'conversation-list-item' + (selected ? ' selected' : '')}>
                 <img className='conversation-photo' src={avatar} alt='conversation' />
                 <div className='conversation-info'>
                     <h1 className='conversation-title'>{contact}</h1>
                     <p className='conversation-snippet'>{last_message && truncate(last_message.message, {length: 35})}</p>
                 </div>
-            </a>
+            </Link>
         );
     }
 }

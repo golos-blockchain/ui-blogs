@@ -32,6 +32,8 @@ export default async function getState(api, url, options, offchain = {}) {
     state.discussion_idx = {}
     state.feed_price = await api.getCurrentMedianHistoryPrice()
     state.select_tags = []
+    state.messages = []
+    state.contacts = []
 
     // const hardfork_version = await api.getHardforkVersion()
     // state.is_hardfork = isHardfork(hardfork_version)

@@ -55,7 +55,8 @@ export default createModule({
                         );
                     }
                 }
-                return state.mergeDeep(payload);
+                let new_state = state.set('messages', List());
+                return new_state.mergeDeep(payload);
             },
         },
         {

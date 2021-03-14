@@ -11,16 +11,90 @@ import Messenger from 'app/components/modules/messages/Messenger';
 import transaction from 'app/redux/Transaction';
 import { getProfileImage } from 'app/utils/NormalizeProfile';
 
+function normalizeContacts(contacts, accounts, currentUser) {
+    let contactsCopy = contacts ? [...contacts.toJS()] : [];
+    for (let contact of contactsCopy) {
+        let account = accounts && accounts[contact.contact];
+        contact.avatar = getProfileImage(account);
+
+        if (contact.last_message.receive_date.startsWith('1970')) {
+            contact.last_message.message = "";
+            continue;
+        }
+
+        if (!currentUser || !accounts) continue;
+
+        const currentAcc = accounts[currentUser.get('username')];
+        if (!currentAcc) continue;
+
+        let public_key;
+        if (currentAcc.memo_key === contact.last_message.to_memo_key) {
+            public_key = contact.last_message.from_memo_key;
+        } else {
+            public_key = contact.last_message.to_memo_key;
+        }
+
+        try {
+            const private_key = currentUser.getIn(['private_keys', 'memo_private']);
+            let message = golos.messages.decode(private_key, public_key, contact.last_message);
+
+            contact.last_message.message = JSON.parse(message).body;
+        } catch (ex) {
+            console.log(ex);
+        }
+    }
+    return contactsCopy
+}
+
+function normalizeMessages(messages, accounts, currentUser) {
+    let messagesCopy = messages ? [...messages.toJS()] : [];
+    let id = 0;
+    for (let msg of messagesCopy) {
+        msg.id = ++id;
+        msg.author = msg.from;
+        msg.date = new Date(msg.receive_date + 'Z');
+
+        if (!currentUser || !accounts) continue;
+
+        const currentAcc = accounts[currentUser.get('username')];
+        if (!currentAcc) continue;
+
+        let public_key;
+        if (currentAcc.memo_key === msg.to_memo_key) {
+            public_key = msg.from_memo_key;
+        } else {
+            public_key = msg.to_memo_key;
+        }
+
+        try {
+            const private_key = currentUser.getIn(['private_keys', 'memo_private']);
+            let message = golos.messages.decode(private_key, public_key, msg);
+            msg.message = JSON.parse(message).body;
+        } catch (ex) {
+            console.log(ex);
+        }
+    }
+    return messagesCopy.reverse()
+}
+
 class Messages extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            contacts: [],
+            messages: [],
             searchContacts: null,
         };
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.messages.length > this.props.messages.length) {
+        if (nextProps.messages.size !== this.props.messages.size
+            || nextProps.contacts.size !== this.props.contacts.size) {
+            const { contacts, messages, accounts, currentUser } = nextProps;
+            this.setState({
+                contacts: normalizeContacts(contacts, accounts, currentUser),
+                messages: normalizeMessages(messages, accounts, currentUser),
+            });
             setTimeout(() => {
                 const scroll = document.getElementsByClassName('scrollable')[1];
                 if (scroll) scroll.scrollTo(0,scroll.scrollHeight);
@@ -99,7 +173,7 @@ class Messages extends React.Component {
         return (<Messenger
             account={this.props.account}
             to={to}
-            contacts={this.state.searchContacts || this.props.contacts}
+            contacts={this.state.searchContacts || this.state.contacts}
             conversationTopLeft={[
                 <a href='/'>
                     <h4>GOLOS</h4>
@@ -107,76 +181,10 @@ class Messages extends React.Component {
             ]}
             conversationLinkPattern='/msgs/@*'
             onConversationSearch={this.onConversationSearch}
-            messages={this.props.messages}
+            messages={this.state.messages}
             messagesTopCenter={this._renderMessagesTopCenter()}
             onSendMessage={this.onSendMessage} />);
     }
-}
-
-function normalizeContacts(contacts, accounts, currentUser) {
-    let contactsCopy = contacts ? [...contacts.toJS()] : [];
-    for (let contact of contactsCopy) {
-        let account = accounts && accounts.toJS()[contact.contact];
-        contact.avatar = getProfileImage(account);
-
-        if (contact.last_message.receive_date.startsWith('1970')) {
-            contact.last_message.message = "";
-            continue;
-        }
-
-        if (!currentUser || !accounts) continue;
-
-        const currentAcc = accounts.toJS()[currentUser.get('username')];
-        if (!currentAcc) continue;
-
-        let public_key;
-        if (currentAcc.memo_key === contact.last_message.to_memo_key) {
-            public_key = contact.last_message.from_memo_key;
-        } else {
-            public_key = contact.last_message.to_memo_key;
-        }
-
-        try {
-            const private_key = currentUser.getIn(['private_keys', 'memo_private']);
-            let message = golos.messages.decode(private_key, public_key, contact.last_message);
-
-            contact.last_message.message = JSON.parse(message).body;
-        } catch (ex) {
-            console.log(ex);
-        }
-    }
-    return contactsCopy
-}
-
-function normalizeMessages(messages, accounts, currentUser) {
-    let messagesCopy = messages ? [...messages.toJS()] : [];
-    let id = 0;
-    for (let msg of messagesCopy) {
-        msg.id = ++id;
-        msg.author = msg.from;
-        msg.date = new Date(msg.receive_date + 'Z');
-
-        if (!currentUser || !accounts) continue;
-
-        const currentAcc = accounts.toJS()[currentUser.get('username')];
-        if (!currentAcc) continue;
-
-        let public_key;
-        if (currentAcc.memo_key === msg.to_memo_key) {
-            public_key = msg.from_memo_key;
-        } else {
-            public_key = msg.to_memo_key;
-        }
-
-        try {
-            const private_key = currentUser.getIn(['private_keys', 'memo_private']);
-            let message = golos.messages.decode(private_key, public_key, msg);
-            msg.message = JSON.parse(message).body;
-        } catch (ex) {
-            console.log(ex);
-        }
-    }
-    return messagesCopy.reverse()
 }
 
 module.exports = {
@@ -192,8 +200,8 @@ module.exports = {
             if (to) to = to.replace('@', '');
             return {
                 to,
-                contacts: normalizeContacts(contacts, accounts, currentUser),
-                messages: normalizeMessages(messages, accounts, currentUser),
+                contacts: contacts,
+                messages: messages,
                 account: currentUser && accounts.toJS()[currentUser.get('username')],
                 currentUser,
                 accounts: accounts ?  accounts.toJS() : {},
