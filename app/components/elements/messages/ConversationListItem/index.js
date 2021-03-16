@@ -29,7 +29,7 @@ export default class ConversationListItem extends React.Component {
 
         const link = this.makeLink();
 
-        const unreadMessages = size.unread_inbox_messages;
+        const unreadMessages = size && size.unread_inbox_messages;
 
         return (
             <Link to={link} className={'conversation-list-item' + (selected ? ' selected' : '')}>
