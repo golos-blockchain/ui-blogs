@@ -412,6 +412,8 @@ export default class UserProfile extends React.Component {
                     </Link>
                     <Link target="_blank" className="UserProfile__menu-item" to={`/search/@${accountname}`}>{tt('g.search')}
                     </Link>
+                    <Link target="_blank" className="UserProfile__menu-item" to={`/msgs`}>{tt('g.messages')}
+                    </Link>
                     <LinkWithDropdown
                         closeOnClickOutside
                         dropdownPosition="bottom"
@@ -465,6 +467,7 @@ export default class UserProfile extends React.Component {
                     <div className="column" style={cover_image_style}>
                         <div className="UserProfile__buttons-wrapper">
                             <div className="UserProfile__buttons">
+                                {(username && username !== accountname) ? <a href={"/msgs/@" + accountname} target='_blank'><label class="button slim hollow secondary ">{tt('g.write_message')}</label></a> : null}
                                 <Follow follower={username} following={accountname} />
                             </div>
                         </div>

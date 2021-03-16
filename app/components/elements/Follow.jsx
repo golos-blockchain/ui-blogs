@@ -133,6 +133,7 @@ export default class Follow extends React.Component {
         const cnBusy = busy ? 'disabled' : '';
         const cnInactive = 'button slim hollow secondary ' + cnBusy;
         const cnDonate = 'button slim alert ' + cnBusy;
+        const cnMessage = 'button slim ' + cnBusy;
         return <span>
             {showFollow && followingWhat !== 'blog' &&
                 <label className={cnInactive} onClick={this.follow}>{tt('g.follow')}</label>}
@@ -148,6 +149,9 @@ export default class Follow extends React.Component {
 
             {showMuteInNew &&
                 <label className={cnInactive} onClick={this.unmuteNew}>{tt('g.unmute')}</label>}
+
+            {donateUrl &&
+                <a href={'/msgs/@' + following} target='_blank'><label style={{color: '#fff'}} className={cnMessage}>&nbsp;{tt('g.write_message')}&nbsp;</label></a>}
 
             {donateUrl &&
                 <label style={{color: '#fff'}} className={cnDonate} onClick={this.showTransfer}>&nbsp;{tt('g.transfer2')}&nbsp;</label>}
