@@ -7,7 +7,9 @@ export default class Compose extends React.Component {
     onSendMessage = (e) => {
         if (e.keyCode !== 13) return;
         const { onSendMessage } = this.props;
-        onSendMessage(e.target.value, e);
+        onSendMessage(e.target.value, e);  
+        const input = document.getElementsByClassName('compose-input');
+        if (input[0]) input[0].value = '';
     };
 
     render() {

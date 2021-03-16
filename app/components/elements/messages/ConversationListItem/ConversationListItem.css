@@ -28,8 +28,24 @@
     margin: 0;
 }
 
+.conversation-info {
+    width: 100%;
+}
+
 .conversation-snippet {
     font-size: 14px;
     color: #888;
     margin: 0;
+    float: left;
+}
+
+.conversation-unread {
+    float: right;
+    background-color: red;
+    color: #fff;
+    border-radius: 20px;
+    min-width: 25px;
+    font-weight: bold;
+    font-size: 12px;
+    text-align: center;
 }

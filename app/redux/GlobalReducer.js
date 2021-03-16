@@ -300,6 +300,22 @@ export default createModule({
             },
         },
         {
+            action: 'MESSAGED',
+            reducer: (
+                state,
+                { payload: { message } }
+            ) => {
+                let new_state = state;
+                new_state = new_state.updateIn(['messages'],
+                    List(),
+                    messages => {
+                        messages = messages.insert(0, fromJS(message));
+                        return messages;
+                    });
+                return new_state;
+            },
+        },
+        {
             action: 'FETCHING_DATA',
             reducer: (state, { payload: { order, category } }) =>
                 state.updateIn(['status', category || '', order], () => ({

@@ -136,7 +136,11 @@ export function getProfileImage(account) {
     if (account && account.json_metadata) {
         try {
             const md = JSON.parse(account.json_metadata);
-            return md.profile.profile_image;
+            if (md.profile) {
+              if (md.profile.profile_image) {
+                return md.profile.profile_image;
+              }
+            }
         } catch (e) {
             console.error(e);
         }

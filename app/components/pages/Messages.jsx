@@ -9,8 +9,11 @@ import Icon from 'app/components/elements/Icon';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Messenger from 'app/components/modules/messages/Messenger';
 import transaction from 'app/redux/Transaction';
+import g from 'app/redux/GlobalReducer';
 import user from 'app/redux/User';
 import { getProfileImage } from 'app/utils/NormalizeProfile';
+
+let preDecoded = {};
 
 function normalizeContacts(contacts, accounts, currentUser) {
     let contactsCopy = contacts ? [...contacts.toJS()] : [];
@@ -49,6 +52,7 @@ function normalizeContacts(contacts, accounts, currentUser) {
 
 function normalizeMessages(messages, accounts, currentUser) {
     let messagesCopy = messages ? [...messages.toJS()] : [];
+    console.log(messagesCopy.length)
     let id = 0;
     for (let msg of messagesCopy) {
         msg.id = ++id;
@@ -63,6 +67,9 @@ function normalizeMessages(messages, accounts, currentUser) {
         let public_key;
         if (currentAcc.memo_key === msg.to_memo_key) {
             public_key = msg.from_memo_key;
+            if (msg.read_date.startsWith('19')) {
+                msg.toMark = true;
+            }
         } else {
             public_key = msg.to_memo_key;
             if (msg.read_date.startsWith('19')) {
@@ -72,7 +79,13 @@ function normalizeMessages(messages, accounts, currentUser) {
 
         try {
             const private_key = currentUser.getIn(['private_keys', 'memo_private']);
-            let message = golos.messages.decode(private_key, public_key, msg);
+            let message = null;
+            if (!preDecoded[msg.encrypted_message]) {
+                message = golos.messages.decode(private_key, public_key, msg);
+                preDecoded[msg.encrypted_message] = message;
+            } else {
+                message = preDecoded[msg.encrypted_message];
+            }
             msg.message = JSON.parse(message).body;
         } catch (ex) {
             console.log(ex);
@@ -91,7 +104,54 @@ class Messages extends React.Component {
         };
     }
 
+    markMessages() {
+        const { messages } = this.state;
+        if (!messages.length) return;
+        let ranges = [];
+        let range = null;
+        for (let i = messages.length - 1; i >=0; --i) {
+            const message = messages[i];
+            if (!range) {
+                if (message.toMark) {
+                    range = {
+                        start_date: message.receive_date,
+                        stop_date: message.receive_date,
+                    };
+                }
+            } else {
+                if (message.toMark) {
+                    range.start_date = message.receive_date;
+                } else {
+                    ranges.push({...range});
+                    range = null;
+                }
+            }
+        }
+        if (range) {
+            ranges.push({...range});
+        }
+        const { account, accounts, to } = this.props;
+        this.props.markMessages(account, accounts[to], ranges);
+    }
+
+    setCallback(account) {
+        golos.api.setPrivateMessageCallback({select_accounts: [account.name]},
+            (err, result) => {
+                if (result.type === 'message') {
+                    if (result.message.from === this.props.to || 
+                        result.message.to === this.props.to)
+                        this.props.messaged(result.message);
+                }
+                this.setCallback(this.props.account ? this.props.account.name : account.name);
+            });
+    }
+
     componentWillReceiveProps(nextProps) {
+        if (nextProps.account && !this.props.account
+            || (nextProps.account && this.props.account && nextProps.account.name !== this.props.account.name)) {
+            const { account } = nextProps;
+            this.setCallback(account);
+        }
         if (nextProps.messages.size !== this.props.messages.size
             || nextProps.contacts.size !== this.props.contacts.size
             || nextProps.memo_private !== this.props.memo_private) {
@@ -102,11 +162,13 @@ class Messages extends React.Component {
             this.setState({
                 contacts: normalizeContacts(contacts, accounts, currentUser),
                 messages: normalizeMessages(messages, accounts, currentUser),
+            }, () => {
+                this.markMessages();
+                setTimeout(() => {
+                    const scroll = document.getElementsByClassName('scrollable')[1];
+                    if (scroll) scroll.scrollTo(0,scroll.scrollHeight);
+                }, 1);
             });
-            setTimeout(() => {
-                const scroll = document.getElementsByClassName('scrollable')[1];
-                if (scroll) scroll.scrollTo(0,scroll.scrollHeight);
-            }, 1);
         }
     }
 
@@ -233,6 +295,37 @@ module.exports = {
                 }
                 return true;
             },
+            markMessages: (senderAcc, toAcc, ranges) => {
+                let OPERATIONS = [];
+                for (const r of ranges) {
+                    const json = JSON.stringify(['private_mark_message', {
+                        from: toAcc.name,
+                        to: senderAcc.name,
+                        nonce: 0,
+                        start_date: new Date(new Date(r.start_date+'Z').getTime() - 1000).toISOString().split('.')[0],
+                        stop_date: r.stop_date,
+                    }]);
+                    OPERATIONS.push(
+                        ['custom_json',
+                            {
+                                id: 'private_message',
+                                required_posting_auths: [senderAcc.name],
+                                json,
+                            }
+                        ]);
+                }
+                if (!OPERATIONS.length) return;
+                dispatch(
+                    transaction.actions.broadcastOperation({
+                        type: 'custom_json',
+                        trx: OPERATIONS,
+                        successCallback: null,
+                        errorCallback: (e) => {
+                            console.log(e);
+                        }
+                    })
+                );
+            },
             sendMessage: (senderAcc, senderPrivMemoKey, toAcc, body) => {
                 let message = {
                     app: 'golos-id',
@@ -259,11 +352,13 @@ module.exports = {
                         id: 'private_message',
                         required_posting_auths: [senderAcc.name],
                         json,
-                        message: message,
                     },
                     successCallback: null,
                     errorCallback: null,
                 }));
+            },
+            messaged: (message) => {
+                dispatch(g.actions.messaged({message}));
             }
         })
     )(Messages),
