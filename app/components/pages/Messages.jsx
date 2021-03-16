@@ -140,7 +140,10 @@ class Messages extends React.Component {
                 if (result && result.type === 'message') {
                     if (result.message.from === this.props.to || 
                         result.message.to === this.props.to)
-                        this.props.messaged(result.message);
+                        if (this.nonce != result.message.nonce) {
+                            this.props.messaged(result.message);
+                            this.nonce = result.message.nonce
+                        }
                 }
                 this.setCallback(this.props.account || account);
             });
