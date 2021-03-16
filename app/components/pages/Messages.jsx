@@ -142,7 +142,7 @@ class Messages extends React.Component {
                         result.message.to === this.props.to)
                         this.props.messaged(result.message);
                 }
-                this.setCallback(this.props.account ? this.props.account.name : account.name);
+                this.setCallback(this.props.account || account);
             });
     }
 
