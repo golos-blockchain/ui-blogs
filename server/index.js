@@ -13,6 +13,7 @@ require('module').Module._initPaths();
 
 global.$STM_Config = {
     ws_connection_client: config.get('ws_connection_client'),
+    ws_connection_msgs: config.get('ws_connection_msgs'),
     img_proxy_prefix: config.get('img_proxy_prefix'),
     read_only_mode: config.get('read_only_mode'),
     registrar_fee: config.get('registrar.fee'),
