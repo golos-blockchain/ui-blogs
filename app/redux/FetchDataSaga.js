@@ -7,7 +7,7 @@ import constants from './constants';
 import { reveseTag } from 'app/utils/tags';
 import { CATEGORIES, DEBT_TOKEN_SHORT, LIQUID_TICKER, DEFAULT_CURRENCY, IGNORE_TAGS, PUBLIC_API, SELECT_TAGS_KEY } from 'app/client_config';
 import cookie from "react-cookie";
-import {api} from 'golos-classic-js';
+import {config, api} from 'golos-classic-js';
 
 export function* fetchDataWatches () {
     yield fork(watchLocationChange);
@@ -340,6 +340,7 @@ export function* fetchState(location_change_action) {
             trending_tags.forEach (tag => tags[tag.name] = tag)
             state.tags = tags
         } else if (parts[0] == 'msgs') {
+            config.set('websocket', 'wss://apibeta.golos.today/ws');
             state.contacts = [];
             state.messages = [];
             if (localStorage.getItem('invite')) {
