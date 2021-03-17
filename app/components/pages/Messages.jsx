@@ -40,9 +40,10 @@ function normalizeContacts(contacts, accounts, currentUser) {
 
         try {
             const private_key = currentUser.getIn(['private_keys', 'memo_private']);
-            let message = golos.messages.decode(private_key, public_key, contact.last_message);
-
-            contact.last_message.message = JSON.parse(message).body;
+            golos.messages.decode(private_key, public_key, [contact.last_message],
+                (message_object) => {
+                    message_object.message = JSON.parse(message_object.message).body;
+                });
         } catch (ex) {
             console.log(ex);
         }
@@ -50,48 +51,42 @@ function normalizeContacts(contacts, accounts, currentUser) {
     return contactsCopy
 }
 
-function normalizeMessages(messages, accounts, currentUser) {
-    let messagesCopy = messages ? [...messages.toJS()] : [];
-    console.log(messagesCopy.length)
-    let id = 0;
-    for (let msg of messagesCopy) {
-        msg.id = ++id;
-        msg.author = msg.from;
-        msg.date = new Date(msg.receive_date + 'Z');
-
-        if (!currentUser || !accounts) continue;
-
-        const currentAcc = accounts[currentUser.get('username')];
-        if (!currentAcc) continue;
-
-        let public_key;
-        if (currentAcc.memo_key === msg.to_memo_key) {
-            public_key = msg.from_memo_key;
-            if (msg.read_date.startsWith('19')) {
-                msg.toMark = true;
-            }
-        } else {
-            public_key = msg.to_memo_key;
-            if (msg.read_date.startsWith('19')) {
-                msg.unread = true;
-            }
-        }
-
-        try {
-            const private_key = currentUser.getIn(['private_keys', 'memo_private']);
-            let message = null;
-            if (!preDecoded[msg.encrypted_message]) {
-                message = golos.messages.decode(private_key, public_key, msg);
-                preDecoded[msg.encrypted_message] = message;
-            } else {
-                message = preDecoded[msg.encrypted_message];
-            }
-            msg.message = JSON.parse(message).body;
-        } catch (ex) {
-            console.log(ex);
-        }
+function normalizeMessages(messages, accounts, currentUser, to) {
+    if (!to || !accounts[to]) {
+        return [];
     }
-    return messagesCopy.reverse()
+    let messagesCopy = messages ? [...messages.toJS()] : [];
+
+    let id = 0;
+    try {
+        const private_key = currentUser.getIn(['private_keys', 'memo_private']);
+        let messagesCopy2 = golos.messages.decode(private_key, accounts[to].memo_key, messagesCopy,
+            (msg) => {
+                msg.id = ++id;
+                msg.author = msg.from;
+                msg.date = new Date(msg.receive_date + 'Z');
+
+                let currentAcc = accounts[currentUser.get('username')];
+
+                if (currentAcc.memo_key === msg.to_memo_key) {
+                    if (msg.read_date.startsWith('19')) {
+                        msg.toMark = true;
+                    }
+                } else {
+                    if (msg.read_date.startsWith('19')) {
+                        msg.unread = true;
+                    }
+                }
+
+                msg.message = JSON.parse(msg.message).body;
+
+                return true;
+            }, messagesCopy.length - 1, -1);
+        return messagesCopy2;
+    } catch (ex) {
+        console.log(ex);
+        return [];
+    }
 }
 
 class Messages extends React.Component {
@@ -164,7 +159,7 @@ class Messages extends React.Component {
             }
             this.setState({
                 contacts: normalizeContacts(contacts, accounts, currentUser),
-                messages: normalizeMessages(messages, accounts, currentUser),
+                messages: normalizeMessages(messages, accounts, currentUser, this.props.to),
             }, () => {
                 this.markMessages();
                 setTimeout(() => {
@@ -347,7 +342,7 @@ module.exports = {
                     to_memo_key: toAcc.memo_key,
                     checksum: data.checksum,
                     update: false,
-                    encrypted_message: data.message,
+                    encrypted_message: data.encrypted_message,
                 }]);
                 dispatch(transaction.actions.broadcastOperation({
                     type: 'custom_json',
