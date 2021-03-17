@@ -63,6 +63,10 @@
     border-bottom-right-radius: 2px;
 }
 
+.message.mine .bubble-container .bubble.sending {
+    background: #c2e0ff;
+}
+
 .message.mine.start .bubble-container .unread {
     margin-top: 10px;
 }
@@ -71,4 +75,8 @@
     padding: 10px 15px;
     color: #007aff;
     font-size: 12px;
+}
+
+.message .bubble-container .unread.sending {
+    color: #c2e0ff !important;
 }

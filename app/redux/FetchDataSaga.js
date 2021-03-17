@@ -340,9 +340,12 @@ export function* fetchState(location_change_action) {
             trending_tags.forEach (tag => tags[tag.name] = tag)
             state.tags = tags
         } else if (parts[0] == 'msgs') {
-            config.set('websocket', 'wss://apibeta.golos.today/ws');
+            const { ws_connection_msgs } = $STM_Config;
+            if (ws_connection_msgs)
+                config.set('websocket', ws_connection_msgs);
             state.contacts = [];
             state.messages = [];
+            state.messages_update = '0';
             if (localStorage.getItem('invite')) {
                 accounts.add(localStorage.getItem('invite'));
 
@@ -353,6 +356,9 @@ export function* fetchState(location_change_action) {
                     accounts.add(to);
 
                     state.messages = yield call([api, api.getThreadAsync], localStorage.getItem('invite'), to, {});
+                    if (state.messages.length) {
+                        state.messages_update = state.messages[state.messages.length - 1].nonce;
+                    }
                 }
             }
             for (let contact of state.contacts) {

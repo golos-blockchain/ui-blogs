@@ -306,11 +306,30 @@ export default createModule({
                 { payload: { message } }
             ) => {
                 let new_state = state;
+                let messages_last_update = message.nonce;
                 new_state = new_state.updateIn(['messages'],
                     List(),
                     messages => {
-                        messages = messages.insert(0, fromJS(message));
+                        const idx = messages.findIndex(i => i.get('nonce') === message.nonce);
+                        if (idx === -1) {
+                            messages = messages.insert(0, fromJS(message));
+                        } else {
+                            messages = messages.set(idx, fromJS(message));
+                            messages = messages.insert(0, fromJS({}));
+                        }
                         return messages;
+                    });
+                new_state = new_state.set('messages_last_update', messages_last_update);
+                new_state = new_state.updateIn(['contacts'],
+                    List(),
+                    contacts => {
+                        let idx = contacts.findIndex(i => i.get('contact') === message.to);
+                        if (idx !== -1) {
+                            contacts = contacts.update(idx, contact => {
+                                return contact.set('last_message', fromJS(message));
+                            });
+                        }
+                        return contacts;
                     });
                 return new_state;
             },

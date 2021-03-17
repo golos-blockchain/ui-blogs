@@ -1,5 +1,5 @@
 import { fork, call, put, select, takeEvery } from 'redux-saga/effects';
-import {fromJS, Set, Map} from 'immutable'
+import {fromJS, Set, Map, List} from 'immutable'
 import {getAccount, getContent, getWorkerRequest} from 'app/redux/SagaShared'
 import {findSigningKey} from 'app/redux/AuthSaga'
 import g from 'app/redux/GlobalReducer'
@@ -119,23 +119,25 @@ function* preBroadcast_custom_json({operation}) {
         } catch(e) {
             console.error('TransactionSaga unrecognized follow custom_json format', operation.json);
         }
-    } /*else if (operation.id === 'private_message' && json[0] === 'private_message') {
+    } else if (operation.id === 'private_message' && json[0] === 'private_message') {
         yield put(g.actions.update({
             key: ['messages'],
-            notSet: Map(),
+            notSet: List(),
             updater: m => {
                 //m = m.asMutable()
-                m = m.insert(0, {
+                m = m.insert(0, fromJS({
+                    nonce: json[1].nonce,
+                    checksum: json[1].checksum,
                     from: json[1].from,
                     read_date: '1970-01-01T00:00:00',
-                    receive_date: new Date().toISOString().split('.')[0],
-                    message: JSON.parse(operation.message).body
-                })
-                delete operation.message
+                    create_date: new Date().toISOString().split('.')[0],
+                    receive_date: '1970-01-01T00:00:00',
+                    encrypted_message: json[1].encrypted_message
+                }))
                 return m//.asImmutable()
             }
         }))
-    }*/
+    }
     return operation
 }
 

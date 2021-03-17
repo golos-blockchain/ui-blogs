@@ -81,7 +81,10 @@ function normalizeMessages(messages, accounts, currentUser, to) {
                 msg.message = JSON.parse(msg.message).body;
 
                 return true;
-            }, messagesCopy.length - 1, -1);
+            }, messagesCopy.length - 1, -1,
+            (msg, i, err) => {
+                console.log(err);
+            });
         return messagesCopy2;
     } catch (ex) {
         console.log(ex);
@@ -154,13 +157,17 @@ class Messages extends React.Component {
             this.setCallback(account);
         }
         if (nextProps.messages.size !== this.props.messages.size
+            || nextProps.to !== this.state.to
             || nextProps.contacts.size !== this.props.contacts.size
             || nextProps.memo_private !== this.props.memo_private) {
             const { contacts, messages, accounts, currentUser } = nextProps;
+            if (!currentUser) return;
             if (!this.props.checkMemo(currentUser)) {
                 return;
             }
+            const anotherChat = nextProps.to !== this.state.to;
             this.setState({
+                to: nextProps.to,
                 contacts: normalizeContacts(contacts, accounts, currentUser),
                 messages: normalizeMessages(messages, accounts, currentUser, this.props.to),
             }, () => {
@@ -168,6 +175,10 @@ class Messages extends React.Component {
                 setTimeout(() => {
                     const scroll = document.getElementsByClassName('scrollable')[1];
                     if (scroll) scroll.scrollTo(0,scroll.scrollHeight);
+                    if (anotherChat) {
+                        const input = document.getElementsByClassName('compose-input')[0];
+                        if (input) input.focus();
+                    }
                 }, 1);
             });
         }
@@ -204,6 +215,7 @@ class Messages extends React.Component {
     };
 
     onSendMessage = (message, event) => {
+        if (!message.length) return;
         const { to, account, accounts, currentUser, messages } = this.props;
         const private_key = currentUser.getIn(['private_keys', 'memo_private']);
         
@@ -266,6 +278,7 @@ module.exports = {
             const accounts = state.global.get('accounts');
             const contacts = state.global.get('contacts');
             const messages = state.global.get('messages');
+            const messages_update = state.global.get('messages_update');
 
             let to = ownProps.routeParams.to;
             if (to) to = to.replace('@', '');
@@ -279,6 +292,7 @@ module.exports = {
                 to,
                 contacts: contacts,
                 messages: messages,
+                messages_update: messages_update,
                 account: currentUser && accounts.toJS()[currentUser.get('username')],
                 currentUser,
                 memo_private,

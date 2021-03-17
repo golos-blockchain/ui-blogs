@@ -14,7 +14,9 @@ export default class Message extends React.Component {
 
         const friendlyDate = data.date.toLocaleString();
 
-        const unread = data.unread ? (<div className='unread'>●</div>) : null;
+        const isSending = (!data.receive_date || data.receive_date.startsWith('19')) ? ' sending' : ''; 
+
+        const unread = data.unread ? (<div className={'unread' + isSending}>●</div>) : null;
 
         return (
             <div className={[
@@ -32,7 +34,7 @@ export default class Message extends React.Component {
 
                 <div className='bubble-container'>
                     {isMine ? unread : null}
-                    <div className='bubble' title={friendlyDate}>
+                    <div className={'bubble' + isSending} title={friendlyDate}>
                         { data.message }
                     </div>
                     {!isMine ? unread : null}
