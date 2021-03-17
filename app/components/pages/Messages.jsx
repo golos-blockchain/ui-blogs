@@ -132,6 +132,10 @@ class Messages extends React.Component {
     setCallback(account) {
         golos.api.setPrivateMessageCallback({select_accounts: [account.name]},
             (err, result) => {
+                if (err) {
+                    this.setCallback(this.props.account || account);
+                    return;
+                }
                 if (result && result.type === 'message') {
                     if (result.message.from === this.props.to || 
                         result.message.to === this.props.to)
@@ -140,7 +144,6 @@ class Messages extends React.Component {
                             this.nonce = result.message.nonce
                         }
                 }
-                this.setCallback(this.props.account || account);
             });
     }
 
