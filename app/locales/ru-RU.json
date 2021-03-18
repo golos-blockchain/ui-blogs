@@ -195,6 +195,7 @@
   "messages": {
     "last_seen": "был(а) ",
     "search": "Поиск людей",
+    "search_not_found": "Никого не найдено",
     "type_a_message_NAME": "Напишите сообщение, @%(NAME)s"
   },
   "g": {

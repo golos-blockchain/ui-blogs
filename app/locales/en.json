@@ -29,6 +29,7 @@
   "messages": {
     "last_seen": "last seen ",
     "search": "Search people",
+    "search_not_found": "Nobody found",
     "type_a_message_NAME": "Type a message, @%(NAME)s"
   },
   "g": {

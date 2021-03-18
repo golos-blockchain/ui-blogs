@@ -139,13 +139,19 @@ class Messages extends React.Component {
                     this.setCallback(this.props.account || account);
                     return;
                 }
-                if (result && result.type === 'message') {
-                    if (result.message.from === this.props.to || 
-                        result.message.to === this.props.to)
-                        if (this.nonce != result.message.nonce) {
-                            this.props.messaged(result.message);
-                            this.nonce = result.message.nonce
-                        }
+                if (!result || !result.message) {
+                    return;
+                }
+                const updateMessage = result.message.from === this.props.to || 
+                    result.message.to === this.props.to;
+                const isMine = account.name === result.message.from;
+                if (result.type === 'message') {
+                    if (this.nonce != result.message.nonce) {
+                        this.props.messaged(result.message, updateMessage, isMine);
+                        this.nonce = result.message.nonce
+                    }
+                } else if (result.type === 'mark') {
+                    this.props.messageRead(result.message, updateMessage, isMine);
                 }
             });
     }
@@ -208,11 +214,25 @@ class Messages extends React.Component {
             contacts.push(account);
         }
         if (contacts.length === 0) {
-            contacts = [{contact: 'Ничего не найдено'}];
+            contacts = [{
+                contact: tt('messages.search_not_found'),
+                isSystemMessage: true
+            }];
         }
         this.setState({
             searchContacts: contacts
         });
+
+        if (this.searchHider) {
+            clearTimeout(this.searchHider);
+        }
+        this.searchHider = setTimeout(() => {
+            if (this.state.searchContacts) {
+                this.setState({
+                    searchContacts: null
+                });
+            }
+        }, 10000);
     };
 
     onSendMessage = (message, event) => {
@@ -373,8 +393,11 @@ module.exports = {
                     errorCallback: null,
                 }));
             },
-            messaged: (message) => {
-                dispatch(g.actions.messaged({message}));
+            messaged: (message, updateMessage, isMine) => {
+                dispatch(g.actions.messaged({message, updateMessage, isMine}));
+            },
+            messageRead: (message, updateMessage, isMine) => {
+                dispatch(g.actions.messageRead({message, updateMessage, isMine}));
             }
         })
     )(Messages),
