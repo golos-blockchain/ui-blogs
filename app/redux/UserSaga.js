@@ -306,7 +306,8 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
         )
     }
 
-    if (!autopost && saveLogin && !operationType)
+    const memoAuth = private_keys.get('memo_private') && private_keys.get('memo_private').toWif() === password;
+    if (!autopost && saveLogin && !operationType && !memoAuth)
         yield put(user.actions.saveLogin());
 
     try {

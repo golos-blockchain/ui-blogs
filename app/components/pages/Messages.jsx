@@ -157,6 +157,7 @@ class Messages extends React.Component {
             this.setCallback(account);
         }
         if (nextProps.messages.size !== this.props.messages.size
+            || nextProps.messages_update !== this.props.messages_update
             || nextProps.to !== this.state.to
             || nextProps.contacts.size !== this.props.contacts.size
             || nextProps.memo_private !== this.props.memo_private) {
@@ -292,7 +293,7 @@ module.exports = {
                 to,
                 contacts: contacts,
                 messages: messages,
-                messages_update: messages_update,
+                messages_update,
                 account: currentUser && accounts.toJS()[currentUser.get('username')],
                 currentUser,
                 memo_private,

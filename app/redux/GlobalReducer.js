@@ -306,7 +306,7 @@ export default createModule({
                 { payload: { message } }
             ) => {
                 let new_state = state;
-                let messages_last_update = message.nonce;
+                let messages_update = message.nonce;
                 new_state = new_state.updateIn(['messages'],
                     List(),
                     messages => {
@@ -315,11 +315,10 @@ export default createModule({
                             messages = messages.insert(0, fromJS(message));
                         } else {
                             messages = messages.set(idx, fromJS(message));
-                            messages = messages.insert(0, fromJS({}));
                         }
                         return messages;
                     });
-                new_state = new_state.set('messages_last_update', messages_last_update);
+                new_state = new_state.set('messages_update', messages_update);
                 new_state = new_state.updateIn(['contacts'],
                     List(),
                     contacts => {
@@ -327,6 +326,12 @@ export default createModule({
                         if (idx !== -1) {
                             contacts = contacts.update(idx, contact => {
                                 return contact.set('last_message', fromJS(message));
+                            });
+
+                            const strCmp = (a, b) => a < b ? 1 : a > b ? -1 : 0
+                            contacts = contacts.sort((a, b) => {
+                                return strCmp(a.getIn(['last_message', 'receive_date']),
+                                    b.getIn(['last_message', 'receive_date']));
                             });
                         }
                         return contacts;
