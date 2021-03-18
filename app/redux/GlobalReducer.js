@@ -365,18 +365,34 @@ export default createModule({
             ) => {
                 let new_state = state;
                 let messages_update = message.nonce;
-                if (updateMessage && isMine) {
+                if (updateMessage) {
                     new_state = new_state.updateIn(['messages'],
                     List(),
                     messages => {
                         const idx = messages.findIndex(i => i.get('nonce') === message.nonce);
-                        if (idx === -1) {
-                            messages = messages.insert(0, fromJS(message));
-                        } else {
+                        if (idx !== -1) {
                             messages = messages.set(idx, fromJS(message));
                         }
                         return messages;
                     });
+                }
+                if (!isMine) {
+                    new_state = new_state.updateIn(['contacts'],
+                        List(),
+                        contacts => {
+                            let idx = contacts.findIndex(i =>
+                                i.get('contact') === message.from);
+                            if (idx !== -1) {
+                                contacts = contacts.update(idx, contact => {
+                                    contact = contact.set('last_message', fromJS(message));
+                                    let msgs = contact.getIn(['size', 'unread_inbox_messages']);
+                                    contact = contact.setIn(['size', 'unread_inbox_messages'],
+                                        Math.max(msgs - 1, 0));
+                                    return contact;
+                                });
+                            }
+                            return contacts;
+                        });
                 }
                 new_state = new_state.set('messages_update', messages_update + 1);
                 return new_state;

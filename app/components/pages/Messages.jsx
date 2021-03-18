@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { browserHistory } from 'react-router';
 import max from 'lodash/max';
+import debounce from 'lodash/debounce';
 import tt from 'counterpart';
 import Icon from 'app/components/elements/Icon';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
@@ -132,6 +133,8 @@ class Messages extends React.Component {
         this.props.markMessages(account, accounts[to], ranges);
     }
 
+    markMessages2 = debounce(this.markMessages, 1000);
+
     setCallback(account) {
         golos.api.setPrivateMessageCallback({select_accounts: [account.name]},
             (err, result) => {
@@ -178,7 +181,7 @@ class Messages extends React.Component {
                 contacts: normalizeContacts(contacts, accounts, currentUser),
                 messages: normalizeMessages(messages, accounts, currentUser, this.props.to),
             }, () => {
-                this.markMessages();
+                this.markMessages2();
                 setTimeout(() => {
                     const scroll = document.getElementsByClassName('scrollable')[1];
                     if (scroll) scroll.scrollTo(0,scroll.scrollHeight);
