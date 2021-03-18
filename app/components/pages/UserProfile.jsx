@@ -412,7 +412,8 @@ export default class UserProfile extends React.Component {
                     </Link>
                     <Link target="_blank" className="UserProfile__menu-item" to={`/search/@${accountname}`}>{tt('g.search')}
                     </Link>
-                    <Link target="_blank" className="UserProfile__menu-item" to={`/msgs`}>{tt('g.messages')}
+                    <Link target="_blank" className="UserProfile__menu-item" to={`/msgs`}>
+                        {tt('g.messages')} {isMyAccount && <NotifiCounter fields="message" />}
                     </Link>
                     <LinkWithDropdown
                         closeOnClickOutside

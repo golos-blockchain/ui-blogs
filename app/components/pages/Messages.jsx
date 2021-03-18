@@ -7,6 +7,7 @@ import max from 'lodash/max';
 import debounce from 'lodash/debounce';
 import tt from 'counterpart';
 import Icon from 'app/components/elements/Icon';
+import MarkNotificationRead from 'app/components/elements/MarkNotificationRead';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Messenger from 'app/components/modules/messages/Messenger';
 import transaction from 'app/redux/Transaction';
@@ -284,6 +285,7 @@ class Messages extends React.Component {
             conversationTopLeft={[
                 <a href='/'>
                     <h4>GOLOS</h4>
+                    <MarkNotificationRead fields='message' account={account.name} />
                 </a>
             ]}
             conversationLinkPattern='/msgs/@*'
