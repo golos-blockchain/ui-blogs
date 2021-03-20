@@ -2,3 +2,11 @@
     padding: 10px;
     padding-bottom: 70px;
 }
+
+.emoji-picker-tooltip:not(.shown) {
+    display: none;
+}
+
+emoji-picker {
+    height: 290px !important;
+}

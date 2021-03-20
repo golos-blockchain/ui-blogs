@@ -9,7 +9,9 @@ import tt from 'counterpart';
 import Icon from 'app/components/elements/Icon';
 import MarkNotificationRead from 'app/components/elements/MarkNotificationRead';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
-import Messenger from 'app/components/modules/messages/Messenger';
+let Messenger;
+if (process.env.BROWSER)
+    Messenger = require('app/components/modules/messages/Messenger').default;
 import transaction from 'app/redux/Transaction';
 import g from 'app/redux/GlobalReducer';
 import user from 'app/redux/User';
@@ -278,21 +280,24 @@ class Messages extends React.Component {
     render() {
         const { contacts, account, to } = this.props;
         if (!contacts || !account) return (<div></div>);
-        return (<Messenger
-            account={this.props.account}
-            to={to}
-            contacts={this.state.searchContacts || this.state.contacts}
-            conversationTopLeft={[
-                <a href='/'>
-                    <h4>GOLOS</h4>
-                    <MarkNotificationRead fields='message' account={account.name} />
-                </a>
-            ]}
-            conversationLinkPattern='/msgs/@*'
-            onConversationSearch={this.onConversationSearch}
-            messages={this.state.messages}
-            messagesTopCenter={this._renderMessagesTopCenter()}
-            onSendMessage={this.onSendMessage} />);
+        return (<div>
+                <link href='https://unpkg.com/ionicons@4.5.0/dist/css/ionicons.min.css' rel='stylesheet' />
+                {Messenger ? (<Messenger
+                    account={this.props.account}
+                    to={to}
+                    contacts={this.state.searchContacts || this.state.contacts}
+                    conversationTopLeft={[
+                        <a href='/'>
+                            <h4>GOLOS</h4>
+                            <MarkNotificationRead fields='message' account={account.name} />
+                        </a>
+                    ]}
+                    conversationLinkPattern='/msgs/@*'
+                    onConversationSearch={this.onConversationSearch}
+                    messages={this.state.messages}
+                    messagesTopCenter={this._renderMessagesTopCenter()}
+                    onSendMessage={this.onSendMessage} />) : null}
+            </div>);
     }
 }
 

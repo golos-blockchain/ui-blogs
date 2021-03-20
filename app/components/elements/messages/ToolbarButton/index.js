@@ -4,9 +4,9 @@ import './ToolbarButton.css';
 
 export default class ToolbarButton extends React.Component {
     render() {
-        const { icon, onClick } = this.props;
+        const { icon, className, onClick } = this.props;
         return (
-            <i className={`toolbar-button ${icon}`} onClick={onClick || undefined} />
+            <i className={`toolbar-button ${icon} ` + (className || '')} onClick={onClick || undefined} />
         );
     }
 }

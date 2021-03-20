@@ -1,6 +1,7 @@
 .message {
     display: flex;
     flex-direction: column;
+    white-space: pre;
 }
 
 .message .timestamp {
@@ -16,6 +17,12 @@
 .message .bubble-container {
     font-size: 14px;
     display: flex;
+}
+
+.message .bubble-container a {
+    color: #ffcccc;
+    text-decoration: underline;
+    font-weight: bold;
 }
 
 .message.mine .bubble-container {
@@ -65,6 +72,10 @@
 
 .message.mine .bubble-container .bubble.sending {
     background: #c2e0ff;
+}
+
+.message.mine .bubble-container .bubble.sending a {
+    color: #007aff;
 }
 
 .message.mine.start .bubble-container .unread {
