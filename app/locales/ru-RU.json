@@ -196,7 +196,8 @@
     "last_seen": "был(а) ",
     "search": "Поиск людей",
     "search_not_found": "Никого не найдено",
-    "type_a_message_NAME": "Напишите сообщение, @%(NAME)s"
+    "type_a_message_NAME": "Напишите сообщение, @%(NAME)s",
+    "cannot_load_image_try_again": "Не удалось загрузить картинку. Попробуйте другую или еще раз."
   },
   "g": {
     "golos_fest": "Новости",
@@ -271,6 +272,7 @@
     "logout": "Выйти",
     "memo": "Ключ заметок",
     "messages": "Сообщения",
+    "modified": " (изменено)",
     "more": "больше",
     "more_hint": "Подробнее",
     "mute": "Заблокировать",

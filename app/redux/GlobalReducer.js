@@ -399,6 +399,27 @@ export default createModule({
             },
         },
         {
+            action: 'MESSAGE_DELETED',
+            reducer: (
+                state,
+                { payload: { message, updateMessage, isMine } }
+            ) => {
+                let new_state = state;
+                if (updateMessage) {
+                    new_state = new_state.updateIn(['messages'],
+                    List(),
+                    messages => {
+                        const idx = messages.findIndex(i => i.get('nonce') === message.nonce);
+                        if (idx !== -1) {
+                            messages = messages.delete(idx);
+                        }
+                        return messages;
+                    });
+                }
+                return new_state;
+            },
+        },
+        {
             action: 'FETCHING_DATA',
             reducer: (state, { payload: { order, category } }) =>
                 state.updateIn(['status', category || '', order], () => ({

@@ -19,10 +19,12 @@
 
 .compose-input {
     flex: 1;
-    border: none;
+    border: none !important;
     font-size: 14px;
     height: 40px;
-    background: none;
+    background: none !important;
+    box-shadow: none !important;
+    -webkite-box-shadow: none !important;
 }
 
 .compose-input::placeholder {
@@ -37,4 +39,14 @@
 
 .compose .toolbar-button:hover {
     color: #99999c;
+}
+
+.compose-panel {
+    width: 100%;
+    height: 50px;
+    padding: 8px;
+}
+
+.compose-panel .cancel-button {
+    float: right;
 }

@@ -12,9 +12,7 @@ export default class Compose extends React.Component {
             } else {
                 e.preventDefault();
                 const { onSendMessage } = this.props;
-                onSendMessage(e.target.value, e);  
-                const input = document.getElementsByClassName('compose-input');
-                if (input[0]) input[0].value = '';
+                onSendMessage(e.target.value, e);
             }
         }
     };
@@ -30,23 +28,24 @@ export default class Compose extends React.Component {
         this._tooltip = document.querySelector('.emoji-picker-tooltip');
         this._tooltip.appendChild(this._picker);
 
-        const button = document.querySelector('.emoji-picker-opener');
-        createPopper(button, this._tooltip, {
-            placement: 'top',
-            strategy: 'fixed',
-        });
-        button.addEventListener('click', this.onEmojiClick);
+        setTimeout(() => {
+            const button = document.querySelector('.emoji-picker-opener');
+            createPopper(button.childNodes[0].childNodes[0], this._tooltip, {
+                placement: 'top',
+                strategy: 'fixed',
+            });
+            button.addEventListener('click', this.onEmojiClick);
 
-        document.body.addEventListener('click', this.onBodyClick);
+            document.body.addEventListener('click', this.onBodyClick);
+        }, 500);
     }
 
     onEmojiClick = (event) => {
-        this._tooltip.classList.add('shown')
+        event.stopPropagation();
+        this._tooltip.classList.add('shown');
     };
 
     onBodyClick = (event) => {
-        if (event.target.localName === 'emoji-picker') return;
-        if (event.target.classList.contains('emoji-picker-opener')) return;
         if (!this._tooltip) return;
         this._tooltip.classList.remove('shown');
     };
@@ -71,6 +70,7 @@ export default class Compose extends React.Component {
     }
 
     onEmojiSelect = (event) => {
+        event.stopPropagation();
         this._tooltip.classList.toggle('shown');
 
         const input = document.getElementsByClassName('compose-input')[0];
@@ -80,19 +80,55 @@ export default class Compose extends React.Component {
         }
     };
 
+    onPanelDeleteClick = (event) => {
+        if (this.props.onPanelDeleteClick) {
+            this.props.onPanelDeleteClick(event);
+        }
+    }
+
+    onPanelEditClick = (event) => {
+        if (this.props.onPanelEditClick) {
+            this.props.onPanelEditClick(event);
+        }
+    }
+
+    onPanelCloseClick = (event) => {
+        if (this.props.onPanelCloseClick) {
+            this.props.onPanelCloseClick(event);
+        }
+    }
+
     render() {
         const { account, rightItems } = this.props;
+        const { onPanelDeleteClick, onPanelEditClick, onPanelCloseClick } = this;
+
+        const selectedMessages = Object.entries(this.props.selectedMessages);
+        let selectedMessagesCount = 0;
+        let selectedEditablesCount = 0;
+        for (let [nonce, info] of selectedMessages) {
+            selectedMessagesCount++;
+            if (info.editable) {
+                selectedEditablesCount++;
+            }
+        }
+
         return (
             <div className='compose'>
                 {
-                    rightItems
+                    !selectedMessagesCount ? rightItems : null
                 }
 
-                <textarea
+                {!selectedMessagesCount ? (<textarea
                     className='compose-input'
                     placeholder={tt('messages.type_a_message_NAME', {NAME: account.name})}
                     onKeyDown={this.onSendMessage}
-                />
+                />) : null}
+
+                {selectedMessagesCount ? (<div className='compose-panel'>
+                    <button className='button hollow small alert' onClick={onPanelDeleteClick}>{tt('g.delete') + ' (' + selectedMessagesCount + ')'}</button>
+                    {(selectedMessagesCount === 1 && selectedEditablesCount === 1) ? (<button className='button hollow small' onClick={onPanelEditClick}>{tt('g.edit')}</button>) : null}
+                    <button className='button hollow small cancel-button' onClick={onPanelCloseClick}>{tt('g.cancel')}</button>
+                </div>) : null}
             </div>
         );
     }

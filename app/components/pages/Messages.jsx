@@ -9,6 +9,8 @@ import tt from 'counterpart';
 import Icon from 'app/components/elements/Icon';
 import MarkNotificationRead from 'app/components/elements/MarkNotificationRead';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
+import DialogManager from 'app/components/elements/common/DialogManager';
+import AddImageDialog from '../dialogs/AddImageDialog';
 let Messenger;
 if (process.env.BROWSER)
     Messenger = require('app/components/modules/messages/Messenger').default;
@@ -55,7 +57,7 @@ function normalizeContacts(contacts, accounts, currentUser) {
     return contactsCopy
 }
 
-function normalizeMessages(messages, accounts, currentUser, to) {
+function normalizeMessages(messages, accounts, currentUser, to, preDecoded) {
     if (!to || !accounts[to]) {
         return [];
     }
@@ -64,13 +66,26 @@ function normalizeMessages(messages, accounts, currentUser, to) {
     let id = 0;
     try {
         const private_key = currentUser.getIn(['private_keys', 'memo_private']);
+
+        let currentAcc = accounts[currentUser.get('username')];
+
         let messagesCopy2 = golos.messages.decode(private_key, accounts[to].memo_key, messagesCopy,
             (msg) => {
+                const decoded = JSON.parse(msg.message);
+                msg.message = decoded.body;
+                msg.type = decoded.type || 'text';
+
+                preDecoded[msg.nonce] = decoded;
+
+                return true;
+            }, messagesCopy.length - 1, -1,
+            (msg, i, err) => {
+                console.log(err);
+            },
+            (msg, i, results) => {
                 msg.id = ++id;
                 msg.author = msg.from;
                 msg.date = new Date(msg.receive_date + 'Z');
-
-                let currentAcc = accounts[currentUser.get('username')];
 
                 if (currentAcc.memo_key === msg.to_memo_key) {
                     if (msg.read_date.startsWith('19')) {
@@ -82,13 +97,16 @@ function normalizeMessages(messages, accounts, currentUser, to) {
                     }
                 }
 
-                msg.message = JSON.parse(msg.message).body;
-
+                let pd = preDecoded[msg.nonce];
+                if (pd) {
+                    msg.message = pd.body;
+                    msg.type = pd.type;
+                    results.push(msg);
+                    return false;
+                }
                 return true;
-            }, messagesCopy.length - 1, -1,
-            (msg, i, err) => {
-                console.log(err);
             });
+
         return messagesCopy2;
     } catch (ex) {
         console.log(ex);
@@ -102,38 +120,36 @@ class Messages extends React.Component {
         this.state = {
             contacts: [],
             messages: [],
+            selectedMessages: {},
             searchContacts: null,
         };
+        this.preDecoded = {};
     }
 
     markMessages() {
         const { messages } = this.state;
         if (!messages.length) return;
-        let ranges = [];
-        let range = null;
-        for (let i = messages.length - 1; i >=0; --i) {
-            const message = messages[i];
-            if (!range) {
-                if (message.toMark) {
-                    range = {
-                        start_date: message.receive_date,
-                        stop_date: message.receive_date,
-                    };
-                }
-            } else {
-                if (message.toMark) {
-                    range.start_date = message.receive_date;
-                } else {
-                    ranges.push({...range});
-                    range = null;
-                }
-            }
-        }
-        if (range) {
-            ranges.push({...range});
-        }
+
         const { account, accounts, to } = this.props;
-        this.props.markMessages(account, accounts[to], ranges);
+
+        let OPERATIONS = golos.messages.make_groups(messages, (message_object, idx) => {
+            return message_object.toMark;
+        }, (group, indexes, results) => {
+            const json = JSON.stringify(['private_mark_message', {
+                from: accounts[to].name,
+                to: account.name,
+                ...group,
+            }]);
+            return ['custom_json',
+                {
+                    id: 'private_message',
+                    required_posting_auths: [account.name],
+                    json,
+                }
+            ];
+        }, messages.length - 1, -1);
+
+        this.props.sendOperations(account, accounts[to], OPERATIONS);
     }
 
     markMessages2 = debounce(this.markMessages, 1000);
@@ -158,6 +174,8 @@ class Messages extends React.Component {
                     }
                 } else if (result.type === 'mark') {
                     this.props.messageRead(result.message, updateMessage, isMine);
+                } else if (result.type === 'remove_outbox' || result.type === 'remove_inbox') {
+                    this.props.messageDeleted(result.message, updateMessage, isMine);
                 }
             });
     }
@@ -176,23 +194,27 @@ class Messages extends React.Component {
             const { contacts, messages, accounts, currentUser } = nextProps;
             if (!currentUser) return;
             if (!this.props.checkMemo(currentUser)) {
+                this.setState({
+                    to: nextProps.to, // protects from infinity loop
+                });
                 return;
             }
             const anotherChat = nextProps.to !== this.state.to;
+            const anotherKey = nextProps.memo_private !== this.props.memo_private;
+            let scrollTimeout = this.props.messages.size ? 1 : 1000;
             this.setState({
                 to: nextProps.to,
                 contacts: normalizeContacts(contacts, accounts, currentUser),
-                messages: normalizeMessages(messages, accounts, currentUser, this.props.to),
+                messages: normalizeMessages(messages, accounts, currentUser, this.props.to, this.preDecoded),
             }, () => {
                 this.markMessages2();
                 setTimeout(() => {
                     const scroll = document.getElementsByClassName('scrollable')[1];
                     if (scroll) scroll.scrollTo(0,scroll.scrollHeight);
-                    if (anotherChat) {
-                        const input = document.getElementsByClassName('compose-input')[0];
-                        if (input) input.focus();
+                    if (anotherChat || anotherKey) {
+                        this.focusInput();
                     }
-                }, 1);
+                }, scrollTimeout);
             });
         }
     }
@@ -245,8 +267,197 @@ class Messages extends React.Component {
         if (!message.length) return;
         const { to, account, accounts, currentUser, messages } = this.props;
         const private_key = currentUser.getIn(['private_keys', 'memo_private']);
-        
-        this.props.sendMessage(account, private_key, accounts[to], message);
+
+        this.props.sendMessage(account, private_key, accounts[to], message, this.editNonce);
+        if (this.editNonce) {
+            this.restoreInput();
+            this.focusInput();
+            this.editNonce = undefined;
+        } else {
+            this.setInput('');
+        }
+    };
+
+    onMessageSelect = (message, isSelected, event) => {
+        if (message.receive_date.startsWith('19') || message.deleting) {
+            this.focusInput();
+            return;
+        }
+        if (isSelected) {
+            this.presaveInput();
+            const { account } = this.props;
+            const isMine = account.name === message.from;
+            this.setState({
+                selectedMessages: {...this.state.selectedMessages, [message.nonce]: { editable: isMine }},
+            });
+        } else {
+            let selectedMessages = {...this.state.selectedMessages};
+            delete selectedMessages[message.nonce];
+            this.setState({
+                selectedMessages,
+            }, () => {
+                this.restoreInput();
+                this.focusInput();
+            });
+        }
+    };
+
+    onPanelDeleteClick = (event) => {
+        const { messages } = this.state;
+
+        const { account, accounts, to } = this.props;
+
+        // TODO: works wrong if few messages have same create_time
+        /*let OPERATIONS = golos.messages.make_groups(messages, (message_object, idx) => {
+            return !!this.state.selectedMessages[message_object.nonce];
+        }, (group, indexes, results) => {
+            let from = '';
+            let to = '';
+            if (indexes.length === 1) {
+                from = messages[indexes[0]].from;
+                to = messages[indexes[0]].to;
+            }
+            const json = JSON.stringify(['private_delete_message', {
+                requester: account.name,
+                from,
+                to,
+                ...group,
+            }]);
+            return ['custom_json',
+                {
+                    id: 'private_message',
+                    required_posting_auths: [account.name],
+                    json,
+                }
+            ];
+        }, messages.length - 1, -1);*/
+
+        let OPERATIONS = [];
+        for (let message_object of messages) {
+            if (!this.state.selectedMessages[message_object.nonce]) {
+                continue;
+            }
+            const json = JSON.stringify(['private_delete_message', {
+                requester: account.name,
+                from: message_object.from,
+                to: message_object.to,
+                start_date: '1970-01-01T00:00:00',
+                stop_date: '1970-01-01T00:00:00',
+                nonce: message_object.nonce,
+            }]);
+            OPERATIONS.push(['custom_json',
+                {
+                    id: 'private_message',
+                    required_posting_auths: [account.name],
+                    json,
+                }
+            ]);
+        }
+
+        this.props.sendOperations(account, accounts[to], OPERATIONS);
+
+        this.setState({
+            selectedMessages: {},
+        }, () => {
+            this.restoreInput();
+            this.focusInput();
+        });
+    };
+
+    onPanelEditClick = (event) => {
+        const nonce = Object.keys(this.state.selectedMessages)[0];
+        let message = this.state.messages.filter(message => {
+            return message.nonce === nonce;
+        });
+        this.setState({
+            selectedMessages: {},
+        }, () => {
+            this.editNonce = message[0].nonce;
+            this.setInput(message[0].message);
+            this.focusInput();
+        });
+    };
+
+    onPanelCloseClick = (event) => {
+        this.setState({
+            selectedMessages: {},
+        }, () => {
+            this.restoreInput();
+            this.focusInput();
+        });
+    };
+
+    onButtonImageClicked = (event) => {
+        DialogManager.showDialog({
+            component: AddImageDialog,
+            onClose: (data) => {
+                if (!data) {
+                    this.focusInput();
+                    return;
+                }
+
+                let sendImageMessage = (url) => {
+                    if (!url)
+                        return;
+
+                    const { to, account, accounts, currentUser, messages } = this.props;
+                    const private_key = currentUser.getIn(['private_keys', 'memo_private']);
+                    this.props.sendMessage(account, private_key, accounts[to], url, undefined, 'image');
+                };
+
+                if (data.file) {
+                    this.props.uploadImage({
+                        file: data.file,
+                        progress: data => {
+                            if (data.url) {
+                                sendImageMessage(data.url);
+                                this.focusInput();
+                            }
+                        }
+                    });
+                } else if (data.url) {
+                    let url = $STM_Config.img_proxy_prefix + '0x0/' + data.url;
+                    let img = new Image();
+                    img.onerror = img.onabort = () => {
+                        this.props.showError(tt('messages.cannot_load_image_try_again'));
+                    };
+                    img.onload = () => {
+                        sendImageMessage(data.url);
+                        this.focusInput();
+                    };
+                    img.src = url;
+                    console.log(url)
+                }
+            },
+        });
+    };
+
+    focusInput = () => {
+        const input = document.getElementsByClassName('compose-input')[0];
+        if (input) input.focus();
+    };
+
+    presaveInput = () => {
+        if (!this.presavedInput) {
+            const input = document.getElementsByClassName('compose-input')[0];
+            if (input) {
+                this.presavedInput = input.value;
+            }
+        }
+    };
+
+    setInput = (value) => {
+        const input = document.getElementsByClassName('compose-input')[0];
+        if (input) {
+            input.value = value;
+        }
+    };
+
+    restoreInput = () => {
+        if (this.presavedInput) {
+            this.setInput(this.presavedInput);
+            this.presavedInput = undefined;
+        }
     };
 
     _renderMessagesTopCenter = () => {
@@ -281,7 +492,6 @@ class Messages extends React.Component {
         const { contacts, account, to } = this.props;
         if (!contacts || !account) return (<div></div>);
         return (<div>
-                <link href='https://unpkg.com/ionicons@4.5.0/dist/css/ionicons.min.css' rel='stylesheet' />
                 {Messenger ? (<Messenger
                     account={this.props.account}
                     to={to}
@@ -296,7 +506,14 @@ class Messages extends React.Component {
                     onConversationSearch={this.onConversationSearch}
                     messages={this.state.messages}
                     messagesTopCenter={this._renderMessagesTopCenter()}
-                    onSendMessage={this.onSendMessage} />) : null}
+                    onSendMessage={this.onSendMessage}
+                    selectedMessages={this.state.selectedMessages}
+                    onMessageSelect={this.onMessageSelect}
+                    onPanelDeleteClick={this.onPanelDeleteClick}
+                    onPanelEditClick={this.onPanelEditClick}
+                    onPanelCloseClick={this.onPanelCloseClick}
+                    onButtonImageClicked={this.onButtonImageClicked}
+                />) : null}
             </div>);
     }
 }
@@ -341,25 +558,7 @@ module.exports = {
                 }
                 return true;
             },
-            markMessages: (senderAcc, toAcc, ranges) => {
-                let OPERATIONS = [];
-                for (const r of ranges) {
-                    const json = JSON.stringify(['private_mark_message', {
-                        from: toAcc.name,
-                        to: senderAcc.name,
-                        nonce: 0,
-                        start_date: new Date(new Date(r.start_date+'Z').getTime() - 1000).toISOString().split('.')[0],
-                        stop_date: r.stop_date,
-                    }]);
-                    OPERATIONS.push(
-                        ['custom_json',
-                            {
-                                id: 'private_message',
-                                required_posting_auths: [senderAcc.name],
-                                json,
-                            }
-                        ]);
-                }
+            sendOperations: (senderAcc, toAcc, OPERATIONS) => {
                 if (!OPERATIONS.length) return;
                 dispatch(
                     transaction.actions.broadcastOperation({
@@ -372,24 +571,33 @@ module.exports = {
                     })
                 );
             },
-            sendMessage: (senderAcc, senderPrivMemoKey, toAcc, body) => {
+            sendMessage: (senderAcc, senderPrivMemoKey, toAcc, body, nonce = undefined, type = 'text') => {
                 let message = {
                     app: 'golos-id',
                     version: 1,
                     body,
                 };
+                if (type !== 'text') {
+                    message.type = type;
+                    if (type === 'image') {
+                        // For clients who don't want use img proxy by themself
+                        message.preview = $STM_Config.img_proxy_prefix + '600x300/' + body;
+                    } else {
+                        throw new Error('Unknown message type: ' + type);
+                    }
+                }
                 message = JSON.stringify(message);
 
-                const data = golos.messages.encode(senderPrivMemoKey, toAcc.memo_key, message);
+                const data = golos.messages.encode(senderPrivMemoKey, toAcc.memo_key, message, nonce || undefined);
 
                 const json = JSON.stringify(['private_message', {
                     from: senderAcc.name,
                     to: toAcc.name,
-                    nonce: data.nonce.toString(),
+                    nonce: nonce || data.nonce.toString(),
                     from_memo_key: senderAcc.memo_key,
                     to_memo_key: toAcc.memo_key,
                     checksum: data.checksum,
-                    update: false,
+                    update: nonce ? true : false,
                     encrypted_message: data.encrypted_message,
                 }]);
                 dispatch(transaction.actions.broadcastOperation({
@@ -408,6 +616,39 @@ module.exports = {
             },
             messageRead: (message, updateMessage, isMine) => {
                 dispatch(g.actions.messageRead({message, updateMessage, isMine}));
+            },
+            messageDeleted: (message, updateMessage, isMine) => {
+                dispatch(g.actions.messageDeleted({message, updateMessage, isMine}));
+            },
+            uploadImage({ file, progress }) {
+                dispatch({
+                    type: 'user/UPLOAD_IMAGE',
+                    payload: {
+                        file,
+                        progress: data => {
+                            //console.log('progress:')
+                            //console.log(data)
+                            if (data && data.error) {
+                                try {
+                                    this.showError(JSON.parse(data.error).data.error || data.error);
+                                } catch (ex) {
+                                    this.showError(data.error);
+                                }
+                            }
+
+                            progress(data);
+                        },
+                    },
+                });
+            },
+            showError(error, dismissAfter = 5000) {
+                dispatch({
+                    type: 'ADD_NOTIFICATION',
+                    payload: {
+                        message: error,
+                        dismissAfter,
+                    },
+                });
             }
         })
     )(Messages),

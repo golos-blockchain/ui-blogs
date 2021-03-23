@@ -119,24 +119,66 @@ function* preBroadcast_custom_json({operation}) {
         } catch(e) {
             console.error('TransactionSaga unrecognized follow custom_json format', operation.json);
         }
-    } else if (operation.id === 'private_message' && json[0] === 'private_message') {
-        yield put(g.actions.update({
-            key: ['messages'],
-            notSet: List(),
-            updater: m => {
-                //m = m.asMutable()
-                m = m.insert(0, fromJS({
-                    nonce: json[1].nonce,
-                    checksum: json[1].checksum,
-                    from: json[1].from,
-                    read_date: '1970-01-01T00:00:00',
-                    create_date: new Date().toISOString().split('.')[0],
-                    receive_date: '1970-01-01T00:00:00',
-                    encrypted_message: json[1].encrypted_message
+    } else if (operation.id === 'private_message') {
+        if (json[0] === 'private_message') {
+            yield put(g.actions.update({
+                key: ['messages'],
+                notSet: List(),
+                updater: msgs => {
+                    msgs = msgs.insert(0, fromJS({
+                        nonce: json[1].nonce,
+                        checksum: json[1].checksum,
+                        from: json[1].from,
+                        read_date: '1970-01-01T00:00:00',
+                        create_date: new Date().toISOString().split('.')[0],
+                        receive_date: '1970-01-01T00:00:00',
+                        encrypted_message: json[1].encrypted_message
+                    }))
+                    return msgs;
+                }
+            }))
+        } else if (json[0] === 'private_delete_message') {
+            let messages_update = null;
+            yield put(g.actions.update({
+                key: ['messages'],
+                notSet: List(),
+                updater: msgs => {
+                    const mark_deleting = (idx) => {
+                        msgs = msgs.update(idx, msg => {
+                            return msg.set('deleting', true);
+                        });
+                    };
+                    if (json[1].nonce) {
+                        const idx = msgs.findIndex(msg => msg.get('nonce') === json[1].nonce);
+                        if (idx !== -1) {
+                            messages_update = json[1].nonce;
+                            mark_deleting(idx);
+                        }
+                    } else {
+                        let idx = msgs.findIndex(msg => msg.get('create_date') === json[1].stop_date);
+                        if (idx !== -1) {
+                            for (; (idx < msgs.size) && (msgs.get(idx).get('create_date') > json[1].start_date); ++idx) {
+                                const msg = msgs.get(idx);
+                                if (msg.get('create_date') > json[1].start_date)
+                                    break;
+                                messages_update = msg.get('nonce');
+                                mark_deleting(idx);
+                            }
+                        }
+                    }
+                    return msgs;
+                }
+            }))
+            if (messages_update) {
+                yield put(g.actions.update({
+                    key: ['messages_update'],
+                    notSet: '0',
+                    updater: mu => {
+                        return messages_update + 1; // Adding something to not collide with messages_update from MESSAGED
+                    }
                 }))
-                return m//.asImmutable()
             }
-        }))
+        }
     }
     return operation
 }

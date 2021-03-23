@@ -1,4 +1,5 @@
 import React from 'react';
+import Icon from 'app/components/elements/Icon';
 
 import './ToolbarButton.css';
 
@@ -6,7 +7,9 @@ export default class ToolbarButton extends React.Component {
     render() {
         const { icon, className, onClick } = this.props;
         return (
-            <i className={`toolbar-button ${icon} ` + (className || '')} onClick={onClick || undefined} />
+            <i className={`toolbar-button ` + (className || '')} onClick={onClick || undefined}>
+                <Icon name={`ionicons/${icon}`} size='1_75x'/>
+            </i>
         );
     }
 }

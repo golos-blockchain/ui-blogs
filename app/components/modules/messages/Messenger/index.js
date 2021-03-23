@@ -9,7 +9,9 @@ export default class Messages extends React.Component {
         const { account, to,
             contacts, conversationTopLeft, conversationLinkPattern,
             onConversationAdd, onConversationSearch, onConversationSelect,
-            messagesTopCenter, messagesTopRight, messages, onSendMessage } = this.props;
+            messagesTopCenter, messagesTopRight, messages, onSendMessage,
+            onButtonImageClicked,
+            selectedMessages, onMessageSelect, onPanelDeleteClick, onPanelEditClick, onPanelCloseClick } = this.props;
         return (
             <div className='messenger'>
                 {/* <Toolbar
@@ -50,7 +52,13 @@ export default class Messages extends React.Component {
                         topCenter={messagesTopCenter}
                         topRight={messagesTopRight}
                         messages={messages}
-                        onSendMessage={onSendMessage} />
+                        onSendMessage={onSendMessage}
+                        selectedMessages={selectedMessages}
+                        onMessageSelect={onMessageSelect}
+                        onPanelDeleteClick={onPanelDeleteClick}
+                        onPanelEditClick={onPanelEditClick}
+                        onPanelCloseClick={onPanelCloseClick}
+                        onButtonImageClicked={onButtonImageClicked} />
                 </div>
             </div>
         );

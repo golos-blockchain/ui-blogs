@@ -15,7 +15,7 @@ import './MessageList.css';
 },*/
 export default class MessageList extends React.Component {
     renderMessages = () => {
-        const messages = this.props.messages;
+        const { messages, selectedMessages, onMessageSelect } = this.props;
         let i = 0;
         let messageCount = messages.length;
         let tempMessages = [];
@@ -63,6 +63,8 @@ export default class MessageList extends React.Component {
                     endsSequence={endsSequence}
                     showTimestamp={showTimestamp}
                     data={current}
+                    selected={selectedMessages && !!selectedMessages[current.nonce]}
+                    onMessageSelect={onMessageSelect}
                 />
             );
 
@@ -74,7 +76,9 @@ export default class MessageList extends React.Component {
     };
 
     render() {
-        const { account, to, topCenter, topRight, onSendMessage } = this.props;
+        const { account, to, topCenter, topRight, onSendMessage, selectedMessages,
+            onButtonImageClicked,
+            onPanelDeleteClick, onPanelEditClick, onPanelCloseClick } = this.props;
         return (
             <div className='message-list'>
                 <Toolbar
@@ -83,16 +87,21 @@ export default class MessageList extends React.Component {
                 />
 
                 <div className='message-list-container'>{this.renderMessages()}</div>
-
                 {to ? (<Compose
-                    account={account}
-                    onSendMessage={onSendMessage}
-                    rightItems={[
-                        (<div>
-                            <ToolbarButton className='emoji-picker-opener' key='emoji' icon='ion-ios-happy' />
-                            <div className='emoji-picker-tooltip' role='tooltip'></div>
-                        </div>),
-                    ]}/>) : null}
+                        account={account}
+                        onSendMessage={onSendMessage}
+                        rightItems={[
+                            (<ToolbarButton key='image' icon='image-outline' onClick={onButtonImageClicked} />),
+                            (<div>
+                                <ToolbarButton className='emoji-picker-opener' key='emoji' icon='happy-outline' />
+                                <div className='emoji-picker-tooltip' role='tooltip'></div>
+                            </div>),
+                        ]}
+                        selectedMessages={selectedMessages}
+                        onPanelDeleteClick={onPanelDeleteClick}
+                        onPanelEditClick={onPanelEditClick}
+                        onPanelCloseClick={onPanelCloseClick}
+                    />) : null}
             </div>
         );
     }

@@ -30,7 +30,8 @@
     "last_seen": "last seen ",
     "search": "Search people",
     "search_not_found": "Nobody found",
-    "type_a_message_NAME": "Type a message, @%(NAME)s"
+    "type_a_message_NAME": "Type a message, @%(NAME)s",
+    "cannot_load_image_try_again": "Cannot upload image. Try again or another one."
   },
   "g": {
     "golos_fest": "Golos.id News",
@@ -105,6 +106,7 @@
     "logout": "Logout",
     "memo": "Memo",
     "messages": "Messages",
+    "modified": " (updated)",
     "more": "more",
     "more_hint": "More detail",
     "mute": "Mute",

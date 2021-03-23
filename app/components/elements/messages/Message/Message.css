@@ -1,7 +1,7 @@
 .message {
     display: flex;
     flex-direction: column;
-    white-space: pre;
+    white-space: pre-wrap;
 }
 
 .message .timestamp {
@@ -59,6 +59,11 @@
     border-bottom-left-radius: 2px;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
+    cursor: pointer;
+}
+
+.message .bubble-container.selected .bubble {
+    background: #fc544e !important;
 }
 
 .message.mine .bubble-container .bubble {
@@ -70,11 +75,11 @@
     border-bottom-right-radius: 2px;
 }
 
-.message.mine .bubble-container .bubble.sending {
+.message.mine .bubble-container .bubble.loading {
     background: #c2e0ff;
 }
 
-.message.mine .bubble-container .bubble.sending a {
+.message.mine .bubble-container .bubble.loading a {
     color: #007aff;
 }
 
@@ -88,6 +93,10 @@
     font-size: 12px;
 }
 
-.message .bubble-container .unread.sending {
+.message .bubble-container .unread.loading {
     color: #c2e0ff !important;
+}
+
+.message .bubble-container.selected .unread {
+    color: #fc544e !important;
 }

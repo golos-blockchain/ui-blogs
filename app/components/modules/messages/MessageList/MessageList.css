@@ -10,3 +10,11 @@
 emoji-picker {
     height: 290px !important;
 }
+
+.Icon {
+    vertical-align: baseline;
+}
+
+.Icon svg {
+    vertical-align: baseline;
+}
