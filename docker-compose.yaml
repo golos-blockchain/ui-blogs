@@ -45,7 +45,7 @@ services:
     volumes:
       - ./data/tarantool:/var/lib/tarantool
     ports:
-      - "3001:3001"
+      - "3301:3301"
 
   datafeed:
     image: golosblockchain/web-ui:datafeed

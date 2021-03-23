@@ -92,9 +92,6 @@ const iframeWhitelist = [
         re: /^(?:https?:)?\/\/music\.yandex\.ru\//,
     },
     {
-        re: /^(?:https?:)?\/\/(:?www\.)?deezer\.com\//,
-    },
-    {
         re: /^(?:https?:)?\/\/(:?www\.)?vk\.com\/video_ext\.php\?/,
     },
     {
