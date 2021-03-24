@@ -58,6 +58,7 @@ export default class MessageList extends React.Component {
             tempMessages.push(
                 <Message
                     key={i}
+                    idx={i}
                     isMine={isMine}
                     startsSequence={startsSequence}
                     endsSequence={endsSequence}

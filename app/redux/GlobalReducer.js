@@ -358,6 +358,29 @@ export default createModule({
             },
         },
         {
+            action: 'MESSAGE_EDITED',
+            reducer: (
+                state,
+                { payload: { message, updateMessage, isMine } }
+            ) => {
+                let new_state = state;
+                let messages_update = message.nonce;
+                if (updateMessage) {
+                    new_state = new_state.updateIn(['messages'],
+                    List(),
+                    messages => {
+                        const idx = messages.findIndex(i => i.get('nonce') === message.nonce);
+                        if (idx !== -1) {
+                            messages = messages.set(idx, fromJS(message));
+                        }
+                        return messages;
+                    });
+                }
+                new_state = new_state.set('messages_update', messages_update + 1);
+                return new_state;
+            },
+        },
+        {
             action: 'MESSAGE_READ',
             reducer: (
                 state,

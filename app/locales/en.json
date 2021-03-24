@@ -31,7 +31,8 @@
     "search": "Search people",
     "search_not_found": "Nobody found",
     "type_a_message_NAME": "Type a message, @%(NAME)s",
-    "cannot_load_image_try_again": "Cannot upload image. Try again or another one."
+    "cannot_load_image_try_again": "Cannot upload image. Try again or another one.",
+    "cannot_select_too_much_messages": "Cannot select more than 10 messages at once."
   },
   "g": {
     "golos_fest": "Golos.id News",

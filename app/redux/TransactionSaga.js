@@ -121,22 +121,43 @@ function* preBroadcast_custom_json({operation}) {
         }
     } else if (operation.id === 'private_message') {
         if (json[0] === 'private_message') {
+            let messages_update;
             yield put(g.actions.update({
                 key: ['messages'],
                 notSet: List(),
                 updater: msgs => {
-                    msgs = msgs.insert(0, fromJS({
-                        nonce: json[1].nonce,
-                        checksum: json[1].checksum,
-                        from: json[1].from,
-                        read_date: '1970-01-01T00:00:00',
-                        create_date: new Date().toISOString().split('.')[0],
-                        receive_date: '1970-01-01T00:00:00',
-                        encrypted_message: json[1].encrypted_message
-                    }))
+                    const idx = msgs.findIndex(i => i.get('nonce') === json[1].nonce);
+                    if (idx === -1) {
+                        msgs = msgs.insert(0, fromJS({
+                            nonce: json[1].nonce,
+                            checksum: json[1].checksum,
+                            from: json[1].from,
+                            read_date: '1970-01-01T00:00:00',
+                            create_date: new Date().toISOString().split('.')[0],
+                            receive_date: '1970-01-01T00:00:00',
+                            encrypted_message: json[1].encrypted_message
+                        }))
+                    } else {
+                        messages_update = json[1].nonce;
+                        msgs = msgs.update(idx, msg => {
+                            msg = msg.set('checksum', json[1].checksum);
+                            msg = msg.set('receive_date', '1970-01-01T00:00:00');
+                            msg = msg.set('encrypted_message', json[1].encrypted_message);
+                            return msg;
+                        });
+                    }
                     return msgs;
                 }
             }))
+            if (messages_update) {
+                yield put(g.actions.update({
+                    key: ['messages_update'],
+                    notSet: '0',
+                    updater: mu => {
+                        return messages_update + 1; // Adding something to not collide with real nonce of last added message
+                    }
+                }))
+            }
         } else if (json[0] === 'private_delete_message') {
             let messages_update = null;
             yield put(g.actions.update({
@@ -174,7 +195,7 @@ function* preBroadcast_custom_json({operation}) {
                     key: ['messages_update'],
                     notSet: '0',
                     updater: mu => {
-                        return messages_update + 1; // Adding something to not collide with messages_update from MESSAGED
+                        return messages_update + 1; // Adding something to not collide with real nonce of last added message
                     }
                 }))
             }

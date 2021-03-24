@@ -4,10 +4,10 @@ import tt from 'counterpart';
 import './Message.css';
 
 export default class Message extends React.Component {
-    onMessageSelect = (event) => {
+    onMessageSelect = (idx, event) => {
         if (this.props.onMessageSelect) {
             const { data, selected } = this.props;
-            this.props.onMessageSelect(data, !selected, event);
+            this.props.onMessageSelect(data, idx, !selected, event);
         }
     };
 
@@ -17,6 +17,7 @@ export default class Message extends React.Component {
 
     render() {
         const {
+            idx,
             data,
             isMine,
             startsSequence,
@@ -80,7 +81,7 @@ export default class Message extends React.Component {
 
                 <div className={'bubble-container' + (selected ? ' selected' : '')}>
                     {isMine ? unread : null}
-                    <div className={'bubble' + loading} onClick={this.onMessageSelect} title={friendlyDate + (modified ? tt('g.modified') : '')}>
+                    <div className={'bubble' + loading} onClick={(event) => this.onMessageSelect(idx, event)} title={friendlyDate + (modified ? tt('g.modified') : '')}>
                         { content }
                     </div>
                     {!isMine ? unread : null}

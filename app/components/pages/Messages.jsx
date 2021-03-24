@@ -19,8 +19,6 @@ import g from 'app/redux/GlobalReducer';
 import user from 'app/redux/User';
 import { getProfileImage } from 'app/utils/NormalizeProfile';
 
-let preDecoded = {};
-
 function normalizeContacts(contacts, accounts, currentUser) {
     let contactsCopy = contacts ? [...contacts.toJS()] : [];
     for (let contact of contactsCopy) {
@@ -168,7 +166,9 @@ class Messages extends React.Component {
                     result.message.to === this.props.to;
                 const isMine = account.name === result.message.from;
                 if (result.type === 'message') {
-                    if (this.nonce != result.message.nonce) {
+                    if (result.message.create_date !== result.message.receive_date) {
+                        this.props.messageEdited(result.message, updateMessage, isMine);
+                    } else if (this.nonce != result.message.nonce) {
                         this.props.messaged(result.message, updateMessage, isMine);
                         this.nonce = result.message.nonce
                     }
@@ -268,6 +268,10 @@ class Messages extends React.Component {
         const { to, account, accounts, currentUser, messages } = this.props;
         const private_key = currentUser.getIn(['private_keys', 'memo_private']);
 
+        if (this.editNonce) {
+            delete this.preDecoded[this.editNonce];
+        }
+
         this.props.sendMessage(account, private_key, accounts[to], message, this.editNonce);
         if (this.editNonce) {
             this.restoreInput();
@@ -278,7 +282,7 @@ class Messages extends React.Component {
         }
     };
 
-    onMessageSelect = (message, isSelected, event) => {
+    onMessageSelect = (message, idx, isSelected, event) => {
         if (message.receive_date.startsWith('19') || message.deleting) {
             this.focusInput();
             return;
@@ -286,13 +290,37 @@ class Messages extends React.Component {
         if (isSelected) {
             this.presaveInput();
             const { account } = this.props;
+
+            let selectedMessages = {...this.state.selectedMessages};
+
+            if (event.shiftKey) {
+                let msgs = Object.entries(selectedMessages);
+                if (msgs.length) {
+                    const lastSelected = msgs[msgs.length - 1][1].idx;
+                    const step = idx > lastSelected ? 1 : -1;
+                    for (let i = lastSelected + step; i != idx; i += step) {
+                        let message = this.state.messages[i];
+                        const isMine = account.name === message.from;
+                        selectedMessages[message.nonce] = { editable: isMine, idx: i };
+                    }
+                }
+            }
+
             const isMine = account.name === message.from;
+            selectedMessages[message.nonce] = { editable: isMine, idx };
+
+            if (Object.keys(selectedMessages).length > 10) {
+                this.props.showError(tt('messages.cannot_select_too_much_messages'));
+                return;
+            }
+
             this.setState({
-                selectedMessages: {...this.state.selectedMessages, [message.nonce]: { editable: isMine }},
+                selectedMessages,
             });
         } else {
             let selectedMessages = {...this.state.selectedMessages};
             delete selectedMessages[message.nonce];
+
             this.setState({
                 selectedMessages,
             }, () => {
@@ -612,6 +640,9 @@ module.exports = {
                 }));
             },
             messaged: (message, updateMessage, isMine) => {
+                dispatch(g.actions.messaged({message, updateMessage, isMine}));
+            },
+            messageEdited: (message, updateMessage, isMine) => {
                 dispatch(g.actions.messaged({message, updateMessage, isMine}));
             },
             messageRead: (message, updateMessage, isMine) => {
