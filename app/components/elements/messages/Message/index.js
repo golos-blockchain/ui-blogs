@@ -43,6 +43,7 @@ export default class Message extends React.Component {
             content = data.message.split('\n').map(line => {
                 let spans = [];
                 const words = line.split(' ');
+                let key = 1;
                 for (let word of words) {
                     // eslint-disable-next-line
                     if (word.length > 4 && /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/.test(word)) {
@@ -50,14 +51,15 @@ export default class Message extends React.Component {
                         if (!href.startsWith('http://') && !href.startsWith('https://')) {
                             href = 'http://' + href;
                         }
-                        spans.push(<a href={href} target='_blank' rel='noopener noreferrer'>{word}</a>);
+                        spans.push(<a href={href} target='_blank' rel='noopener noreferrer' key={key}>{word}</a>);
                         spans.push(' ');
                     } else if (word.length <= 2 && /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/.test(word)) {
-                        spans.push(<span style={{fontSize: '20px'}}>{word}</span>);
+                        spans.push(<span key={key} style={{fontSize: '20px'}}>{word}</span>);
                         spans.push(' ');
                     } else {
                         spans.push(word + ' ');
                     }
+                    ++key;
                 }
                 return (<span>{spans}<br/></span>);
             });

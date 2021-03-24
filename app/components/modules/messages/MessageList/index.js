@@ -93,8 +93,8 @@ export default class MessageList extends React.Component {
                         onSendMessage={onSendMessage}
                         rightItems={[
                             (<ToolbarButton key='image' icon='image-outline' onClick={onButtonImageClicked} />),
-                            (<div>
-                                <ToolbarButton className='emoji-picker-opener' key='emoji' icon='happy-outline' />
+                            (<div key='emoji'>
+                                <ToolbarButton className='emoji-picker-opener' icon='happy-outline' />
                                 <div className='emoji-picker-tooltip' role='tooltip'></div>
                             </div>),
                         ]}

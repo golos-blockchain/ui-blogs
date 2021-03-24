@@ -19,21 +19,34 @@ import g from 'app/redux/GlobalReducer';
 import user from 'app/redux/User';
 import { getProfileImage } from 'app/utils/NormalizeProfile';
 
-function normalizeContacts(contacts, accounts, currentUser) {
+function getProfileImageLazy(account, cachedProfileImages) {
+    let cached = cachedProfileImages[account.name];
+    if (cached) 
+        return cached;
+    const image = getProfileImage(account);
+    cachedProfileImages[account.name] = image;
+    return image;
+}
+
+function normalizeContacts(contacts, accounts, currentUser, preDecoded, cachedProfileImages) {
+    if (!currentUser || !accounts)
+        return [];
+
+    const currentAcc = accounts[currentUser.get('username')];
+    if (!currentAcc)
+        return [];
+
+    const private_key = currentUser.getIn(['private_keys', 'memo_private']);
+
     let contactsCopy = contacts ? [...contacts.toJS()] : [];
     for (let contact of contactsCopy) {
         let account = accounts && accounts[contact.contact];
-        contact.avatar = getProfileImage(account);
+        contact.avatar = getProfileImageLazy(account, cachedProfileImages);
 
-        if (contact.last_message.receive_date.startsWith('1970')) {
+        if (contact.last_message.create_date.startsWith('1970')) {
             contact.last_message.message = "";
             continue;
         }
-
-        if (!currentUser || !accounts) continue;
-
-        const currentAcc = accounts[currentUser.get('username')];
-        if (!currentAcc) continue;
 
         let public_key;
         if (currentAcc.memo_key === contact.last_message.to_memo_key) {
@@ -43,10 +56,19 @@ function normalizeContacts(contacts, accounts, currentUser) {
         }
 
         try {
-            const private_key = currentUser.getIn(['private_keys', 'memo_private']);
             golos.messages.decode(private_key, public_key, [contact.last_message],
-                (message_object) => {
-                    message_object.message = JSON.parse(message_object.message).body;
+                (msg) => {
+                    const decoded = JSON.parse(msg.message);
+                    msg.message = decoded.body;
+
+                    preDecoded[msg.nonce] = decoded;
+                }, 0, 1, undefined, (msg, i, results) => {
+                    let pd = preDecoded[msg.nonce];
+                    if (pd) {
+                        msg.message = pd.body;
+                        return false;
+                    }
+                    return true;
                 });
         } catch (ex) {
             console.log(ex);
@@ -118,10 +140,12 @@ class Messages extends React.Component {
         this.state = {
             contacts: [],
             messages: [],
+            messagesCount: 0,
             selectedMessages: {},
             searchContacts: null,
         };
         this.preDecoded = {};
+        this.cachedProfileImages = {};
     }
 
     markMessages() {
@@ -201,16 +225,21 @@ class Messages extends React.Component {
             }
             const anotherChat = nextProps.to !== this.state.to;
             const anotherKey = nextProps.memo_private !== this.props.memo_private;
+            const added = nextProps.messages.size > this.state.messagesCount;
             let scrollTimeout = this.props.messages.size ? 1 : 1000;
             this.setState({
                 to: nextProps.to,
-                contacts: normalizeContacts(contacts, accounts, currentUser),
+                contacts: normalizeContacts(contacts, accounts, currentUser, this.preDecoded, this.cachedProfileImages),
                 messages: normalizeMessages(messages, accounts, currentUser, this.props.to, this.preDecoded),
+                messagesCount: messages.size,
             }, () => {
-                this.markMessages2();
+                if (added)
+                    this.markMessages2();
                 setTimeout(() => {
-                    const scroll = document.getElementsByClassName('scrollable')[1];
-                    if (scroll) scroll.scrollTo(0,scroll.scrollHeight);
+                    if (added) {
+                        const scroll = document.getElementsByClassName('scrollable')[1];
+                        if (scroll) scroll.scrollTo(0,scroll.scrollHeight);
+                    }
                     if (anotherChat || anotherKey) {
                         this.focusInput();
                     }
@@ -238,7 +267,7 @@ class Messages extends React.Component {
                 continue;
             }
             account.contact = account.name;
-            account.avatar = getProfileImage(account);
+            account.avatar = getProfileImage(account, this.cachedProfileImages);
             contacts.push(account);
         }
         if (contacts.length === 0) {
@@ -492,7 +521,7 @@ class Messages extends React.Component {
         let messagesTopCenter = [];
         const { to, accounts } = this.props;
         if (accounts[to]) {
-            messagesTopCenter.push(<div style={{fontSize: '14px', width: '100%', textAlign: 'center'}}>
+            messagesTopCenter.push(<div key='to-link' style={{fontSize: '14px', width: '100%', textAlign: 'center'}}>
                 <a href={'/@' + to}>{to}</a>
             </div>);
             const dates = [
@@ -503,7 +532,7 @@ class Messages extends React.Component {
             ];
             let lastSeen = max(dates);
             if (!lastSeen.startsWith('19')) {
-                messagesTopCenter.push(<div style={{fontSize: '12px', fontWeight: 'normal'}}>
+                messagesTopCenter.push(<div key='to-last-seen' style={{fontSize: '12px', fontWeight: 'normal'}}>
                     {
                         <span>
                             {tt('messages.last_seen')}
@@ -525,7 +554,7 @@ class Messages extends React.Component {
                     to={to}
                     contacts={this.state.searchContacts || this.state.contacts}
                     conversationTopLeft={[
-                        <a href='/'>
+                        <a href='/' key='logo'>
                             <h4>GOLOS</h4>
                             <MarkNotificationRead fields='message' account={account.name} />
                         </a>

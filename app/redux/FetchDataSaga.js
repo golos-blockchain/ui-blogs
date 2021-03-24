@@ -349,16 +349,21 @@ export function* fetchState(location_change_action) {
             if (localStorage.getItem('invite')) {
                 accounts.add(localStorage.getItem('invite'));
 
+                console.time('fcon');
                 state.contacts = yield call([api, api.getContactsAsync], localStorage.getItem('invite'), 'unknown', 100, 0);
+                console.timeEnd('fcon');
 
                 if (parts[1]) {
                     const to = parts[1].replace('@', '');
                     accounts.add(to);
 
+                    console.time('fmsg');
                     state.messages = yield call([api, api.getThreadAsync], localStorage.getItem('invite'), to, {});
                     if (state.messages.length) {
                         state.messages_update = state.messages[state.messages.length - 1].nonce;
                     }
+                    console.timeEnd('fmsg');
+
                 }
             }
             for (let contact of state.contacts) {
@@ -367,7 +372,9 @@ export function* fetchState(location_change_action) {
         }
 
         if (accounts.size > 0) {
+                    console.time('accs');
             const acc = yield call([api, api.getAccountsAsync], Array.from(accounts))
+                    console.timeEnd('accs');
             for (let i in acc) {
                 state.accounts[ acc[i].name ] = acc[i]
             }
