@@ -248,8 +248,7 @@ class Messages extends React.Component {
         }
     }
 
-    onConversationSearch = async (event) => {
-        const query = event.target.value;
+    onConversationSearch = async (query, event) => {
         if (!query) {
             this.setState({
                 searchContacts: null

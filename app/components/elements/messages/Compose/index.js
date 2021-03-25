@@ -1,7 +1,6 @@
 import React from 'react';
 import tt from 'counterpart';
 import { Picker } from 'emoji-picker-element';
-import { createPopper } from '@popperjs/core';
 
 import './Compose.css';
 
@@ -30,23 +29,25 @@ export default class Compose extends React.Component {
 
         setTimeout(() => {
             const button = document.querySelector('.emoji-picker-opener');
-            createPopper(button.childNodes[0].childNodes[0], this._tooltip, {
-                placement: 'top',
-                strategy: 'fixed',
-            });
             button.addEventListener('click', this.onEmojiClick);
-
             document.body.addEventListener('click', this.onBodyClick);
         }, 500);
     }
 
     onEmojiClick = (event) => {
         event.stopPropagation();
-        this._tooltip.classList.add('shown');
+        this._tooltip.classList.toggle('shown');
+        if (!this._tooltip.classList.contains('shown')) {
+            const input = document.getElementsByClassName('compose-input')[0];
+            if (input) {
+                input.focus();
+            }
+        }
     };
 
     onBodyClick = (event) => {
         if (!this._tooltip) return;
+        if (event.target.tagName.toLowerCase() === 'emoji-picker') return;
         this._tooltip.classList.remove('shown');
     };
 
