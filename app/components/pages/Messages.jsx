@@ -329,13 +329,15 @@ class Messages extends React.Component {
                     for (let i = lastSelected + step; i != idx; i += step) {
                         let message = this.state.messages[i];
                         const isMine = account.name === message.from;
-                        selectedMessages[message.nonce] = { editable: isMine, idx: i };
+                        const isImage = message.type === 'image';
+                        selectedMessages[message.nonce] = { editable: isMine && !isImage, idx: i };
                     }
                 }
             }
 
             const isMine = account.name === message.from;
-            selectedMessages[message.nonce] = { editable: isMine, idx };
+            const isImage = message.type === 'image';
+            selectedMessages[message.nonce] = { editable: isMine && !isImage, idx };
 
             if (Object.keys(selectedMessages).length > 10) {
                 this.props.showError(tt('messages.cannot_select_too_much_messages'));
@@ -443,6 +445,40 @@ class Messages extends React.Component {
         });
     };
 
+    uploadImage = (imageFile, imageUrl) => {
+        let sendImageMessage = (url) => {
+            if (!url)
+                return;
+
+            const { to, account, accounts, currentUser, messages } = this.props;
+            const private_key = currentUser.getIn(['private_keys', 'memo_private']);
+            this.props.sendMessage(account, private_key, accounts[to], url, undefined, 'image');
+        };
+
+        if (imageFile) {
+            this.props.uploadImage({
+                file: imageFile,
+                progress: data => {
+                    if (data.url) {
+                        sendImageMessage(data.url);
+                        this.focusInput();
+                    }
+                }
+            });
+        } else if (imageUrl) {
+            let url = $STM_Config.img_proxy_prefix + '0x0/' + imageUrl;
+            let img = new Image();
+            img.onerror = img.onabort = () => {
+                this.props.showError(tt('messages.cannot_load_image_try_again'));
+            };
+            img.onload = () => {
+                sendImageMessage(url);
+                this.focusInput();
+            };
+            img.src = url;
+        }
+    };
+
     onButtonImageClicked = (event) => {
         DialogManager.showDialog({
             component: AddImageDialog,
@@ -452,40 +488,32 @@ class Messages extends React.Component {
                     return;
                 }
 
-                let sendImageMessage = (url) => {
-                    if (!url)
-                        return;
-
-                    const { to, account, accounts, currentUser, messages } = this.props;
-                    const private_key = currentUser.getIn(['private_keys', 'memo_private']);
-                    this.props.sendMessage(account, private_key, accounts[to], url, undefined, 'image');
-                };
-
                 if (data.file) {
-                    this.props.uploadImage({
-                        file: data.file,
-                        progress: data => {
-                            if (data.url) {
-                                sendImageMessage(data.url);
-                                this.focusInput();
-                            }
-                        }
-                    });
+                    this.uploadImage(data.file);
                 } else if (data.url) {
-                    let url = $STM_Config.img_proxy_prefix + '0x0/' + data.url;
-                    let img = new Image();
-                    img.onerror = img.onabort = () => {
-                        this.props.showError(tt('messages.cannot_load_image_try_again'));
-                    };
-                    img.onload = () => {
-                        sendImageMessage(data.url);
-                        this.focusInput();
-                    };
-                    img.src = url;
-                    console.log(url)
+                    this.uploadImage(undefined, data.url);
                 }
             },
         });
+    };
+
+    onImagePasted = (file, fileName) => {
+        this.uploadImage(file);
+    };
+
+    onImageDropped = (acceptedFiles, rejectedFiles, event) => {
+        const file = acceptedFiles[0];
+
+        if (!file) {
+            if (rejectedFiles.length) {
+                DialogManager.alert(
+                    tt('reply_editor.please_insert_only_image_files')
+                );
+            }
+            return;
+        }
+
+        this.uploadImage(file);
     };
 
     focusInput = () => {
@@ -569,6 +597,8 @@ class Messages extends React.Component {
                     onPanelEditClick={this.onPanelEditClick}
                     onPanelCloseClick={this.onPanelCloseClick}
                     onButtonImageClicked={this.onButtonImageClicked}
+                    onImagePasted={this.onImagePasted}
+                    onImageDropped={this.onImageDropped}
                 />) : null}
             </div>);
     }
@@ -680,19 +710,24 @@ module.exports = {
                 dispatch(g.actions.messageDeleted({message, updateMessage, isMine}));
             },
             uploadImage({ file, progress }) {
+                this.showError(`${tt(
+                    'user_saga_js.image_upload.uploading'
+                )}...`, 5000, 'progress');
                 dispatch({
                     type: 'user/UPLOAD_IMAGE',
                     payload: {
                         file,
                         progress: data => {
-                            //console.log('progress:')
-                            //console.log(data)
                             if (data && data.error) {
                                 try {
-                                    this.showError(JSON.parse(data.error).data.error || data.error);
+                                    const error = JSON.parse(data.error).data.error;
+                                    this.showError(error.message || error);
                                 } catch (ex) {
+                                    // unknown error format
                                     this.showError(data.error);
                                 }
+                            } else if (data && data.message && typeof data.message === 'string') {
+                                this.showError(data.message, 5000, 'progress');
                             }
 
                             progress(data);
@@ -700,12 +735,13 @@ module.exports = {
                     },
                 });
             },
-            showError(error, dismissAfter = 5000) {
+            showError(error, dismissAfter = 5000, key = 'error') {
                 dispatch({
                     type: 'ADD_NOTIFICATION',
                     payload: {
                         message: error,
                         dismissAfter,
+                        key,
                     },
                 });
             }

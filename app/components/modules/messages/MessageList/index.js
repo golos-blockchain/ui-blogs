@@ -78,7 +78,7 @@ export default class MessageList extends React.Component {
 
     render() {
         const { account, to, topCenter, topRight, onSendMessage, selectedMessages,
-            onButtonImageClicked,
+            onButtonImageClicked, onImagePasted,
             onPanelDeleteClick, onPanelEditClick, onPanelCloseClick } = this.props;
         return (
             <div className='message-list'>
@@ -102,6 +102,7 @@ export default class MessageList extends React.Component {
                         onPanelDeleteClick={onPanelDeleteClick}
                         onPanelEditClick={onPanelEditClick}
                         onPanelCloseClick={onPanelCloseClick}
+                        onImagePasted={onImagePasted}
                     />) : null}
             </div>
         );

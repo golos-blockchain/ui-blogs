@@ -16,7 +16,14 @@ export default class Compose extends React.Component {
         }
     };
 
-    componentDidMount() {
+    init = () => {
+        this._tooltip = document.querySelector('.emoji-picker-tooltip');
+        if (!this._tooltip)
+            return;
+
+        if (this._tooltip.childNodes.length)
+            return;
+
         this._picker = new Picker({
             locale: tt.getLocale(),
             i18n: tt('emoji_i18n'),
@@ -24,7 +31,6 @@ export default class Compose extends React.Component {
 
         this._picker.addEventListener('emoji-click', this.onEmojiSelect);
 
-        this._tooltip = document.querySelector('.emoji-picker-tooltip');
         this._tooltip.appendChild(this._picker);
 
         setTimeout(() => {
@@ -32,6 +38,14 @@ export default class Compose extends React.Component {
             button.addEventListener('click', this.onEmojiClick);
             document.body.addEventListener('click', this.onBodyClick);
         }, 500);
+    };
+
+    componentDidMount() {
+        this.init();
+    }
+
+    componentDidUpdate() {
+        this.init();
     }
 
     onEmojiClick = (event) => {
@@ -81,6 +95,34 @@ export default class Compose extends React.Component {
         }
     };
 
+    onPaste = (event) => {
+        try {
+            if (event.clipboardData) {
+                let fileName = null;
+
+                for (let item of event.clipboardData.items) {
+                    if (item.kind === 'string' && item.type === 'text/plain') {
+                        try {
+                            fileName = item.getAsString(a => (fileName = a));
+                        } catch (err) {}
+                    }
+
+                    if (item.kind === 'file' && item.type.startsWith('image')) {
+                        event.preventDefault();
+
+                        const file = item.getAsFile();
+
+                        if (this.props.onImagePasted) {
+                            this.props.onImagePasted(file, fileName);
+                        }
+                    }
+                }
+            }
+        } catch (err) {
+            console.warn('Error analyzing clipboard event', err);
+        }
+    };
+
     onPanelDeleteClick = (event) => {
         if (this.props.onPanelDeleteClick) {
             this.props.onPanelDeleteClick(event);
@@ -123,7 +165,8 @@ export default class Compose extends React.Component {
                     className='compose-input'
                     placeholder={tt('messages.type_a_message_NAME', {NAME: account.name})}
                     onKeyDown={this.onSendMessage}
-                />) : null}
+                    onPaste={this.onPaste}
+                    />) : null}
 
                 {selectedMessagesCount ? (<div className='compose-panel'>
                     <button className='button hollow small alert' onClick={onPanelDeleteClick}>{tt('g.delete') + ' (' + selectedMessagesCount + ')'}</button>
