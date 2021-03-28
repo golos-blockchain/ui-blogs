@@ -376,7 +376,7 @@ export default createModule({
                         return messages;
                     });
                 }
-                new_state = new_state.set('messages_update', messages_update + 1);
+                new_state = new_state.set('messages_update', messages_update + 2);
                 return new_state;
             },
         },
@@ -399,24 +399,29 @@ export default createModule({
                         return messages;
                     });
                 }
-                if (!isMine) {
-                    new_state = new_state.updateIn(['contacts'],
-                        List(),
-                        contacts => {
-                            let idx = contacts.findIndex(i =>
-                                i.get('contact') === message.from);
-                            if (idx !== -1) {
-                                contacts = contacts.update(idx, contact => {
+                new_state = new_state.updateIn(['contacts'],
+                    List(),
+                    contacts => {
+                        let idx = contacts.findIndex(i =>
+                            i.get('contact') === (isMine ? message.to : message.from));
+                        if (idx !== -1) {
+                            contacts = contacts.update(idx, contact => {
+                                 // to update read_date (need for isMine case), and more actualize text
+                                let last = contact.get('last_message');
+                                if (last && last.get('nonce') == message.nonce) {
                                     contact = contact.set('last_message', fromJS(message));
-                                    let msgs = contact.getIn(['size', 'unread_inbox_messages']);
-                                    contact = contact.setIn(['size', 'unread_inbox_messages'],
-                                        Math.max(msgs - 1, 0));
-                                    return contact;
-                                });
-                            }
-                            return contacts;
-                        });
-                }
+                                }
+
+                                // currently used only !isMine case
+                                const msgsKey = isMine ? 'unread_outbox_messages' : 'unread_inbox_messages';
+                                let msgs = contact.getIn(['size', msgsKey]);
+                                contact = contact.setIn(['size', msgsKey],
+                                    Math.max(msgs - 1, 0));
+                                return contact;
+                            });
+                        }
+                        return contacts;
+                    });
                 new_state = new_state.set('messages_update', messages_update + 1);
                 return new_state;
             },

@@ -31,6 +31,13 @@ export default class ConversationListItem extends React.Component {
 
         const unreadMessages = size && size.unread_inbox_messages;
 
+        let unread = null;
+        if (last_message && last_message.unread) {
+            unread = (<div className='conversation-unread mine'>●</div>);
+        } else if (unreadMessages) {
+            unread = (<div className='conversation-unread'>{unreadMessages}</div>);
+        }
+
         return (
             <Link to={isSystemMessage ? null : link} className={'conversation-list-item' + (selected ? ' selected' : '')}>
                 <img className='conversation-photo' src={avatar} alt={'404 :('} />
@@ -38,7 +45,7 @@ export default class ConversationListItem extends React.Component {
                     <h1 className='conversation-title'>{contact}</h1>
                     <div className='conversation-snippet'>{last_message && truncate(last_message.message, {length: 30})}
                     </div>
-                    {unreadMessages ? <div className='conversation-unread'>{unreadMessages}</div> : null}
+                    {unread}
                 </div>
             </Link>
         );

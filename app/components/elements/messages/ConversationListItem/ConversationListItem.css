@@ -39,7 +39,7 @@
     float: left;
 }
 
-.conversation-unread {
+.conversation-unread:not(.mine) {
     float: right;
     background-color: red;
     color: #fff;
@@ -48,4 +48,13 @@
     font-weight: bold;
     font-size: 12px;
     text-align: center;
+}
+
+.conversation-unread.mine {
+    float: right;
+    color: #007aff;
+    font-weight: bold;
+    font-size: 12px;
+    text-align: center;
+    padding-right: 1px;
 }

@@ -35,9 +35,12 @@ export default class Message extends React.Component {
         let content;
         if (data.type === 'image') {
             const src = $STM_Config.img_proxy_prefix + '0x0/' + data.message;
-            const src_preview = $STM_Config.img_proxy_prefix + '600x300/' + data.message;
+            const srcPreview = $STM_Config.img_proxy_prefix + '600x300/' + data.message;
+            const previewWidth = data.previewWidth ? data.previewWidth + 'px' : 'auto';
+            const previewHeight = data.previewHeight ? data.previewHeight + 'px' : 'auto';
+
             content = (<a href={src} target='_blank' rel='noopener noreferrer' tabIndex='-1' onClick={this.doNotSelectMessage}>
-                <img src={src_preview} alt={src} />
+                <img src={srcPreview} alt={src} style={{width: previewWidth, height: previewHeight, objectFit: 'cover'}} />
             </a>);
         } else {
             content = data.message.split('\n').map(line => {

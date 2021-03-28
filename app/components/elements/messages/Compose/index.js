@@ -35,8 +35,10 @@ export default class Compose extends React.Component {
 
         setTimeout(() => {
             const button = document.querySelector('.emoji-picker-opener');
-            button.addEventListener('click', this.onEmojiClick);
-            document.body.addEventListener('click', this.onBodyClick);
+            if (button) {
+                button.addEventListener('click', this.onEmojiClick);
+                document.body.addEventListener('click', this.onBodyClick);
+            }
         }, 500);
     };
 

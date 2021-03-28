@@ -18,6 +18,7 @@ import transaction from 'app/redux/Transaction';
 import g from 'app/redux/GlobalReducer';
 import user from 'app/redux/User';
 import { getProfileImage } from 'app/utils/NormalizeProfile';
+import { fitToPreview } from 'app/utils/ImageUtils';
 
 function getProfileImageLazy(account, cachedProfileImages) {
     let cached = cachedProfileImages[account.name];
@@ -61,9 +62,12 @@ function normalizeContacts(contacts, accounts, currentUser, preDecoded, cachedPr
                     const decoded = JSON.parse(msg.message);
                     msg.message = decoded.body;
 
-                    preDecoded[msg.nonce] = decoded;
+                    preDecoded[msg.nonce + '' + msg.receive_date] = decoded;
                 }, 0, 1, undefined, (msg, i, results) => {
-                    let pd = preDecoded[msg.nonce];
+                    if (msg.read_date.startsWith('19') && currentAcc.memo_key === msg.from_memo_key) {
+                        msg.unread = true;
+                    }
+                    let pd = preDecoded[msg.nonce + '' + msg.receive_date];
                     if (pd) {
                         msg.message = pd.body;
                         return false;
@@ -94,8 +98,12 @@ function normalizeMessages(messages, accounts, currentUser, to, preDecoded) {
                 const decoded = JSON.parse(msg.message);
                 msg.message = decoded.body;
                 msg.type = decoded.type || 'text';
+                msg.width = decoded.width;
+                msg.height = decoded.height;
+                msg.previewWidth = decoded.previewWidth;
+                msg.previewHeight = decoded.previewHeight;
 
-                preDecoded[msg.nonce] = decoded;
+                preDecoded[msg.nonce + '' + msg.receive_date] = decoded;
 
                 return true;
             }, messagesCopy.length - 1, -1,
@@ -105,7 +113,7 @@ function normalizeMessages(messages, accounts, currentUser, to, preDecoded) {
             (msg, i, results) => {
                 msg.id = ++id;
                 msg.author = msg.from;
-                msg.date = new Date(msg.receive_date + 'Z');
+                msg.date = new Date(msg.create_date + 'Z');
 
                 if (currentAcc.memo_key === msg.to_memo_key) {
                     if (msg.read_date.startsWith('19')) {
@@ -117,10 +125,14 @@ function normalizeMessages(messages, accounts, currentUser, to, preDecoded) {
                     }
                 }
 
-                let pd = preDecoded[msg.nonce];
+                let pd = preDecoded[msg.nonce + '' + msg.receive_date];
                 if (pd) {
                     msg.message = pd.body;
                     msg.type = pd.type;
+                    msg.width = pd.width;
+                    msg.height = pd.height;
+                    msg.previewWidth = pd.previewWidth;
+                    msg.previewHeight = pd.previewHeight;
                     results.push(msg);
                     return false;
                 }
@@ -154,7 +166,7 @@ class Messages extends React.Component {
 
         const { account, accounts, to } = this.props;
 
-        let OPERATIONS = golos.messages.make_groups(messages, (message_object, idx) => {
+        let OPERATIONS = golos.messages.makeGroups(messages, (message_object, idx) => {
             return message_object.toMark;
         }, (group, indexes, results) => {
             const json = JSON.stringify(['private_mark_message', {
@@ -296,11 +308,12 @@ class Messages extends React.Component {
         const { to, account, accounts, currentUser, messages } = this.props;
         const private_key = currentUser.getIn(['private_keys', 'memo_private']);
 
+        let editInfo;
         if (this.editNonce) {
-            delete this.preDecoded[this.editNonce];
+            editInfo = { preDecoded: this.preDecoded, nonce: this.editNonce };
         }
 
-        this.props.sendMessage(account, private_key, accounts[to], message, this.editNonce);
+        this.props.sendMessage(account, private_key, accounts[to], message, editInfo);
         if (this.editNonce) {
             this.restoreInput();
             this.focusInput();
@@ -354,8 +367,10 @@ class Messages extends React.Component {
             this.setState({
                 selectedMessages,
             }, () => {
-                this.restoreInput();
-                this.focusInput();
+                if (!Object.keys(selectedMessages).length) {
+                    this.restoreInput();
+                    this.focusInput();
+                }
             });
         }
     };
@@ -366,7 +381,7 @@ class Messages extends React.Component {
         const { account, accounts, to } = this.props;
 
         // TODO: works wrong if few messages have same create_time
-        /*let OPERATIONS = golos.messages.make_groups(messages, (message_object, idx) => {
+        /*let OPERATIONS = golos.messages.makeGroups(messages, (message_object, idx) => {
             return !!this.state.selectedMessages[message_object.nonce];
         }, (group, indexes, results) => {
             let from = '';
@@ -446,13 +461,13 @@ class Messages extends React.Component {
     };
 
     uploadImage = (imageFile, imageUrl) => {
-        let sendImageMessage = (url) => {
+        let sendImageMessage = (url, width, height) => {
             if (!url)
                 return;
 
             const { to, account, accounts, currentUser, messages } = this.props;
             const private_key = currentUser.getIn(['private_keys', 'memo_private']);
-            this.props.sendMessage(account, private_key, accounts[to], url, undefined, 'image');
+            this.props.sendMessage(account, private_key, accounts[to], url, undefined, 'image', {width, height});
         };
 
         if (imageFile) {
@@ -460,7 +475,7 @@ class Messages extends React.Component {
                 file: imageFile,
                 progress: data => {
                     if (data.url) {
-                        sendImageMessage(data.url);
+                        sendImageMessage(data.url, data.width, data.height);
                         this.focusInput();
                     }
                 }
@@ -472,7 +487,7 @@ class Messages extends React.Component {
                 this.props.showError(tt('messages.cannot_load_image_try_again'));
             };
             img.onload = () => {
-                sendImageMessage(url);
+                sendImageMessage(url, img.width, img.height);
                 this.focusInput();
             };
             img.src = url;
@@ -522,7 +537,7 @@ class Messages extends React.Component {
     };
 
     presaveInput = () => {
-        if (!this.presavedInput) {
+        if (this.presavedInput === undefined) {
             const input = document.getElementsByClassName('compose-input')[0];
             if (input) {
                 this.presavedInput = input.value;
@@ -538,7 +553,7 @@ class Messages extends React.Component {
     };
 
     restoreInput = () => {
-        if (this.presavedInput) {
+        if (this.presavedInput !== undefined) {
             this.setInput(this.presavedInput);
             this.presavedInput = undefined;
         }
@@ -657,33 +672,35 @@ module.exports = {
                     })
                 );
             },
-            sendMessage: (senderAcc, senderPrivMemoKey, toAcc, body, nonce = undefined, type = 'text') => {
+            sendMessage: (senderAcc, senderPrivMemoKey, toAcc, body, editInfo = undefined, type = 'text', meta = {}) => {
                 let message = {
                     app: 'golos-id',
                     version: 1,
                     body,
+                    ...meta,
                 };
                 if (type !== 'text') {
                     message.type = type;
                     if (type === 'image') {
                         // For clients who don't want use img proxy by themself
                         message.preview = $STM_Config.img_proxy_prefix + '600x300/' + body;
+                        message = { ...message, ...fitToPreview(600, 300, meta.width, meta.height), };
                     } else {
                         throw new Error('Unknown message type: ' + type);
                     }
                 }
                 message = JSON.stringify(message);
 
-                const data = golos.messages.encode(senderPrivMemoKey, toAcc.memo_key, message, nonce || undefined);
+                const data = golos.messages.encode(senderPrivMemoKey, toAcc.memo_key, message, editInfo ? editInfo.nonce : undefined);
 
                 const json = JSON.stringify(['private_message', {
                     from: senderAcc.name,
                     to: toAcc.name,
-                    nonce: nonce || data.nonce.toString(),
+                    nonce: editInfo ? editInfo.nonce : data.nonce.toString(),
                     from_memo_key: senderAcc.memo_key,
                     to_memo_key: toAcc.memo_key,
                     checksum: data.checksum,
-                    update: nonce ? true : false,
+                    update: editInfo ? true : false,
                     encrypted_message: data.encrypted_message,
                 }]);
                 dispatch(transaction.actions.broadcastOperation({
@@ -701,7 +718,7 @@ module.exports = {
                 dispatch(g.actions.messaged({message, updateMessage, isMine}));
             },
             messageEdited: (message, updateMessage, isMine) => {
-                dispatch(g.actions.messaged({message, updateMessage, isMine}));
+                dispatch(g.actions.messageEdited({message, updateMessage, isMine}));
             },
             messageRead: (message, updateMessage, isMine) => {
                 dispatch(g.actions.messageRead({message, updateMessage, isMine}));
