@@ -44,29 +44,29 @@
     grid-row-gap: 1px;
 }
 
-.container {
+.msgs-container {
     padding: 10px;
 }
 
-.scrollable {
+.msgs-scrollable {
     position: relative;
     overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
 }
 
-.sidebar {
+.msgs-sidebar {
     background: white;
     grid-row-start: 1;
     grid-row-end: span 3;
 }
 
-.content {
+.msgs-content {
     background: white;
     grid-row-start: 1;
     grid-row-end: span 3;
 }
 
-.footer {
+.msgs-footer {
     grid-column-start: 2;
     background: white;
 }

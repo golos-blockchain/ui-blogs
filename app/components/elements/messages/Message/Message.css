@@ -1,11 +1,11 @@
-.message {
+.msgs-message {
     display: flex;
     flex-direction: column;
     white-space: pre-wrap;
     word-wrap: break-word;
 }
 
-.message .timestamp {
+.msgs-message .timestamp {
     display: flex;
     justify-content: center;
     color: #999;
@@ -15,42 +15,42 @@
     text-transform: uppercase;
 }
 
-.message .bubble-container {
+.msgs-message .bubble-container {
     font-size: 14px;
     display: flex;
 }
 
-.message .bubble-container a {
+.msgs-message .bubble-container a {
     color: #ffcccc;
     text-decoration: underline;
     font-weight: bold;
 }
 
-.message.mine .bubble-container {
+.msgs-message.mine .bubble-container {
     justify-content: flex-end;
 }
 
-.message.start .bubble-container .bubble {
+.msgs-message.start .bubble-container .bubble {
     margin-top: 10px;
     border-top-left-radius: 20px;
 }
 
-.message.end .bubble-container .bubble {
+.msgs-message.end .bubble-container .bubble {
     border-bottom-left-radius: 20px;
     margin-bottom: 10px;
 }
 
-.message.mine.start .bubble-container .bubble {
+.msgs-message.mine.start .bubble-container .bubble {
     margin-top: 10px;
     border-top-right-radius: 20px;
 }
 
-.message.mine.end .bubble-container .bubble {
+.msgs-message.mine.end .bubble-container .bubble {
     border-bottom-right-radius: 20px;
     margin-bottom: 10px;
 }
 
-.message .bubble-container .bubble {
+.msgs-message .bubble-container .bubble {
     margin: 1px 0px;
     background: #f4f4f8;
     padding: 10px 15px;
@@ -63,11 +63,11 @@
     cursor: pointer;
 }
 
-.message .bubble-container.selected .bubble {
+.msgs-message .bubble-container.selected .bubble {
     background: #fc544e !important;
 }
 
-.message.mine .bubble-container .bubble {
+.msgs-message.mine .bubble-container .bubble {
     background: #007aff;
     color: white;
     border-top-left-radius: 20px;
@@ -76,28 +76,28 @@
     border-bottom-right-radius: 2px;
 }
 
-.message.mine .bubble-container .bubble.loading {
+.msgs-message.mine .bubble-container .bubble.loading {
     background: #c2e0ff;
 }
 
-.message.mine .bubble-container .bubble.loading a {
+.msgs-message.mine .bubble-container .bubble.loading a {
     color: #007aff;
 }
 
-.message.mine.start .bubble-container .unread {
+.msgs-message.mine.start .bubble-container .unread {
     margin-top: 10px;
 }
 
-.message .bubble-container .unread {
+.msgs-message .bubble-container .unread {
     padding: 10px 15px;
     color: #007aff;
     font-size: 12px;
 }
 
-.message .bubble-container .unread.loading {
+.msgs-message .bubble-container .unread.loading {
     color: #c2e0ff !important;
 }
 
-.message .bubble-container.selected .unread {
+.msgs-message .bubble-container.selected .unread {
     color: #fc544e !important;
 }

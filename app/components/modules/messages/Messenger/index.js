@@ -48,7 +48,7 @@ export default class Messages extends React.Component {
                         ]}
                     /> */}
 
-                    <div className='scrollable sidebar'>
+                    <div className='msgs-scrollable msgs-sidebar'>
                         <ConversationList
                             conversationTopLeft={conversationTopLeft}
                             account={account}
@@ -61,7 +61,7 @@ export default class Messages extends React.Component {
                             />
                     </div>
 
-                    <div className='scrollable content'>
+                    <div className='msgs-scrollable msgs-content'>
                         <MessageList
                             account={account}
                             to={to}

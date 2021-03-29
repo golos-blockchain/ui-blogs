@@ -17,7 +17,7 @@ export default class Compose extends React.Component {
     };
 
     init = () => {
-        this._tooltip = document.querySelector('.emoji-picker-tooltip');
+        this._tooltip = document.querySelector('.msgs-emoji-picker-tooltip');
         if (!this._tooltip)
             return;
 
@@ -34,7 +34,7 @@ export default class Compose extends React.Component {
         this._tooltip.appendChild(this._picker);
 
         setTimeout(() => {
-            const button = document.querySelector('.emoji-picker-opener');
+            const button = document.querySelector('.msgs-emoji-picker-opener');
             if (button) {
                 button.addEventListener('click', this.onEmojiClick);
                 document.body.addEventListener('click', this.onBodyClick);
@@ -54,7 +54,7 @@ export default class Compose extends React.Component {
         event.stopPropagation();
         this._tooltip.classList.toggle('shown');
         if (!this._tooltip.classList.contains('shown')) {
-            const input = document.getElementsByClassName('compose-input')[0];
+            const input = document.getElementsByClassName('msgs-compose-input')[0];
             if (input) {
                 input.focus();
             }
@@ -90,7 +90,7 @@ export default class Compose extends React.Component {
         event.stopPropagation();
         this._tooltip.classList.toggle('shown');
 
-        const input = document.getElementsByClassName('compose-input')[0];
+        const input = document.getElementsByClassName('msgs-compose-input')[0];
         if (input) {
             input.focus();
             this.insertAtCursor(input, ' ' + event.detail.unicode + ' ');
@@ -158,19 +158,19 @@ export default class Compose extends React.Component {
         }
 
         return (
-            <div className='compose'>
+            <div className='msgs-compose'>
                 {
                     !selectedMessagesCount ? rightItems : null
                 }
 
                 {!selectedMessagesCount ? (<textarea
-                    className='compose-input'
+                    className='msgs-compose-input'
                     placeholder={tt('messages.type_a_message_NAME', {NAME: account.name})}
                     onKeyDown={this.onSendMessage}
                     onPaste={this.onPaste}
                     />) : null}
 
-                {selectedMessagesCount ? (<div className='compose-panel'>
+                {selectedMessagesCount ? (<div className='msgs-compose-panel'>
                     <button className='button hollow small alert' onClick={onPanelDeleteClick}>{tt('g.delete') + ' (' + selectedMessagesCount + ')'}</button>
                     {(selectedMessagesCount === 1 && selectedEditablesCount === 1) ? (<button className='button hollow small' onClick={onPanelEditClick}>{tt('g.edit')}</button>) : null}
                     <button className='button hollow small cancel-button' onClick={onPanelCloseClick}>{tt('g.cancel')}</button>

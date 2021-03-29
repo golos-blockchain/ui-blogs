@@ -3,7 +3,7 @@
     padding-bottom: 70px;
 }
 
-.emoji-picker-tooltip {
+.msgs-emoji-picker-tooltip {
     display: block !important;
     position: absolute;
     z-index: 1;
@@ -11,18 +11,18 @@
     left: 0px;
 }
 
-.emoji-picker-tooltip:not(.shown) {
+.msgs-emoji-picker-tooltip:not(.shown) {
     display: none !important;
 }
 
-emoji-picker {
+.msgs-emoji-picker-tooltip emoji-picker {
     height: 290px !important;
 }
 
-.Icon {
+.Icon.msgs-icon {
     vertical-align: baseline;
 }
 
-.Icon svg {
+.Icon.msgs-icon svg {
     vertical-align: baseline;
 }

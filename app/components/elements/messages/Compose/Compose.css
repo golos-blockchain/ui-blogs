@@ -1,4 +1,4 @@
-.compose {
+.msgs-compose {
     padding: 10px;
     display: flex;
     align-items: center;
@@ -10,14 +10,14 @@
 }
 
 @supports (backdrop-filter: blur(20px)) {
-    .compose {
+    .msgs-compose {
         border: none;
         background-color: rgba(255, 255, 255, 0.8);
         backdrop-filter: blur(20px);
     }
 }
 
-.compose-input {
+.msgs-compose-input {
     flex: 1;
     border: none !important;
     font-size: 14px;
@@ -27,26 +27,26 @@
     -webkite-box-shadow: none !important;
 }
 
-.compose-input::placeholder {
+.msgs-compose-input::placeholder {
     opacity: 1 !important;
     color: #888 !important;
 }
 
-.compose .toolbar-button {
+.msgs-compose .msgs-toolbar-button {
     color: #bbbbbf;
     margin-right: 12px;
 }
 
-.compose .toolbar-button:hover {
+.msgs-compose .msgs-toolbar-button:hover {
     color: #99999c;
 }
 
-.compose-panel {
+.msgs-compose-panel {
     width: 100%;
     height: 50px;
     padding: 8px;
 }
 
-.compose-panel .cancel-button {
+.msgs-compose-panel .cancel-button {
     float: right;
 }

@@ -1,19 +1,15 @@
-.toolbar-button {
+.msgs-toolbar-button {
     color: #007aff;
     font-size: 28px;
     transition: all 0.1s;
 }
 
-.toolbar-button:hover {
+.msgs-toolbar-button:hover {
     cursor: pointer;
     color: #0063ce;
 }
 
-.toolbar-button:active {
+.msgs-toolbar-button:active {
     color: #007aff;
     opacity: 0.25;
-}
-
-ion-icon {
-    pointer-events: none;
 }

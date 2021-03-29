@@ -7,8 +7,8 @@ export default class ToolbarButton extends React.Component {
     render() {
         const { icon, className, onClick } = this.props;
         return (
-            <i className={`toolbar-button ` + (className || '')} onClick={onClick || undefined}>
-                <Icon name={`ionicons/${icon}`} size='1_75x'/>
+            <i className={`msgs-toolbar-button ` + (className || '')} onClick={onClick || undefined}>
+                <Icon name={`ionicons/${icon}`} size='1_75x' className='msgs-icon' />
             </i>
         );
     }

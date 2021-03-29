@@ -14,11 +14,13 @@ import AddImageDialog from '../dialogs/AddImageDialog';
 let Messenger;
 if (process.env.BROWSER)
     Messenger = require('app/components/modules/messages/Messenger').default;
+import PageFocus from 'app/components/elements/messages/PageFocus';
 import transaction from 'app/redux/Transaction';
 import g from 'app/redux/GlobalReducer';
 import user from 'app/redux/User';
 import { getProfileImage } from 'app/utils/NormalizeProfile';
 import { fitToPreview } from 'app/utils/ImageUtils';
+import { flash, unflash } from 'app/components/elements/messages/FlashTitle';
 
 function getProfileImageLazy(account, cachedProfileImages) {
     let cached = cachedProfileImages[account.name];
@@ -158,6 +160,8 @@ class Messages extends React.Component {
         };
         this.preDecoded = {};
         this.cachedProfileImages = {};
+        this.windowFocused = true;
+        this.newMessages = 0;
     }
 
     markMessages() {
@@ -207,6 +211,25 @@ class Messages extends React.Component {
                     } else if (this.nonce != result.message.nonce) {
                         this.props.messaged(result.message, updateMessage, isMine);
                         this.nonce = result.message.nonce
+                        if (!isMine && !this.windowFocused) {
+                            ++this.newMessages;
+
+                            let title = this.newMessages;
+                            const plural = this.newMessages % 10;
+
+                            if (plural === 1) {
+                                if (this.newMessages === 11)
+                                    title += tt('messages.new_message5');
+                                else
+                                    title += tt('messages.new_message1');
+                            } else if ((plural === 2 || plural === 3 || plural === 4) && (this.newMessages < 10 || this.newMessages > 20)) {
+                                title += tt('messages.new_message234');
+                            } else {
+                                title += tt('messages.new_message5');
+                            }
+
+                            flash(title);
+                        }
                     }
                 } else if (result.type === 'mark') {
                     this.props.messageRead(result.message, updateMessage, isMine);
@@ -249,7 +272,7 @@ class Messages extends React.Component {
                     this.markMessages2();
                 setTimeout(() => {
                     if (added) {
-                        const scroll = document.getElementsByClassName('scrollable')[1];
+                        const scroll = document.getElementsByClassName('msgs-scrollable')[1];
                         if (scroll) scroll.scrollTo(0,scroll.scrollHeight);
                     }
                     if (anotherChat || anotherKey) {
@@ -532,13 +555,13 @@ class Messages extends React.Component {
     };
 
     focusInput = () => {
-        const input = document.getElementsByClassName('compose-input')[0];
+        const input = document.getElementsByClassName('msgs-compose-input')[0];
         if (input) input.focus();
     };
 
     presaveInput = () => {
         if (this.presavedInput === undefined) {
-            const input = document.getElementsByClassName('compose-input')[0];
+            const input = document.getElementsByClassName('msgs-compose-input')[0];
             if (input) {
                 this.presavedInput = input.value;
             }
@@ -546,7 +569,7 @@ class Messages extends React.Component {
     };
 
     setInput = (value) => {
-        const input = document.getElementsByClassName('compose-input')[0];
+        const input = document.getElementsByClassName('msgs-compose-input')[0];
         if (input) {
             input.value = value;
         }
@@ -587,10 +610,28 @@ class Messages extends React.Component {
         return messagesTopCenter;
     };
 
+    handleFocusChange = isFocused => {
+        this.windowFocused = isFocused;
+        if (!isFocused) {
+            if (this.newMessages) {
+                flash();
+            }
+        } else {
+            this.newMessages = 0;
+            unflash();
+        }
+    }
+
     render() {
         const { contacts, account, to } = this.props;
         if (!contacts || !account) return (<div></div>);
         return (<div>
+                <PageFocus onChange={this.handleFocusChange}>
+                    {(focused) => (
+                        <MarkNotificationRead fields='message' account={account.name}
+                            interval={focused ? 5000 : null}
+                        />)}
+                </PageFocus>
                 {Messenger ? (<Messenger
                     account={this.props.account}
                     to={to}
@@ -598,7 +639,6 @@ class Messages extends React.Component {
                     conversationTopLeft={[
                         <a href='/' key='logo'>
                             <h4>GOLOS</h4>
-                            <MarkNotificationRead fields='message' account={account.name} />
                         </a>
                     ]}
                     conversationLinkPattern='/msgs/@*'
