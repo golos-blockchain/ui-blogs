@@ -2,6 +2,7 @@ import React from 'react';
 import golos from 'golos-classic-js';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import { LinkWithDropdown } from 'react-foundation-components/lib/global/dropdown';
 import { browserHistory } from 'react-router';
 import max from 'lodash/max';
 import debounce from 'lodash/debounce';
@@ -9,6 +10,9 @@ import tt from 'counterpart';
 import Icon from 'app/components/elements/Icon';
 import MarkNotificationRead from 'app/components/elements/MarkNotificationRead';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
+import Userpic from 'app/components/elements/Userpic';
+import VerticalMenu from 'app/components/elements/VerticalMenu';
+import NotifiCounter from 'app/components/elements/NotifiCounter';
 import DialogManager from 'app/components/elements/common/DialogManager';
 import AddImageDialog from '../dialogs/AddImageDialog';
 let Messenger;
@@ -21,6 +25,7 @@ import user from 'app/redux/User';
 import { getProfileImage } from 'app/utils/NormalizeProfile';
 import { fitToPreview } from 'app/utils/ImageUtils';
 import { flash, unflash } from 'app/components/elements/messages/FlashTitle';
+import { APP_NAME_UP, APP_ICON } from 'app/client_config';
 
 function getProfileImageLazy(account, cachedProfileImages) {
     let cached = cachedProfileImages[account.name];
@@ -47,7 +52,7 @@ function normalizeContacts(contacts, accounts, currentUser, preDecoded, cachedPr
         contact.avatar = getProfileImageLazy(account, cachedProfileImages);
 
         if (contact.last_message.create_date.startsWith('1970')) {
-            contact.last_message.message = "";
+            contact.last_message.message = '';
             continue;
         }
 
@@ -251,7 +256,6 @@ class Messages extends React.Component {
             || nextProps.contacts.size !== this.props.contacts.size
             || nextProps.memo_private !== this.props.memo_private) {
             const { contacts, messages, accounts, currentUser } = nextProps;
-            if (!currentUser) return;
             if (!this.props.checkMemo(currentUser)) {
                 this.setState({
                     to: nextProps.to, // protects from infinity loop
@@ -586,7 +590,7 @@ class Messages extends React.Component {
         let messagesTopCenter = [];
         const { to, accounts } = this.props;
         if (accounts[to]) {
-            messagesTopCenter.push(<div key='to-link' style={{fontSize: '14px', width: '100%', textAlign: 'center'}}>
+            messagesTopCenter.push(<div key='to-link' style={{fontSize: '15px', width: '100%', textAlign: 'center'}}>
                 <a href={'/@' + to}>{to}</a>
             </div>);
             const dates = [
@@ -597,7 +601,7 @@ class Messages extends React.Component {
             ];
             let lastSeen = max(dates);
             if (!lastSeen.startsWith('19')) {
-                messagesTopCenter.push(<div key='to-last-seen' style={{fontSize: '12px', fontWeight: 'normal'}}>
+                messagesTopCenter.push(<div key='to-last-seen' style={{fontSize: '13px', fontWeight: 'normal'}}>
                     {
                         <span>
                             {tt('messages.last_seen')}
@@ -608,6 +612,47 @@ class Messages extends React.Component {
             }
         }
         return messagesTopCenter;
+    };
+
+    _renderMessagesTopRight = () => {
+        const { currentUser } = this.props;
+        if (!currentUser) {
+            return null;
+        }
+
+        const username = currentUser.get('username');
+        const feedLink = `/@${username}/feed`;
+        const accountLink = `/@${username}`;
+        const repliesLink = `/@${username}/recent-replies`;
+        const donatesLink = `/@${username}/donates-to`;
+        const walletLink = `/@${username}/transfers`;
+
+        let user_menu = [
+            {link: feedLink, icon: 'new/home', value: tt('g.feed'), addon: <NotifiCounter fields='feed' />},
+            {link: accountLink, icon: 'new/blogging', value: tt('g.blog')},
+            {link: repliesLink, icon: 'new/answer', value: tt('g.replies'), addon: <NotifiCounter fields='comment_reply' />},
+            {link: donatesLink, icon: 'editor/coin', value: tt('g.rewards'), addon: <NotifiCounter fields='donate' />},
+            {link: walletLink, icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields='send,receive' />},
+            {link: '#', icon: 'new/logout', onClick: this.props.logout, value: tt('g.logout')},
+        ];
+
+        return (<LinkWithDropdown
+                closeOnClickOutside
+                dropdownPosition='bottom'
+                dropdownAlignment='bottom'
+                dropdownContent={<VerticalMenu className={'VerticalMenu_nav-profile'} items={user_menu} />}
+            >
+                <div 
+            className='msgs-curruser'>
+                <div className='msgs-curruser-notify-sink'>
+                    <Userpic account={username} title={username} width={40} height={40} />
+                    <div className='TopRightMenu__notificounter'><NotifiCounter fields='total' /></div>
+                </div>
+                <div className='msgs-curruser-name'>
+                    {username}
+                </div>
+                </div>
+            </LinkWithDropdown>);
     };
 
     handleFocusChange = isFocused => {
@@ -638,13 +683,16 @@ class Messages extends React.Component {
                     contacts={this.state.searchContacts || this.state.contacts}
                     conversationTopLeft={[
                         <a href='/' key='logo'>
-                            <h4>GOLOS</h4>
+                            <Icon name={APP_ICON} size='2x' className='msgs-logo-icon' />
+                            <div className='msgs-logo-title'>{APP_NAME_UP}
+                            <span className='msgs-logo-subtitle'>blockchain</span></div>
                         </a>
                     ]}
                     conversationLinkPattern='/msgs/@*'
                     onConversationSearch={this.onConversationSearch}
                     messages={this.state.messages}
                     messagesTopCenter={this._renderMessagesTopCenter()}
+                    messagesTopRight={this._renderMessagesTopRight()}
                     onSendMessage={this.onSendMessage}
                     selectedMessages={this.state.selectedMessages}
                     onMessageSelect={this.onMessageSelect}
@@ -690,6 +738,12 @@ module.exports = {
         },
         dispatch => ({
             checkMemo: (currentUser) => {
+                if (!currentUser) {
+                    dispatch(user.actions.showLogin({
+                        loginDefault: { }
+                    }));
+                    return false;
+                }
                 const private_key = currentUser.getIn(['private_keys', 'memo_private']);
                 if (!private_key) {
                     dispatch(user.actions.showLogin({
@@ -801,7 +855,11 @@ module.exports = {
                         key,
                     },
                 });
-            }
+            },
+            logout: e => {
+                if (e) e.preventDefault();
+                dispatch(user.actions.logout());
+            },
         })
     )(Messages),
 };

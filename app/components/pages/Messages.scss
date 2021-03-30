@@ -1,0 +1,44 @@
+.msgs-logo-icon {
+    vertical-align: top;
+    margin-top: 4px;
+}
+
+.msgs-logo-title {
+    display: inline-block;
+    margin-top: 4px;
+    margin-left: 10px;
+    text-transform: uppercase;
+    color: #2572ba;
+    font-family: "Source Serif Pro";
+    font-size: 24px !important;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.msgs-logo-subtitle {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: none;
+}
+
+.msgs-toolbar {
+    height: 61px !important;
+}
+
+.msgs-curruser {
+    cursor: pointer;
+    padding-top: 6px;
+}
+
+.msgs-curruser-notify-sink {
+    display: inline-block;
+
+    position: relative;
+}
+
+.msgs-curruser-name {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 9px;
+    margin-left: 10px;
+}
