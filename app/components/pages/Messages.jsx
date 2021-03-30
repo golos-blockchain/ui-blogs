@@ -633,6 +633,7 @@ class Messages extends React.Component {
             {link: repliesLink, icon: 'new/answer', value: tt('g.replies'), addon: <NotifiCounter fields='comment_reply' />},
             {link: donatesLink, icon: 'editor/coin', value: tt('g.rewards'), addon: <NotifiCounter fields='donate' />},
             {link: walletLink, icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields='send,receive' />},
+            {link: '#', onClick: this.props.toggleNightmode, icon: 'editor/eye', value: tt('g.night_mode')},
             {link: '#', icon: 'new/logout', onClick: this.props.logout, value: tt('g.logout')},
         ];
 
@@ -857,6 +858,10 @@ module.exports = {
             logout: e => {
                 if (e) e.preventDefault();
                 dispatch(user.actions.logout());
+            },
+            toggleNightmode: (e) => {
+                if (e) e.preventDefault();
+                dispatch(user.actions.toggleNightmode());
             },
         })
     )(Messages),
