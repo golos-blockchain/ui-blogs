@@ -1,24 +1,5 @@
-.msgs-logo-icon {
-    vertical-align: top;
-    margin-top: 4px;
-}
-
-.msgs-logo-title {
-    display: inline-block;
-    margin-top: 4px;
-    margin-left: 10px;
-    text-transform: uppercase;
-    color: #2572ba;
-    font-family: "Source Serif Pro";
-    font-size: 24px !important;
-    font-weight: bold;
-    line-height: 1;
-}
-
-.msgs-logo-subtitle {
-    display: block;
-    font-size: 0.7rem;
-    text-transform: none;
+.msgs-logo {
+    height: 55px;
 }
 
 .msgs-toolbar {
@@ -28,6 +9,7 @@
 .msgs-curruser {
     cursor: pointer;
     padding-top: 6px;
+    user-select: none;
 }
 
 .msgs-curruser-notify-sink {
@@ -39,6 +21,6 @@
 .msgs-curruser-name {
     display: inline-block;
     vertical-align: top;
-    margin-top: 9px;
+    margin-top: 8px;
     margin-left: 10px;
 }

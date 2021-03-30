@@ -683,9 +683,7 @@ class Messages extends React.Component {
                     contacts={this.state.searchContacts || this.state.contacts}
                     conversationTopLeft={[
                         <a href='/' key='logo'>
-                            <Icon name={APP_ICON} size='2x' className='msgs-logo-icon' />
-                            <div className='msgs-logo-title'>{APP_NAME_UP}
-                            <span className='msgs-logo-subtitle'>blockchain</span></div>
+                            <img className='msgs-logo' src='/images/messenger.png' />
                         </a>
                     ]}
                     conversationLinkPattern='/msgs/@*'
