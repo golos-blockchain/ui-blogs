@@ -271,7 +271,8 @@ class PostFull extends React.Component {
                 iurl += pp2.image_link
             } else {
                 // Proxy old images from io fork
-                iurl += 'https://imgp.golos.io/0x0/' + pp2.image_link
+                // iurl += 'https://imgp.golos.io/0x0/' + pp2.image_link
+                iurl += pp2.image_link
             }
             if (!pp2.image_link) {
                 iurl = '/images/noimage.png';

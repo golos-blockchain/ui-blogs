@@ -79,6 +79,9 @@ a {
 .button.slim {
   padding: 5px;
   margin: 5px;
+  &:hover {
+      background-color: $dark-gray;
+  }
 }
 
 .button.violet {

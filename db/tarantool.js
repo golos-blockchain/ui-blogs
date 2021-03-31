@@ -2,8 +2,7 @@ import TarantoolDriver from 'tarantool-driver';
 
 const config = require('config');
 const instance = {
-  'tarantool': null,
-  'chainproxy': null
+  'tarantool': null
 };
 
 class Tarantool {

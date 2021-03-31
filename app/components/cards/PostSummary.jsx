@@ -194,7 +194,8 @@ class PostSummary extends React.Component {
             url += p.image_link
           } else {
             // Proxy old images from io fork
-            url += 'https://imgp.golos.io/0x0/' + p.image_link
+            // url += 'https://imgp.golos.io/0x0/' + p.image_link
+            url += p.image_link
           }
 
           thumb = <PostSummaryThumb

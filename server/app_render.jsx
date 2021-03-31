@@ -13,7 +13,6 @@ import {
   DEFAULT_LANGUAGE, LANGUAGES, LOCALE_COOKIE_KEY,
   SELECT_TAGS_KEY
 } from 'app/client_config';
-import { metrics } from './metrics';
 
 const DB_RECONNECT_TIMEOUT = process.env.NODE_ENV === 'development' ? 1000 * 60 * 60 : 1000 * 60 * 10;
 
@@ -103,12 +102,8 @@ async function appRender(ctx) {
           store,
           offchain,
           ErrorPage,
-          tarantool: Tarantool.instance('tarantool'),
-          chainproxy: Tarantool.instance('chainproxy'),
-          metrics
+          tarantool: Tarantool.instance('tarantool')
         });
-
-        if (metrics) metrics.timing(`universalRender.time`, new Date() - start)
 
         // Assets name are found in `webpack-stats` file
         const assets_filename = process.env.NODE_ENV === 'production' ? 'tmp/webpack-isotools-assets-prod.json' : 'tmp/webpack-isotools-assets-dev.json';

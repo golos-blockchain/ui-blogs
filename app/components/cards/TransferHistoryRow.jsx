@@ -119,8 +119,9 @@ class TransferHistoryRow extends React.Component {
                 }
             };
 
-            // golos-id donates of version 1 are for posts (with permlink) and just for account (without)
-            if (data.memo.app == 'golos-id' && data.memo.target.permlink != '') {
+            // golos-blog donates of version 1 are for posts (with permlink) and just for account (without)
+            // if (data.memo.app == 'golos-blog' && data.memo.target.permlink != '') {
+            if (data.memo.target.permlink != '') {
                 description_start += data.amount;
                 if (context === "from" && data.to != data.memo.target.author) {
                     description_start += tt('transferhistoryrow_jsx.to') + data.to;
