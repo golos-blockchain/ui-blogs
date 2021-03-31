@@ -499,7 +499,7 @@ export default connect(
 
             if (transferType === 'TIP to Account') {
                 let donate_memo = {};
-                donate_memo.app = "golos-id";
+                donate_memo.app = "golos-blog";
                 donate_memo.version = 1;
                 donate_memo.comment = operation.memo;
                 donate_memo.target = {
