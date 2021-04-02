@@ -9,8 +9,8 @@ export default class PageFocus extends React.Component {
     }
 
     componentDidMount() {
-        document.addEventListener('focus', this.handleChange);
-        document.addEventListener('blur', this.handleChange);
+        window.addEventListener('focus', this.handleChange);
+        window.addEventListener('blur', this.handleChange);
         if (typeof this.props.onChange === 'function') {
             // propagate change to callback
             this.props.onChange(document.hasFocus());
@@ -18,8 +18,8 @@ export default class PageFocus extends React.Component {
     }
 
     componentWillUnmount() {
-        document.removeEventListener('focus', this.handleChange);
-        document.removeEventListener('blur', this.handleChange);
+        window.removeEventListener('focus', this.handleChange);
+        window.removeEventListener('blur', this.handleChange);
     }
 
     propagateChange = (focused) => {
