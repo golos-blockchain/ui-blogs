@@ -167,6 +167,7 @@ class Messages extends React.Component {
         this.cachedProfileImages = {};
         this.windowFocused = true;
         this.newMessages = 0;
+        props.checkMemo(props.currentUser);
     }
 
     markMessages() {
