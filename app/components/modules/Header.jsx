@@ -96,6 +96,7 @@ class Header extends React.Component {
                 if(prefix == 'trending') prefix = tt('header_jsx.trending')
                 if(prefix == 'promoted') prefix = tt('header_jsx.promoted')
                 if(prefix == 'donates') prefix = tt('header_jsx.donates')
+                if(prefix == 'forums') prefix = tt('header_jsx.forums')
                 page_title = `${prefix} ${topic}${type}`;
             }
         } else if (route.page === 'Post') {
@@ -159,6 +160,7 @@ class Header extends React.Component {
             ['responses', tt('main_menu.discussion')],
             ['trending', tt('main_menu.trending')],
             ['donates', tt('main_menu.donates')],
+            ['forums', tt('main_menu.forums')],
             ['promoted', tt('g.promoted')],
         ];
         if (current_account_name) sort_orders.unshift(['home', tt('header_jsx.home')]);
@@ -171,6 +173,7 @@ class Header extends React.Component {
             ['trending', tt('main_menu.trending')],
             ['promoted', tt('g.promoted')],
             ['donates', tt('main_menu.donates')],
+            ['forums', tt('main_menu.forums')],
         ];
         if (current_account_name) sort_orders_horizontal.unshift(['home', tt('header_jsx.home')]);
         const sort_order_menu_horizontal = sort_orders_horizontal.map(so => {

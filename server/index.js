@@ -22,7 +22,8 @@ global.$STM_Config = {
     google_analytics_id: config.get('google_analytics_id'),
     chain_id: config.get('chain_id'),
     ads_per_post: config.get('ads_per_post'),
-    elastic_search: config.get('elastic_search')
+    elastic_search: config.get('elastic_search'),
+    forums: config.get('forums')
 };
 
 const WebpackIsomorphicTools = require('webpack-isomorphic-tools');

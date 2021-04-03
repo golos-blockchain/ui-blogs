@@ -507,6 +507,9 @@ export function* fetchData(action) {
     } else if( order === 'by_replies' ) {
         call_name = 'getRepliesByLastUpdateAsync';
         args = [author, permlink, constants.FETCH_DATA_BATCH_SIZE, constants.DEFAULT_VOTE_LIMIT];
+    } else if (order === 'forums') {
+        call_name = PUBLIC_API.forums;
+        args = [author, permlink, 0, constants.FETCH_DATA_BATCH_SIZE, $STM_Config.forums.white_list, 0, 0, [], [], 'fm-'];
     } else {
         call_name = PUBLIC_API.active;
     }
@@ -515,7 +518,13 @@ export function* fetchData(action) {
     try {
         let posts = []
 
-        const data = yield call([api, api[call_name]], ...args);
+        console.time('1');
+        let data = yield call([api, api[call_name]], ...args);
+
+        console.timeEnd('1');
+        if (order === 'forums') {
+            data = data['fm-'];
+        }
 
         if (['created', 'responses', 'hot', 'trending'].includes(order) && !args[0].start_author) {
           // Add top 3 from promo to tranding and 1 to hot, created
