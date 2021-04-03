@@ -76,7 +76,8 @@ class Author extends React.Component {
             </Link>
             <div>
                 <Follow className="float-right" follower={username} following={author} what="blog"
-                        showFollow={follow} showMute={mute} donateUrl={donateUrl} />
+                        showFollow={follow} showMute={mute} donateUrl={donateUrl}
+                        showMessage={true} />
             </div>
 
             <div className="Author__bio">
