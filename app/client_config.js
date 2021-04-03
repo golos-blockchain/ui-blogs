@@ -62,6 +62,7 @@ export const PUBLIC_API = {
   active:    'getDiscussionsByActiveAsync',
   responses: 'getDiscussionsByChildrenAsync',
   donates:   'getDiscussionsByDonatesAsync',
+  forums:   'getAllDiscussionsByActiveAsync',
   votes:     'getDiscussionsByVotesAsync',
   cashout:   'getDiscussionsByCashoutAsync',
   payout:     'getDiscussionsByPayoutAsync',

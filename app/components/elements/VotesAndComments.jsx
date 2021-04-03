@@ -12,6 +12,7 @@ class VotesAndComments extends React.Component {
         // HTML properties
         post: PropTypes.string.isRequired,
         commentsLink: PropTypes.string.isRequired,
+        isForum: PropTypes.bool,
 
         // Redux connect properties
         votes: PropTypes.number,
@@ -23,6 +24,14 @@ class VotesAndComments extends React.Component {
         this.shouldComponentUpdate = shouldComponentUpdate(this, 'VotesAndComments');
     }
 
+    onClick = (event) => {
+        const { isForum, commentsLink } = this.props;
+        if (isForum) {
+            event.preventDefault();
+            window.open(commentsLink, '_blank');
+        }
+    };
+
     render() {
         const {votes, comments, commentsLink} = this.props;
         let comments_tooltip = tt('votesandcomments_jsx.no_responses_yet_click_to_respond');
@@ -31,7 +40,7 @@ class VotesAndComments extends React.Component {
         return (
             <span className="VotesAndComments">
                 <span className={'VotesAndComments__comments' + (comments === 0 ? ' no-comments' : '')}>
-                     <Link to={commentsLink} title={comments_tooltip}>
+                     <Link to={commentsLink} onClick={this.onClick} title={comments_tooltip}>
                         <Icon name={comments > 1 ? 'chatboxes' : 'chatbox'} />&nbsp;{comments}
                      </Link>
                  </span>

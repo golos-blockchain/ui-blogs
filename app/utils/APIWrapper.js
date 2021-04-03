@@ -86,6 +86,8 @@ export function getDonates(uia, target, from, to, voteLimit, offset) {
 }
 
 export function gedDiscussionsBy(type, args) {
+    if (type === 'forums')
+        return api[PUBLIC_API[type]](...args)
     return api[PUBLIC_API[type]](args)
 }
 

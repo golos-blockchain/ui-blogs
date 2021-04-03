@@ -5,7 +5,7 @@ export const routeRegex = {
     UserProfile3: /^\/(@[\w\.\d-]+)\/[\w\.\d-]+/,
     UserAssetEndPoints: /^\/(@[\w\.\d-]+)\/assets\/([\w\d.-]+)\/(update|transfer)$/,
     UserEndPoints: /^(blog|posts|comments|recommended|transfers|assets|create-asset|invites|curation-rewards|author-rewards|donates-from|donates-to|permissions|created|recent-replies|feed|password|witness|followed|followers|settings)$/,
-    CategoryFilters: /^\/(hot|votes|responses|donates|trending|promoted|cashout|payout|payout_comments|created|active)\/?$/ig,
+    CategoryFilters: /^\/(hot|votes|responses|donates|forums|trending|promoted|cashout|payout|payout_comments|created|active)\/?$/ig,
     PostNoCategory: /^\/(@[\w\.\d-]+)\/([\w\d-]+)/,
     Post: /^\/([\w\d\-\/]+)\/(\@[\w\d\.-]+)\/([\w\d-]+)\/?($|\?)/,
     WorkerSort: /^\/workers\/([\w\d\-]+)\/?($|\?)/,
@@ -117,8 +117,8 @@ export default function resolveRoute(path)
     if (match) {
         return {page: 'Post', params: match.slice(1)};
     }
-    match = path.match(/^\/(hot|votes|responses|donates|trending|promoted|cashout|payout|payout_comments|created|active)\/?$/)
-         || decodeURI(path).match(/^\/(hot|votes|responses|donates|trending|promoted|cashout|payout|payout_comments|created|active)\/([\u0400-\u04FF-\w\d-]+)\/?$/)
+    match = path.match(/^\/(hot|votes|responses|donates|forums|trending|promoted|cashout|payout|payout_comments|created|active)\/?$/)
+         || decodeURI(path).match(/^\/(hot|votes|responses|donates|forums|trending|promoted|cashout|payout|payout_comments|created|active)\/([\u0400-\u04FF-\w\d-]+)\/?$/)
     if (match) {
         return {page: 'PostsIndex', params: match.slice(1)};
     }
