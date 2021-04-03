@@ -36,7 +36,7 @@ export default class EmojiPicker extends React.Component {
 
         this._picker = new Picker({
             locale: tt.getLocale(),
-            i18n: tt('emoji_i18n')
+            i18n: tt('emoji_i18n'),
         });
 
         this._picker.addEventListener('emoji-click', this.onSelect);

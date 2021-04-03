@@ -119,13 +119,14 @@ class LoginForm extends Component {
         }
 
         const { externalTransfer } = this.props;
-        const { loginBroadcastOperation, dispatchSubmit, afterLoginRedirectToWelcome, msg} = this.props;
+        const { loginBroadcastOperation, loginDefault, dispatchSubmit, afterLoginRedirectToWelcome, msg} = this.props;
         const {username, password, saveLogin} = this.state;
         const {submitting, valid, handleSubmit} = this.state.login;
         const {usernameOnChange, onCancel, /*qrReader*/} = this;
         const disabled = submitting || !valid;
         const opType = loginBroadcastOperation ? loginBroadcastOperation.get('type') : null;
         let postType = "";
+        let isMemo = false;
         if (opType === "vote") {
             postType = tt('loginform_jsx.login_to_vote')
         } else if (opType === "custom_json" && loginBroadcastOperation.getIn(['operation', 'id']) === "follow") {
@@ -133,6 +134,9 @@ class LoginForm extends Component {
         } else if (loginBroadcastOperation) {
             // check for post or comment in operation
             postType = loginBroadcastOperation.getIn(['operation', 'title']) ? tt('loginform_jsx.login_to_post') : tt('loginform_jsx.login_to_comment');
+        } else if (loginDefault && loginDefault.get('authType') === 'memo') {
+            isMemo = true;
+            postType = tt('loginform_jsx.login_to_message');
         }
         const title = postType ? postType : tt('g.login');
         const authType = /^vote|comment/.test(opType) ? tt('loginform_jsx.posting') : tt('loginform_jsx.active_or_owner');
@@ -199,7 +203,7 @@ class LoginForm extends Component {
                 {loginBroadcastOperation && <div>
                     <div className="info">{tt('loginform_jsx.this_operation_requires_your_key_or_master_password', {authType})}</div>
                 </div>}
-                {!loginBroadcastOperation && <div>
+                {!loginBroadcastOperation && !isMemo && <div>
                     <label htmlFor="saveLogin">
                         {tt('loginform_jsx.keep_me_logged_in')} &nbsp;
                         <input id="saveLogin" type="checkbox" ref="pw" {...saveLogin.props} onChange={this.saveLoginToggle} disabled={submitting} /></label>
@@ -209,7 +213,7 @@ class LoginForm extends Component {
                     <button type="submit" disabled={submitting || disabled} className="button" onClick={this.SignIn}>
                         {submitLabel}
                     </button>
-                    {this.props.onCancel && <button type="button float-right" disabled={submitting} className="button hollow" onClick={onCancel}>
+                    {this.props.onCancel && !isMemo && <button type="button float-right" disabled={submitting} className="button hollow" onClick={onCancel}>
                         {tt('g.cancel')}
                     </button>}
                 </div>
@@ -310,6 +314,7 @@ export default connect(
             loginBroadcastOperation,
             initialValues,
             initialUsername,
+            loginDefault,
             msg,
             offchain_user: state.offchain.get('user')
         }

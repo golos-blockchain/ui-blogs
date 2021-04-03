@@ -146,8 +146,11 @@ function* uploadImage(action) {
 
             onError(xhr.responseText);
         } else {
+            const { link, width, height } = data.data;
             progress({
-              url: data.data.link,
+                url: link,
+                width,
+                height,
             });
         }
     };

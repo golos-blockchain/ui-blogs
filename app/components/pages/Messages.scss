@@ -1,0 +1,26 @@
+.msgs-logo {
+    height: 55px;
+}
+
+.msgs-toolbar {
+    height: 61px !important;
+}
+
+.msgs-curruser {
+    cursor: pointer;
+    padding-top: 6px;
+    user-select: none;
+}
+
+.msgs-curruser-notify-sink {
+    display: inline-block;
+
+    position: relative;
+}
+
+.msgs-curruser-name {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 8px;
+    margin-left: 10px;
+}

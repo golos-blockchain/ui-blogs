@@ -126,6 +126,8 @@ const icons = new Map([
     ['editor-toolbar/picture', require('app/assets/icons/editor-toolbar/picture.svg')],
     ['editor-toolbar/video', require('app/assets/icons/editor-toolbar/video.svg')],
     ['editor-toolbar/search', require('app/assets/icons/editor-toolbar/search.svg')],
+    ['ionicons/image-outline', require('app/assets/icons/ionicons/image-outline.svg')],
+    ['ionicons/happy-outline', require('app/assets/icons/ionicons/happy-outline.svg')],
 ]);
 
 const rem_sizes = {
@@ -151,6 +153,7 @@ export default class Icon extends React.PureComponent {
             '1x',
             '1_25x',
             '1_5x',
+            '1_75x',
             '2x',
             '3x',
             '4x',

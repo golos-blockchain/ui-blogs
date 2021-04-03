@@ -13,6 +13,12 @@ export default class AddImageDialog extends React.PureComponent {
         onClose: PropTypes.func.isRequired,
     };
 
+    componentDidMount() {
+        const linkInput = document.getElementsByClassName('AddImageDialog__link-input')[0];
+        if (linkInput)
+            linkInput.focus();
+    }
+
     render() {
         return (
             <DialogFrame

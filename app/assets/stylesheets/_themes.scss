@@ -200,6 +200,63 @@ $themes: (
             background-position: 50% 50%;
         }
     }
+
+    .msgs-sidebar {
+      background: #1c252b;
+    }
+
+    .msgs-content {
+      background: #1c252b;
+    }
+
+    .msgs-compose {
+        border-top: 1px solid #373737;
+        background: #1c252b;
+    }
+
+    @supports (backdrop-filter: blur(20px)) {
+        .msgs-compose {
+            background-color: rgba(28, 37, 43, 0.5);
+            backdrop-filter: blur(20px);
+        }
+    }
+
+    .msgs-toolbar {
+        border-bottom: 1px solid #373737;
+        background-color: #1c252b;
+    }
+
+    @supports (backdrop-filter: blur(20px)) {
+        .msgs-toolbar {
+            background-color: rgba(28, 37, 43, 0.5);
+            backdrop-filter: blur(20px);
+        }
+    }
+
+    .msgs-compose-input {
+        color: $color-text-white !important;
+    }
+
+    .msgs-compose-input::placeholder {
+        color: $color-text-white !important;
+    }
+
+    .conversation-list-item.selected {
+        background: #002346 !important;
+    }
+
+    .msgs-message .timestamp {
+        color: $color-text-white;
+    }
+
+    .conversation-search-input {
+        background: #373737 !important;
+        color: $color-text-white !important;
+    }
+
+    .conversation-search-input::placeholder {
+        color: $color-text-white !important;
+    }
   }
 
 
