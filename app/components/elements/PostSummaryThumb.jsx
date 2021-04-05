@@ -47,7 +47,7 @@ export default class PostSummaryThumb extends React.Component {
     title = title ? title : '';
     body = body ? body : '';
     return (
-      <a href={this.props.href} onClick={this.props.onClick}>
+      <a href={this.props.href} target={this.props.target} onClick={this.props.onClick}>
         <span className="PostSummary__image_container">
          <picture className="PostSummary__image_container-wrapper">
           <img

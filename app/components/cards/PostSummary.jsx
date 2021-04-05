@@ -32,7 +32,9 @@ function isModifiedEvent(event) {
     return !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey)
 }
 
-function navigate(e, onClick, post, url) {
+function navigate(e, onClick, post, url, isForum) {
+    if (isForum)
+        return;
     if (isModifiedEvent(e) || !isLeftClickEvent(e)) return;
     e.preventDefault();
     if (onClick) onClick(post, url);
@@ -121,6 +123,7 @@ class PostSummary extends React.Component {
         if(p.image_link)// image link is already shown in the preview
             desc = desc.replace(p.image_link, '')
         let title_link_url;
+        let is_forum = false;
         let title_text = p.title;
         let comments_link;
         let is_comment = false;
@@ -136,17 +139,33 @@ class PostSummary extends React.Component {
            comments_link = p.link + '#comments';
         }
 
-        if (username)
+        if (title_link_url.includes('fm-') && $STM_Config.forums) {
+            let parts = title_link_url.split('/');
+            for (let [_id, forum] of Object.entries($STM_Config.forums)) {
+                if (!forum || !forum.domain)
+                    continue;
+                if (parts[1].startsWith(_id)) {
+                    is_forum = true;
+                    parts[0] = forum.domain;
+                    parts[1] = parts[1].replace(_id + '-', '');
+                    title_link_url = 'http://' + parts.join('/');
+                    comments_link = title_link_url;
+                    break;
+                }
+            }
+        }
+
+        if (username && !is_forum)
             title_link_url += "?invite=" + username;
 
         let content_body = <div className="PostSummary__body entry-content">
-            <a href={title_link_url} onClick={e => navigate(e, onClick, post, title_link_url)}>{desc}</a>
+            <a href={title_link_url} target={is_forum && '_blank'} onClick={e => navigate(e, onClick, post, title_link_url, is_forum)}>{desc}</a>
         </div>;
 
         const warn = (isNsfw && nsfwPref === 'warn' && !myPost);
 
         let content_title = <h3 className="entry-title">
-            <a href={title_link_url} onClick={e => navigate(e, onClick, post, title_link_url)}>
+            <a href={title_link_url} target={is_forum && '_blank'} onClick={e => navigate(e, onClick, post, title_link_url, is_forum)}>
                 {warn && <span className="nsfw-flag">{detransliterate(nsfwTitle)}</span>}
                 {title_text}
                 {full_power && <span title={tt('g.powered_up_100')}><Icon name={APP_ICON} /></span>}
@@ -155,7 +174,7 @@ class PostSummary extends React.Component {
 
         // author and category
         let author_category = <span className="vcard">
-            <a href={title_link_url} onClick={e => navigate(e, onClick, post, title_link_url)}><TimeAgoWrapper date={p.created} className="updated" /></a>
+            <a href={title_link_url} target={is_forum && '_blank'} onClick={e => navigate(e, onClick, post, title_link_url, is_forum)}><TimeAgoWrapper date={p.created} className="updated" /></a>
             {' '}
             {blockEye && <MuteAuthorInNew author={p.author} />}
             <Author author={p.author} authorRepLog10={authorRepLog10} follow={false} mute={false} />
@@ -164,7 +183,7 @@ class PostSummary extends React.Component {
 
         const content_footer = <div className="PostSummary__footer">
             <Voting post={post} showList={false} />
-            <VotesAndComments post={post} commentsLink={comments_link} />
+            <VotesAndComments post={post} commentsLink={comments_link} isForum={is_forum} />
             <span className="PostSummary__time_author_category">
             
             <PinPost author={p.author} permlink={p.permlink} />
@@ -203,8 +222,9 @@ class PostSummary extends React.Component {
               mobile={thumbSize == 'mobile'}
               isNsfw={warn}
               src={url}
-              href={p.link}
-              onClick={e => navigate(e, onClick, post, p.link)} />
+              href={title_link_url}
+              target={is_forum && '_blank'}
+              onClick={e => navigate(e, onClick, post, title_link_url, is_forum)} />
         }
         const commentClasses = []
         if(gray || ignore) commentClasses.push('downvoted') // rephide

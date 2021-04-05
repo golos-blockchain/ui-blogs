@@ -358,8 +358,16 @@ export default async function getState(api, url, options, offchain = {}) {
             const mutedInNew = getMutedInNew(loader);
             args.filter_authors = mutedInNew;
         }
+        if (discussionsType == 'forums') {
+            args = ['', '', 0, args.limit, $STM_Config.forums.white_list, 0, 0, [], [], 'fm-'];
+        }
         requests.push(api.gedDiscussionsBy(discussionsType, args))
-        const responses = await Promise.all(requests)
+        let responses = await Promise.all(requests)
+
+        // Warning! Should be updated if changing requests.push order
+        if (discussionsType == 'forums') {
+            responses[responses.length - 1] = responses[responses.length - 1]['fm-'];
+        }
 
         const discussions = [].concat(...responses)
 
