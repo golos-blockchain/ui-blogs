@@ -6,6 +6,29 @@ import truncate from 'lodash/truncate';
 import './ConversationListItem.css';
 
 export default class ConversationListItem extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            avatarSrc: require('app/assets/images/user.png'),
+        };
+    }
+
+    componentDidMount() {
+        const { data } = this.props;
+        if (data && data.avatar)
+            this.setState({
+                avatarSrc: data.avatar,
+            });
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { data } = nextProps;
+        if (data && data.avatar && data.avatar !== this.props.data.avatar)
+            this.setState({
+                avatarSrc: data.avatar,
+            });
+    }
+
     makeLink = () => {
         const { conversationLinkPattern } = this.props;
         if (conversationLinkPattern) {
@@ -40,7 +63,7 @@ export default class ConversationListItem extends React.Component {
 
         return (
             <Link to={isSystemMessage ? null : link} className={'conversation-list-item' + (selected ? ' selected' : '')}>
-                <img className='conversation-photo' src={avatar} alt={'404 :('} />
+                <img className='conversation-photo' src={this.state.avatarSrc} alt={''} />
                 <div className='conversation-info'>
                     <h1 className='conversation-title'>{contact}</h1>
                     <div className='conversation-snippet'>{last_message && truncate(last_message.message, {length: 30})}
