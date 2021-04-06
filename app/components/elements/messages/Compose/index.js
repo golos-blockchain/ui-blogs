@@ -165,7 +165,7 @@ export default class Compose extends React.Component {
 
                 {!selectedMessagesCount ? (<textarea
                     className='msgs-compose-input'
-                    placeholder={tt('messages.type_a_message_NAME', {NAME: account.name})}
+                    placeholder={tt('messages.type_a_message')}
                     onKeyDown={this.onSendMessage}
                     onPaste={this.onPaste}
                     />) : null}

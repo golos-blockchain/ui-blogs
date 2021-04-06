@@ -157,7 +157,7 @@ class Search extends React.Component {
             },
             ...sort,
             "highlight": {
-                "fragment_size" : 350,
+                "fragment_size" : 400,
                 "fields": {
                     "title": {},
                     "body": {}
@@ -299,7 +299,7 @@ class Search extends React.Component {
                     url += '#@' + author + '/' + permlink;
                 }
                 let body = hit.highlight && hit.highlight.body;
-                body = body ? body[0].split('</em> <em>').join(' ') : truncate(hit.fields.body[0], {length: 200});
+                body = body ? body[0].split('</em> <em>').join(' ') : truncate(hit.fields.body[0], {length: 250});
 
                 if (this.state.author && author !== this.state.author) return null;
 
@@ -344,7 +344,7 @@ class Search extends React.Component {
               </div>);
         }
         return (<div className="App-search">
-                <img className="float-center" src={require("app/assets/images/landing/docs.png")} width="500" />
+                <img className="float-center" src={require("app/assets/images/search.png")} width="500" />
               <div className='esearch-box'>
                   <input value={this.state.query} className='esearch-input' placeholder={tt('search.placeholder')} type='text' onKeyUp={this.search} onChange={this.onChange} />
                     <select onChange={this.handleWhereChange}>

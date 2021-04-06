@@ -410,10 +410,10 @@ export default class UserProfile extends React.Component {
                     <Link className="UserProfile__menu-item" to={`/@${accountname}/recent-replies`} activeClassName="active">
                         {tt('g.replies')} {isMyAccount && <NotifiCounter fields="comment_reply" />}
                     </Link>
-                    <Link target="_blank" className="UserProfile__menu-item" to={`/search/@${accountname}`}>{tt('g.search')}
-                    </Link>
                     <Link target="_blank" className="UserProfile__menu-item" to={`/msgs`}>
                         {tt('g.messages')} {isMyAccount && <NotifiCounter fields="message" />}
+                    </Link>
+                    <Link className="UserProfile__menu-item" to={`/search/@${accountname}`}>{tt('g.search')}
                     </Link>
                     <LinkWithDropdown
                         closeOnClickOutside

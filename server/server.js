@@ -12,7 +12,6 @@ import useGeneralApi from './api/general';
 import useAccountRecoveryApi from './api/account_recovery';
 import useNotificationsApi from './api/notifications';
 import useRegistrationApi from './api/registration';
-import {proxyRoutes as useProxyRoutes} from './api/proxy';
 import useUserJson from './json/user_json';
 import usePostJson from './json/post_json';
 import isBot from 'koa-isbot';
@@ -194,7 +193,6 @@ usePostJson(app);
 useAccountRecoveryApi(app);
 useGeneralApi(app);
 useNotificationsApi(app);
-useProxyRoutes(app);
 
 // helmet wants some things as bools and some as lists, makes config difficult.
 // our config uses strings, this splits them to lists on whitespace.

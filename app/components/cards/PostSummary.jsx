@@ -212,8 +212,9 @@ class PostSummary extends React.Component {
           if (Date.parse(p.created) > CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME) {
             url += p.image_link
           } else {
-            // Proxy old images from io fork
-            url += 'https://imgp.golos.io/0x0/' + p.image_link
+            // Proxy old images. Update - proxy IO does not work
+            // url += 'https://imgp.golos.io/0x0/' + p.image_link
+            url += p.image_link
           }
 
           thumb = <PostSummaryThumb
