@@ -518,10 +518,8 @@ export function* fetchData(action) {
     try {
         let posts = []
 
-        console.time('1');
         let data = yield call([api, api[call_name]], ...args);
 
-        console.timeEnd('1');
         if (order === 'forums') {
             data = data['fm-'];
         }

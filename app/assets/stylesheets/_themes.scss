@@ -249,6 +249,10 @@ $themes: (
         color: $color-text-white;
     }
 
+    .msgs-message:not(.mine) .bubble-container:not(.selected) .bubble {
+        color: $color-background-dark;
+    }
+
     .conversation-search-input {
         background: #373737 !important;
         color: $color-text-white !important;

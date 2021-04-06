@@ -21,12 +21,17 @@
 }
 
 .msgs-message .bubble-container a {
-    color: #ffcccc;
+    color: #007aff;
     text-decoration: underline;
     font-weight: bold;
 }
 
 .msgs-message.mine .bubble-container {
+    justify-content: flex-end;
+}
+
+.msgs-message.mine .bubble-container a {
+    color: #ffcccc;
     justify-content: flex-end;
 }
 
@@ -65,6 +70,7 @@
 
 .msgs-message .bubble-container.selected .bubble {
     background: #fc544e !important;
+    color: white;
 }
 
 .msgs-message.mine .bubble-container .bubble {

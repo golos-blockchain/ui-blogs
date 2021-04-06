@@ -132,14 +132,17 @@ export default function normalizeProfile(account) {
 /**
  * Returns profile image if set, or default avatar image.
  */
-export function getProfileImage(account) {
+export function getProfileImage(account, size = 48) {
     if (account && account.json_metadata) {
         try {
             const md = JSON.parse(account.json_metadata);
             if (md.profile) {
-              if (md.profile.profile_image) {
-                return md.profile.profile_image;
-              }
+                let url = md.profile.profile_image;
+                if (url && /^(https?:)\/\//.test(url)) {
+                    size = size > 48 ? '320x320' : '120x120';
+                    url = $STM_Config.img_proxy_prefix + size + '/' + url;
+                    return url;
+                }
             }
         } catch (e) {
             console.error(e);
