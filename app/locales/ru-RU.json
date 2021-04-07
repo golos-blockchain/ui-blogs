@@ -583,6 +583,7 @@
     "password_or_wif": "Пароль или соответствующий ключ",
     "this_operation_requires_your_key_or_master_password": "Эта операция требует ввода вашего %(authType)s ключа или главного пароля",
     "keep_me_logged_in": "Оставить меня залогиненным",
+    "keep_me_logged_in_memo": "Запомнить",
     "amazing_community": "удивительное сообщество",
     "to_comment_and_reward_others": " комментировать и вознаграждать других.",
     "sign_up_now_to_receive": "Зарегистрируйтесь сейчас, чтобы получить ",

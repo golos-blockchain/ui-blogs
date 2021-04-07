@@ -346,11 +346,13 @@ export function* fetchState(location_change_action) {
             state.contacts = [];
             state.messages = [];
             state.messages_update = '0';
-            if (localStorage.getItem('invite')) {
-                accounts.add(localStorage.getItem('invite'));
+
+            const offchainAccount = yield select(state => state.user.getIn(['current', 'username']));
+            if (offchainAccount) {
+                accounts.add(offchainAccount);
 
                 console.time('fcon');
-                state.contacts = yield call([api, api.getContactsAsync], localStorage.getItem('invite'), 'unknown', 100, 0);
+                state.contacts = yield call([api, api.getContactsAsync], offchainAccount, 'unknown', 100, 0);
                 console.timeEnd('fcon');
 
                 if (parts[1]) {
@@ -358,7 +360,7 @@ export function* fetchState(location_change_action) {
                     accounts.add(to);
 
                     console.time('fmsg');
-                    state.messages = yield call([api, api.getThreadAsync], localStorage.getItem('invite'), to, {});
+                    state.messages = yield call([api, api.getThreadAsync], offchainAccount, to, {});
                     if (state.messages.length) {
                         state.messages_update = state.messages[state.messages.length - 1].nonce;
                     }

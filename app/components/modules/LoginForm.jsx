@@ -60,6 +60,14 @@ class LoginForm extends Component {
         if (this.refs.username && this.refs.username.value) this.refs.pw.focus();
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (!this.props.initialValues.username
+            && !this.state.username.value
+            && nextProps.initialValues.username) {
+            this.state.username.props.onChange(nextProps.initialValues.username);
+        }
+    }
+
     shouldComponentUpdate = shouldComponentUpdate(this, 'LoginForm');
 
     initForm(props) {
@@ -96,6 +104,11 @@ class LoginForm extends Component {
     showChangePassword = () => {
         const {username, password} = this.state;
         this.props.showChangePassword(username.value, password.value)
+    };
+
+    checkRegisterEnabled = (e) => {
+        if (e.currentTarget.hasAttribute('disabled'))
+            e.preventDefault();
     };
 
     render() {
@@ -141,6 +154,7 @@ class LoginForm extends Component {
         const title = postType ? postType : tt('g.login');
         const authType = /^vote|comment/.test(opType) ? tt('loginform_jsx.posting') : tt('loginform_jsx.active_or_owner');
         const submitLabel = loginBroadcastOperation ? tt('g.sign_in') : tt('g.login');
+        const cancelIsRegister = loginDefault && loginDefault.get('cancelIsRegister');
         let error = password.touched && password.error ? password.error : this.props.login_error;
         if (error === 'owner_login_blocked') {
             error = <span>
@@ -181,6 +195,7 @@ class LoginForm extends Component {
         const form = (
             <center>
             <form onSubmit={handleSubmit(({data}) => {
+                this.state.password.props.onChange('');
                 // bind redux-form to react-redux
                 return dispatchSubmit(data, loginBroadcastOperation, afterLoginRedirectToWelcome)
             })}
@@ -203,9 +218,9 @@ class LoginForm extends Component {
                 {loginBroadcastOperation && <div>
                     <div className="info">{tt('loginform_jsx.this_operation_requires_your_key_or_master_password', {authType})}</div>
                 </div>}
-                {!loginBroadcastOperation && !isMemo && <div>
+                {!loginBroadcastOperation && <div>
                     <label htmlFor="saveLogin">
-                        {tt('loginform_jsx.keep_me_logged_in')} &nbsp;
+                        {tt(isMemo ? 'loginform_jsx.keep_me_logged_in_memo' : 'loginform_jsx.keep_me_logged_in')} &nbsp;
                         <input id="saveLogin" type="checkbox" ref="pw" {...saveLogin.props} onChange={this.saveLoginToggle} disabled={submitting} /></label>
                 </div>}
                 <div>
@@ -213,9 +228,12 @@ class LoginForm extends Component {
                     <button type="submit" disabled={submitting || disabled} className="button" onClick={this.SignIn}>
                         {submitLabel}
                     </button>
-                    {this.props.onCancel && !isMemo && <button type="button float-right" disabled={submitting} className="button hollow" onClick={onCancel}>
+                    {!cancelIsRegister && this.props.onCancel && !isMemo && <button type="button float-right" disabled={submitting} className="button hollow" onClick={onCancel}>
                         {tt('g.cancel')}
                     </button>}
+                    {cancelIsRegister && !isMemo && <a href='/create_account' target='_blank' type="button float-right" disabled={submitting} className="button hollow" onClick={this.checkRegisterEnabled}>
+                        {tt('g.sign_up')}
+                    </a>}
                 </div>
                 {authType == 'Posting' &&
                 <div>

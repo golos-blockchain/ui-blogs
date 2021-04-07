@@ -167,7 +167,11 @@ class Messages extends React.Component {
         this.cachedProfileImages = {};
         this.windowFocused = true;
         this.newMessages = 0;
-        props.checkMemo(props.currentUser);
+        if (!props.username) {
+            setTimeout(() => {
+                props.checkMemo(this.props.currentUser);
+            }, 100);
+        }
     }
 
     markMessages() {
@@ -248,6 +252,7 @@ class Messages extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.account && !this.props.account
             || (nextProps.account && this.props.account && nextProps.account.name !== this.props.account.name)) {
+            this.props.fetchState(nextProps.to);
             const { account } = nextProps;
             this.setCallback(account);
         }
@@ -716,6 +721,7 @@ module.exports = {
             const contacts = state.global.get('contacts');
             const messages = state.global.get('messages');
             const messages_update = state.global.get('messages_update');
+            const username = state.user.getIn(['current', 'username']);
 
             let to = ownProps.routeParams.to;
             if (to) to = to.replace('@', '');
@@ -734,24 +740,29 @@ module.exports = {
                 currentUser,
                 memo_private,
                 accounts: accounts ?  accounts.toJS() : {},
+                username,
             };
         },
         dispatch => ({
             checkMemo: (currentUser) => {
                 if (!currentUser) {
                     dispatch(user.actions.showLogin({
-                        loginDefault: { }
+                        loginDefault: { cancelIsRegister: true, unclosable: true }
                     }));
                     return false;
                 }
                 const private_key = currentUser.getIn(['private_keys', 'memo_private']);
                 if (!private_key) {
                     dispatch(user.actions.showLogin({
-                        loginDefault: { username: currentUser.get('username'), authType: 'memo' }
+                        loginDefault: { username: currentUser.get('username'), authType: 'memo', unclosable: true }
                     }));
                     return false;
                 }
                 return true;
+            },
+            fetchState: (to) => {
+                const pathname = 'msgs/' + (to ? ('@' + to) : '');
+                dispatch({type: 'FETCH_STATE', payload: {pathname}});
             },
             sendOperations: (senderAcc, toAcc, OPERATIONS) => {
                 if (!OPERATIONS.length) return;

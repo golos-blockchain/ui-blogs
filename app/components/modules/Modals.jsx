@@ -41,6 +41,12 @@ class Modals extends React.Component {
         this.shouldComponentUpdate = shouldComponentUpdate(this, 'Modals');
     }
 
+    onLoginBackdropClick = (e) => {
+        const { loginUnclosable } = this.props;
+        if (loginUnclosable)
+            throw new Error('Closing login modal is forbidden here');
+    };
+
     render() {
         const {
             show_login_modal,
@@ -70,7 +76,7 @@ class Modals extends React.Component {
 
         return (
             <div>
-                {show_login_modal && <Reveal onHide={hideLogin} show={show_login_modal}>
+                {show_login_modal && <Reveal onBackdropClick={this.onLoginBackdropClick} onHide={hideLogin} show={show_login_modal}>
                     <LoginForm onCancel={hideLogin} />
                 </Reveal>}
                 {show_confirm_modal && <Reveal onHide={hideConfirm} show={show_confirm_modal}>
@@ -107,8 +113,11 @@ class Modals extends React.Component {
 
 export default connect(
     state => {
+        const loginDefault = state.user.get('loginDefault');
+        const loginUnclosable = loginDefault && loginDefault.get('unclosable');
         return {
             show_login_modal: state.user.get('show_login_modal'),
+            loginUnclosable,
             show_confirm_modal: state.transaction.get('show_confirm_modal'),
             show_transfer_modal: state.user.get('show_transfer_modal'),
             show_promote_post_modal: state.user.get('show_promote_post_modal'),
