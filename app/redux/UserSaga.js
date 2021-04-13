@@ -273,12 +273,12 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     const memo_pubkey = private_keys.has('memo_private') ?
         private_keys.get('memo_private').toPublicKey().toString() : null
 
-    if(
+    /*if(
         memo_pubkey === owner_pubkey ||
         memo_pubkey === active_pubkey
     )
         // Memo key could be saved in local storage.. In RAM it is not purged upon LOCATION_CHANGE
-        private_keys = private_keys.remove('memo_private')
+        private_keys = private_keys.remove('memo_private')*/
 
     // If user is signing operation by operaion and has no saved login, don't save to RAM
     if(!operationType) {
@@ -306,6 +306,7 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
         )
     }
 
+    const memoAuth = private_keys.get('memo_private') && private_keys.get('memo_private').toWif() === password;
     if (!autopost && saveLogin && !operationType)
         yield put(user.actions.saveLogin());
 

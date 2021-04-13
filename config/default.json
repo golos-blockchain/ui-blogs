@@ -71,5 +71,9 @@
   "gmail_send": {
       "user": false,
       "pass": false
+  },
+  "forums": {
+    "white_list": ["fm-golostalk"],
+    "fm-golostalk": {"domain": "golostalk.com"}
   }
 }

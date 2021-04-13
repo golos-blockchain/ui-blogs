@@ -241,7 +241,7 @@ class PostsIndex extends React.Component {
                             loadMore={this.loadMore}
                             showSpam={showSpam}
                         /> }
-                <span className="strike"><a target="_blank" href="/search">{tt('g.more_post')}</a></span>
+                <span className="strike"><a href="/search">{tt('g.more_post')}</a></span>
                 </div>
                 <div className="PostsIndex__topics column shrink show-for-large">
 

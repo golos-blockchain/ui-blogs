@@ -410,7 +410,10 @@ export default class UserProfile extends React.Component {
                     <Link className="UserProfile__menu-item" to={`/@${accountname}/recent-replies`} activeClassName="active">
                         {tt('g.replies')} {isMyAccount && <NotifiCounter fields="comment_reply" />}
                     </Link>
-                    <Link target="_blank" className="UserProfile__menu-item" to={`/search/@${accountname}`}>{tt('g.search')}
+                    <Link target="_blank" className="UserProfile__menu-item" to={`/msgs`}>
+                        {tt('g.messages')} {isMyAccount && <NotifiCounter fields="message" />}
+                    </Link>
+                    <Link className="UserProfile__menu-item" to={`/search/@${accountname}`}>{tt('g.search')}
                     </Link>
                     <LinkWithDropdown
                         closeOnClickOutside
@@ -465,6 +468,7 @@ export default class UserProfile extends React.Component {
                     <div className="column" style={cover_image_style}>
                         <div className="UserProfile__buttons-wrapper">
                             <div className="UserProfile__buttons">
+                                {(!username || username !== accountname) ? <a href={"/msgs/@" + accountname} target='_blank'><label class="button slim hollow secondary ">{tt('g.write_message')}</label></a> : null}
                                 <Follow follower={username} following={accountname} />
                             </div>
                         </div>

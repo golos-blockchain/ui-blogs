@@ -13,6 +13,7 @@ require('module').Module._initPaths();
 
 global.$STM_Config = {
     ws_connection_client: config.get('ws_connection_client'),
+    ws_connection_msgs: config.get('ws_connection_msgs'),
     img_proxy_prefix: config.get('img_proxy_prefix'),
     read_only_mode: config.get('read_only_mode'),
     registrar_fee: config.get('registrar.fee'),
@@ -21,7 +22,8 @@ global.$STM_Config = {
     google_analytics_id: config.get('google_analytics_id'),
     chain_id: config.get('chain_id'),
     ads_per_post: config.get('ads_per_post'),
-    elastic_search: config.get('elastic_search')
+    elastic_search: config.get('elastic_search'),
+    forums: config.get('forums')
 };
 
 const WebpackIsomorphicTools = require('webpack-isomorphic-tools');

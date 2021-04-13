@@ -86,6 +86,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     const settingsLink = `/@${username}/settings`;
     const accountLink = `/@${username}`;
     const donatesLink = `/@${username}/donates-to`;
+    const messagesLink = `/msgs`;
 
     const faqItem = <li className={scn}>
         <Link to="/faq" title={tt('navigation.faq')}><Icon name="info_o" size="1_5x" />
@@ -148,6 +149,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
             {link: feedLink, icon: 'new/home', value: tt('g.feed'), addon: <NotifiCounter fields="feed" />},
             {link: accountLink, icon: 'new/blogging', value: tt('g.blog')},
             {link: repliesLink, icon: 'new/answer', value: tt('g.replies'), addon: <NotifiCounter fields="comment_reply" />},
+            {link: messagesLink, icon: 'new/envelope', value: tt('g.messages'), target: '_blank', addon: <NotifiCounter fields="message" />},
             {link: donatesLink, icon: 'editor/coin', value: tt('g.rewards'), addon: <NotifiCounter fields="donate" />},
             {link: walletLink, icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields="send,receive" />},
             {link: '#', onClick: toggleNightmode, icon: 'editor/eye', value: tt('g.night_mode')},

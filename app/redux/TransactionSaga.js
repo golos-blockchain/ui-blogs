@@ -1,5 +1,5 @@
 import { fork, call, put, select, takeEvery } from 'redux-saga/effects';
-import {fromJS, Set, Map} from 'immutable'
+import {fromJS, Set, Map, List} from 'immutable'
 import {getAccount, getContent, getWorkerRequest} from 'app/redux/SagaShared'
 import {findSigningKey} from 'app/redux/AuthSaga'
 import g from 'app/redux/GlobalReducer'
@@ -62,7 +62,7 @@ function* preBroadcast_transfer({operation}) {
             const memo_private = yield select(
                 state => state.user.getIn(['current', 'private_keys', 'memo_private'])
             )
-            if(!memo_private) throw new Error('Unable to encrypte memo, missing memo private key')
+            if(!memo_private) throw new Error('Unable to encrypt memo, missing memo private key')
             const account = yield call(getAccount, operation.to)
             if(!account) throw new Error(`Unknown to account ${operation.to}`)
             const memo_key = account.get('memo_key')
@@ -118,6 +118,87 @@ function* preBroadcast_custom_json({operation}) {
             }
         } catch(e) {
             console.error('TransactionSaga unrecognized follow custom_json format', operation.json);
+        }
+    } else if (operation.id === 'private_message') {
+        if (json[0] === 'private_message') {
+            let messages_update;
+            yield put(g.actions.update({
+                key: ['messages'],
+                notSet: List(),
+                updater: msgs => {
+                    const idx = msgs.findIndex(i => i.get('nonce') === json[1].nonce);
+                    if (idx === -1) {
+                        msgs = msgs.insert(0, fromJS({
+                            nonce: json[1].nonce,
+                            checksum: json[1].checksum,
+                            from: json[1].from,
+                            read_date: '1970-01-01T00:00:00',
+                            create_date: new Date().toISOString().split('.')[0],
+                            receive_date: '1970-01-01T00:00:00',
+                            encrypted_message: json[1].encrypted_message
+                        }))
+                    } else {
+                        messages_update = json[1].nonce;
+                        msgs = msgs.update(idx, msg => {
+                            msg = msg.set('checksum', json[1].checksum);
+                            msg = msg.set('receive_date', '1970-01-01T00:00:00');
+                            msg = msg.set('encrypted_message', json[1].encrypted_message);
+                            return msg;
+                        });
+                    }
+                    return msgs;
+                }
+            }))
+            if (messages_update) {
+                yield put(g.actions.update({
+                    key: ['messages_update'],
+                    notSet: '0',
+                    updater: mu => {
+                        return messages_update + 1; // Adding something to not collide with real nonce of last added message
+                    }
+                }))
+            }
+        } else if (json[0] === 'private_delete_message') {
+            let messages_update = null;
+            yield put(g.actions.update({
+                key: ['messages'],
+                notSet: List(),
+                updater: msgs => {
+                    const mark_deleting = (idx) => {
+                        msgs = msgs.update(idx, msg => {
+                            return msg.set('deleting', true);
+                        });
+                    };
+                    if (json[1].nonce) {
+                        const idx = msgs.findIndex(msg => msg.get('nonce') === json[1].nonce);
+                        if (idx !== -1) {
+                            messages_update = json[1].nonce;
+                            mark_deleting(idx);
+                        }
+                    } else {
+                        let idx = msgs.findIndex(msg => msg.get('create_date') === json[1].stop_date);
+                        if (idx !== -1) {
+                            for (; (idx < msgs.size) && (msgs.get(idx).get('create_date') > json[1].start_date); ++idx) {
+                                const msg = msgs.get(idx);
+                                if (msg.get('create_date') > json[1].start_date)
+                                    break;
+                                messages_update = msg.get('nonce');
+                                mark_deleting(idx);
+                            }
+                        }
+                    }
+                    return msgs;
+                }
+            }))
+            if (messages_update) {
+                yield put(g.actions.update({
+                    key: ['messages_update'],
+                    notSet: '0',
+                    updater: mu => {
+                        return messages_update + 1; // Adding something to not collide with real nonce of last added message
+                    }
+                }))
+            }
         }
     }
     return operation

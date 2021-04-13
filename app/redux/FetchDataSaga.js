@@ -7,7 +7,7 @@ import constants from './constants';
 import { reveseTag } from 'app/utils/tags';
 import { CATEGORIES, DEBT_TOKEN_SHORT, LIQUID_TICKER, DEFAULT_CURRENCY, IGNORE_TAGS, PUBLIC_API, SELECT_TAGS_KEY } from 'app/client_config';
 import cookie from "react-cookie";
-import {api} from 'golos-classic-js';
+import {config, api} from 'golos-classic-js';
 
 export function* fetchDataWatches () {
     yield fork(watchLocationChange);
@@ -339,10 +339,44 @@ export function* fetchState(location_change_action) {
             const trending_tags = yield call([api, api.getTrendingTagsAsync], '', 250)
             trending_tags.forEach (tag => tags[tag.name] = tag)
             state.tags = tags
+        } else if (parts[0] == 'msgs') {
+            const { ws_connection_msgs } = $STM_Config;
+            if (ws_connection_msgs)
+                config.set('websocket', ws_connection_msgs);
+            state.contacts = [];
+            state.messages = [];
+            state.messages_update = '0';
+
+            const offchainAccount = yield select(state => state.user.getIn(['current', 'username']));
+            if (offchainAccount) {
+                accounts.add(offchainAccount);
+
+                console.time('fcon');
+                state.contacts = yield call([api, api.getContactsAsync], offchainAccount, 'unknown', 100, 0);
+                console.timeEnd('fcon');
+
+                if (parts[1]) {
+                    const to = parts[1].replace('@', '');
+                    accounts.add(to);
+
+                    console.time('fmsg');
+                    state.messages = yield call([api, api.getThreadAsync], offchainAccount, to, {});
+                    if (state.messages.length) {
+                        state.messages_update = state.messages[state.messages.length - 1].nonce;
+                    }
+                    console.timeEnd('fmsg');
+
+                }
+            }
+            for (let contact of state.contacts) {
+                accounts.add(contact.contact);
+            }
         }
 
         if (accounts.size > 0) {
+                    console.time('accs');
             const acc = yield call([api, api.getAccountsAsync], Array.from(accounts))
+                    console.timeEnd('accs');
             for (let i in acc) {
                 state.accounts[ acc[i].name ] = acc[i]
             }
@@ -475,6 +509,9 @@ export function* fetchData(action) {
     } else if( order === 'by_replies' ) {
         call_name = 'getRepliesByLastUpdateAsync';
         args = [author, permlink, constants.FETCH_DATA_BATCH_SIZE, constants.DEFAULT_VOTE_LIMIT];
+    } else if (order === 'forums') {
+        call_name = PUBLIC_API.forums;
+        args = [author, permlink, 0, constants.FETCH_DATA_BATCH_SIZE, $STM_Config.forums.white_list, 0, 0, [], [], 'fm-'];
     } else {
         call_name = PUBLIC_API.active;
     }
@@ -483,7 +520,11 @@ export function* fetchData(action) {
     try {
         let posts = []
 
-        const data = yield call([api, api[call_name]], ...args);
+        let data = yield call([api, api[call_name]], ...args);
+
+        if (order === 'forums') {
+            data = data['fm-'];
+        }
 
         if (['created', 'responses', 'hot', 'trending'].includes(order) && !args[0].start_author) {
           // Add top 3 from promo to tranding and 1 to hot, created

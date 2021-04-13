@@ -55,7 +55,8 @@ export default createModule({
                         );
                     }
                 }
-                return state.mergeDeep(payload);
+                let new_state = state.set('messages', List());
+                return new_state.mergeDeep(payload);
             },
         },
         {
@@ -295,6 +296,154 @@ export default createModule({
                             }
                         })
                 );
+                return new_state;
+            },
+        },
+        {
+            action: 'MESSAGED',
+            reducer: (
+                state,
+                { payload: { message, updateMessage, isMine } }
+            ) => {
+                let new_state = state;
+                let messages_update = message.nonce;
+                if (updateMessage) {
+                    new_state = new_state.updateIn(['messages'],
+                    List(),
+                    messages => {
+                        const idx = messages.findIndex(i => i.get('nonce') === message.nonce);
+                        if (idx === -1) {
+                            messages = messages.insert(0, fromJS(message));
+                        } else {
+                            messages = messages.set(idx, fromJS(message));
+                        }
+                        return messages;
+                    });
+                }
+                new_state = new_state.set('messages_update', messages_update);
+                new_state = new_state.updateIn(['contacts'],
+                    List(),
+                    contacts => {
+                        let idx = contacts.findIndex(i =>
+                            i.get('contact') === message.to
+                            || i.get('contact') === message.from);
+                        if (idx === -1) {
+                            let contact = isMine ? message.to : message.from;
+                            contacts = contacts.insert(0, fromJS({
+                                contact,
+                                last_message: message,
+                                size: {
+                                    unread_inbox_messages: !isMine ? 1 : 0,
+                                },
+                            }));
+                        } else {
+                            contacts = contacts.update(idx, contact => {
+                                contact = contact.set('last_message', fromJS(message));
+                                if (!isMine && !updateMessage) {
+                                    let msgs = contact.getIn(['size', 'unread_inbox_messages']);
+                                    contact = contact.setIn(['size', 'unread_inbox_messages'],
+                                        msgs + 1);
+                                }
+                                return contact
+                            });
+                        }
+                        const strCmp = (a, b) => a < b ? 1 : a > b ? -1 : 0
+                        contacts = contacts.sort((a, b) => {
+                            return strCmp(a.getIn(['last_message', 'receive_date']),
+                                b.getIn(['last_message', 'receive_date']));
+                        });
+                        return contacts;
+                    });
+                return new_state;
+            },
+        },
+        {
+            action: 'MESSAGE_EDITED',
+            reducer: (
+                state,
+                { payload: { message, updateMessage, isMine } }
+            ) => {
+                let new_state = state;
+                let messages_update = message.nonce;
+                if (updateMessage) {
+                    new_state = new_state.updateIn(['messages'],
+                    List(),
+                    messages => {
+                        const idx = messages.findIndex(i => i.get('nonce') === message.nonce);
+                        if (idx !== -1) {
+                            messages = messages.set(idx, fromJS(message));
+                        }
+                        return messages;
+                    });
+                }
+                new_state = new_state.set('messages_update', messages_update + 2);
+                return new_state;
+            },
+        },
+        {
+            action: 'MESSAGE_READ',
+            reducer: (
+                state,
+                { payload: { message, updateMessage, isMine } }
+            ) => {
+                let new_state = state;
+                let messages_update = message.nonce;
+                if (updateMessage) {
+                    new_state = new_state.updateIn(['messages'],
+                    List(),
+                    messages => {
+                        const idx = messages.findIndex(i => i.get('nonce') === message.nonce);
+                        if (idx !== -1) {
+                            messages = messages.set(idx, fromJS(message));
+                        }
+                        return messages;
+                    });
+                }
+                new_state = new_state.updateIn(['contacts'],
+                    List(),
+                    contacts => {
+                        let idx = contacts.findIndex(i =>
+                            i.get('contact') === (isMine ? message.to : message.from));
+                        if (idx !== -1) {
+                            contacts = contacts.update(idx, contact => {
+                                 // to update read_date (need for isMine case), and more actualize text
+                                let last = contact.get('last_message');
+                                if (last && last.get('nonce') == message.nonce) {
+                                    contact = contact.set('last_message', fromJS(message));
+                                }
+
+                                // currently used only !isMine case
+                                const msgsKey = isMine ? 'unread_outbox_messages' : 'unread_inbox_messages';
+                                let msgs = contact.getIn(['size', msgsKey]);
+                                contact = contact.setIn(['size', msgsKey],
+                                    Math.max(msgs - 1, 0));
+                                return contact;
+                            });
+                        }
+                        return contacts;
+                    });
+                new_state = new_state.set('messages_update', messages_update + 1);
+                return new_state;
+            },
+        },
+        {
+            action: 'MESSAGE_DELETED',
+            reducer: (
+                state,
+                { payload: { message, updateMessage, isMine } }
+            ) => {
+                let new_state = state;
+                if (updateMessage) {
+                    new_state = new_state.updateIn(['messages'],
+                    List(),
+                    messages => {
+                        const idx = messages.findIndex(i => i.get('nonce') === message.nonce);
+                        if (idx !== -1) {
+                            messages = messages.delete(idx);
+                        }
+                        return messages;
+                    });
+                }
                 return new_state;
             },
         },
