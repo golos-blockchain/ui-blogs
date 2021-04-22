@@ -779,7 +779,7 @@ module.exports = {
             },
             sendMessage: (senderAcc, senderPrivMemoKey, toAcc, body, editInfo = undefined, type = 'text', meta = {}) => {
                 let message = {
-                    app: 'golos-id',
+                    app: 'golos-messenger',
                     version: 1,
                     body,
                     ...meta,
