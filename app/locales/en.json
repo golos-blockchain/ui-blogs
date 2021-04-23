@@ -35,7 +35,8 @@
     "cannot_select_too_much_messages": "Cannot select more than 10 messages at once.",
     "new_message1": " notification",
     "new_message234": " notifications",
-    "new_message5": " notifications"
+    "new_message5": " notifications",
+    "invalid_message": "(This message could not be displayed in Golos Messenger)"
   },
   "g": {
     "golos_fest": "Golos.id News",
