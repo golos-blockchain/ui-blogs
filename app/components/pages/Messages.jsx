@@ -28,6 +28,8 @@ import { flash, unflash } from 'app/components/elements/messages/FlashTitle';
 import { APP_NAME_UP, APP_ICON } from 'app/client_config';
 
 function getProfileImageLazy(account, cachedProfileImages) {
+    if (!account)
+        return getProfileImage(null);
     let cached = cachedProfileImages[account.name];
     if (cached) 
         return cached;
