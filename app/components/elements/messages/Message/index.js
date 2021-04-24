@@ -45,6 +45,7 @@ export default class Message extends React.Component {
                 <img src={srcPreview} alt={src} style={{width: previewWidth, height: previewHeight, objectFit: 'cover'}} />
             </a>);
         } else {
+            let lineKey = 1;
             content = message.body.split('\n').map(line => {
                 let spans = [];
                 const words = line.split(' ');
@@ -59,14 +60,13 @@ export default class Message extends React.Component {
                         spans.push(<a href={href} target='_blank' rel='noopener noreferrer' key={key} tabIndex='-1' onClick={this.doNotSelectMessage}>{word}</a>);
                         spans.push(' ');
                     } else if (word.length <= 2 && /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/.test(word)) {
-                        spans.push(<span key={key} style={{fontSize: '20px'}}>{word}</span>);
+                        spans.push(<span key={key++} style={{fontSize: '20px'}}>{word}</span>);
                         spans.push(' ');
                     } else {
                         spans.push(word + ' ');
                     }
-                    ++key;
                 }
-                return (<span>{spans}<br/></span>);
+                return (<span key={lineKey++}>{spans}<br/></span>);
             });
         }
 
