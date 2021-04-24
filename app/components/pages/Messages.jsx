@@ -28,6 +28,8 @@ import { flash, unflash } from 'app/components/elements/messages/FlashTitle';
 import { APP_NAME_UP, APP_ICON } from 'app/client_config';
 
 function getProfileImageLazy(account, cachedProfileImages) {
+    if (!account)
+        return getProfileImage(null);
     let cached = cachedProfileImages[account.name];
     if (cached) 
         return cached;
@@ -46,13 +48,15 @@ function normalizeContacts(contacts, accounts, currentUser, preDecoded, cachedPr
 
     const private_key = currentUser.getIn(['private_keys', 'memo_private']);
 
+    const tt_invalid_message = tt('messages.invalid_message');
+
     let contactsCopy = contacts ? [...contacts.toJS()] : [];
     for (let contact of contactsCopy) {
         let account = accounts && accounts[contact.contact];
         contact.avatar = getProfileImageLazy(account, cachedProfileImages);
 
         if (contact.last_message.create_date.startsWith('1970')) {
-            contact.last_message.message = '';
+            contact.last_message.message = { body: '', };
             continue;
         }
 
@@ -65,22 +69,21 @@ function normalizeContacts(contacts, accounts, currentUser, preDecoded, cachedPr
 
         try {
             golos.messages.decode(private_key, public_key, [contact.last_message],
-                (msg) => {
-                    const decoded = JSON.parse(msg.message);
-                    msg.message = decoded.body;
-
-                    preDecoded[msg.nonce + '' + msg.receive_date] = decoded;
-                }, 0, 1, undefined, (msg, i, results) => {
-                    if (msg.read_date.startsWith('19') && currentAcc.memo_key === msg.from_memo_key) {
+                (msg, idx, results) => {
+                    if (msg.read_date.startsWith('19') && msg.from === currentAcc.name) {
                         msg.unread = true;
                     }
                     let pd = preDecoded[msg.nonce + '' + msg.receive_date];
                     if (pd) {
-                        msg.message = pd.body;
-                        return false;
+                        msg.message = pd;
+                        return true;
                     }
-                    return true;
-                });
+                    return false;
+                }, (msg) => {
+                    preDecoded[msg.nonce + '' + msg.receive_date] = msg.message;
+                }, (msg, idx, exception) => {
+                    msg.message = { body: tt_invalid_message, invalid: true, };
+                }, 0, 1);
         } catch (ex) {
             console.log(ex);
         }
@@ -100,29 +103,15 @@ function normalizeMessages(messages, accounts, currentUser, to, preDecoded) {
 
         let currentAcc = accounts[currentUser.get('username')];
 
+        const tt_invalid_message = tt('messages.invalid_message');
+
         let messagesCopy2 = golos.messages.decode(private_key, accounts[to].memo_key, messagesCopy,
-            (msg) => {
-                const decoded = JSON.parse(msg.message);
-                msg.message = decoded.body;
-                msg.type = decoded.type || 'text';
-                msg.width = decoded.width;
-                msg.height = decoded.height;
-                msg.previewWidth = decoded.previewWidth;
-                msg.previewHeight = decoded.previewHeight;
-
-                preDecoded[msg.nonce + '' + msg.receive_date] = decoded;
-
-                return true;
-            }, messagesCopy.length - 1, -1,
-            (msg, i, err) => {
-                console.log(err);
-            },
             (msg, i, results) => {
                 msg.id = ++id;
                 msg.author = msg.from;
                 msg.date = new Date(msg.create_date + 'Z');
 
-                if (currentAcc.memo_key === msg.to_memo_key) {
+                if (msg.to === currentAcc.name) {
                     if (msg.read_date.startsWith('19')) {
                         msg.toMark = true;
                     }
@@ -134,17 +123,20 @@ function normalizeMessages(messages, accounts, currentUser, to, preDecoded) {
 
                 let pd = preDecoded[msg.nonce + '' + msg.receive_date];
                 if (pd) {
-                    msg.message = pd.body;
-                    msg.type = pd.type;
-                    msg.width = pd.width;
-                    msg.height = pd.height;
-                    msg.previewWidth = pd.previewWidth;
-                    msg.previewHeight = pd.previewHeight;
+                    msg.message = pd;
                     results.push(msg);
-                    return false;
+                    return true;
                 }
-                return true;
-            });
+                return false;
+            },
+            (msg) => {
+                preDecoded[msg.nonce + '' + msg.receive_date] = msg.message;
+            },
+            (msg, i, err) => {
+                console.log(err);
+                msg.message = {body: tt_invalid_message, invalid: true};
+            },
+            messagesCopy.length - 1, -1);
 
         return messagesCopy2;
     } catch (ex) {
@@ -180,7 +172,7 @@ class Messages extends React.Component {
 
         const { account, accounts, to } = this.props;
 
-        let OPERATIONS = golos.messages.makeGroups(messages, (message_object, idx) => {
+        let OPERATIONS = golos.messages.makeDatedGroups(messages, (message_object, idx) => {
             return message_object.toMark;
         }, (group, indexes, results) => {
             const json = JSON.stringify(['private_mark_message', {
@@ -367,6 +359,19 @@ class Messages extends React.Component {
 
             let selectedMessages = {...this.state.selectedMessages};
 
+            let selectMessage = (msg, idx) => {
+                const isMine = account.name === msg.from;
+                let isImage = false;
+                let isInvalid = true;
+                const { message } = msg;
+                if (message) {
+                    isImage = message.type === 'image';
+                    isInvalid = !!message.invalid;
+                }
+                selectedMessages[msg.nonce] = {
+                    editable: isMine && !isImage && !isInvalid, idx };
+            };
+
             if (event.shiftKey) {
                 let msgs = Object.entries(selectedMessages);
                 if (msgs.length) {
@@ -374,16 +379,12 @@ class Messages extends React.Component {
                     const step = idx > lastSelected ? 1 : -1;
                     for (let i = lastSelected + step; i != idx; i += step) {
                         let message = this.state.messages[i];
-                        const isMine = account.name === message.from;
-                        const isImage = message.type === 'image';
-                        selectedMessages[message.nonce] = { editable: isMine && !isImage, idx: i };
+                        selectMessage(message, i);
                     }
                 }
             }
 
-            const isMine = account.name === message.from;
-            const isImage = message.type === 'image';
-            selectedMessages[message.nonce] = { editable: isMine && !isImage, idx };
+            selectMessage(message, idx);
 
             if (Object.keys(selectedMessages).length > 10) {
                 this.props.showError(tt('messages.cannot_select_too_much_messages'));
@@ -414,7 +415,7 @@ class Messages extends React.Component {
         const { account, accounts, to } = this.props;
 
         // TODO: works wrong if few messages have same create_time
-        /*let OPERATIONS = golos.messages.makeGroups(messages, (message_object, idx) => {
+        /*let OPERATIONS = golos.messages.makeDatedGroups(messages, (message_object, idx) => {
             return !!this.state.selectedMessages[message_object.nonce];
         }, (group, indexes, results) => {
             let from = '';
@@ -475,11 +476,14 @@ class Messages extends React.Component {
         let message = this.state.messages.filter(message => {
             return message.nonce === nonce;
         });
+        // (additional protection - normally invalid messages shouldn't be available for select)
+        if (!message[0].message)
+            return;
         this.setState({
             selectedMessages: {},
         }, () => {
             this.editNonce = message[0].nonce;
-            this.setInput(message[0].message);
+            this.setInput(message[0].message.body);
             this.focusInput();
         });
     };
@@ -782,19 +786,15 @@ module.exports = {
                     app: 'golos-messenger',
                     version: 1,
                     body,
-                    ...meta,
                 };
                 if (type !== 'text') {
                     message.type = type;
                     if (type === 'image') {
-                        // For clients who don't want use img proxy by themself
-                        message.preview = $STM_Config.img_proxy_prefix + '600x300/' + body;
                         message = { ...message, ...fitToPreview(600, 300, meta.width, meta.height), };
                     } else {
                         throw new Error('Unknown message type: ' + type);
                     }
                 }
-                message = JSON.stringify(message);
 
                 const data = golos.messages.encode(senderPrivMemoKey, toAcc.memo_key, message, editInfo ? editInfo.nonce : undefined);
 

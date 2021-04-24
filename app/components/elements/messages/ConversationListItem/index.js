@@ -52,12 +52,21 @@ export default class ConversationListItem extends React.Component {
 
         const link = this.makeLink();
 
+        let last_body = null;
+        let unread = null;
+        if (last_message) {
+            const { message } = last_message;
+            if (message) {
+                last_body = message.body;
+            }
+
+            if (last_message.unread)
+                unread = (<div className='conversation-unread mine'>●</div>);
+        }
+
         const unreadMessages = size && size.unread_inbox_messages;
 
-        let unread = null;
-        if (last_message && last_message.unread) {
-            unread = (<div className='conversation-unread mine'>●</div>);
-        } else if (unreadMessages) {
+        if (!unread && unreadMessages) {
             unread = (<div className='conversation-unread'>{unreadMessages}</div>);
         }
 
@@ -66,7 +75,7 @@ export default class ConversationListItem extends React.Component {
                 <img className='conversation-photo' src={this.state.avatarSrc} alt={''} />
                 <div className='conversation-info'>
                     <h1 className='conversation-title'>{contact}</h1>
-                    <div className='conversation-snippet'>{last_message && truncate(last_message.message, {length: 30})}
+                    <div className='conversation-snippet'>{last_body && truncate(last_body, {length: 30})}
                     </div>
                     {unread}
                 </div>

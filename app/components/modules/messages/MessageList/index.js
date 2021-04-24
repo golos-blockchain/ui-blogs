@@ -33,6 +33,11 @@ export default class MessageList extends React.Component {
 
             const hour = 60 * 60 * 1000;
 
+            if (!current.message) {
+                i += 1;
+                continue;
+            }
+
             if (previous) {
                 let previousDuration = current.date - previous.date;
                 prevBySameAuthor = previous.author === current.author;
