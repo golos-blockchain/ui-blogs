@@ -201,7 +201,8 @@
     "cannot_select_too_much_messages": "Невозможно одновременно выбрать более 10 сообщений.",
     "new_message1": " новое сообщение",
     "new_message234": " новых сообщения",
-    "new_message5": " новых сообщений"
+    "new_message5": " новых сообщений",
+    "invalid_message": "(Это сообщение не может быть отображено в Golos Messenger)"
   },
   "g": {
     "golos_fest": "Новости",
