@@ -269,7 +269,7 @@ class Messages extends React.Component {
             const anotherChat = nextProps.to !== this.state.to;
             const anotherKey = nextProps.memo_private !== this.props.memo_private;
             const added = nextProps.messages.size > this.state.messagesCount;
-            let scrollTimeout = this.props.messages.size ? 1 : 1000;
+            let focusTimeout = this.props.messages.size ? 1 : 1000;
             this.setState({
                 to: nextProps.to,
                 contacts: normalizeContacts(contacts, accounts, currentUser, this.preDecoded, this.cachedProfileImages),
@@ -279,14 +279,10 @@ class Messages extends React.Component {
                 if (added)
                     this.markMessages2();
                 setTimeout(() => {
-                    if (added || anotherChat) {
-                        const scroll = document.getElementsByClassName('msgs-scrollable')[1];
-                        if (scroll) scroll.scrollTo(0,scroll.scrollHeight);
-                    }
                     if (anotherChat || anotherKey) {
                         this.focusInput();
                     }
-                }, scrollTimeout);
+                }, focusTimeout);
             });
         }
     }
