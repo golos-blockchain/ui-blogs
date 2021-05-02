@@ -153,3 +153,30 @@ export function fromJSGreedy(js) {
       Seq(js).map(fromJSGreedy).toList() :
       Seq(js).map(fromJSGreedy).toMap();
 }
+
+export function processDatedGroup(group, messages, for_each) {
+    if (group.nonce) {
+        const idx = messages.findIndex(i => i.get('nonce') === group.nonce);
+        if (idx !== -1) {
+            messages = messages.update(idx, (msg) => {
+                return for_each(msg, idx);
+            });
+        }
+    } else {
+        let inRange = false;
+        for (let idx = 0; idx < messages.size; ++idx) {
+            let msg = messages.get(idx);
+            const date = msg.get('create_date');
+            if (!inRange && date <= group.stop_date) {
+                inRange = true;
+            }
+            if (date <= group.start_date) {
+                break;
+            }
+            if (inRange) {
+                messages = messages.set(idx, for_each(msg, idx));
+            }
+        }
+    }
+    return messages;
+}
