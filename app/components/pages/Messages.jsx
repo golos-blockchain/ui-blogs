@@ -160,11 +160,11 @@ class Messages extends React.Component {
         this.cachedProfileImages = {};
         this.windowFocused = true;
         this.newMessages = 0;
-        if (!props.username) {
-            setTimeout(() => {
-                props.checkMemo(this.props.currentUser);
-            }, 100);
-        }
+        setTimeout(() => {
+            if (!this.props.username) {
+                this.props.checkMemo(this.props.currentUser);
+            }
+        }, 1500);
     }
 
     markMessages() {
