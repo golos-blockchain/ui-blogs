@@ -1,5 +1,5 @@
 import { fork, call, put, select } from 'redux-saga/effects';
-import {getNotifications, webPushRegister} from 'app/utils/ServerApiClient';
+import { getNotifications } from 'app/utils/ServerApiClient';
 import registerServiceWorker from 'app/utils/RegisterServiceWorker';
 
 const wait = ms => (

@@ -2,7 +2,7 @@ import { Map, Set, List, fromJS, Iterable } from 'immutable';
 import createModule from 'redux-modules';
 import { emptyContent } from 'app/redux/EmptyState';
 import constants from './constants';
-import { contentStats, fromJSGreedy } from 'app/utils/StateFunctions';
+import { contentStats, fromJSGreedy, processDatedGroup } from 'app/utils/StateFunctions';
 
 const emptyContentMap = Map(emptyContent);
 
@@ -303,8 +303,12 @@ export default createModule({
             action: 'MESSAGED',
             reducer: (
                 state,
-                { payload: { message, updateMessage, isMine } }
+                { payload: { message, timestamp, updateMessage, isMine } }
             ) => {
+                message.create_date = timestamp;
+                message.receive_date = timestamp;
+                message.read_date = '1970-01-01T00:00:00';
+
                 let new_state = state;
                 let messages_update = message.nonce;
                 if (updateMessage) {
@@ -361,7 +365,7 @@ export default createModule({
             action: 'MESSAGE_EDITED',
             reducer: (
                 state,
-                { payload: { message, updateMessage, isMine } }
+                { payload: { message, timestamp, updateMessage, isMine } }
             ) => {
                 let new_state = state;
                 let messages_update = message.nonce;
@@ -371,7 +375,12 @@ export default createModule({
                     messages => {
                         const idx = messages.findIndex(i => i.get('nonce') === message.nonce);
                         if (idx !== -1) {
-                            messages = messages.set(idx, fromJS(message));
+                            messages = messages.update(idx, (obj) => {
+                                obj = obj.set('receive_date', timestamp);
+                                obj = obj.set('checksum', message.checksum);
+                                obj = obj.set('encrypted_message', message.encrypted_message);
+                                return obj;
+                            });
                         }
                         return messages;
                     });
@@ -384,7 +393,7 @@ export default createModule({
             action: 'MESSAGE_READ',
             reducer: (
                 state,
-                { payload: { message, updateMessage, isMine } }
+                { payload: { message, timestamp, updateMessage, isMine } }
             ) => {
                 let new_state = state;
                 let messages_update = message.nonce;
@@ -392,11 +401,9 @@ export default createModule({
                     new_state = new_state.updateIn(['messages'],
                     List(),
                     messages => {
-                        const idx = messages.findIndex(i => i.get('nonce') === message.nonce);
-                        if (idx !== -1) {
-                            messages = messages.set(idx, fromJS(message));
-                        }
-                        return messages;
+                        return processDatedGroup(message, messages, (msg, idx) => {
+                            return msg.set('read_date', timestamp);
+                        });
                     });
                 }
                 new_state = new_state.updateIn(['contacts'],
@@ -409,14 +416,14 @@ export default createModule({
                                  // to update read_date (need for isMine case), and more actualize text
                                 let last = contact.get('last_message');
                                 if (last && last.get('nonce') == message.nonce) {
-                                    contact = contact.set('last_message', fromJS(message));
+                                    contact = contact.update('last_message', obj => {
+                                        return obj.set('read_date', timestamp);
+                                    });
                                 }
 
                                 // currently used only !isMine case
                                 const msgsKey = isMine ? 'unread_outbox_messages' : 'unread_inbox_messages';
-                                let msgs = contact.getIn(['size', msgsKey]);
-                                contact = contact.setIn(['size', msgsKey],
-                                    Math.max(msgs - 1, 0));
+                                contact = contact.setIn(['size', msgsKey], 0);
                                 return contact;
                             });
                         }
@@ -430,7 +437,7 @@ export default createModule({
             action: 'MESSAGE_DELETED',
             reducer: (
                 state,
-                { payload: { message, updateMessage, isMine } }
+                { payload: { message, updateMessage/*, isMine*/ } }
             ) => {
                 let new_state = state;
                 if (updateMessage) {

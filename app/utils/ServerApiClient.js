@@ -70,14 +70,63 @@ export function recordPageView(page, ref, posts) {
     return last_page_promise;
 }
 
-export function webPushRegister(account, webpush_params) {
+export async function notificationSubscribe(account, subscriber_id = '') {
     if (!process.env.BROWSER || window.$STM_ServerBusy) return;
-    const request = Object.assign({}, request_base, {body: JSON.stringify({csrf: $STM_csrf, account, webpush_params})});
-    fetch('/api/v1/notifications/register', request);
+    if (window.__subscriber_id) return;
+    try {
+        const request = Object.assign({}, request_base, {method: 'get'});
+        let response = await fetch(`/api/v1/notifications/subscribe/${account}/${subscriber_id}`, request);
+        if (response.ok) {
+            const result = await response.json();
+            window.__subscriber_id = result.subscriber_id;
+        }
+    } catch (ex) {
+        console.error(ex)
+    }
+    if (!window.__subscriber_id) {
+        throw new Error('Cannot subscribe');
+    }
+}
+
+export async function notificationTake(account, removeTaskIds, forEach) {
+    let url = `/api/v1/notifications/take/${account}/${window.__subscriber_id}`;
+    if (removeTaskIds)
+        url += '/' + removeTaskIds;
+    let response;
+    try {
+        const request = Object.assign({}, request_base, {method: 'get'});
+        response = await fetch(url, request);
+        if (response && response.ok) {
+            const result = await response.json();
+            if (Array.isArray(result.tasks)) {
+                removeTaskIds = '';
+
+                let removeTaskIdsArr = [];
+                for (let task of result.tasks) {
+                    const task_id = task[0];
+                    const { data, timestamp } = task[2];
+                    const [ type, op ] = data;
+
+                    forEach(type, op, timestamp, task_id);
+
+                    removeTaskIdsArr.push(task_id.toString());
+                }
+
+                removeTaskIds = removeTaskIdsArr.join('-');
+
+                return removeTaskIds;
+            }
+        }
+    } catch (ex) {
+        console.error(ex);
+        throw ex;
+    }
 }
 
 if (process.env.BROWSER) {
     window.getNotifications = getNotifications;
     window.markNotificationRead = markNotificationRead;
+    window.notificationSubscribe = notificationSubscribe;
+    window.notificationTake = notificationTake;
 }
 
