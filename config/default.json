@@ -37,9 +37,6 @@
     "setAllHeaders": true
   },
   "img_proxy_prefix": "https://steemitimages.com/",
-  "notify": {
-    "gcm_key": "google secret key"
-  },
   "read_only_mode": false,
   "registrar": {
     "account": "id-demiurge",
