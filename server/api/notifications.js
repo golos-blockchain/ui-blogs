@@ -5,10 +5,6 @@ import config from 'config';
 import webPush from 'web-push';
 import { checkCSRF } from "server/utils/misc";
 
-if(config.has('notify.gcm_key')) {
-    webPush.setGCMAPIKey(config.get('notify.gcm_key'));
-}
-
 function toResArray(result) {
     if (!result || result.length < 1) return [];
     return result[0].slice(1);
@@ -18,6 +14,39 @@ export default function useNotificationsApi(app) {
     const router = koa_router({prefix: '/api/v1'});
     app.use(router.routes());
     const koaBody = koa_body();
+
+    router.get('/notifications/subscribe/:account/:subscriber_id?', function *() {
+        let { account, subscriber_id } = this.params;
+        if (!subscriber_id) {
+            subscriber_id = Math.floor(Math.random() * 10000);
+        }
+
+        try {
+            const res = yield Tarantool.instance('tarantool').call('notification_subscribe', account, subscriber_id);
+        } catch (error) {
+            console.error(`[reqid ${this.request.header['x-request-id']}] ${this.method} ERRORLOG notifications @${account} ${error.message}`);
+            this.body = { subscriber_id: null };
+            return;
+        }
+
+        this.body = {
+            subscriber_id,
+        };
+    });
+
+    router.get('/notifications/take/:account/:subscriber_id/:task_ids?', function *() {
+        const { account, subscriber_id, task_ids } = this.params;
+
+        const remove_task_ids = task_ids ? task_ids.split('-').map(x=>+x) : [];
+
+        try {
+            const res = yield Tarantool.instance('tarantool').call('notification_take', account, subscriber_id, remove_task_ids);
+            this.body = { tasks: [res[0]] };
+        } catch (error) {
+            console.error(`[reqid ${this.request.header['x-request-id']}] ${this.method} ERRORLOG notifications @${account} ${error.message}`);
+            this.body = { tasks: null };
+        }
+    });
 
     // get all notifications for account
     router.get('/notifications/:account', function *() {

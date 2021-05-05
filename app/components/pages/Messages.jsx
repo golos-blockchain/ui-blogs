@@ -24,6 +24,7 @@ import g from 'app/redux/GlobalReducer';
 import user from 'app/redux/User';
 import { getProfileImage } from 'app/utils/NormalizeProfile';
 import { fitToPreview } from 'app/utils/ImageUtils';
+import { notificationSubscribe, notificationTake } from 'app/utils/ServerApiClient';
 import { flash, unflash } from 'app/components/elements/messages/FlashTitle';
 import { APP_NAME_UP, APP_ICON } from 'app/client_config';
 
@@ -159,11 +160,11 @@ class Messages extends React.Component {
         this.cachedProfileImages = {};
         this.windowFocused = true;
         this.newMessages = 0;
-        if (!props.username) {
-            setTimeout(() => {
-                props.checkMemo(this.props.currentUser);
-            }, 100);
-        }
+        setTimeout(() => {
+            if (!this.props.username) {
+                this.props.checkMemo(this.props.currentUser);
+            }
+        }, 1500);
     }
 
     markMessages() {
@@ -194,51 +195,56 @@ class Messages extends React.Component {
 
     markMessages2 = debounce(this.markMessages, 1000);
 
-    setCallback(account) {
-        golos.api.setPrivateMessageCallback({select_accounts: [account.name]},
-            (err, result) => {
-                if (err) {
-                    this.setCallback(this.props.account || account);
-                    return;
-                }
-                if (!result || !result.message) {
-                    return;
-                }
-                const updateMessage = result.message.from === this.props.to || 
-                    result.message.to === this.props.to;
-                const isMine = account.name === result.message.from;
-                if (result.type === 'message') {
-                    if (result.message.create_date !== result.message.receive_date) {
-                        this.props.messageEdited(result.message, updateMessage, isMine);
-                    } else if (this.nonce != result.message.nonce) {
-                        this.props.messaged(result.message, updateMessage, isMine);
-                        this.nonce = result.message.nonce
+    flashMessage() {
+        ++this.newMessages;
+
+        let title = this.newMessages;
+        const plural = this.newMessages % 10;
+
+        if (plural === 1) {
+            if (this.newMessages === 11)
+                title += tt('messages.new_message5');
+            else
+                title += tt('messages.new_message1');
+        } else if ((plural === 2 || plural === 3 || plural === 4) && (this.newMessages < 10 || this.newMessages > 20)) {
+            title += tt('messages.new_message234');
+        } else {
+            title += tt('messages.new_message5');
+        }
+
+        flash(title);
+    }
+
+    async setCallback(account, removeTaskIds) {
+        await notificationSubscribe(account.name);
+
+        try {
+            removeTaskIds = await notificationTake(account.name, removeTaskIds, (type, op, timestamp, task_id) => {
+                const updateMessage = op.from === this.state.to || 
+                    op.to === this.state.to;
+                const isMine = account.name === op.from;
+                if (type === 'private_message') {
+                    if (op.update) {
+                        this.props.messageEdited(op, timestamp, updateMessage, isMine);
+                    } else if (this.nonce !== op.nonce) {
+                        this.props.messaged(op, timestamp, updateMessage, isMine);
+                        this.nonce = op.nonce
                         if (!isMine && !this.windowFocused) {
-                            ++this.newMessages;
-
-                            let title = this.newMessages;
-                            const plural = this.newMessages % 10;
-
-                            if (plural === 1) {
-                                if (this.newMessages === 11)
-                                    title += tt('messages.new_message5');
-                                else
-                                    title += tt('messages.new_message1');
-                            } else if ((plural === 2 || plural === 3 || plural === 4) && (this.newMessages < 10 || this.newMessages > 20)) {
-                                title += tt('messages.new_message234');
-                            } else {
-                                title += tt('messages.new_message5');
-                            }
-
-                            flash(title);
+                            this.flashMessage();
                         }
                     }
-                } else if (result.type === 'mark') {
-                    this.props.messageRead(result.message, updateMessage, isMine);
-                } else if (result.type === 'remove_outbox' || result.type === 'remove_inbox') {
-                    this.props.messageDeleted(result.message, updateMessage, isMine);
+                } else if (type === 'private_delete_message') {
+                    this.props.messageDeleted(op, updateMessage, isMine);
+                } else if (type === 'private_mark_message') {
+                    this.props.messageRead(op, timestamp, updateMessage, isMine);
                 }
             });
+            this.setCallback(this.props.account || account, removeTaskIds);
+        } catch (ex) {
+            setTimeout(() => {
+                this.setCallback(this.props.account || account, removeTaskIds);
+            }, 100);
+        }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -263,7 +269,7 @@ class Messages extends React.Component {
             const anotherChat = nextProps.to !== this.state.to;
             const anotherKey = nextProps.memo_private !== this.props.memo_private;
             const added = nextProps.messages.size > this.state.messagesCount;
-            let scrollTimeout = this.props.messages.size ? 1 : 1000;
+            let focusTimeout = this.props.messages.size ? 1 : 1000;
             this.setState({
                 to: nextProps.to,
                 contacts: normalizeContacts(contacts, accounts, currentUser, this.preDecoded, this.cachedProfileImages),
@@ -273,14 +279,10 @@ class Messages extends React.Component {
                 if (added)
                     this.markMessages2();
                 setTimeout(() => {
-                    if (added) {
-                        const scroll = document.getElementsByClassName('msgs-scrollable')[1];
-                        if (scroll) scroll.scrollTo(0,scroll.scrollHeight);
-                    }
                     if (anotherChat || anotherKey) {
                         this.focusInput();
                     }
-                }, scrollTimeout);
+                }, focusTimeout);
             });
         }
     }
@@ -819,14 +821,14 @@ module.exports = {
                     errorCallback: null,
                 }));
             },
-            messaged: (message, updateMessage, isMine) => {
-                dispatch(g.actions.messaged({message, updateMessage, isMine}));
+            messaged: (message, timestamp, updateMessage, isMine) => {
+                dispatch(g.actions.messaged({message, timestamp, updateMessage, isMine}));
             },
-            messageEdited: (message, updateMessage, isMine) => {
-                dispatch(g.actions.messageEdited({message, updateMessage, isMine}));
+            messageEdited: (message, timestamp, updateMessage, isMine) => {
+                dispatch(g.actions.messageEdited({message, timestamp, updateMessage, isMine}));
             },
-            messageRead: (message, updateMessage, isMine) => {
-                dispatch(g.actions.messageRead({message, updateMessage, isMine}));
+            messageRead: (message, timestamp, updateMessage, isMine) => {
+                dispatch(g.actions.messageRead({message, timestamp, updateMessage, isMine}));
             },
             messageDeleted: (message, updateMessage, isMine) => {
                 dispatch(g.actions.messageDeleted({message, updateMessage, isMine}));

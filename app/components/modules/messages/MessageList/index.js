@@ -14,6 +14,23 @@ import './MessageList.css';
     timestamp: new Date().getTime()
 },*/
 export default class MessageList extends React.Component {
+    componentDidUpdate(prevProps) {
+        const { to, messages } = this.props;
+        const hasMsgs = messages && prevProps.messages;
+        let scroll = hasMsgs && messages.length > prevProps.messages.length;
+        if (!scroll && hasMsgs && messages.length) {
+            const msg1 = prevProps.messages[0];
+            const msg2 = messages[0];
+            if (msg1.from !== msg2.from || msg1.to !== msg2.to) {
+                scroll = true;
+            }
+        }
+        if (scroll) {
+            scroll = document.getElementsByClassName('msgs-scrollable')[1];
+            if (scroll) scroll.scrollTo(0,scroll.scrollHeight);
+        }
+    }
+
     renderMessages = () => {
         const { messages, selectedMessages, onMessageSelect } = this.props;
         let i = 0;
