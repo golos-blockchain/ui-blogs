@@ -30,7 +30,6 @@
       "connectSrc": "'self' api.imgur.com *.golos.id wss://*.golos.id *.golos.today *.coinmarketcap.com app.sharpay.io www.google-analytics.com cdn.jsdelivr.net",
       "reportUri": "/api/v1/csp_violation",
       "objectSrc": "'self'",
-      "pluginTypes": "application/pdf",
       "frameAncestors": "'none'"
     },
     "reportOnly": false,
@@ -66,11 +65,12 @@
     "password": "golosclient"
   },
   "gmail_send": {
-      "user": false,
-      "pass": false
+    "user": false,
+    "pass": false
   },
   "forums": {
-    "white_list": ["fm-golostalk"],
-    "fm-golostalk": {"domain": "golostalk.com"}
+    "white_list": ["fm-golostalk", "fm-graphenetalks"],
+    "fm-golostalk": {"domain": "golostalk.com"},
+    "fm-graphenetalks": {"domain": "forum.gph.ai"}
   }
 }
