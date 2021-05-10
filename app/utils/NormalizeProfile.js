@@ -1,3 +1,4 @@
+import max from 'lodash/max';
 import linksRe from 'app/utils/Links';
 
 export function getPinnedPosts(account, links=false) {
@@ -149,4 +150,13 @@ export function getProfileImage(account, size = 48) {
         }
     }
     return require('app/assets/images/user.png');
+}
+
+export function getLastSeen(account) {
+    const dates = [
+        account.last_bandwidth_update, // all operations
+        account.created,
+    ];
+    const last = max(dates);
+    return last.startsWith('19') ? null : last;
 }
