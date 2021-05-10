@@ -32,11 +32,12 @@ import VerticalMenu from 'app/components/elements/VerticalMenu';
 import MarkNotificationRead from 'app/components/elements/MarkNotificationRead';
 import NotifiCounter from 'app/components/elements/NotifiCounter';
 import DateJoinWrapper from 'app/components/elements/DateJoinWrapper';
+import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import tt from 'counterpart';
 import WalletSubMenu from 'app/components/elements/WalletSubMenu';
 import Userpic from 'app/components/elements/Userpic';
 import Callout from 'app/components/elements/Callout';
-import normalizeProfile from 'app/utils/NormalizeProfile';
+import normalizeProfile, { getLastSeen } from 'app/utils/NormalizeProfile';
 
 export default class UserProfile extends React.Component {
     constructor(props) {
@@ -459,6 +460,7 @@ export default class UserProfile extends React.Component {
         if (gender && gender != "undefined")
             genderIcon = <span><Icon name={gender} /></span>
 
+        const lastSeen = getLastSeen(account);
 
         return (
             <div className="UserProfile">
@@ -493,6 +495,7 @@ export default class UserProfile extends React.Component {
                                 {location && <span><Icon name="location" /> {location}</span>}
                                 {website && <span><Icon name="link" /> <a href={website}>{website_label}</a></span>}
                                 <Icon name="calendar" /> <DateJoinWrapper date={accountjoin} />
+                                {lastSeen && <span><Icon name="eye" /> {tt('g.last_seen')} <TimeAgoWrapper date={`${lastSeen}`} /> </span>}
                             </p>
                         </div>
                         <div className="UserProfile__buttons-mobile">
