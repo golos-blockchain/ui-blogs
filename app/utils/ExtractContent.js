@@ -17,6 +17,7 @@ export default function extractContent(get, content) {
         category,
         title,
         created,
+        active,
         net_rshares,
         children
     } = get(
@@ -29,6 +30,7 @@ export default function extractContent(get, content) {
         'category',
         'title',
         'created',
+        'active',
         'net_rshares',
         'children'
     );
@@ -107,6 +109,7 @@ export default function extractContent(get, content) {
         category,
         title,
         created,
+        active,
         net_rshares,
         children,
         link,
