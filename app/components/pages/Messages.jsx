@@ -803,7 +803,7 @@ module.exports = {
                 const json = JSON.stringify(['private_message', {
                     from: senderAcc.name,
                     to: toAcc.name,
-                    nonce: editInfo ? editInfo.nonce : data.nonce.toString(),
+                    nonce: editInfo ? editInfo.nonce : data.nonce,
                     from_memo_key: senderAcc.memo_key,
                     to_memo_key: toAcc.memo_key,
                     checksum: data.checksum,

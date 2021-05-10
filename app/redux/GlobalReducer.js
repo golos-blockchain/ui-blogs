@@ -396,7 +396,7 @@ export default createModule({
                 { payload: { message, timestamp, updateMessage, isMine } }
             ) => {
                 let new_state = state;
-                let messages_update = message.nonce;
+                let messages_update = message.nonce || Math.random();
                 if (updateMessage) {
                     new_state = new_state.updateIn(['messages'],
                     List(),
