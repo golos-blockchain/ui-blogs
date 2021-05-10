@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { LinkWithDropdown } from 'react-foundation-components/lib/global/dropdown';
 import { browserHistory } from 'react-router';
-import max from 'lodash/max';
 import debounce from 'lodash/debounce';
 import tt from 'counterpart';
 import Icon from 'app/components/elements/Icon';
@@ -22,7 +21,7 @@ import PageFocus from 'app/components/elements/messages/PageFocus';
 import transaction from 'app/redux/Transaction';
 import g from 'app/redux/GlobalReducer';
 import user from 'app/redux/User';
-import { getProfileImage } from 'app/utils/NormalizeProfile';
+import { getProfileImage, getLastSeen } from 'app/utils/NormalizeProfile';
 import { fitToPreview } from 'app/utils/ImageUtils';
 import { notificationSubscribe, notificationTake } from 'app/utils/ServerApiClient';
 import { flash, unflash } from 'app/components/elements/messages/FlashTitle';
@@ -605,14 +604,8 @@ class Messages extends React.Component {
             messagesTopCenter.push(<div key='to-link' style={{fontSize: '15px', width: '100%', textAlign: 'center'}}>
                 <a href={'/@' + to}>{to}</a>
             </div>);
-            const dates = [
-                accounts[to].last_custom_json_bandwidth_update,
-                accounts[to].last_post,
-                accounts[to].last_comment,
-                accounts[to].created,
-            ];
-            let lastSeen = max(dates);
-            if (!lastSeen.startsWith('19')) {
+            let lastSeen = getLastSeen(accounts[to]);
+            if (lastSeen) {
                 messagesTopCenter.push(<div key='to-last-seen' style={{fontSize: '13px', fontWeight: 'normal'}}>
                     {
                         <span>
@@ -803,7 +796,7 @@ module.exports = {
                 const json = JSON.stringify(['private_message', {
                     from: senderAcc.name,
                     to: toAcc.name,
-                    nonce: editInfo ? editInfo.nonce : data.nonce.toString(),
+                    nonce: editInfo ? editInfo.nonce : data.nonce,
                     from_memo_key: senderAcc.memo_key,
                     to_memo_key: toAcc.memo_key,
                     checksum: data.checksum,

@@ -167,10 +167,11 @@ export function processDatedGroup(group, messages, for_each) {
         for (let idx = 0; idx < messages.size; ++idx) {
             let msg = messages.get(idx);
             const date = msg.get('create_date');
+            const rec_date = msg.get('receive_date');
             if (!inRange && date <= group.stop_date) {
                 inRange = true;
             }
-            if (date <= group.start_date) {
+            if (date <= group.start_date && rec_date.startsWith('20')) {
                 break;
             }
             if (inRange) {
