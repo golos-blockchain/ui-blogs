@@ -5,10 +5,6 @@ import config from 'config';
 import webPush from 'web-push';
 import { checkCSRF } from "server/utils/misc";
 
-if(config.has('notify.gcm_key')) {
-    webPush.setGCMAPIKey(config.get('notify.gcm_key'));
-}
-
 function toResArray(result) {
     if (!result || result.length < 1) return [];
     return result[0].slice(1);

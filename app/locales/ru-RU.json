@@ -824,7 +824,7 @@
     "choose_currency": "Выберите валюту",
     "choose_preset_tips": "Выберите суммы для кнопок вознаграждений",
     "invalid_url": "Недопустимый URL-адрес",
-    "invalid_ws": "wss://api.golos.id/ws",
+    "invalid_ws": "wss://api-full.golos.id/ws",
     "invalid_ip_port": "Пример: 120.16.10.18:2001",
     "name_is_too_long": "Имя слишком длинное",
     "name_must_not_begin_with": "Имя не должно начинаться с @",
@@ -1083,7 +1083,7 @@
     "cancel_power_down": "Отменить понижение Силы Голоса",
     "top_dpos": "Топ-100 пользователей по Силе Голоса",
     "worker_foundation": "Фонд сообщества",
-    "history_viewing": "Сервисы истории",
+    "history_viewing": "История операций",
     "history": "ИСТОРИЯ"
   },
   "votesandcomments_jsx": {

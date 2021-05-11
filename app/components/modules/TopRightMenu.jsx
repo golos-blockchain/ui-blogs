@@ -30,36 +30,27 @@ const calculateEstimateOutput = ({ account, price_per_golos, savings_withdraws, 
   if (!account) return 0;
 
   // Sum savings withrawals
-  let savings_pending = 0, savings_sbd_pending = 0;
   if (savings_withdraws) {
     savings_withdraws.forEach(withdraw => {
       const [amount, asset] = withdraw.get('amount').split(' ');
-      if (asset === LIQUID_TICKER)
-        savings_pending += parseFloat(amount);
-      else {
-        if (asset === DEBT_TICKER)
-          savings_sbd_pending += parseFloat(amount)
-      }
     })
   }
 
   const total_sbd = 0 
     + parseFloat(account.get('sbd_balance'))
     + parseFloat(toAsset(account.get('savings_sbd_balance')).amount)
-    + savings_sbd_pending
 
   const total_steem = 0
     + parseFloat(toAsset(account.get('balance')).amount)
+    + parseFloat(toAsset(account.get('tip_balance')).amount)
     + parseFloat(toAsset(account.get('savings_balance')).amount)
     + parseFloat(vestsToSteem(account.get('vesting_shares'), globalprops.toJS()))
-    + savings_pending
 
   return Number(((total_steem * price_per_golos) + total_sbd).toFixed(2) );
 }
 
 function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops, username, showLogin, logout, loggedIn, vertical, navigate, probablyLoggedIn, location, locationQueryParams, showMessages, toggleNightmode}) {
     const APP_NAME = tt('g.APP_NAME');
-    
     const mcn = 'menu' + (vertical ? ' vertical show-for-small-only' : '');
     const mcl = vertical ? '' : ' sub-menu';
     const lcn = vertical ? '' : 'show-for-large';

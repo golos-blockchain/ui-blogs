@@ -3,6 +3,7 @@ rudex
 steem-engine
 ecurrex-prizm
 ecurrex-ymrub
+golos.doge
 `
 .trim()
 .split('\n');
