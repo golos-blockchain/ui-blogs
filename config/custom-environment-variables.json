@@ -33,9 +33,6 @@
     }
   },
   "img_proxy_prefix": "SDC_IMAGE_PROXY_PREFIX",
-  "notify": {
-    "gcm_key": "SDC_NOTIFY_GCM_KEY"
-  },
   "read_only_mode": "SDC_READONLY_MODE",
   "registrar": {
     "account": "SDC_REGISTRAR_ACCOUNT",

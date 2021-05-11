@@ -30,16 +30,12 @@
       "connectSrc": "'self' api.imgur.com *.golos.id wss://*.golos.id *.golos.today *.coinmarketcap.com app.sharpay.io www.google-analytics.com cdn.jsdelivr.net",
       "reportUri": "/api/v1/csp_violation",
       "objectSrc": "'self'",
-      "pluginTypes": "application/pdf",
       "frameAncestors": "'none'"
     },
     "reportOnly": false,
     "setAllHeaders": true
   },
   "img_proxy_prefix": "https://steemitimages.com/",
-  "notify": {
-    "gcm_key": "google secret key"
-  },
   "read_only_mode": false,
   "registrar": {
     "account": "id-demiurge",
@@ -58,9 +54,9 @@
     "username": "guest"
   },
   "upload_image": "https://api.imgur.com/3/image",
-  "ws_connection_client": "https://api.golos.id",
-  "ws_connection_server": "wss://api.golos.id/ws",
-  "ws_connection_msgs": "wss://api.golos.id/ws",
+  "ws_connection_client": "https://api-full.golos.id",
+  "ws_connection_server": "wss://api-full.golos.id/ws",
+  "ws_connection_msgs": "wss://api-full.golos.id/ws",
   "chain_id": "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12",
   "ads_per_post": 20,
   "elastic_search": {
@@ -69,8 +65,8 @@
     "password": "golosclient"
   },
   "gmail_send": {
-      "user": false,
-      "pass": false
+    "user": false,
+    "pass": false
   },
   "forums": {
     "white_list": ["fm-golostalk", "fm-prizmtalk", "fm-graphenetalks", "fm-kostroma"],

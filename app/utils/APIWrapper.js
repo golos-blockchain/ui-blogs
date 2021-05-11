@@ -78,7 +78,9 @@ export function getContentReplies(author, permlink, voteLimit) {
 }
 
 export function getAllContentReplies(author, permlink, voteLimit) {
-    return api.getAllContentRepliesAsync(author, permlink, voteLimit, 0, [], [], true)
+    // Filtering comments from authors with a negative reputation
+    // return api.getAllContentRepliesAsync(author, permlink, voteLimit, 0, [], [], true)
+    return api.getAllContentRepliesAsync(author, permlink, voteLimit)
 }
 
 export function getDonates(uia, target, from, to, voteLimit, offset) {
