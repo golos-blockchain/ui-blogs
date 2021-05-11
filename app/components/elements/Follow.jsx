@@ -118,11 +118,10 @@ export default class Follow extends React.Component {
             return <span></span>
         }
 
-        const {follower, following, showMessage} = this.props; // html
+        const {follower, following} = this.props; // html
         // Show follow preview for new users
         if(!follower || !following) return <span>
              <label className="button slim hollow secondary" onClick={this.followLoggedOut}>{tt('g.follow')}</label>
-             {showMessage ? (<a href={'/msgs/@' + following} target='_blank'><label style={{color: '#fff'}} className="button slim">&nbsp;{tt('g.write_message')}&nbsp;</label></a>) : null}
         </span>;
         // Can't follow or ignore self
         if(follower === following) return <span></span>
@@ -150,9 +149,6 @@ export default class Follow extends React.Component {
 
             {showMuteInNew &&
                 <label className={cnInactive} onClick={this.unmuteNew}>{tt('g.unmute')}</label>}
-
-            {showMessage &&
-                <a href={'/msgs/@' + following} target='_blank'><label style={{color: '#fff'}} className={cnMessage}>&nbsp;{tt('g.write_message')}&nbsp;</label></a>}
 
             {donateUrl &&
                 <label style={{color: '#fff'}} className={cnDonate} onClick={this.showTransfer}>&nbsp;{tt('g.transfer2')}&nbsp;</label>}

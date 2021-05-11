@@ -77,7 +77,7 @@ class Author extends React.Component {
             <div>
                 <Follow className="float-right" follower={username} following={author} what="blog"
                         showFollow={follow} showMute={mute} donateUrl={donateUrl}
-                        showMessage={true} />
+                        />
             </div>
 
             <div className="Author__bio">
@@ -101,6 +101,9 @@ class Author extends React.Component {
                     </span>
                 </LinkWithDropdown>
                 <Reputation value={authorRepLog10} />
+                <a href={`/msgs/@${author}`} target='_blank' title={tt('g.write_message_long')} className='Author__write'>
+                    <Icon name="new/envelope" />
+                </a>
             </span>
         )
     }
