@@ -29,7 +29,8 @@ function* showTransactionErrorNotification() {
 
     if (errors) {
         for (const [key, message] of errors) {
-            yield put({ type: 'ADD_NOTIFICATION', payload: { key, message } });
+            if (message !== 'Duplicate transaction check failed')
+                yield put({ type: 'ADD_NOTIFICATION', payload: { key, message } });
             yield put({ type: 'transaction/DELETE_ERROR', payload: { key } });
         }
     }
