@@ -149,6 +149,12 @@ class PostSummary extends React.Component {
                     parts[0] = forum.domain;
                     parts[1] = parts[1].replace(_id + '-', '');
                     title_link_url = 'http://' + parts.join('/');
+
+                    const last_reply = content.get('last_reply');
+                    if (last_reply) {
+                        title_link_url += '#@' + last_reply.get('author') + '/' + last_reply.get('permlink');
+                    }
+
                     comments_link = title_link_url;
                     break;
                 }
@@ -174,7 +180,7 @@ class PostSummary extends React.Component {
 
         // author and category
         let author_category = <span className="vcard">
-            <a href={title_link_url} target={is_forum && '_blank'} onClick={e => navigate(e, onClick, post, title_link_url, is_forum)}><TimeAgoWrapper date={p.created} className="updated" /></a>
+            <a href={title_link_url} target={is_forum && '_blank'} onClick={e => navigate(e, onClick, post, title_link_url, is_forum)}><TimeAgoWrapper date={is_forum ? p.active : p.created} className="updated" /></a>
             {' '}
             {blockEye && <MuteAuthorInNew author={p.author} />}
             <Author author={p.author} authorRepLog10={authorRepLog10} follow={false} mute={false} />
