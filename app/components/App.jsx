@@ -232,7 +232,10 @@ class App extends React.Component {
         const warning = flash.get('warning');
         const success = flash.get('success');
         let callout = null;
-        const showInfoBox = true && this.isShowInfoBox();
+        const notifyShow = $STM_Config.add_notify_site.show;
+        const notifyLink = $STM_Config.add_notify_site.link;
+        const notifyTitle = $STM_Config.add_notify_site.title;
+        const showInfoBox = notifyShow && this.isShowInfoBox();
 
         if (this.state.showCallout && (alert || warning || success)) {
             callout = (
@@ -253,41 +256,16 @@ class App extends React.Component {
             callout = (
                 <div className="App__announcement row">
                     <div className="column">
-                        <div
-                            className="callout"
-                            style={{
-                                backgroundColor: '#1b519a',
-                                color: 'white',
-                            }}
-                        >
+                        <div align="center" className="callout" style={{backgroundColor: '#1b519a', color: 'white'}}>
                             <CloseButton
                                 onClick={() => {
                                     this.setState({ showCallout: false });
                                     this.closeBox();
                                 }}
                             />
-                            <Link className="link"
-                                to="/@lex/obmen-lichnymi-soobsheniyami-i-nachalo-dlya-golos-messenger"
-                            >
-                                <Icon className="logo-icon" name={APP_ICON} />&nbsp;
-                                Обмен личными сообщениями и начало для Golos Messenger
+                            <Link className="link" to={notifyLink}>
+                                <Icon className="logo-icon" name={APP_ICON} /> {notifyTitle}
                             </Link>
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-        if ($STM_Config.read_only_mode && this.state.showCallout) {
-            callout = (
-                <div className="App__announcement row">
-                    <div className="column">
-                        <div className="callout warning">
-                            <CloseButton
-                                onClick={() =>
-                                    this.setState({ showCallout: false })
-                                }
-                            />
-                            <p>{tt('g.read_only_mode')}</p>
                         </div>
                     </div>
                 </div>

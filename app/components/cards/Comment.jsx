@@ -316,7 +316,6 @@ class CommentImpl extends PureComponent {
     _renderControls(post, comment) {
         let controls = null;
 
-        if (!$STM_Config.read_only_mode) {
             const { author, stats } = comment;
             const { username } = this.props;
 
@@ -345,7 +344,6 @@ class CommentImpl extends PureComponent {
                     <Confetti config={CONFETTI_CONFIG.comment} active={comment.confetti_active}/>
                 </span>
             );
-        }
 
         return (
             <div>

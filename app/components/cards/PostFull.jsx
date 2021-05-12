@@ -508,7 +508,6 @@ class PostFull extends React.Component {
         const { showReply, showEdit } = this.state;
         const { author, permlink } = content;
 
-        const readonly = $STM_Config.read_only_mode;
         const _isPaidout =
             postContent.get('cashout_time') === '1969-12-31T23:59:59';
 
@@ -531,10 +530,8 @@ class PostFull extends React.Component {
                     <Voting post={post} />
                 </div>
                 <div className="RightShare__Menu small-11 medium-5 large-5 columns text-right">
-                    {!readonly ? (
+
                         <Reblog author={author} permlink={permlink} />
-                    ) : null}
-                    {!readonly && (
                         <span className="PostFull__reply">
                             {showReplyOption ? (
                                 <a onClick={this.onShowReply}>
@@ -550,7 +547,7 @@ class PostFull extends React.Component {
                                 </a>
                             ) : null}
                         </span>
-                    )}
+
                     <span className="PostFull__responses">
                         <Link
                             to={link}

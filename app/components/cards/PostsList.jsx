@@ -237,45 +237,22 @@ class PostsList extends PureComponent {
             );
         }
 
-        const renderSummary = items => {
-          let result = []
-
-          let i = 1;
-          for (const item of items) {
-            result.push((
-              <li key={item.item}>
-                <PostSummary
-                    account={account}
-                    post={item.item}
-                    currentCategory={category}
-                    thumbSize={thumbSize}
-                    ignore={item.ignore}
-                    onClick={this.onPostClick}
-                    nsfwPref={nsfwPref}
-                    visited={isPostVisited(item.item)}
-                    blockEye={pathname === '/created'}
-                />
-              </li>
-            ))
-
-            {/* if (i % this.props.adsPerPost == 0) {
-              // Show ads each 10 posts
-              result.push((
-                <li key={i}>
-
-                  <iframe data-aa='1200986' src='//acceptable.a-ads.com/1200986' scrolling='no'
-                  style={{width:'100%', border:'0px', padding:'0', overflow:'hidden'}} 
-                  allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe> 
-                  
-                </li>))
-            } */}
-
-            i += 1
-          }
-
-          return result
-        }
-
+        const renderSummary = items =>
+            items.map(item => (
+                <li key={item.item}>
+                    <PostSummary
+                        account={account}
+                        post={item.item}
+                        currentCategory={category}
+                        thumbSize={thumbSize}
+                        ignore={item.ignore}
+                        onClick={this.onPostClick}
+                        nsfwPref={nsfwPref}
+                        visited={isPostVisited(item.item)}
+                        blockEye={pathname === '/created'}
+                    />
+                </li>
+            ));
 
         return (
             <div id={'posts_list_' + this.state.id} className="PostsList">
@@ -331,12 +308,9 @@ export default connect(
             ? current.get('username')
             : state.offchain.get('account');
 
-        const adsPerPost = state.offchain.get('config').get('ads_per_post')
-
         return {
             ...props,
             username,
-            adsPerPost,
             content: state.global.get('content'),
             ignoreResult: state.global.getIn([
                 'follow',
