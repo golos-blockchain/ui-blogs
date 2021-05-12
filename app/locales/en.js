@@ -33,7 +33,6 @@ const en =  {
   authors_get_paid_when_people_like_you_upvote_their_post: 'Authors get paid when people like you upvote their post',
   if_you_enjoyed_what_you_read_earn_amount: 'Join our amazing community to comment and reward others.',
   when_you_link_text: 'Sign Up',
-  read_only_mode: 'Due to server maintenance we are running in read only mode. We are sorry for the inconvenience.',
   membership_invitation_only: 'Membership to ' + APP_DOMAIN + ' is now under invitation only because of unexpectedly high sign up rate.',
   submit_email_to_get_on_waiting_list: 'Submit your email to get on the waiting list',
   login: 'Login',

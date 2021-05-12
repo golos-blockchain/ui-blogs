@@ -56,8 +56,6 @@
     "please": "Please",    
     "active": "Active key",    
     "owner": "Owner key",
-    "read_only_mode": "Из-за технического обслуживания серверов мы работаем в режиме чтения. Извините за неудобство.",
-    "read_only_mode_notify": "Ведутся технические работы",
     "are_you_sure": "Are you sure?",
     "ask": "Ask",
     "auto": "auto",
