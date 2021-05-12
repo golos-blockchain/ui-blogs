@@ -18,7 +18,6 @@ class Post extends React.Component {
         aiPosts: PropTypes.array,
         routeParams: PropTypes.object,
         location: PropTypes.object,
-        signup_bonus: PropTypes.string,
         current_user: PropTypes.object,
         negativeCommenters: PropTypes.any,
     };
@@ -236,7 +235,6 @@ export default connect((state, props) => {
 
     return {
         content: state.global.get('content'),
-        signup_bonus: state.offchain.get('signup_bonus'),
         current_user,
         ignoring,
         negativeCommenters

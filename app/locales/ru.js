@@ -45,7 +45,6 @@ const ru = {
   tags_and_topics: "Тэги и топики",
   filter: "Фильтр",
   show_more_topics: "Показать больше топиков",
-  we_require_social_account: APP_NAME + ' спонсирует каждый аккаунт на сумму около {signup_bonus} в ' + VESTING_TOKEN + '; чтобы предотвратить злоупотребление, мы просим новых пользователей регистрироваться используя социальные сети.',
   personal_info_will_be_private: 'Ваша персональная информация будет оставаться',
   personal_info_will_be_private_link: 'приватной',
   continue_with_facebook: 'Продолжить с Facebook',

@@ -19,8 +19,6 @@ class SignUp extends React.Component {
                 <div className="column">
                     <h3>{tt("g.sign_up")}</h3>
                     <p>
-                        {tt("g.we_require_social_account1", {APP_NAME})}
-                        <br />
                         {tt("g.personal_info_will_be_private")}
                         {' '}
                     </p>
@@ -50,7 +48,6 @@ class SignUp extends React.Component {
 export default connect(
     state => {
         return {
-            signup_bonus: state.offchain.get('signup_bonus'),
             serverBusy: state.offchain.get('serverBusy')
         };
     }

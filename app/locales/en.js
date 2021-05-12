@@ -43,7 +43,6 @@ const en =  {
   tags_and_topics: "Tags and Topics",
   filter: "Filter",
   show_more_topics: "Show more topics",
-  we_require_social_account: APP_NAME + ' funds each account with over {signup_bonus} worth of ' + VESTING_TOKEN + '; to prevent abuse, we require new users to login via social media.',
   personal_info_will_be_private: 'Your personal information will be kept',
   personal_info_will_be_private_link: 'Private',
   continue_with_facebook: 'Continue with Facebook',
