@@ -69,8 +69,10 @@
     "pass": false
   },
   "forums": {
-    "white_list": ["fm-golostalk", "fm-graphenetalks"],
+    "white_list": ["fm-golostalk", "fm-prizmtalk", "fm-graphenetalks", "fm-kostroma"],
     "fm-golostalk": {"domain": "golostalk.com"},
-    "fm-graphenetalks": {"domain": "forum.gph.ai"}
+    "fm-prizmtalk": {"domain": "prizmtalk.com"},
+    "fm-graphenetalks": {"domain": "forum.gph.ai"},
+    "fm-kostroma": {"domain": "kostromaforum.ru"}
   }
 }

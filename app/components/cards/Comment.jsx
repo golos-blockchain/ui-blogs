@@ -470,11 +470,13 @@ const Comment = connect(
     dispatch => ({
         unlock: () => user.actions.showLogin(),
         deletePost: (author, permlink) =>
-            transaction.actions.broadcastOperation({
-                type: 'delete_comment',
-                operation: { author, permlink },
-                confirm: tt('g.are_you_sure'),
-            }),
+            dispatch(
+                transaction.actions.broadcastOperation({
+                    type: 'delete_comment',
+                    operation: { author, permlink },
+                    confirm: tt('g.are_you_sure'),
+                })
+            ),
         showTransfer(transferDefaults) {
             dispatch(user.actions.setTransferDefaults(transferDefaults));
             dispatch(user.actions.showTransfer());
