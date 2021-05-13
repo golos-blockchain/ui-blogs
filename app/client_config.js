@@ -119,10 +119,10 @@ export const CATEGORIES = [
 export const CONFETTI_CONFIG = {
     angle: "90",
     spread: "360",
-    startVelocity: "15",
+    startVelocity: "20",
     elementCount: "50",
     dragFriction: "0.1",
-    duration: "1500",
+    duration: "2000",
     stagger: 0,
     width: "10px",
     height: "10px",
