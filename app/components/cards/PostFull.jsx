@@ -311,7 +311,7 @@ class PostFull extends React.Component {
                         onClick={this.showTransfer}
                     >
                         {tt('g.donate')}
-                        <Confetti config={CONFETTI_CONFIG.post} active={content.confetti_active}/>
+                        <Confetti config={CONFETTI_CONFIG} active={content.confetti_active}/>
                     </button>)
                     : null
                 }

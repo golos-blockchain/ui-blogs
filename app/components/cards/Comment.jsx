@@ -341,7 +341,7 @@ class CommentImpl extends PureComponent {
                     {showDelete && (
                         <a onClick={this.onDeletePost}>{tt('g.delete')}</a>
                     )}
-                    <Confetti config={CONFETTI_CONFIG.comment} active={comment.confetti_active}/>
+                    <Confetti config={CONFETTI_CONFIG} active={comment.confetti_active}/>
                 </span>
             );
 

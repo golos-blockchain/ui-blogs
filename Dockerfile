@@ -5,11 +5,11 @@ RUN npm install -g yarn
 WORKDIR /var/app
 RUN mkdir -p /var/app
 ADD package.json yarn.lock /var/app/
-RUN yarn
+RUN yarn install
 
 COPY . /var/app
 
-RUN mkdir tmp && npm run-script build
+RUN mkdir tmp && yarn build
 
 ENV PORT 8080
 ENV NODE_ENV production
