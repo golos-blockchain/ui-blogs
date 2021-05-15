@@ -1,6 +1,4 @@
-FROM node:8.15
-
-RUN npm install -g yarn
+FROM node:16.1
 
 WORKDIR /var/app
 RUN mkdir -p /var/app

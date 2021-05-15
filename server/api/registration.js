@@ -55,7 +55,7 @@ export default function useRegistrationApi(app) {
                 {
                     clientID: grant.key,
                     clientSecret: grant.secret,
-                    callbackURL: `/api/v1/auth/${grantId}/callback`,
+                    callbackURL: `${config.REST_API}/api/v1/auth/${grantId}/callback`,
                     passReqToCallback: true
                 },
                 async (req, accessToken, refreshToken, params, profile, done) => {
