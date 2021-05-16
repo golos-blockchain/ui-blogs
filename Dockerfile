@@ -1,15 +1,13 @@
-FROM node:8.15
-
-RUN npm install -g yarn
+FROM node:16.1
 
 WORKDIR /var/app
 RUN mkdir -p /var/app
 ADD package.json yarn.lock /var/app/
-RUN yarn
+RUN yarn install
 
 COPY . /var/app
 
-RUN mkdir tmp && npm run-script build
+RUN mkdir tmp && yarn build
 
 ENV PORT 8080
 ENV NODE_ENV production
