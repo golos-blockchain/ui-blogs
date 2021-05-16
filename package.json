@@ -75,7 +75,7 @@
     "libsodium-wrappers": "0.4.8",
     "lightbox-react": "^0.3.7",
     "lightweight-charts": "^3.2.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "minimist": "^1.2.0",
     "multiselect-react-dropdown": "^1.6.7",
     "multistream": "^2.1.1",
