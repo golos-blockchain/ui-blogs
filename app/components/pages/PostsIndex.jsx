@@ -198,9 +198,8 @@ class PostsIndex extends React.Component {
         const active_user = this.props.username || ''
 
         let promo_posts = []
-        if (['created', 'hot', 'responses', 'trending'].includes(order) && posts && posts.size) {
+        if (['created', 'responses', 'donates', 'trending'].includes(order) && posts && posts.size) {
           const slice_step = order == 'trending' ? 3 : 1
-
           promo_posts = posts.slice(0, slice_step)
           posts = posts.slice(slice_step)
         }
