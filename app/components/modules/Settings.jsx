@@ -63,7 +63,7 @@ class Settings extends React.Component {
             this.state.accountSettings.handleSubmit(args => this.handleSubmit(args))
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const {accountname} = this.props
         const {vesting_shares} = this.props.account
         

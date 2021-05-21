@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import cn from 'classnames';
-import { injectGlobal } from 'styled-components';
+import { createGlobalStyle } from 'styled-components';
 import AppPropTypes from 'app/utils/AppPropTypes';
 import Header from 'app/components/modules/Header';
 import Footer from 'app/components/modules/Footer';
@@ -28,7 +28,7 @@ import {
     VEST_TICKER,
 } from 'app/client_config';
 
-injectGlobal`
+const GlobalStyle = createGlobalStyle`
     body {
         fill: currentColor;
     }
@@ -114,7 +114,7 @@ class App extends React.Component {
         this.toggleBodyNightmode(nightmodeEnabled);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         if (process.env.BROWSER) {
             window.IS_MOBILE =
                 /android|iphone/i.test(navigator.userAgent) ||
@@ -352,6 +352,7 @@ class App extends React.Component {
                 <DialogManager />
                 {process.env.BROWSER ? <TooltipManager /> : null}
                 <PageViewsCounter hidden/>
+                <GlobalStyle />
             </div>
 
         );

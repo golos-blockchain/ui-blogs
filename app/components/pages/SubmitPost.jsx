@@ -10,7 +10,7 @@ class SubmitPost extends React.PureComponent {
         this.SubmitReplyEditor = ReplyEditor('submitStory');
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         document.body.classList.add('submit-page');
     }
 

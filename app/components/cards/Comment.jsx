@@ -56,7 +56,7 @@ class CommentImpl extends PureComponent {
         };
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const content = this.props.cont.get(this.props.content);
 
         if (content) {
