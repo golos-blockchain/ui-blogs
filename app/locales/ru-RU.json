@@ -306,7 +306,7 @@
     "voting_capacity": "Мощность Голоса",
     "power_up": "Увеличить %(VESTING_TOKEN2)s",
     "promoted_title": "продвижение",
-    "promoted_post": "Этот пост был продвинут за токены GBG",
+    "promoted_post": "Этот пост был продвинут за GBG (>1 токена)",
     "preview": "Предварительный просмотр",
     "previous": "Предыдущий",
     "price": "Цена",
