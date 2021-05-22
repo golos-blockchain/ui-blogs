@@ -36,6 +36,17 @@ ul.PostsList__summaries {
      margin: 0 0.1rem;
      padding: 0 0.2rem;
   }
+
+  .promoted_post {
+     color: darkgoldenrod;
+     border: 1px solid darkgoldenrod;
+     font-size: 75%;
+     border-radius: 3px;
+     font-weight: normal;
+     font-family: Arial;
+     margin: 0 0.5rem;
+     padding: 0 0.2rem;
+  }
 }
 
 .PostSummary__image {
