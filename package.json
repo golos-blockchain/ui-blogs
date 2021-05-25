@@ -131,7 +131,7 @@
     "sanitize-html": "^1.14.1",
     "sass-loader": "6.0.6",
     "secure-random": "^1.1.1",
-    "sequelize": "^3.35.1",
+    "sequelize": "^6.6.2",
     "sequelize-cli": "^3.2.0",
     "simplemde": "^1.11.2",
     "slick-carousel": "^1.8.1",
