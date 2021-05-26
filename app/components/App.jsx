@@ -363,7 +363,6 @@ App.propTypes = {
     error: PropTypes.string,
     children: AppPropTypes.Children,
     location: PropTypes.object,
-    signup_bonus: PropTypes.string,
     loginUser: PropTypes.func.isRequired,
     logoutUser: PropTypes.func.isRequired,
     depositSteem: PropTypes.func.isRequired,
@@ -377,7 +376,6 @@ export default connect(
         return {
             error: state.app.get('error'),
             flash: state.offchain.get('flash'),
-            signup_bonus: state.offchain.get('signup_bonus'),
             new_visitor:
                 !state.user.get('current') &&
                 !state.offchain.get('user') &&

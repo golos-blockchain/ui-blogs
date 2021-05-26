@@ -246,7 +246,7 @@ class CreateAccount extends React.Component {
                     >
                         <h2>{tt('g.sign_up')}</h2>
                         <p className="CreateAccount__account-name-hint">
-                            <Icon name="info_o" /> Возникли сложности? Напишите в <a target="_blank" href="https://t.me/goloshelp">телеграм-чат</a> или на <a href="mailto:info@golos.id">info@golos.id</a>
+                            <Icon name="info_o" /> Возникли сложности? Напишите в <a target="_blank" href="https://t.me/goloshelp">телеграм-чат</a> или на <a href={'mailto:' + SUPPORT_EMAIL}>{SUPPORT_EMAIL}</a>
                         </p>
                         <hr />
                         <form

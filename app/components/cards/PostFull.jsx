@@ -311,7 +311,7 @@ class PostFull extends React.Component {
                         onClick={this.showTransfer}
                     >
                         {tt('g.donate')}
-                        <Confetti config={CONFETTI_CONFIG.post} active={content.confetti_active}/>
+                        <Confetti config={CONFETTI_CONFIG} active={content.confetti_active}/>
                     </button>)
                     : null
                 }
@@ -405,8 +405,6 @@ class PostFull extends React.Component {
             parsePayoutAmount(content.pending_payout_value) +
             parsePayoutAmount(content.total_payout_value);
 
-        const fullPower = postContent.get('percent_steem_dollars') === 0;
-
         let postHeader;
 
         if (content.depth > 0) {
@@ -449,11 +447,6 @@ class PostFull extends React.Component {
             postHeader = (
                 <h1 className="entry-title">
                     {content.title}
-                    {fullPower && (
-                        <span title={tt('g.powered_up_100')}>
-                            <Icon name={APP_ICON} />
-                        </span>
-                    )}
                 </h1>
             );
         }

@@ -143,8 +143,8 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
             {link: messagesLink, icon: 'new/envelope', value: tt('g.messages'), target: '_blank', addon: <NotifiCounter fields="message" />},
             {link: donatesLink, icon: 'editor/coin', value: tt('g.rewards'), addon: <NotifiCounter fields="donate" />},
             {link: walletLink, icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields="send,receive" />},
-            {link: '#', onClick: toggleNightmode, icon: 'editor/eye', value: tt('g.night_mode')},
             {link: settingsLink, icon: 'new/setting', value: tt('g.settings')},
+            {link: '#', onClick: toggleNightmode, icon: 'editor/eye', value: tt('g.night_mode')},
             loggedIn ?
                 {link: '#', icon: 'new/logout', onClick: logout, value: tt('g.logout')} :
                 {link: '#', onClick: showLogin, value: tt('g.login')}

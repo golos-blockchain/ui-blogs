@@ -117,28 +117,14 @@ export const CATEGORIES = [
 ];
 
 export const CONFETTI_CONFIG = {
-  post: {
     angle: "90",
     spread: "360",
-    startVelocity: "25",
-    elementCount: "100",
-    dragFriction: "0.1",
-    duration: "3000",
-    stagger: 0,
-    width: "10px",
-    height: "10px",
-    colors: ["#a864fd", "#29cdff", "#78ff44", "#ff718d", "#fdff6a"]
-  },
-  comment: {
-    angle: "90",
-    spread: "360",
-    startVelocity: "15",
+    startVelocity: "20",
     elementCount: "50",
     dragFriction: "0.1",
-    duration: "1500",
+    duration: "2000",
     stagger: 0,
     width: "10px",
     height: "10px",
     colors: ["#a864fd", "#29cdff", "#78ff44", "#ff718d", "#fdff6a"]
-  }
 };

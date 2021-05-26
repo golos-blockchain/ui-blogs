@@ -1,7 +1,6 @@
 import React from 'react';
 import { LIQUID_TOKEN } from 'app/client_config';
 import config from 'config';
-//import AnalyticsScripts from 'app/components/elements/AnalyticsScripts';
 
 export default function ServerHTML({ body, assets, locale, title, meta, analytics }) {
     let page_title = title;
@@ -27,7 +26,6 @@ export default function ServerHTML({ body, assets, locale, title, meta, analytic
                     return null;
                 })
             }
-            <link rel="manifest" href="/static/manifest.json" />
             <link rel="icon" type="image/x-icon" href="/favicon.ico" />
             <link rel="apple-touch-icon-precomposed" sizes="57x57" href="/images/favicons/apple-icon-57x57.png" type="image/png" />
             <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/images/favicons/apple-icon-114x114.png" type="image/png" />
@@ -63,7 +61,6 @@ export default function ServerHTML({ body, assets, locale, title, meta, analytic
             <title>{page_title}</title>
         </head>
         <body>
-            {/* <AnalyticsScripts { ...analytics }/> */}
             <div id="content" dangerouslySetInnerHTML={ { __html: body } }></div>
 
             {/* javascripts */}

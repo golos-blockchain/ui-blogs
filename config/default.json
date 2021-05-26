@@ -32,9 +32,7 @@
       "reportUri": "/api/v1/csp_violation",
       "objectSrc": "'self'",
       "frameAncestors": "'none'"
-    },
-    "reportOnly": false,
-    "setAllHeaders": true
+    }
   },
   "img_proxy_prefix": "https://steemitimages.com/",
   "add_notify_site": {

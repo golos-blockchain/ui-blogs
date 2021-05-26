@@ -200,8 +200,8 @@ useNotificationsApi(app);
 if (env === 'production') {
     const helmetConfig = {
         directives: convertEntriesToArrays(config.get('helmet.directives')),
-        reportOnly: config.get('helmet.reportOnly'),
-        setAllHeaders: config.get('helmet.setAllHeaders')
+        reportOnly: false,
+        setAllHeaders: true
     };
     helmetConfig.directives.reportUri = '/api/v1/csp_violation';
     app.use(helmet.contentSecurityPolicy(helmetConfig));

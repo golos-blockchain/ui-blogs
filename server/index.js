@@ -16,7 +16,6 @@ global.$STM_Config = {
     ws_connection_msgs: config.get('ws_connection_msgs'),
     img_proxy_prefix: config.get('img_proxy_prefix'),
     add_notify_site: config.get('add_notify_site'),
-    registrar_fee: config.get('registrar.fee'),
     upload_image: config.get('upload_image'),
     site_domain: config.get('site_domain'),
     google_analytics_id: config.get('google_analytics_id'),
