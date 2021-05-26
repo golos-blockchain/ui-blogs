@@ -399,9 +399,9 @@ class Search extends React.Component {
               <hr/>
               <center><p className='another-search'>
               {tt('search.search_in')}
-              <a target='_blank' href={'https://yandex.ru/search/?lr=35&text=' + this.state.query + ' site:golos.id'}>{tt('search.yandex')}</a>
+              <a target='_blank' rel='noopener noreferrer' href={'https://yandex.ru/search/?lr=35&text=' + this.state.query + ' site:golos.id'}>{tt('search.yandex')}</a>
               {tt('search.or')}
-              <a target='_blank' href={'https://www.google.com/search?lr=&q=' + this.state.query + ' site:golos.id'}>{tt('search.google')}</a>
+              <a target='_blank' rel='noopener noreferrer' href={'https://www.google.com/search?lr=&q=' + this.state.query + ' site:golos.id'}>{tt('search.google')}</a>
               </p></center>
           </div>);
     }

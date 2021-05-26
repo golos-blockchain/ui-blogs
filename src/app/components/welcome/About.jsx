@@ -72,7 +72,7 @@ export default class About extends PureComponent {
             <Root>
                 <Row className="row align-middle">
                     <div className="columns">
-                        <Header>Основные веб-клиенты: <a target="_blank" href="https://golos.id/">golos.id</a> и <a target="_blank" href="https://golos.in/">golos.in</a></Header>
+                        <Header>Основные веб-клиенты: <a href="https://golos.id/">golos.id</a> и <a href="https://golos.in/">golos.in</a></Header>
                         <SubHeader>
                             Голос - это интересные истории, полезные статьи, творческий контент, которые благодаря блокчейн-технологиям останутся в веках с подтверждённым авторством и без цензуры.<br /><br />
                             Пишите, общайтесь, получайте вознаграждения и награждайте других.

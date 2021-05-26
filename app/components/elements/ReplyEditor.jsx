@@ -805,7 +805,6 @@ class ReplyEditor extends React.Component {
                                     {!isHtml && (
                                         <div className="float-right">
                                             <a
-                                                target="_blank"
                                                 href="/@on0tole/osnovy-oformleniya-postov-na-golose-polnyi-kurs-po-rabote-s-markdown"
                                             >
                                                 {tt(
