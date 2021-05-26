@@ -9395,9 +9395,10 @@ react-style-proptype@^3.0.0:
   dependencies:
     prop-types "^15.5.4"
 
-react-timeago@^3.4.3:
-  version "3.4.3"
-  resolved "https://registry.yarnpkg.com/react-timeago/-/react-timeago-3.4.3.tgz#eb9061eefb044e4a2b09ce8c99d34645b2dbfa25"
+react-timeago@^6.1.1:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/react-timeago/-/react-timeago-6.1.1.tgz#d9365c042428eceb90c4a689248d55b37a1bd6be"
+  integrity sha512-44zsWw2J/4AiZ/eVviygDthcDvCSuVyR/PLVF/g7OIUGq8rnEOwa3A+pHPmHt9WJ5fhHumwTY+Go+RkzEaIHvQ==
 
 react-tooltip@^3.4.0:
   version "3.6.1"
