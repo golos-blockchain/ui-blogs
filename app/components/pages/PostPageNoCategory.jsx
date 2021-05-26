@@ -12,7 +12,7 @@ class PostWrapper extends React.Component {
         };
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const route_params = this.props.routeParams;
         const post = route_params.username + '/' + route_params.slug;
         const dis = this.props.content.get(post);

@@ -26,7 +26,7 @@ class ChangePassword extends React.Component {
         this.onNameChange = this.onNameChange.bind(this)
         this.generateWif = this.generateWif.bind(this)
     }
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
     }
     componentWillUnmount() {
         newWif = null

@@ -15,7 +15,7 @@ class SavingsWithdrawHistory extends React.Component {
         this.shouldComponentUpdate = shouldComponentUpdate(this, 'SavingsWithdrawHistory')
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.loadHistory()
     }
 

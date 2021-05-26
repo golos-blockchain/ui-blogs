@@ -37,7 +37,7 @@ class ShowKey extends Component {
         this.showLogin = this.showLogin.bind(this)
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.setWif(this.props, this.state)
         this.setOnKey(this.props, this.state)
     }

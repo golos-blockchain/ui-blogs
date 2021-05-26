@@ -66,7 +66,7 @@ class ReplyEditor extends React.Component {
         this.initForm(props);
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const { setMetaData, formId, jsonMetadata } = this.props;
         setMetaData(formId, jsonMetadata);
 

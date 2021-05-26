@@ -18,7 +18,7 @@ class SuggestPassword extends React.Component {
     static propTypes = {
         print: bool,
     }
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const {suggestedPassword, createSuggestedPassword} = this.props
         if(!suggestedPassword)
             createSuggestedPassword()
