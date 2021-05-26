@@ -175,7 +175,7 @@ class ViewWorkerRequest extends React.Component {
 
     return(
       <div>
-        <h5><a target="_blank" href={"/@" + request.post.author + "/" + request.post.permlink}><Icon name="extlink" size="1_5x" /> 
+        <h5><a target="_blank" rel="noopener noreferrer" href={"/@" + request.post.author + "/" + request.post.permlink}><Icon name="extlink" size="1_5x" /> 
           {request.post.title}
         </a></h5>
         <hr/>
