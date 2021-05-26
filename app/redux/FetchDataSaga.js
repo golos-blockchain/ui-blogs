@@ -528,10 +528,9 @@ export function* fetchData(action) {
             data = data['fm-'];
         }
 
-        if (['created', 'responses', 'hot', 'trending'].includes(order) && !args[0].start_author) {
+        if (['created', 'responses', 'donates', 'trending'].includes(order) && !args[0].start_author) {
           // Add top 3 from promo to tranding and 1 to hot, created
           args[0].limit = order == 'trending' ? 3 : 1
-
           const promo_posts = yield call([api, api[PUBLIC_API.promoted]], ...args);
           posts = posts.concat(promo_posts)
         }

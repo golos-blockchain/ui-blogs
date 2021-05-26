@@ -127,7 +127,7 @@ class PostSummary extends React.Component {
         let title_text = p.title;
         let comments_link;
         let is_comment = false;
-        let full_power = content.get('percent_steem_dollars') === 0;
+        let promoted_post = content.get('promoted') >= "1.000 GBG";
 
         if( content.get( 'parent_author') !== "" ) {
            title_text = tt('g.re') + ": " + content.get('root_title');
@@ -164,23 +164,25 @@ class PostSummary extends React.Component {
         if (username && !is_forum)
             title_link_url += "?invite=" + username;
 
+        const link_target = is_forum ? '_blank' : undefined;
+
         let content_body = <div className="PostSummary__body entry-content">
-            <a href={title_link_url} target={is_forum && '_blank'} onClick={e => navigate(e, onClick, post, title_link_url, is_forum)}>{desc}</a>
+            <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum)}>{desc}</a>
         </div>;
 
         const warn = (isNsfw && nsfwPref === 'warn' && !myPost);
 
         let content_title = <h3 className="entry-title">
-            <a href={title_link_url} target={is_forum && '_blank'} onClick={e => navigate(e, onClick, post, title_link_url, is_forum)}>
+            <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum)}>
                 {warn && <span className="nsfw-flag">{detransliterate(nsfwTitle)}</span>}
                 {title_text}
-                {full_power && <span title={tt('g.powered_up_100')}><Icon name={APP_ICON} /></span>}
+                {promoted_post && <span className="promoted_post" title={tt('g.promoted_post')}>{tt('g.promoted_title')}</span>}
             </a>
         </h3>;
 
         // author and category
         let author_category = <span className="vcard">
-            <a href={title_link_url} target={is_forum && '_blank'} onClick={e => navigate(e, onClick, post, title_link_url, is_forum)}><TimeAgoWrapper date={is_forum ? p.active : p.created} className="updated" /></a>
+            <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum)}><TimeAgoWrapper date={is_forum ? p.active : p.created} className="updated" /></a>
             {' '}
             {blockEye && <MuteAuthorInNew author={p.author} />}
             <Author author={p.author} authorRepLog10={authorRepLog10} follow={false} mute={false} />
@@ -229,7 +231,7 @@ class PostSummary extends React.Component {
               isNsfw={warn}
               src={url}
               href={title_link_url}
-              target={is_forum && '_blank'}
+              target={link_target}
               onClick={e => navigate(e, onClick, post, title_link_url, is_forum)} />
         }
         const commentClasses = []

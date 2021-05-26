@@ -20,7 +20,7 @@ class TransactionError extends React.Component {
         errorKey: string,
         exception: string,
     }
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         const {opType, addListener} = this.props
         addListener(opType)
     }

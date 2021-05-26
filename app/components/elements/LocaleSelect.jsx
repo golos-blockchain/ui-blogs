@@ -157,7 +157,7 @@ class LocaleSelect extends PureComponent {
         console.warn('locale', locale);
 
         return (
-            <Wrapper innerRef={this.onRef}>
+            <Wrapper ref={this.onRef}>
                 <Current onClick={this.onOpenClick}>
                     {locale}
                     <Chevron open={open} />

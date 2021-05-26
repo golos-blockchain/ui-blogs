@@ -269,7 +269,7 @@ class Voting extends React.Component {
             //voters.push({value: <span>&hellip; {tt('g.and')} {(total_votes - voters.length)} {tt('g.more')}</span>});
         }
 
-        voters_list = <PagedDropdownMenu selected={total_votes} className="Voting__voters_list" items={voters} el="div" noArrow={true} />;
+        voters_list = <PagedDropdownMenu selected={total_votes.toString()} className="Voting__voters_list" items={voters} el="div" noArrow={true} />;
 
         let voteUpClick = this.voteUp;
         let dropdown = null;
