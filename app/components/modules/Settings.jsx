@@ -4,7 +4,7 @@ import user from 'app/redux/User';
 import g from 'app/redux/GlobalReducer';
 import tt from 'counterpart';
 import transaction from 'app/redux/Transaction'
-import o2j from 'shared/clash/object2json'
+import { getMetadataReliably } from 'app/utils/NormalizeProfile';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator'
 import Userpic from 'app/components/elements/Userpic';
 import reactForm from 'app/utils/ReactForm'
@@ -536,8 +536,7 @@ export default connect(
         const account = state.global.getIn(['accounts', accountname]).toJS()
         const current_user = state.user.get('current')
         const username = current_user ? current_user.get('username') : ''
-        let metaData = account ? o2j.ifStringParseJSON(account.json_metadata) : {}
-        if (typeof metaData === 'string') metaData = o2j.ifStringParseJSON(metaData); // issue #1237
+        let metaData = account ? getMetadataReliably(account.json_metadata) : {}
         const profile = metaData && metaData.profile ? metaData.profile : {}
         const mutedInNew = metaData && metaData.mutedInNew ? Set(metaData.mutedInNew) : Set([])
 

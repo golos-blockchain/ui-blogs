@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
-import { getMutedInNew } from 'app/utils/NormalizeProfile'
+import { getMetadataReliably, getMutedInNew } from 'app/utils/NormalizeProfile'
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
 import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
 import Icon from 'app/components/elements/Icon';
 import tt from 'counterpart';
-import DialogManager from 'app/components/elements/common/DialogManager';
 
 
 const {string, func, object} = PropTypes
@@ -33,15 +32,7 @@ export default class MuteAuthorInNew extends React.Component {
       const current_user = this.props.current_user.toJS()
       let mutedInNew = getMutedInNew(current_user)
 
-      let metadata;
-      try {
-        if (current_user.json_metadata == '')
-            metadata = {};
-        else
-            metadata = JSON.parse(current_user.json_metadata);
-      } catch(err) {
-        DialogManager.alert('json_metadata invalid format');
-      }
+      let metadata = getMetadataReliably(current_user.json_metadata);
 
       if (!mutedInNew.includes(author))
         mutedInNew.push(author);

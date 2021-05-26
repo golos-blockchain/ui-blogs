@@ -4,7 +4,7 @@ import transaction from 'app/redux/Transaction'
 import reactForm from 'app/utils/ReactForm';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import tt from 'counterpart';
-import o2j from 'shared/clash/object2json'
+import { getMetadataReliably } from 'app/utils/NormalizeProfile';
 
 class FeedNodes extends React.Component {
     
@@ -170,8 +170,7 @@ export default connect(
     (state, props) => {
         const { username } = props;
         let account = state.global.getIn(['accounts', username]).toJS();
-        let metaData = account ? o2j.ifStringParseJSON(account.json_metadata) : {}
-        if (typeof metaData === 'string') metaData = o2j.ifStringParseJSON(metaData); // issue #1237
+        let metaData = account ? getMetadataReliably(account.json_metadata) : {}
         const witness = metaData && metaData.witness ? metaData.witness : {}
 
         return {

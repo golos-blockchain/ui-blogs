@@ -7,8 +7,7 @@ import transaction from 'app/redux/Transaction';
 import {Set, Map} from 'immutable'
 import tt from 'counterpart';
 import user from 'app/redux/User';
-import { getMutedInNew } from 'app/utils/NormalizeProfile';
-import o2j from 'shared/clash/object2json'
+import { getMetadataReliably, getMutedInNew } from 'app/utils/NormalizeProfile';
 
 const {string, bool, any} = PropTypes;
 import { LIQUID_TICKER } from 'app/client_config';
@@ -170,8 +169,7 @@ module.exports = connect(
         }
 
         const account = state.global.getIn(['accounts', follower])
-        let metaData = account ? o2j.ifStringParseJSON(account.get('json_metadata')) : {}
-        if (typeof metaData !== 'object') metaData = {}
+        let metaData = account ? getMetadataReliably(account.get('json_metadata')) : {}
         metaData.mutedInNew = account ? getMutedInNew(account.toJS(), true) : [];
 
         const {following} = ownProps;
