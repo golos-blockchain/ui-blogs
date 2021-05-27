@@ -246,7 +246,7 @@ class Messages extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.account && !this.props.account
             || (nextProps.account && this.props.account && nextProps.account.name !== this.props.account.name)) {
             this.props.fetchState(nextProps.to);

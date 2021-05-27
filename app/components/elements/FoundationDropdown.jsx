@@ -25,7 +25,7 @@ export default class FoundationDropdown extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         if (newProps.show !== this.props.show && newProps.show !== this.state.show) {
             this.setState({show: newProps.show});
         }

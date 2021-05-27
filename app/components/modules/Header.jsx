@@ -35,7 +35,7 @@ class Header extends React.Component {
         this.hideSubheader = this.hideSubheader.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.location.pathname !== this.props.location.pathname) {
             const route = resolveRoute(nextProps.location.pathname);
             if (route && route.page === 'PostsIndex' && route.params && route.params.length > 0) {

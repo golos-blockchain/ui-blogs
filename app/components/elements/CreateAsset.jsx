@@ -35,12 +35,6 @@ class CreateAsset extends Component {
         this.initForm(props)
     }
 
-    componentDidMount() {
-    }
-
-    componentWillUpdate(nextProps, nextState) {
-    }
-
     initForm(props) {
         const insufficientFunds = (symbol) => {
             const balanceValue = props.account.get('sbd_balance')

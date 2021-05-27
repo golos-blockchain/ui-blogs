@@ -82,7 +82,7 @@ class MessageBox extends Component {
 
     componentDidMount() {}
 
-    componentWillReceiveProps(np, ns) {
+    UNSAFE_componentWillReceiveProps(np, ns) {
       this.prepareConversations(np, ns);
     }
 

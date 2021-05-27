@@ -34,7 +34,7 @@ class MarkNotificationRead extends React.Component {
             markNotificationRead(account, this.fields_array).then(nc => update(nc));
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.interval) {
             this._activateInterval(nextProps.interval);
         } else {

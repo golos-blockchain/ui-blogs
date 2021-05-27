@@ -9,7 +9,7 @@ export default class BottomPanel extends React.Component {
         hide: PropTypes.func.isRequired
     };
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.visible) {
             document.addEventListener('click', this.props.hide);
         } else {

@@ -77,7 +77,7 @@ class CommentImpl extends PureComponent {
         }
     }
 
-    componentWillReceiveProps(np) {
+    UNSAFE_componentWillReceiveProps(np) {
         const content = np.cont.get(np.content);
 
         if (content) {

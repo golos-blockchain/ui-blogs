@@ -42,11 +42,11 @@ class ShowKey extends Component {
         this.setOnKey(this.props, this.state)
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.setWif(nextProps)
     }
 
-    componentWillUpdate(nextProps, nextState) {
+    UNSAFE_componentWillUpdate(nextProps, nextState) {
         this.setOnKey(nextProps, nextState)
     }
 
