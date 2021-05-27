@@ -527,7 +527,7 @@
     "trending": "Популярные",
     "promoted": "Промо",
     "donates": "Вознаграждаемые",
-    "forums": "Форумные (beta)",
+    "forums": "Форумные",
     "new_topic_posts": "Новый %(topic)s пост",
     "sort_order_topic_posts": "%(sort_order)s %(topic)s посты",
     "new_posts": "Новые посты",
