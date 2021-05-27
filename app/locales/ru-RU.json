@@ -950,6 +950,10 @@
     "from": " от ",
     "for": " за ",
     "issue": "Эмиссия токенов ",
+    "orders_canceled": "Биржевые ордера отменены, автоконвертация ",
+    "to_golos_tokens": " в токены GOLOS",
+    "conversion_started": "Запущена 3.5 дневная конвертация ",
+    "were_converted": " были сконвертированы в ",
     "to_account": " на аккаунт "
   },
   "user_profile": {

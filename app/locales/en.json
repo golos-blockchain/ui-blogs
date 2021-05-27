@@ -923,6 +923,10 @@
     "from": " from ",
     "for": " for ",
     "issue": "Issue of tokens ",
+    "orders_canceled": "Exchange orders canceled, autoconversion ",
+    "to_golos_tokens": " to GOLOS tokens",
+    "conversion_started": "Started 3.5 day conversion ",
+    "were_converted": " were converted to ",
     "to_account": " to account "
   },
   "savingswithdrawhistory_jsx": {
