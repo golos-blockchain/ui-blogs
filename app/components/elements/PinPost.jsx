@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
-import { getPinnedPosts } from 'app/utils/NormalizeProfile'
+import { getMetadataReliably, getPinnedPosts } from 'app/utils/NormalizeProfile'
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
 import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
 import Icon from 'app/components/elements/Icon';
 import tt from 'counterpart';
-import DialogManager from 'app/components/elements/common/DialogManager';
 
 
 const {string, func, object} = PropTypes
@@ -38,12 +37,7 @@ export default class PinPost extends React.Component {
       let pinnedPosts = getPinnedPosts(account, true)
       const link = author + '/' + permlink
 
-      let metadata;
-      try {
-        metadata = JSON.parse(account.json_metadata);
-      } catch(err) {
-        DialogManager.alert('json_metadata invalid format');
-      }
+      let metadata = getMetadataReliably(account.json_metadata);
 
       if(this.state.active) {
         pinnedPosts = pinnedPosts.filter(pinnedLink => pinnedLink !== link);
