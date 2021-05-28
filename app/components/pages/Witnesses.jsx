@@ -95,8 +95,6 @@ class Witnesses extends Component {
                 100 * (votes / oneM / totalVestingShares.split(' ')[0]);
 
             const lastFeedDate = new Date(lastUpdateFeed).getTime();
-            const isOneDayAgo =
-                lastFeedDate < new Date().setDate(new Date().getDate() - 1);
             const isOneWeekAgo =
                 lastFeedDate < new Date().setDate(new Date().getDate() - 7);
 
@@ -106,10 +104,6 @@ class Witnesses extends Component {
             const noPriceFeed = /0.000 GOLOS/.test(priceFeed.get('base'));
 
             let lastUpdateFeedClassName;
-            if (isOneDayAgo) {
-                lastUpdateFeedClassName = 'warning';
-            }
-
             if (isOneWeekAgo) {
                 lastUpdateFeedClassName = 'error';
             }
