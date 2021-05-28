@@ -32,12 +32,6 @@ class ClaimInvite extends Component {
         this.initForm(props)
     }
 
-    componentDidMount() {
-    }
-
-    componentWillUpdate(nextProps, nextState) {
-    }
-
     initForm(props) {
         const fields = ['invite_secret'];
         const validateSecret = (secret) => {

@@ -121,7 +121,7 @@ class ReplyEditor extends React.Component {
 
     shouldComponentUpdate = shouldComponentUpdate(this, 'ReplyEditor');
 
-    componentWillUpdate(nextProps, nextState) {
+    UNSAFE_componentWillUpdate(nextProps, nextState) {
         if (process.env.BROWSER) {
             const ts = this.state;
             const ns = nextState;

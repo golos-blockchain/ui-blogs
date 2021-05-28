@@ -43,7 +43,7 @@ class KeyEdit extends Component {
     componentDidMount() {
         setTimeout(() => { this.refs.key.focus() }, 300)
     }
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         const {fields: {password, confirm}} = nextProps
         let isWif
         try {

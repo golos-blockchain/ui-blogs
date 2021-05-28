@@ -8,7 +8,7 @@ const Wrapper = styled.div`
     background-color: #f9f9f9;
 `;
 
-const HeaderContainer = Container.extend`
+const HeaderContainer = styled(Container)`
     @media (max-width: 1200px) {
         flex-direction: column-reverse;
         align-items: center;
@@ -72,7 +72,7 @@ const Button = styled.a`
     font-weight: bold;
 `;
 
-const BlueButton = Button.extend`
+const BlueButton = styled(Button)`
     color: #ffffff;
     line-height: 18px;
     text-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.15);
@@ -93,7 +93,7 @@ const BlueButton = Button.extend`
     }
 `;
 
-const WhiteButton = Button.extend`
+const WhiteButton = styled(Button)`
     margin-left: 15px;
     background-color: #ffffff;
     border: 1px solid rgba(149, 149, 149, 0.3);

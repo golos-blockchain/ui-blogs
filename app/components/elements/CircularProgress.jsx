@@ -19,7 +19,7 @@ class CircularProgress extends Component {
     this.animateValue(progress, percentage, animateTime)
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const { percentage } = nextProps
 
     if (nextProps.show && !this.props.show) {

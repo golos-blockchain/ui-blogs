@@ -35,12 +35,6 @@ class TransferAsset extends Component {
         this.initForm(props)
     }
 
-    componentDidMount() {
-    }
-
-    componentWillUpdate(nextProps, nextState) {
-    }
-
     initForm(props) {
         const fields = ['new_owner']
         reactForm({

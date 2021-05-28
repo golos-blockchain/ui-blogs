@@ -60,7 +60,7 @@ class LoginForm extends Component {
         if (this.refs.username && this.refs.username.value) this.refs.pw.focus();
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (!this.props.initialValues.username
             && !this.state.username.value
             && nextProps.initialValues.username) {

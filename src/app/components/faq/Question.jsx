@@ -42,10 +42,10 @@ const Answer = styled.div`
     overflow: hidden;
 `;
 
-const Switcher = Flex.extend.attrs({
+const Switcher = styled(Flex).attrs(props => ({
     justify: 'center',
     align: 'center',
-})`
+}))`
     position: absolute;
     top: 18px;
     right: 12px;

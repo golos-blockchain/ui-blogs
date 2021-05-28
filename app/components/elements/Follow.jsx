@@ -35,7 +35,7 @@ export default class Follow extends React.Component {
         this.shouldComponentUpdate = shouldComponentUpdate(this, 'Follow');
     }
 
-    componentWillUpdate(nextProps) {
+    UNSAFE_componentWillUpdate(nextProps) {
         this.initEvents(nextProps)
     }
 

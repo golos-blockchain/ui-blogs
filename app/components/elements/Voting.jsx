@@ -115,7 +115,7 @@ class Voting extends React.Component {
         this.setState({ xchangePair });
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         const {username, active_votes} = nextProps;
         this._checkMyVote(username, active_votes)
     }

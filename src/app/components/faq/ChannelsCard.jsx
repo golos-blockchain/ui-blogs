@@ -55,7 +55,7 @@ const Text = styled.p`
     }
 `;
 
-const CustomIcon = Icon.extend`
+const CustomIcon = styled(Icon)`
     min-width: ${props => props.width}px;
 `;
 

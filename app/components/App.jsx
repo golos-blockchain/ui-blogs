@@ -109,7 +109,7 @@ class App extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         const { nightmodeEnabled } = nextProps;
         this.toggleBodyNightmode(nightmodeEnabled);
     }
