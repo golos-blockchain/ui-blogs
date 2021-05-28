@@ -8873,14 +8873,7 @@ prop-types-extra@^1.0.1:
     react-is "^16.3.2"
     warning "^3.0.0"
 
-prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@^15.5.9, prop-types@^15.6.1:
-  version "15.6.2"
-  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.2.tgz#05d5ca77b4453e985d60fc7ff8c859094a497102"
-  dependencies:
-    loose-envify "^1.3.1"
-    object-assign "^4.1.1"
-
-prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@^15.5.9, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -9439,16 +9432,7 @@ react-treebeard@^2.1.0:
     object-assign "^4.1.0"
     prop-types "^15.5.10"
 
-react@^16.0.0:
-  version "16.12.0"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.12.0.tgz#0c0a9c6a142429e3614834d5a778e18aa78a0b83"
-  integrity sha512-fglqy3k5E+81pA8s+7K0/T3DBCF0ZDOher1elBFzF7O6arXJgzyu/FW+COxFvAWXJoJN9KIZbT2LXlukwphYTA==
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    prop-types "^15.6.2"
-
-react@^16.14.0, react@^16.7.0:
+react@^16.0.0, react@^16.14.0, react@^16.7.0:
   version "16.14.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.14.0.tgz#94d776ddd0aaa37da3eda8fc5b6b18a4c9a3114d"
   integrity sha512-0X2CImDkJGApiAlcf0ODKIneSwBPhqJawOa5wCtKbu7ZECrmS26NvtSILynQ66cgkT/RJ4LidJOc3bUESwmU8g==
@@ -10632,9 +10616,10 @@ stealthy-require@^1.1.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.1.tgz#35b09875b4ff49f26a777e509b3090a3226bf24b"
 
-storybook-router@0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/storybook-router/-/storybook-router-0.3.3.tgz#a70a8e49baee4a2b54e8de8ab632d107d05fcc7b"
+storybook-router@0.3.4:
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/storybook-router/-/storybook-router-0.3.4.tgz#27c0c0de5eafa03b9003a850ac40e2b0c2a3ee65"
+  integrity sha512-WU8kyx06R5zFa3KT1TZey2fOadj0nFhWs5yuq3iVcfSbUhtwSg/QNGF7V6IXjiBOtYqmvN2/hlUnYneC/oQ16w==
   dependencies:
     "@storybook/addon-actions" "^3.2.10"
     prop-types "^15.5.10"
