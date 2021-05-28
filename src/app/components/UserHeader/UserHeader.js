@@ -57,7 +57,7 @@ const Wrapper = styled.div`
     }
 `;
 
-const Container = StyledContainer.extend`
+const Container = styled(StyledContainer)`
     position: relative;
 
     @media (max-width: 768px) {
@@ -106,11 +106,11 @@ const Login = styled.div`
     }
 `;
 
-const Buttons = Flex.extend`
+const Buttons = styled(Flex)`
     margin-top: 24px;
 `;
 
-const Button = StyledButton.extend`
+const Button = styled(StyledButton)`
     width: 167px;
 `;
 

@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import Container from '../Container/Container';
 import tt from 'counterpart';
 
-const Wrapper = Container.extend.attrs({
+const Wrapper = styled(Container).attrs(props => ({
     justify: 'space-between',
     align: 'center',
-})`
+}))`
     background: #ffffff;
     padding: 20px 64px;
 

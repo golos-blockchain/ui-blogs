@@ -1,8 +1,9 @@
+import styled from 'styled-components';
 import Flex from './../Flex';
 
-const Container = Flex.extend.attrs({
+const Container = styled(Flex).attrs(props => ({
     auto: 1
-})`
+}))`
     max-width: 1200px;
     margin: 0 auto;
 
