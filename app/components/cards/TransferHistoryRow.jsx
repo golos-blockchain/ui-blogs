@@ -189,19 +189,21 @@ class TransferHistoryRow extends React.Component {
             description_end += tt('invites_jsx.hist_invite2') + data.balance;            
         }
 
-        else if (type === 'invite_claim') {
-            description_start += tt('invites_jsx.hist_claimed');
-            code_key = PrivateKey.fromWif(data.invite_secret).toPublicKey().toString();
-        }
-
-        else if (type === 'worker_reward') {
-            description_start += tt('transferhistoryrow_jsx.funded_workers') + data.reward + tt('transferhistoryrow_jsx.for');
-            other_account = data.worker_request_author + "/" + data.worker_request_permlink;
-        }
-
         else if (type === 'asset_issue') {
             description_start += tt('transferhistoryrow_jsx.issue') + data.amount + tt('transferhistoryrow_jsx.to_account');
             other_account = data.to;
+        }
+
+        else if (type === 'convert_sbd_debt') {
+            description_start += tt('transferhistoryrow_jsx.orders_canceled') + data.sbd_amount + tt('transferhistoryrow_jsx.to_golos_tokens');
+        }
+
+        else if (type === 'convert') {
+            description_start += tt('transferhistoryrow_jsx.conversion_started') + data.amount + tt('transferhistoryrow_jsx.to_golos_tokens');
+        }
+
+        else if (type === 'fill_convert_request') {
+            description_start += data.amount_in + tt('transferhistoryrow_jsx.were_converted') + data.amount_out;
         }
 
         else {

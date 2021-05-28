@@ -312,7 +312,7 @@ class UserWallet extends React.Component {
                 <div className="column small-12 medium-8">
                     {VESTING_TOKEN.toUpperCase()}<br />
                     <span className="secondary">{powerTip.split(".").map((a, index) => {if (a) {return <div key={index}>{a}.</div>;} return null;})}
-                    <Link to="/workers">{tt('userwallet_jsx.worker_foundation')}</Link> | {tt('userwallet_jsx.top_dpos')} - <a target="_blank" href="https://dpos.space/golos/top/gp">dpos.space <Icon name="extlink" /></a></span>
+                    <Link to="/workers">{tt('userwallet_jsx.worker_foundation')}</Link> | {tt('userwallet_jsx.top_dpos')} - <a target="_blank" rel="noopener noreferrer" href="https://dpos.space/golos/top/gp">dpos.space <Icon name="extlink" /></a></span>
                 </div>
                 <div className="column small-12 medium-4">
                     {isMyAccount
@@ -444,7 +444,7 @@ class UserWallet extends React.Component {
             <div className="row">
                 <div className="column small-12">
                     {/** history */}
-                    <span className="secondary" style={{ float: 'right' }}><Icon name="new/search" /> {tt('userwallet_jsx.history_viewing')}: <a target="_blank" href={"https://golos.cf/@" + account.get('name')}>golos.cf <Icon name="extlink" /></a> / <a target="_blank" href={"https://explorer.golos.id/#account/" + account.get('name')}>explorer <Icon name="extlink" /></a></span>
+                    <span className="secondary" style={{ float: 'right' }}><Icon name="new/search" /> {tt('userwallet_jsx.history_viewing')}: <a target="_blank" rel="noopener noreferrer" href={"https://golos.cf/@" + account.get('name')}>golos.cf <Icon name="extlink" /></a> / <a target="_blank" href={"https://explorer.golos.id/#account/" + account.get('name')}>explorer <Icon name="extlink" /></a></span>
                     <h4>{tt('userwallet_jsx.history')}</h4>
                     <table>
                         <tbody>

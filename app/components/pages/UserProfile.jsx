@@ -480,7 +480,7 @@ export default class UserProfile extends React.Component {
                             {name || account.name}{' '}
                             {genderIcon}
                             <Tooltip t={tt('user_profile.this_is_users_reputations_score_it_is_based_on_history_of_votes', {name: accountname})}>
-                                <span className="UserProfile__rep">(<a target="_blank" href="https://dpos.space/golos/top/reputation">{rep}</a>)</span>
+                                <span className="UserProfile__rep">(<a target="_blank" rel="noopener noreferrer" href="https://dpos.space/golos/top/reputation">{rep}</a>)</span>
                             </Tooltip>
                         </h1>
 
