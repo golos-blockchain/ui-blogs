@@ -61,7 +61,7 @@ class PostsList extends PureComponent {
         this.attachScrollListener();
     }
 
-    componentWillUpdate() {
+    UNSAFE_componentWillUpdate() {
         const path = `${location.pathname}${location.search}${location.hash}`;
         if (this.state.showPost && path !== this.post_url) {
             this.setState({ showPost: null });
@@ -87,7 +87,7 @@ class PostsList extends PureComponent {
         }
     }
 
-    componentWillReceiveProps() {
+    UNSAFE_componentWillReceiveProps() {
         const visited = getVisitedPosts();
         if (this.state.visitedPosts !== visited) {
             this.setState({ visitedPosts: visited });

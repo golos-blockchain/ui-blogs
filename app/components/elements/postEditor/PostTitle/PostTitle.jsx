@@ -9,7 +9,7 @@ export default class PostTitle extends PureComponent {
         dotAlertAlreadyShown: false,
     };
 
-    componentWillReceiveProps(newProps) {
+    UNSAFE_componentWillReceiveProps(newProps) {
         const { dotAlertAlreadyShown, showDotAlert } = this.state;
 
         if (

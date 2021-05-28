@@ -10,7 +10,7 @@ const ChannelsList = styled.div`
     background-color: #f9f9f9;
 `;
 
-const Wrapper = Container.extend`
+const Wrapper = styled(Container)`
     padding: 60px 24px;
 
     @media (max-width: 1200px) {
@@ -36,10 +36,10 @@ const Title = styled.p`
     }
 `;
 
-const CardsWrapper = Flex.extend.attrs({
+const CardsWrapper = styled(Flex).attrs(props => ({
     justify: 'flex-start',
     wrap: 'wrap',
-})`
+}))`
     margin: -10px;
 `;
 

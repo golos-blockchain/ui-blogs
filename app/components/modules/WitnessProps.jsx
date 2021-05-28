@@ -4,7 +4,6 @@ import transaction from 'app/redux/Transaction'
 import reactForm from 'app/utils/ReactForm';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import tt from 'counterpart';
-import o2j from 'shared/clash/object2json'
 import WitnessSettings from 'app/components/elements/WitnessSettings';
 
 class WitnessProps extends React.Component {

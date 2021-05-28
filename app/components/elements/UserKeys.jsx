@@ -31,7 +31,7 @@ class UserKeys extends Component {
             }
         })
     }
-    componentWillUpdate(nextProps, nextState) {
+    UNSAFE_componentWillUpdate(nextProps, nextState) {
         const {wifShown, setWifShown} = nextProps
         let hasWif = false
         keyTypes.forEach(key => {

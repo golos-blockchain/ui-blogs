@@ -16,7 +16,7 @@ import {APP_NAME} from 'app/client_config';
 import cookie from "react-cookie";
 import { SELECT_TAGS_KEY } from 'app/client_config';
 import transaction from 'app/redux/Transaction'
-import o2j from 'shared/clash/object2json'
+import { getMetadataReliably } from 'app/utils/NormalizeProfile';
 
 class PostsIndex extends React.Component {
 
@@ -86,9 +86,7 @@ class PostsIndex extends React.Component {
     updateSubscribe() {
         const {accounts, username} = this.props
         const account = accounts.get(username) ? accounts.get(username).toJS() : {}
-        let metaData = account ? o2j.ifStringParseJSON(account.json_metadata) : {}
-        if (!metaData)
-            metaData = {}
+        let metaData = account ? getMetadataReliably(account.json_metadata) : {}
         if (!metaData.profile)
             metaData.profile = {}
 
@@ -194,7 +192,7 @@ class PostsIndex extends React.Component {
         const {showSpam} = this.state;
         const account = this.props.username && this.props.accounts.get(this.props.username) || null
         const json_metadata = account ? account.toJS().json_metadata : {}
-        const metaData = account ? o2j.ifStringParseJSON(json_metadata) : {}
+        const metaData = account ? getMetadataReliably(json_metadata) : {}
         const active_user = this.props.username || ''
 
         let promo_posts = []
@@ -271,7 +269,7 @@ class PostsIndex extends React.Component {
                     <div className="sticky-right-ad">
 
                     <p align="center">
-                        <a target="_blank" rel="noopener noreferrer" href={"https://coins.black/xchange_SBERRUB_to_GLS/?summ=1000&schet2=" + active_user + "&lock2=true"}><img src='https://i.imgur.com/tN2U24r.jpg' width='220' height='150' /></a>
+                        <a target="_blank" href={"https://coins.black/xchange_SBERRUB_to_GLS/?summ=1000&schet2=" + active_user + "&lock2=true"}><img src='https://i.imgur.com/tN2U24r.jpg' width='220' height='150' /></a>
                         <span className="strike"><a target="_blank" href="/@on0tole/pryamaya-pokupka-tokenov-golos-za-rubli-i-ne-tolko">{tt('g.more_hint')}</a></span>
                     </p>
 

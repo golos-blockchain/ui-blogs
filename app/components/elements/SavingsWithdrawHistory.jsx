@@ -19,7 +19,7 @@ class SavingsWithdrawHistory extends React.Component {
         this.loadHistory()
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.loadHistory(false, nextProps)
     }
 

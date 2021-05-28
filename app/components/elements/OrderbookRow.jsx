@@ -30,7 +30,7 @@ export default class OrderBookRow extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (this.state.rowIndex !== nextProps.index) {
             return this.setState({
                 rowIndex: nextProps.index

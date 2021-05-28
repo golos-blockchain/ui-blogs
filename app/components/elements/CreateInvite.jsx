@@ -37,9 +37,6 @@ class CreateInvite extends Component {
         this.generateKeys()
     }
 
-    componentWillUpdate(nextProps, nextState) {
-    }
-
     generateKeys = () => {
         const pk = PrivateKey.fromSeed(Math.random().toString());
         this.state.public_key.props.onChange(pk.toPublicKey().toString());

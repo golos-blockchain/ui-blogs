@@ -43,7 +43,7 @@ class LocalizedCurrency extends React.Component {
     })
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     const {fetching} = this.props;
     if (fetching !== nextProps.fetching) {
       const xchangePicked = this.props.currency ? this.props.currency : localStorage.getItem('xchange.picked') || DEBT_TOKEN_SHORT;

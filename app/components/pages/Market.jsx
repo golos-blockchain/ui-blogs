@@ -43,7 +43,7 @@ class Market extends Component {
         sym2_list_page: 0
     };
 
-    componentWillReceiveProps(np) {
+    UNSAFE_componentWillReceiveProps(np) {
         if (!this.props.ticker && np.ticker) {
             const { lowest_ask, highest_bid } = np.ticker;
 

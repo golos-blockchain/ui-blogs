@@ -23,7 +23,7 @@ class Services extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <h4><a target="_blank" href="https://dpos.space/golos/"><Icon name="new/monitor" /> Сервисы dpos.space</a></h4>
+                                <h4><a target="_blank" rel="noopener noreferrer" href="https://dpos.space/golos/"><Icon name="new/monitor" /> Сервисы dpos.space</a></h4>
                                 Разработчик сервисов <a target="_blank" href="/@denis-skripnik">@denis-skripnik</a>
                                 </div>
                                 <div className='column large-12 medium-12 small-12'>
@@ -44,7 +44,7 @@ class Services extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <h4><a target="_blank" href="https://golos.cf/"><Icon name="new/monitor" /> Сервисы golos.cf</a></h4>
+                                <h4><a target="_blank" rel="noopener noreferrer" href="https://golos.cf/"><Icon name="new/monitor" /> Сервисы golos.cf</a></h4>
                                 Разработчик сервисов <a target="_blank" href="/@vik">@vik</a>
                                 </div>
                                 <div className=' column large-12 medium-12 small-12'>

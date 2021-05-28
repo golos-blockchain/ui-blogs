@@ -110,11 +110,11 @@ export function* fetchState(location_change_action) {
                                 case 'withdraw_vesting':
                                 case 'asset_issue':
                                 case 'invite':
-                                case 'invite_claim':
                                 case 'transfer_to_savings':
                                 case 'transfer_from_savings':
-                                case 'worker_reward':
-                                case 'internal_transfer':
+                                case 'convert_sbd_debt':
+                                case 'convert':
+                                case 'fill_convert_request':
                                     state.accounts[uname].transfer_history.push(operation)
                                 break
 

@@ -21,7 +21,7 @@ export default class ConversationListItem extends React.Component {
             });
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         const { data } = nextProps;
         if (data && data.avatar && data.avatar !== this.props.data.avatar)
             this.setState({

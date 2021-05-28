@@ -35,7 +35,7 @@ class Header extends React.Component {
         this.hideSubheader = this.hideSubheader.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.location.pathname !== this.props.location.pathname) {
             const route = resolveRoute(nextProps.location.pathname);
             if (route && route.page === 'PostsIndex' && route.params && route.params.length > 0) {
@@ -208,7 +208,7 @@ class Header extends React.Component {
                     <div className={'Header__sub-nav show-for-medium hide-for-small ' + (this.state.subheader_hidden ? ' hidden' : '')}>
                         <div className="row">
                             <div className="columns">
-                                <span className="question"><a target="_blank" href="https://golos.chatbro.com"><Icon name="new/telegram" />&nbsp;&nbsp;{tt('g.to_ask')}</a></span>
+                                <span className="question"><a target="_blank" rel="noopener noreferrer" href="https://golos.chatbro.com"><Icon name="new/telegram" />&nbsp;&nbsp;{tt('g.to_ask')}</a></span>
                                 <HorizontalMenu items={sort_order_menu_horizontal} />
                             </div>
                         </div>

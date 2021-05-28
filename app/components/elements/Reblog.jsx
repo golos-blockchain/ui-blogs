@@ -28,7 +28,7 @@ export default class Reblog extends React.Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if(nextProps.account) {
             this.setState({active: this.isReblogged(nextProps.account)})
         }

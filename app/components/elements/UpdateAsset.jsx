@@ -33,12 +33,6 @@ class UpdateAsset extends Component {
         this.initForm(props)
     }
 
-    componentDidMount() {
-    }
-
-    componentWillUpdate(nextProps, nextState) {
-    }
-
     initForm(props) {
         const fields = ['fee_percent', 'symbols_whitelist', 'description', 'image_url']
         let fee_percent = props.asset.fee_percent

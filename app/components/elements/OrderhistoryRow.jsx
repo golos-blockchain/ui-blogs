@@ -23,7 +23,7 @@ export default class OrderhistoryRow extends React.Component {
         }, 1000);
     }
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         if (this.state.rowIndex !== nextProps.index) {
             return this.setState({
                 rowIndex: nextProps.index

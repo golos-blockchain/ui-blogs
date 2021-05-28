@@ -152,6 +152,9 @@ export function getProfileImage(account, size = 48) {
     return require('app/assets/images/user.png');
 }
 
+/**
+ * Returns last data when account last seen website.
+ */
 export function getLastSeen(account) {
     const dates = [
         account.last_bandwidth_update, // all operations
@@ -159,4 +162,18 @@ export function getLastSeen(account) {
     ];
     const last = max(dates);
     return last.startsWith('19') ? null : last;
+}
+
+/**
+ * Parses json_metadata string to object. If it cannot be parsed to object, creates new empty object, in order to fix it. So this method is reliably.
+ */
+export function getMetadataReliably(json_metadata) {
+    if (typeof json_metadata === 'object')
+        return json_metadata;
+    try {
+        const obj = JSON.parse(json_metadata);
+        return (typeof obj === 'object') ? obj : {};
+    } catch (e) {
+        return {};
+    }
 }
