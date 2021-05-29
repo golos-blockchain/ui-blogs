@@ -44,10 +44,6 @@ export default {
             cb(null, [require('@pages/ChangePasswordPage')]);
         } else if (route.page === 'CreateAccount') {
             cb(null, [require('@pages/CreateAccount')]);
-        } else if (route.page === 'RecoverAccountStep1') {
-            cb(null, [require('@pages/RecoverAccountStep1')]);
-        } else if (route.page === 'RecoverAccountStep2') {
-            cb(null, [require('@pages/RecoverAccountStep2')]);
         } else if (route.page === 'Witnesses') {
             cb(null, [require('@pages/WitnessesLoader')]);
         } else if (route.page === 'Workers') {

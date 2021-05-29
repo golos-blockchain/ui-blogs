@@ -108,8 +108,6 @@ class Header extends React.Component {
             page_title = tt('header_jsx.change_account_password');
         } else if (route.page == 'CreateAccount') {
             page_title = tt('header_jsx.create_account');
-        } else if (route.page == 'RecoverAccountStep1' || route.page == 'RecoverAccountStep2') {
-            page_title = tt('header_jsx.stolen_account_recovery');
         } else if (route.page === 'UserProfile') {
             user_name = route.params[0].slice(1);
             const acct_meta = this.props.account_meta.getIn([user_name]);

@@ -18,7 +18,6 @@ export function* transactionWatches() {
     yield fork(watchForBroadcast);
     yield fork(watchForUpdateAuthorities);
     yield fork(watchForUpdateMeta);
-    yield fork(watchForRecoverAccount);
 }
 
 export function* watchForBroadcast() {
@@ -29,9 +28,6 @@ export function* watchForUpdateAuthorities() {
 }
 export function* watchForUpdateMeta() {
     yield takeEvery('transaction/UPDATE_META', updateMeta);
-}
-export function* watchForRecoverAccount() {
-    yield takeEvery('transaction/RECOVER_ACCOUNT', recoverAccount);
 }
 
 const hook = {
@@ -595,66 +591,6 @@ function slug(text) {
 }
 
 const pwPubkey = (name, pw, role) => auth.wifToPublic(auth.toWif(name, pw.trim(), role))
-
-function* recoverAccount({payload: {account_to_recover, old_password, new_password, onError, onSuccess}}) {
-    const [account] = yield call([api, api.getAccountsAsync], [account_to_recover])
-    if(!account) {
-        onError('Unknown account ' + account)
-        return
-    }
-    if(auth.isWif(new_password)) {
-        onError('Your new password should not be a WIF')
-        return
-    }
-    if(auth.isPubkey(new_password)) {
-        onError('Your new password should not be a Public Key')
-        return
-    }
-
-    const oldOwnerPrivate = auth.isWif(old_password) ? old_password :
-        auth.toWif(account_to_recover, old_password, 'owner')
-
-    const oldOwner = auth.wifToPublic(oldOwnerPrivate)
-
-    const newOwnerPrivate = auth.toWif(account_to_recover, new_password.trim(), 'owner')
-    const newOwner = auth.wifToPublic(newOwnerPrivate)
-    const newActive = pwPubkey(account_to_recover, new_password.trim(), 'active')
-    const newPosting = pwPubkey(account_to_recover, new_password.trim(), 'posting')
-    const newMemo = pwPubkey(account_to_recover, new_password.trim(), 'memo')
-
-    const new_owner_authority = {weight_threshold: 1, account_auths: [],
-        key_auths: [[newOwner, 1]]}
-
-    const recent_owner_authority = {weight_threshold: 1, account_auths: [],
-        key_auths: [[oldOwner, 1]]}
-
-    try {
-        yield broadcast.sendAsync({extensions: [], operations: [
-            ['recover_account', {
-                account_to_recover,
-                new_owner_authority,
-                recent_owner_authority,
-            }]
-        ]}, [oldOwnerPrivate, newOwnerPrivate])
-
-        // change password
-        // change password probably requires a separate transaction (single trx has not been tested)
-        const {json_metadata} = account
-        yield broadcast.sendAsync({extensions: [], operations: [
-            ['account_update', {
-                account: account.name,
-                active: {weight_threshold: 1, account_auths: [], key_auths: [[newActive, 1]]},
-                posting: {weight_threshold: 1, account_auths: [], key_auths: [[newPosting, 1]]},
-                memo_key: newMemo,
-                json_metadata,
-            }]
-        ]}, [newOwnerPrivate])
-        if(onSuccess) onSuccess()
-    } catch(error) {
-        console.error('Recover account', error)
-        if(onError) onError(error)
-    }
-}
 
 /** auths must start with most powerful key: owner for example */
 // const twofaAccount = 'steem'

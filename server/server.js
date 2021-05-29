@@ -9,7 +9,6 @@ import favicon from 'koa-favicon';
 import staticCache from 'koa-static-cache';
 import useRedirects from './redirects';
 import useGeneralApi from './api/general';
-import useAccountRecoveryApi from './api/account_recovery';
 import useNotificationsApi from './api/notifications';
 import useRegistrationApi from './api/registration';
 import useUserJson from './json/user_json';
@@ -189,8 +188,6 @@ useRedirects(app);
 useRegistrationApi(app);
 useUserJson(app);
 usePostJson(app);
-
-useAccountRecoveryApi(app);
 useGeneralApi(app);
 useNotificationsApi(app);
 

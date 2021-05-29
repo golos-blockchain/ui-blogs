@@ -44,10 +44,6 @@ class CheckLoginOwner extends React.Component {
         const key = `${username}_previous_owner_authority_last_valid_time`
         return key
     }
-    recover = () => {
-        this.hide()
-        browserHistory.push('/recover_account_step_1')
-    }
     onUnderstood = e => {
         const understood = e.target.checked
         console.log('understood', understood)
@@ -66,13 +62,10 @@ class CheckLoginOwner extends React.Component {
                 <CloseButton onClick={this.hide} />
                 <h3>{tt('postfull_jsx.account_updated')}</h3>
                 <p>
-                    <span className="warning uppercase">{tt('g.warning')}:</span> {tt('postfull_jsx.your_password_permissions_were_reduced')} <TimeAgoWrapper date={last_valid_time} />. {tt('postfull_jsx.if_you_did_not_make_this_change') + ' '} <a onClick={this.recover}>{tt('postfull_jsx.recover_your_account')}</a>.
+                    <span className="warning uppercase">{tt('g.warning')}:</span> {tt('postfull_jsx.your_password_permissions_were_reduced')} <TimeAgoWrapper date={last_valid_time} />.
                 </p>
                 <p>
                     {tt('postfull_jsx.owhership_changed_on')}: {last_valid_date.toString()}
-                </p>
-                <p>
-                    {tt('deadline_for_recovery_is' + ' ')} <u><TimeAgoWrapper date={deadline} /></u>.
                 </p>
                 <p>
                     <input type="checkbox" onChange={this.onUnderstood} />&nbsp;&nbsp;

@@ -80,17 +80,6 @@ async function appRender(ctx) {
             }
         }
 
-        if (ctx.session.arec) {
-            const account_recovery_record = await models.AccountRecoveryRequest.findOne({
-                attributes: ['id', 'account_name', 'status', 'provider'],
-                where: {id: ctx.session.arec, status: 'confirmed'}
-            });
-
-            if (account_recovery_record) {
-                offchain.recover_account = account_recovery_record.account_name;
-            }
-        }
-
         const start = new Date()
         const {
           body,
