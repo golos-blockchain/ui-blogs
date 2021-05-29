@@ -480,20 +480,16 @@ export function* fetchData(action) {
         call_name = PUBLIC_API.trending;
     } else if (order === 'promoted') {
         call_name = PUBLIC_API.promoted;
-    } else if( order === 'active' /*|| order === 'updated'*/) {
+    } else if( order === 'active' ) {
         call_name = PUBLIC_API.active;
-    } else if( order === 'cashout' ) {
-        call_name = PUBLIC_API.cashout;
     } else if( order === 'payout' ) {
         call_name = PUBLIC_API.payout;
-    } else if( order === 'created' || order === 'recent' ) {
+    } else if( order === 'created' ) {
         call_name = PUBLIC_API.created;
     } else if( order === 'responses' ) {
         call_name = PUBLIC_API.responses;
     } else if( order === 'donates' ) {
         call_name = PUBLIC_API.donates;
-    } else if( order === 'votes' ) {
-        call_name = PUBLIC_API.votes;
     } else if( order === 'hot' ) {
         call_name = PUBLIC_API.hot;
     } else if( order === 'by_feed' ) {
