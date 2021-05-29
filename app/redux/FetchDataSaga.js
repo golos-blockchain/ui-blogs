@@ -228,9 +228,11 @@ export function* fetchState(location_change_action) {
             const category = parts[0]
             const permlink = parts[2]
     
+            console.time('getContent');
             const curl = `${account}/${permlink}`
             state.content[curl] = yield call([api, api.getContentAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT)
             accounts.add(account)
+            console.timeEnd('getContent');
 
             // Filtering comments from authors with a negative reputation
             // const replies =  yield call([api, api.getAllContentRepliesAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT, 0, [], [], true)
