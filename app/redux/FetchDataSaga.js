@@ -232,6 +232,8 @@ export function* fetchState(location_change_action) {
             state.content[curl] = yield call([api, api.getContentAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT)
             accounts.add(account)
 
+            yield put(GlobalReducer.actions.receiveState(state))
+
             // Filtering comments from authors with a negative reputation
             // const replies =  yield call([api, api.getAllContentRepliesAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT, 0, [], [], true)
             const replies =  yield call([api, api.getAllContentRepliesAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT)
@@ -299,6 +301,8 @@ export function* fetchState(location_change_action) {
             if (localStorage.getItem('invite')) {
                 state.assets = (yield call([api, api.getAccountsBalances], [localStorage.getItem('invite')]))[0]
             }
+
+            console.log('Full post load');
         } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
             state.witnesses = {};
             const witnesses =  yield call([api, api.getWitnessesByVoteAsync], '', 100)
