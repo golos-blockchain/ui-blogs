@@ -232,6 +232,17 @@ export function* fetchState(location_change_action) {
             state.content[curl] = yield call([api, api.getContentAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT)
             accounts.add(account)
 
+            state.content[curl].donate_list = [];
+            if (state.content[curl].donates != '0.000 GOLOS') {
+                const donates = yield call([api, api.getDonatesAsync], false, {author: account, permlink: permlink}, '', '', 20, 0, true)
+                state.content[curl].donate_list = donates;
+            }
+            state.content[curl].donate_uia_list = [];
+            if (state.content[curl].donates_uia != 0) {
+                state.content[curl].donate_uia_list = yield call([api, api.getDonatesAsync], true, {author: account, permlink: permlink}, '', '', 20, 0, true)
+            }
+            state.content[curl].confetti_active = false
+
             yield put(GlobalReducer.actions.receiveState(state))
 
             // Filtering comments from authors with a negative reputation
@@ -259,17 +270,6 @@ export function* fetchState(location_change_action) {
                 }
                 state.content[link].confetti_active = false
             }
-
-            state.content[curl].donate_list = [];
-            if (state.content[curl].donates != '0.000 GOLOS') {
-                const donates = yield call([api, api.getDonatesAsync], false, {author: account, permlink: permlink}, '', '', 20, 0, true)
-                state.content[curl].donate_list = donates;
-            }
-            state.content[curl].donate_uia_list = [];
-            if (state.content[curl].donates_uia != 0) {
-                state.content[curl].donate_uia_list = yield call([api, api.getDonatesAsync], true, {author: account, permlink: permlink}, '', '', 20, 0, true)
-            }
-            state.content[curl].confetti_active = false
 
             let args = { truncate_body: 128, select_categories: [category], filter_tag_masks: ['fm-'] };
             let prev_posts = yield call([api, api[PUBLIC_API.created]], {limit: 4, start_author: account, start_permlink: permlink, select_authors: [account], ...args});
