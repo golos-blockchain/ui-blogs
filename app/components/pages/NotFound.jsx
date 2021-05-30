@@ -30,10 +30,10 @@ class NotFound extends React.Component {
                            or check out some great posts.
                         </p>
                         <ul className="NotFound__menu">
+                          <li><a href="/trending">trending posts</a></li>
                           <li><a href="/created">new posts</a></li>
                           <li><a href="/responses">discussed posts</a></li>
-                          <li><a href="/trending">trending posts</a></li>
-                          <li><a href="/promoted">promoted posts</a></li>
+                          <li><a href="/forums">forums posts</a></li>
                         </ul>
                     </div>
                 </div>

@@ -4,6 +4,7 @@ import Comment from 'app/components/cards/Comment';
 import PostFull from 'app/components/cards/PostFull';
 import {connect} from 'react-redux';
 import {sortComments} from 'app/utils/comments';
+import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import FoundationDropdownMenu from 'app/components/elements/FoundationDropdownMenu';
 import IllegalContentMessage from 'app/components/elements/IllegalContentMessage';
 import {Set} from 'immutable'
@@ -53,7 +54,7 @@ class Post extends React.Component {
     }
 
     render() {
-        const {ignoring, content, negativeCommenters} = this.props
+        const {ignoring, content, negativeCommenters, loading} = this.props
         const {showNegativeComments, commentHidden, showAnyway} = this.state
         let { post } = this.props;
         const { aiPosts } = this.props;
@@ -157,10 +158,10 @@ class Post extends React.Component {
                             or check out some great posts.
                         </p>
                         <ul className="NotFound__menu">
+                            <li><a href="/trending">trending posts</a></li>
                             <li><a href="/created">new posts</a></li>
                             <li><a href="/responses">discussed posts</a></li>
-                            <li><a href="/trending">trending posts</a></li>
-                            <li><a href="/promoted">promoted posts</a></li>
+                            <li><a href="/forums">forums posts</a></li>
                         </ul>
                     </div>
                 </div>
@@ -187,6 +188,11 @@ class Post extends React.Component {
                 <div id="comments" className="Post_comments row hfeed">
                     <div className="column large-12">
                         <div className="Post_comments__content">
+                            {(loading && dis.get('children')) ? (
+                                <center>
+                                    <LoadingIndicator type="circle" size="25px" />
+                                </center>
+                            ) : null}
                             {positiveComments.length ?
                             (<div className="Post__comments_sort_order float-right">
                                 {tt('post_jsx.sort_order')}: &nbsp;
@@ -235,6 +241,7 @@ export default connect((state, props) => {
 
     return {
         content: state.global.get('content'),
+        loading: state.app.get('loading'),
         current_user,
         ignoring,
         negativeCommenters

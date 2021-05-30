@@ -99,7 +99,7 @@ class ChangePassword extends React.Component {
             console.error('Missing priorAuthKey')
 
         const error2 = /Missing Owner Authority/.test(error) ?
-            <span>{tt('g.this_is_wrong_password')}. {tt('g.do_you_need_to') + ' '}<a href="/recover_account_step_1">{tt('g.recover_your_account')}</a>?</span> :
+            <span>{tt('g.this_is_wrong_password')}.</span> :
             error;
 
         const {accountName, nameError} = this.state;
@@ -142,7 +142,6 @@ class ChangePassword extends React.Component {
                     </div>
                     <br />
                     <label>
-                        {/* <div className="float-right"><a href="/recover_account_step_1">{tt('g.recover_password')}</a></div> */}
                         {tt('g.current_password')}
                         <br />
                         <input {...cleanReduxInput(password)} type="password" disabled={loading} />

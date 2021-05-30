@@ -94,7 +94,6 @@ class Header extends React.Component {
                 if(prefix == 'created') prefix = tt('header_jsx.created')
                 if(prefix == 'responses') prefix = tt('header_jsx.responses')
                 if(prefix == 'trending') prefix = tt('header_jsx.trending')
-                if(prefix == 'promoted') prefix = tt('header_jsx.promoted')
                 if(prefix == 'donates') prefix = tt('header_jsx.donates')
                 if(prefix == 'forums') prefix = tt('header_jsx.forums')
                 page_title = `${prefix} ${topic}${type}`;
@@ -108,8 +107,6 @@ class Header extends React.Component {
             page_title = tt('header_jsx.change_account_password');
         } else if (route.page == 'CreateAccount') {
             page_title = tt('header_jsx.create_account');
-        } else if (route.page == 'RecoverAccountStep1' || route.page == 'RecoverAccountStep2') {
-            page_title = tt('header_jsx.stolen_account_recovery');
         } else if (route.page === 'UserProfile') {
             user_name = route.params[0].slice(1);
             const acct_meta = this.props.account_meta.getIn([user_name]);
@@ -160,8 +157,7 @@ class Header extends React.Component {
             ['responses', tt('main_menu.discussion')],
             ['trending', tt('main_menu.trending')],
             ['donates', tt('main_menu.donates')],
-            ['forums', tt('main_menu.forums')],
-            ['promoted', tt('g.promoted')],
+            ['forums', tt('main_menu.forums')]
         ];
         if (current_account_name) sort_orders.unshift(['home', tt('header_jsx.home')]);
         const sort_order_menu = sort_orders.filter(so => so[0] !== sort_order).map(so => ({link: sortOrderToLink(so[0], topic_original_link, current_account_name), value: capitalizeFirstLetter(so[1])}));
@@ -171,9 +167,8 @@ class Header extends React.Component {
             ['created', tt('g.new')],
             ['responses', tt('main_menu.discussion')],
             ['trending', tt('main_menu.trending')],
-            ['promoted', tt('g.promoted')],
             ['donates', tt('main_menu.donates')],
-            ['forums', tt('main_menu.forums')],
+            ['forums', tt('main_menu.forums')]
         ];
         if (current_account_name) sort_orders_horizontal.unshift(['home', tt('header_jsx.home')]);
         const sort_order_menu_horizontal = sort_orders_horizontal.map(so => {

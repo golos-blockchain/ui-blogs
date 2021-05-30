@@ -55,7 +55,6 @@ export const IGNORE_TAGS = ['test', 'ru--test']
 export const SELECT_TAGS_KEY = 'gls.select.tags'
 export const PUBLIC_API = {
   created:   'getDiscussionsByCreatedAsync',
-  recent:    'getDiscussionsByCreatedAsync',
   hot:       'getDiscussionsByHotAsync',
   trending:  'getDiscussionsByTrendingAsync',
   promoted:  'getDiscussionsByPromotedAsync',
@@ -63,8 +62,6 @@ export const PUBLIC_API = {
   responses: 'getDiscussionsByChildrenAsync',
   donates:   'getDiscussionsByDonatesAsync',
   forums:   'getAllDiscussionsByActiveAsync',
-  votes:     'getDiscussionsByVotesAsync',
-  cashout:   'getDiscussionsByCashoutAsync',
   payout:     'getDiscussionsByPayoutAsync',
   author:     'getDiscussionsByBlogAsync',
 }
