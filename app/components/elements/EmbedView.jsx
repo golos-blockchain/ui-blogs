@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
-import Remarkable from 'remarkable'
+import { Remarkable } from 'remarkable';
+import { linkify } from 'remarkable/linkify';
 
 const remarkable = new Remarkable({
     breaks: true,
-    linkify: true
-})
+}).use(linkify);
 
 function VideoContainer({url, content}) {
     return (

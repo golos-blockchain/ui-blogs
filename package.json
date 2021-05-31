@@ -121,7 +121,7 @@
     "redux-form": "^5.3.4",
     "redux-modules": "0.0.5",
     "redux-saga": "^0.16.0",
-    "remarkable": "1.7.3",
+    "remarkable": "2.0.1",
     "sanitize-html": "^1.14.1",
     "sass-loader": "6.0.6",
     "secure-random": "^1.1.1",

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Remarkable from 'remarkable';
+import { Remarkable } from 'remarkable';
 import cn from 'classnames';
 import tt from 'counterpart';
 import sanitize from 'sanitize-html';
@@ -19,9 +19,6 @@ export function getRemarkable() {
         remarkable = new Remarkable({
             html: true,
             breaks: true,
-            // Linkify is done locally
-            // Issue: https://github.com/jonschlinkert/remarkable/issues/142#issuecomment-221546793
-            linkify: false,
             typographer: false,
             quotes: '“”‘’',
         });
