@@ -12,12 +12,15 @@ class Tarantool {
         const port = config.get(key + '.port');
         const username = config.get(key + '.username');
         const password = config.get(key + '.password');
-        const connection = this.connection = new TarantoolDriver({host, port});
+        const connection = this.connection = new TarantoolDriver({
+            host, port, username, password,
+            retryStrategy: null,
+            lazyConnect: true,
+        });
         this.ready_promise = new Promise((resolve, reject) => {
             connection.connect()
-            .then(() => connection.auth(username, password))
-            .then(() => resolve())
-            .catch(error => resolve(false));
+                .then(() => resolve())
+                .catch(error => resolve(false));
         });
     }
 

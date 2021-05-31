@@ -2483,10 +2483,6 @@ bindings@^1.5.0:
   dependencies:
     file-uri-to-path "1.0.0"
 
-bitwise-xor@0.0.0:
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/bitwise-xor/-/bitwise-xor-0.0.0.tgz#040a8172b5bb8cc562b0b7119f230b2a1a780e3d"
-
 blacklist@^1.1.2:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/blacklist/-/blacklist-1.1.4.tgz#b2dd09d6177625b2caa69835a37b28995fa9a2f2"
@@ -3990,6 +3986,11 @@ delayed-stream@~1.0.0:
 delegates@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/delegates/-/delegates-1.0.0.tgz#84c6e159b81904fdca59a0ef44cd870d31250f9a"
+
+denque@^1.2.1:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/denque/-/denque-1.5.0.tgz#773de0686ff2d8ec2ff92914316a47b73b1c73de"
+  integrity sha512-CYiCSgIF1p6EUByQPlGkKnP1M9g0ZV3qMIrqMqZqdwazygIA/YP2vrbcyl1h/WppKJTdl1F85cXIle+394iDAQ==
 
 depd@1.1.1:
   version "1.1.1"
@@ -11590,14 +11591,15 @@ tar@^6.0.2:
     mkdirp "^1.0.3"
     yallist "^4.0.0"
 
-tarantool-driver@^2.0.1:
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/tarantool-driver/-/tarantool-driver-2.0.5.tgz#ea6605ee4a66128c77a2d38a74fbd3bc612ba4e6"
+tarantool-driver@^3.0.6:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/tarantool-driver/-/tarantool-driver-3.0.6.tgz#e75cf0348daff91ced38220abca84f61a0e2cf43"
+  integrity sha512-dWreDDKRl+/e96aCNTRz19HIgWoHjJg19FY3lgsZyVIWq3eEbOnTHFIrD6+XBYvC1O/cHp+Ww/zRMvd6DH2Wsw==
   dependencies:
-    bitwise-xor "0.0.0"
+    debug "^2.6.8"
+    denque "^1.2.1"
+    lodash "^4.17.4"
     msgpack-lite "^0.1.20"
-    object-assign "^4.1.0"
-    underscore "^1.8.3"
 
 term-size@^1.2.0:
   version "1.2.0"
@@ -11990,10 +11992,6 @@ underscore.string@^3.3.5:
   dependencies:
     sprintf-js "^1.0.3"
     util-deprecate "^1.0.2"
-
-underscore@^1.8.3:
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.9.1.tgz#06dce34a0e68a7babc29b365b8e74b8925203961"
 
 unidecode@0.1.8:
   version "0.1.8"
