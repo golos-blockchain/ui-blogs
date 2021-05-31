@@ -2,7 +2,7 @@ import koa_router from 'koa-router';
 import koa_body from 'koa-body';
 import Tarantool from 'db/tarantool';
 import config from 'config';
-import webPush from 'web-push';
+//import webPush from 'web-push';
 import { checkCSRF } from "server/utils/misc";
 
 function toResArray(result) {

@@ -142,7 +142,6 @@
     "uncontrollable": "^3.3.1",
     "underscore.string": "^3.3.5",
     "url-loader": "^1.0.1",
-    "web-push": "^3.2.3",
     "webpack": "^4.46.0",
     "webpack-isomorphic-tools": "3.0.6",
     "websocket": "^1.0.24",
