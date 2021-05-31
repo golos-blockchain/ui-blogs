@@ -5,7 +5,6 @@ import { browserHistory } from 'react-router';
 import tt from 'counterpart';
 import Icon from 'app/components/elements/Icon';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
-import Remarkable from 'remarkable';
 import remarkableStripper from 'app/utils/RemarkableStripper';
 import sanitize from 'sanitize-html';
 import { detransliterate } from 'app/utils/ParsersAndFormatters';
@@ -16,8 +15,6 @@ import localeRu from 'rc-pagination/lib/locale/ru_RU';
 if (typeof(document) !== 'undefined') require('rc-pagination/assets/index.css');
 let Multiselect;
 if (typeof(document) !== 'undefined') Multiselect = require('multiselect-react-dropdown').Multiselect;
-
-const remarkable = new Remarkable({ html: true, linkify: false })
 
 class Search extends React.Component {
     constructor(props) {

@@ -3,9 +3,10 @@ import links from 'app/utils/Links'
 import sanitize from 'sanitize-html'
 import {htmlDecode} from 'app/utils/Html'
 import { getTags } from 'shared/HtmlReady'
-import Remarkable from 'remarkable'
+import { Remarkable } from 'remarkable';
+import { linkify } from 'remarkable/linkify';
 
-const remarkable = new Remarkable({ html: true, linkify: false })
+const remarkable = new Remarkable({ html: true, }).use(linkify);
 
 export default function extractContent(get, content) {
     const {
