@@ -56,9 +56,9 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     const lcn = vertical ? '' : 'show-for-large';
     const scn = vertical ? '' : 'show-for-medium';
     const nav = navigate || defaultNavigate;
-    const forumlink = <li className={lcn + ' submit-story'}>
-        <a target="blank" href="https://golostalk.com" className={'button small forumlink'}>
-            <Icon name="voters" size="0_95x" />{tt('g.forumlink')}
+    const topbutton = <li className={lcn + ' submit-story'}>
+        <a target="blank" href="https://golostalk.com" className={'button small topbutton'}>
+            <Icon name="voters" size="0_95x" />{tt('g.topbutton')}
         </a>
     </li>;
     const submitStory = <li className={scn + ' submit-story'}>
@@ -104,8 +104,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     if (!loggedIn) {
         additional_menu.push(
             { link: '/login.html', onClick: showLogin, value: tt('g.login'), className: 'show-for-small-only' },
-            { link: "/create_account" + (invite ? ("?invite=" + invite) : ""), value: tt('g.sign_up'), className: 'show-for-small-only' },
-            { link: '#', onClick: toggleNightmode, icon: 'editor/eye', value: tt('g.night_mode') }
+            { link: "/create_account" + (invite ? ("?invite=" + invite) : ""), value: tt('g.sign_up'), className: 'show-for-small-only' }
         )
     }
     additional_menu.push(
@@ -158,7 +157,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
                 {faqItem}
                 {searchItem}
                 <li className="delim show-for-medium" />
-                {forumlink}
+                {topbutton}
                 {submitStory}
                 {!vertical && submitStoryPencil}
                 <li className="delim show-for-medium" />

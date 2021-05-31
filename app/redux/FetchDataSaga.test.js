@@ -9,7 +9,7 @@ chai.use(dirtyChai);
 
 const action = {
     payload: {
-        pathname: '/recent',
+        pathname: '/created',
         search: '',
         action: 'PUSH'
     }

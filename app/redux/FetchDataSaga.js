@@ -228,9 +228,11 @@ export function* fetchState(location_change_action) {
             const category = parts[0]
             const permlink = parts[2]
     
+            console.time('getContent');
             const curl = `${account}/${permlink}`
             state.content[curl] = yield call([api, api.getContentAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT)
             accounts.add(account)
+            console.timeEnd('getContent');
 
             state.content[curl].donate_list = [];
             if (state.content[curl].donates != '0.000 GOLOS') {
@@ -482,20 +484,16 @@ export function* fetchData(action) {
         call_name = PUBLIC_API.trending;
     } else if (order === 'promoted') {
         call_name = PUBLIC_API.promoted;
-    } else if( order === 'active' /*|| order === 'updated'*/) {
+    } else if( order === 'active' ) {
         call_name = PUBLIC_API.active;
-    } else if( order === 'cashout' ) {
-        call_name = PUBLIC_API.cashout;
     } else if( order === 'payout' ) {
         call_name = PUBLIC_API.payout;
-    } else if( order === 'created' || order === 'recent' ) {
+    } else if( order === 'created' ) {
         call_name = PUBLIC_API.created;
     } else if( order === 'responses' ) {
         call_name = PUBLIC_API.responses;
     } else if( order === 'donates' ) {
         call_name = PUBLIC_API.donates;
-    } else if( order === 'votes' ) {
-        call_name = PUBLIC_API.votes;
     } else if( order === 'hot' ) {
         call_name = PUBLIC_API.hot;
     } else if( order === 'by_feed' ) {

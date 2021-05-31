@@ -1,11 +1,11 @@
 export const routeRegex = {
     PostsIndex: /^\/(@[\w\.\d-]+)\/feed\/?$/,
     UserProfile1: /^\/(@[\w\.\d-]+)\/?$/,
-    UserProfile2: /^\/(@[\w\.\d-]+)\/(blog|posts|comments|recommended|transfers|assets|create-asset|invites|curation-rewards|author-rewards|donates-from|donates-to|permissions|created|recent-replies|feed|password|witness|followed|followers|settings)\/??(?:&?[^=&]*=[^=&]*)*$/,
+    UserProfile2: /^\/(@[\w\.\d-]+)\/(blog|posts|comments|transfers|assets|create-asset|invites|curation-rewards|author-rewards|donates-from|donates-to|permissions|created|recent-replies|feed|password|witness|followed|followers|settings)\/??(?:&?[^=&]*=[^=&]*)*$/,
     UserProfile3: /^\/(@[\w\.\d-]+)\/[\w\.\d-]+/,
     UserAssetEndPoints: /^\/(@[\w\.\d-]+)\/assets\/([\w\d.-]+)\/(update|transfer)$/,
-    UserEndPoints: /^(blog|posts|comments|recommended|transfers|assets|create-asset|invites|curation-rewards|author-rewards|donates-from|donates-to|permissions|created|recent-replies|feed|password|witness|followed|followers|settings)$/,
-    CategoryFilters: /^\/(hot|votes|responses|donates|forums|trending|promoted|cashout|payout|payout_comments|created|active)\/?$/ig,
+    UserEndPoints: /^(blog|posts|comments|transfers|assets|create-asset|invites|curation-rewards|author-rewards|donates-from|donates-to|permissions|created|recent-replies|feed|password|witness|followed|followers|settings)$/,
+    CategoryFilters: /^\/(hot|responses|donates|forums|trending|promoted|payout|payout_comments|created|active)\/?$/ig,
     PostNoCategory: /^\/(@[\w\.\d-]+)\/([\w\d-]+)/,
     Post: /^\/([\w\d\-\/]+)\/(\@[\w\d\.-]+)\/([\w\d-]+)\/?($|\?)/,
     WorkerSort: /^\/workers\/([\w\d\-]+)\/?($|\?)/,
@@ -54,12 +54,6 @@ export default function resolveRoute(path)
     }
     if (path === '/create_account') {
         return {page: 'CreateAccount'};
-    }
-    if (path === '/recover_account_step_1') {
-        return {page: 'RecoverAccountStep1'};
-    }
-    if (path === '/recover_account_step_2') {
-        return {page: 'RecoverAccountStep2'};
     }
     if (path === '/market') {
         return {page: 'Market'};
@@ -117,8 +111,8 @@ export default function resolveRoute(path)
     if (match) {
         return {page: 'Post', params: match.slice(1)};
     }
-    match = path.match(/^\/(hot|votes|responses|donates|forums|trending|promoted|cashout|payout|payout_comments|created|active)\/?$/)
-         || decodeURI(path).match(/^\/(hot|votes|responses|donates|forums|trending|promoted|cashout|payout|payout_comments|created|active)\/([\u0400-\u04FF-\w\d-]+)\/?$/)
+    match = path.match(/^\/(hot|responses|donates|forums|trending|promoted|payout|payout_comments|created|active)\/?$/)
+         || decodeURI(path).match(/^\/(hot|responses|donates|forums|trending|promoted|payout|payout_comments|created|active)\/([\u0400-\u04FF-\w\d-]+)\/?$/)
     if (match) {
         return {page: 'PostsIndex', params: match.slice(1)};
     }

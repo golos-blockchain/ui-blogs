@@ -179,11 +179,6 @@ class LoginForm extends Component {
                         <p>{tt('loginform_jsx.you_account_has_been_successfully_created')}</p>
                     </div>;
             }
-            else if (msg === 'accountrecovered') {
-                message =<div className="callout primary">
-                    <p>{tt('loginform_jsx.you_account_has_been_successfully_recovered')}</p>
-                </div>;
-            }
             else if (msg === 'passwordupdated') {
                 message = <div className="callout primary">
                     <p>{tt('loginform_jsx.password_update_succes', {accountName: username.value})}</p>

@@ -53,15 +53,6 @@ export default class UserNavigation extends PureComponent {
     render() {
         const { accountName, isOwner, section } = this.props;
 
-        // const items = [
-        //     { value: 'Посты', to: `/@${accountName}` },
-        //     { value: tt('g.replies'), to: `/@${accountName}/recent-replies` },
-        //     { value: 'Избранное', to: '--' },
-        //     { value: 'Уведомления', to: '--' },
-        //     { value: 'Сообщения', to: '--' },
-        //     { value: 'Мои ключи', to: '--' },
-        //     { value: tt('g.wallet'), to: `/@${accountName}/transfers` },
-        // ];
         const items = [
             { value: tt('g.blog'), to: `/@${accountName}` },
             { value: tt('g.comments'), to: `/@${accountName}/comments` },

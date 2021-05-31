@@ -29,7 +29,7 @@ class SignUp extends React.Component {
                     <SvgImage name="golos" width="64px" height="64px" />
                 </div>
                 <div className="column large-8">
-                    <a href="/create_account" className="button secondary">{tt("recoveraccountstep1_jsx.continue_with_email")}</a>
+                    <a href="/create_account" className="button secondary">Продолжить с электронной почтой</a>
                 </div>
             </div>
             <div className="row">
