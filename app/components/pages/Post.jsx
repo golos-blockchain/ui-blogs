@@ -188,7 +188,7 @@ class Post extends React.Component {
                 <div id="comments" className="Post_comments row hfeed">
                     <div className="column large-12">
                         <div className="Post_comments__content">
-                            {(loading && dis.get('children')) ? (
+                            {(loading && !positiveComments.length && dis.get('children')) ? (
                                 <center>
                                     <LoadingIndicator type="circle" size="25px" />
                                 </center>
