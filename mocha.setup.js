@@ -1,4 +1,6 @@
 require('babel-register')();
+const Enzyme = require('enzyme');
+const Adapter = require('enzyme-adapter-react-16');
 
 process.env.NODE_PATH = require('path').resolve(__dirname, '.');
 require('module').Module._initPaths();
@@ -31,3 +33,5 @@ function donothing() {
 require.extensions['.svg'] = donothing;
 require.extensions['.css'] = donothing;
 require.extensions['.scss'] = donothing;
+
+Enzyme.configure({ adapter: new Adapter() });

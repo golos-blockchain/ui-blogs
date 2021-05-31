@@ -12,7 +12,7 @@ import Tooltip from 'app/components/elements/Tooltip';
 import HtmlReady from 'shared/HtmlReady';
 import g from 'app/redux/GlobalReducer';
 import { Set } from 'immutable';
-import Remarkable from 'remarkable';
+import { Remarkable } from 'remarkable';
 import Dropzone from 'react-dropzone';
 import { LinkWithDropdown } from 'react-foundation-components/lib/global/dropdown';
 import VerticalMenu from 'app/components/elements/VerticalMenu';
@@ -23,7 +23,7 @@ import { detransliterate } from 'app/utils/ParsersAndFormatters';
 import { replyAction } from './ReplyEditorActions';
 import KEYS from 'app/utils/keyCodes';
 
-const remarkable = new Remarkable({ html: true, linkify: false, breaks: true });
+const remarkable = new Remarkable({ html: true, breaks: true });
 const RichTextEditor = process.env.BROWSER
     ? require('react-rte-image').default
     : null;
