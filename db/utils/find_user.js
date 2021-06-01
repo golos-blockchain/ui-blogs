@@ -3,14 +3,14 @@ import models from '../models';
 function findByProvider(provider_user_id, resolve) {
     if (!provider_user_id) resolve(null);
     const query = {
-        attributes: ['user_id'],
+        attributes: ['UserId'],
         where: {provider_user_id}
     };
     models.Identity.findOne(query).then(identity => {
         if (identity) {
             models.User.findOne({
                 attributes: ['id'],
-                where: {id: identity.user_id}
+                where: {id: identity.UserId}
             }).then(u => resolve(u));
         } else {
             resolve(null);

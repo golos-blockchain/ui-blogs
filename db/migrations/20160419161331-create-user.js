@@ -62,7 +62,7 @@ module.exports = {
             }
         }).then(function () {
             queryInterface.addIndex('users', ['email']);
-            queryInterface.addIndex('users', ['uid'], {indicesType: 'UNIQUE'});
+            queryInterface.addIndex('users', ['uid'], {type: 'UNIQUE'});
         });
     },
     down: function (queryInterface, Sequelize) {

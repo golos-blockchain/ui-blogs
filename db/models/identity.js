@@ -22,16 +22,16 @@ module.exports = function (sequelize, DataTypes) {
         updatedAt   : 'updated_at',
         timestamps  : true,
         underscored : true,
-        classMethods: {
-            associate: function (models) {
-                Identity.belongsTo(models.User, {
-                    onDelete: "CASCADE",
-                    foreignKey: {
-                        allowNull: false
-                    }
-                });
-            }
-        }
     });
+
+    Identity.associate = function (models) {
+        Identity.belongsTo(models.User, {
+            onDelete: "CASCADE",
+            foreignKey: {
+                allowNull: false
+            }
+        });
+    };
+
     return Identity;
 };
