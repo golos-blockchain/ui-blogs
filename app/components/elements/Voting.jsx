@@ -110,9 +110,6 @@ class Voting extends React.Component {
     componentDidMount() {
         const {username, active_votes} = this.props;
         this._checkMyVote(username, active_votes)
-
-        const xchangePair = localStorage.getItem('xchange.pair') || 0;
-        this.setState({ xchangePair });
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
