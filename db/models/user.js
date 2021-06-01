@@ -23,12 +23,12 @@ module.exports = function (sequelize, DataTypes) {
         updatedAt   : 'updated_at',
         timestamps  : true,
         underscored : true,
-        classMethods: {
-            associate: function (models) {
-                User.hasMany(models.Identity);
-                User.hasMany(models.Account);
-            }
-        }
     });
+
+    User.associate = function (models) {
+        User.hasMany(models.Identity);
+        User.hasMany(models.Account);
+    };
+
     return User;
 };

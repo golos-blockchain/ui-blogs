@@ -20,8 +20,8 @@ module.exports = {
           'lists',
           ['kk', 'value'],
           {
-            indexName: 'KeyValue',
-            indicesType: 'UNIQUE'
+            name: 'KeyValue',
+            type: 'UNIQUE'
           }
       )
     });

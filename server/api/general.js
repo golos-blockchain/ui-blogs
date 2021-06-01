@@ -96,8 +96,8 @@ export default function useGeneralApi(app) {
 
             const existing_account = yield models.Account.findOne({
                 attributes: ['id', 'created_at'],
-                where: {user_id, ignored: false},
-                order: 'id DESC'
+                where: {UserId: user_id, ignored: false},
+                order: [ ['id', 'DESC'] ]
             });
 
             if (existing_account) {
@@ -105,7 +105,7 @@ export default function useGeneralApi(app) {
             }
 
             const same_ip_account = yield models.Account.findOne(
-                {attributes: ['created_at'], where: {remote_ip: esc(remote_ip)}, order: 'id DESC'}
+                {attributes: ['created_at'], where: {remote_ip: esc(remote_ip)}, order: [ ['id', 'DESC'] ]}
             );
             if (same_ip_account) {
                 const minutes = (Date.now() - same_ip_account.created_at) / 60000;
@@ -124,7 +124,7 @@ export default function useGeneralApi(app) {
             let mid;
             if (account.invite_code && !this.session.soc_id) {
                 mid = yield models.Identity.findOne(
-                    {attributes: ['id'], where: {user_id, provider: 'invite_code', verified: false}, order: 'id DESC'}
+                    {attributes: ['id'], where: {UserId: user_id, provider: 'invite_code', verified: false}, order: [ ['id', 'DESC'] ]}
                 );
                 if (!mid) {
                     console.log(`api /accounts: try to skip use_invite step by user ${this.session.uid} #${user_id}`);
@@ -135,7 +135,7 @@ export default function useGeneralApi(app) {
                 }
             } else if (this.session.soc_id && this.session.soc_id_type) {
                 mid = yield models.Identity.findOne(
-                    {attributes: ['id'], where: {user_id, provider: 'social-' + this.session.soc_id_type.replace('_id', ''), verified: false}, order: 'id DESC'}
+                    {attributes: ['id'], where: {UserId: user_id, provider: 'social-' + this.session.soc_id_type.replace('_id', ''), verified: false}, order: [ ['id', 'DESC'] ]}
                 );
                 if (!mid) {
                     console.log(`api /accounts: not authorized with social site for user ${this.session.uid} #${user_id}`);
@@ -148,7 +148,7 @@ export default function useGeneralApi(app) {
                 json_metadata = JSON.stringify(json_metadata);
             } else {
                 mid = yield models.Identity.findOne(
-                    {attributes: ['id'], where: {user_id, provider: 'email', verified: true}, order: 'id DESC'}
+                    {attributes: ['id'], where: {UserId: user_id, provider: 'email', verified: true}, order: [ ['id', 'DESC'] ]}
                 );
                 if (!mid) {
                     console.log(`api /accounts: not confirmed sms for user ${this.session.uid} #${user_id}`);
@@ -167,7 +167,7 @@ export default function useGeneralApi(app) {
             if (email) {
                 yield models.Identity.create({
                     provider: 'email',
-                    user_id,
+                    UserId: user_id,
                     uid: this.session.uid,
                     email,
                     verified: false
@@ -235,7 +235,7 @@ export default function useGeneralApi(app) {
             console.log('-- create_account_with_keys created -->', this.session.uid, account.name, user_id, account.owner_key);
 
             models.Account.create(escAttrs({
-                user_id,
+                UserId: user_id,
                 name: account.name,
                 owner_key: account.owner_key,
                 active_key: account.active_key,
@@ -291,9 +291,9 @@ export default function useGeneralApi(app) {
         console.log('-- /login_account -->', this.session.uid, account);
         try {
             const db_account = yield models.Account.findOne(
-                {attributes: ['user_id'], where: {name: esc(account)}, logging: false}
+                {attributes: ['UserId'], where: {name: esc(account)}, logging: false}
             );
-            if (db_account) this.session.user = db_account.user_id;
+            if (db_account) this.session.user = db_account.UserId;
 
             let body = { status: 'ok' }
             if(signatures) {

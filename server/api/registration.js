@@ -80,7 +80,7 @@ export default function useRegistrationApi(app) {
                     const emailHash = hash.sha256('' + req.session.soc_id, 'hex');
                     let mid = await models.Identity.create({
                         provider: 'social-' + grantId,
-                        user_id: req.session.user,
+                        UserId: req.session.user,
                         uid: req.session.uid,
                         email: emailHash,
                         verified: false,
@@ -129,8 +129,8 @@ export default function useRegistrationApi(app) {
         //        'updated_at',
         //        'confirmation_code',
         //    ],
-        //    where: { user_id, confirmation_code: code },
-        //    order: 'id DESC',
+        //    where: { UserId: user_id, confirmation_code: code },
+        //    order: [ ['id', 'DESC'] ],
         //});
 
         //if (mid) {
@@ -162,13 +162,13 @@ export default function useRegistrationApi(app) {
         );
 
         let mid = yield models.Identity.findOne({
-            attributes: ['id', 'user_id', 'verified', 'updated_at', 'email'],
+            attributes: ['id', 'UserId', 'verified', 'updated_at', 'email'],
             where: {
                 email: hash.sha256(email, 'hex'),
                 confirmation_code,
                 provider: 'email',
             },
-            order: 'id DESC',
+            order: [ ['id', 'DESC'] ],
         });
 
         if (!mid) {
@@ -230,19 +230,19 @@ export default function useRegistrationApi(app) {
         const emailHash = hash.sha256(email, 'hex');
 
         const existing_email = yield models.Identity.findOne({
-            attributes: ['user_id'],
+            attributes: ['UserId'],
             where: { email: emailHash, provider: 'email', verified: true },
-            order: 'id DESC',
+            order: [ ['id', 'DESC'] ],
         });
 
-        let user_id = this.session.user;
-        if (existing_email && existing_email.user_id != user_id) {
+        let user_id = this.session.user || null;
+        if (existing_email && existing_email.UserId != user_id) {
             console.log(
                 '-- /send_code existing_email -->',
                 user_id,
                 this.session.uid,
                 emailHash,
-                existing_email.user_id
+                existing_email.UserId
             );
             this.body = JSON.stringify({ status: 'already_used' });
             return;
@@ -261,8 +261,8 @@ export default function useRegistrationApi(app) {
                 'updated_at',
                 'confirmation_code',
             ],
-            where: { email: emailHash, user_id, provider: 'email' },
-            order: 'id DESC',
+            where: { email: emailHash, UserId: user_id, provider: 'email' },
+            order: [ ['id', 'DESC'] ],
         });
 
         if (mid) {
@@ -317,7 +317,7 @@ export default function useRegistrationApi(app) {
             }).then(async () => {
               mid = await models.Identity.create({
                   provider: 'email',
-                  user_id,
+                  UserId: user_id,
                   uid: this.session.uid,
                   email: emailHash,
                   verified: false,
@@ -371,9 +371,9 @@ export default function useRegistrationApi(app) {
         const emailHash = hash.sha256(invite_key, 'hex');
 
         const existing_email = yield models.Identity.findOne({
-            attributes: ['user_id', 'verified'],
+            attributes: ['UserId', 'verified'],
             where: { email: emailHash, provider: 'invite_code' },
-            order: 'id DESC',
+            order: [ ['id', 'DESC'] ],
         });
 
         let user_id = this.session.user;
@@ -383,7 +383,7 @@ export default function useRegistrationApi(app) {
                 user_id,
                 this.session.uid,
                 emailHash,
-                existing_email.user_id
+                existing_email.UserId
             );
             this.body = JSON.stringify({ status: 'already_used' });
             return;
@@ -413,7 +413,7 @@ export default function useRegistrationApi(app) {
         if (!existing_email) {
             let mid = yield models.Identity.create({
               provider: 'invite_code',
-              user_id,
+              UserId: user_id,
               uid: this.session.uid,
               email: emailHash,
               verified: false,
