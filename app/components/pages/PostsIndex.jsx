@@ -41,11 +41,7 @@ class PostsIndex extends React.Component {
 
     constructor() {
         super();
-
-        this.state = {
-          currencyid: 0
-        }
-
+        this.state = {}
         this.loadMore = this.loadMore.bind(this);
         this.shouldComponentUpdate = shouldComponentUpdate(this, 'PostsIndex')
         this.loadSelected = this.loadSelected.bind(this);
@@ -59,20 +55,13 @@ class PostsIndex extends React.Component {
         }
     }
 
-    componentDidMount () {
-        
+    componentDidMount () {        
         const script = document.createElement("script");
 
         script.src = "https://files.coinmarketcap.com/static/widget/currency.js";
         script.async = true;
 
         document.body.appendChild(script);
-
-        const picked_curr = localStorage.getItem('xchange.picked')
-
-        this.setState({
-          currencyid: picked_curr ? {GOLOS: 1480, GBG: 1542}[picked_curr] : 1480
-        })
     }
 
     getPosts(order, category) {

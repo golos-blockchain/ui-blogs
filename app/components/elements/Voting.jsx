@@ -6,19 +6,15 @@ import user from 'app/redux/User';
 import Slider from 'react-rangeslider';
 import Icon from 'app/components/elements/Icon';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
-import { parsePayoutAmount } from 'app/utils/ParsersAndFormatters';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
 import PagedDropdownMenu from 'app/components/elements/PagedDropdownMenu';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import FoundationDropdown from 'app/components/elements/FoundationDropdown';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
 import tt from 'counterpart';
-import { DEBT_TICKER } from 'app/client_config';
-import CalculatePayout from 'shared/CalculatePayout.js'
 
 const MAX_VOTES_DISPLAY = 20;
 const VOTE_WEIGHT_DROPDOWN_THRESHOLD = 1.0 * 1000.0 * 1000.0;
-
 
 class Voting extends React.Component {
     static propTypes = {
@@ -49,7 +45,6 @@ class Voting extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          xchangePair: 0,
           showWeight: false,
           showWeightDown: false,
           myVote: null,
@@ -110,9 +105,6 @@ class Voting extends React.Component {
     componentDidMount() {
         const {username, active_votes} = this.props;
         this._checkMyVote(username, active_votes)
-
-        const xchangePair = localStorage.getItem('xchange.pair') || 0;
-        this.setState({ xchangePair });
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -166,21 +158,6 @@ class Voting extends React.Component {
                 </div>
             </FoundationDropdown>;
 
-//            const dropdown = <FoundationDropdown show={showWeight} onHide={() => this.setState({showWeight: false})} className="Voting__adjust_weight_down">
-//                {(myVote == null || myVote === 0) && net_vesting_shares > VOTE_WEIGHT_DROPDOWN_THRESHOLD &&
-//                    <div>
-//                        <div className="weight-display">- {weight / 100}%</div>
-//                        <Slider min={100} max={10000} step={100} value={weight} onChange={this.handleWeightChange} />
-//                    </div>
-//                }
-//                <CloseButton onClick={() => this.setState({showWeight: false})} />
-//                <div className="clear Voting__about-flag">
-//                    <p>{ABOUT_FLAG}</p>
-//                    <a href="#" onClick={this.voteDown} className="button outline" title={tt('g.flag')}>{tt('g.flag')}</a>
-//                </div>
-//            </FoundationDropdown>;
-
-
             downVote = <span className={classDown}>
                     {votingDownActive ? down : <a href="#" onClick={flagClickAction} title={tt('g.flag')}>{down}</a>}
                     {dropdown}
@@ -189,24 +166,11 @@ class Voting extends React.Component {
 
         const total_votes = post_obj.getIn(['stats', 'total_votes']);
 
-        const cashout_time = post_obj.get('cashout_time');
-        const max_payout = parsePayoutAmount(post_obj.get('max_accepted_payout'));
-        const pending_payout = parsePayoutAmount(post_obj.get('pending_payout_value'));
-        const promoted = parsePayoutAmount(post_obj.get('promoted'));
-        const total_author_payout = parsePayoutAmount(post_obj.get('total_payout_value'));
-
-        const payout = CalculatePayout(post_obj)
-
-        const payout_limit_hit = payout.total >= max_payout;
-        // Show pending payout amount for declined payment posts
-  
         const up = <Icon name={votingUpActive ? 'empty' : 'chevron-up-circle'} />;
         const classUp = 'Voting__button Voting__button-up' + (myVote > 0 ? ' Voting__button--upvoted' : '') + (votingUpActive ? ' votingUp' : '');
-        // There is an "active cashout" if: (a) there is a pending payout, OR (b) there is a valid cashout_time AND it's NOT a comment with 0 votes.
-        const cashout_active = pending_payout > 0 || (cashout_time.indexOf('1969') !== 0 && !(is_comment && total_votes == 0));
+        
         let donateItems = [];
         let donateUiaItems = [];
-
         let donates = post_obj.get('donate_list');
         if (donates !== undefined) {
             donates = donates.toJS();
@@ -229,8 +193,9 @@ class Voting extends React.Component {
             });
         }
 
+        const pullpayout = tt('g.pull_payout') + post_obj.get('pending_author_payout_gests_value');
         const donatesEl = <DropdownMenu className="Voting__donates_list" el="div" items={donateItems}>
-            <span title={tt('g.rewards_tip')}>
+            <span title={pullpayout}>
                 <Icon size="0_95x" name="tips" />&nbsp;{post_obj.get('donates').toString().split(".")[0] + " GOLOS"}
                 {donateItems.length > 0 && <Icon name="dropdown-arrow" />}
             </span>
@@ -239,7 +204,7 @@ class Voting extends React.Component {
         let donatesUiaSum = post_obj.get('donates_uia');
         let donatesUiaEl = null;
         if (donatesUiaSum > 0) donatesUiaEl = <DropdownMenu className="Voting__donates_list" el="div" items={donateUiaItems}>
-            <span className="Voting__donates_uia_sum" title={tt('g.rewards_tip')}>
+            <span className="Voting__donates_uia_sum" title={tt('g.uia_rewards')}>
                 +&nbsp;{post_obj.get('donates_uia').toString() + " UIA"}
                 {donateUiaItems.length > 0 && <Icon name="dropdown-arrow" />}
             </span>
@@ -258,7 +223,6 @@ class Voting extends React.Component {
                 }
                 const {percent, voter} = avotes[v]
                 const sign = Math.sign(percent)
-                //const voterPercent= percent / 100 + '%';
                 if(sign === 0) continue
                 voters.push({value: (sign > 0 ? '+ ' : '- ') + voter, link: '/@' + voter})
             }
@@ -266,7 +230,6 @@ class Voting extends React.Component {
             voters.push({value: <span>
               <a className="Voting__votes_pagination" onClick={this.prevVoteListPage}>{voteListPage > 0 ? '< ' + tt('g.back') : ''}</a>
               <a className="Voting__votes_pagination" onClick={has_more_votes ? this.nextVoteListPage : null}>{has_more_votes ? tt('g.more_list') + ' >' : ''}</a></span>});
-            //voters.push({value: <span>&hellip; {tt('g.and')} {(total_votes - voters.length)} {tt('g.more')}</span>});
         }
 
         voters_list = <PagedDropdownMenu selected={total_votes.toString()} className="Voting__voters_list" items={voters} el="div" noArrow={true} />;

@@ -369,15 +369,14 @@ export default function useRegistrationApi(app) {
         }
 
         const emailHash = hash.sha256(invite_key, 'hex');
+        let user_id = this.session.user;
 
         const existing_email = yield models.Identity.findOne({
             attributes: ['UserId', 'verified'],
-            where: { email: emailHash, provider: 'invite_code' },
+            where: { email: emailHash, provider: 'invite_code', verified: true },
             order: [ ['id', 'DESC'] ],
         });
-
-        let user_id = this.session.user;
-        if (existing_email && existing_email.verified) {
+        if (existing_email) {
             console.log(
                 '-- /check_invite existing_email -->',
                 user_id,
@@ -410,14 +409,18 @@ export default function useRegistrationApi(app) {
             this.session.user = user_id = user.id;
         }
 
-        if (!existing_email) {
-            let mid = yield models.Identity.create({
-              provider: 'invite_code',
-              UserId: user_id,
-              uid: this.session.uid,
-              email: emailHash,
-              verified: false,
-              confirmation_code: '1234'
+        let mid = yield models.Identity.findOne({
+            where: { email: emailHash, provider: 'invite_code', UserId: user_id },
+            order: [ ['id', 'DESC'] ],
+        });
+        if (!mid) {
+            mid = yield models.Identity.create({
+                provider: 'invite_code',
+                UserId: user_id,
+                uid: this.session.uid,
+                email: emailHash,
+                verified: false,
+                confirmation_code: '1234'
             });
         }
 
