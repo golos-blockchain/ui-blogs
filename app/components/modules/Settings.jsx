@@ -32,7 +32,6 @@ class Settings extends React.Component {
         this.initForm(props)
         this.onNsfwPrefChange = this.onNsfwPrefChange.bind(this)
         this.onNsfwPrefSubmit = this.onNsfwPrefSubmit.bind(this)
-        this.onRoundingNumbersChange = this.onRoundingNumbersChange.bind(this)
         this.onDonatePresetChange = this.onDonatePresetChange.bind(this)
     }
 
@@ -67,21 +66,12 @@ class Settings extends React.Component {
         const {accountname} = this.props
         const {vesting_shares} = this.props.account
         
-        let rounding, nsfwPref, donatePresets;
+        let nsfwPref, donatePresets;
 
         nsfwPref = (process.env.BROWSER ? localStorage.getItem('nsfwPref-' + accountname) : null) || 'warn'
         this.setState({nsfwPref, oldNsfwPref: nsfwPref})
 
         if(process.env.BROWSER){
-            rounding = localStorage.getItem('xchange.rounding')
-            if(!rounding){
-                if(vesting_shares > MIN_VESTING_SHARES)
-                    rounding = FRACTION_DIGITS
-                else 
-                    rounding = FRACTION_DIGITS_MARKET
-              }
-            this.setState({rounding : rounding})
-
             donatePresets = localStorage.getItem('donate.presets-' + accountname)
             if (donatePresets) donatePresets = JSON.parse(donatePresets)
         }
@@ -100,7 +90,6 @@ class Settings extends React.Component {
       const file = acceptedFiles[0]
       this.upload(file, file.name)
     }
-
 
     // fixme remove all the code duplication below
 
@@ -196,19 +185,6 @@ class Settings extends React.Component {
         this.props.notify(tt('g.saved'))
     }
 
-    onCurrencyChange = (event) => {
-        localStorage.setItem('xchange.created', 0);
-        localStorage.setItem('xchange.picked', event.target.value);
-        this.props.reloadExchangeRates()
-        this.notify()
-    }
-
-    onRoundingNumbersChange = (event) => {
-        localStorage.setItem('xchange.rounding', event.target.value)
-        this.setState({rounding : event.target.value})
-        this.notify()
-    }
-
     onLanguageChange = (event) => {
         const language = event.target.value
         cookie.save(LOCALE_COOKIE_KEY, language, {path: "/", expires: new Date(Date.now() + 60 * 60 * 24 * 365 * 10 * 1000)});
@@ -302,7 +278,7 @@ class Settings extends React.Component {
         const {submitting, valid, touched} = this.state.accountSettings
         const disabled = !props.isOwnAccount || state.loading || submitting || !valid || !touched
 
-        const {profile_image, cover_image, name, about, gender, location, website, rounding, donatePresets} = this.state
+        const {profile_image, cover_image, name, about, gender, location, website, donatePresets} = this.state
 
         const {follow, account, isOwnAccount} = this.props
         const following = follow && follow.getIn(['getFollowingAsync', account.name]);
@@ -561,9 +537,6 @@ export default connect(
       },
         changeLanguage: (language) => {
             dispatch(user.actions.changeLanguage(language))
-        },
-        reloadExchangeRates: () => {
-          dispatch(g.actions.fetchExchangeRates())
         },
         updateAccount: ({successCallback, errorCallback, ...operation}) => {
             const success = () => {

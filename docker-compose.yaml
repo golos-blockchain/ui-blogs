@@ -7,7 +7,7 @@ services:
     restart: always
     command: bash -c "cd db && ../node_modules/.bin/sequelize db:migrate && cd .. && yarn run production"
     volumes:
-      - ./default.json:/var/app/config/default.json
+      - ./config/default.json:/var/app/config/default.json
     depends_on:
       - db
     ports:
@@ -17,10 +17,11 @@ services:
       SDC_DATABASE_URL: mysql://golosdev:golosdev@db:3306/golosdev
       SDC_CLIENT_WEBSOCKET_URL: https://api-full.golos.id
       SDC_SERVER_WEBSOCKET_URL: https://api-full.golos.id
-      SDC_REGISTRAR_ACCOUNT: your-account
-      SDC_REGISTRAR_SIGNINGKEY: active-key
-      SDC_GMAIL_SEND_USER: your-mail@gmail.com
-      SDC_GMAIL_SEND_PASS: your-password
+      SDC_MSGS_WEBSOCKET_URL: wss://api-full.golos.id/ws
+      #SDC_REGISTRAR_ACCOUNT: your-account
+      #SDC_REGISTRAR_SIGNINGKEY: active-key
+      #SDC_GMAIL_SEND_USER: your-mail@gmail.com
+      #SDC_GMAIL_SEND_PASS: your-password
 
   db:
     image: mysql:5.7.22

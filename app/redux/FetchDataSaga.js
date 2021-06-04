@@ -605,9 +605,8 @@ export function* fetchExchangeRates() {
   const fourHours = 1000 * 60 * 60 * 4;
 
   try {
-    const created = localStorage.getItem('xchange.created') || 0;
-
-    let pickedCurrency = localStorage.getItem('xchange.picked') || DEFAULT_CURRENCY;
+    const created = 0;
+    let pickedCurrency = DEFAULT_CURRENCY;
     if (pickedCurrency.localeCompare(DEBT_TOKEN_SHORT) == 0) {
         // pickedCurrency = DEFAULT_CURRENCY;
         storeExchangeValues(1, 1, 1, DEBT_TOKEN_SHORT); // For GBG currency on site #687

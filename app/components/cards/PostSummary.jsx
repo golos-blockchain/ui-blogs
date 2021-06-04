@@ -171,12 +171,13 @@ class PostSummary extends React.Component {
         </div>;
 
         const warn = (isNsfw && nsfwPref === 'warn' && !myPost);
+        const promosumm = tt('g.promoted_post') + content.get('promoted');
 
         let content_title = <h3 className="entry-title">
             <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum)}>
                 {warn && <span className="nsfw-flag">{detransliterate(nsfwTitle)}</span>}
                 {title_text}
-                {promoted_post && <span className="promoted_post" title={tt('g.promoted_post')}>{tt('g.promoted_title')}</span>}
+                {promoted_post && <span className="promoted_post" title={promosumm}>{tt('g.promoted_title')}</span>}
             </a>
         </h3>;
 
