@@ -268,13 +268,15 @@ class PostFull extends React.Component {
         for (let pp of this.props.prevPosts) {
             let pp2 = extractContent(objAccessor, pp);
             let iurl = (prox ? prox + '800x600' + '/' : '');
-            if (Date.parse(pp2.created) > CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME) {
-                iurl += pp2.image_link
-            } else {
-                // Proxy old images. Update - proxy IO does not work
-                // iurl += 'https://imgp.golos.io/0x0/' + pp2.image_link
-                iurl += pp2.image_link
-            }
+            iurl += pp2.image_link
+
+            // Proxy old images
+            // if (Date.parse(pp2.created) > CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME) {
+            //     iurl += pp2.image_link
+            // } else {
+            //     iurl += 'https://img.golos.io/proxy/' + pp2.image_link
+            // }
+
             if (!pp2.image_link) {
                 iurl = '/images/noimage.png';
             }
