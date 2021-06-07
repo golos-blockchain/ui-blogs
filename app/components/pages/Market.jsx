@@ -799,7 +799,7 @@ class Market extends Component {
                             </span>
                         </DropdownMenu>
                         &nbsp;
-                        <a href={"/market/"+sym2+"/"+sym1}><Icon name="shuffle" /></a>
+                        <a style={{fill: "gray"}} href={"/market/"+sym2+"/"+sym1}><Icon name="shuffle" /></a>
                         &nbsp;
                         <DropdownMenu el="div" items={symbols2}>
                             <span>
