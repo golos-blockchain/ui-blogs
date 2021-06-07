@@ -113,7 +113,7 @@ class PriceChart extends React.Component {
         candleSeries.setData(data);
 
         this.chart.timeScale().setVisibleLogicalRange({
-            from: data.length - 62,
+            from: data.length - 45,
             to: data.length,
         });
     }

@@ -8,8 +8,8 @@
  * <proxy>/{int}x{int}/[<proxy>/{int}x{int}/]<proxy>/<file url>
  * @type {RegExp}
  */
-const rProxyDomain = /^http(s)?:\/\/(imgp|images).golos.id\//g;
-const rProxyDomainsDimensions = /http(s)?:\/\/(imgp|images).golos.id\/([0-9]+x[0-9]+)\//g;
+const rProxyDomain = /^http(s)?:\/\/images.golos.today\//g;
+const rProxyDomainsDimensions = /http(s)?:\/\/images.golos.today\/([0-9]+x[0-9]+)\//g;
 const NATURAL_SIZE = '0x0/';
 
 export const imageProxy = () => $STM_Config.img_proxy_prefix;

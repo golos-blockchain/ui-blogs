@@ -211,13 +211,8 @@ class PostsIndex extends React.Component {
                             loading={false}
                             showSpam={showSpam}
                             />
-
-                        <div className="strike">
-                            <span><a target="_blank" href="https://wiki.golos.id/users/welcome#prodvinut-post">{tt('g.promote_block')}</a></span>
-                        </div>
+                        <hr style={{ borderColor: 'goldenrod' }}></hr>
                       </div> : null }
-
-
                     { (!fetching && (posts && !posts.size)) ? <Callout>{emptyText}</Callout> :
                         <PostsList
                             ref={this.listRef}

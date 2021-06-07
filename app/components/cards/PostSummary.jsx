@@ -127,7 +127,7 @@ class PostSummary extends React.Component {
         let title_text = p.title;
         let comments_link;
         let is_comment = false;
-        let promoted_post = content.get('promoted') >= "1.000 GBG";
+        const promoted_post = content.get('promoted') >= "1.000 GBG";
 
         if( content.get( 'parent_author') !== "" ) {
            title_text = tt('g.re') + ": " + content.get('root_title');
@@ -177,8 +177,8 @@ class PostSummary extends React.Component {
             <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum)}>
                 {warn && <span className="nsfw-flag">{detransliterate(nsfwTitle)}</span>}
                 {title_text}
-                {promoted_post && <span className="promoted_post" title={promosumm}>{tt('g.promoted_title')}</span>}
             </a>
+            {promoted_post && <a target="_blank" href="https://wiki.golos.id/users/welcome#prodvinut-post"><span className="promoted_post" title={promosumm}>{tt('g.promoted_title')}</span></a>}
         </h3>;
 
         // author and category
@@ -218,13 +218,14 @@ class PostSummary extends React.Component {
           const size = (thumbSize == 'mobile') ? '800x600' : '256x512'
 
           let url = (prox ? prox + size + '/' : '');
-          if (Date.parse(p.created) > CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME) {
-            url += p.image_link
-          } else {
-            // Proxy old images. Update - proxy IO does not work
-            // url += 'https://imgp.golos.io/0x0/' + p.image_link
-            url += p.image_link
-          }
+          url += p.image_link
+
+          // Proxy old images
+          // if (Date.parse(p.created) > CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME) {
+          //   url += p.image_link
+          // } else {
+          //   url += 'https://img.golos.io/proxy/' + p.image_link
+          // }
 
           thumb = <PostSummaryThumb
               visitedClassName={visitedClassName}

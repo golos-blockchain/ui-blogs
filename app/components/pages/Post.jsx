@@ -54,7 +54,7 @@ class Post extends React.Component {
     }
 
     render() {
-        const {ignoring, content, negativeCommenters, loading} = this.props
+        const {ignoring, content, negativeCommenters} = this.props
         const {showNegativeComments, commentHidden, showAnyway} = this.state
         let { post } = this.props;
         const { aiPosts } = this.props;
@@ -188,7 +188,7 @@ class Post extends React.Component {
                 <div id="comments" className="Post_comments row hfeed">
                     <div className="column large-12">
                         <div className="Post_comments__content">
-                            {(loading && !positiveComments.length && dis.get('children')) ? (
+                            {(!replies.length && dis.get('children')) ? (
                                 <center>
                                     <LoadingIndicator type="circle" size="25px" />
                                 </center>
@@ -241,7 +241,6 @@ export default connect((state, props) => {
 
     return {
         content: state.global.get('content'),
-        loading: state.app.get('loading'),
         current_user,
         ignoring,
         negativeCommenters
