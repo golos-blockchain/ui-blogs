@@ -615,14 +615,16 @@
     "re_send": "Re-send",
     "phone_number_has_been_verified": "Phone number has been verified, please continue the registration.",
     "authorized_with_": "Аuthorized with ",
-    "this_phone_number_has_already_been_used": "This phone number has already been used",
-    "pdf_title": "Keys Of @",
-    "pdf_desc": "There are private keys, which are authorizing your account. Store this file in secure place.",
-    "pdf_password_desc": "Password (use it to log in on Golos): ",
-    "pdf_posting_desc": "Posting Key (also can be used as Golos password): ",
-    "pdf_active_desc": "Active Key: ",
-    "pdf_owner_desc": "Owner Key: ",
-    "pdf_memo_desc": "Memo Key: "
+    "this_phone_number_has_already_been_used": "This phone number has already been used"
+  },
+  "key_file": {
+    "file_title": "Keys Of @",
+    "file_desc": "There are private keys, which are authorizing your account. Store this file in secure place.",
+    "password_desc": "Password (use it to log in on Golos): ",
+    "posting_desc": "Posting Key (also can be used as Golos password): ",
+    "active_desc": "Active Key: ",
+    "owner_desc": "Owner Key: ",
+    "memo_desc": "Memo Key: "
   },
   "voting_jsx": {
     "stop_seeing_content_from_this_user": "Stop seeing content from this user",

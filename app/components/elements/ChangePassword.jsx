@@ -5,6 +5,7 @@ import transaction from 'app/redux/Transaction'
 import LoadingIndicator from 'app/components/elements/LoadingIndicator'
 import {PrivateKey, PublicKey, key_utils} from 'golos-classic-js/lib/auth/ecc'
 import {validate_account_name} from 'app/utils/ChainValidation'
+import KeyFile from 'app/utils/KeyFile';
 import {cleanReduxInput} from 'app/utils/ReduxForms'
 import tt from 'counterpart';
 import { APP_NAME } from 'app/client_config';
@@ -20,14 +21,17 @@ class ChangePassword extends React.Component {
         authType: oneOf(['posting', 'active', 'owner', 'memo']), // null for all
         priorAuthKey: string, // Required pubkey if authType is given
     }
+
     constructor(props) {
         super(props)
         this.state = {accountName: props.username, nameError: '', generated: false}
         this.onNameChange = this.onNameChange.bind(this)
         this.generateWif = this.generateWif.bind(this)
     }
+
     UNSAFE_componentWillMount() {
     }
+
     componentWillUnmount() {
         newWif = null
     }
@@ -36,6 +40,7 @@ class ChangePassword extends React.Component {
         newWif = 'P' + key_utils.get_random_key().toWif()
         this.setState({generated: true})
     }
+
     validateAccountName(name) {
         let nameError = '';
         let promise;
@@ -57,11 +62,13 @@ class ChangePassword extends React.Component {
             this.setState({nameError});
         }
     }
+
     onNameChange(e) {
         const accountName = e.target.value.trim().toLowerCase();
         this.validateAccountName(accountName);
         this.setState({accountName});
     }
+
     dispatchSubmit = () => {
         const {changePassword, authType, priorAuthKey} = this.props
         const {resetForm, notify} = this.props
@@ -82,6 +89,7 @@ class ChangePassword extends React.Component {
         changePassword(accountName, authType, priorAuthKey,
             password.value, twofa.value, success, error)
     }
+
     render() {
         if (!process.env.BROWSER) { // don't render this page on the server
             return <div className="row">
@@ -240,13 +248,21 @@ export default reduxForm(
                     {authType: 'active', oldAuth: password, newAuth: ph('active', newWif)},
                     {authType: 'posting', oldAuth: password, newAuth: ph('posting', newWif)},
                     {authType: 'memo', oldAuth: password, newAuth: ph('memo', newWif)},
-                ]
+                ];
+            const keyFile = new KeyFile(accountName, {
+                password: newWif,
+                owner: auths[0].newAuth, active: auths[1].newAuth,
+                posting: auths[2].newAuth, memo: auths[3].newAuth,
+            });
             dispatch(transaction.actions.updateAuthorities({
                 twofa,
                 // signingKey provides the password if it was not provided in auths
                 signingKey: authType ? password : null,
                 accountName, auths,
-                onSuccess: success, onError: error,
+                onSuccess: () => {
+                    keyFile.save();
+                    success();
+                }, onError: error,
                 // notifySuccess: 'Change password success'
             }))
         },
