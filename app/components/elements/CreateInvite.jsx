@@ -35,12 +35,36 @@ class CreateInvite extends Component {
 
     componentDidMount() {
         this.generateKeys()
+        this.setDefaultAmount();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.min_invite_balance !== prevProps.min_invite_balance) {
+            this.setDefaultAmount();
+        }
+    }
+
+    setDefaultAmount = () => {
+        const { min_invite_balance } = this.props;
+        const { amount } = this.state;
+        if (min_invite_balance && !amount.value) {
+            amount.props.onChange(min_invite_balance.split('.')[0]);
+        }
+    }
+
+    updatePrivateKey = (pk) => {
+        this.state.private_key.props.onChange(pk);
+
+        const register_link = `https://${$STM_Config.site_domain}/create_account?invite=${pk}`
+        this.state.register_link.props.onChange(register_link);
     }
 
     generateKeys = () => {
         const pk = PrivateKey.fromSeed(Math.random().toString());
-        this.state.public_key.props.onChange(pk.toPublicKey().toString());
-        this.state.private_key.props.onChange(pk.toString());
+        this.updatePrivateKey(pk.toString())
+        this.setState({
+            createdInvite: '',
+        });
     }
 
     initForm(props) {
@@ -65,7 +89,7 @@ class CreateInvite extends Component {
             }
         };
 
-        const fields = ['public_key', 'private_key', 'amount', 'is_referral:checked']
+        const fields = ['private_key', 'register_link', 'amount', 'is_referral:checked']
         reactForm({
             name: 'invite',
             instance: this, fields,
@@ -73,8 +97,8 @@ class CreateInvite extends Component {
             validation: values => ({
                 private_key:
                     ! values.private_key ? tt('g.required') : validateSecret(values.private_key),
-                public_key:
-                    ! values.public_key ? tt('g.required') : null,
+                register_link:
+                    ! values.register_link ? tt('g.required') : null,
                 amount:
                     ! parseFloat(values.amount) || /^0$/.test(values.amount) ? tt('g.required') :
                     insufficientFunds(values.amount) ? tt('transfer_jsx.insufficient_funds') :
@@ -92,8 +116,8 @@ class CreateInvite extends Component {
         this.props.showQRKey({type: 'Invite', text: this.state.private_key.value, isPrivate: true});
     }
 
-    showQrPub = e => {
-        this.props.showQRKey({type: 'Invite', text: this.state.public_key.value, isPrivate: false});
+    showQrRegLink = e => {
+        this.props.showQRKey({type: 'Invite', text: this.state.register_link.value, title: tt('invites_jsx.register_link')});
     }
 
     balanceValue() {
@@ -110,11 +134,7 @@ class CreateInvite extends Component {
     onChangePrivateKey = (e) => {
         const {value} = e.target
         let pk = value.trim()
-        this.state.private_key.props.onChange(pk)
-        try {
-            this.state.public_key.props.onChange(PrivateKey.fromWif(pk).toPublicKey().toString())
-        } catch (e) {
-        }
+        this.updatePrivateKey(pk)
     }
 
     onChangeAmount = (e) => {
@@ -128,8 +148,9 @@ class CreateInvite extends Component {
 
     handleSubmit = ({updateInitialValues}) => {
         const {createInvite, accountName} = this.props
-        const {public_key, amount, is_referral} = this.state
+        const {private_key, amount, is_referral} = this.state
         this.setState({loading: true});
+        const public_key = PrivateKey.fromWif(private_key.value).toPublicKey().toString();
         createInvite({public_key, amount, is_referral, accountName, 
             errorCallback: (e) => {
                 if (e === 'Canceled') {
@@ -150,16 +171,26 @@ class CreateInvite extends Component {
                     loading: false,
                     errorMessage: '',
                     successMessage: tt('invites_jsx.success'),
+                    createdInvite: public_key,
                 })
                 // remove successMessage after a while
-                setTimeout(() => this.setState({successMessage: ''}), 4000)
+                setTimeout(() => this.setState({successMessage: ''}), 8000)
             }})
     }
 
     render() {
         const {props: {account, isMyAccount, cprops, min_invite_balance}} = this
-        const {public_key, private_key, amount, is_referral, loading, successMessage, errorMessage} = this.state
+        const {private_key, register_link, amount, is_referral, loading, successMessage, errorMessage, createdInvite} = this.state
         const {submitting, valid} = this.state.invite
+
+        let publicKeyLink = null;
+        if (createdInvite) {
+            publicKeyLink = `${$STM_Config.golos_lib_gui}database_api/get_invite?invite_key=${createdInvite}`;
+            publicKeyLink=(<span>{tt('invites_jsx.public_key_can_be_checked') + ' '}
+                    <a href={publicKeyLink} target='_blank' rel='noopener noreferrer'>{tt('g.here')}</a>
+                    <Icon name="extlink" size="1_5x" />
+                </span>);
+        }
 
         return (<div>
             <form onSubmit={this.handleSubmitForm}>
@@ -178,7 +209,10 @@ class CreateInvite extends Component {
 
                 <div className="row">
                     <div className="column small-10">
-                        <div className="float-right"><a onClick={this.generateKeys}>{tt('invites_jsx.generate_new').toUpperCase()}</a></div>{tt('invites_jsx.private_key')}
+                        <div className="float-right">
+                            <a onClick={this.generateKeys}>{tt('invites_jsx.generate_new').toUpperCase()}</a>
+                        </div>
+                        {tt('invites_jsx.private_key')}
                         <div className="input-group" style={{marginBottom: "1.25rem"}}>
                             <div style={{display: "inline-block", paddingTop: 2, paddingRight: 5, cursor: "pointer"}} onClick={this.showQrPriv}>
                                 <img src={require("app/assets/images/qrcode.png")} height="40" width="40" />
@@ -202,26 +236,24 @@ class CreateInvite extends Component {
 
                 <div className="row">
                     <div className="column small-10">
-                        {tt('invites_jsx.public_key')}
+                        {tt('invites_jsx.register_link')}
                         <div className="input-group" style={{marginBottom: "1.25rem"}}>
-                            <div style={{display: "inline-block", paddingTop: 2, paddingRight: 5, cursor: "pointer"}} onClick={this.showQrPub}>
+                            <div style={{display: "inline-block", paddingTop: 2, paddingRight: 5, cursor: "pointer"}} onClick={this.showQrRegLink}>
                                 <img src={require("app/assets/images/qrcode.png")} height="40" width="40" />
                             </div>
                             <input
                                 className="input-group-field bold"
                                 type="text"
+                                style={{color: '#0078C4'}}
                                 disabled
-                                {...public_key.props}
+                                {...register_link.props}
                             />
                             <CopyToClipboard 
-                                text={public_key.value} 
+                                text={register_link.value} 
                             >
                                 <span className="CreateInvite__copy-button input-group-label" title={tt('explorepost_jsx.copy')}><Icon name="copy"/></span>
                             </CopyToClipboard>
                         </div>
-                        {public_key.touched && public_key.blur && public_key.error &&
-                            <div className="error">{public_key.error}&nbsp;</div>
-                        }
                     </div>
                 </div>
 
@@ -243,7 +275,7 @@ class CreateInvite extends Component {
 
                 <div className="row">
                     <div className="column small-10">
-                        <div className="input-group" style={{marginBottom: "1.25rem"}}>
+                        <div className="input-group" style={{marginBottom: '0rem'}}>
                             <label title={tt('invites_jsx.referral_invite')}>
                                 <input
                                     className="input-group-field bold"
@@ -259,7 +291,13 @@ class CreateInvite extends Component {
                     </div>
                 </div>
 
-                <div className="row">
+                {publicKeyLink ? (<div className="row" style={{marginTop: "0.5rem"}}>
+                    <div className="column small-10 secondary">
+                        {publicKeyLink}
+                    </div>
+                </div>) : null}
+
+                <div className="row" style={{marginTop: "1.25rem"}}>
                     <div className="column small-10">
                         {loading && <span><LoadingIndicator type="circle" /><br /></span>}
                         {!loading && <input type="submit" className="button" value={tt('invites_jsx.create_btn')} disabled={submitting || !valid} />}
@@ -302,7 +340,7 @@ export default connect(
             let operation = {
                 creator: accountName,
                 balance: parseFloat(amount.value, 10).toFixed(3) + ' GOLOS',
-                invite_key: public_key.value
+                invite_key: public_key
             }
             if (is_referral.value) {
                 operation.extensions = [[0, {
@@ -324,8 +362,8 @@ export default connect(
             }))
         },
 
-        showQRKey: ({type, isPrivate, text}) => {
-            dispatch(g.actions.showDialog({name: "qr_key", params: {type, isPrivate, text}}));
+        showQRKey: ({type, isPrivate, text, title}) => {
+            dispatch(g.actions.showDialog({name: "qr_key", params: {type, isPrivate, text, title}}));
         }
     })
 )(CreateInvite)

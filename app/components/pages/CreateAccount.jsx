@@ -36,6 +36,7 @@ class CreateAccount extends React.Component {
         country: 7,
         name: '',
         email: '',
+        referrer: '',
         invite_code: '',
         invite_enabled: false,
         code: '',
@@ -65,6 +66,20 @@ class CreateAccount extends React.Component {
                 cryptoTestResult
             );
             this.setState({ cryptographyFailure: true });
+        }
+
+        const invite = new URLSearchParams(window.location.search).get('invite');
+        if (invite) {
+            if (!validate_account_name(invite)) {
+                this.setState({referrer: invite});
+            } else {
+                this.setState({
+                    invite_code: invite,
+                    invite_enabled: true,
+                }, () => {
+                    this.validateInviteCode(invite);
+                });
+            }
         }
     }
 
@@ -636,7 +651,7 @@ class CreateAccount extends React.Component {
     _onSubmit = async e => {
         e.preventDefault();
         this.setState({ serverError: '', loading: true });
-        const { email, invite_code, name, password, passwordValid } = this.state;
+        const { email, invite_code, name, password, passwordValid, referrer } = this.state;
         if (!name || !password || !passwordValid) return;
 
         let publicKeys;
@@ -669,7 +684,7 @@ class CreateAccount extends React.Component {
                 active_key: publicKeys[1],
                 posting_key: publicKeys[2],
                 memo_key: publicKeys[3],
-                referrer: new URLSearchParams(window.location.search).get('invite')
+                referrer,
             });
 
             const data = await res.json();
