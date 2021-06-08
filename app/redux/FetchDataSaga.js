@@ -487,7 +487,10 @@ export function* fetchData(action) {
     } else if( order === 'active' ) {
         call_name = PUBLIC_API.active;
     } else if( order === 'payout' ) {
-        call_name = PUBLIC_API.payout;
+        call_name = PUBLIC_API.created;
+        delete args[0].select_tags;
+        delete args[0].select_categories;
+        delete args[0].filter_tag_masks; // do not exclude forum posts
     } else if( order === 'created' ) {
         call_name = PUBLIC_API.created;
     } else if( order === 'responses' ) {
