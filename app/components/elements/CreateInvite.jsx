@@ -75,7 +75,7 @@ class CreateInvite extends Component {
         }
 
         const meetsMinimum = (amount) => {
-            const minValue = props.min_invite_balance
+            const minValue = this.props.min_invite_balance
             if (!minValue) return false
             return parseFloat(amount) < parseFloat(minValue.split(' ')[0])
         }
@@ -259,7 +259,7 @@ class CreateInvite extends Component {
 
                 <div className="row">
                     <div className="column small-10">
-                        {tt('g.amount')} ({tt('g.at_least')} <b>{formatAsset(min_invite_balance, true, false, '')}</b>)
+                        {tt('g.amount')} ({tt('g.at_least')} <b>{min_invite_balance ? formatAsset(min_invite_balance, true, false, '') : '0 GOLOS'}</b>)
                         <div className="input-group" style={{marginBottom: 5}}>
                             <input type="text" placeholder={tt('g.amount')} {...amount.props} ref="amount" autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck="false" onChange={(e) => this.onChangeAmount(e)}/>
                         </div>
@@ -330,7 +330,7 @@ export default connect(
         const username = current && current.get('username')
         const isMyAccount = username === accountName
         const cprops = state.global.get('cprops');
-        const min_invite_balance = cprops ? cprops.get('min_invite_balance') : '0.000 GOLOS'
+        const min_invite_balance = cprops && cprops.get('min_invite_balance')
         return {...ownProps, isMyAccount, accountName, min_invite_balance}
     },
     dispatch => ({
