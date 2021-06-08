@@ -17,6 +17,7 @@ global.$STM_Config = {
     img_proxy_prefix: config.get('img_proxy_prefix'),
     add_notify_site: config.get('add_notify_site'),
     upload_image: config.get('upload_image'),
+    golos_lib_gui: config.get('golos_lib_gui'),
     site_domain: config.get('site_domain'),
     google_analytics_id: config.get('google_analytics_id'),
     chain_id: config.get('chain_id'),

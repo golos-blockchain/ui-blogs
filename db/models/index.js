@@ -30,7 +30,7 @@ if(env === 'development') {
     // in dev, sync all table schema automatically for convenience
     //if (!process.env.DISABLE_DB) { FIXME
     if (true) {
-        sequelize.sync();
+        sequelize.sync({logging: false});
     }
 }
 

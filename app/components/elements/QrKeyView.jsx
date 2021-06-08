@@ -2,10 +2,13 @@ import React from 'react';
 import QRCode from 'app/components/elements/QrCode'
 import tt from 'counterpart';
 
-export default ({type, text, isPrivate, onClose}) => {
+export default ({type, text, isPrivate, title, onClose}) => {
     return (
         <div className="text-center Dialog__qr_viewer">
-            <h3>{isPrivate ? tt('userkeys_jsx.private_something_key', {key: type}) : tt('userkeys_jsx.public_something_key', {key: type})}:</h3>
+            <h3>{title || (isPrivate ?
+                    tt('userkeys_jsx.private_something_key', {key: type}) :
+                    tt('userkeys_jsx.public_something_key', {key: type})
+                )}:</h3>
             <br />
             <QRCode text={text} />
 
