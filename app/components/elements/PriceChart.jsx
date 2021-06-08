@@ -1,4 +1,5 @@
 import React from 'react';
+import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
 import tt from 'counterpart';
 import { DEBT_TOKEN_SHORT, LIQUID_TICKER, CURRENCY_SIGN } from 'app/client_config';
@@ -25,7 +26,38 @@ class PriceChart extends React.Component {
         ) {
             return true;
         }
+        if (nextProps.nightmodeEnabled !== this.props.nightmodeEnabled) {
+            return true;
+        }
         return false;
+    }
+
+    setupChart = () => {
+        if (this.props.nightmodeEnabled) {
+            const {layout, grid} = JSON.parse(JSON.stringify(this.chart.options()));
+            this.oldChartOptions = {layout, grid};
+
+            this.chart.applyOptions({
+                layout: {
+                    backgroundColor: '#212629',
+                    textColor: '#D9D9D9',
+                },
+                grid: {
+                    vertLines: {
+                        color: '#2B2B43',
+                    },
+                    horzLines: {
+                        color: '#363C4E',
+                    },
+                }
+            })
+        } else if (this.oldChartOptions) {
+            this.chart.applyOptions(this.oldChartOptions)
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.chart) this.setupChart();
     }
 
     loadChart = () => {
@@ -46,6 +78,8 @@ class PriceChart extends React.Component {
                 mode: CrosshairMode.Normal
             }
         });
+
+        this.setupChart();
 
         var candleSeries = this.chart.addCandlestickSeries();
 
@@ -133,4 +167,13 @@ class PriceChart extends React.Component {
     }
 }
 
-export default PriceChart;
+export default connect(
+    (state, ownProps) => {
+        let nightmodeEnabled = process.env.BROWSER ? localStorage.getItem('nightmodeEnabled') == 'true' || false : false
+
+        return {
+            ...ownProps,
+            nightmodeEnabled,
+        }
+    },
+)(PriceChart)
