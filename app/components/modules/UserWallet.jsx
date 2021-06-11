@@ -70,6 +70,10 @@ class UserWallet extends React.Component {
         const delegated_vesting_shares = vestsToSteem(account.get('delegated_vesting_shares'), gprops);
 
         let isMyAccount = current_user && current_user.get('username') === account.get('name');
+        
+        const lastActiveOperation = account.get('last_active_operation');
+        const lastActiveOp = new Date(lastActiveOperation).getTime();
+        const accountIdleness = lastActiveOp < new Date().setDate(new Date().getDate() - 150);
 
         const disabledWarning = false;
         // isMyAccount = false; // false to hide wallet transactions
@@ -264,6 +268,13 @@ class UserWallet extends React.Component {
                     <WalletSubMenu account_name={account.get('name')} isMyAccount={isMyAccount} />
                 </div>
             </div>
+            {accountIdleness && <div className="row column">
+                <div className="callout" align="center">
+                    <b>{tt('userwallet_jsx.account_idleness')}. <a target="_blank" href="https://wiki.golos.id/users/update#ponizhenie-sily-golosa-pri-neaktivnosti">{tt('g.more_hint')} <Icon name="extlink" /></a></b>
+                    <br /><img src={require("app/assets/images/golos-share.png")} width="300" /><br />
+                    Рекомендуем прочитать об <a target="_blank" href="https://wiki.golos.id/users/update">основных обновлениях</a> на Голосе за последнее время...
+                </div>
+            </div>}
             <div className="UserWallet__balance row">
                 <div className="column small-12 medium-8">
                     {TIP_TOKEN.toUpperCase()}<br />
