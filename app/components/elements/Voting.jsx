@@ -12,6 +12,7 @@ import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import FoundationDropdown from 'app/components/elements/FoundationDropdown';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
 import tt from 'counterpart';
+import { Asset } from 'golos-classic-js/lib/utils';
 
 const MAX_VOTES_DISPLAY = 20;
 const VOTE_WEIGHT_DROPDOWN_THRESHOLD = 1.0 * 1000.0 * 1000.0;
@@ -193,10 +194,21 @@ class Voting extends React.Component {
             });
         }
 
-        const pullpayout = tt('g.pull_payout') + post_obj.get('pending_author_payout_gests_value');
-        const donatesEl = <DropdownMenu className="Voting__donates_list" el="div" items={donateItems}>
-            <span title={pullpayout}>
-                <Icon size="0_95x" name="tips" />&nbsp;{post_obj.get('donates').toString().split(".")[0] + " GOLOS"}
+        let reward = Asset(post_obj.get('pending_author_payout_in_golos'));
+        if (reward.amount === 0)
+            reward = Asset(post_obj.get('author_payout_in_golos'));
+
+        let donateTitle = undefined;
+        if (donateItems.length)
+            donateTitle = tt('g.pool_payout_short') + reward;
+
+        let donateSum = Asset(post_obj.get('donates'))
+        if (reward.amount !== 0) 
+            donateSum = Asset(donateSum.amount + reward.amount, 3, 'GOLOS');
+
+        const donatesEl = <DropdownMenu className="Voting__donates_list" el="div" items={donateItems} title={donateTitle}>
+            <span title={tt('g.pool_payout') + reward}>
+                <Icon size="0_95x" name="tips" />&nbsp;{donateSum.toString()}
                 {donateItems.length > 0 && <Icon name="dropdown-arrow" />}
             </span>
         </DropdownMenu>;

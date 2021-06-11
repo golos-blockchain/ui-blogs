@@ -190,6 +190,11 @@
 .DropdownMenu.Voting__donates_list {
   margin-right: .7rem;
   margin-left: .1rem;
+
+  .title {
+    font-size: 12px;
+    padding: 0.3rem;
+  }
 }
 
 .DropdownMenu.Voting__donates_list ul {
