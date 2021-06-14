@@ -235,7 +235,7 @@ class App extends React.Component {
         const notifyShow = $STM_Config.add_notify_site.show;
         const notifyLink = $STM_Config.add_notify_site.link;
         const notifyTitle = $STM_Config.add_notify_site.title;
-        const showInfoBox = notifyShow && this.isShowInfoBox();
+        const showInfoBox = notifyShow; // && this.isShowInfoBox()
 
         if (this.state.showCallout && (alert || warning || success)) {
             callout = (
