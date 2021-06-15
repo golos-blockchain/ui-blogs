@@ -55,6 +55,8 @@
     "please": "Please",    
     "active": "Active key",    
     "owner": "Owner key",
+    "read_only_mode_notify": "Server under maintenance",
+    "read_only_mode": "Due to server maintenance, the site is running in read mode.",
     "are_you_sure": "Are you sure?",
     "ask": "Ask",
     "auto": "auto",
@@ -303,7 +305,7 @@
     "for_the_post": "for the post",    
     "night_mode": "Night Mode",
     "social_network": "Social network",
-    "about_project": "Golos.id — social platform, blogger community, media network developed on the GOLOS blockchain"
+    "about_project": "Golos.id — social platform and blogger community, developed on the GOLOS blockchain"
   },
   "exchanges_jsx": {
     "title": "Buying and selling tokens",
