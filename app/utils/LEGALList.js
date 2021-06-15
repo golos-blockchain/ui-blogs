@@ -9,6 +9,7 @@ const LEGALList = `
 /ru--kokteijlx/@ilyachema/managa-ili-eshe-odin-sposob-rasslabitsya
 /ru--politika/@ms-boss/chastnaya-armiya-vagnera
 /ru--prochee/@oldpages/masterokst-zakonno-li-videonablyudenie-v-podezde
+/ru--megagalxyan/@chin/once-upon-a-time-in-hollywood-odnazhdy-v-gollivude-2019-g
 `
 .trim()
 .split('\n');
