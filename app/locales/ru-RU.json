@@ -354,7 +354,6 @@
     "unmute": "Разблокировать",
     "upvote": "Голосовать за",
     "uia_rewards": "Вознаграждения прочими токенами (User Issued Assets)",
-    "pool_payout": "...из них из общего пула ",
     "pool_payout_short": "Из общего пула ",
     "upvote_post": "Проголосовать за пост",
     "upload": "Загрузить",
@@ -924,7 +923,6 @@
     "for": " за ",
     "issue": "Эмиссия токенов ",
     "orders_canceled": "Биржевые ордера отменены, автоконвертация ",
-    "to_golos_tokens": " в токены GOLOS",
     "conversion_started": "Запущена 3.5 дневная конвертация ",
     "were_converted": " были сконвертированы в ",
     "to_account": " на аккаунт "

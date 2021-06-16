@@ -207,7 +207,7 @@ class Voting extends React.Component {
             donateSum = Asset(donateSum.amount + reward.amount, 3, 'GOLOS');
 
         const donatesEl = <DropdownMenu className="Voting__donates_list" el="div" items={donateItems} title={donateTitle}>
-            <span title={tt('g.pool_payout') + reward}>
+            <span title={tt('g.pool_payout_short') + reward}>
                 <Icon size="0_95x" name="tips" />&nbsp;{donateSum.toString()}
                 {donateItems.length > 0 && <Icon name="dropdown-arrow" />}
             </span>

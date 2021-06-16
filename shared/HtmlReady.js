@@ -244,7 +244,7 @@ function proxifyImages(doc) {
     for (let node of [...doc.getElementsByTagName('img')]) {
         let url = node.getAttribute('src');
 
-        url = url.replace(/postimg.org/, 'postimg.cc');
+        //url = url.replace(/postimg.org/, 'postimg.cc');
 
         if (!linksRe.local.test(url)) {
             node.setAttribute(
