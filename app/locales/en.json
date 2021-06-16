@@ -55,6 +55,8 @@
     "please": "Please",    
     "active": "Active key",    
     "owner": "Owner key",
+    "read_only_mode_notify": "Server under maintenance",
+    "read_only_mode": "Due to server maintenance, the site is running in read mode.",
     "are_you_sure": "Are you sure?",
     "ask": "Ask",
     "auto": "auto",
@@ -187,7 +189,6 @@
     "unmute": "Unmute",
     "upvote": "Upvote",
     "uia_rewards": "Rewards with other tokens (User Issued Assets)",
-    "pool_payout": "From the publication pool ",
     "pool_payout_short": "From the pool ",
     "upvote_post": "Upvote post",
     "upload": "Upload",
@@ -303,7 +304,7 @@
     "for_the_post": "for the post",    
     "night_mode": "Night Mode",
     "social_network": "Social network",
-    "about_project": "Golos.id — social platform, blogger community, media network developed on the GOLOS blockchain"
+    "about_project": "Golos.id — social platform and blogger community, developed on the GOLOS blockchain"
   },
   "exchanges_jsx": {
     "title": "Buying and selling tokens",
@@ -894,7 +895,6 @@
     "for": " for ",
     "issue": "Issue of tokens ",
     "orders_canceled": "Exchange orders canceled, autoconversion ",
-    "to_golos_tokens": " to GOLOS tokens",
     "conversion_started": "Started 3.5 day conversion ",
     "were_converted": " were converted to ",
     "to_account": " to account "

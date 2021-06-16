@@ -195,11 +195,11 @@ class TransferHistoryRow extends React.Component {
         }
 
         else if (type === 'convert_sbd_debt') {
-            description_start += tt('transferhistoryrow_jsx.orders_canceled') + data.sbd_amount + tt('transferhistoryrow_jsx.to_golos_tokens');
+            description_start += tt('transferhistoryrow_jsx.orders_canceled') + data.sbd_amount;
         }
 
         else if (type === 'convert') {
-            description_start += tt('transferhistoryrow_jsx.conversion_started') + data.amount + tt('transferhistoryrow_jsx.to_golos_tokens');
+            description_start += tt('transferhistoryrow_jsx.conversion_started') + data.amount;
         }
 
         else if (type === 'fill_convert_request') {

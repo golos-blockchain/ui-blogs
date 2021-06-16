@@ -272,7 +272,7 @@ class UserWallet extends React.Component {
                 <div className="callout" align="center">
                     <b>{tt('userwallet_jsx.account_idleness')}. <a target="_blank" href="https://wiki.golos.id/users/update#ponizhenie-sily-golosa-pri-neaktivnosti">{tt('g.more_hint')} <Icon name="extlink" /></a></b>
                     <br /><img src={require("app/assets/images/golos-share.png")} width="300" /><br />
-                    Рекомендуем прочитать об <a target="_blank" href="https://wiki.golos.id/users/update">основных обновлениях</a> на Голосе за последнее время...
+                    Рекомендуем прочитать об <a target="_blank" href="https://wiki.golos.id/users/update">изменениях</a> на Голосе за последнее время...
                 </div>
             </div>}
             <div className="UserWallet__balance row">
