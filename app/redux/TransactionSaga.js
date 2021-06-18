@@ -463,7 +463,7 @@ function* preBroadcast_comment({operation, username}) {
     if(comment_options) {
         const isPost = parent_author === '';
         const {
-            max_accepted_payout = [isPost ? "1000.000" : "10.000", DEBT_TICKER].join(" "),
+            max_accepted_payout = [isPost ? "2000.000" : "20.000", DEBT_TICKER].join(" "),
             percent_steem_dollars = 10000, // 10000 === 100%
             allow_votes = true,
             allow_curation_rewards = true,
