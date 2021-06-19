@@ -97,6 +97,24 @@ class App extends React.Component {
         if (process.env.BROWSER) {
             initAnchorHelper();
         }
+
+        if (process.env.BROWSER) {
+            this.savedAuthCleaner();
+        }
+    }
+
+    savedAuthCleaner() {
+        setInterval(() => {
+            const saved = sessionStorage.getItem('session_id');
+            if (saved) {
+                const created = parseInt(saved.split('\t')[0]);
+                const now = Date.now();
+                if (now - created >= 3600000) {
+                    console.log('session_id cleaned');
+                    sessionStorage.removeItem('session_id');
+                }
+            }
+        }, 1000)
     }
 
     toggleBodyNightmode(nightmodeEnabled) {

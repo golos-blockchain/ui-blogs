@@ -98,10 +98,16 @@ function pubkeyThreshold({pubkeys, authority}) {
 
 export function* findSigningKey({opType, username, password}) {
     let authTypes
-    if (postingOps.has(opType))
+    if (postingOps.has(opType)) {
         authTypes = 'posting, active'
-    else
+    }
+    else {
         authTypes = 'active, owner'
+        if (location.pathname.startsWith('/market')) {
+            const saved = sessionStorage.getItem('session_id')
+            if (saved) return new Buffer(saved.split('\t')[1], 'hex').toString()
+        }
+    }
     authTypes = authTypes.split(', ')
 
     const currentUser = yield select(state => state.user.get('current'))
