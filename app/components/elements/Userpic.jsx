@@ -50,7 +50,7 @@ class Userpic extends Component {
         }
 
         if (url && /^(https?:)\/\//.test(url)) {
-            const size = width && width > 48 ? '320x320' : '120x120';
+            const size = width && width > 75 ? '200x200' : '75x75';
             url = proxifyImageUrl(url, size);
         } else {
             if (hideIfDefault) {

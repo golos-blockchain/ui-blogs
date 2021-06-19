@@ -140,7 +140,7 @@ export function getProfileImage(account, size = 48) {
             if (md.profile) {
                 let url = md.profile.profile_image;
                 if (url && /^(https?:)\/\//.test(url)) {
-                    size = size > 48 ? '320x320' : '120x120';
+                    size = size > 75 ? '200x200' : '75x75';
                     url = $STM_Config.img_proxy_prefix + size + '/' + url;
                     return url;
                 }
