@@ -1129,7 +1129,7 @@
     "payout_option_100": "Power of voice 100%%",
     "payout_option_100_hint": "Receive all payout in Golos tokens",
     "payout_option_50": "50%%/50%%",
-    "payout_option_50_hint": "50%% for yourself, 50%% in fund for development",
+    "payout_option_50_hint": "50%% for yourself, 50%% for the development",
     "payout_option_0": "Refuse payout",
     "payout_option_0_hint": "Without payout from the publication pool",
     "tags_input_placeholder": "Add tags",
