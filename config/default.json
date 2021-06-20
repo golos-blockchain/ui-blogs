@@ -34,7 +34,8 @@
       "frameAncestors": "'none'"
     }
   },
-  "img_proxy_prefix": "https://steemitimages.com/",
+  "img_proxy_prefix": "https://devimages.golos.today/",
+  "img_proxy_backup_prefix": "https://steemitimages.com/",
   "add_notify_site": {
     "show": false,
     "link": "/@lex/obmen-lichnymi-soobsheniyami-i-nachalo-dlya-golos-messenger",

@@ -26,6 +26,7 @@ import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import PostsList from 'app/components/cards/PostsList';
 import {isFetchingOrRecentlyUpdated} from 'app/utils/StateFunctions';
 import {repLog10} from 'app/utils/ParsersAndFormatters';
+import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
 import Tooltip from 'app/components/elements/Tooltip';
 import { LinkWithDropdown } from 'react-foundation-components/lib/global/dropdown';
 import VerticalMenu from 'app/components/elements/VerticalMenu';
@@ -452,7 +453,7 @@ export default class UserProfile extends React.Component {
 
         let cover_image_style = {}
         if(cover_image) {
-            const cover_image_url = $STM_Config.img_proxy_prefix ? $STM_Config.img_proxy_prefix + '0x0' + '/' + cover_image : null
+            const cover_image_url = proxifyImageUrl(cover_image);
             cover_image_style = {backgroundImage: "url(" + cover_image_url + ")"}
         }
 

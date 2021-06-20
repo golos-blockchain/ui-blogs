@@ -2,6 +2,7 @@ import xmldom from 'xmldom';
 import linksRe, { any as linksAny } from 'app/utils/Links';
 import { validate_account_name } from 'app/utils/ChainValidation';
 import { detransliterate } from 'app/utils/ParsersAndFormatters';
+import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
 
 let DOMParser = null;
 let XMLSerializer = null;
@@ -233,7 +234,7 @@ function img(state, child) {
 
 // For all img elements with non-local URLs
 function proxifyImages(doc) {
-    if (!$STM_Config.img_proxy_prefix) {
+    if (!$STM_Config.img_proxy_prefix && !$STM_Config.img_proxy_backup_prefix) {
         return;
     }
 
@@ -247,7 +248,7 @@ function proxifyImages(doc) {
         if (!linksRe.local.test(url)) {
             node.setAttribute(
                 'src',
-                $STM_Config.img_proxy_prefix + '0x0/' + url
+                proxifyImageUrl(url)
             );
         }
     }

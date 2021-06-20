@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import proxifyImageUrl from 'app/utils/ProxifyUrl';
+import { proxifyImageUrlWithStrip } from 'app/utils/ProxifyUrl';
 
 import Icon from 'golos-ui/Icon';
 
@@ -68,7 +68,7 @@ export default class UserProfileAvatar extends PureComponent {
     render() {
         const { children, avatarUrl } = this.props;
         const backgroundUrl = avatarUrl
-            ? proxifyImageUrl(avatarUrl, '125x125')
+            ? proxifyImageUrlWithStrip(avatarUrl, '125x125')
             : null;
 
         return (

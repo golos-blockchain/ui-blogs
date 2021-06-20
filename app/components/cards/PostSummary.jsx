@@ -22,6 +22,7 @@ import UserNames from 'app/components/elements/UserNames';
 import tt from 'counterpart';
 import { APP_ICON, CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config';
 import { detransliterate } from 'app/utils/ParsersAndFormatters';
+import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
 import PostSummaryThumb from 'app/components/elements/PostSummaryThumb'
 
 function isLeftClickEvent(event) {
@@ -214,10 +215,9 @@ class PostSummary extends React.Component {
         const visitedClassName = this.props.visited ? 'PostSummary__post-visited ' : '';
         let thumb = null;
         if(pictures && p.image_link) {
-          const prox = $STM_Config.img_proxy_prefix
           const size = (thumbSize == 'mobile') ? '800x600' : '256x512'
 
-          let url = (prox ? prox + size + '/' : '');
+          let url = proxifyImageUrl('', size);
           if (Date.parse(p.created) > CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME) {
             url += p.image_link
           } else {

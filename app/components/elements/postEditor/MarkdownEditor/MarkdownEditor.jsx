@@ -7,6 +7,7 @@ import tt from 'counterpart';
 import cn from 'classnames';
 import MarkdownEditorToolbar from 'app/components/elements/postEditor/MarkdownEditorToolbar';
 import DialogManager from 'app/components/elements/common/DialogManager';
+import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
 import 'simplemde/dist/simplemde.min.css';
 
 const DELAYED_TIMEOUT = 1000;
@@ -355,7 +356,7 @@ export default class MarkdownEditor extends PureComponent {
             this._lineWidgets.push(widget);
         });
 
-        img.src = $STM_Config.img_proxy_prefix + '0x0/' + url;
+        img.src = proxifyImageUrl(url);
     }
 
     _onPaste = (cm, e) => {

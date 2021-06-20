@@ -23,6 +23,7 @@ import Userpic from 'app/components/elements/Userpic';
 import PostFormLoader from 'app/components/modules/PostForm/loader';
 import CommentFormLoader from 'app/components/modules/CommentForm/loader';
 import { getEditDraftPermLink } from 'app/utils/postForm';
+import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
 import Confetti from 'react-dom-confetti';
 import PostSummaryThumb from 'app/components/elements/PostSummaryThumb';
 import { APP_ICON, SEO_TITLE, LIQUID_TICKER, CONFETTI_CONFIG, CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config';
@@ -261,13 +262,10 @@ class PostFull extends React.Component {
 
         const authorRepLog10 = repLog10(content.author_reputation);
 
-        // for prevPosts
-        const prox = $STM_Config.img_proxy_prefix
-
         let prevPosts = [];
         for (let pp of this.props.prevPosts) {
             let pp2 = extractContent(objAccessor, pp);
-            let iurl = (prox ? prox + '800x600' + '/' : '');
+            let iurl = proxifyImageUrl('', '800x600');
             if (Date.parse(pp2.created) > CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME) {
                 iurl += pp2.image_link
             } else {
