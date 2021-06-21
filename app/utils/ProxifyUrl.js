@@ -12,7 +12,16 @@ const rProxyDomain = /^http(s)?:\/\/images.golos.today\//g;
 const rProxyDomainsDimensions = /http(s)?:\/\/images.golos.today\/([0-9]+x[0-9]+)\//g;
 const NATURAL_SIZE = '0x0/';
 
-export const imageProxy = () => $STM_Config.img_proxy_prefix;
+export const proxifyImageUrl = (url, dimensions = '0x0') => {
+    if (!$STM_Config || !dimensions)
+      return url;
+    if (dimensions[dimensions.length - 1] !== '/')
+      dimensions += '/';
+    let prefix = '';
+    if ($STM_Config.img_proxy_prefix) prefix += $STM_Config.img_proxy_prefix + dimensions;
+    if ($STM_Config.img_proxy_backup_prefix) prefix += $STM_Config.img_proxy_backup_prefix + dimensions;
+    return prefix + url;
+};
 
 /**
  * Strips all proxy domains from the beginning of the url. Adds the global proxy if dimension is specified
@@ -22,14 +31,14 @@ export const imageProxy = () => $STM_Config.img_proxy_prefix;
  *                                          if true, preserves the first {int}x{int} in a proxy url. If not found, uses 0x0
  * @returns string
  */
-export default (url, dimensions = false) => {
+export const proxifyImageUrlWithStrip = (url, dimensions = false) => {
   const proxyList = url.match(rProxyDomainsDimensions);
   let respUrl = url;
   if (proxyList) {
     const lastProxy = proxyList[proxyList.length - 1];
     respUrl = url.substring(url.lastIndexOf(lastProxy) + lastProxy.length);
   }
-  if (dimensions && $STM_Config && $STM_Config.img_proxy_prefix) {
+  if (dimensions && $STM_Config && ($STM_Config.img_proxy_prefix || $STM_Config.img_proxy_backup_prefix)) {
     let dims = dimensions + '/';
     if (typeof dimensions !== 'string') {
       dims = proxyList
@@ -37,7 +46,7 @@ export default (url, dimensions = false) => {
         : NATURAL_SIZE;
     }
     if (NATURAL_SIZE !== dims || !rProxyDomain.test(respUrl)) {
-      return $STM_Config.img_proxy_prefix + dims + respUrl;
+      return proxifyImageUrl(respUrl, dims);
     }
   }
   return respUrl;

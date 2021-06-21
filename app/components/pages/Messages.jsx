@@ -23,6 +23,7 @@ import g from 'app/redux/GlobalReducer';
 import user from 'app/redux/User';
 import { getProfileImage, getLastSeen } from 'app/utils/NormalizeProfile';
 import { fitToPreview } from 'app/utils/ImageUtils';
+import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
 import { notificationSubscribe, notificationTake } from 'app/utils/ServerApiClient';
 import { flash, unflash } from 'app/components/elements/messages/FlashTitle';
 import { APP_NAME_UP, APP_ICON } from 'app/client_config';
@@ -519,7 +520,7 @@ class Messages extends React.Component {
                 }
             });
         } else if (imageUrl) {
-            let url = $STM_Config.img_proxy_prefix + '0x0/' + imageUrl;
+            let url = proxifyImageUrl(imageUrl);
             let img = new Image();
             img.onerror = img.onabort = () => {
                 this.props.showError(tt('messages.cannot_load_image_try_again'));

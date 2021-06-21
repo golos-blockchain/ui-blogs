@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import tt from 'counterpart';
 import o2j from 'shared/clash/object2json';
-import proxifyImageUrl from 'app/utils/ProxifyUrl';
+import { proxifyImageUrlWithStrip } from 'app/utils/ProxifyUrl';
 import normalizeProfile from 'app/utils/NormalizeProfile';
 
 import user from 'app/redux/User';
@@ -210,7 +210,7 @@ class UserHeader extends Component {
         //     : null;
 
         const backgroundUrl = cover_image
-            ? proxifyImageUrl(cover_image, '0x0')
+            ? proxifyImageUrlWithStrip(cover_image, '0x0')
             : false;
 
         return (

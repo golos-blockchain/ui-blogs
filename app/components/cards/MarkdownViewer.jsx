@@ -48,7 +48,7 @@ class MarkdownViewer extends Component {
         super(props);
 
         this.images = [];
-        this.imagesAlts = [];
+        this.imagesOrigs = [];
 
         this.handleContentClick = this.handleContentClick.bind(this);
     }
@@ -77,10 +77,10 @@ class MarkdownViewer extends Component {
     };
 
     handleContentClick(e) {
-      if (e.target.tagName === 'IMG' && this.images) {
+      if (e.target.tagName === 'IMG' && this.imagesOrigs) {
         const tags = this.contentDiv.getElementsByTagName('img');
         for (let i = 0; i < tags.length; i += 1) {
-          if (tags[i] === e.target && this.images.length > i) {
+          if (tags[i] === e.target && i < this.imagesOrigs.length) {
             if (e.target.parentNode && e.target.parentNode.tagName === 'A') return;
             this.setState({
               ...this.state,
@@ -160,6 +160,9 @@ class MarkdownViewer extends Component {
 
         const rtags = getTags(cleanText);
         this.images = Array.from(rtags.images);
+        this.imagesOrigs = this.images.map(url => {
+            return url.substring(url.lastIndexOf('/http') + 1);
+        });
 
         const noImageActive = cleanText.indexOf(noImageText) !== -1;
 
@@ -288,9 +291,9 @@ class MarkdownViewer extends Component {
                     )}
                 {lightboxOpen && (
                   <Lightbox
-                    mainSrc={this.images[lightboxIndex]}
-                    nextSrc={this.images[(lightboxIndex + 1) % this.images.length]}
-                    prevSrc={this.images[(lightboxIndex + (this.images.length - 1)) % this.images.length]}
+                    mainSrc={this.imagesOrigs[lightboxIndex]}
+                    nextSrc={this.imagesOrigs[(lightboxIndex + 1) % this.imagesOrigs.length]}
+                    prevSrc={this.imagesOrigs[(lightboxIndex + (this.imagesOrigs.length - 1)) % this.imagesOrigs.length]}
                     onCloseRequest={() => {
                       this.setState({
                         ...this.state,
@@ -300,13 +303,13 @@ class MarkdownViewer extends Component {
                     onMovePrevRequest={() =>
                       this.setState({
                         ...this.state,
-                        lightboxIndex: (lightboxIndex + (this.images.length - 1)) % this.images.length
+                        lightboxIndex: (lightboxIndex + (this.imagesOrigs.length - 1)) % this.imagesOrigs.length
                       })
                     }
                     onMoveNextRequest={() =>
                       this.setState({
                         ...this.state,
-                        lightboxIndex: (lightboxIndex + (this.images.length + 1)) % this.images.length
+                        lightboxIndex: (lightboxIndex + (this.imagesOrigs.length + 1)) % this.imagesOrigs.length
                       })
                     }
                   />

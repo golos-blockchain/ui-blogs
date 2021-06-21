@@ -374,7 +374,7 @@ class Settings extends React.Component {
                           </Dropzone>
                           <a onClick={this.onOpenClick}
                              style={selectorStyle}>
-                                {pImageUploading ? `${tt(`user_saga_js.imageUpload.uploading`)} ...` : tt(`g.upload`)}
+                                {pImageUploading ? `${tt(`user_saga_js.image_upload.uploading`)} ...` : tt(`g.upload`)}
                           </a>
                         </div>
                     </label>
@@ -396,7 +396,7 @@ class Settings extends React.Component {
                       </Dropzone>
                       <a onClick={this.onOpenCoverClick}
                          style={selectorStyleCover}>
-                        {cImageUploading ? `${tt(`user_saga_js.imageUpload.uploading`)} ...` : tt(`g.upload`)}
+                        {cImageUploading ? `${tt(`user_saga_js.image_upload.uploading`)} ...` : tt(`g.upload`)}
                       </a>
                     </div>
                   </label>
