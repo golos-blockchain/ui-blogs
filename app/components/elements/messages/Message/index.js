@@ -1,5 +1,6 @@
 import React from 'react';
 import tt from 'counterpart';
+import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
 
 import './Message.css';
 
@@ -36,8 +37,8 @@ export default class Message extends React.Component {
 
         let content;
         if (message.type === 'image') {
-            const src = $STM_Config.img_proxy_prefix + '0x0/' + message.body;
-            const srcPreview = $STM_Config.img_proxy_prefix + '600x300/' + message.body;
+            const src = proxifyImageUrl(message.body);
+            const srcPreview = proxifyImageUrl(message.body, '600x300');
             const previewWidth = message.previewWidth ? message.previewWidth + 'px' : 'auto';
             const previewHeight = message.previewHeight ? message.previewHeight + 'px' : 'auto';
 

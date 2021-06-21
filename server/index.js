@@ -15,6 +15,7 @@ global.$STM_Config = {
     ws_connection_client: config.get('ws_connection_client'),
     ws_connection_msgs: config.get('ws_connection_msgs'),
     img_proxy_prefix: config.get('img_proxy_prefix'),
+    img_proxy_backup_prefix: config.get('img_proxy_backup_prefix'),
     read_only_mode: config.get('read_only_mode'),
     add_notify_site: config.get('add_notify_site'),
     upload_image: config.get('upload_image'),

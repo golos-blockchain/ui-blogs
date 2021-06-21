@@ -1,5 +1,6 @@
 import max from 'lodash/max';
 import linksRe from 'app/utils/Links';
+import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
 
 export function getPinnedPosts(account, links=false) {
   let pinnedPosts = [];
@@ -140,8 +141,8 @@ export function getProfileImage(account, size = 48) {
             if (md.profile) {
                 let url = md.profile.profile_image;
                 if (url && /^(https?:)\/\//.test(url)) {
-                    size = size > 48 ? '320x320' : '120x120';
-                    url = $STM_Config.img_proxy_prefix + size + '/' + url;
+                    size = size > 75 ? '200x200' : '75x75';
+                    url = proxifyImageUrl(url, size);
                     return url;
                 }
             }
