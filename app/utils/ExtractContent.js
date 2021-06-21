@@ -69,6 +69,11 @@ export default function extractContent(get, content) {
         [image_link] = Array.from(rtags.images)
     }
 
+    // Fixing &amp; if present in URL (some alternative UIs?)
+    if (image_link) {
+        image_link = image_link.split('&amp;').join('&');
+    }
+
     let desc
     let desc_complete = false
     if(!desc) {
