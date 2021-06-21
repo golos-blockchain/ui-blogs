@@ -360,8 +360,12 @@ function linkify(state, content) {
     });
 
     content = content.replace(linksAny('gi'), ln => {
+        // Make images from URLs inserted into text
         if (linksRe.image.test(ln)) {
             if (state.images) {
+                // Fix if URL has params
+                // TODO: move to imageproxy
+                ln = ln.split('&amp;').join('&');
                 state.images.add(ln);
             }
 
