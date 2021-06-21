@@ -262,10 +262,15 @@ class PostFull extends React.Component {
 
         const authorRepLog10 = repLog10(content.author_reputation);
 
+        let isMobile = false;
+        if (process.env.BROWSER) {
+            isMobile = window.matchMedia('screen and (max-width: 39.9375em)').matches;
+        }
+
         let prevPosts = [];
         for (let pp of this.props.prevPosts) {
             let pp2 = extractContent(objAccessor, pp);
-            let iurl = proxifyImageUrl('', '800x600');
+            let iurl = proxifyImageUrl('', isMobile ? '800x600' : '256x512');
             if (Date.parse(pp2.created) > CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME) {
                 iurl += pp2.image_link
             } else {
