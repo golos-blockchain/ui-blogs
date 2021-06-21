@@ -243,7 +243,10 @@ function proxifyImages(doc) {
     }
 
     for (let node of [...doc.getElementsByTagName('img')]) {
-        const url = node.getAttribute('src');
+        let url = node.getAttribute('src');
+
+        // url = url.replace(/postimg.org/, 'postimg.cc'); // postimg.org moved to another domain
+        // url = url.replace(/(?:https?:)\/\/imgp.golos.io\/0x0\//, ''); // imgp.golos.io does not work
 
         if (!linksRe.local.test(url)) {
             node.setAttribute(
@@ -304,8 +307,6 @@ function linkifyNode(state, child) {
 function linkify(state, content) {
     // hashtag
     content = content.replace(/(?:https?:)\/\/(golos.io|golos.blog)/, 'https://golos.id');
-    content = content.replace(/postimg.org/, 'postimg.cc');
-
     content = content.replace(/(^|\s)(#[-a-zа-яёґєії\d]+)/gi, tag => {
         // Don't allow numbers to be tags
         if (/#[\d]+$/.test(tag)) {

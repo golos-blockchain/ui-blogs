@@ -55,6 +55,8 @@
     "please": "Please",    
     "active": "Active key",    
     "owner": "Owner key",
+    "read_only_mode_notify": "Server under maintenance",
+    "read_only_mode": "Due to server maintenance, the site is running in read mode.",
     "are_you_sure": "Are you sure?",
     "ask": "Ask",
     "auto": "auto",
@@ -187,7 +189,6 @@
     "unmute": "Unmute",
     "upvote": "Upvote",
     "uia_rewards": "Rewards with other tokens (User Issued Assets)",
-    "pool_payout": "From the publication pool ",
     "pool_payout_short": "From the pool ",
     "upvote_post": "Upvote post",
     "upload": "Upload",
@@ -303,7 +304,7 @@
     "for_the_post": "for the post",    
     "night_mode": "Night Mode",
     "social_network": "Social network",
-    "about_project": "Golos.id — social platform, blogger community, media network developed on the GOLOS blockchain"
+    "about_project": "Golos.id — social platform and blogger community, developed on the GOLOS blockchain"
   },
   "exchanges_jsx": {
     "title": "Buying and selling tokens",
@@ -894,7 +895,6 @@
     "for": " for ",
     "issue": "Issue of tokens ",
     "orders_canceled": "Exchange orders canceled, autoconversion ",
-    "to_golos_tokens": " to GOLOS tokens",
     "conversion_started": "Started 3.5 day conversion ",
     "were_converted": " were converted to ",
     "to_account": " to account "
@@ -1082,6 +1082,7 @@
     "transfers_are_temporary_disabled": "Transfers are temporary disabled.",
     "cancel_power_down": "Cancel Power Down",
     "top_dpos": "Top 100 users by Golos Power",
+    "account_idleness": "Your account has not had any actions using the active key for a long time",
     "worker_foundation": "Workers foundation",
     "history_viewing": "Operation history",
     "history": "HISTORY"
@@ -1128,9 +1129,9 @@
     "payout_option_100": "Power of voice 100%%",
     "payout_option_100_hint": "Receive all payout in Golos tokens",
     "payout_option_50": "50%%/50%%",
-    "payout_option_50_hint": "Receive payout in Golos and GBG",
+    "payout_option_50_hint": "50%% for yourself, 50%% for the development",
     "payout_option_0": "Refuse payout",
-    "payout_option_0_hint": "Publish post without payout",
+    "payout_option_0_hint": "Without payout from the publication pool",
     "tags_input_placeholder": "Add tags",
     "convert_to_md_warning": "Converting to Markdown may cause some changes and markup loses. Are you sure?",
     "convert_to_html_warning": "Converting to HTML may cause some changes and markup loses. Are you sure?",
@@ -1138,7 +1139,7 @@
     "empty_body_error": "Empty body",
     "text_placeholder": "Start your story...",
     "add_image": "Add image",
-    "set_payout_type": "Select the type of payment for your post",
+    "set_payout_type": "Select type of payment for post",
     "image_preview_error": "Image loading error",
     "update": "Update",
     "wait_uploading": "Images uploading...",

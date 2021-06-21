@@ -254,6 +254,15 @@ function* broadcastOperation(
 }
 
 function* broadcastPayload({payload: {operations, keys, username, hideErrors, successCallback, errorCallback}}) {
+    if ($STM_Config.read_only_mode) {
+        yield put({type: 'ADD_NOTIFICATION', payload: {
+            key: "trx_" + Date.now(),
+            message: tt('g.read_only_mode_notify'),
+            dismissAfter: 5000
+        }})
+        return;
+    }
+    
     for (const [type] of operations) // see also transaction/ERROR
         yield put(tr.actions.remove({key: ['TransactionError', type]}))
 
@@ -454,7 +463,8 @@ function* preBroadcast_comment({operation, username}) {
     if(comment_options) {
         const isPost = parent_author === '';
         const {
-            max_accepted_payout = [isPost ? "1000.000" : "1.000", DEBT_TICKER].join(" "),
+            max_accepted_payout = ["1000000.000", DEBT_TICKER].join(" "),
+            // max_accepted_payout = [isPost ? "10000.000" : "100.000", DEBT_TICKER].join(" "),
             percent_steem_dollars = 10000, // 10000 === 100%
             allow_votes = true,
             allow_curation_rewards = true,

@@ -95,8 +95,7 @@ export function* fetchState(location_change_action) {
                         account.transfer_history = []
                         account.other_history = []
 
-                        state.cprops = yield call([api, api.getChainPropertiesAsync])
-                        
+                        state.cprops = yield call([api, api.getChainPropertiesAsync])                        
                         history.forEach(operation => {
                             switch (operation[1].op[0]) {
                                 case 'claim':
@@ -115,6 +114,7 @@ export function* fetchState(location_change_action) {
                                 case 'convert_sbd_debt':
                                 case 'convert':
                                 case 'fill_convert_request':
+                                case 'worker_reward':
                                     state.accounts[uname].transfer_history.push(operation)
                                 break
 
