@@ -1159,7 +1159,7 @@
         "login_first": "Пожалуйста, выполните вход в систему ...",
         "login_with_posting_key": "Недоступен постинг ключ",
         "server_unavailable": "Ошибка доступа к серверу",
-        "image_size_is_too_large": "Изображение слишком большое"
+        "image_size_is_too_large": "Загрузите фото размером до 1 МБ"
       }
     }
   },
