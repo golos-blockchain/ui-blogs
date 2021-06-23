@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import TransferHistoryRow from 'app/components/cards/TransferHistoryRow';
 import {numberWithCommas, vestsToSp, assetFloat} from 'app/utils/StateFunctions'
 import tt from 'counterpart';
+import Icon from 'app/components/elements/Icon';
 import { LIQUID_TICKER, VEST_TICKER } from 'app/client_config';
 
 class AuthorRewards extends React.Component {
@@ -89,6 +90,7 @@ class AuthorRewards extends React.Component {
         return (<div className="UserWallet">
             <div className="row">
                 <div className="column small-12">
+                    <span style={{float: 'right', fontSize: '85%'}}><a href="/payout"><Icon name="hf/hf18" size="2x" /> {tt('g.posts')}</a> {tt('g.and')} {tt('g.comments')} {tt('g.sorted_by_payouts')}</span>
                     <h4 className="uppercase">{tt('g.author_rewards')}</h4>
                 </div>
             </div>

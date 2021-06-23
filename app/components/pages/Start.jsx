@@ -90,12 +90,12 @@ class Start extends React.Component {
                             <div className='column large-3 medium-3 small-6'>
                                 <Icon name='money' size='10x'/>
                                 <h5>Выгодно для блогинга</h5>
-                                <p className='landing-start-block-icon-text'>Каждый может получить вознаграждения за интересные посты, комментарии, и даже за репосты</p>
+                                <p className='landing-start-block-icon-text'>Каждый может получить вознаграждения за интересные посты, комментарии, репосты и продвижение проекта</p>
                             </div>
                             <div className='column large-3 medium-3 small-6'>
                                 <Icon name='rocket' size='10x'/>
                                 <h5>В интересах каждого</h5>
-                                <p className='landing-start-block-icon-text'>Писать можно обо всём на свете —
+                                <p className='landing-start-block-icon-text'>Писать обо всём на свете —
                                     расскажите о ракетостроении или выложите красочные фотографии с отпуска</p>
                             </div>
                             <div className='column large-3 medium-3 small-6'>
