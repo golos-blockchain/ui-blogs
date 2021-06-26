@@ -202,7 +202,7 @@
     "wallet": "Wallet",
     "warning": "warning",
     "write_message": "Message",
-    "write_message_long": "Write a Message",
+    "write_message_long": "Private Message",
     "yes": "Yes",
     "blocked_from_blog": "You are blocked by the author of this blog.",
     "you_are_viewing_a_single_comments_thread_from": "You are viewing a single comment's thread from",
@@ -261,7 +261,9 @@
     "curation_rewards": "Curation rewards",
     "donates_from": "Donates from",
     "donates_to": "Donates to",
-    "referral_link": "Your referral link",
+    "top_donates": "Top users by donates",
+    "sorted_by_payouts": "sorted by pool payouts",
+    "referral_link": "Referral link",
     "referral_link_title": "When registering users after clicking on the referral link, you will receive 10%% of the donations received by them within a year",
     "connection_lost_reconnecting": "Connection lost, reconnecting",
     "server_returned_error": "server returned error",
@@ -757,7 +759,7 @@
     "private_key": "Private key",
     "amount": "Amount",
     "is_referral": "For referrals",
-    "referral_invite": "During the year 10%% of user rewards (registered with this invite)\nwill be credited to your TIP balance.",
+    "referral_invite": "During the year 10%% of user rewards (registered with this invite)\nwill be credited to your balance.",
     "create_btn": "Create check",
     "meet_minimum": "Too low amount",
     "success": "Created! Save it (private key or link)",
@@ -921,8 +923,8 @@
     "promoted": "Promoted",
     "donates": "Donated",
     "forums": "Forum",
-    "payout": "All Posts in Blockchain",
-    "payout_comments": "All Comments in Blockchain",
+    "all_posts": "All Posts",
+    "all_comments": "All Comments",
     "new_topic_posts": "New %(topic)s posts",
     "sort_order_topic_posts": "%(sort_order)s %(topic)s posts",
     "new_posts": "New posts",
@@ -1101,7 +1103,7 @@
         "login_first": "Please logged in first ...",
         "login_with_posting_key": "Login with your posting key",
         "server_unavailable": "The server is unavailable",
-        "image_size_is_too_large": "Image size is too large"
+        "image_size_is_too_large": "Upload images up to 1 MB in size"
       }
     }
   },

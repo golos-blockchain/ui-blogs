@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import TransferHistoryRow from 'app/components/cards/TransferHistoryRow';
 import {numberWithCommas, vestsToSp, assetFloat} from 'app/utils/StateFunctions'
 import tt from 'counterpart';
+import Icon from 'app/components/elements/Icon';
 import { LIQUID_TICKER, VEST_TICKER } from 'app/client_config';
 
 class DonatesFrom extends React.Component {
@@ -93,13 +94,11 @@ class DonatesFrom extends React.Component {
              </nav>
         );
 
-
-
-
         return (<div className="UserWallet">
             <div className="row">
                 <div className="column small-12">
                     {/** history */}
+                    <span style={{float: 'right', fontSize: '85%'}}><a target="_blank" href="https://dpos.space/golos/donates/donators/golos"><Icon name="hf/hf2" size="2x" /> {tt('g.top_donates')}</a></span>
                     <h4 className="uppercase">{incoming ? tt('g.donates_from') : tt('g.donates_to')}</h4>
                     {navButtons}
                     <table>
