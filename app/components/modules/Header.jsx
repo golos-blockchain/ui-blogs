@@ -87,7 +87,7 @@ class Header extends React.Component {
                 if (current_account_name && account_name.indexOf(current_account_name) === 1)
                     home_account = true;
             } else {
-                const type = tt(route.params[0] == 'payout_comments' ? 'g.comments' : 'g.posts');
+                const type = tt('g.posts');
                 const topic = (route.params.length > 1 ? detransliterate(route.params[1]) + ' ' : '')
                 topic_original_link = route.params[1]
                 let prefix = route.params[0];
@@ -98,6 +98,8 @@ class Header extends React.Component {
                 if(prefix == 'forums') prefix = tt('header_jsx.forums')
                 if(prefix == 'payout') {
                     page_title = tt('header_jsx.payout');
+                } else if(prefix == 'payout_comments') {
+                    page_title = tt('header_jsx.payout_comments');
                 } else {
                     page_title = `${prefix} ${topic}${type}`;
                 }

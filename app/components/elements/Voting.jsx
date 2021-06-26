@@ -194,9 +194,10 @@ class Voting extends React.Component {
             });
         }
 
-        let reward = Asset(post_obj.get('pending_author_payout_in_golos'));
-        if (reward.amount === 0)
-            reward = Asset(post_obj.get('author_payout_in_golos'));
+        let reward = post_obj.get('mode') === 'archived' ?
+            post_obj.get('author_payout_in_golos') :
+            post_obj.get('pending_author_payout_in_golos');
+        reward = Asset(reward);
 
         let donateTitle = undefined;
         if (donateItems.length)

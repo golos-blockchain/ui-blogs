@@ -924,6 +924,7 @@
     "donates": "Donated",
     "forums": "Forum",
     "payout": "All Posts in Blockchain",
+    "payout_comments": "All Comments in Blockchain",
     "new_topic_posts": "New %(topic)s posts",
     "sort_order_topic_posts": "%(sort_order)s %(topic)s posts",
     "new_posts": "New posts",
