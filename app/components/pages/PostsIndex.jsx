@@ -220,7 +220,7 @@ class PostsIndex extends React.Component {
                             loading={fetching}
                             category={category}
                             loadMore={this.loadMore}
-                            showSpam={showSpam || (order === 'payout')}
+                            showSpam={showSpam || (order === 'allposts')}
                         /> }
                 <span className="strike"><a href="/search">{tt('g.more_post')}</a></span>
                 </div>

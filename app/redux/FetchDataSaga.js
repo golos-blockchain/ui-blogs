@@ -498,14 +498,14 @@ export function* fetchData(action) {
         call_name = PUBLIC_API.promoted;
     } else if( order === 'active' ) {
         call_name = PUBLIC_API.active;
-    } else if( order === 'payout' ) {
-        call_name = PUBLIC_API.payout;
+    } else if( order === 'allposts' ) {
+        call_name = PUBLIC_API.allposts;
         args[0].comments_only = false;
         delete args[0].select_tags;
         delete args[0].select_categories;
         delete args[0].filter_tag_masks; // do not exclude forum posts
-    } else if( order === 'payout_comments' ) {
-        call_name = PUBLIC_API.payout_comments;
+    } else if( order === 'allcomments' ) {
+        call_name = PUBLIC_API.allcomments;
         args[0].comments_only = true;
         delete args[0].select_tags;
         delete args[0].select_categories;

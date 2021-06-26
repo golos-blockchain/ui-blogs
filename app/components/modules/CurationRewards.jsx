@@ -90,7 +90,7 @@ class CurationRewards extends React.Component {
         return (<div className="UserWallet">
             <div className="row">
                 <div className="column small-12">
-                    <span style={{float: 'right', fontSize: '85%'}}><a href="/payout"><Icon name="hf/hf18" size="2x" /> {tt('g.posts')}</a> {tt('g.and')} {tt('g.comments')} {tt('g.sorted_by_payouts')}</span>
+                    <span style={{float: 'right', fontSize: '85%'}}><a href="/allposts"><Icon name="hf/hf18" size="2x" /> {tt('g.posts')}</a> {tt('g.and')} <a href="/allcomments">{tt('g.comments')}</a> {tt('g.sorted_by_payouts')}</span>
                     <h4 className="uppercase">{tt('g.curation_rewards')}</h4>
                 </div>
             </div>
