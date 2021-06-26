@@ -523,6 +523,7 @@
     "donates": "Вознаграждаемые",
     "forums": "Форумные",
     "payout": "Все посты в системе",
+    "payout_comments": "Все комментарии в системе",
     "new_topic_posts": "Новый %(topic)s пост",
     "sort_order_topic_posts": "%(sort_order)s %(topic)s посты",
     "new_posts": "Новые посты",

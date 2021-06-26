@@ -54,16 +54,17 @@ export const FIRST_DATE = new Date(Date.UTC(2016, 7, 1)); //1 september
 export const IGNORE_TAGS = ['test', 'ru--test']
 export const SELECT_TAGS_KEY = 'gls.select.tags'
 export const PUBLIC_API = {
-  created:   'getDiscussionsByCreatedAsync',
-  hot:       'getDiscussionsByHotAsync',
-  trending:  'getDiscussionsByTrendingAsync',
-  promoted:  'getDiscussionsByPromotedAsync',
-  active:    'getDiscussionsByActiveAsync',
-  responses: 'getDiscussionsByChildrenAsync',
-  donates:   'getDiscussionsByDonatesAsync',
-  forums:   'getAllDiscussionsByActiveAsync',
-  payout:     'getDiscussionsByPayoutAsync',
-  author:     'getDiscussionsByBlogAsync',
+  created:         'getDiscussionsByCreatedAsync',
+  hot:             'getDiscussionsByHotAsync',
+  trending:        'getDiscussionsByTrendingAsync',
+  promoted:        'getDiscussionsByPromotedAsync',
+  active:          'getDiscussionsByActiveAsync',
+  responses:       'getDiscussionsByChildrenAsync',
+  donates:         'getDiscussionsByDonatesAsync',
+  forums:          'getAllDiscussionsByActiveAsync',
+  payout:          'getDiscussionsByPayoutAsync',
+  payout_comments: 'getDiscussionsByPayoutAsync',
+  author:          'getDiscussionsByBlogAsync',
 }
 
 export const SEO_TITLE = 'Блокчейн Голос'
