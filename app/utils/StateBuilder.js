@@ -364,12 +364,14 @@ export default async function getState(api, url, options, offchain = {}) {
             delete args.select_tags;
             delete args.select_categories;
             delete args.filter_tag_masks; // do not exclude forum posts
+            delete args.filter_tags; // test tag posts
         }
         if (discussionsType == 'allcomments') {
             args.comments_only = true;
             delete args.select_tags;
             delete args.select_categories;
             delete args.filter_tag_masks; // do not exclude forum comments
+            delete args.filter_tags; // test tag posts
         }
         if (discussionsType == 'forums') {
             args = ['', '', 0, args.limit, $STM_Config.forums.white_list, 0, 0, [], [], 'fm-'];
