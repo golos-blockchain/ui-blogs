@@ -51,7 +51,7 @@ export const SUPPORT_EMAIL = 'info@' + APP_DOMAIN
 export const FIRST_DATE = new Date(Date.UTC(2016, 7, 1)); //1 september
 
 // ignore special tags, dev-tags, partners tags
-export const IGNORE_TAGS = ['test', 'ru--test']
+export const IGNORE_TAGS = ['test']
 export const SELECT_TAGS_KEY = 'gls.select.tags'
 export const PUBLIC_API = {
   created:         'getDiscussionsByCreatedAsync',

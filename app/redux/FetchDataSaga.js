@@ -504,12 +504,14 @@ export function* fetchData(action) {
         delete args[0].select_tags;
         delete args[0].select_categories;
         delete args[0].filter_tag_masks; // do not exclude forum posts
+        delete args[0].filter_tags; // test tag posts
     } else if( order === 'allcomments' ) {
         call_name = PUBLIC_API.allcomments;
         args[0].comments_only = true;
         delete args[0].select_tags;
         delete args[0].select_categories;
         delete args[0].filter_tag_masks; // do not exclude forum comments
+        delete args[0].filter_tags; // test tag comments
     } else if( order === 'created' ) {
         call_name = PUBLIC_API.created;
     } else if( order === 'responses' ) {
