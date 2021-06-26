@@ -80,6 +80,21 @@ export function* fetchState(location_change_action) {
 
         let accounts = new Set()
 
+        const getPost = () => {
+            const check = parts.length === 3 && parts[1] && parts[1][0] == '@';
+            if (!check) return false;
+            const [category, account, permlink] = parts;
+            return {category, account: account.substr(1), permlink};
+        }
+        const getComment = () => {
+            const checkParent = parts.length === 4 && parts[1] && parts[1][0] == '@';
+            if (!checkParent) return false;
+            let [parent_permlink, account] = parts[2].split('#');
+            const checkComment = account.length && account[0] == '@';
+            if (!checkComment) return false;
+            return {category: parts[0], account: account.substr(1), permlink: parts[3]};
+        }
+
         if (parts[0][0] === '@') {
             const uname = parts[0].substr(1)
             const [ account ] = yield call([api, api.getAccountsAsync], [uname])
@@ -219,15 +234,12 @@ export function* fetchState(location_change_action) {
                 }
             }
 
-        } else if (parts.length === 3 && parts[1].length > 0 && parts[1][0] == '@') {
-            const account = parts[1].substr(1)
+        } else if (getPost() || getComment()) {
+            const {account, category, permlink} = getPost() || getComment();
 
             // Fetch for ignored follow for hide comments
             yield fork(loadFollows, "getFollowingAsync", account, 'ignore')
 
-            const category = parts[0]
-            const permlink = parts[2]
-    
             console.time('getContent');
             const curl = `${account}/${permlink}`
             state.content[curl] = yield call([api, api.getContentAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT)
@@ -486,11 +498,20 @@ export function* fetchData(action) {
         call_name = PUBLIC_API.promoted;
     } else if( order === 'active' ) {
         call_name = PUBLIC_API.active;
-    } else if( order === 'payout' ) {
-        call_name = PUBLIC_API.payout;
+    } else if( order === 'allposts' ) {
+        call_name = PUBLIC_API.allposts;
+        args[0].comments_only = false;
         delete args[0].select_tags;
         delete args[0].select_categories;
         delete args[0].filter_tag_masks; // do not exclude forum posts
+        delete args[0].filter_tags; // test tag posts
+    } else if( order === 'allcomments' ) {
+        call_name = PUBLIC_API.allcomments;
+        args[0].comments_only = true;
+        delete args[0].select_tags;
+        delete args[0].select_categories;
+        delete args[0].filter_tag_masks; // do not exclude forum comments
+        delete args[0].filter_tags; // test tag comments
     } else if( order === 'created' ) {
         call_name = PUBLIC_API.created;
     } else if( order === 'responses' ) {

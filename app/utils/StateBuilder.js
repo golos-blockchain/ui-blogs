@@ -359,10 +359,17 @@ export default async function getState(api, url, options, offchain = {}) {
             const mutedInNew = getMutedInNew(loader);
             args.filter_authors = mutedInNew;
         }
-        if (discussionsType == 'payout') {
+        if (discussionsType == 'allposts') {
+            args.comments_only = false;
             delete args.select_tags;
             delete args.select_categories;
             delete args.filter_tag_masks; // do not exclude forum posts
+        }
+        if (discussionsType == 'allcomments') {
+            args.comments_only = true;
+            delete args.select_tags;
+            delete args.select_categories;
+            delete args.filter_tag_masks; // do not exclude forum comments
         }
         if (discussionsType == 'forums') {
             args = ['', '', 0, args.limit, $STM_Config.forums.white_list, 0, 0, [], [], 'fm-'];
