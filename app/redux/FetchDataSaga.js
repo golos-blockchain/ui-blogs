@@ -80,6 +80,21 @@ export function* fetchState(location_change_action) {
 
         let accounts = new Set()
 
+        const getPost = () => {
+            const check = parts.length === 3 && parts[1] && parts[1][0] == '@';
+            if (!check) return false;
+            const [category, account, permlink] = parts;
+            return {category, account: account.substr(1), permlink};
+        }
+        const getComment = () => {
+            const checkParent = parts.length === 4 && parts[1] && parts[1][0] == '@';
+            if (!checkParent) return false;
+            let [parent_permlink, account] = parts[2].split('#');
+            const checkComment = account.length && account[0] == '@';
+            if (!checkComment) return false;
+            return {category: parts[0], account: account.substr(1), permlink: parts[3]};
+        }
+
         if (parts[0][0] === '@') {
             const uname = parts[0].substr(1)
             const [ account ] = yield call([api, api.getAccountsAsync], [uname])
@@ -219,15 +234,12 @@ export function* fetchState(location_change_action) {
                 }
             }
 
-        } else if (parts.length === 3 && parts[1].length > 0 && parts[1][0] == '@') {
-            const account = parts[1].substr(1)
+        } else if (getPost() || getComment()) {
+            const {account, category, permlink} = getPost() || getComment();
 
             // Fetch for ignored follow for hide comments
             yield fork(loadFollows, "getFollowingAsync", account, 'ignore')
 
-            const category = parts[0]
-            const permlink = parts[2]
-    
             console.time('getContent');
             const curl = `${account}/${permlink}`
             state.content[curl] = yield call([api, api.getContentAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT)
