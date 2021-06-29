@@ -283,6 +283,11 @@ class Messages extends React.Component {
                         this.focusInput();
                     }
                 }, focusTimeout);
+                if (anotherChat && this.state.replyingMessage) {
+                    this.setState({
+                        replyingMessage: null,
+                    });
+                }
             });
         }
     }
@@ -330,6 +335,19 @@ class Messages extends React.Component {
         }, 10000);
     };
 
+    onCancelReply = (event) => {
+        this.setState({
+            replyingMessage: null,
+        }, () => {
+            // if editing - cancel edit at all, not just remove reply
+            if (this.editNonce) {
+                this.restoreInput();
+                this.editNonce = undefined;
+            }
+            this.focusInput();
+        });
+    };
+
     onSendMessage = (message, event) => {
         if (!message.length) return;
         const { to, account, accounts, currentUser, messages } = this.props;
@@ -337,10 +355,10 @@ class Messages extends React.Component {
 
         let editInfo;
         if (this.editNonce) {
-            editInfo = { preDecoded: this.preDecoded, nonce: this.editNonce };
+            editInfo = { nonce: this.editNonce };
         }
 
-        this.props.sendMessage(account, private_key, accounts[to], message, editInfo);
+        this.props.sendMessage(account, private_key, accounts[to], message, editInfo, 'text', {}, this.state.replyingMessage);
         if (this.editNonce) {
             this.restoreInput();
             this.focusInput();
@@ -348,6 +366,10 @@ class Messages extends React.Component {
         } else {
             this.setInput('');
         }
+        if (this.state.replyingMessage)
+            this.setState({
+                replyingMessage: null,
+            });
     };
 
     onMessageSelect = (message, idx, isSelected, event) => {
@@ -473,6 +495,24 @@ class Messages extends React.Component {
         });
     };
 
+    onPanelReplyClick = (event) => {
+        const nonce = Object.keys(this.state.selectedMessages)[0];
+        let message = this.state.messages.filter(message => {
+            return message.nonce === nonce;
+        });
+        // (additional protection - normally invalid messages shouldn't be available for select)
+        if (!message[0].message)
+            return;
+        let quote = golos.messages.makeQuoteMsg({}, message[0]);
+        this.setState({
+            selectedMessages: {},
+            replyingMessage: quote,
+        }, () => {
+            this.restoreInput();
+            this.focusInput();
+        });
+    };
+
     onPanelEditClick = (event) => {
         const nonce = Object.keys(this.state.selectedMessages)[0];
         let message = this.state.messages.filter(message => {
@@ -485,6 +525,15 @@ class Messages extends React.Component {
             selectedMessages: {},
         }, () => {
             this.editNonce = message[0].nonce;
+            if (message[0].message.quote) {
+                this.setState({
+                    replyingMessage: {quote: message[0].message.quote},
+                });
+            } else {
+                this.setState({
+                    replyingMessage: null,
+                });
+            }
             this.setInput(message[0].message.body);
             this.focusInput();
         });
@@ -506,7 +555,12 @@ class Messages extends React.Component {
 
             const { to, account, accounts, currentUser, messages } = this.props;
             const private_key = currentUser.getIn(['private_keys', 'memo_private']);
-            this.props.sendMessage(account, private_key, accounts[to], url, undefined, 'image', {width, height});
+            this.props.sendMessage(account, private_key, accounts[to], url, undefined, 'image', {width, height}, this.state.replyingMessage);
+
+            if (this.state.replyingMessage)
+                this.setState({
+                    replyingMessage: null,
+                });
         };
 
         if (imageFile) {
@@ -698,10 +752,13 @@ class Messages extends React.Component {
                     messages={this.state.messages}
                     messagesTopCenter={this._renderMessagesTopCenter()}
                     messagesTopRight={this._renderMessagesTopRight()}
+                    replyingMessage={this.state.replyingMessage}
+                    onCancelReply={this.onCancelReply}
                     onSendMessage={this.onSendMessage}
                     selectedMessages={this.state.selectedMessages}
                     onMessageSelect={this.onMessageSelect}
                     onPanelDeleteClick={this.onPanelDeleteClick}
+                    onPanelReplyClick={this.onPanelReplyClick}
                     onPanelEditClick={this.onPanelEditClick}
                     onPanelCloseClick={this.onPanelCloseClick}
                     onButtonImageClicked={this.onButtonImageClicked}
@@ -777,7 +834,7 @@ module.exports = {
                     })
                 );
             },
-            sendMessage: (senderAcc, senderPrivMemoKey, toAcc, body, editInfo = undefined, type = 'text', meta = {}) => {
+            sendMessage: (senderAcc, senderPrivMemoKey, toAcc, body, editInfo = undefined, type = 'text', meta = {}, replyingMessage = null) => {
                 let message = {
                     app: 'golos-messenger',
                     version: 1,
@@ -790,6 +847,9 @@ module.exports = {
                     } else {
                         throw new Error('Unknown message type: ' + type);
                     }
+                }
+                if (replyingMessage) {
+                    message = {...message, ...replyingMessage};
                 }
 
                 const data = golos.messages.encode(senderPrivMemoKey, toAcc.memo_key, message, editInfo ? editInfo.nonce : undefined);

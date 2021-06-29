@@ -1,6 +1,8 @@
 import React from 'react';
 import tt from 'counterpart';
 import { Picker } from 'emoji-picker-element';
+import Icon from 'app/components/elements/Icon';
+import { displayQuoteMsg } from 'app/utils/MessageUtils';
 
 import './Compose.css';
 
@@ -131,6 +133,12 @@ export default class Compose extends React.Component {
         }
     }
 
+    onPanelReplyClick = (event) => {
+        if (this.props.onPanelReplyClick) {
+            this.props.onPanelReplyClick(event);
+        }
+    }
+
     onPanelEditClick = (event) => {
         if (this.props.onPanelEditClick) {
             this.props.onPanelEditClick(event);
@@ -143,9 +151,15 @@ export default class Compose extends React.Component {
         }
     }
 
+    onCancelReply = (event) => {
+        if (this.props.onCancelReply) {
+            this.props.onCancelReply(event);
+        }
+    }
+
     render() {
-        const { account, rightItems } = this.props;
-        const { onPanelDeleteClick, onPanelEditClick, onPanelCloseClick } = this;
+        const { account, rightItems, replyingMessage } = this.props;
+        const { onPanelDeleteClick, onPanelReplyClick, onPanelEditClick, onPanelCloseClick, onCancelReply } = this;
 
         const selectedMessages = Object.entries(this.props.selectedMessages);
         let selectedMessagesCount = 0;
@@ -157,23 +171,38 @@ export default class Compose extends React.Component {
             }
         }
 
+        let quote = null;
+        if (replyingMessage) {
+            quote = (<div className='msgs-compose-reply'>
+                    <div className='msgs-compose-reply-from'>
+                        {replyingMessage.quote.from}
+                    </div>
+                    {displayQuoteMsg(replyingMessage.quote.body)}
+                    <Icon name={`cross`} size='0_95x' className='msgs-compose-reply-close' onClick={onCancelReply} />
+                </div>);
+        }
+
         return (
             <div className='msgs-compose'>
                 {
                     !selectedMessagesCount ? rightItems : null
                 }
 
-                {!selectedMessagesCount ? (<textarea
-                    className='msgs-compose-input'
-                    placeholder={tt('messages.type_a_message')}
-                    onKeyDown={this.onSendMessage}
-                    onPaste={this.onPaste}
-                    />) : null}
+                {!selectedMessagesCount ? (<div className='msgs-compose-input-panel'>
+                    {quote}
+                    <textarea
+                        className='msgs-compose-input'
+                        placeholder={tt('messages.type_a_message')}
+                        onKeyDown={this.onSendMessage}
+                        onPaste={this.onPaste}
+                        />
+                    </div>) : null}
 
                 {selectedMessagesCount ? (<div className='msgs-compose-panel'>
-                    <button className='button hollow small alert' onClick={onPanelDeleteClick}>{tt('g.delete') + ' (' + selectedMessagesCount + ')'}</button>
-                    {(selectedMessagesCount === 1 && selectedEditablesCount === 1) ? (<button className='button hollow small' onClick={onPanelEditClick}>{tt('g.edit')}</button>) : null}
+                    {(selectedMessagesCount === 1) ? (<button className='button small' onClick={onPanelReplyClick}>{tt('g.reply')}</button>) : null}
                     <button className='button hollow small cancel-button' onClick={onPanelCloseClick}>{tt('g.cancel')}</button>
+                    <button className='button hollow small alert delete-button' onClick={onPanelDeleteClick}>{tt('g.delete') + ' (' + selectedMessagesCount + ')'}</button>
+                    {(selectedMessagesCount === 1 && selectedEditablesCount === 1) ? (<button className='button hollow small edit-button' onClick={onPanelEditClick}>{tt('g.edit')}</button>) : null}
                 </div>) : null}
             </div>
         );

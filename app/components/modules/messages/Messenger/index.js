@@ -16,9 +16,9 @@ export default class Messages extends React.Component {
         const { account, to,
             contacts, conversationTopLeft, conversationLinkPattern,
             onConversationAdd, onConversationSearch, onConversationSelect,
-            messagesTopCenter, messagesTopRight, messages, onSendMessage,
+            messagesTopCenter, messagesTopRight, messages, replyingMessage, onCancelReply, onSendMessage,
             onButtonImageClicked, onImagePasted,
-            selectedMessages, onMessageSelect, onPanelDeleteClick, onPanelEditClick, onPanelCloseClick } = this.props;
+            selectedMessages, onMessageSelect, onPanelDeleteClick, onPanelReplyClick, onPanelEditClick, onPanelCloseClick } = this.props;
         return (
             <Dropzone
                 className='messenger-dropzone'
@@ -68,10 +68,13 @@ export default class Messages extends React.Component {
                             topCenter={messagesTopCenter}
                             topRight={messagesTopRight}
                             messages={messages}
+                            replyingMessage={replyingMessage}
+                            onCancelReply={onCancelReply}
                             onSendMessage={onSendMessage}
                             selectedMessages={selectedMessages}
                             onMessageSelect={onMessageSelect}
                             onPanelDeleteClick={onPanelDeleteClick}
+                            onPanelReplyClick={onPanelReplyClick}
                             onPanelEditClick={onPanelEditClick}
                             onPanelCloseClick={onPanelCloseClick}
                             onButtonImageClicked={onButtonImageClicked}

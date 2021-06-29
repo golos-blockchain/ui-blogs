@@ -107,3 +107,48 @@
 .msgs-message .bubble-container.selected .unread {
     color: #fc544e !important;
 }
+
+.msgs-message .quote {
+    margin-left: 0.1rem;
+    margin-bottom: 0.2rem;
+    padding-left: 0.5rem;
+    flex: 1;
+    border-left: #007aff solid 2px;
+    font-size: 14px;
+}
+
+.msgs-message .quote-from {
+    font-weight: bold;
+    color: #007aff;
+}
+
+.msgs-message.mine .quote {
+    border-left: #70fff2 solid 2px;
+}
+
+.msgs-message.mine .quote-from {
+    color: #70fff2;
+}
+
+.msgs-message .quote img {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    width: 60px;
+    height: 30px;
+}
+
+.msgs-message.mine .bubble.loading .quote {
+    border-left: #007aff solid 2px;
+}
+
+.msgs-message.mine .bubble.loading .quote-from {
+    color: #007aff;
+}
+
+.msgs-message.mine .bubble-container.selected .quote {
+    border-left: white solid 2px;
+}
+
+.msgs-message.mine .bubble-container.selected .quote-from {
+    color: white;
+}

@@ -17,8 +17,35 @@
     }
 }
 
-.msgs-compose-input {
+.msgs-compose-input-panel {
     flex: 1;
+}
+
+.msgs-compose-reply {
+    margin-left: 0.5rem;
+    padding-left: 0.5rem;
+    flex: 1;
+    border-left: #007aff solid 2px;
+    font-size: 14px;
+}
+
+.msgs-compose-reply-from {
+    font-weight: bold;
+    color: #007aff;
+}
+
+.msgs-compose-reply-close {
+    position: absolute;
+    top: 1rem;
+    right: 0.75rem;
+    cursor: pointer;
+}
+
+.msgs-compose-reply-close:hover {
+    color: #007aff;
+}
+
+.msgs-compose-input {
     border: none !important;
     font-size: 14px;
     height: 40px;
@@ -45,6 +72,14 @@
     width: 100%;
     height: 50px;
     padding: 8px;
+}
+
+.msgs-compose-panel .edit-button {
+    float: right;
+}
+
+.msgs-compose-panel .delete-button {
+    float: right;
 }
 
 .msgs-compose-panel .cancel-button {

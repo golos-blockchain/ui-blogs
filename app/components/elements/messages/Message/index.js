@@ -1,5 +1,6 @@
 import React from 'react';
 import tt from 'counterpart';
+import { displayQuoteMsg } from 'app/utils/MessageUtils';
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
 
 import './Message.css';
@@ -71,6 +72,23 @@ export default class Message extends React.Component {
             });
         }
 
+        let quoteHeader = null;
+        if (message.quote) {
+            const { quote } = message;
+            let quoteBody = null;
+            if (quote.type === 'image') {
+                quoteBody = <img src={proxifyImageUrl(quote.body, '600x300')} title={quote.body} />
+            } else {
+                quoteBody = displayQuoteMsg(quote.body);
+            }
+            quoteHeader = (<div className='quote'>
+                <div className='quote-from'>
+                    {quote.from}
+                </div>
+                {quoteBody}
+            </div>);
+        }
+
         const modified = (data.receive_date !== data.create_date) && !data.receive_date.startsWith('19');
 
         return (
@@ -90,6 +108,7 @@ export default class Message extends React.Component {
                 <div className={'bubble-container' + (selected ? ' selected' : '')}>
                     {isMine ? unread : null}
                     <div className={'bubble' + loading} onClick={(event) => this.onMessageSelect(idx, event)} title={friendlyDate + (modified ? tt('g.modified') : '')}>
+                        { quoteHeader }
                         { content }
                     </div>
                     {!isMine ? unread : null}
