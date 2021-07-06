@@ -1,6 +1,7 @@
 import React from 'react';
 import tt from 'counterpart';
 import { Picker } from 'emoji-picker-element';
+import TextareaAutosize from 'react-textarea-autosize';
 import Icon from 'app/components/elements/Icon';
 import { displayQuoteMsg } from 'app/utils/MessageUtils';
 
@@ -157,6 +158,22 @@ export default class Compose extends React.Component {
         }
     }
 
+    onHeightChange = (height) => {
+        const cont = document.getElementsByClassName('message-list-container')[0];
+        if (cont) {
+            const oldPB = parseInt(cont.style.paddingBottom, 10) || 0; // if NaN, will be 0
+            const newPB = 30 + height;
+            cont.style.paddingBottom = newPB + 'px';
+
+            const delta = newPB - oldPB;
+
+            if (delta > 0) {
+                const scroll = document.getElementsByClassName('msgs-scrollable')[1];
+                if (scroll) scroll.scrollTop += delta;
+            }
+        }
+    }
+
     render() {
         const { account, rightItems, replyingMessage } = this.props;
         const { onPanelDeleteClick, onPanelReplyClick, onPanelEditClick, onPanelCloseClick, onCancelReply } = this;
@@ -190,11 +207,14 @@ export default class Compose extends React.Component {
 
                 {!selectedMessagesCount ? (<div className='msgs-compose-input-panel'>
                     {quote}
-                    <textarea
+                    <TextareaAutosize
                         className='msgs-compose-input'
                         placeholder={tt('messages.type_a_message')}
                         onKeyDown={this.onSendMessage}
                         onPaste={this.onPaste}
+                        minRows={2}
+                        maxRows={14}
+                        onHeightChange={this.onHeightChange}
                         />
                     </div>) : null}
 

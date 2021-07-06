@@ -52,6 +52,7 @@
     background: none !important;
     box-shadow: none !important;
     -webkite-box-shadow: none !important;
+    resize: none;
 }
 
 .msgs-compose-input::placeholder {
