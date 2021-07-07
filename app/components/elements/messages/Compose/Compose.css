@@ -21,6 +21,14 @@
     flex: 1;
 }
 
+.msgs-compose-send {
+    margin: 0px !important;
+    width: 38px;
+    height: 38px;
+    padding: 0px;
+    color: white;
+}
+
 .msgs-compose-reply {
     margin-left: 0.5rem;
     padding-left: 0.5rem;

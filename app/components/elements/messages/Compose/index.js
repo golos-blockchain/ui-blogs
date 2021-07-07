@@ -8,7 +8,7 @@ import { displayQuoteMsg } from 'app/utils/MessageUtils';
 import './Compose.css';
 
 export default class Compose extends React.Component {
-    onSendMessage = (e) => {
+    onKeyDown = (e) => {
         if (e.keyCode === 13) {
             if (e.shiftKey) {
             } else {
@@ -17,6 +17,14 @@ export default class Compose extends React.Component {
                 onSendMessage(e.target.value, e);
             }
         }
+    };
+
+    onSendClick = (e) => {
+        e.preventDefault();
+        const { onSendMessage } = this.props;
+        const input = document.getElementsByClassName('msgs-compose-input')[0];
+        input.focus();
+        onSendMessage(input.value, e);
     };
 
     init = () => {
@@ -199,6 +207,13 @@ export default class Compose extends React.Component {
                 </div>);
         }
 
+        const sendButton = selectedMessagesCount ? null :
+            (<button className='button small msgs-compose-send' title={tt('g.submit')}
+                    onClick={this.onSendClick}
+                >
+                <Icon name='new/envelope' size='1_25x' />
+            </button>);
+
         return (
             <div className='msgs-compose'>
                 {
@@ -210,13 +225,15 @@ export default class Compose extends React.Component {
                     <TextareaAutosize
                         className='msgs-compose-input'
                         placeholder={tt('messages.type_a_message')}
-                        onKeyDown={this.onSendMessage}
+                        onKeyDown={this.onKeyDown}
                         onPaste={this.onPaste}
                         minRows={2}
                         maxRows={14}
                         onHeightChange={this.onHeightChange}
                         />
-                    </div>) : null}
+                </div>) : null}
+
+                {sendButton}
 
                 {selectedMessagesCount ? (<div className='msgs-compose-panel'>
                     {(selectedMessagesCount === 1) ? (<button className='button small' onClick={onPanelReplyClick}>{tt('g.reply')}</button>) : null}
