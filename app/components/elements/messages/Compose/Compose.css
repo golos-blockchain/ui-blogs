@@ -17,6 +17,12 @@
     }
 }
 
+@media screen and (max-width: 39.9375em) {
+    .msgs-compose {
+        width: 100%;
+    }
+}
+
 .msgs-compose-input-panel {
     flex: 1;
 }

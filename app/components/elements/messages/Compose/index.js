@@ -9,7 +9,7 @@ import './Compose.css';
 
 export default class Compose extends React.Component {
     onKeyDown = (e) => {
-        if (e.keyCode === 13) {
+        if (!window.IS_MOBILE && e.keyCode === 13) {
             if (e.shiftKey) {
             } else {
                 e.preventDefault();
@@ -176,7 +176,7 @@ export default class Compose extends React.Component {
             const delta = newPB - oldPB;
 
             if (delta > 0) {
-                const scroll = document.getElementsByClassName('msgs-scrollable')[1];
+                const scroll = document.getElementsByClassName('msgs-content')[0];
                 if (scroll) scroll.scrollTop += delta;
             }
         }

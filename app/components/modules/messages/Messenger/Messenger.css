@@ -44,6 +44,12 @@
     grid-row-gap: 1px;
 }
 
+@media screen and (max-width: 39.9375em) {
+    .messenger {
+        grid-template-columns: 100%;
+    }
+}
+
 .msgs-container {
     padding: 10px;
 }

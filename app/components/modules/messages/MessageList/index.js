@@ -26,7 +26,7 @@ export default class MessageList extends React.Component {
             }
         }
         if (scroll) {
-            scroll = document.getElementsByClassName('msgs-scrollable')[1];
+            scroll = document.getElementsByClassName('msgs-content')[0];
             if (scroll) scroll.scrollTo(0,scroll.scrollHeight);
         }
     }
@@ -99,12 +99,13 @@ export default class MessageList extends React.Component {
     };
 
     render() {
-        const { account, to, topCenter, topRight, replyingMessage, onCancelReply, onSendMessage, selectedMessages,
+        const { account, to, topLeft, topCenter, topRight, replyingMessage, onCancelReply, onSendMessage, selectedMessages,
             onButtonImageClicked, onImagePasted,
             onPanelDeleteClick, onPanelReplyClick, onPanelEditClick, onPanelCloseClick } = this.props;
         return (
             <div className='message-list'>
                 <Toolbar
+                    leftItems={topLeft}
                     title={topCenter}
                     rightItems={topRight}
                 />

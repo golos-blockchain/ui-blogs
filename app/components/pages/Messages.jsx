@@ -247,6 +247,22 @@ class Messages extends React.Component {
         }
     }
 
+    onWindowResize = (e) => {
+        const isMobile = window.matchMedia('screen and (max-width: 39.9375em)').matches;
+        if (isMobile != this.isMobile) {
+            this.forceUpdate();
+        }
+        this.isMobile = isMobile;
+    };
+
+    componentDidMount() {
+        window.addEventListener('resize', this.onWindowResize);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.onWindowResize);
+    }
+
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.account && !this.props.account
             || (nextProps.account && this.props.account && nextProps.account.name !== this.props.account.name)) {
@@ -624,7 +640,8 @@ class Messages extends React.Component {
         this.uploadImage(file);
     };
 
-    focusInput = () => {
+    focusInput = (workOnMobile = false) => {
+        if (!workOnMobile && window.IS_MOBILE) return;
         const input = document.getElementsByClassName('msgs-compose-input')[0];
         if (input) input.focus();
     };
@@ -650,6 +667,15 @@ class Messages extends React.Component {
             this.setInput(this.presavedInput);
             this.presavedInput = undefined;
         }
+    };
+
+    _renderMessagesTopLeft = () => {
+        let messagesTopLeft = [];
+        // mobile only
+        messagesTopLeft.push(<Link to='/msgs/' className='msgs-back-btn'>
+            <Icon key='back-btn' name='chevron-left' />
+        </Link>);
+        return messagesTopLeft;
     };
 
     _renderMessagesTopCenter = () => {
@@ -750,6 +776,7 @@ class Messages extends React.Component {
                     conversationLinkPattern='/msgs/@*'
                     onConversationSearch={this.onConversationSearch}
                     messages={this.state.messages}
+                    messagesTopLeft={this._renderMessagesTopLeft()}
                     messagesTopCenter={this._renderMessagesTopCenter()}
                     messagesTopRight={this._renderMessagesTopRight()}
                     replyingMessage={this.state.replyingMessage}

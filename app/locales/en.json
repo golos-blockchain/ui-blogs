@@ -30,7 +30,7 @@
     "last_seen": "last seen ",
     "search": "Search people",
     "search_not_found": "Nobody found",
-    "type_a_message": "Type a message and press Enter",
+    "type_a_message": "Type a message",
     "cannot_load_image_try_again": "Cannot upload image. Try again or another one.",
     "cannot_select_too_much_messages": "Cannot select more than 10 messages at once.",
     "new_message1": " notification",

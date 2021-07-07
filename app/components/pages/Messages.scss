@@ -6,6 +6,16 @@
     height: 61px !important;
 }
 
+.msgs-back-btn {
+    display: none;
+}
+
+@media screen and (max-width: 39.9375em) {
+    .msgs-back-btn {
+        display: inline-block;
+    }
+}
+
 .msgs-curruser {
     cursor: pointer;
     padding-top: 6px;
