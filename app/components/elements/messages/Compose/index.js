@@ -236,10 +236,22 @@ export default class Compose extends React.Component {
                 {sendButton}
 
                 {selectedMessagesCount ? (<div className='msgs-compose-panel'>
-                    {(selectedMessagesCount === 1) ? (<button className='button small' onClick={onPanelReplyClick}>{tt('g.reply')}</button>) : null}
-                    <button className='button hollow small cancel-button' onClick={onPanelCloseClick}>{tt('g.cancel')}</button>
-                    <button className='button hollow small alert delete-button' onClick={onPanelDeleteClick}>{tt('g.delete') + ' (' + selectedMessagesCount + ')'}</button>
-                    {(selectedMessagesCount === 1 && selectedEditablesCount === 1) ? (<button className='button hollow small edit-button' onClick={onPanelEditClick}>{tt('g.edit')}</button>) : null}
+                    {(selectedMessagesCount === 1) ? (<button className='button small' onClick={onPanelReplyClick}>
+                        <Icon name='reply' />
+                        <span>{tt('g.reply')}</span>
+                    </button>) : null}
+                    <button className='button hollow small cancel-button' onClick={onPanelCloseClick}>
+                        <Icon name='cross' />
+                        <span>{tt('g.cancel')}</span>
+                    </button>
+                    <button className='button hollow small alert delete-button' onClick={onPanelDeleteClick}>
+                        <Icon name='ionicons/trash-outline' />
+                        <span>{tt('g.delete') + ' (' + selectedMessagesCount + ')'}</span>
+                    </button>
+                    {(selectedMessagesCount === 1 && selectedEditablesCount === 1) ? (<button className='button hollow small edit-button' onClick={onPanelEditClick}>
+                        <Icon name='pencil' />
+                        <span>{tt('g.edit')}</span>
+                    </button>) : null}
                 </div>) : null}
             </div>
         );

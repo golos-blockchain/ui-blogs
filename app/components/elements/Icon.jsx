@@ -126,8 +126,9 @@ const icons = new Map([
     ['editor-toolbar/picture', require('app/assets/icons/editor-toolbar/picture.svg')],
     ['editor-toolbar/video', require('app/assets/icons/editor-toolbar/video.svg')],
     ['editor-toolbar/search', require('app/assets/icons/editor-toolbar/search.svg')],
-    ['ionicons/image-outline', require('app/assets/icons/ionicons/image-outline.svg')],
     ['ionicons/happy-outline', require('app/assets/icons/ionicons/happy-outline.svg')],
+    ['ionicons/image-outline', require('app/assets/icons/ionicons/image-outline.svg')],
+    ['ionicons/trash-outline', require('app/assets/icons/ionicons/trash-outline.svg')],
 ]);
 
 const rem_sizes = {
