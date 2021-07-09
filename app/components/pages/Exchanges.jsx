@@ -24,7 +24,7 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <a target="_blank" href="https://coins.black/"><img src='https://i.imgur.com/1FvfDHw.png' width='275' height='67' /></a>
+                                <a target="_blank" href="https://coins.black/"><img src={require("app/assets/images/coinsblack.png")} width="275" /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
                                     <a target="_blank" href="https://coins.black/xchange_SBERRUB_to_GLS/?summ=1000&schet2=&lock2=true" className="button">{tt('g.buy')} GOLOS</a>
@@ -46,12 +46,13 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <a target="_blank" href="https://rudex.org/"><img src='https://i.imgur.com/RyCrpvb.png' width='275' height='77' /></a>
+                                <a target="_blank" href="https://rudex.org/"><img src={require("app/assets/images/rudex.png")} width="275" /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
                                     <a target="_blank" href="/@allforyou/golos-delistyat-s-kuny-perekhodim-na-rudex">{tt('exchanges_jsx.guide_user')}</a> <Icon name="extlink" />
                                     <br /><br />
-                                    <a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_RUDEX.BTC" className="button">GOLOS-BTC</a>&nbsp;&nbsp;<a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_RUDEX.USDT" className="button">GOLOS-USDT</a>&nbsp;&nbsp;<a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_GPH" className="button">GOLOS-GPH</a>
+                                    <a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_RUDEX.BTC" className="button">GOLOS-BTC</a>&nbsp;&nbsp;<a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_RUDEX.USDT" className="button">GOLOS-USDT</a>&nbsp;&nbsp;<a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_RUDEX.BTS" className="button">GOLOS-BTS</a>&nbsp;&nbsp;
+                                    <a target="_blank" href="https://market.rudex.org/#/market/RUDEX.GOLOS_GPH" className="button">GOLOS-GPH</a>
                                 </div>
                             </div>
                         </div>
@@ -68,13 +69,13 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <a target="_blank" href="/market"><img src='https://i.imgur.com/QvsAZmu.png' width='285' height='77' /></a>
+                                <a target="_blank" href="/market"><img src={require("app/assets/images/golosdex.png")} width="285" /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
-                                    <p><a target="_blank" href="/@allforyou/torguem-na-vnutrennei-birzhe-golosa">Внутренняя биржа</a>, на которой также возможно покупать/продавать токены GOLOS через пользовательские шлюзы, напр. к <small>YMRUB, DOGECOIN, PRIZM</small> и другим активам.</p>
+                                    <p><a target="_blank" href="/@allforyou/torguem-na-vnutrennei-birzhe-golosa">Внутренняя биржа</a>, на которой также возможно покупать/продавать токены GOLOS через пользовательские шлюзы, напр. к <small>DOGE, DASH, PRIZM</small> и другим активам.</p>
                                     <p><Icon name="line" /> <a target="_blank" href="/@ecurrex-ru/ymrub-umer-da-zdravstvuet-ymrub">YMRUB</a> <small>(эквивалент рубля, с поддержкой ADVcash и PAYEER)</small>, обсуждение сервиса <a target="_blank" href="https://golostalk.com/services/@ecurrex-ru/ecurrex-tokeny-ymxxx">на форуме</a></p>
                                     <p><Icon name="line" /> <a target="_blank" href="/@golos.doge/doge-dogecoin-na-golose-avtomaticheskii-shlyuz-vvod-vyvod-i-torgi-na-vnutrennei-birzhe">DOGECOIN</a> <small>(позволяющий вести обмен через популярные биржи)</small> от эмитента <a target="_blank" href="/@golos.doge">@golos.doge</a></p>
-                                    <p><Icon name="line" /> <a target="_blank" href="/@ecurrex-ru/prizm-na-golose">YMPZM</a> <small>(шлюз к блокчейну PRIZM)</small> от эмитента <a target="_blank" href="/@ecurrex-ru">@ecurrex-ru</a></p>
+                                    <p><Icon name="line" /> <a target="_blank" href="/@ecurrex-ru/anons-shlyuza-dash">YMDASH</a> <small>(блокчейн DASH)</small> или <a target="_blank" href="/@ecurrex-ru/prizm-na-golose">YMPZM</a> <small>(блокчейн PRIZM)</small> от эмитента <a target="_blank" href="/@ecurrex-ru">@ecurrex-ru</a></p>
                                 </div>
                             </div>
                         </div>
@@ -91,7 +92,29 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <a target="_blank" href="https://steem-engine.net/"><img src='https://i.imgur.com/KpqwZy6.png' width='182' height='125' /></a>
+                                <a target="_blank" href="https://www.minter.network/"><img src={require("app/assets/images/minter.png")} width="250" /></a>
+                                </div>
+                                <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
+                                    <a target="_blank" href="/@docsait/reliz-shlyuza-golos-minter-cross-chain-exchange">{tt('g.more_hint')}</a> <Icon name="extlink" />
+                                    <br /><br />
+                                    <a target="_blank" href="https://chainik.io/pool/GOLOSCHAIN/USDTE" className="button">GOLOS-USDT</a>&nbsp;&nbsp;<a target="_blank" href="https://chainik.io/pool/GOLOSCHAIN/BIP" className="button">GOLOS-BIP</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='column large-12 medium-12 small-12'>
+                            <hr/>
+                        </div>
+                    </div>
+                </div>
+                <div className='landing-exchanges-block'>
+                    <div className='column large-12 medium-12 small-12'>
+                        <div className='column large-12 medium-12 small-12'>
+                            <hr/>
+                        </div>
+                        <div className='column large-12 medium-12 small-12'>
+                            <div className='row'>
+                                <div className='column large-12 medium-12 small-12' align='center'>
+                                <a target="_blank" href="https://steem-engine.net/"><img src={require("app/assets/images/steemengine.png")} width="182" /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
                                     <a target="_blank" href="/@allforyou/zavodim-i-vyvodim-golosa-s-birzhi-steem-engine">{tt('exchanges_jsx.guide_user')}</a> <Icon name="extlink" />

@@ -16,9 +16,15 @@ export default class Messages extends React.Component {
         const { account, to,
             contacts, conversationTopLeft, conversationLinkPattern,
             onConversationAdd, onConversationSearch, onConversationSelect,
-            messagesTopCenter, messagesTopRight, messages, onSendMessage,
+            messagesTopLeft, messagesTopCenter, messagesTopRight, messages, replyingMessage, onCancelReply, onSendMessage,
             onButtonImageClicked, onImagePasted,
-            selectedMessages, onMessageSelect, onPanelDeleteClick, onPanelEditClick, onPanelCloseClick } = this.props;
+            selectedMessages, onMessageSelect, onPanelDeleteClick, onPanelReplyClick, onPanelEditClick, onPanelCloseClick } = this.props;
+
+        let isMobile = false;
+        if (process.env.BROWSER) {
+            isMobile = window.matchMedia('screen and (max-width: 39.9375em)').matches;
+        }
+
         return (
             <Dropzone
                 className='messenger-dropzone'
@@ -29,26 +35,7 @@ export default class Messages extends React.Component {
                 onDrop={this.onDrop}
             >
                 {(dropzoneParams) => (<div className='messenger'>
-                    {/* <Toolbar
-                        title='Messenger'
-                        leftItems={[
-                            <ToolbarButton key='cog' icon='ion-ios-cog' />
-                        ]}
-                        rightItems={[
-                            <ToolbarButton key='add' icon='ion-ios-add-circle-outline' />
-                        ]}
-                    /> */}
-
-                    {/* <Toolbar
-                        title='Conversation Title'
-                        rightItems={[
-                            <ToolbarButton key='info' icon='ion-ios-information-circle-outline' />,
-                            <ToolbarButton key='video' icon='ion-ios-videocam' />,
-                            <ToolbarButton key='phone' icon='ion-ios-call' />
-                        ]}
-                    /> */}
-
-                    <div className='msgs-scrollable msgs-sidebar'>
+                    {(!isMobile || !to) ? <div className='msgs-scrollable msgs-sidebar'>
                         <ConversationList
                             conversationTopLeft={conversationTopLeft}
                             account={account}
@@ -59,25 +46,29 @@ export default class Messages extends React.Component {
                             onConversationSearch={onConversationSearch}
                             onConversationSelect={onConversationSelect}
                             />
-                    </div>
+                    </div> : null}
 
-                    <div className='msgs-scrollable msgs-content'>
+                    {(!isMobile || to) ? <div className='msgs-scrollable msgs-content'>
                         <MessageList
                             account={account}
                             to={to}
+                            topLeft={messagesTopLeft}
                             topCenter={messagesTopCenter}
                             topRight={messagesTopRight}
                             messages={messages}
+                            replyingMessage={replyingMessage}
+                            onCancelReply={onCancelReply}
                             onSendMessage={onSendMessage}
                             selectedMessages={selectedMessages}
                             onMessageSelect={onMessageSelect}
                             onPanelDeleteClick={onPanelDeleteClick}
+                            onPanelReplyClick={onPanelReplyClick}
                             onPanelEditClick={onPanelEditClick}
                             onPanelCloseClick={onPanelCloseClick}
                             onButtonImageClicked={onButtonImageClicked}
                             onImagePasted={onImagePasted}
                             />
-                    </div>
+                    </div> : null}
 
                     {dropzoneParams.isDragActive ? (<div className='messenger-dropzone-shade'>
                         <div className='messenger-dropzone-modal'>

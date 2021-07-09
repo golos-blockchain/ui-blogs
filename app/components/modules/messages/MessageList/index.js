@@ -26,7 +26,7 @@ export default class MessageList extends React.Component {
             }
         }
         if (scroll) {
-            scroll = document.getElementsByClassName('msgs-scrollable')[1];
+            scroll = document.getElementsByClassName('msgs-content')[0];
             if (scroll) scroll.scrollTo(0,scroll.scrollHeight);
         }
     }
@@ -99,12 +99,13 @@ export default class MessageList extends React.Component {
     };
 
     render() {
-        const { account, to, topCenter, topRight, onSendMessage, selectedMessages,
+        const { account, to, topLeft, topCenter, topRight, replyingMessage, onCancelReply, onSendMessage, selectedMessages,
             onButtonImageClicked, onImagePasted,
-            onPanelDeleteClick, onPanelEditClick, onPanelCloseClick } = this.props;
+            onPanelDeleteClick, onPanelReplyClick, onPanelEditClick, onPanelCloseClick } = this.props;
         return (
             <div className='message-list'>
                 <Toolbar
+                    leftItems={topLeft}
                     title={topCenter}
                     rightItems={topRight}
                 />
@@ -112,6 +113,8 @@ export default class MessageList extends React.Component {
                 <div className='message-list-container'>{this.renderMessages()}</div>
                 {to ? (<Compose
                         account={account}
+                        replyingMessage={replyingMessage}
+                        onCancelReply={onCancelReply}
                         onSendMessage={onSendMessage}
                         rightItems={[
                             (<ToolbarButton key='image' icon='image-outline' onClick={onButtonImageClicked} />),
@@ -122,6 +125,7 @@ export default class MessageList extends React.Component {
                         ]}
                         selectedMessages={selectedMessages}
                         onPanelDeleteClick={onPanelDeleteClick}
+                        onPanelReplyClick={onPanelReplyClick}
                         onPanelEditClick={onPanelEditClick}
                         onPanelCloseClick={onPanelCloseClick}
                         onImagePasted={onImagePasted}

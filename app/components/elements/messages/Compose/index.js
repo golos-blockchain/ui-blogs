@@ -1,12 +1,15 @@
 import React from 'react';
 import tt from 'counterpart';
 import { Picker } from 'emoji-picker-element';
+import TextareaAutosize from 'react-textarea-autosize';
+import Icon from 'app/components/elements/Icon';
+import { displayQuoteMsg } from 'app/utils/MessageUtils';
 
 import './Compose.css';
 
 export default class Compose extends React.Component {
-    onSendMessage = (e) => {
-        if (e.keyCode === 13) {
+    onKeyDown = (e) => {
+        if (!window.IS_MOBILE && e.keyCode === 13) {
             if (e.shiftKey) {
             } else {
                 e.preventDefault();
@@ -14,6 +17,14 @@ export default class Compose extends React.Component {
                 onSendMessage(e.target.value, e);
             }
         }
+    };
+
+    onSendClick = (e) => {
+        e.preventDefault();
+        const { onSendMessage } = this.props;
+        const input = document.getElementsByClassName('msgs-compose-input')[0];
+        input.focus();
+        onSendMessage(input.value, e);
     };
 
     init = () => {
@@ -131,6 +142,12 @@ export default class Compose extends React.Component {
         }
     }
 
+    onPanelReplyClick = (event) => {
+        if (this.props.onPanelReplyClick) {
+            this.props.onPanelReplyClick(event);
+        }
+    }
+
     onPanelEditClick = (event) => {
         if (this.props.onPanelEditClick) {
             this.props.onPanelEditClick(event);
@@ -143,9 +160,31 @@ export default class Compose extends React.Component {
         }
     }
 
+    onCancelReply = (event) => {
+        if (this.props.onCancelReply) {
+            this.props.onCancelReply(event);
+        }
+    }
+
+    onHeightChange = (height) => {
+        const cont = document.getElementsByClassName('message-list-container')[0];
+        if (cont) {
+            const oldPB = parseInt(cont.style.paddingBottom, 10) || 0; // if NaN, will be 0
+            const newPB = 30 + height;
+            cont.style.paddingBottom = newPB + 'px';
+
+            const delta = newPB - oldPB;
+
+            if (delta > 0) {
+                const scroll = document.getElementsByClassName('msgs-content')[0];
+                if (scroll) scroll.scrollTop += delta;
+            }
+        }
+    }
+
     render() {
-        const { account, rightItems } = this.props;
-        const { onPanelDeleteClick, onPanelEditClick, onPanelCloseClick } = this;
+        const { account, rightItems, replyingMessage } = this.props;
+        const { onPanelDeleteClick, onPanelReplyClick, onPanelEditClick, onPanelCloseClick, onCancelReply } = this;
 
         const selectedMessages = Object.entries(this.props.selectedMessages);
         let selectedMessagesCount = 0;
@@ -157,23 +196,62 @@ export default class Compose extends React.Component {
             }
         }
 
+        let quote = null;
+        if (replyingMessage) {
+            quote = (<div className='msgs-compose-reply'>
+                    <div className='msgs-compose-reply-from'>
+                        {replyingMessage.quote.from}
+                    </div>
+                    {displayQuoteMsg(replyingMessage.quote.body)}
+                    <Icon name={`cross`} size='0_95x' className='msgs-compose-reply-close' onClick={onCancelReply} />
+                </div>);
+        }
+
+        const sendButton = selectedMessagesCount ? null :
+            (<button className='button small msgs-compose-send' title={tt('g.submit')}
+                    onClick={this.onSendClick}
+                >
+                <Icon name='new/envelope' size='1_25x' />
+            </button>);
+
         return (
             <div className='msgs-compose'>
                 {
                     !selectedMessagesCount ? rightItems : null
                 }
 
-                {!selectedMessagesCount ? (<textarea
-                    className='msgs-compose-input'
-                    placeholder={tt('messages.type_a_message')}
-                    onKeyDown={this.onSendMessage}
-                    onPaste={this.onPaste}
-                    />) : null}
+                {!selectedMessagesCount ? (<div className='msgs-compose-input-panel'>
+                    {quote}
+                    <TextareaAutosize
+                        className='msgs-compose-input'
+                        placeholder={tt('messages.type_a_message')}
+                        onKeyDown={this.onKeyDown}
+                        onPaste={this.onPaste}
+                        minRows={2}
+                        maxRows={14}
+                        onHeightChange={this.onHeightChange}
+                        />
+                </div>) : null}
+
+                {sendButton}
 
                 {selectedMessagesCount ? (<div className='msgs-compose-panel'>
-                    <button className='button hollow small alert' onClick={onPanelDeleteClick}>{tt('g.delete') + ' (' + selectedMessagesCount + ')'}</button>
-                    {(selectedMessagesCount === 1 && selectedEditablesCount === 1) ? (<button className='button hollow small' onClick={onPanelEditClick}>{tt('g.edit')}</button>) : null}
-                    <button className='button hollow small cancel-button' onClick={onPanelCloseClick}>{tt('g.cancel')}</button>
+                    {(selectedMessagesCount === 1) ? (<button className='button small' onClick={onPanelReplyClick}>
+                        <Icon name='reply' />
+                        <span>{tt('g.reply')}</span>
+                    </button>) : null}
+                    <button className='button hollow small cancel-button' onClick={onPanelCloseClick}>
+                        <Icon name='cross' />
+                        <span>{tt('g.cancel')}</span>
+                    </button>
+                    <button className='button hollow small alert delete-button' onClick={onPanelDeleteClick}>
+                        <Icon name='ionicons/trash-outline' />
+                        <span>{tt('g.delete') + ' (' + selectedMessagesCount + ')'}</span>
+                    </button>
+                    {(selectedMessagesCount === 1 && selectedEditablesCount === 1) ? (<button className='button hollow small edit-button' onClick={onPanelEditClick}>
+                        <Icon name='pencil' />
+                        <span>{tt('g.edit')}</span>
+                    </button>) : null}
                 </div>) : null}
             </div>
         );

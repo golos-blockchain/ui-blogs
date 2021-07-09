@@ -580,22 +580,22 @@ class CreateAccount extends React.Component {
                 {!this.state.authType && tt('createaccount_jsx.or_use_socsite')}<br/>
                 <Tooltip t='VK'>
                     <span onClick={this.useVk} style={{cursor: 'pointer', marginRight: '5px' }}>
-                        <img src='https://i.imgur.com/NT939Ct.png' />
+                        <img src={require("app/assets/images/icon-vk.png")} />
                     </span>
                 </Tooltip>
                 <Tooltip t='Facebook'>
                     <span onClick={this.useFacebook} style={{cursor: 'pointer', marginRight: '5px' }}>
-                        <img src='https://i.imgur.com/cx5ywN3.png' />
+                        <img src={require("app/assets/images/icon-fb.png")} />
                     </span>
                 </Tooltip>
                 <Tooltip t='Yandex'>
                     <span onClick={this.useYandex} style={{cursor: 'pointer', marginRight: '5px' }}>
-                        <img src='https://i.imgur.com/SDxA8fI.png' />
+                        <img src={require("app/assets/images/icon-ya.png")} />
                     </span>
                 </Tooltip>
                 <Tooltip t='Mail.Ru'>
                     <span onClick={this.useMailru} style={{cursor: 'pointer', marginRight: '5px' }}>
-                        <img src='https://i.imgur.com/OtkGX9J.png' />
+                        <img src={require("app/assets/images/icon-mail.png")} />
                     </span>
                 </Tooltip>                
             </div>

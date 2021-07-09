@@ -253,12 +253,12 @@ class PostsIndex extends React.Component {
                     <div className="sticky-right-ad">
 
                     <p align="center">
-                        <a target="_blank" href={"https://coins.black/xchange_SBERRUB_to_GLS/?summ=1000&schet2=" + active_user + "&lock2=true"}><img src='https://i.imgur.com/tN2U24r.jpg' width='220' height='150' /></a>
+                        <a target="_blank" href={"https://coins.black/xchange_SBERRUB_to_GLS/?summ=1000&schet2=" + active_user + "&lock2=true"}><img src={require("app/assets/images/coinsblack-banner.png")} width="220" height="150" /></a>
                         <span className="strike"><a target="_blank" href="/@on0tole/pryamaya-pokupka-tokenov-golos-za-rubli-i-ne-tolko">{tt('g.more_hint')}</a></span>
                     </p>
 
                     <p align="center">
-                        <a target="_blank" href="https://golostalk.com"><img src='https://i.imgur.com/EUCHJfH.jpg' width='220' height='180' /></a>
+                        <a target="_blank" href="https://golostalk.com"><img src={require("app/assets/images/golostalk-right.png")} width="220" height="180" /></a>
                         <span className="strike"><a target="_blank" href="/@lex/zapusk-foruma-golostalk-com">{tt('g.more_hint')}</a></span>
                     </p>
 
