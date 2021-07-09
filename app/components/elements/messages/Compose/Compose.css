@@ -89,6 +89,24 @@
     padding: 8px;
 }
 
+.msgs-compose-panel button .Icon {
+    display: none;
+}
+
+@media screen and (max-width: 39.9375em) {
+    .msgs-compose-panel button .Icon {
+        display: inline-block;
+    }
+
+    .msgs-compose-panel button span {
+        display: none;
+    }
+
+    .msgs-compose-panel .cancel-button {
+        border: none;
+    }
+}
+
 .msgs-compose-panel .edit-button {
     float: right;
 }
