@@ -24,7 +24,7 @@ import user from 'app/redux/User';
 import { getProfileImage, getLastSeen } from 'app/utils/NormalizeProfile';
 import { fitToPreview } from 'app/utils/ImageUtils';
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
-import { notificationSubscribe, notificationTake } from 'app/utils/ServerApiClient';
+import { notificationSubscribe, notificationTake } from 'app/utils/NotifyApiClient';
 import { flash, unflash } from 'app/components/elements/messages/FlashTitle';
 import { APP_NAME_UP, APP_ICON } from 'app/client_config';
 

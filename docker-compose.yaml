@@ -13,7 +13,6 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SDC_TARANTOOL_HOSTNAME: datastore
       SDC_DATABASE_URL: mysql://golosdev:golosdev@db:3306/golosdev
       SDC_CLIENT_WEBSOCKET_URL: https://api-full.golos.id
       SDC_SERVER_WEBSOCKET_URL: https://api-full.golos.id
@@ -37,25 +36,3 @@ services:
       MYSQL_USER: golosdev
       MYSQL_PASSWORD: golosdev
       MYSQL_ROOT_PASSWORD: golosdev
-
-  datastore:
-    image: golosblockchain/notify:datastore
-    build:
-      context: https://github.com/golos-blockchain/golosnotify.git
-      dockerfile: Dockerfile-datastore
-    volumes:
-      - ./data/tarantool:/var/lib/tarantool
-    ports:
-      - "3301:3301"
-
-  datafeed:
-    image: golosblockchain/notify:datafeed
-    build:
-      context: https://github.com/golos-blockchain/golosnotify.git
-      dockerfile: Dockerfile-datafeed
-    restart: unless-stopped
-    depends_on:
-      - datastore
-    environment:
-      NODE_URL: https://api-full.golos.id
-      TARANTOOL_HOST: datastore

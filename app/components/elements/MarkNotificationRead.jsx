@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
-import {markNotificationRead} from 'app/utils/ServerApiClient';
+import { markNotificationRead } from 'app/utils/NotifyApiClient';
 
 class MarkNotificationRead extends React.Component {
 
