@@ -64,6 +64,9 @@
   "ws_connection_server": "wss://api-full.golos.id/ws",
   "ws_connection_msgs": "wss://api-full.golos.id/ws",
   "chain_id": "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12",
+  "notify_service": {
+    "host": "https://devnotify.golos.today/"
+  },
   "elastic_search": {
     "url": "https://search.golos.today",
     "login": "golosclient",
