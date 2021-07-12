@@ -34,7 +34,7 @@
       "frameAncestors": "'none'"
     }
   },
-  "img_proxy_prefix": "https://devimages.golos.today/",
+  "img_proxy_prefix": "https://images.golos.today/",
   "img_proxy_backup_prefix": "https://steemitimages.com/",
   "read_only_mode": false,
   "add_notify_site": {
@@ -52,12 +52,6 @@
   "session_cookie_key": "gls.session",
   "session_key": "golos",
   "site_domain": "golos.id",
-  "tarantool": {
-    "host": "localhost",
-    "password": "",
-    "port": "3301",
-    "username": "guest"
-  },
   "upload_image": "https://api.imgur.com/3/image",
   "golos_lib_gui": "https://gapi.golos.today/steemjs/api/",
   "ws_connection_client": "https://api-full.golos.id",
@@ -65,7 +59,7 @@
   "ws_connection_msgs": "wss://api-full.golos.id/ws",
   "chain_id": "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12",
   "notify_service": {
-    "host": "https://devnotify.golos.today/"
+    "host": "https://notify.golos.today/"
   },
   "elastic_search": {
     "url": "https://search.golos.today",

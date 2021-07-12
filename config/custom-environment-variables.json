@@ -1,21 +1,12 @@
 {
   "database_url": "SDC_DATABASE_URL",
   "google_analytics_id": "SDC_GOOGLE_ANALYTICS_ID",
-  "img_proxy_prefix": "SDC_IMAGE_PROXY_PREFIX",
   "registrar": {
     "account": "SDC_REGISTRAR_ACCOUNT",
-    "fee": "SDC_REGISTRAR_AMOUNT",
-    "signing_key": "SDC_REGISTRAR_SIGNINGKEY",
-    "delegation": "SDC_REGISTRAR_DELEGATION"
+    "signing_key": "SDC_REGISTRAR_SIGNINGKEY"
   },
   "server_session_secret": "SDC_SESSION_SECRETKEY",
   "site_domain": "SDC_SITE_DOMAIN",
-  "tarantool": {
-    "host": "SDC_TARANTOOL_HOSTNAME",
-    "password": "SDC_TARANTOOL_PASSWORD",
-    "port": "SDC_TARANTOOL_PORT",
-    "username": "SDC_TARANTOOL_USERNAME"
-  },
   "upload_image": "SDC_UPLOAD_IMAGE_URL",
   "ws_connection_client": "SDC_CLIENT_WEBSOCKET_URL",
   "ws_connection_server": "SDC_SERVER_WEBSOCKET_URL",
