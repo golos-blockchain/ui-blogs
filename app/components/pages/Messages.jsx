@@ -216,9 +216,9 @@ class Messages extends React.Component {
     }
 
     async setCallback(account, removeTaskIds) {
-        await notificationSubscribe(account.name);
-
         try {
+            await notificationSubscribe(account.name);
+
             removeTaskIds = await notificationTake(account.name, removeTaskIds, (type, op, timestamp, task_id) => {
                 const updateMessage = op.from === this.state.to || 
                     op.to === this.state.to;
