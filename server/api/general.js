@@ -7,7 +7,7 @@ import recordWebEvent from 'server/record_web_event';
 import {esc, escAttrs} from 'db/models';
 import {emailRegex, getRemoteIp, rateLimitReq, checkCSRF} from 'server/utils/misc';
 import coBody from 'co-body';
-import Tarantool from 'db/tarantool';
+//import Tarantool from 'db/tarantool';
 import {PublicKey, Signature, hash} from 'golos-classic-js/lib/auth/ecc';
 import {api, broadcast} from 'golos-classic-js';
 import { getDynamicGlobalProperties } from 'app/utils/APIWrapper'
@@ -55,22 +55,24 @@ export default function useGeneralApi(app) {
             return;
         }
 
-        try {
-            const lock_entity_res = yield Tarantool.instance('tarantool').call('lock_entity', user_id+'');
-            if (!lock_entity_res[0][0]) {
-                console.log('-- /accounts lock_entity -->', user_id, lock_entity_res[0][0]);
-                this.body = JSON.stringify({error: 'Conflict'});
-                this.status = 409;
-                return;
-            }
-        } catch (e) {
-            console.error('-- /accounts tarantool is not available, fallback to another method', e)
-            const rnd_wait_time = Math.random() * 10000;
-            console.log('-- /accounts rnd_wait_time -->', rnd_wait_time);
-            yield new Promise((resolve) =>
-                setTimeout(() => resolve(), rnd_wait_time)
-            )
-        }
+        // TODO: use golos-ui tarantool, when mysql will be replaced with tarantool
+        // try {
+        //     const lock_entity_res = yield Tarantool.instance('tarantool').call('lock_entity', user_id+'');
+        //     if (!lock_entity_res[0][0]) {
+        //         console.log('-- /accounts lock_entity -->', user_id, lock_entity_res[0][0]);
+        //         this.body = JSON.stringify({error: 'Conflict'});
+        //         this.status = 409;
+        //         return;
+        //     }
+        // } catch (e) {
+        // console.error('-- /accounts tarantool is not available, fallback to another method', e)
+        console.error('-- /accounts using ram lock')
+        const rnd_wait_time = Math.random() * 10000;
+        console.log('-- /accounts rnd_wait_time -->', rnd_wait_time);
+        yield new Promise((resolve) =>
+            setTimeout(() => resolve(), rnd_wait_time)
+        )
+        // }
 
         try {
             const user = yield models.User.findOne(
@@ -253,7 +255,8 @@ export default function useGeneralApi(app) {
             this.status = 500;
         } finally {
             // console.log('-- /accounts unlock_entity -->', user_id);
-            try { yield Tarantool.instance('tarantool').call('unlock_entity', user_id + ''); } catch(e) {/* ram lock */}
+            // TODO: use golos-ui tarantool, when mysql will be replaced with tarantool
+            //try { yield Tarantool.instance('tarantool').call('unlock_entity', user_id + ''); } catch(e) {/* ram lock */}
         }
         recordWebEvent(this, 'api/accounts', account ? account.name : 'n/a');
     });
@@ -284,60 +287,20 @@ export default function useGeneralApi(app) {
     });
 
     router.post('/login_account', koaBody, function *() {
-        if (rateLimitReq(this, this.req)) return;
         const params = this.request.body;
-        const {csrf, account, signatures} = typeof(params) === 'string' ? JSON.parse(params) : params;
+        const {csrf, account} = typeof(params) === 'string' ? JSON.parse(params) : params;
         if (!checkCSRF(this, csrf)) return;
         console.log('-- /login_account -->', this.session.uid, account);
         try {
+            this.session.a = account;
+
             const db_account = yield models.Account.findOne(
                 {attributes: ['UserId'], where: {name: esc(account)}, logging: false}
             );
             if (db_account) this.session.user = db_account.UserId;
 
             let body = { status: 'ok' }
-            if(signatures) {
-                if(!this.session.login_challenge) {
-                    console.error('/login_account missing this.session.login_challenge');
-                } else {
-                    const [chainAccount] = yield api.getAccountsAsync([account])
-                    if(!chainAccount) {
-                        console.error('/login_account missing blockchain account', account);
-                    } else {
-                        const auth = {posting: false}
-                        const bufSha = hash.sha256(JSON.stringify({token: this.session.login_challenge}, null, 0))
-                        const verify = (type, sigHex, pubkey, weight, weight_threshold) => {
-                            if(!sigHex) return
-                            if(weight !== 1 || weight_threshold !== 1) {
-                                console.error(`/login_account login_challenge unsupported ${type} auth configuration: ${account}`);
-                            } else {
-                                const sig = parseSig(sigHex)
-                                const public_key = PublicKey.fromString(pubkey)
-                                const verified = sig.verifyHash(bufSha, public_key)
-                                if (!verified) {
-                                    console.error('/login_account verification failed', this.session.uid, account, pubkey)
-                                }
-                                auth[type] = verified
-                            }
-                        }
-                        const {posting: {key_auths: [[posting_pubkey, weight]], weight_threshold}} = chainAccount
-                        verify('posting', signatures.posting, posting_pubkey, weight, weight_threshold)
-                        if (auth.posting) {
-                          this.session.a = account;
-                            if (config.has('tarantool') && config.has('tarantool.host')) {
-                                try {
-                                    const res = yield Tarantool.instance('tarantool').call('get_guid', account);
-                                    const [acc, guid] = res[0][0];
-                                    body = Object.assign(body, { guid })
-                                } catch (e) {}
-                            }
-                        }
-                    }
-                }
-            }
-
             this.body = JSON.stringify(body);
-            const remote_ip = getRemoteIp(this.req);
         } catch (error) {
             console.error('Error in /login_account api call', this.session.uid, error.message);
             this.body = JSON.stringify({error: error.message});
@@ -399,12 +362,13 @@ export default function useGeneralApi(app) {
         const remote_ip = getRemoteIp(this.req);
         try {
             let views = 1, unique = true;
-            if (config.has('tarantool') && config.has('tarantool.host')) {
-                try {
-                    const res = yield Tarantool.instance('tarantool').call('page_view', page, remote_ip, this.session.uid, ref);
-                    unique = res[0][0];
-                } catch (e) {}
-            }
+            // TODO: use golos-ui tarantool, when mysql will be replaced with tarantool
+            // if (config.has('tarantool') && config.has('tarantool.host')) {
+            //     try {
+            //         const res = yield Tarantool.instance('tarantool').call('page_view', page, remote_ip, this.session.uid, ref);
+            //         unique = res[0][0];
+            //     } catch (e) {}
+            // }
             const page_model = yield models.Page.findOne(
                 {attributes: ['id', 'views'], where: {permlink: esc(page)}, logging: false}
             );

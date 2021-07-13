@@ -24,7 +24,7 @@ import user from 'app/redux/User';
 import { getProfileImage, getLastSeen } from 'app/utils/NormalizeProfile';
 import { fitToPreview } from 'app/utils/ImageUtils';
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
-import { notificationSubscribe, notificationTake } from 'app/utils/ServerApiClient';
+import { notificationSubscribe, notificationTake } from 'app/utils/NotifyApiClient';
 import { flash, unflash } from 'app/components/elements/messages/FlashTitle';
 import { APP_NAME_UP, APP_ICON } from 'app/client_config';
 
@@ -216,9 +216,9 @@ class Messages extends React.Component {
     }
 
     async setCallback(account, removeTaskIds) {
-        await notificationSubscribe(account.name);
-
         try {
+            await notificationSubscribe(account.name);
+
             removeTaskIds = await notificationTake(account.name, removeTaskIds, (type, op, timestamp, task_id) => {
                 const updateMessage = op.from === this.state.to || 
                     op.to === this.state.to;

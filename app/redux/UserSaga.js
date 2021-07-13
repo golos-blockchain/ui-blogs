@@ -4,6 +4,7 @@ import {accountAuthLookup} from 'app/redux/AuthSaga'
 import user from 'app/redux/User'
 import {getAccount} from 'app/redux/SagaShared'
 import {browserHistory} from 'react-router'
+import {notifyApiLogin, notifyApiLogout} from 'app/utils/NotifyApiClient';
 import {serverApiLogin, serverApiLogout} from 'app/utils/ServerApiClient';
 import {serverApiRecordEvent} from 'app/utils/ServerApiClient';
 import {loadFollows} from 'app/redux/FollowSaga'
@@ -166,7 +167,10 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     // no saved password
     if (!username || !password) {
         const offchain_account = yield select(state => state.offchain.get('account'))
-        if (offchain_account) serverApiLogout()
+        if (offchain_account) {
+            notifyApiLogout();
+            serverApiLogout()
+        }
         return
     }
 
@@ -311,26 +315,26 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
         yield put(user.actions.saveLogin());
 
     try {
-        // const challengeString = yield serverApiLoginChallenge()
         const offchainData = yield select(state => state.offchain)
         const serverAccount = offchainData.get('account')
-        const challengeString = offchainData.get('login_challenge')
-        if (!serverAccount && challengeString) {
-            const signatures = {}
-            const challenge = {token: challengeString}
-            const bufSha = hash.sha256(JSON.stringify(challenge, null, 0))
+        if (!serverAccount) {
+            const res = yield notifyApiLogin(username, null);
+            console.log('login_challenge', res.login_challenge);
+
+            const signatures = {};
+            const challenge = {token: res.login_challenge};
+            const bufSha = hash.sha256(JSON.stringify(challenge, null, 0));
             const sign = (role, d) => {
-                if (!d) return
-                const sig = Signature.signBufferSha256(bufSha, d)
-                signatures[role] = sig.toHex()
+                if (!d) return;
+                const sig = Signature.signBufferSha256(bufSha, d);
+                signatures[role] = sig.toHex();
+            };
+            sign('posting', private_keys.get('posting_private'));
+            const res2 = yield notifyApiLogin(username, signatures);
+            if (res2.guid) {
+                localStorage.setItem('guid', res2.guid)
             }
-            sign('posting', private_keys.get('posting_private'))
-            // sign('active', private_keys.get('active_private'))
-            const res = yield serverApiLogin(username, signatures)
-            if (res.guid) {
-                localStorage.setItem('guid', res.guid)
-            }
-            serverApiLogin(username, signatures);
+            serverApiLogin(username);
         }
     } catch(error) {
         // Does not need to be fatal
@@ -392,10 +396,12 @@ function* logout() {
         localStorage.removeItem('autopost2')
         localStorage.removeItem('guid')
     }
+    notifyApiLogout();
     serverApiLogout();
 }
 
 function* loginError({payload: {/*error*/}}) {
+    notifyApiLogout();
     serverApiLogout();
 }
 

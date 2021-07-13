@@ -3,7 +3,7 @@ import { renderToNodeStream } from 'react-dom/server';
 import stringToStream from 'string-to-stream';
 import multiStream from 'multistream';
 import { ServerStyleSheet } from 'styled-components'
-import Tarantool from 'db/tarantool';
+// import Tarantool from 'db/tarantool';
 import ServerHTML from './server-html';
 import { serverRender } from '../shared/UniversalRender';
 import models from 'db/models';
@@ -19,12 +19,6 @@ const DB_RECONNECT_TIMEOUT = process.env.NODE_ENV === 'development' ? 1000 * 60 
 async function appRender(ctx) {
     const store = {};
     try {
-        let login_challenge = ctx.session.login_challenge;
-        if (!login_challenge) {
-            login_challenge = secureRandom.randomBuffer(16).toString('hex');
-            ctx.session.login_challenge = login_challenge;
-        }
-
         let select_tags = [];
         try {
             select_tags = JSON.parse(decodeURIComponent(ctx.cookies.get(SELECT_TAGS_KEY) || '[]') || '[]') || [];
@@ -36,7 +30,6 @@ async function appRender(ctx) {
             new_visit: ctx.session.new_visit,
             account: ctx.session.a,
             config: $STM_Config,
-            login_challenge,
             locale: Object.keys(LANGUAGES).indexOf(ctx.cookies.get(LOCALE_COOKIE_KEY)) !== -1 ? ctx.cookies.get(LOCALE_COOKIE_KEY) : DEFAULT_LANGUAGE,
             select_tags
         };
@@ -91,7 +84,7 @@ async function appRender(ctx) {
           store,
           offchain,
           ErrorPage,
-          tarantool: Tarantool.instance('tarantool')
+          // tarantool: Tarantool.instance('tarantool')
         });
 
         // Assets name are found in `webpack-stats` file
