@@ -36,7 +36,9 @@
     "new_message1": " notification",
     "new_message234": " notifications",
     "new_message5": " notifications",
-    "invalid_message": "(This message could not be displayed in Golos Messenger)"
+    "invalid_message": "(This message could not be displayed in Golos Messenger)",
+    "sync_error": "Sync error. To receive new messages please refresh the page.",
+    "sync_error_short": "Sync error."
   },
   "g": {
     "golos_fest": "Golos.id News",
@@ -148,6 +150,7 @@
     "promoted": "promoted",
     "re": "RE",
     "receive": "Receive ",
+    "refresh": "Refresh",
     "remove": "Remove",
     "remove_vote": "Remove Vote",
     "replied_to": "replied to",

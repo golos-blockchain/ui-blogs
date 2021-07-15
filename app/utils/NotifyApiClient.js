@@ -93,6 +93,7 @@ export async function notificationSubscribe(account, subscriber_id = '') {
             saveSession(response);
             const result = await response.json();
             window.__subscriber_id = result.subscriber_id;
+            return result.subscriber_id;
         }
     } catch (ex) {
         console.error(ex)
