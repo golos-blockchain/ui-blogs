@@ -316,9 +316,8 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
 
     try {
         const offchainData = yield select(state => state.offchain)
-        const serverAccount = offchainData.get('account')
-        if (!serverAccount) {
-            const res = yield notifyApiLogin(username, null);
+        const res = yield notifyApiLogin(username, null);
+        if (res.already_authorized !== username) {
             console.log('login_challenge', res.login_challenge);
 
             const signatures = {};
@@ -334,6 +333,7 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
             if (res2.guid) {
                 localStorage.setItem('guid', res2.guid)
             }
+
             serverApiLogin(username);
         }
     } catch(error) {
