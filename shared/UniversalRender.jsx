@@ -24,7 +24,6 @@ import rootSaga from 'app/redux/RootSaga';
 import {component as NotFound} from 'app/components/pages/NotFound';
 import extractMeta from 'app/utils/ExtractMeta';
 import Translator from 'app/Translator';
-import {notificationsArrayToMap} from 'app/utils/Notifications';
 import getState from 'app/utils/StateBuilder';
 import {routeRegex} from "app/ResolveRoute";
 import {contentStats} from 'app/utils/StateFunctions'
