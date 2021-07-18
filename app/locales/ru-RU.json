@@ -803,6 +803,12 @@
     "choose_language": "Выберите язык интерфейса",
     "choose_currency": "Выберите валюту",
     "choose_preset_tips": "Выберите суммы для кнопок вознаграждений",
+    "notifications_settings": "Настройки уведомлений на сайте",
+    "notifications_transfer": "Перевод средств",
+    "notifications_donate": "Вознаграждения (донаты)",
+    "notifications_reply": "Ответ на комментарий или пост",
+    "notifications_mention": "Упоминание имени в посте или комментарии",
+    "notifications_message": "Новое сообщение",
     "invalid_url": "Недопустимый URL-адрес",
     "invalid_ws": "wss://api-full.golos.id/ws",
     "invalid_ip_port": "Пример: 120.16.10.18:2001",
@@ -1342,5 +1348,15 @@
       "symbols": "Символы и знаки",
       "flags": "Флаги"
     }
+  },
+  "notify_content": {
+    "send_AMOUNT": "Вы перевели %(AMOUNT)s",
+    "receive_AMOUNT": " перевел вам %(AMOUNT)s",
+    "donate_AMOUNT": " отблагодарил вас %(AMOUNT)s",
+    "reply_post": " прокомментировал ваш пост",
+    "reply_comment": " ответил на ваш комментарий",
+    "mention_post": " упомянул вас в своем посте",
+    "mention_comment": " упомянул вас в комментарии",
+    "message": " написал вам сообщение"
   }
 }

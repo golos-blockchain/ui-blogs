@@ -80,9 +80,9 @@ export function markNotificationRead(account, fields) {
     });
 }
 
-export async function notificationSubscribe(account, scopes = 'message') {
+export async function notificationSubscribe(account, scopes = 'message', sidKey = '__subscriber_id') {
     if (!notifyAvailable() || window.$STM_ServerBusy) return;
-    if (window.__subscriber_id) return;
+    if (window[sidKey]) return;
     try {
         let request = Object.assign({}, request_base, {method: 'get'});
         setSession(request);
@@ -90,20 +90,22 @@ export async function notificationSubscribe(account, scopes = 'message') {
         if (response.ok) {
             saveSession(response);
             const result = await response.json();
-            window.__subscriber_id = result.subscriber_id;
-            return result.subscriber_id;
+            if (result.subscriber_id) {
+                window[sidKey] = result.subscriber_id;
+                return result.subscriber_id;
+            } else {
+                throw new Error('Cannot subscribe, error: ' + result.error);
+            }
         }
     } catch (ex) {
         console.error(ex)
     }
-    if (!window.__subscriber_id) {
-        throw new Error('Cannot subscribe');
-    }
+    throw new Error('Cannot subscribe');
 }
 
-export async function notificationTake(account, removeTaskIds, forEach) {
+export async function notificationTake(account, removeTaskIds, forEach, sidKey = '__subscriber_id') {
     if (!notifyAvailable() || window.$STM_ServerBusy) return;
-    let url = notifyUrl(`/take/@${account}/${window.__subscriber_id}`);
+    let url = notifyUrl(`/take/@${account}/${window[sidKey]}`);
     if (removeTaskIds)
         url += '/' + removeTaskIds;
     let response;
@@ -121,12 +123,12 @@ export async function notificationTake(account, removeTaskIds, forEach) {
                 for (let task of result.tasks) {
                     const [ type, op ] = task.data;
 
-                    forEach(type, op, task.timestamp, task.id);
+                    forEach(type, op, task.timestamp, task.id, task.scope);
 
                     removeTaskIdsArr.push(task.id.toString());
                 }
 
-                removeTaskIds = removeTaskIdsArr.join('-');
+                removeTaskIds = removeTaskIdsArr.join(',');
 
                 return removeTaskIds;
             }
