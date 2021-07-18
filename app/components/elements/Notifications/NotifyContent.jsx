@@ -63,25 +63,25 @@ const transfer = (scope, type, op) => {
 };
 
 const comment = (scope, type, op) => {
-    const { author, permlink, parent_author, parent_permlink, } = op;
+    const { author, permlink, parent_author, parent_permlink, _depth, } = op;
 
     let icon = null;
     let message = null;
     let url = null;
     if (scope === 'comment_reply') {
         icon = 'notification/comment';
-        if (parent_author) {
-            message = tt('notify_content.reply_post');
-        } else {
+        if (_depth > 1) {
             message = tt('notify_content.reply_comment');
+        } else {
+            message = tt('notify_content.reply_post');
         }
         url = `/@${parent_author}/recent-replies`;
     } else {
         icon = 'notification/mention';
         if (parent_author) {
-            message = tt('notify_content.mention_post');
-        } else {
             message = tt('notify_content.mention_comment');
+        } else {
+            message = tt('notify_content.mention_post');
         }
         url = `/@${author}/${permlink}`;
     }
@@ -191,5 +191,5 @@ export default action => ({
         cursor: 'pointer'
     },
     key: 'chain_' + Date.now(),
-    dismissAfter: 5000,
+    dismissAfter: 10000,
 });
