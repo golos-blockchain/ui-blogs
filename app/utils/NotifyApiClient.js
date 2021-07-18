@@ -1,5 +1,3 @@
-import { NTYPES, notificationsArrayToMap } from 'app/utils/Notifications';
-
 const request_base = {
     method: 'post',
     credentials: 'include',
@@ -65,7 +63,7 @@ export function getNotifications(account) {
         saveSession(r);
         return r.json();
     }).then(res => {
-        return notificationsArrayToMap(res.counters);
+        return res.counters;
     });
 }
 
@@ -73,38 +71,41 @@ export function markNotificationRead(account, fields) {
     if (!notifyAvailable() || window.$STM_ServerBusy) return Promise.resolve(null);
     let request = Object.assign({}, request_base, {method: 'put', mode: 'cors'});
     setSession(request);
-    const field_nums_str = fields.map(f => NTYPES.indexOf(f)).join('-');
-    return fetch(notifyUrl(`/counters/@${account}/${field_nums_str}`), request).then(r => {
+    const fields_str = fields.join(',');
+    return fetch(notifyUrl(`/counters/@${account}/${fields_str}`), request).then(r => {
         saveSession(r);
         return r.json();
     }).then(res => {
-        return notificationsArrayToMap(res.counters);
+        return res.counters;
     });
 }
 
-export async function notificationSubscribe(account, subscriber_id = '') {
+export async function notificationSubscribe(account, scopes = 'message', sidKey = '__subscriber_id') {
     if (!notifyAvailable() || window.$STM_ServerBusy) return;
-    if (window.__subscriber_id) return;
+    if (window[sidKey]) return;
     try {
         let request = Object.assign({}, request_base, {method: 'get'});
         setSession(request);
-        let response = await fetch(notifyUrl(`/subscribe/@${account}/${subscriber_id}`), request);
+        let response = await fetch(notifyUrl(`/subscribe/@${account}/${scopes}`), request);
         if (response.ok) {
             saveSession(response);
             const result = await response.json();
-            window.__subscriber_id = result.subscriber_id;
+            if (result.subscriber_id) {
+                window[sidKey] = result.subscriber_id;
+                return result.subscriber_id;
+            } else {
+                throw new Error('Cannot subscribe, error: ' + result.error);
+            }
         }
     } catch (ex) {
         console.error(ex)
     }
-    if (!window.__subscriber_id) {
-        throw new Error('Cannot subscribe');
-    }
+    throw new Error('Cannot subscribe');
 }
 
-export async function notificationTake(account, removeTaskIds, forEach) {
+export async function notificationTake(account, removeTaskIds, forEach, sidKey = '__subscriber_id') {
     if (!notifyAvailable() || window.$STM_ServerBusy) return;
-    let url = notifyUrl(`/take/@${account}/${window.__subscriber_id}`);
+    let url = notifyUrl(`/take/@${account}/${window[sidKey]}`);
     if (removeTaskIds)
         url += '/' + removeTaskIds;
     let response;
@@ -120,16 +121,14 @@ export async function notificationTake(account, removeTaskIds, forEach) {
 
                 let removeTaskIdsArr = [];
                 for (let task of result.tasks) {
-                    const task_id = task[0];
-                    const { data, timestamp } = task[2];
-                    const [ type, op ] = data;
+                    const [ type, op ] = task.data;
 
-                    forEach(type, op, timestamp, task_id);
+                    forEach(type, op, task.timestamp, task.id, task.scope);
 
-                    removeTaskIdsArr.push(task_id.toString());
+                    removeTaskIdsArr.push(task.id.toString());
                 }
 
-                removeTaskIds = removeTaskIdsArr.join('-');
+                removeTaskIds = removeTaskIdsArr.join(',');
 
                 return removeTaskIds;
             }

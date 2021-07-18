@@ -155,6 +155,7 @@ class Messages extends React.Component {
             messagesCount: 0,
             selectedMessages: {},
             searchContacts: null,
+            notifyErrors: 0,
         };
         this.preDecoded = {};
         this.cachedProfileImages = {};
@@ -215,10 +216,35 @@ class Messages extends React.Component {
         flash(title);
     }
 
-    async setCallback(account, removeTaskIds) {
-        try {
-            await notificationSubscribe(account.name);
+    notifyErrorsClear = () => {
+        if (this.state.notifyErrors)
+            this.setState({
+                notifyErrors: 0,
+            });
+    };
 
+    notifyErrorsInc = (score) => {
+        this.setState({
+            notifyErrors: this.state.notifyErrors + score,
+        });
+    };
+
+    async setCallback(account, removeTaskIds) {
+        let subscribed = null;
+        try {
+            subscribed = await notificationSubscribe(account.name);
+        } catch (ex) {
+            console.error('notificationSubscribe', ex);
+            this.notifyErrorsInc(15);
+            setTimeout(() => {
+                this.setCallback(this.props.account || account, removeTaskIds);
+            }, 5000);
+            return;
+        }
+        if (subscribed) { // if was not already subscribed
+            this.notifyErrorsClear();
+        }
+        try {
             removeTaskIds = await notificationTake(account.name, removeTaskIds, (type, op, timestamp, task_id) => {
                 const updateMessage = op.from === this.state.to || 
                     op.to === this.state.to;
@@ -241,10 +267,14 @@ class Messages extends React.Component {
             });
             this.setCallback(this.props.account || account, removeTaskIds);
         } catch (ex) {
+            console.error('notificationTake', ex);
+            this.notifyErrorsInc(1);
             setTimeout(() => {
                 this.setCallback(this.props.account || account, removeTaskIds);
-            }, 100);
+            }, 1000);
+            return;
         }
+        this.notifyErrorsClear();
     }
 
     onWindowResize = (e) => {
@@ -672,8 +702,8 @@ class Messages extends React.Component {
     _renderMessagesTopLeft = () => {
         let messagesTopLeft = [];
         // mobile only
-        messagesTopLeft.push(<Link to='/msgs/' className='msgs-back-btn'>
-            <Icon key='back-btn' name='chevron-left' />
+        messagesTopLeft.push(<Link to='/msgs/' key='back-btn' className='msgs-back-btn'>
+            <Icon name='chevron-left' />
         </Link>);
         return messagesTopLeft;
     };
@@ -685,16 +715,27 @@ class Messages extends React.Component {
             messagesTopCenter.push(<div key='to-link' style={{fontSize: '15px', width: '100%', textAlign: 'center'}}>
                 <a href={'/@' + to}>{to}</a>
             </div>);
-            let lastSeen = getLastSeen(accounts[to]);
-            if (lastSeen) {
-                messagesTopCenter.push(<div key='to-last-seen' style={{fontSize: '13px', fontWeight: 'normal'}}>
+            const { notifyErrors } = this.state;
+            if (notifyErrors >= 30) {
+                messagesTopCenter.push(<div key='to-last-seen' style={{fontSize: '13px', fontWeight: 'normal', color: 'red'}}>
                     {
                         <span>
-                            {tt('messages.last_seen')}
-                            <TimeAgoWrapper date={`${lastSeen}`} />
+                            {tt('messages.sync_error')}
                         </span>
                     }
                 </div>);
+            } else {
+                let lastSeen = getLastSeen(accounts[to]);
+                if (lastSeen) {
+                    messagesTopCenter.push(<div key='to-last-seen' style={{fontSize: '13px', fontWeight: 'normal'}}>
+                        {
+                            <span>
+                                {tt('messages.last_seen')}
+                                <TimeAgoWrapper date={`${lastSeen}`} />
+                            </span>
+                        }
+                    </div>);
+                }
             }
         }
         return messagesTopCenter;

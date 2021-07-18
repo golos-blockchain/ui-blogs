@@ -36,7 +36,9 @@
     "new_message1": " notification",
     "new_message234": " notifications",
     "new_message5": " notifications",
-    "invalid_message": "(This message could not be displayed in Golos Messenger)"
+    "invalid_message": "(This message could not be displayed in Golos Messenger)",
+    "sync_error": "Sync error. To receive new messages please refresh the page.",
+    "sync_error_short": "Sync error."
   },
   "g": {
     "golos_fest": "Golos.id News",
@@ -148,6 +150,7 @@
     "promoted": "promoted",
     "re": "RE",
     "receive": "Receive ",
+    "refresh": "Refresh",
     "remove": "Remove",
     "remove_vote": "Remove Vote",
     "replied_to": "replied to",
@@ -1006,6 +1009,12 @@
     "choose_language": "Choose language",
     "choose_currency": "Choose currency",
     "choose_preset_tips": "Choose the amounts for the reward buttons",
+    "notifications_settings": "Notification settings",
+    "notifications_transfer": "Transfer notifications",
+    "notifications_donate": "Donate notifications",
+    "notifications_reply": "Reply notifications",
+    "notifications_mention": "Mention notifications",
+    "notifications_message": "Private message notifications",
     "invalid_url": "Invalid URL",
     "name_is_too_long": "Name is too long",
     "name_must_not_begin_with": "Name must not begin with @",
@@ -1279,5 +1288,15 @@
         "symbols": "Symbols",
         "flags": "Flags"
     }
+  },
+  "notify_content": {
+    "send_AMOUNT": "You transferred %(AMOUNT)s to",
+    "receive_AMOUNT": " transferred you %(AMOUNT)s",
+    "donate_AMOUNT": " donated you %(AMOUNT)s",
+    "reply_post": " commented your post",
+    "reply_comment": " replied to your comment",
+    "mention_post": " mentioned you in their post",
+    "mention_comment": " mentioned you in their comment",
+    "message": " sent you a private message"
   }
 }

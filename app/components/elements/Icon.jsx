@@ -129,6 +129,11 @@ const icons = new Map([
     ['ionicons/happy-outline', require('app/assets/icons/ionicons/happy-outline.svg')],
     ['ionicons/image-outline', require('app/assets/icons/ionicons/image-outline.svg')],
     ['ionicons/trash-outline', require('app/assets/icons/ionicons/trash-outline.svg')],
+    ['notification/comment', require('app/assets/icons/notification/comment.svg')],
+    ['notification/donate', require('app/assets/icons/notification/donate.svg')],
+    ['notification/transfer', require('app/assets/icons/notification/transfer.svg')],
+    ['notification/mention', require('app/assets/icons/notification/mention.svg')],
+    ['notification/message', require('app/assets/icons/notification/message.svg')],
 ]);
 
 const rem_sizes = {

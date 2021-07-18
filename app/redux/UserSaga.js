@@ -128,18 +128,13 @@ function* usernamePasswordLogin(action) {
         const username = current.get('username')
         yield fork(loadFollows, "getFollowingAsync", username, 'blog')
         yield fork(loadFollows, "getFollowingAsync", username, 'ignore')
-        // TODO Deploy notofication services
-        //if(process.env.BROWSER) {
-        //  const notification_channel_created = yield select(state => state.user.get('notification_channel_created'))
-        //  if (!notification_channel_created) {
-        //    // console.log(']]]]]]]]]]]]]]]]]]]]]]] ', notification_channel_created)
-        //    const {onUserLogin} = PushNotificationSaga;
-        //    // clientside
-        //    // when logged in
-        //    // start listening to the personal server event channel
-        //    yield call(onUserLogin);
-        //  }
-        //}
+        if (process.env.BROWSER) {
+            //const notification_channel_created = yield select(state => state.user.get('notification_channel_created'))
+            //if (!notification_channel_created) {
+            const { onUserLogin } = PushNotificationSaga;
+            yield call(onUserLogin, { username });
+            //}
+        }
     }
 }
 
@@ -315,10 +310,8 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
         yield put(user.actions.saveLogin());
 
     try {
-        const offchainData = yield select(state => state.offchain)
-        const serverAccount = offchainData.get('account')
-        if (!serverAccount) {
-            const res = yield notifyApiLogin(username, null);
+        const res = yield notifyApiLogin(username, null);
+        if (!res.already_authorized) {
             console.log('login_challenge', res.login_challenge);
 
             const signatures = {};
@@ -334,6 +327,15 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
             if (res2.guid) {
                 localStorage.setItem('guid', res2.guid)
             }
+        }
+    } catch(error) {
+        // Does not need to be fatal
+        console.error('Notify Login Error', error);
+    }
+    try {
+        const offchainData = yield select(state => state.offchain)
+        const serverAccount = offchainData.get('account')
+        if (!serverAccount) {
             serverApiLogin(username);
         }
     } catch(error) {
