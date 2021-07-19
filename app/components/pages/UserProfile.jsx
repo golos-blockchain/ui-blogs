@@ -323,7 +323,7 @@ export default class UserProfile extends React.Component {
                                 loadMore={this.loadMore}
                                 showSpam={false}
                             />
-                            {isMyAccount && <div><MarkNotificationRead fields="comment_reply,post_reply" account={account.name} /></div>}
+                            {isMyAccount && <div><MarkNotificationRead fields="comment_reply" account={account.name} /></div>}
                         </div>
                     );
                 }

@@ -3,9 +3,11 @@ rudex
 steem-engine
 ecurrex-ymrub
 ecurrex-prizm
-ecurrex-dash
 golos.doge
+ecurrex-dash
 glsmp
+ecurrex-hive
+ecurrex-steem
 `
 .trim()
 .split('\n');

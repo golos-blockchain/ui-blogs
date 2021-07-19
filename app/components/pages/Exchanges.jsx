@@ -75,7 +75,7 @@ class Exchanges extends React.Component {
                                     <p><a target="_blank" href="/@allforyou/torguem-na-vnutrennei-birzhe-golosa">Внутренняя биржа</a>, на которой также возможно покупать/продавать токены GOLOS через пользовательские шлюзы, напр. к <small>DOGE, DASH, PRIZM</small> и другим активам.</p>
                                     <p><Icon name="line" /> <a target="_blank" href="/@ecurrex-ru/ymrub-umer-da-zdravstvuet-ymrub">YMRUB</a> <small>(эквивалент рубля, с поддержкой ADVcash и PAYEER)</small>, обсуждение сервиса <a target="_blank" href="https://golostalk.com/services/@ecurrex-ru/ecurrex-tokeny-ymxxx">на форуме</a></p>
                                     <p><Icon name="line" /> <a target="_blank" href="/@golos.doge/doge-dogecoin-na-golose-avtomaticheskii-shlyuz-vvod-vyvod-i-torgi-na-vnutrennei-birzhe">DOGECOIN</a> <small>(позволяющий вести обмен через популярные биржи)</small> от эмитента <a target="_blank" href="/@golos.doge">@golos.doge</a></p>
-                                    <p><Icon name="line" /> <a target="_blank" href="/@ecurrex-ru/anons-shlyuza-dash">YMDASH</a> <small>(блокчейн DASH)</small> или <a target="_blank" href="/@ecurrex-ru/prizm-na-golose">YMPZM</a> <small>(блокчейн PRIZM)</small> от эмитента <a target="_blank" href="/@ecurrex-ru">@ecurrex-ru</a></p>
+                                    <p><Icon name="line" /> <a target="_blank" href="/@ecurrex-ru/anons-shlyuza-dash">YMDASH</a>, <a target="_blank" href="/@ecurrex-ru/prizm-na-golose">YMPZM</a>, <a target="_blank" href="/@ecurrex-ru/anons-shlyuzov-dlya-hive-i-steem">YMSTEEM и YMHIVE</a> от эмитента <a target="_blank" href="/@ecurrex-ru">@ecurrex-ru</a></p>
                                 </div>
                             </div>
                         </div>
@@ -95,7 +95,7 @@ class Exchanges extends React.Component {
                                 <a target="_blank" href="https://www.minter.network/"><img src={require("app/assets/images/minter.png")} width="250" /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
-                                    <a target="_blank" href="/@docsait/reliz-shlyuza-golos-minter-cross-chain-exchange">{tt('g.more_hint')}</a> <Icon name="extlink" />
+                                    <a target="_blank" href="/@denis-skripnik/glsmp">{tt('g.more_hint')}</a> <Icon name="extlink" />
                                     <br /><br />
                                     <a target="_blank" href="https://chainik.io/pool/GOLOSCHAIN/USDTE" className="button">GOLOS-USDT</a>&nbsp;&nbsp;<a target="_blank" href="https://chainik.io/pool/GOLOSCHAIN/BIP" className="button">GOLOS-BIP</a>
                                 </div>
