@@ -205,8 +205,10 @@ class Post extends React.Component {
                 </div>
 
                 <p align="center">
-                    <a target="_blank" href="https://golostalk.com"><img src='https://i.imgur.com/2GyvTNY.jpg' width='800' height='100' /></a>
-                    <span className="strike"><a target="_blank" href="/@lex/zapusk-foruma-golostalk-com">{tt('g.more_hint')}</a></span>
+                    <a target="_blank" href="/msgs"><img src={require("app/assets/images/msgbanner-footer.png")} width="800" height="100" /></a>
+                    <span className="strike"><a target="_blank" href="/@lex/obmen-lichnymi-soobsheniyami-i-nachalo-dlya-golos-messenger">{tt('g.more_hint')}</a></span>
+                    {/* <a target="_blank" href="https://golostalk.com"><img src={require("app/assets/images/golostalk-footer.png")} width="800" height="100" /></a>
+                    <span className="strike"><a target="_blank" href="/@lex/zapusk-foruma-golostalk-com">{tt('g.more_hint')}</a></span> */}
                 </p>
 
             </div>

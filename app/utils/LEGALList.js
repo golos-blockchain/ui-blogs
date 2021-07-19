@@ -10,6 +10,7 @@ const LEGALList = `
 /ru--politika/@ms-boss/chastnaya-armiya-vagnera
 /ru--prochee/@oldpages/masterokst-zakonno-li-videonablyudenie-v-podezde
 /ru--megagalxyan/@chin/once-upon-a-time-in-hollywood-odnazhdy-v-gollivude-2019-g
+/ru--kino/@nichosee/devushka-podayushaya-nadezhdy-promising-young-woman
 `
 .trim()
 .split('\n');
