@@ -24,7 +24,6 @@ import rootSaga from 'app/redux/RootSaga';
 import {component as NotFound} from 'app/components/pages/NotFound';
 import extractMeta from 'app/utils/ExtractMeta';
 import Translator from 'app/Translator';
-import {notificationsArrayToMap} from 'app/utils/Notifications';
 import getState from 'app/utils/StateBuilder';
 import {routeRegex} from "app/ResolveRoute";
 import {contentStats} from 'app/utils/StateFunctions'
@@ -57,7 +56,7 @@ export async function serverRender({
     location,
     offchain,
     ErrorPage,
-    tarantool
+    // tarantool
 }) {
     let error, redirect, renderProps;
 
@@ -166,14 +165,15 @@ export async function serverRender({
         offchain.server_location = location;
         serverStore = createStore(rootReducer, { global: onchain, offchain});
         serverStore.dispatch({type: '@@router/LOCATION_CHANGE', payload: {pathname: location}});
-        if (offchain.account) {
+        // TODO: maybe use request to golosnotify to fetch counters?
+        /*if (offchain.account) {
             try {
                 const notifications = await tarantool.select('notifications', 0, 1, 0, 'eq', offchain.account);
                 serverStore.dispatch({type: 'UPDATE_NOTIFICOUNTERS', payload: notificationsArrayToMap(notifications)});
             } catch(e) {
                 console.warn('WARNING! cannot retrieve notifications from tarantool in universalRender:', e.message);
             }
-        }
+        }*/
     } catch (e) {
         // Ensure 404 page when username not found
         if (location.match(routeRegex.UserProfile1)) {

@@ -61,7 +61,7 @@ class UserWallet extends React.Component {
         const CLAIM_TOKEN = tt('token_names.CLAIM_TOKEN')
 
         const {showDeposit, depositType, toggleDivestError} = this.state
-        const {convertToSteem, price_per_golos, savings_withdraws, account, current_user} = this.props
+        const {convertToSteem, price_per_golos, savings_withdraws, account, current_user, open_orders} = this.props
         const gprops = this.props.gprops.toJS();
 
         if (!account) return null;
@@ -189,6 +189,19 @@ class UserWallet extends React.Component {
         const sbd_balance = parseFloat(account.get('sbd_balance'))
         const sbd_balance_savings = parseFloat(savings_sbd_balance.split(' ')[0]);
 
+        const sbdOrders = (!open_orders || !isMyAccount) ? 0 : open_orders.reduce((o, order) => {
+            if (order.sell_price.base.indexOf(DEBT_TICKER) !== -1) {
+                o += order.for_sale;
+            }
+            return o;
+        }, 0) / assetPrecision;
+        const steemOrders = (!open_orders || !isMyAccount) ? 0 : open_orders.reduce((o, order) => {
+            if (order.sell_price.base.indexOf(LIQUID_TICKER) !== -1) {
+                o += order.for_sale;
+            }
+            return o;
+        }, 0) / assetPrecision;
+
         /// transfer log
         let idx = 0
         const transfer_log = account.get('transfer_history', [])
@@ -245,6 +258,9 @@ class UserWallet extends React.Component {
         const savings_sbd_balance_str = numberWithCommas(sbd_balance_savings.toFixed(3)) + ' ' + DEBT_TICKER;
         const received_vesting_shares_str = `${numberWithCommas(received_vesting_shares)} ${LIQUID_TICKER}`;
         const delegated_vesting_shares_str = `${numberWithCommas(delegated_vesting_shares)} ${LIQUID_TICKER}`;
+
+        const steem_orders_balance_str = numberWithCommas(steemOrders.toFixed(3)) + ' ' + LIQUID_TOKEN_UPPERCASE;
+        const sbd_orders_balance_str = numberWithCommas(sbdOrders.toFixed(3)) + ' ' + DEBT_TICKER;
 
         const steemTip = tt('tips_js.tradeable_tokens_that_may_be_transferred_anywhere_at_anytime') + ' ' + tt('tips_js.LIQUID_TOKEN_can_be_converted_to_VESTING_TOKEN_in_a_process_called_powering_up', {LIQUID_TOKEN, VESTING_TOKEN2, VESTING_TOKENS});
         const powerTip = tt('tips_js.influence_tokens_which_give_you_more_control_over', {VESTING_TOKEN, VESTING_TOKENS});
@@ -376,6 +392,12 @@ class UserWallet extends React.Component {
                         />
                         : steem_balance_str
                     }
+                    {steemOrders
+                        ? <div style={{paddingRight: isMyAccount ? "0.85rem" : null}}>
+                            <Link to="/market/GBG/GOLOS"><small><Tooltip t={tt('market_jsx.open_orders')}>+ {steem_orders_balance_str}</Tooltip></small></Link>
+                         </div>
+                        : null
+                    }
                     <div>{isMyAccount ? <Link
                         className="button tiny hollow"
                         to="/exchanges"
@@ -397,6 +419,12 @@ class UserWallet extends React.Component {
                             menu={dollar_menu}
                           />
                         : sbd_balance_str
+                    }
+                    {sbdOrders 
+                        ? <div style={{paddingRight: isMyAccount ? "0.85rem" : null}}>
+                            <Link to="/market/GBG/GOLOS"><small><Tooltip t={tt('market_jsx.open_orders')}>+ {sbd_orders_balance_str}</Tooltip></small></Link>
+                          </div>
+                        : null
                     }
                     {conversions}
                 </div>
@@ -485,6 +513,7 @@ export default connect(
 
         return {
             ...ownProps,
+            open_orders: state.market.get('open_orders'),
             price_per_golos,
             savings_withdraws,
             sbd_interest,

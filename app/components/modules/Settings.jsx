@@ -5,6 +5,7 @@ import g from 'app/redux/GlobalReducer';
 import tt from 'counterpart';
 import transaction from 'app/redux/Transaction'
 import { getMetadataReliably } from 'app/utils/NormalizeProfile';
+import Icon from 'app/components/elements/Icon';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator'
 import Userpic from 'app/components/elements/Userpic';
 import reactForm from 'app/utils/ReactForm'
@@ -66,7 +67,7 @@ class Settings extends React.Component {
         const {accountname} = this.props
         const {vesting_shares} = this.props.account
         
-        let nsfwPref, donatePresets;
+        let nsfwPref, donatePresets, notifyPresets;
 
         nsfwPref = (process.env.BROWSER ? localStorage.getItem('nsfwPref-' + accountname) : null) || 'warn'
         this.setState({nsfwPref, oldNsfwPref: nsfwPref})
@@ -77,6 +78,15 @@ class Settings extends React.Component {
         }
         if (!donatePresets) donatePresets = ['5','10','25','50','100'];
         this.setState({donatePresets : donatePresets})
+
+        if (process.env.BROWSER){
+            notifyPresets = localStorage.getItem('notify.presets-' + accountname)
+            if (notifyPresets) notifyPresets = JSON.parse(notifyPresets)
+        }
+        if (!notifyPresets) notifyPresets = {
+            receive: true, donate: true, comment_reply: true, mention: true, message: true,
+        }
+        this.setState({notifyPresets})
     }
 
     onDrop = (acceptedFiles, rejectedFiles) => {
@@ -272,13 +282,35 @@ class Settings extends React.Component {
         window.location.reload()
     }
 
+    onNotifyPresetChange = e => {
+        let notifyPresets = {...this.state.notifyPresets};
+        if (e.target.checked) {
+            notifyPresets[e.target.dataset.type] = true;
+        } else {
+            delete notifyPresets[e.target.dataset.type];
+        }
+        this.setState({
+            notifyPresets,
+            notifyPresetsTouched: true,
+        });
+    }
+
+    onNotifyPresetsSubmit = e => {
+        const { accountname } = this.props;
+        localStorage.setItem('notify.presets-' + accountname,
+            JSON.stringify(this.state.notifyPresets));
+        this.setState({
+            notifyPresetsTouched: false,
+        })
+    }
+
     render() {
         const {state, props} = this
         
         const {submitting, valid, touched} = this.state.accountSettings
         const disabled = !props.isOwnAccount || state.loading || submitting || !valid || !touched
 
-        const {profile_image, cover_image, name, about, gender, location, website, donatePresets} = this.state
+        const {profile_image, cover_image, name, about, gender, location, website, donatePresets, notifyPresets, notifyPresetsTouched} = this.state
 
         const {follow, account, isOwnAccount} = this.props
         const following = follow && follow.getIn(['getFollowingAsync', account.name]);
@@ -499,6 +531,47 @@ class Settings extends React.Component {
                         <br /><br />
                         <h3>{tt('settings_jsx.muted_uia')}</h3>
                         {mutedUIAlist}
+                    </div>
+                </div>}
+
+            {isOwnAccount &&
+                <div className="row">
+                    <div className="small-12 medium-8 large-6 columns Notification_presets">
+                        <br /><br />
+                        <h3>{tt('settings_jsx.notifications_settings')}</h3>
+                        <label>
+                            <input type='checkbox' checked={!!notifyPresets.receive} data-type='receive' onChange={this.onNotifyPresetChange} />
+                            <Icon name='notification/transfer' size='2x' />
+                            <span>{tt('settings_jsx.notifications_transfer')}</span>
+                        </label>
+                        <label>
+                            <input type='checkbox' checked={!!notifyPresets.donate} data-type='donate' onChange={this.onNotifyPresetChange} />
+                            <Icon name='notification/donate' size='2x' />
+                            <span>{tt('settings_jsx.notifications_donate')}</span>
+                        </label>
+                        <label>
+                            <input type='checkbox' checked={!!notifyPresets.comment_reply} data-type='comment_reply' onChange={this.onNotifyPresetChange} />
+                            <Icon name='notification/comment' size='2x' />
+                            <span>{tt('settings_jsx.notifications_reply')}</span>
+                        </label>
+                        <label>
+                            <input type='checkbox' checked={!!notifyPresets.mention} data-type='mention' onChange={this.onNotifyPresetChange} />
+                            <Icon name='notification/mention' size='2x' />
+                            <span>{tt('settings_jsx.notifications_mention')}</span>
+                        </label>
+                        <label>
+                            <input type='checkbox' checked={!!notifyPresets.message} data-type='message' onChange={this.onNotifyPresetChange} />
+                            <Icon name='notification/message' size='2x' />
+                            <span>{tt('settings_jsx.notifications_message')}</span>
+                        </label>
+                        <br />
+                        <input
+                            type="submit"
+                            onClick={this.onNotifyPresetsSubmit}
+                            className="button"
+                            value={tt('settings_jsx.update')}
+                            disabled={!this.state.notifyPresetsTouched}
+                        />
                     </div>
                 </div>}
         </div>

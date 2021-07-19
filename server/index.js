@@ -24,6 +24,7 @@ global.$STM_Config = {
     google_analytics_id: config.get('google_analytics_id'),
     chain_id: config.get('chain_id'),
     elastic_search: config.get('elastic_search'),
+    notify_service: config.get('notify_service'),
     forums: config.get('forums')
 };
 
