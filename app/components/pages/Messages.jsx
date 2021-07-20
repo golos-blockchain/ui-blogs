@@ -245,7 +245,10 @@ class Messages extends React.Component {
             this.notifyErrorsClear();
         }
         try {
-            removeTaskIds = await notificationTake(account.name, removeTaskIds, (type, op, timestamp, task_id) => {
+            removeTaskIds = await notificationTake(account.name, removeTaskIds, (type, op, timestamp, task_id, scope) => {
+                if (scope !== 'message') {
+                    return;
+                }
                 const updateMessage = op.from === this.state.to || 
                     op.to === this.state.to;
                 const isMine = account.name === op.from;
@@ -933,10 +936,12 @@ module.exports = {
                     encrypted_message: data.encrypted_message,
                 };
 
-                try {
-                    sendOffchainMessage(opData);
-                } catch (ex) {
-                    console.error('sendOffchainMessage', ex);
+                if (!editInfo) {
+                    try {
+                        sendOffchainMessage(opData);
+                    } catch (ex) {
+                        console.error('sendOffchainMessage', ex);
+                    }
                 }
 
                 const json = JSON.stringify(['private_message', opData]);
