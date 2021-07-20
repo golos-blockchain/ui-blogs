@@ -24,7 +24,7 @@ import user from 'app/redux/User';
 import { getProfileImage, getLastSeen } from 'app/utils/NormalizeProfile';
 import { fitToPreview } from 'app/utils/ImageUtils';
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
-import { notificationSubscribe, notificationTake } from 'app/utils/NotifyApiClient';
+import { notificationSubscribe, notificationTake, sendOffchainMessage } from 'app/utils/NotifyApiClient';
 import { flash, unflash } from 'app/components/elements/messages/FlashTitle';
 import { APP_NAME_UP, APP_ICON } from 'app/client_config';
 
@@ -175,7 +175,7 @@ class Messages extends React.Component {
         const { account, accounts, to } = this.props;
 
         let OPERATIONS = golos.messages.makeDatedGroups(messages, (message_object, idx) => {
-            return message_object.toMark;
+            return message_object.toMark && !message_object._offchain;
         }, (group, indexes, results) => {
             const json = JSON.stringify(['private_mark_message', {
                 from: accounts[to].name,
@@ -922,7 +922,7 @@ module.exports = {
 
                 const data = golos.messages.encode(senderPrivMemoKey, toAcc.memo_key, message, editInfo ? editInfo.nonce : undefined);
 
-                const json = JSON.stringify(['private_message', {
+                const opData = {
                     from: senderAcc.name,
                     to: toAcc.name,
                     nonce: editInfo ? editInfo.nonce : data.nonce,
@@ -931,7 +931,15 @@ module.exports = {
                     checksum: data.checksum,
                     update: editInfo ? true : false,
                     encrypted_message: data.encrypted_message,
-                }]);
+                };
+
+                try {
+                    sendOffchainMessage(opData);
+                } catch (ex) {
+                    console.error('sendOffchainMessage', ex);
+                }
+
+                const json = JSON.stringify(['private_message', opData]);
                 dispatch(transaction.actions.broadcastOperation({
                     type: 'custom_json',
                     operation: {
