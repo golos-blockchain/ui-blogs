@@ -139,6 +139,32 @@ export async function notificationTake(account, removeTaskIds, forEach, sidKey =
     }
 }
 
+export async function sendOffchainMessage(op) {
+    if (!notifyAvailable() || window.$STM_ServerBusy) return;
+    let url = notifyUrl(`/msgs/send_offchain`);
+    let response;
+    try {
+        let request = Object.assign({}, request_base, {
+            method: 'post',
+            body: JSON.stringify(op),
+        });
+        setSession(request);
+        response = await fetch(url, request);
+        if (response && response.ok) {
+            saveSession(response);
+            const result = await response.json();
+            if (result.status === 'ok') {
+                return;
+            } else {
+                throw new Error('error: ' +result.error);
+            }
+        }
+    } catch (ex) {
+        console.error(ex);
+        throw ex;
+    }
+}
+
 if (process.env.BROWSER) {
     window.getNotifications = getNotifications;
     window.markNotificationRead = markNotificationRead;
