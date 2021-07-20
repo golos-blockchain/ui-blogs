@@ -265,13 +265,15 @@ class Messages extends React.Component {
                     this.props.messageRead(op, timestamp, updateMessage, isMine);
                 }
             });
-            this.setCallback(this.props.account || account, removeTaskIds);
+            setTimeout(() => {
+                this.setCallback(this.props.account || account, removeTaskIds);
+            }, 250);
         } catch (ex) {
             console.error('notificationTake', ex);
             this.notifyErrorsInc(1);
             setTimeout(() => {
                 this.setCallback(this.props.account || account, removeTaskIds);
-            }, 1000);
+            }, 2000);
             return;
         }
         this.notifyErrorsClear();
@@ -935,7 +937,7 @@ module.exports = {
 
                 if (!editInfo) {
                     try {
-                        await sendOffchainMessage(opData);
+                        sendOffchainMessage(opData);
                     } catch (ex) {
                         console.error('sendOffchainMessage', ex);
                     }

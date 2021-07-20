@@ -4,6 +4,12 @@ import user from 'app/redux/User';
 import NotifyContent from 'app/components/elements/Notifications/NotifyContent';
 import { notificationSubscribe, notificationTake } from 'app/utils/NotifyApiClient';
 
+const wait = ms => (
+    new Promise(resolve => {
+        setTimeout(() => resolve(), ms)
+    })
+)
+
 function getScopePresets(username) {
     let presets = localStorage.getItem('notify.presets-' + username);
     if (!presets) {
@@ -55,8 +61,10 @@ function* onUserLogin(action) {
                     }
                     tasks.push({scope, type, op});
                 }, '__notify_id');
+            yield call(wait, 250);
         } catch (error) {
             console.error('notificationTake', error);
+            yield call(wait, 250);
             continue;
         }
         for (let task of tasks) {
