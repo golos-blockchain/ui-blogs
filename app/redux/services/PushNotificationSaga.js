@@ -2,7 +2,7 @@ import {take, call, put, select, fork, cancel} from 'redux-saga/effects';
 import {SagaCancellationException} from 'redux-saga';
 import user from 'app/redux/User';
 import NotifyContent from 'app/components/elements/Notifications/NotifyContent';
-import { notificationSubscribe, notificationTake } from 'app/utils/NotifyApiClient';
+import { notificationSubscribe, notificationUnsubscribe, notificationTake } from 'app/utils/NotifyApiClient';
 
 const wait = ms => (
     new Promise(resolve => {
@@ -30,38 +30,51 @@ function* onUserLogin(action) {
         return;
     }
 
-    let sid = null;
-    try {
-        sid = yield notificationSubscribe(action.username,
-            presets,
-            '__notify_id')
-        console.log('GNS: subscribed with id:', sid, 'account:', action.username);
-    } catch (error) {
-        console.error('GNS: cannot subscribe', error)
-        return;
-    }
-
     let removeTaskIds = null;
     while (true) {
         let tasks = [];
         try {
-            removeTaskIds = yield notificationTake(action.username, removeTaskIds,
-                (type, op, timestamp, id, scope) => {
-                    if (op._offchain) return;
-                    if (window.location.pathname.startsWith('/msgs')) {
-                        return;
-                    }
-                    if (!getScopePresets(action.username).includes(scope)) {
-                        return;
-                    }
-                    if (scope === 'message') {
-                        if (type !== 'private_message') return;
-                        if (op.to !== action.username) return;
-                        if (op.update) return;
-                    }
-                    tasks.push({scope, type, op});
-                }, '__notify_id');
-            yield call(wait, 5000);
+            if (document.visibilityState === 'hidden') {
+                try {
+                    let wasSubscribed = yield notificationUnsubscribe(action.username, '__notify_id');
+                    if (wasSubscribed)
+                        console.log('GNS: unsubscribed account:', action.username);
+                } catch (error) {
+                    console.error('notificationUnsubscribe', error);
+                }
+                yield call(wait, 500);
+            } else {
+                let sid = null;
+                try {
+                    sid = yield notificationSubscribe(action.username,
+                        presets,
+                        '__notify_id')
+                    if (sid)
+                        console.log('GNS: subscribed with id:', sid, 'account:', action.username);
+                } catch (error) {
+                    console.error('GNS: cannot subscribe', error)
+                    return;
+                }
+
+                removeTaskIds = yield notificationTake(action.username, removeTaskIds,
+                    (type, op, timestamp, id, scope) => {
+                        if (op._offchain) return;
+                        if (window.location.pathname.startsWith('/msgs')) {
+                            return;
+                        }
+                        if (!getScopePresets(action.username).includes(scope)) {
+                            return;
+                        }
+                        if (scope === 'message') {
+                            if (type !== 'private_message') return;
+                            if (op.to !== action.username) return;
+                            if (op.update) return;
+                        }
+                        tasks.push({scope, type, op});
+                    }, '__notify_id');
+
+                yield call(wait, 5000);
+            }
         } catch (error) {
             console.error('notificationTake', error);
             yield call(wait, 5000);

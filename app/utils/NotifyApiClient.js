@@ -103,6 +103,31 @@ export async function notificationSubscribe(account, scopes = 'message', sidKey 
     throw new Error('Cannot subscribe');
 }
 
+export async function notificationUnsubscribe(account, sidKey = '__subscriber_id') {
+    if (!notifyAvailable() || window.$STM_ServerBusy) return;
+    if (!window[sidKey]) return;
+    let url = notifyUrl(`/unsubscribe/@${account}/${window[sidKey]}`);
+    let response;
+    try {
+        let request = Object.assign({}, request_base, {method: 'get'});
+        setSession(request);
+        response = await fetch(url, request);
+        if (response.ok) {
+            saveSession(response);
+        }
+        const result = await response.json();
+        if (result.status !== 'ok') {
+            throw new Error(response.status + ': ' + result.error);
+        } else {
+            window[sidKey] = null;
+            return result.was;
+        }
+    } catch (ex) {
+        console.error(ex);
+        throw ex;
+    }
+}
+
 export async function notificationTake(account, removeTaskIds, forEach, sidKey = '__subscriber_id') {
     if (!notifyAvailable() || window.$STM_ServerBusy) return;
     let url = notifyUrl(`/take/@${account}/${window[sidKey]}`);
@@ -171,5 +196,6 @@ if (process.env.BROWSER) {
     window.getNotifications = getNotifications;
     window.markNotificationRead = markNotificationRead;
     window.notificationSubscribe = notificationSubscribe;
+    window.notificationUnsubscribe = notificationUnsubscribe;
     window.notificationTake = notificationTake;
 }
