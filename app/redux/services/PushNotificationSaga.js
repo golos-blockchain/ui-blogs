@@ -61,10 +61,10 @@ function* onUserLogin(action) {
                     }
                     tasks.push({scope, type, op});
                 }, '__notify_id');
-            yield call(wait, 250);
+            yield call(wait, 5000);
         } catch (error) {
             console.error('notificationTake', error);
-            yield call(wait, 250);
+            yield call(wait, 5000);
             continue;
         }
         for (let task of tasks) {
