@@ -53,7 +53,8 @@ function* onUserLogin(action) {
                         console.log('GNS: subscribed with id:', sid, 'account:', action.username);
                 } catch (error) {
                     console.error('GNS: cannot subscribe', error)
-                    return;
+                    yield call(wait, 5000);
+                    continue;
                 }
 
                 removeTaskIds = yield notificationTake(action.username, removeTaskIds,
@@ -73,11 +74,11 @@ function* onUserLogin(action) {
                         tasks.push({scope, type, op});
                     }, '__notify_id');
 
-                yield call(wait, 5000);
+                yield call(wait, 2000);
             }
         } catch (error) {
             console.error('notificationTake', error);
-            yield call(wait, 5000);
+            yield call(wait, 20000);
             continue;
         }
         for (let task of tasks) {
