@@ -245,10 +245,7 @@ class Messages extends React.Component {
             this.notifyErrorsClear();
         }
         try {
-            removeTaskIds = await notificationTake(account.name, removeTaskIds, (type, op, timestamp, task_id, scope) => {
-                if (scope !== 'message') {
-                    return;
-                }
+            removeTaskIds = await notificationTake(account.name, removeTaskIds, (type, op, timestamp, task_id) => {
                 const updateMessage = op.from === this.state.to || 
                     op.to === this.state.to;
                 const isMine = account.name === op.from;
