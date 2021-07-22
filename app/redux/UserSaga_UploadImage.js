@@ -117,7 +117,7 @@ function* uploadImage(action) {
     const xhr = new XMLHttpRequest();
 
     xhr.open('POST', postUrl);
-    xhr.setRequestHeader('Authorization', 'Client-ID b4d78455f0d5fca')
+    xhr.setRequestHeader('Authorization', 'Client-ID 6c09ebf8c548126')
 
     xhr.onload = function() {
         let data;
