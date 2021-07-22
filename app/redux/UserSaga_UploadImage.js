@@ -114,10 +114,12 @@ function* uploadImage(action) {
   //
     const postUrl = $STM_Config.upload_image
 
+    let imgurFailCounter = 0;
+
     const xhr = new XMLHttpRequest();
 
     xhr.open('POST', postUrl);
-    xhr.setRequestHeader('Authorization', 'Client-ID b4d78455f0d5fca')
+    xhr.setRequestHeader('Authorization', 'Client-ID 6c09ebf8c548126')
 
     xhr.onload = function() {
         let data;
@@ -144,7 +146,22 @@ function* uploadImage(action) {
             //    }
             //}
 
-            onError(xhr.responseText);
+            console.error('Cannot upload image:', xhr.responseText);
+            let repeat = false;
+            if (xhr.responseText.includes('Invalid client')) {
+                ++imgurFailCounter;
+                if (imgurFailCounter < 5) {
+                    repeat = true;
+                    setTimeout(() => {
+                        xhr.open('POST', postUrl);
+                        xhr.setRequestHeader('Authorization', 'Client-ID 6c09ebf8c548126')
+                        xhr.send(formData);
+                    }, 1000);
+                }
+            }
+            if (!repeat) {
+                onError(xhr.responseText);
+            }
         } else {
             const { link, width, height } = data.data;
             progress({
