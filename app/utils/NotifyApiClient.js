@@ -87,20 +87,45 @@ export async function notificationSubscribe(account, scopes = 'message', sidKey 
         let request = Object.assign({}, request_base, {method: 'get'});
         setSession(request);
         let response = await fetch(notifyUrl(`/subscribe/@${account}/${scopes}`), request);
+        const result = await response.json();
         if (response.ok) {
             saveSession(response);
-            const result = await response.json();
-            if (result.subscriber_id) {
-                window[sidKey] = result.subscriber_id;
-                return result.subscriber_id;
-            } else {
-                throw new Error('Cannot subscribe, error: ' + result.error);
-            }
+        }
+        if (result.subscriber_id) {
+            window[sidKey] = result.subscriber_id;
+            return result.subscriber_id;
+        } else {
+            throw new Error('Cannot subscribe, error: ' + result.error);
         }
     } catch (ex) {
         console.error(ex)
     }
     throw new Error('Cannot subscribe');
+}
+
+export async function notificationUnsubscribe(account, sidKey = '__subscriber_id') {
+    if (!notifyAvailable() || window.$STM_ServerBusy) return;
+    if (!window[sidKey]) return;
+    let url = notifyUrl(`/unsubscribe/@${account}/${window[sidKey]}`);
+    let response;
+    try {
+        let request = Object.assign({}, request_base, {method: 'get'});
+        setSession(request);
+        response = await fetch(url, request);
+        if (response.ok) {
+            saveSession(response);
+        }
+        const result = await response.json();
+        if (result.status !== 'ok') {
+            throw new Error(response.status + ': ' + result.error);
+        } else {
+            window[sidKey] = null;
+            return result.was;
+        }
+    } catch (ex) {
+        console.error(ex);
+        throw ex;
+    }
 }
 
 export async function notificationTake(account, removeTaskIds, forEach, sidKey = '__subscriber_id') {
@@ -113,25 +138,27 @@ export async function notificationTake(account, removeTaskIds, forEach, sidKey =
         let request = Object.assign({}, request_base, {method: 'get'});
         setSession(request);
         response = await fetch(url, request);
-        if (response && response.ok) {
+        if (response.ok) {
             saveSession(response);
-            const result = await response.json();
-            if (Array.isArray(result.tasks)) {
-                removeTaskIds = '';
+        }
+        const result = await response.json();
+        if (result.status === 'ok' && Array.isArray(result.tasks)) {
+            removeTaskIds = '';
 
-                let removeTaskIdsArr = [];
-                for (let task of result.tasks) {
-                    const [ type, op ] = task.data;
+            let removeTaskIdsArr = [];
+            for (let task of result.tasks) {
+                const [ type, op ] = task.data;
 
-                    forEach(type, op, task.timestamp, task.id, task.scope);
+                forEach(type, op, task.timestamp, task.id, task.scope);
 
-                    removeTaskIdsArr.push(task.id.toString());
-                }
-
-                removeTaskIds = removeTaskIdsArr.join(',');
-
-                return removeTaskIds;
+                removeTaskIdsArr.push(task.id.toString());
             }
+
+            removeTaskIds = removeTaskIdsArr.join(',');
+
+            return removeTaskIds;
+        } else {
+            throw new Error(response.status + ': ' + result.error);
         }
     } catch (ex) {
         console.error(ex);
@@ -150,14 +177,14 @@ export async function sendOffchainMessage(op) {
         });
         setSession(request);
         response = await fetch(url, request);
-        if (response && response.ok) {
+        if (response.ok) {
             saveSession(response);
-            const result = await response.json();
-            if (result.status === 'ok') {
-                return;
-            } else {
-                throw new Error('error: ' +result.error);
-            }
+        }
+        const result = await response.json();
+        if (result.status === 'ok') {
+            return;
+        } else {
+            throw new Error('error: ' +result.error);
         }
     } catch (ex) {
         console.error(ex);
@@ -169,5 +196,6 @@ if (process.env.BROWSER) {
     window.getNotifications = getNotifications;
     window.markNotificationRead = markNotificationRead;
     window.notificationSubscribe = notificationSubscribe;
+    window.notificationUnsubscribe = notificationUnsubscribe;
     window.notificationTake = notificationTake;
 }

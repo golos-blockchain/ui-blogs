@@ -245,10 +245,7 @@ class Messages extends React.Component {
             this.notifyErrorsClear();
         }
         try {
-            removeTaskIds = await notificationTake(account.name, removeTaskIds, (type, op, timestamp, task_id, scope) => {
-                if (scope !== 'message') {
-                    return;
-                }
+            removeTaskIds = await notificationTake(account.name, removeTaskIds, (type, op, timestamp, task_id) => {
                 const updateMessage = op.from === this.state.to || 
                     op.to === this.state.to;
                 const isMine = account.name === op.from;
@@ -268,13 +265,15 @@ class Messages extends React.Component {
                     this.props.messageRead(op, timestamp, updateMessage, isMine);
                 }
             });
-            this.setCallback(this.props.account || account, removeTaskIds);
+            setTimeout(() => {
+                this.setCallback(this.props.account || account, removeTaskIds);
+            }, 250);
         } catch (ex) {
             console.error('notificationTake', ex);
             this.notifyErrorsInc(1);
             setTimeout(() => {
                 this.setCallback(this.props.account || account, removeTaskIds);
-            }, 1000);
+            }, 2000);
             return;
         }
         this.notifyErrorsClear();
