@@ -534,7 +534,7 @@ class Settings extends React.Component {
                     </div>
                 </div>}
 
-            {/*isOwnAccount &&
+            {isOwnAccount &&
                 <div className="row">
                     <div className="small-12 medium-8 large-6 columns Notification_presets">
                         <br /><br />
@@ -573,7 +573,7 @@ class Settings extends React.Component {
                             disabled={!this.state.notifyPresetsTouched}
                         />
                     </div>
-                </div>*/}
+                </div>}
         </div>
     }
 }
