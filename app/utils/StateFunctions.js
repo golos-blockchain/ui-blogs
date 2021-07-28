@@ -100,6 +100,8 @@ export function contentStats(content) {
 
     const grayThreshold = -5000000000000 // dislikes ~100k Golos Power
     const meetsGrayThreshold = net_rshares_adj.compare(grayThreshold) < 0
+    const grayThreshold2 = -50000000000000 // dislikes ~1kk Golos Power
+    const meetsGrayThreshold2 = net_rshares_adj.compare(grayThreshold2) < 0
     const hideThreshold = -500000000000000 // dislikes ~10kk Golos Power
     const meetsHideThreshold = net_rshares_adj.compare(hideThreshold) < 0
 
@@ -107,7 +109,7 @@ export function contentStats(content) {
     const allowDelete = !hasPositiveRshares && content.get('children') === 0
     const authorRepLog10 = repLog10(content.get('author_reputation'))
 
-    const gray = authorRepLog10 < 0 || (authorRepLog10 < 75 && meetsGrayThreshold)
+    const gray = authorRepLog10 < 0 || (authorRepLog10 < 70 && meetsGrayThreshold) || meetsGrayThreshold2
     const hide = authorRepLog10 < 0 || meetsHideThreshold
     const pictures = !gray
 

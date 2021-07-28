@@ -25,7 +25,7 @@ export default class LinkOptionsDialog extends React.PureComponent {
         return (
             <DialogFrame
                 className="LinkOptionsDialog"
-                title={tt('post_editor.add_image')}
+                title={tt('editor_toolbar.add_link')}
                 buttons={[
                     {
                         text: tt('g.cancel'),
