@@ -31,7 +31,7 @@ function* onUserLogin(action) {
     }
 
     let removeTaskIds = null;
-    /*while (true) {
+    while (true) {
         let tasks = [];
         try {
             if (document.visibilityState === 'hidden') {
@@ -87,7 +87,7 @@ function* onUserLogin(action) {
                 payload: NotifyContent(task)
             });
         }
-    }*/
+    }
 }
 
 export default {
