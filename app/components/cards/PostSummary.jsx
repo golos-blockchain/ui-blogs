@@ -128,7 +128,7 @@ class PostSummary extends React.Component {
         let title_text = p.title;
         let comments_link;
         let is_comment = false;
-        const promoted_post = content.get('promoted') >= "1.000 GBG";
+        const promoted_post = content.get('promoted') >= '1.000 GBG';
 
         if( content.get( 'parent_author') !== "" ) {
            title_text = tt('g.re') + ": " + content.get('root_title');

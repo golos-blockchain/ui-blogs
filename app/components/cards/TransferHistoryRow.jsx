@@ -206,6 +206,10 @@ class TransferHistoryRow extends React.Component {
             description_start += data.amount_in + tt('transferhistoryrow_jsx.were_converted') + data.amount_out;
         }
 
+        else if (type === 'interest') {
+            description_start += tt('transferhistoryrow_jsx.receive_interest_of') + data.interest;
+        }
+
         else if (type === 'worker_reward') {
             description_start += tt('transferhistoryrow_jsx.funded_workers') + data.reward + tt('transferhistoryrow_jsx.for');
             other_account = data.worker_request_author + "/" + data.worker_request_permlink;

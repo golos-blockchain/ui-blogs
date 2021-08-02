@@ -278,6 +278,8 @@ class UserWallet extends React.Component {
         let EMISSION_STAKE = toAsset(gprops.accumulative_emission_per_day).amount * toAsset(account.get('vesting_shares')).amount / toAsset(gprops.total_vesting_shares).amount;
         EMISSION_STAKE = numberWithCommas(EMISSION_STAKE.toFixed(3)) + ' ' + LIQUID_TICKER;
 
+        const vesting_withdraw_rate_str = vestsToSteem(account.get('vesting_withdraw_rate'), gprops);
+
         return (<div className="UserWallet">
             <div className="row">
                 <div className="columns small-10 medium-12 medium-expand">
@@ -460,7 +462,7 @@ class UserWallet extends React.Component {
             </div>
             <div className="UserWallet__balance row">
                 <div className="column small-12">
-                    {isWithdrawScheduled && <span>{tt('userwallet_jsx.next_power_down_is_scheduled_to_happen')}&nbsp;<TimeAgoWrapper date={account.get('next_vesting_withdrawal')} />.</span> }
+                    {isWithdrawScheduled && <span>{tt('userwallet_jsx.next_power_down_to_happen')}&nbsp;<b>{vesting_withdraw_rate_str} {LIQUID_TICKER}</b>&nbsp;{tt('userwallet_jsx.next_power_down_is_scheduled')}&nbsp;<TimeAgoWrapper date={account.get('next_vesting_withdrawal')} />.</span> }
                     {/*toggleDivestError && <div className="callout alert">{toggleDivestError}</div>*/}
                     <TransactionError opType="withdraw_vesting" />
                 </div>

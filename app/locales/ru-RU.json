@@ -920,7 +920,7 @@
     "cancel_transfer_from_savings": "Отменить перевод из сейфа",
     "stop_power_down": "Понижение %(VESTING_TOKENS)s остановлено",
     "start_power_down_of": "Понижение %(VESTING_TOKENS)s начато с",
-    "receive_interest_of": "Получены проценты ",
+    "receive_interest_of": "Начислены проценты ",
     "transfer": "Отправлено ",
     "transferred": "Передано ",
     "percen_referral": " - процент от награды в адрес вашего реферала ",
@@ -1068,7 +1068,8 @@
     "buy_LIQUID_TOKEN_or_VESTING_TOKEN": "Купить %(LIQUID_TOKEN)s или %(VESTING_TOKEN2)s",
     "savings": "СЕЙФ",
     "estimated_account_value": "Оценочная стоимость аккаунта",
-    "next_power_down_is_scheduled_to_happen": "Следующее понижение Силы Голоса запланировано",
+    "next_power_down_to_happen": "Понижение Силы Голоса в размере",
+    "next_power_down_is_scheduled": "запланировано",
     "transfers_are_temporary_disabled": "Переводы временно отключены.",
     "cancel_power_down": "Отменить понижение Силы Голоса",
     "top_dpos": "Топ-100 пользователей по Силе Голоса",
@@ -1119,7 +1120,7 @@
     "there_was_an_error_uploading_your_image": "Произошла ошибка во время загрузки изображения",
     "raw_html": "HTML код",
     "please_remove_following_html_elements": "Пожалуйста, удалите эти HTML элементы из вашего поста: ",
-    "payouts_declined": "Выплаты отключены"
+    "payouts_declined": "Выплаты из пула отключены"
   },
   "witnesses_jsx": {
     "witness_info": "Делегаты - это избираемые голосованием сообщества пользователи, которые поддерживают работу своих нод блокчейна и принимают решения об обновлении кода, также занимаются и другими вопросами, связанными с развитием проекта.",
@@ -1250,7 +1251,7 @@
   "powerdown_jsx": {
     "power_down": "Уменьшить Силу Голоса",
     "amount": "Количество",
-    "already_power_down": "Вы уже запустили понижение СГ на %(AMOUNT)s %(LIQUID_TICKER)s (из них %(WITHDRAWN)s уже выплачено). Если вы измените количество, отсчёт в 8 недель начнётся от сегодняшего дня.",
+    "already_power_down": "Вы уже запустили понижение СГ на %(AMOUNT)s %(LIQUID_TICKER)s (из них %(WITHDRAWN)s выплачено). Если вы измените количество, отсчёт в 8 недель начнётся заново.",
     "delegating": "Вы делегировали %(AMOUNT)s %(LIQUID_TICKER)s. Эти токены заблокированы, в случае отмены делегирования они вернутся на баланс через 7 дней.",
     "per_week": "Это ~%(AMOUNT)s %(LIQUID_TICKER)s в неделю (в течении 8 недель).",
     "warning": "Оставлять меньше чем %(AMOUNT)s %(LIQUID_TICKER)s не рекомендуется, т.к. это может остановить все транзакции с использованием это аккаунта.",
