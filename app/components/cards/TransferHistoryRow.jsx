@@ -200,10 +200,17 @@ class TransferHistoryRow extends React.Component {
 
         else if (type === 'convert') {
             description_start += tt('transferhistoryrow_jsx.conversion_started') + data.amount;
+            const from = data.amount.split(' ')[1];
+            const to = from === 'GOLOS' ? 'GBG' : 'GOLOS';
+            description_start += ' ' + tt('g.into') + ' ' + to;
         }
 
         else if (type === 'fill_convert_request') {
-            description_start += data.amount_in + tt('transferhistoryrow_jsx.were_converted') + data.amount_out;
+            description_start += data.amount_in;
+            if (data.fee_in.endsWith(' GOLOS')) {
+                description_start += ' (' + tt('transferhistoryrow_jsx.including_conversion_fee') + ' ' + data.fee_in + ')';
+            }
+            description_start += tt('transferhistoryrow_jsx.were_converted') + data.amount_out;
         }
 
         else if (type === 'worker_reward') {

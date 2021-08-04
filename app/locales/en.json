@@ -50,6 +50,7 @@
     "add": "Add",
     "author": "Author",
     "age": "age",
+    "approximately": "approximately",
     "all_langs": "All languages",
     "amount": "Amount",
     "and": "and",
@@ -101,6 +102,7 @@
     "hide": "Hide",
     "hot": "Hot",
     "in": "in",
+    "into": "into",
     "in_reply_to": "in reply to",
     "insufficient_balance": "Insufficient balance",
     "invalid_amount": "Invalid amount",
@@ -797,11 +799,15 @@
     "after_printing_write_down_your_user_name": "After printing, write down your user name"
   },
   "converttosteem_jsx": {
+    "title_FROM_TO": "Convert %(FROM)s to %(TO)s",
     "confirm_title": "Confirm Convert",
-    "this_is_a_price_feed_conversion": "This is a price feed conversion. The 3.5 day delay is necessary to prevent abuse from gaming the price feed average",
-    "convert_to_LIQUID_TOKEN": "Convert to %(LIQUID_TOKEN)s",
-    "your_existing_DEBT_TOKEN_are_liquid_and_transferable": "Your existing %(DEBT_TOKEN)s are liquid and transferable. Instead you may wish to trade %(DEBT_TOKEN)s directly in this site under %(link)s or transfer to an external market.",
-    "DEBT_TOKEN_will_be_unavailable": "This action will take place 3.5 days from now and can not be canceled. These %(DEBT_TOKEN)s will immediately become unavailable"
+    "this_will_take_days": "This action will take place 3.5 days from now and can not be canceled. These tokens will immediately become unavailable",
+    "tokens_will_be_unavailable": "This action will take place 3.5 days from now and can not be canceled. These tokens will immediately become unavailable",
+    "this_will_take_days_hint": "This is a price feed conversion. The 3.5 day delay is necessary to prevent abuse from gaming the price feed average",
+    "fee": "Fee will be ",
+    "no_fee": "No fee.",
+    "too_low_amount": "Too low amount.",
+    "you_will_receive": "You will receive "
   },
   "tips_js": {
     "tip_balance_hint": "Balance that you use to reward users and that you use to earn rewards for yourself. Tokens from it can also be sent to increase the Golos Power.",
@@ -900,8 +906,9 @@
     "for": " for ",
     "issue": "Issue of tokens ",
     "orders_canceled": "Exchange orders canceled, autoconversion ",
-    "conversion_started": "Started 3.5 day conversion ",
+    "conversion_started": "Started 3.5 day conversion of ",
     "were_converted": " were converted to ",
+    "including_conversion_fee": "incl. fee",
     "to_account": " to account "
   },
   "savingswithdrawhistory_jsx": {
@@ -1082,6 +1089,7 @@
     "donate": "Donate",
     "power_down": "Power Down",
     "market": "Market",
+    "convert_to_DEBT_TOKEN": "Convert to %(DEBT_TOKEN)s",
     "convert_to_LIQUID_TOKEN": "Convert to %(LIQUID_TOKEN)s",
     "withdraw_LIQUID_TOKEN": "Withdraw GOLOS",
     "withdraw_DEBT_TOKENS": "Withdraw GBG",

@@ -5745,10 +5745,10 @@ gmail-send@^1.8.10:
     lodash "^4.17.15"
     nodemailer "^6.3.0"
 
-golos-classic-js@^0.8.3:
-  version "0.8.3"
-  resolved "https://registry.yarnpkg.com/golos-classic-js/-/golos-classic-js-0.8.3.tgz#f9d57eb2937b0e4753af18fd2fb9a552e63500b6"
-  integrity sha512-WWZMQtpFwlQaMSh6EciXbtpHoveNMcksjxIplWkI7fuaDgc7QgllcjR8ngVP2kPB6V+UbL2J/moEZrlj1Uzc0Q==
+golos-classic-js@^0.8.4:
+  version "0.8.4"
+  resolved "https://registry.yarnpkg.com/golos-classic-js/-/golos-classic-js-0.8.4.tgz#085f00f82c45dc01399eabfdb1b31ffd113833dd"
+  integrity sha512-Lw0JmIm6U4QvX12CgneeTGxskZuJu0QgZjUKvhj3zK09J5CqdWNN+n5KMOseyCutlangQlreuXtlhWLJSd7c9g==
   dependencies:
     bigi "^1.4.2"
     bluebird "^3.4.6"

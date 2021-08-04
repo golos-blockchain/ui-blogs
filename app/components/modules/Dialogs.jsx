@@ -51,9 +51,9 @@ class Dialogs extends React.Component {
                 </Reveal>
             </span>:
             k === 'convertToSteem' ? <span key={idx++} >
-                <Reveal onHide={this['hide_' + k]} show revealStyle={{width: '450px'}} >
+                <Reveal onHide={this['hide_' + k]} show>
                     <CloseButton onClick={this['hide_' + k]} />
-                    <ConvertToSteem onClose={this['hide_' + k]} />
+                    <ConvertToSteem onClose={this['hide_' + k]} {...v.get('params').toJS()} />
                 </Reveal>
             </span>:
             k === 'suggestPassword' ? <span key={idx++} >
