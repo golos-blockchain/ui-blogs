@@ -558,7 +558,9 @@
     "daily_average_curation_rewards": "Daily average curation rewards",
     "estimated_curation_rewards_last_week": "Estimated curation rewards last week",
     "curation_rewards_last_week": "Curation rewards last week",
-    "curation_rewards_history": "Curation Rewards History"
+    "curation_rewards_history": "Curation Rewards History",
+    "replenish_golos_power": "Replenish your Golos Power",
+    "replenish_golos_power_AMOUNT": " with %(AMOUNT)s to receive your curaton rewards."
   },
   "post_jsx": {
     "now_showing_comments_with_low_ratings": "Now showing comments with low ratings",

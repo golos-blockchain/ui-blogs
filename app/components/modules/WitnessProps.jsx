@@ -83,6 +83,9 @@ class WitnessProps extends React.Component {
         [
             ['convert_fee_percent'],
         ],
+        [
+            ['min_golos_power_to_curate', 'golos'],
+        ],
     ];
 
     wprops_22 = [

@@ -1,11 +1,14 @@
 /* eslint react/prop-types: 0 */
 import React from 'react';
+import { Link } from 'react-router';
 import {connect} from 'react-redux'
 import TransferHistoryRow from 'app/components/cards/TransferHistoryRow';
 import {numberWithCommas, vestsToSp, assetFloat} from 'app/utils/StateFunctions'
 import tt from 'counterpart';
+import Callout from 'app/components/elements/Callout';
 import Icon from 'app/components/elements/Icon';
 import { LIQUID_TICKER, VEST_TICKER } from 'app/client_config';
+import { Asset } from 'golos-classic-js/lib/utils';
 
 class CurationRewards extends React.Component {
     state = { historyIndex: 0 }
@@ -13,6 +16,7 @@ class CurationRewards extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         if (!this.props.account.transfer_history) return true;
         if (!nextProps.account.transfer_history) return true;
+        if (!this.props.current_user && nextProps.current_user) return true;
         return (
             nextProps.account.transfer_history.length !== this.props.account.transfer_history.length ||
             nextState.historyIndex !== this.state.historyIndex);
@@ -23,11 +27,43 @@ class CurationRewards extends React.Component {
         this.setState({historyIndex: Math.max(0, newIndex)});
     }
 
+    vestsToSteem(vestingShares, gprops) {
+        const { total_vesting_fund_steem, total_vesting_shares } = gprops;
+        const totalVestingFundSteem = Asset(total_vesting_fund_steem).amount;
+        const totalVestingShares = Asset(total_vesting_shares).amount;
+        const vesting_shares = Asset(vestingShares).amount;
+        return totalVestingFundSteem * (vesting_shares / totalVestingShares);
+    }
+
+    effectiveVestingShares(account, gprops) {
+        const vesting_steem = this.vestsToSteem(account.vesting_shares, gprops);
+        const received_vesting_shares = this.vestsToSteem(account.received_vesting_shares, gprops);
+        const delegated_vesting_shares = this.vestsToSteem(account.delegated_vesting_shares, gprops);
+        return Asset(Math.trunc(vesting_steem)
+            + Math.trunc(received_vesting_shares)
+            - Math.trunc(delegated_vesting_shares), 3, 'GOLOS');
+    }
+
     render() {
         const VESTING_TOKENS = tt('token_names.VESTING_TOKENS')
 
         const {state: {historyIndex}} = this
-        const account = this.props.account;
+        const { account, current_user, cprops, gprops, } = this.props;
+
+        const isMyAccount = current_user && current_user.get('username') === account.name;
+
+        let gpDeficit = '';
+        if (isMyAccount && account.vesting_shares && gprops && cprops) {
+            let gpExists = this.effectiveVestingShares(account, gprops.toJS());
+            let gpMin = cprops.get('min_golos_power_to_curate');
+            if (gpMin) {
+                gpMin = Asset(gpMin);
+                if (gpExists.amount < gpMin.amount) {
+                    gpDeficit = gpMin.amount - gpExists.amount;
+                    gpDeficit = Asset(gpDeficit, 3, 'GOLOS').toString();
+                }
+            }
+        }
 
         // FIX bug, golos doesn't return transfer_history sometimes
         if (!account.transfer_history) account.transfer_history = [];
@@ -103,6 +139,10 @@ class CurationRewards extends React.Component {
                 </div>
             </div>
 
+            {gpDeficit && <Callout>
+                <Link to={`/@${account.name}/transfers`}>{tt('curationrewards_jsx.replenish_golos_power')}</Link>
+                {tt('curationrewards_jsx.replenish_golos_power_AMOUNT', {AMOUNT: gpDeficit})}
+            </Callout>}
             {/*  -- These estimates have been causing issus, see #600 --
             <div className="UserWallet__balance UserReward__row row">
                 <div className="column small-12 medium-8">
@@ -155,9 +195,13 @@ class CurationRewards extends React.Component {
 export default connect(
     // mapStateToProps
     (state, ownProps) => {
+        const gprops = state.global.get('props');
+        const cprops = state.global.get('cprops');
         return {
             state,
-            ...ownProps
+            ...ownProps,
+            gprops,
+            cprops,
         }
     }
 )(CurationRewards)

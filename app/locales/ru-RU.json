@@ -150,7 +150,9 @@
     "daily_average_curation_rewards": "Среднесуточные кураторские награды",
     "estimated_curation_rewards_last_week": "Оценочные кураторские награды за неделю",
     "curation_rewards_last_week": "Кураторские награды за неделю",
-    "curation_rewards_history": "История кураторских наград"
+    "curation_rewards_history": "История кураторских наград",
+    "replenish_golos_power": "Пополните Силу Голоса",
+    "replenish_golos_power_AMOUNT": " на %(AMOUNT)s, чтобы начать получать свой процент за кураторство."
   },
   "enter_confirm_email_jsx": {
     "thank_you_for_providing_your_email_address": "Благодарим вас за предоставление вашей электронной почты",
