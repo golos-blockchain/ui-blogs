@@ -462,7 +462,7 @@ class UserWallet extends React.Component {
             </div>
             <div className="UserWallet__balance row">
                 <div className="column small-12">
-                    {isWithdrawScheduled && <span>{tt('userwallet_jsx.next_power_down_to_happen')}&nbsp;<b>{vesting_withdraw_rate_str} {LIQUID_TICKER}</b>&nbsp;{tt('userwallet_jsx.next_power_down_is_scheduled')}&nbsp;<TimeAgoWrapper date={account.get('next_vesting_withdrawal')} />.</span> }
+                    {isWithdrawScheduled && <span style={{fontSize: "90%"}}><Icon name="hf/hf11" /> {tt('userwallet_jsx.next_power_down_to_happen')}&nbsp;<b>{vesting_withdraw_rate_str} {LIQUID_TICKER}</b>&nbsp;{tt('userwallet_jsx.next_power_down_is_scheduled')}&nbsp;<TimeAgoWrapper date={account.get('next_vesting_withdrawal')} />.</span> }
                     {/*toggleDivestError && <div className="callout alert">{toggleDivestError}</div>*/}
                     <TransactionError opType="withdraw_vesting" />
                 </div>
