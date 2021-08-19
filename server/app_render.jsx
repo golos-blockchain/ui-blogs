@@ -3,10 +3,9 @@ import { renderToNodeStream } from 'react-dom/server';
 import stringToStream from 'string-to-stream';
 import multiStream from 'multistream';
 import { ServerStyleSheet } from 'styled-components'
-// import Tarantool from 'db/tarantool';
+import Tarantool from 'db/tarantool';
 import ServerHTML from './server-html';
 import { serverRender } from '../shared/UniversalRender';
-import models from 'db/models';
 import secureRandom from 'secure-random';
 import ErrorPage from 'server/server-error';
 import {
@@ -34,41 +33,33 @@ async function appRender(ctx) {
             select_tags
         };
 
-        const user_id = ctx.session.user;
-        if (user_id) {
+        const user_id = parseInt(ctx.session.user);
+        if (!isNaN(user_id)) {
             let user = null;
             if (appRender.dbStatus.ok || (new Date() - appRender.dbStatus.lastAttempt) > DB_RECONNECT_TIMEOUT) {
                 try {
-                    user = await models.User.findOne({
-                        attributes: ['name', 'email', 'picture_small'],
-                        where: {id: user_id},
-                        include: [{model: models.Account, attributes: ['name', 'ignored']}],
-                        logging: false
-                    });
+                    user = await Tarantool.instance('tarantool').select('users', 'primary',
+                        1, 0, 'eq', [user_id]);
                     appRender.dbStatus = {ok: true};
                 } catch (e) {
                     appRender.dbStatus = {ok: false, lastAttempt: new Date()};
-                    console.error('WARNING! mysql query failed: ', e.toString());
+                    console.error('WARNING! tarantool user query failed: ', e.toString());
                     offchain.serverBusy = true;
                 }
             } else {
                 offchain.serverBusy = true;
             }
-            if (user) {
-                let account = null;
-                for (const a of user.Accounts) {
-                    if (!a.ignored) {
-                        account = a.name;
-                        break;
-                    }
-                }
+            if (user[0]) {
+                let account = await Tarantool.instance('tarantool').select('accounts', 'by_user_id',
+                    1, 0, 'eq', [user_id]);
+                account = account[0] ? account[0][2] : null;
                 offchain.user = {
                     id: user_id,
                     name: user.name,
                     email: user.email,
                     picture: user.picture_small,
                     prv: ctx.session.prv,
-                    account
+                    account,
                 }
             }
         }

@@ -5,7 +5,7 @@ services:
     image: golosblockchain/web-ui:latest
     build: .
     restart: always
-    command: bash -c "cd db && ../node_modules/.bin/sequelize db:migrate && cd .. && yarn run production"
+    command: bash -c "yarn run production"
     volumes:
       - ./config/default.json:/var/app/config/default.json
     depends_on:
@@ -13,7 +13,7 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SDC_DATABASE_URL: mysql://golosdev:golosdev@db:3306/golosdev
+      SDC_TARANTOOL_HOSTNAME: db
       SDC_CLIENT_WEBSOCKET_URL: https://api-full.golos.id
       SDC_SERVER_WEBSOCKET_URL: https://api-full.golos.id
       SDC_MSGS_WEBSOCKET_URL: wss://api-full.golos.id/ws
@@ -21,14 +21,10 @@ services:
   # other parameters in config/custom-environment-variables.json
 
   db:
-    image: mysql:5.7.22
+    image: golosblockchain/web-ui:db
     restart: always
-    command: --default-authentication-plugin=mysql_native_password
+    build:
+      context: .
+      dockerfile: Dockerfile-db
     volumes:
-      - ./data/mysql:/var/lib/mysql
-      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d/:ro
-    environment:
-      MYSQL_DATABASE: golosdev
-      MYSQL_USER: golosdev
-      MYSQL_PASSWORD: golosdev
-      MYSQL_ROOT_PASSWORD: golosdev
+      - ./tarantool:/var/lib/tarantool

@@ -1,7 +1,7 @@
 import koa_router from 'koa-router';
 import koa_body from 'koa-body';
 import config from 'config';
-import models from 'db/models';
+import Tarantool from 'db/tarantool';
 import { checkCSRF, getRemoteIp, rateLimitReq } from 'server/utils/misc';
 import { hash } from 'golos-classic-js/lib/auth/ecc';
 import { api } from 'golos-classic-js';
@@ -63,29 +63,21 @@ export default function useRegistrationApi(app) {
                     req.session.soc_id = profile.id;
                     req.session.soc_id_type = grantId + '_id';
 
-                    let user;
-                    if (req.session.user) {
-                        user = await models.User.findOne({
-                            attributes: ['id'],
-                            where: { id: req.session.user },
-                        });
+                    const idHash = hash.sha256(req.session.soc_id.toString(), 'hex');
+
+                    console.log('-- social select user');
+
+                    let user = await Tarantool.instance('tarantool').select('users', 'by_verify_uid',
+                        1, 0, 'eq', ['social-' + grantId, idHash, req.session.uid]);
+
+                    if (!user[0]) {
+                        console.log('-- social insert user');
+                        user = await Tarantool.instance('tarantool').insert('users',
+                            [null, req.session.uid, 'social-' + grantId, idHash, true, '1234', getRemoteIp(req), false]);
                     }
-                    if (!user) {
-                        user = await models.User.create({
-                            uid: req.session.uid,
-                            remote_ip: getRemoteIp(req),
-                        });
-                        req.session.user = user.id;
-                    }
-                    const emailHash = hash.sha256('' + req.session.soc_id, 'hex');
-                    let mid = await models.Identity.create({
-                        provider: 'social-' + grantId,
-                        UserId: req.session.user,
-                        uid: req.session.uid,
-                        email: emailHash,
-                        verified: false,
-                        confirmation_code: '1234'
-                    });
+
+                    req.session.user = user[0][0];
+
                     done(null, {profile});
                 }
             ));
@@ -119,77 +111,33 @@ export default function useRegistrationApi(app) {
 
         if (!checkCSRF(this, params.csrf)) return;
 
-        const { confirmation_code, email } = params
-
-        //let mid = yield models.Identity.findOne({
-        //    attributes: [
-        //        'id',
-        //        'email',
-        //        'verified',
-        //        'updated_at',
-        //        'confirmation_code',
-        //    ],
-        //    where: { UserId: user_id, confirmation_code: code },
-        //    order: [ ['id', 'DESC'] ],
-        //});
-
-        //if (mid) {
-        //  console.log('verif: mid exists')
-        //    if (mid.verified) {
-        //      this.body = JSON.stringify({ status: 'done' });
-        //      return;
-        //    } else {
-        //      yield mid.update({ verified: true });
-        //    }
-
-        //    this.body = JSON.stringify({ status: 'done' });
-        //    return;
-        //} else {
-        //    this.status = 401;
-        //    this.body = 'Bad Request Data from';
-        //    return;
-        //}
-
-        //    this.status = 401;
-        //    this.body = 'Bad Request Data from';
-        //    return;
-        //}
+        const { confirmation_code, email } = params;
 
         console.log(
-            '-- /api/v1/confirm_provider -->',
+            '-- /api/v1/verify_code -->',
             email,
             confirmation_code
         );
 
-        let mid = yield models.Identity.findOne({
-            attributes: ['id', 'UserId', 'verified', 'updated_at', 'email'],
-            where: {
-                email: hash.sha256(email, 'hex'),
-                confirmation_code,
-                provider: 'email',
-            },
-            order: [ ['id', 'DESC'] ],
-        });
+        const emailHash = hash.sha256(email, 'hex');
 
-        if (!mid) {
+        const user = yield Tarantool.instance('tarantool').select('users', 'by_verify',
+            1, 0, 'eq', ['email', emailHash, false]);
+
+        if (!user[0]) {
+            this.status = 401;
+            this.body = 'No confirmation for this e-mail';
+            return;
+        }
+
+        if (user[0][5] != confirmation_code) {
             this.status = 401;
             this.body = 'Wrong confirmation code';
             return;
         }
-        if (mid.verified) {
-            this.status = 401;
-            this.body = 'Email has already been verified';
-            return;
-        }
 
-        const hours_ago = (Date.now() - mid.updated_at) / 1000.0 / 3600.0;
-        if (hours_ago > 24.0) {
-            this.status = 401;
-            this.body = 'Confirmation code has been expired, try again';
-            return;
-        }
+        yield Tarantool.instance('tarantool').update('users', 'primary', [user[0][0]], [['=', 4, true]])
 
-        yield mid.update({ verified: true });
         this.body =
             'GOLOS.id \nСпасибо за подтверждение вашей почты';
     });
@@ -205,7 +153,6 @@ export default function useRegistrationApi(app) {
 
         const body = this.request.body;
         let params = {};
-        let error = false
 
         if (typeof body === 'string') {
             try {
@@ -217,7 +164,7 @@ export default function useRegistrationApi(app) {
 
         if (!checkCSRF(this, params.csrf)) return;
 
-        const { email } = params
+        const { email } = params;
 
         //const retry = params.retry ? params.retry : null;
         console.log(params);
@@ -229,20 +176,18 @@ export default function useRegistrationApi(app) {
 
         const emailHash = hash.sha256(email, 'hex');
 
-        const existing_email = yield models.Identity.findOne({
-            attributes: ['UserId'],
-            where: { email: emailHash, provider: 'email', verified: true },
-            order: [ ['id', 'DESC'] ],
-        });
+        console.log('/send_code existing_email');
 
-        let user_id = this.session.user || null;
-        if (existing_email && existing_email.UserId != user_id) {
+        const existing_email = yield Tarantool.instance('tarantool').select('users', 'by_verify_registered',
+            1, 0, 'eq', ['email', emailHash, true]);
+
+        if (existing_email[0]) {
             console.log(
-                '-- /send_code existing_email -->',
-                user_id,
+                '-- /send_code existing_email error -->',
+                this.session.user,
                 this.session.uid,
                 emailHash,
-                existing_email.UserId
+                existing_email[0][0]
             );
             this.body = JSON.stringify({ status: 'already_used' });
             return;
@@ -253,92 +198,63 @@ export default function useRegistrationApi(app) {
             16
         ).toString(10).substring(0, 4); // 4 digit code
 
-        let mid = yield models.Identity.findOne({
-            attributes: [
-                'id',
-                'email',
-                'verified',
-                'updated_at',
-                'confirmation_code',
-            ],
-            where: { email: emailHash, UserId: user_id, provider: 'email' },
-            order: [ ['id', 'DESC'] ],
+        console.log('-- /send_code select user');
+
+        let user = yield Tarantool.instance('tarantool').select('users', 'by_verify_uid',
+            1, 0, 'eq', ['email', emailHash, this.session.uid]);
+
+        // TODO возможно сделать срок активности для кодов
+        //const seconds_ago = (Date.now() - mid.updated_at) / 1000.0;
+        //const timeAgo = process.env.NODE_ENV === 'production' ? 300 : 10;
+
+        //if (retry) {
+        //    confirmation_code = mid.confirmation_code;
+        //} else {
+        //    if (seconds_ago < timeAgo) {
+        //        this.body = JSON.stringify({ status: 'attempts_300' });
+        //        return;
+        //    }
+        //    yield mid.update({ confirmation_code, email: emailHash });
+        //}
+
+        // Send mail
+        const send = gmailSend({
+            user: config.gmail_send.user,
+            pass: config.gmail_send.pass,
+            from: 'registrator@golos.id',
+            to: email,
+            subject: 'Golos verification code',
         });
 
-        if (mid) {
-            if (mid.verified) {
-                if (mid.email === emailHash) {
-                    this.body = JSON.stringify({ status: 'done' });
-                    return;
-                }
-                yield mid.update({ verified: false, email: emailHash });
-            }
+        try {
+            const res = yield send({
+                html: `Registration code: <h4>${confirmation_code}</h4>`,
+            });
+        } catch (e) {
+            console.log(e);
 
-            // TODO возможно сделать срок активности для кодов
-            //const seconds_ago = (Date.now() - mid.updated_at) / 1000.0;
-            //const timeAgo = process.env.NODE_ENV === 'production' ? 300 : 10;
-
-            //if (retry) {
-            //    confirmation_code = mid.confirmation_code;
-            //} else {
-            //    if (seconds_ago < timeAgo) {
-            //        this.body = JSON.stringify({ status: 'attempts_300' });
-            //        return;
-            //    }
-            //    yield mid.update({ confirmation_code, email: emailHash });
-            //}
-        } else {
-            let user;
-            if (user_id) {
-                user = yield models.User.findOne({
-                    attributes: ['id'],
-                    where: { id: user_id },
-                });
-            }
-            if (!user) {
-                user = yield models.User.create({
-                    uid: this.session.uid,
-                    remote_ip: getRemoteIp(this.request.req),
-                });
-                this.session.user = user_id = user.id;
-            }
-
-            // Send mail
-            const send = gmailSend({
-              user: config.gmail_send.user,
-              pass: config.gmail_send.pass,
-              from: 'registrator@golos.id',
-              to: email,
-              subject: 'Golos verification code',
+            this.body = JSON.stringify({
+                status: 'error',
+                error: 'Send code error ' + e,
             });
 
-            send({
-              html: `Registration code: <h4>${confirmation_code}</h4>`
-            }).then(async () => {
-              mid = await models.Identity.create({
-                  provider: 'email',
-                  UserId: user_id,
-                  uid: this.session.uid,
-                  email: emailHash,
-                  verified: false,
-                  confirmation_code,
-              });
-            }).catch((e) => {
-              console.log(e)
-              error = true
-
-              this.body = JSON.stringify({
-                  status: 'error',
-                  error: 'Send code error ' + e,
-              });
-          })
+            return;
         }
 
-      if (!error) {
+        if (!user[0]) {
+            console.log('-- /send_code insert user');
+            user = yield Tarantool.instance('tarantool').insert('users',
+                [null, this.session.uid, 'email', emailHash, false, confirmation_code, getRemoteIp(this.request.req), false]);
+        } else {
+            console.log('-- /send_code update user');
+            user = yield Tarantool.instance('tarantool').update('users', 'primary', [user[0][0]], [['=', 5, confirmation_code]])
+        }
+
+        this.session.user = user[0][0];
+
         this.body = JSON.stringify({
             status: 'waiting',
         });
-      }
     });
 
     router.post('/use_invite', koaBody, function*() {
@@ -361,68 +277,61 @@ export default function useRegistrationApi(app) {
         const { invite_key } = params
 
         //const retry = params.retry ? params.retry : null;
-        console.log(params);
 
         if (!invite_key) {
             this.body = JSON.stringify({ status: 'provide_email' });
             return;
         }
 
-        const emailHash = hash.sha256(invite_key, 'hex');
+        const inviteHash = hash.sha256(invite_key, 'hex');
+
         let user_id = this.session.user;
 
-        const existing_email = yield models.Identity.findOne({
-            attributes: ['UserId', 'verified'],
-            where: { email: emailHash, provider: 'invite_code', verified: true },
-            order: [ ['id', 'DESC'] ],
-        });
-        if (existing_email) {
-            console.log(
-                '-- /check_invite existing_email -->',
-                user_id,
+        console.log('-- /use_invite existing_invite');
+
+        const existing_invite = yield Tarantool.instance('tarantool').select('users', 'by_verify_registered',
+            1, 0, 'eq', ['invite_code', inviteHash, true]);
+
+        if (existing_invite[0]) {
+            console.error(
+                '-- /use_invite existing_invite error -->',
+                this.session.user,
                 this.session.uid,
-                emailHash,
-                existing_email.UserId
+                inviteHash,
+                existing_invite[0][0]
             );
             this.body = JSON.stringify({ status: 'already_used' });
             return;
         }
 
-        const invite = yield api.getInvite(invite_key);
+        let invite = null;
+        try {
+            invite = yield api.getInviteAsync(invite_key);
+        } catch (err) {
+            if (err.message.includes('Invalid value')) {
+                this.body = JSON.stringify({ status: 'no_invite' });
+            } else {
+                this.body = JSON.stringify({ status: 'blockchain_not_available' });
+            }
+            return;
+        }
         if (!invite) {
             this.body = JSON.stringify({ status: 'no_invite' });
             return;
         }
 
-        let user;
-        if (user_id) {
-            user = yield models.User.findOne({
-                attributes: ['id'],
-                where: { id: user_id },
-            });
-        }
-        if (!user) {
-            user = yield models.User.create({
-                uid: this.session.uid,
-                remote_ip: getRemoteIp(this.request.req),
-            });
-            this.session.user = user_id = user.id;
+        console.log('-- /use_invite select user');
+
+        let user = yield Tarantool.instance('tarantool').select('users', 'by_verify_uid',
+            1, 0, 'eq', ['invite_code', inviteHash, this.session.uid]);
+
+        if (!user[0]) {
+            console.log('-- /use_invite insert user');
+            user = yield Tarantool.instance('tarantool').insert('users',
+                [null, this.session.uid, 'invite_code', inviteHash, true, '1234', getRemoteIp(this.request.req), false]);
         }
 
-        let mid = yield models.Identity.findOne({
-            where: { email: emailHash, provider: 'invite_code', UserId: user_id },
-            order: [ ['id', 'DESC'] ],
-        });
-        if (!mid) {
-            mid = yield models.Identity.create({
-                provider: 'invite_code',
-                UserId: user_id,
-                uid: this.session.uid,
-                email: emailHash,
-                verified: false,
-                confirmation_code: '1234'
-            });
-        }
+        this.session.user = user[0][0];
 
         this.body = JSON.stringify({
             status: 'done',

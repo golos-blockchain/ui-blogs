@@ -1,13 +1,10 @@
 import koa_router from 'koa-router';
 import koa_body from 'koa-body';
-import models from 'db/models';
-import findUser from 'db/utils/find_user';
+import Tarantool from 'db/tarantool';
 import config from 'config';
 import recordWebEvent from 'server/record_web_event';
-import {esc, escAttrs} from 'db/models';
 import {emailRegex, getRemoteIp, rateLimitReq, checkCSRF} from 'server/utils/misc';
 import coBody from 'co-body';
-//import Tarantool from 'db/tarantool';
 import {PublicKey, Signature, hash} from 'golos-classic-js/lib/auth/ecc';
 import {api, broadcast} from 'golos-classic-js';
 import { getDynamicGlobalProperties } from 'app/utils/APIWrapper'
@@ -46,89 +43,64 @@ export default function useGeneralApi(app) {
         if (!checkCSRF(this, account.csrf)) return;
         console.log('-- /accounts -->', this.session.uid, this.session.user, account);
 
-        const remote_ip = getRemoteIp(this.req);
-
-        const user_id = this.session.user;
-        if (!user_id) { // require user to sign in with identity provider
+        const user_id = parseInt(this.session.user);
+        if (isNaN(user_id)) { // require user to sign in with identity provider
             this.body = JSON.stringify({error: 'Unauthorized'});
             this.status = 401;
+            if (this.session.user) {
+                console.log('-- /accounts - user_id is NaN:', user_id, account)
+            }
             return;
         }
 
-        // TODO: use golos-ui tarantool, when mysql will be replaced with tarantool
-        // try {
-        //     const lock_entity_res = yield Tarantool.instance('tarantool').call('lock_entity', user_id+'');
-        //     if (!lock_entity_res[0][0]) {
-        //         console.log('-- /accounts lock_entity -->', user_id, lock_entity_res[0][0]);
-        //         this.body = JSON.stringify({error: 'Conflict'});
-        //         this.status = 409;
-        //         return;
-        //     }
-        // } catch (e) {
-        // console.error('-- /accounts tarantool is not available, fallback to another method', e)
-        console.error('-- /accounts using ram lock')
-        const rnd_wait_time = Math.random() * 10000;
-        console.log('-- /accounts rnd_wait_time -->', rnd_wait_time);
-        yield new Promise((resolve) =>
-            setTimeout(() => resolve(), rnd_wait_time)
-        )
-        // }
+        console.log('-- /accounts lock_entity');
+
+        const lock_entity_res = yield Tarantool.instance('tarantool').call('lock_entity', user_id.toString());
+        if (!lock_entity_res[0][0]) {
+            console.log('-- /accounts lock_entity -->', user_id, lock_entity_res[0][0]);
+            this.body = JSON.stringify({error: 'Conflict'});
+            this.status = 409;
+            return;
+        }
 
         try {
-            const user = yield models.User.findOne(
-                {attributes: ['verified', 'waiting_list'], where: {id: user_id}}
-            );
-            if (!user) {
+            console.log('-- /accounts check user id');
+
+            const user = yield Tarantool.instance('tarantool').select('users', 'primary',
+                1, 0, 'eq', [user_id]);
+            if (!user[0]) {
                 this.body = JSON.stringify({error: 'Unauthorized'});
                 this.status = 401;
+                console.log('-- /accounts - user_id is wrong:', user_id, account)
                 return;
             }
 
-            // check if user's ip is associated with any bot
-            const same_ip_bot = yield models.User.findOne({
-                attributes: ['id', 'created_at'],
-                where: {remote_ip, bot: true}
-            });
-            if (same_ip_bot) {
-                console.log('-- /accounts same_ip_bot -->', user_id, this.session.uid, remote_ip, user.email);
-                this.body = JSON.stringify({error: 'We are sorry, we cannot sign you up at this time because your IP address is associated with bots activity. Please contact t@cyber.fund for more information.'});
-                this.status = 401;
-                return;
+            console.log('-- /accounts check existing_account');
+
+            const existing_account = yield Tarantool.instance('tarantool').select('accounts', 'by_user_id',
+                1, 0, 'eq', [user_id]);
+            if (existing_account[0]) {
+                throw new Error('Only one Golos account per user is allowed in order to prevent abuse');
             }
 
-            const existing_account = yield models.Account.findOne({
-                attributes: ['id', 'created_at'],
-                where: {UserId: user_id, ignored: false},
-                order: [ ['id', 'DESC'] ]
-            });
+            console.log('-- /accounts check same_ip_account');
 
-            if (existing_account) {
-                throw new Error("Only one Golos account per user is allowed in order to prevent abuse");
-            }
-
-            const same_ip_account = yield models.Account.findOne(
-                {attributes: ['created_at'], where: {remote_ip: esc(remote_ip)}, order: [ ['id', 'DESC'] ]}
-            );
-            if (same_ip_account) {
-                const minutes = (Date.now() - same_ip_account.created_at) / 60000;
-                if (minutes < 10) {
+            const remote_ip = getRemoteIp(this.req);
+            const same_ip_account = yield Tarantool.instance('tarantool').select('accounts', 'by_remote_ip',
+                1, 0, 'eq', [remote_ip]);
+            if (same_ip_account[0]) {
+                const seconds = (Date.now() - parseInt(same_ip_account[0][9])) / 1000;
+                if (seconds < 10*60) {
                     console.log(`api /accounts: IP rate limit for user ${this.session.uid} #${user_id}, IP ${remote_ip}`);
                     throw new Error('Only one Golos account allowed per IP address every 10 minutes');
                 }
-            }
-            if (user.waiting_list) {
-                console.log(`api /accounts: waiting_list user ${this.session.uid} #${user_id}`);
-                throw new Error('You are on the waiting list. We will get back to you at the earliest possible opportunity.');
             }
 
             let json_metadata = '';
 
             let mid;
             if (account.invite_code && !this.session.soc_id) {
-                mid = yield models.Identity.findOne(
-                    {attributes: ['id'], where: {UserId: user_id, provider: 'invite_code', verified: false}, order: [ ['id', 'DESC'] ]}
-                );
-                if (!mid) {
+                if (!user[0][4]) {
                     console.log(`api /accounts: try to skip use_invite step by user ${this.session.uid} #${user_id}`);
                     throw new Error('Not passed entering use_invite step');
                 }
@@ -136,10 +108,7 @@ export default function useGeneralApi(app) {
                   console.log(`api /accounts: found use_invite step for user ${this.session.uid} #${user_id}`)
                 }
             } else if (this.session.soc_id && this.session.soc_id_type) {
-                mid = yield models.Identity.findOne(
-                    {attributes: ['id'], where: {UserId: user_id, provider: 'social-' + this.session.soc_id_type.replace('_id', ''), verified: false}, order: [ ['id', 'DESC'] ]}
-                );
-                if (!mid) {
+                if (!user[0][4]) {
                     console.log(`api /accounts: not authorized with social site for user ${this.session.uid} #${user_id}`);
                     throw new Error('Not authorized with social site');
                 }
@@ -149,32 +118,16 @@ export default function useGeneralApi(app) {
                 json_metadata = {[this.session.soc_id_type]: this.session.soc_id};
                 json_metadata = JSON.stringify(json_metadata);
             } else {
-                mid = yield models.Identity.findOne(
-                    {attributes: ['id'], where: {UserId: user_id, provider: 'email', verified: true}, order: [ ['id', 'DESC'] ]}
-                );
-                if (!mid) {
-                    console.log(`api /accounts: not confirmed sms for user ${this.session.uid} #${user_id}`);
-                    throw new Error('Phone number is not confirmed');
+                if (!user[0][4]) {
+                    console.log(`api /accounts: not confirmed e-mail for user ${this.session.uid} #${user_id}`);
+                    throw new Error('E-mail is not confirmed');
                 }
                 else {
-                  console.log(`api /accounts: is confirmed sms for user ${this.session.uid} #${user_id}`)
+                  console.log(`api /accounts: is confirmed e-mail for user ${this.session.uid} #${user_id}`)
                 }
             }
 
-            // store email
-            let email = account.email || '';
-            const parsed_email = email.match(/^.+\@.*?([\w\d-]+\.\w+)$/);
-            if (!parsed_email || parsed_email.length < 2) email = null;
-
-            if (email) {
-                yield models.Identity.create({
-                    provider: 'email',
-                    UserId: user_id,
-                    uid: this.session.uid,
-                    email,
-                    verified: false
-                });
-            }
+            console.log('-- /accounts creating account');
 
             const [fee_value, fee_currency] = config.get('registrar.fee').split(' ');
             const delegation = config.get('registrar.delegation')
@@ -230,24 +183,22 @@ export default function useGeneralApi(app) {
                 invite_secret: account.invite_code ? account.invite_code : ''
             });
 
-            if (account.invite_code || this.session.soc_id) {
-                yield mid.update({ verified: true });
-            }
-
             console.log('-- create_account_with_keys created -->', this.session.uid, account.name, user_id, account.owner_key);
 
-            models.Account.create(escAttrs({
-                UserId: user_id,
-                name: account.name,
-                owner_key: account.owner_key,
-                active_key: account.active_key,
-                posting_key: account.posting_key,
-                memo_key: account.memo_key,
-                remote_ip,
-                referrer: this.session.r
-            })).catch(error => {
+            // store email
+            let email = account.email || '';
+
+            try {
+                yield Tarantool.instance('tarantool').insert('accounts',
+                    [null, user_id, account.name,
+                    account.owner_key, account.active_key, account.posting_key, account.memo_key,
+                    this.session.r || '', '', Date.now().toString(), email, remote_ip]);
+            } catch (error) {
                 console.error('!!! Can\'t create account model in /accounts api', this.session.uid, error);
-            });
+            }
+
+            yield Tarantool.instance('tarantool').update('users', 'primary', [user_id], [['=', 7, true]])
+
             this.body = JSON.stringify({status: 'ok'});
         } catch (error) {
             console.error('Error in /accounts api call', this.session.uid, error.toString());
@@ -255,35 +206,9 @@ export default function useGeneralApi(app) {
             this.status = 500;
         } finally {
             // console.log('-- /accounts unlock_entity -->', user_id);
-            // TODO: use golos-ui tarantool, when mysql will be replaced with tarantool
-            //try { yield Tarantool.instance('tarantool').call('unlock_entity', user_id + ''); } catch(e) {/* ram lock */}
+            yield Tarantool.instance('tarantool').call('unlock_entity', user_id.toString());
         }
         recordWebEvent(this, 'api/accounts', account ? account.name : 'n/a');
-    });
-
-    router.post('/update_email', koaBody, function *() {
-        if (rateLimitReq(this, this.req)) return;
-        const params = this.request.body;
-        const {csrf, email} = typeof(params) === 'string' ? JSON.parse(params) : params;
-        if (!checkCSRF(this, csrf)) return;
-        console.log('-- /update_email -->', this.session.uid, email);
-        try {
-            if (!emailRegex.test(email.toLowerCase())) throw new Error('not valid email: ' + email);
-            // TODO: limit by 1/min/ip
-            let user = yield findUser({user_id: this.session.user, email: esc(email), uid: this.session.uid});
-            if (user) {
-                user = yield models.User.update({email: esc(email), waiting_list: true}, {where: {id: user.id}});
-            } else {
-                user = yield models.User.create({email: esc(email), waiting_list: true});
-            }
-            this.session.user = user.id;
-            this.body = JSON.stringify({status: 'ok'});
-        } catch (error) {
-            console.error('Error in /update_email api call', this.session.uid, error);
-            this.body = JSON.stringify({error: error.message});
-            this.status = 500;
-        }
-        recordWebEvent(this, 'api/update_email', email);
     });
 
     router.post('/login_account', koaBody, function *() {
@@ -294,10 +219,11 @@ export default function useGeneralApi(app) {
         try {
             this.session.a = account;
 
-            const db_account = yield models.Account.findOne(
-                {attributes: ['UserId'], where: {name: esc(account)}, logging: false}
-            );
-            if (db_account) this.session.user = db_account.UserId;
+            const dbAccount = yield Tarantool.instance('tarantool').select('accounts', 'by_name',
+                1, 0, 'eq', [account]);
+            if (dbAccount[0]) {
+                this.session.user = dbAccount[0][1];
+            }
 
             let body = { status: 'ok' }
             this.body = JSON.stringify(body);
@@ -316,7 +242,7 @@ export default function useGeneralApi(app) {
         if (!checkCSRF(this, csrf)) return;
         console.log('-- /logout_account -->', this.session.uid);
         try {
-          this.session.a = this.session.user = this.session.uid = null;
+            this.session.a = this.session.user = this.session.uid = null;
             this.body = JSON.stringify({status: 'ok'});
         } catch (error) {
             console.error('Error in /logout_account api call', this.session.uid, error);
@@ -350,44 +276,7 @@ export default function useGeneralApi(app) {
     });
 
     router.post('/page_view', koaBody, function *() {
-        const params = this.request.body;
-        const {csrf, page, ref, posts} = typeof(params) === 'string' ? JSON.parse(params) : params;
-        if (!checkCSRF(this, csrf)) return;
-        if (page.match(/\/feed$/)) {
-            this.body = JSON.stringify({views: 0});
-            return;
-        }
-
-        recordWebEvent(this, 'PageView', JSON.stringify(posts));
-        const remote_ip = getRemoteIp(this.req);
-        try {
-            let views = 1, unique = true;
-            // TODO: use golos-ui tarantool, when mysql will be replaced with tarantool
-            // if (config.has('tarantool') && config.has('tarantool.host')) {
-            //     try {
-            //         const res = yield Tarantool.instance('tarantool').call('page_view', page, remote_ip, this.session.uid, ref);
-            //         unique = res[0][0];
-            //     } catch (e) {}
-            // }
-            const page_model = yield models.Page.findOne(
-                {attributes: ['id', 'views'], where: {permlink: esc(page)}, logging: false}
-            );
-            if (unique) {
-                if (page_model) {
-                    views = page_model.views + 1;
-                    yield yield models.Page.update({views}, {where: {id: page_model.id}, logging: false});
-                } else {
-                    yield models.Page.create(escAttrs({permlink: page, views}), {logging: false});
-                }
-            } else {
-                if (page_model) views = page_model.views;
-            }
-            this.body = JSON.stringify({views});
-        } catch (error) {
-            console.error('Error in /page_view api call', this.session.uid, error.message);
-            this.body = JSON.stringify({error: error.message});
-            this.status = 500;
-        }
+        this.body = JSON.stringify({views: 1});
     });
 }
 
