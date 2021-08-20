@@ -49,7 +49,7 @@ async function appRender(ctx) {
             } else {
                 offchain.serverBusy = true;
             }
-            if (user[0]) {
+            if (user && user[0]) {
                 let account = await Tarantool.instance('tarantool').select('accounts', 'by_user_id',
                     1, 0, 'eq', [user_id]);
                 account = account[0] ? account[0][2] : null;

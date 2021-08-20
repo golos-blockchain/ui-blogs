@@ -121,8 +121,8 @@ export default function useRegistrationApi(app) {
 
         const emailHash = hash.sha256(email, 'hex');
 
-        const user = yield Tarantool.instance('tarantool').select('users', 'by_verify',
-            1, 0, 'eq', ['email', emailHash, false]);
+        const user = yield Tarantool.instance('tarantool').select('users', 'by_verify_uid',
+            1, 0, 'eq', ['email', emailHash, this.session.uid, false]);
 
         if (!user[0]) {
             this.status = 401;
@@ -137,6 +137,8 @@ export default function useRegistrationApi(app) {
         }
 
         yield Tarantool.instance('tarantool').update('users', 'primary', [user[0][0]], [['=', 4, true]])
+
+        this.session.user = user[0][0];
 
         this.body =
             'GOLOS.id \nСпасибо за подтверждение вашей почты';
@@ -167,7 +169,6 @@ export default function useRegistrationApi(app) {
         const { email } = params;
 
         //const retry = params.retry ? params.retry : null;
-        console.log(params);
 
         if (!email || !/^[a-z0-9](\.?[a-z0-9]){5,}@g(oogle)?mail\.com$/.test(email)) {
             this.body = JSON.stringify({ status: 'provide_email' });
@@ -180,14 +181,10 @@ export default function useRegistrationApi(app) {
 
         const existing_email = yield Tarantool.instance('tarantool').select('users', 'by_verify_registered',
             1, 0, 'eq', ['email', emailHash, true]);
-
         if (existing_email[0]) {
-            console.log(
-                '-- /send_code existing_email error -->',
-                this.session.user,
-                this.session.uid,
-                emailHash,
-                existing_email[0][0]
+            console.log('-- /send_code existing_email error -->',
+                this.session.user, this.session.uid,
+                emailHash, existing_email[0][0]
             );
             this.body = JSON.stringify({ status: 'already_used' });
             return;
@@ -201,7 +198,7 @@ export default function useRegistrationApi(app) {
         console.log('-- /send_code select user');
 
         let user = yield Tarantool.instance('tarantool').select('users', 'by_verify_uid',
-            1, 0, 'eq', ['email', emailHash, this.session.uid]);
+            1, 0, 'le', ['email', emailHash, this.session.uid, true]);
 
         // TODO возможно сделать срок активности для кодов
         //const seconds_ago = (Date.now() - mid.updated_at) / 1000.0;
@@ -217,6 +214,18 @@ export default function useRegistrationApi(app) {
         //    yield mid.update({ confirmation_code, email: emailHash });
         //}
 
+        if (user[0] && user[0][2] === 'email' && user[0][3] === emailHash && user[0][1] === this.session.uid) {
+            if (user[0][4]) {
+                this.body = JSON.stringify({
+                    status: 'done',
+                });
+                this.session.user = user[0][0];
+                return;
+            }
+        } else {
+            user[0] = null;
+        }
+
         // Send mail
         const send = gmailSend({
             user: config.gmail_send.user,
@@ -227,7 +236,7 @@ export default function useRegistrationApi(app) {
         });
 
         try {
-            const res = yield send({
+            yield send({
                 html: `Registration code: <h4>${confirmation_code}</h4>`,
             });
         } catch (e) {
@@ -241,16 +250,19 @@ export default function useRegistrationApi(app) {
             return;
         }
 
+        const ip = getRemoteIp(this.request.req);
+
         if (!user[0]) {
             console.log('-- /send_code insert user');
             user = yield Tarantool.instance('tarantool').insert('users',
-                [null, this.session.uid, 'email', emailHash, false, confirmation_code, getRemoteIp(this.request.req), false]);
+                [null, this.session.uid, 'email', emailHash, false,
+                confirmation_code, ip, false]);
         } else {
             console.log('-- /send_code update user');
-            user = yield Tarantool.instance('tarantool').update('users', 'primary', [user[0][0]], [['=', 5, confirmation_code]])
+            user = yield Tarantool.instance('tarantool').update('users',
+                'primary', [user[0][0]],
+                [['=', 5, confirmation_code], ['=', 6, ip]])
         }
-
-        this.session.user = user[0][0];
 
         this.body = JSON.stringify({
             status: 'waiting',
@@ -283,27 +295,6 @@ export default function useRegistrationApi(app) {
             return;
         }
 
-        const inviteHash = hash.sha256(invite_key, 'hex');
-
-        let user_id = this.session.user;
-
-        console.log('-- /use_invite existing_invite');
-
-        const existing_invite = yield Tarantool.instance('tarantool').select('users', 'by_verify_registered',
-            1, 0, 'eq', ['invite_code', inviteHash, true]);
-
-        if (existing_invite[0]) {
-            console.error(
-                '-- /use_invite existing_invite error -->',
-                this.session.user,
-                this.session.uid,
-                inviteHash,
-                existing_invite[0][0]
-            );
-            this.body = JSON.stringify({ status: 'already_used' });
-            return;
-        }
-
         let invite = null;
         try {
             invite = yield api.getInviteAsync(invite_key);
@@ -321,6 +312,8 @@ export default function useRegistrationApi(app) {
         }
 
         console.log('-- /use_invite select user');
+
+        const inviteHash = hash.sha256(invite_key, 'hex');
 
         let user = yield Tarantool.instance('tarantool').select('users', 'by_verify_uid',
             1, 0, 'eq', ['invite_code', inviteHash, this.session.uid]);

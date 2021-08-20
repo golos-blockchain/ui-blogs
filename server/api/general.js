@@ -75,12 +75,24 @@ export default function useGeneralApi(app) {
                 return;
             }
 
-            console.log('-- /accounts check existing_account');
-
-            const existing_account = yield Tarantool.instance('tarantool').select('accounts', 'by_user_id',
-                1, 0, 'eq', [user_id]);
-            if (existing_account[0]) {
+            if (user[0][7]) {
                 throw new Error('Only one Golos account per user is allowed in order to prevent abuse');
+            }
+
+            console.log('-- /accounts check same_email_account');
+
+            if (user[0][2] === 'email') {
+                const emailHash = user[0][3];
+                const existing_email = yield Tarantool.instance('tarantool').select('users', 'by_verify_registered',
+                    1, 0, 'eq', ['email', emailHash, true]);
+                if (existing_email[0]) {
+                    console.log('-- /accounts existing_email error -->',
+                        this.session.user, this.session.uid,
+                        emailHash, existing_email[0][0]
+                    );
+                    console.log(`api /accounts: existing_same-email account ${this.session.uid} #${user_id}, IP ${remote_ip}`);
+                    throw new Error('Account with such email already registered');
+                }
             }
 
             console.log('-- /accounts check same_ip_account');
@@ -90,9 +102,11 @@ export default function useGeneralApi(app) {
                 1, 0, 'eq', [remote_ip]);
             if (same_ip_account[0]) {
                 const seconds = (Date.now() - parseInt(same_ip_account[0][9])) / 1000;
-                if (seconds < 10*60) {
+                const minSeconds = process.env.REGISTER_INTERVAL_SEC || 10*60;
+                if (seconds < minSeconds) {
+                    const minMinutes = Math.ceil(minSeconds / 60);
                     console.log(`api /accounts: IP rate limit for user ${this.session.uid} #${user_id}, IP ${remote_ip}`);
-                    throw new Error('Only one Golos account allowed per IP address every 10 minutes');
+                    throw new Error('Only one Golos account allowed per IP address every ' + minMinutes + ' minutes');
                 }
             }
 

@@ -7,7 +7,7 @@ RUN yarn install
 
 COPY . /var/app
 
-RUN mkdir tmp && yarn build
+RUN mkdir tmp && yarn build-version && yarn build
 
 ENV PORT 8080
 ENV NODE_ENV production

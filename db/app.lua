@@ -42,7 +42,7 @@ box.once('bootstrap', function()
         type = 'tree', parts = {'verify_type', 'verify_id', 'registered'}, unique = false
     })
     users:create_index('by_verify_uid', {
-        type = 'tree', parts = {'verify_type', 'verify_id', 'uid'}, unique = false
+        type = 'tree', parts = {'verify_type', 'verify_id', 'uid', 'verified'}, unique = false
     })
     users:create_index('by_remote_ip', {
         type = 'tree', parts = {'remote_ip'}, unique = false
@@ -61,7 +61,7 @@ box.once('bootstrap', function()
             {name = 'referrer', type = 'STR'},
             {name = 'refcode', type = 'STR'},
             {name = 'created_at', type = 'STR'}, -- it is STR due to https://github.com/tarantool/node-tarantool-driver/issues/49
-            {name = 'email', type = 'STR'},
+            {name = 'email', type = 'STR'}, -- raw email, not hash. For admin
             {name = 'remote_ip', type = 'STR'},
         }
     })
@@ -69,10 +69,10 @@ box.once('bootstrap', function()
         sequence='accounts'
     })
     accounts:create_index('by_user_id', {
-        type = 'tree', parts = {2, 'unsigned'}, unique = false
+        type = 'tree', parts = {'user_id'}, unique = false
     })
     accounts:create_index('by_name', {
-        type = 'tree', parts = {3, 'STR'}, unique = true
+        type = 'tree', parts = {'name'}, unique = true
     })
     accounts:create_index('by_remote_ip', {
         type = 'tree', parts = {'remote_ip'}, unique = false
