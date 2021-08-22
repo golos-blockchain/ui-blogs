@@ -1,5 +1,6 @@
 import config from 'config';
 import * as golos from 'golos-classic-js';
+const version = require('./version');
 
 delete process.env.BROWSER;
 
@@ -21,11 +22,13 @@ global.$STM_Config = {
     upload_image: config.get('upload_image'),
     golos_lib_gui: config.get('golos_lib_gui'),
     site_domain: config.get('site_domain'),
+    tarantool: config.get('tarantool'),
     google_analytics_id: config.get('google_analytics_id'),
     chain_id: config.get('chain_id'),
     elastic_search: config.get('elastic_search'),
     notify_service: config.get('notify_service'),
-    forums: config.get('forums')
+    forums: config.get('forums'),
+    ui_version: version || '1.0-unknown',
 };
 
 const WebpackIsomorphicTools = require('webpack-isomorphic-tools');

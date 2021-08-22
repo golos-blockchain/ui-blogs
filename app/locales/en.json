@@ -54,6 +54,7 @@
     "amount": "Amount",
     "and": "and",
     "at_least": "at least",
+    "no_more_than": "no more than",
     "please": "Please",    
     "active": "Active key",    
     "owner": "Owner key",
@@ -1129,7 +1130,17 @@
   },
   "delegatevestingshares_jsx":{
     "form_title": "Delegate %(VESTING_TOKEN2)s",
-    "button_title": "Delegate"
+    "delegate": "Delegate",
+    "edit": "Edit",
+    "revoke": "Revoke",
+    "interest": "%% Of Curate Rewards",
+    "interest_hint": "To account will be able to receive more curation rewards. This is a %% of your interest.",
+    "interest_short": "%% Of Interest",
+    "interest_short_hint_delegator": "That part of delegatee's curation rewards (on delegated GP) will be returned to you",
+    "interest_short_hint_delegatee": "That part of yours curation rewards (on delegated GP) will be returned to delegator",
+    "interest_short_hint_neutral": "That part of delegatee's curation rewards (on delegated GP) will be returned to delegator",
+    "too_large_percent": "Too large percent",
+    "vdo_exists": "You already have delegated some GP to this account. You could edit its amount, or revoke it at all." 
   },
   "post_editor": {
     "new_editor": "Markdown editor",
@@ -1199,7 +1210,7 @@
   },
   "delegate_vesting_shares_info_jsx": {
     "confirm_title": "Cancel %(VESTING_TOKENS)s delegation",
-    "confirm_cancel_delegation": "Are you sure you want to cancel %(VESTING_TOKEN2)s delegation",
+    "confirm_cancel_delegation": "Are you sure you want to cancel %(VESTING_TOKEN2)s delegation (you will receive tokens back during 7 days)?",
     "from": "From",
     "to": "To"
   },

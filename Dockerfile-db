@@ -1,0 +1,5 @@
+FROM tarantool/tarantool:2.7
+
+COPY db/*.lua db/*.sh /opt/tarantool/
+
+CMD ["/bin/sh", "/opt/tarantool/db-run.sh"]

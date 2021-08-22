@@ -5,6 +5,7 @@ import tt from 'counterpart'
 import g from 'app/redux/GlobalReducer'
 import { LIQUID_TICKER } from 'app/client_config'
 import transaction from 'app/redux/Transaction'
+import Icon from 'app/components/elements/Icon'
 import LoadingIndicator from 'app/components/elements/LoadingIndicator'
 import { numberWithCommas, vestsToSteem } from 'app/utils/StateFunctions'
 
@@ -37,6 +38,7 @@ class DelegateVestingSharesInfo extends React.Component {
             const c = delegatedVesting[k]
             const vestingShares = vestsToSteem(c.vesting_shares, gprops)
             const vestingShares_str = `${numberWithCommas(vestingShares)} ${LIQUID_TICKER}`
+            const interestRate = c.interest_rate / 100;
 
             return <tr key={k}>
                 {type === 'delegated' 
@@ -60,6 +62,9 @@ class DelegateVestingSharesInfo extends React.Component {
                 <td>
                     {vestingShares_str}
                 </td>
+                <td style={{ textAlign: 'center' }}>
+                    {interestRate}%
+                </td>
                 {type === 'delegated' && isMyAccount && (
                     <td style={{textAlign: 'center'}}>
                         <a
@@ -75,6 +80,14 @@ class DelegateVestingSharesInfo extends React.Component {
             </tr>
         })
 
+        let interestHint = tt('delegatevestingshares_jsx.interest_short_hint_neutral');
+        if (isMyAccount) {
+            if (type === 'delegated')
+                interestHint = tt('delegatevestingshares_jsx.interest_short_hint_delegator');
+            else
+                interestHint = tt('delegatevestingshares_jsx.interest_short_hint_delegatee');
+        }
+
         return (
             <div>
                 <div className="row">
@@ -89,6 +102,11 @@ class DelegateVestingSharesInfo extends React.Component {
                                     : tt('delegate_vesting_shares_info_jsx.from')}
                                 </td>
                                 <td>{tt('token_names.VESTING_TOKEN')}</td>
+                                <td>
+                                    {tt('delegatevestingshares_jsx.interest_short')}
+                                    &nbsp;
+                                    <Icon name='info_o' title={interestHint} />
+                                </td>
                                 {type === 'delegated' && isMyAccount && <td style={{textAlign: 'center'}}>{tt('g.cancel')}</td>}
                             </tr>
                         </thead>

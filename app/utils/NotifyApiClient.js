@@ -33,7 +33,7 @@ function saveSession(response) {
 }
 
 export function notifyApiLogin(account, signatures) {
-    if (!notifyAvailable() || window.$STM_ServerBusy) return;
+    if (!notifyAvailable()) return;
     let request = Object.assign({}, request_base, {
         body: JSON.stringify({account, signatures}),
     });
@@ -45,7 +45,7 @@ export function notifyApiLogin(account, signatures) {
 }
 
 export function notifyApiLogout() {
-    if (!notifyAvailable() || window.$STM_ServerBusy) return;
+    if (!notifyAvailable()) return;
     let request = Object.assign({}, request_base, {
         method: 'get',
     });
@@ -56,7 +56,7 @@ export function notifyApiLogout() {
 }
 
 export function getNotifications(account) {
-    if (!notifyAvailable() || window.$STM_ServerBusy) return Promise.resolve(null);
+    if (!notifyAvailable()) return Promise.resolve(null);
     let request = Object.assign({}, request_base, {method: 'get'});
     setSession(request);
     return fetch(notifyUrl(`/counters/@${account}`), request).then(r => {
@@ -68,7 +68,7 @@ export function getNotifications(account) {
 }
 
 export function markNotificationRead(account, fields) {
-    if (!notifyAvailable() || window.$STM_ServerBusy) return Promise.resolve(null);
+    if (!notifyAvailable()) return Promise.resolve(null);
     let request = Object.assign({}, request_base, {method: 'put', mode: 'cors'});
     setSession(request);
     const fields_str = fields.join(',');
@@ -81,7 +81,7 @@ export function markNotificationRead(account, fields) {
 }
 
 export async function notificationSubscribe(account, scopes = 'message', sidKey = '__subscriber_id') {
-    if (!notifyAvailable() || window.$STM_ServerBusy) return;
+    if (!notifyAvailable()) return;
     if (window[sidKey]) return;
     try {
         let request = Object.assign({}, request_base, {method: 'get'});
@@ -104,7 +104,7 @@ export async function notificationSubscribe(account, scopes = 'message', sidKey 
 }
 
 export async function notificationUnsubscribe(account, sidKey = '__subscriber_id') {
-    if (!notifyAvailable() || window.$STM_ServerBusy) return;
+    if (!notifyAvailable()) return;
     if (!window[sidKey]) return;
     let url = notifyUrl(`/unsubscribe/@${account}/${window[sidKey]}`);
     let response;
@@ -129,7 +129,7 @@ export async function notificationUnsubscribe(account, sidKey = '__subscriber_id
 }
 
 export async function notificationTake(account, removeTaskIds, forEach, sidKey = '__subscriber_id') {
-    if (!notifyAvailable() || window.$STM_ServerBusy) return;
+    if (!notifyAvailable()) return;
     let url = notifyUrl(`/take/@${account}/${window[sidKey]}`);
     if (removeTaskIds)
         url += '/' + removeTaskIds;
@@ -167,7 +167,7 @@ export async function notificationTake(account, removeTaskIds, forEach, sidKey =
 }
 
 export async function sendOffchainMessage(op) {
-    if (!notifyAvailable() || window.$STM_ServerBusy) return;
+    if (!notifyAvailable()) return;
     let url = notifyUrl(`/msgs/send_offchain`);
     let response;
     try {
