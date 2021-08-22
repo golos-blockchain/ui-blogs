@@ -78,6 +78,10 @@ class App extends React.Component {
     }
 
     componentDidMount() {
+        if (process.env.BROWSER) {
+            console.log('golos-ui version:', $STM_Config.ui_version);
+        }
+
         const { nightmodeEnabled } = this.props;
         this.toggleBodyNightmode(nightmodeEnabled);
 

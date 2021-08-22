@@ -50,7 +50,7 @@ class CreateAccount extends React.Component {
         codeError: '',
         codeHint: '',
         serverError: '',
-        loading: false,
+        submitting: false,
         cryptographyFailure: false,
         showRules: false,
         allBoxChecked: false,
@@ -167,7 +167,7 @@ class CreateAccount extends React.Component {
             inviteHint,
             inviteError,
             serverError,
-            loading,
+            submitting,
             cryptographyFailure,
             allBoxChecked,
         } = this.state;
@@ -188,14 +188,14 @@ class CreateAccount extends React.Component {
             return this._renderExistingUserAccount(offchainUser.get('account'));
         }
 
-        let phoneStep = null;
+        let emailConfirmStep = null;
         let showMailForm =
             fetchState.status !== 'waiting' && fetchState.status !== 'done';
 
         if (fetchState.status === 'waiting') {
-            phoneStep = this._renderCodeWaiting();
+            emailConfirmStep = this._renderCodeWaiting();
         } else if (fetchState.message) {
-            phoneStep = (
+            emailConfirmStep = (
                 <div
                     className={cn('callout', {
                         success: fetchState.success,
@@ -241,7 +241,7 @@ class CreateAccount extends React.Component {
         const okStatus = fetchState.checking && fetchState.success;
 
         const submitDisabled =
-            loading ||
+            submitting ||
             !name ||
             nameError ||
             inviteError ||
@@ -249,7 +249,7 @@ class CreateAccount extends React.Component {
             !allBoxChecked ||
             !okStatus;
 
-        const disableGetCode = okStatus || !emailHint;
+        const disableGetCode = okStatus || !emailHint || fetchState.checking;
         const disableContinueInvite = !inviteHint;
 
         return (
@@ -308,10 +308,10 @@ class CreateAccount extends React.Component {
                                     {this._renderSocialButtons()}
                                 </div>
                             )}
-                            {phoneStep}
+                            {emailConfirmStep}
                             {showMailForm && !invite_enabled && (
                                 <div>
-                                    <p>
+                                    <p className="CreateAccount__send-code-block">
                                         <a
                                             className={cn('button', {
                                                 disabled: disableGetCode,
@@ -324,6 +324,7 @@ class CreateAccount extends React.Component {
                                         >
                                             {tt('g.continue')}
                                         </a>
+                                        {fetchState.checking && <LoadingIndicator type='circle' size='20px' inline />}
                                     </p>
                                 </div>
                             )}
@@ -375,7 +376,7 @@ class CreateAccount extends React.Component {
                             </div>
                             <GeneratedPasswordInput
                                 onChange={this.onPasswordChange}
-                                disabled={!okStatus || loading}
+                                disabled={!okStatus || submitting}
                                 showPasswordString={
                                     name.length > 0 && !nameError
                                 }
@@ -391,7 +392,7 @@ class CreateAccount extends React.Component {
                                     </p>
                                 </div>
                             </noscript>
-                            {loading && <LoadingIndicator type="circle" />}
+                            {submitting && <LoadingIndicator type='circle' />}
                             <button
                                 disabled={submitDisabled}
                                 className={cn('button action uppercase', {
@@ -453,7 +454,7 @@ class CreateAccount extends React.Component {
 
         return (
             <div className="callout">
-                <div className="CreateAccount__send-sms-block">
+                <div className="CreateAccount__confirm-email-block">
                     {'Введите проверочный код отправленный на вашу почту'}
                     <input
                         type="email"
@@ -650,7 +651,7 @@ class CreateAccount extends React.Component {
 
     _onSubmit = async e => {
         e.preventDefault();
-        this.setState({ serverError: '', loading: true });
+        this.setState({ serverError: '', submitting: true });
         const { email, invite_code, name, password, passwordValid, referrer } = this.state;
         if (!name || !password || !passwordValid) return;
 
@@ -693,7 +694,7 @@ class CreateAccount extends React.Component {
                 console.error('CreateAccount server error', data.error);
                 this.setState({
                     serverError: data.error || tt('g.unknown'),
-                    loading: false,
+                    submitting: false,
                 });
             } else {
                 keyFile.save();
@@ -703,7 +704,7 @@ class CreateAccount extends React.Component {
             console.error('Caught CreateAccount server error', err);
             this.setState({
                 serverError: err.message ? err.message : err,
-                loading: false,
+                submitting: false,
             });
         }
     };

@@ -1,6 +1,5 @@
 {
   "REST_API": "https://golos.id",
-  "database_url": "mysql://golosdev:golosdev@127.0.0.1:3306/golosdev",
   "grant": {
     "vk": {
       "key": "7729925",
@@ -58,6 +57,12 @@
   "ws_connection_server": "wss://api-full.golos.id/ws",
   "ws_connection_msgs": "wss://api-full.golos.id/ws",
   "chain_id": "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12",
+  "tarantool": {
+    "host": "37.18.27.45",
+    "port": "3301",
+    "username": "guest",
+    "password": ""
+  },
   "notify_service": {
     "host": "https://notify.golos.today/"
   },

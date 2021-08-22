@@ -129,6 +129,7 @@ export function* fetchState(location_change_action) {
                                 case 'convert_sbd_debt':
                                 case 'convert':
                                 case 'fill_convert_request':
+                                case 'interest':
                                 case 'worker_reward':
                                     state.accounts[uname].transfer_history.push(operation)
                                 break

@@ -1,5 +1,4 @@
 {
-  "database_url": "SDC_DATABASE_URL",
   "google_analytics_id": "SDC_GOOGLE_ANALYTICS_ID",
   "registrar": {
     "account": "SDC_REGISTRAR_ACCOUNT",
@@ -7,6 +6,12 @@
   },
   "server_session_secret": "SDC_SESSION_SECRETKEY",
   "site_domain": "SDC_SITE_DOMAIN",
+  "tarantool": {
+    "host": "SDC_TARANTOOL_HOSTNAME",
+    "port": "SDC_TARANTOOL_PORT",
+    "username": "SDC_TARANTOOL_USERNAME",
+    "password": "SDC_TARANTOOL_PASSWORD"
+  },
   "upload_image": "SDC_UPLOAD_IMAGE_URL",
   "ws_connection_client": "SDC_CLIENT_WEBSOCKET_URL",
   "ws_connection_server": "SDC_SERVER_WEBSOCKET_URL",

@@ -28,7 +28,7 @@ class Tarantool {
         return this.ready_promise
             .then(() => this.connection[call_name].apply(this.connection, args))
             .catch(error => {
-                if (error.message.indexOf('connect') >= 0)
+                if (error.message.toLowerCase().indexOf('connect') >= 0)
                     instance[this.key] = null;
                 return Promise.reject(error);
             });
