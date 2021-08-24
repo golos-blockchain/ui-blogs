@@ -65,8 +65,7 @@ class CurationRewards extends React.Component {
             }
         }
 
-        // FIX bug, golos doesn't return transfer_history sometimes
-        if (!account.transfer_history) account.transfer_history = [];
+        const transfer_history = account.transfer_history || [];
 
         /// transfer log
         let rewards24 = 0, rewardsWeek = 0, totalRewards = 0;
@@ -76,7 +75,7 @@ class CurationRewards extends React.Component {
         let lastWeek = new Date(today.getTime() - 7 * oneDay ).getTime();
 
         let firstDate, finalDate;
-        let curation_log = account.transfer_history.map((item, index) => {
+        let curation_log = transfer_history.map((item, index) => {
             // Filter out rewards
             if (item[1].op[0] === "curation_reward") {
                 if (!finalDate) {

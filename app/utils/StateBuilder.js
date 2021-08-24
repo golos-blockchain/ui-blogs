@@ -168,6 +168,17 @@ export default async function getState(api, url, options, offchain = {}) {
                     }
                 break
 
+                case 'reputation':
+                    const rhistory = await api.getAccountHistory(uname, -1, 1000, ['producer_reward']);
+                    account.reputation_history = [];
+
+                    rhistory.forEach(operation => {
+                        const op = operation[1].op;
+                        if (op[0] === 'account_reputation' && op[1].author === uname) {
+                            state.accounts[uname].reputation_history.push(operation);
+                        }
+                    });
+                break
                 case 'blog':
                 default:
                     const blogEntries = await api.getBlogEntries(uname, 0, 20)

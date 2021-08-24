@@ -211,13 +211,23 @@ export function* fetchState(location_change_action) {
                         }
                     break
 
+                    case 'reputation':
+                        const rhistory = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {filter_ops: ['producer_reward']});
+                        account.reputation_history = [];
+                        rhistory.forEach(operation => {
+                            const op = operation[1].op;
+                            if (op[0] === 'account_reputation' && op[1].author === uname) {
+                                state.accounts[uname].reputation_history.push(operation);
+                            }
+                        });
+                    break
                     case 'blog':
-                      default:
-                      const blogEntries = yield call([api, api.getBlogEntriesAsync], uname, 0, 20, ['fm-'])
-                      state.accounts[uname].blog = []
+                    default:
+                        const blogEntries = yield call([api, api.getBlogEntriesAsync], uname, 0, 20, ['fm-'])
+                        state.accounts[uname].blog = []
 
-                      let pinnedPosts = getPinnedPosts(account)
-                      blogEntries.unshift(...pinnedPosts)
+                        let pinnedPosts = getPinnedPosts(account)
+                        blogEntries.unshift(...pinnedPosts)
 
                         for (let key in blogEntries) {
                             const { author, permlink } = blogEntries[key]

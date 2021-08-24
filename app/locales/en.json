@@ -40,6 +40,19 @@
     "sync_error": "Sync error. To receive new messages please refresh the page.",
     "sync_error_short": "Sync error."
   },
+  "reputation_panel_jsx": {
+    "cannot_vote_neg_rep": "You cannot upvote/downvote account reputations, because your reputation is negative",
+    "cannot_downvote_lower_rep_ACCOUNT_NAME": "You cannot downvote @%(ACCOUNT_NAME)s, because your reputation is lesser than their",
+    "confirm_title": "Account Voting",
+    "confirm_upvote_ACCOUNT_NAME": "Are you sure you want to upvote @%(ACCOUNT_NAME)s? It will be saved in their reputation history.",
+    "confirm_downvote_ACCOUNT_NAME": "Are you sure you want to downvote @%(ACCOUNT_NAME)s? It will be saved in their reputation history."
+  },
+  "reputation_history_jsx": {
+    "title": "Reputation History",
+    "upvoted": " increased your reputation by ",
+    "downvoted": " decreased your reputation by ",
+    "empty_NAME": "There are no yet operations with %(NAME)s's  reputation."
+  },
   "g": {
     "golos_fest": "Golos.id News",
     "APP_NAME": "Golos",
