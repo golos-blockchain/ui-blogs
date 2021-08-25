@@ -957,6 +957,7 @@
     "users_permissions": "Разрешения %(name)s",
     "recent_replies_to_users_posts": "Недавние ответы к постам пользователя %(name)s",
     "followers": "Подписчики",
+    "followed": "Подписки",
     "this_is_users_reputations_score_it_is_based_on_history_of_votes": "Это количество очков репутации пользователя.\nПодсчитывается на основе полученных голосов и используется, чтобы скрыть некачественное содержимое.",
     "follower_count": {
       "zero": "0 подписчиков",

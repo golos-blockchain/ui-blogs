@@ -260,10 +260,12 @@ export function* fetchState(location_change_action) {
 
             yield put(GlobalReducer.actions.receiveState(state))
 
-            // Filtering comments from authors with a negative reputation
-            const replies =  yield call([api, api.getAllContentRepliesAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT, 0, [], [], true)
-            // const replies =  yield call([api, api.getAllContentRepliesAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT)
-            
+            if ($STM_Config.hide_comment_neg_rep) {
+                const replies =  yield call([api, api.getAllContentRepliesAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT, 0, [], [], true)
+            } else {
+                const replies =  yield call([api, api.getAllContentRepliesAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT)
+            }
+
             for (let key in replies) {
                 let reply = replies[key]
                 const link = `${reply.author}/${reply.permlink}`
