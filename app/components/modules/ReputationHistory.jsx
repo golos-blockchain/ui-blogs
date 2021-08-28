@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import golos from 'golos-classic-js';
 import tt from 'counterpart';
+import Icon from 'app/components/elements/Icon';
 import Callout from 'app/components/elements/Callout';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Tooltip from 'app/components/elements/Tooltip';
