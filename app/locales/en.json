@@ -48,6 +48,7 @@
     "confirm_downvote_ACCOUNT_NAME": "Are you sure you want to downvote @%(ACCOUNT_NAME)s? It will be saved in their reputation history."
   },
   "reputation_history_jsx": {
+    "top_reputation": "Rating of users by reputation",
     "title": "Reputation History",
     "upvoted": " increased your reputation by ",
     "downvoted": " decreased your reputation by ",
@@ -837,7 +838,7 @@
     "vesting_emission_per_day": "~ %(EMISSION_STAKE)s daily",
     "vesting_emission_per_day_title": "Amount that, depending on the Golos Power, is transferred daily to the CLAIM balance\n(your share of the blockchain token issue per day)",
     "the_estimated_value_is_based_on_an_average_value_of_steem_in_US_dollars": "The estimated cost is calculated on an 7-day average cost of %(LIQUID_TOKEN)s.",
-    "VESTING_TOKEN_is_non_transferrable_and_requires_convert_back_to_LIQUID_TOKEN": "%(VESTING_TOKEN2)s is non-transferrable and requires 2 months (8 payments) to convert back to %(LIQUID_TOKEN)s.",
+    "VESTING_TOKEN_is_non_transferrable_and_requires_convert_back_to_LIQUID_TOKEN": "%(VESTING_TOKEN2)s is non-transferrable and requires 1 month (4 payments) to convert back to %(LIQUID_TOKEN)s.",
     "converted_VESTING_TOKEN_can_be_sent_to_yourself_but_can_not_transfer_again": "Converted %(VESTING_TOKEN)s can be sent to yourself or someone else but can not transfer again without converting back to %(LIQUID_TOKEN)s.",
     "profile": "Profile",
     "send_to_account": "Send to account",

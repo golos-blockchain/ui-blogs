@@ -1,4 +1,4 @@
-name: beta golos-ui
+name: beta
 
 on:
   push:

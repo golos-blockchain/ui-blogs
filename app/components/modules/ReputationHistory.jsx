@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import golos from 'golos-classic-js';
 import tt from 'counterpart';
+import Icon from 'app/components/elements/Icon';
 import Callout from 'app/components/elements/Callout';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Tooltip from 'app/components/elements/Tooltip';
@@ -63,6 +64,7 @@ class ReputationHistory extends Component {
 
         return (
             <div>
+                <span style={{float: 'right', fontSize: '85%'}}><a target="_blank" rel="noopener noreferrer" href="https://dpos.space/golos/top/reputation"><Icon name="hf/hf18" size="2x" /> {tt('reputation_history_jsx.top_reputation')}</a></span>
                 <h4 className='uppercase'>{tt('reputation_history_jsx.title')}</h4>
                 {history.length ? (<table>
                     <tbody>
