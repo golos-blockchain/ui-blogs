@@ -24,6 +24,7 @@ class WitnessProps extends React.Component {
         [
             ['maximum_block_size', 'raw'],
             ['custom_ops_bandwidth_multiplier', 'raw'],
+            ['negrep_bandwidth_power'],
             ['min_invite_balance', 'golos'],
         ],
         [
@@ -57,14 +58,18 @@ class WitnessProps extends React.Component {
             ['curation_reward_curve', ['bounded','linear','square_root']],
         ],
         [
-            ['auction_window_size', 'raw'],
-            ['allow_distribute_auction_reward', 'bbool'],
-            ['allow_return_auction_reward_to_fund', 'bbool'],
+            ['auction_window_size', 'dropped', 0],
+            ['allow_distribute_auction_reward', 'dropped', 'true'],
+            ['allow_return_auction_reward_to_fund', 'dropped', 'true'],
         ],
         [
-            ['worker_reward_percent'],
-            ['witness_reward_percent'],
-            ['vesting_reward_percent'],
+            ['worker_reward_percent', 'dropped', 0],
+            ['witness_reward_percent', 'dropped', 0],
+            ['vesting_reward_percent', 'dropped', 0],
+        ],
+        [
+            ['worker_emission_percent'],
+            ['vesting_of_remain_percent'],
         ],
         [
             ['worker_request_creation_fee', 'gbg'],
@@ -113,17 +118,19 @@ class WitnessProps extends React.Component {
 
         let props = {};
         for (let prop of this.wp_flat) {
-            if (prop.length === 1 || prop[1] == "raw" || prop[1] == "time") {
+            if (prop.length === 1 || prop[1] == 'raw' || prop[1] == 'time') {
                 props[prop[0]] = parseInt(this.state[prop[0]].value);
+            } else if (prop[1] === 'dropped') {
+                props[prop[0]] = prop[2];
             } else {
                 props[prop[0]] = this.state[prop[0]].value;
             }
         }
-        if (props.curation_reward_curve == "bounded") {
+        if (props.curation_reward_curve == 'bounded') {
             props.curation_reward_curve = 0;
-        } else if (props.curation_reward_curve == "linear") {
+        } else if (props.curation_reward_curve == 'linear') {
             props.curation_reward_curve = 1;
-        } else if (props.curation_reward_curve == "square_root") {
+        } else if (props.curation_reward_curve == 'square_root') {
             props.curation_reward_curve = 2;
         }
         props.create_account_delegation_time = parseInt(props.create_account_delegation_time);
@@ -186,41 +193,43 @@ class WitnessProps extends React.Component {
                 const field = this.state[f[0]];
 
                 let input = null;
-                if (f[1] == 'bool') {
-                    input = <input type="checkbox" {...field.props} />
-                } else if (f[1] == 'raw') {
-                    input = <input type="text" {...field.props} />
+                if (f[1] === 'bool') {
+                    input = <input type='checkbox' {...field.props} />
+                } else if (f[1] === 'raw') {
+                    input = <input type='text' {...field.props} />
+                } else if (f[1] === 'dropped') {
+                    return null;
                 } else {
-                    input = <input type="text" {...field.props} />
+                    input = <input type='text' {...field.props} />
                 }
 
                 return (<td key={f[0]}>
                     <label title={tt('g.'+f[0])}>{f[0]}
                     {input}</label>
-                    <div className="error">{field.touched && field.error}</div>
+                    <div className='error'>{field.touched && field.error}</div>
                 </td>);
             });
             return (<tr>{fields}</tr>);
         });
 
-        return (<div className="UserWallet">
+        return (<div className='UserWallet'>
             <WitnessSettings 
                 account={this.props.account} />
-            <form onSubmit={this.handleSubmitForm} className="small-12 medium-8 large-6 columns">
+            <form onSubmit={this.handleSubmitForm} className='small-12 medium-8 large-6 columns'>
                     <div>
-                    <h3 className="inline">Параметры сети</h3>&nbsp;&nbsp;
+                    <h3 className='inline'>Параметры сети</h3>&nbsp;&nbsp;
 
-                    {state.loading && <span><LoadingIndicator type="circle" /><br /></span>}
-                    {!state.loading && <input type="submit" className="button" value="Сохранить" disabled={disabled} />}
+                    {state.loading && <span><LoadingIndicator type='circle' /><br /></span>}
+                    {!state.loading && <input type='submit' className='button' value='Сохранить' disabled={disabled} />}
                     {' '}{
                             state.errorMessage
-                                ? <small className="error">{state.errorMessage}</small>
+                                ? <small className='error'>{state.errorMessage}</small>
                                 : state.successMessage
-                                ? <small className="success uppercase">{state.successMessage}</small>
+                                ? <small className='success uppercase'>{state.successMessage}</small>
                                 : null
                         }
                     </div>
-                    <table className="WitnessPropsTable">
+                    <table className='WitnessPropsTable'>
                         {groups}
                     </table>
 
