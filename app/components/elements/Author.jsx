@@ -19,7 +19,7 @@ class Author extends React.Component {
         author: string.isRequired,
         follow: bool,
         mute: bool,
-        authorRepLog10: number,
+        authorRepFn: number,
         donateUrl: string,
     };
     static defaultProps = {
@@ -52,11 +52,11 @@ class Author extends React.Component {
 
     shouldComponentUpdate = shouldComponentUpdate(this, 'Author');
     render() {
-        const {author, follow, mute, authorRepLog10, donateUrl} = this.props; // html
+        const {author, follow, mute, authorRepFn, donateUrl} = this.props; // html
         const {username} = this.props; // redux
 
         const author_link = <span className="author" itemProp="author" itemScope itemType="http://schema.org/Person">
-            <Link to={'/@' + author}><strong>{author}</strong></Link> <Reputation value={authorRepLog10} />
+            <Link to={'/@' + author}><strong>{author}</strong></Link> <Reputation value={authorRepFn} />
         </span>;
 
         if(!(follow || mute) || username === author)
@@ -100,7 +100,7 @@ class Author extends React.Component {
                         <Icon name="dropdown-arrow" />
                     </span>
                 </LinkWithDropdown>
-                <Reputation value={authorRepLog10} />
+                <Reputation value={authorRepFn} />
                 <a href={`/msgs/@${author}`} target='_blank' title={tt('g.write_message_long')} className='Author__write'>
                     <Icon name="new/envelope" />
                 </a>
@@ -112,11 +112,11 @@ class Author extends React.Component {
 import {connect} from 'react-redux'
 export default connect(
     (state, ownProps) => {
-        const {author, follow, mute, authorRepLog10} = ownProps;
+        const {author, follow, mute, authorRepFn} = ownProps;
         const username = state.user.getIn(['current', 'username']);
         const account = state.global.getIn(['accounts', author]);
         return {
-            author, follow, mute, authorRepLog10,
+            author, follow, mute, authorRepFn,
             username,
             account,
         }

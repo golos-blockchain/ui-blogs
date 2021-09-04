@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const authorNameAndRep = (author, authorRepLog10) => <span>
+export const authorNameAndRep = (author, authorRepFn) => <span>
     <strong>{author}</strong>
-    {authorRepLog10 != null && <span style={{fontWeight: 'normal'}}> ({authorRepLog10})</span>}
+    {authorRepFn != null && <span style={{fontWeight: 'normal'}}> ({authorRepFn})</span>}
 </span>

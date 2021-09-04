@@ -82,5 +82,7 @@
     "fm-prizmtalk": {"domain": "prizmtalk.com"},
     "fm-graphenetalks": {"domain": "forum.gph.ai"},
     "fm-kostroma": {"domain": "kostromaforum.ru"}
-  }
+  },
+  "repFn":"gameRep",
+  "gameRepConst": "860000000000"
 }
