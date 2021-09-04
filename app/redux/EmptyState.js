@@ -29,7 +29,7 @@ export const emptyContent = {
     active_votes: [],
     replies: [],
     stats: {
-        authorRepLog10: 86,
+        authorRepFn: 86,
         gray: false,
         hasPendingPayout: false,
         hasReplies: false,

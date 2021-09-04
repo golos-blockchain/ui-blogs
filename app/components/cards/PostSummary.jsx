@@ -111,7 +111,7 @@ class PostSummary extends React.Component {
                          </div>
         }
 
-        const {gray, pictures, authorRepLog10, flagWeight, isNsfw} = content.get('stats', Map()).toJS()
+        const {gray, pictures, authorRepFn, flagWeight, isNsfw} = content.get('stats', Map()).toJS()
         const p = extractContent(immutableAccessor, content);
         const nsfwTags = ['nsfw', 'ru--mat', '18+']
         let nsfwTitle = nsfwTags[0]
@@ -187,7 +187,7 @@ class PostSummary extends React.Component {
             <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum)}><TimeAgoWrapper date={is_forum ? p.active : p.created} className="updated" /></a>
             {' '}
             {blockEye && <MuteAuthorInNew author={p.author} />}
-            <Author author={p.author} authorRepLog10={authorRepLog10} follow={false} mute={false} />
+            <Author author={p.author} authorRepFn={authorRepFn} follow={false} mute={false} />
             {} {tt('g.in')} <TagList post={p} single />
         </span>
 

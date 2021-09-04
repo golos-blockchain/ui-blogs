@@ -1,6 +1,6 @@
 import assert from 'assert';
 import constants from 'app/redux/constants';
-import {parsePayoutAmount, repLog10} from 'app/utils/ParsersAndFormatters';
+import {parsePayoutAmount, repFn} from 'app/utils/ParsersAndFormatters';
 import {Long} from 'bytebuffer';
 import {VEST_TICKER, LIQUID_TICKER} from 'app/client_config'
 import {Map, Seq, fromJS} from 'immutable';
@@ -107,10 +107,10 @@ export function contentStats(content) {
 
     const hasPositiveRshares = Long.fromString(String(content.get('net_rshares'))).gt(Long.ZERO)
     const allowDelete = !hasPositiveRshares && content.get('children') === 0
-    const authorRepLog10 = repLog10(content.get('author_reputation'))
+    const authorRepFn = repFn(content.get('author_reputation'))
 
-    const gray = authorRepLog10 < 0 || (authorRepLog10 < 70 && meetsGrayThreshold) || meetsGrayThreshold2
-    const hide = authorRepLog10 < 0 || meetsHideThreshold
+    const gray = authorRepFn < 0 || (authorRepFn < 70 && meetsGrayThreshold) || meetsGrayThreshold2
+    const hide = authorRepFn < 0 || meetsHideThreshold
     const pictures = !gray
 
     // Combine tags+category to check nsfw status
@@ -136,7 +136,7 @@ export function contentStats(content) {
         hide,
         gray,
         pictures,
-        authorRepLog10,
+        authorRepFn,
         allowDelete,
         isNsfw,
         flagWeight,

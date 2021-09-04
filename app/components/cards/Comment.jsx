@@ -130,7 +130,7 @@ class CommentImpl extends PureComponent {
             comment.stats = {};
         }
 
-        const { authorRepLog10, pictures, gray } = comment.stats;
+        const { authorRepFn, pictures, gray } = comment.stats;
         const { json_metadata } = comment;
         const {
             depth,
@@ -268,7 +268,7 @@ class CommentImpl extends PureComponent {
                             </div>
                             <Author
                                 author={comment.author}
-                                authorRepLog10={authorRepLog10}
+                                authorRepFn={authorRepFn}
                             />
                         </span>
                         &nbsp; &middot; &nbsp;

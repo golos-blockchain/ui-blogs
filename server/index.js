@@ -29,6 +29,8 @@ global.$STM_Config = {
     notify_service: config.get('notify_service'),
     forums: config.get('forums'),
     ui_version: version || '1.0-unknown',
+    repFn: config.get('repFn') || 'repLog10',
+    gameRepConst: config.get('gameRepConst') || '860000000000',
 };
 
 const WebpackIsomorphicTools = require('webpack-isomorphic-tools');

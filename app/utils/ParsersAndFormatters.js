@@ -73,7 +73,7 @@ function log10(str) {
     return n + (log - parseInt(log));
 }
 
-export const repLog10 = rep2 => {
+function repLog10(rep2) {
     if(rep2 == null) return rep2
     let rep = String(rep2)
     const neg = rep.charAt(0) === '-'
@@ -87,6 +87,18 @@ export const repLog10 = rep2 => {
     // base-line 0 to darken and < 0 to auto hide (grep rephide)
     out = parseInt(out)
     return out
+}
+
+function gameRep(exp) {
+  let sign = Math.sign(exp);
+  return Math.floor(sign * (Math.sqrt(4 * (Math.abs(exp) / parseInt($STM_Config.gameRepConst))) / 2));
+}
+
+export function repFn(rep) {
+  switch($STM_Config.repFn) {
+    case "gameRep": return gameRep(rep);
+  }
+  return repLog10(rep);
 }
 
 export function formatAmount(amount){

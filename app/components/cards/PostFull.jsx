@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import tt from 'counterpart';
 import user from 'app/redux/User';
 import transaction from 'app/redux/Transaction';
-import { repLog10, parsePayoutAmount } from 'app/utils/ParsersAndFormatters';
+import { repFn, parsePayoutAmount } from 'app/utils/ParsersAndFormatters';
 import extractContent from 'app/utils/ExtractContent';
 import { immutableAccessor, objAccessor } from 'app/utils/Accessors';
 import LEGALList from 'app/utils/LEGALList';
@@ -28,13 +28,13 @@ import Confetti from 'react-dom-confetti';
 import PostSummaryThumb from 'app/components/elements/PostSummaryThumb';
 import { APP_ICON, SEO_TITLE, LIQUID_TICKER, CONFETTI_CONFIG, CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config';
 
-function TimeAuthorCategory({ content, authorRepLog10, showTags }) {
+function TimeAuthorCategory({ content, authorRepFn, showTags }) {
     return (
         <span className="PostFull__time_author_category vcard">
             <Icon name="clock" className="space-right" />
             <TimeAgoWrapper date={content.created} className="updated" />
             {' '}
-            <Author author={content.author} authorRepLog10={authorRepLog10} donateUrl={content.url} />
+            <Author author={content.author} authorRepFn={authorRepFn} donateUrl={content.url} />
             {showTags && (
                 <span>
                     {' '}
@@ -45,7 +45,7 @@ function TimeAuthorCategory({ content, authorRepLog10, showTags }) {
     );
 }
 
-function TimeAuthorCategoryLarge({ content, authorRepLog10 }) {
+function TimeAuthorCategoryLarge({ content, authorRepFn }) {
     return (
         <span className="PostFull__time_author_category_large vcard">
             <TimeAgoWrapper
@@ -56,7 +56,7 @@ function TimeAuthorCategoryLarge({ content, authorRepLog10 }) {
             <div className="right-side">
                 <Author
                     author={content.author}
-                    authorRepLog10={authorRepLog10}
+                    authorRepFn={authorRepFn}
                     donateUrl={content.url}
                 />
                 <span>
@@ -260,7 +260,7 @@ class PostFull extends React.Component {
             desc: p.desc,
         };
 
-        const authorRepLog10 = repLog10(content.author_reputation);
+        const authorRepFn = repFn(content.author_reputation);
 
         let isMobile = false;
         if (process.env.BROWSER) {
@@ -304,9 +304,9 @@ class PostFull extends React.Component {
                           postContent,
                           content,
                           jsonMetadata,
-                          authorRepLog10
+                          authorRepFn
                       )}
-                {this._renderFooter(postContent, content, link, authorRepLog10)}
+                {this._renderFooter(postContent, content, link, authorRepFn)}
                 {(username && username !== author)
                     ? (<button
                         key="b2"
@@ -389,7 +389,7 @@ class PostFull extends React.Component {
         )
     }
 
-    _renderContent(postContent, content, jsonMetadata, authorRepLog10) {
+    _renderContent(postContent, content, jsonMetadata, authorRepFn) {
         const { username, post } = this.props;
         const { author, permlink, category } = content;
 
@@ -460,7 +460,7 @@ class PostFull extends React.Component {
                     {postHeader}
                     <TimeAuthorCategoryLarge
                         content={content}
-                        authorRepLog10={authorRepLog10}
+                        authorRepFn={authorRepFn}
                     />
                 </div>
                 <div className="PostFull__body entry-content">
@@ -499,7 +499,7 @@ class PostFull extends React.Component {
         return main;
     }
 
-    _renderFooter(postContent, content, link, authorRepLog10) {
+    _renderFooter(postContent, content, link, authorRepFn) {
         const { username, post, ignoring } = this.props;
         const { showReply, showEdit } = this.state;
         const { author, permlink } = content;
@@ -521,7 +521,7 @@ class PostFull extends React.Component {
                 <div className="column">
                     <TimeAuthorCategory
                         content={content}
-                        authorRepLog10={authorRepLog10}
+                        authorRepFn={authorRepFn}
                     />
                     <Voting post={post} />
                 </div>

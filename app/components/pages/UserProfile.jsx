@@ -25,7 +25,7 @@ import Follow from 'app/components/elements/Follow';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import PostsList from 'app/components/cards/PostsList';
 import {isFetchingOrRecentlyUpdated} from 'app/utils/StateFunctions';
-import {repLog10} from 'app/utils/ParsersAndFormatters';
+import {repFn} from 'app/utils/ParsersAndFormatters';
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
 import Tooltip from 'app/components/elements/Tooltip';
 import { LinkWithDropdown } from 'react-foundation-components/lib/global/dropdown';
@@ -156,7 +156,7 @@ export default class UserProfile extends React.Component {
             }
         }
 
-        const rep = repLog10(account.reputation);
+        const rep = repFn(account.reputation);
 
         const isMyAccount = username === account.name
         let tab_content = null;
