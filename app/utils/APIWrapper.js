@@ -1,4 +1,4 @@
-import { api, config } from 'golos-classic-js'
+import { api, config } from 'golos-lib-js'
 import { PUBLIC_API } from 'app/client_config'
 
 export function getDynamicGlobalProperties() {

@@ -7,7 +7,7 @@ import Memo from 'app/components/elements/Memo'
 import {numberWithCommas, vestsToSp} from 'app/utils/StateFunctions'
 import tt from 'counterpart';
 import { VEST_TICKER } from 'app/client_config';
-import {PrivateKey} from 'golos-classic-js/lib/auth/ecc';
+import {PrivateKey} from 'golos-lib-js/lib/auth/ecc';
 
 class TransferHistoryRow extends React.Component {
 

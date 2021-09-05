@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import {connect} from 'react-redux';
 import { browserHistory } from 'react-router';
-import golos from 'golos-classic-js';
+import golos from 'golos-lib-js';
 import tt from 'counterpart';
 import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';

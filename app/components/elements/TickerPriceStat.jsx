@@ -1,6 +1,6 @@
 import React from 'react';
 import tt from 'counterpart';
-import { Asset } from 'golos-classic-js/lib/utils';
+import { Asset } from 'golos-lib-js/lib/utils';
 
 export default class TickerPriceStat extends React.Component {
 

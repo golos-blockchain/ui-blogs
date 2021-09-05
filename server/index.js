@@ -1,5 +1,5 @@
 import config from 'config';
-import * as golos from 'golos-classic-js';
+import * as golos from 'golos-lib-js';
 const version = require('./version');
 
 delete process.env.BROWSER;

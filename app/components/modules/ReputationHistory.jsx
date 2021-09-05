@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
-import golos from 'golos-classic-js';
+import golos from 'golos-lib-js';
 import tt from 'counterpart';
 import Icon from 'app/components/elements/Icon';
 import Callout from 'app/components/elements/Callout';

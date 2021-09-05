@@ -11,7 +11,7 @@ import {cleanReduxInput} from 'app/utils/ReduxForms'
 import {formatAmount} from 'app/utils/ParsersAndFormatters';
 import tt from 'counterpart';
 import { DEBT_TICKER, LIQUID_TOKEN, LIQUID_TICKER } from 'app/client_config';
-import { Asset } from 'golos-classic-js/lib/utils';
+import { Asset } from 'golos-lib-js/lib/utils';
 
 function floatToAsset(value, from) {
     value = parseFloat(value);
@@ -24,9 +24,7 @@ function floatToAsset(value, from) {
 
 function calcFee(value, cprops) {
     const percent = cprops ? cprops.toJS().convert_fee_percent : 0;
-    const fee = Asset(Math.trunc(value.amount
-        * parseInt(percent)
-        / 10000), 3, 'GOLOS');
+    const fee = value.mul(parseInt(percent)).div(10000);
     return fee;
 }
 
@@ -78,9 +76,9 @@ class ConvertToSteem extends React.Component {
             value.amount = value.amount - fee.amount;
         }
         if (value.symbol === base.symbol) {
-            toAmount = value.amount * quote.amount / base.amount;
+            toAmount = value.mul(quote).div(base);
         } else {
-            toAmount = value.amount * base.amount / quote.amount;
+            toAmount = value.mul(base).div(quote);
         }
         toAmount = Asset(toAmount, 3, to);
         this.setState({ toAmount, fee, });

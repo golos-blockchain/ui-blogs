@@ -8,8 +8,8 @@ import {notifyApiLogin, notifyApiLogout} from 'app/utils/NotifyApiClient';
 import {serverApiLogin, serverApiLogout} from 'app/utils/ServerApiClient';
 import {serverApiRecordEvent} from 'app/utils/ServerApiClient';
 import {loadFollows} from 'app/redux/FollowSaga'
-import {PrivateKey, Signature, hash} from 'golos-classic-js/lib/auth/ecc'
-import {api} from 'golos-classic-js'
+import {PrivateKey, Signature, hash} from 'golos-lib-js/lib/auth/ecc'
+import {api} from 'golos-lib-js'
 import g from 'app/redux/GlobalReducer'
 import React from 'react';
 import PushNotificationSaga from 'app/redux/services/PushNotificationSaga';

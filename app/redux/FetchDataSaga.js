@@ -7,7 +7,7 @@ import constants from './constants';
 import { reveseTag } from 'app/utils/tags';
 import { CATEGORIES, DEBT_TOKEN_SHORT, LIQUID_TICKER, DEFAULT_CURRENCY, IGNORE_TAGS, PUBLIC_API, SELECT_TAGS_KEY } from 'app/client_config';
 import cookie from "react-cookie";
-import {config, api} from 'golos-classic-js';
+import {config, api} from 'golos-lib-js';
 
 export function* fetchDataWatches () {
     yield fork(watchLocationChange);

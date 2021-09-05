@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import tt from 'counterpart';
-import { api } from 'golos-classic-js';
+import { api } from 'golos-lib-js';
 import Icon from 'app/components/elements/Icon';
 import { SUPPORT_EMAIL } from 'app/client_config';
 

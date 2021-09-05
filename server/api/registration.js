@@ -3,8 +3,8 @@ import koa_body from 'koa-body';
 import config from 'config';
 import Tarantool from 'db/tarantool';
 import { checkCSRF, getRemoteIp, rateLimitReq } from 'server/utils/misc';
-import { hash } from 'golos-classic-js/lib/auth/ecc';
-import { api } from 'golos-classic-js';
+import { hash } from 'golos-lib-js/lib/auth/ecc';
+import { api } from 'golos-lib-js';
 import secureRandom from 'secure-random';
 import gmailSend from 'gmail-send'
 import passport from 'koa-passport';

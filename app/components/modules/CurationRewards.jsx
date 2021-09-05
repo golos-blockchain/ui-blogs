@@ -8,7 +8,7 @@ import tt from 'counterpart';
 import Callout from 'app/components/elements/Callout';
 import Icon from 'app/components/elements/Icon';
 import { LIQUID_TICKER, VEST_TICKER } from 'app/client_config';
-import { Asset } from 'golos-classic-js/lib/utils';
+import { Asset } from 'golos-lib-js/lib/utils';
 
 class CurationRewards extends React.Component {
     state = { historyIndex: 0 }
@@ -39,9 +39,9 @@ class CurationRewards extends React.Component {
         const vesting_steem = this.vestsToSteem(account.vesting_shares, gprops);
         const received_vesting_shares = this.vestsToSteem(account.received_vesting_shares, gprops);
         const delegated_vesting_shares = this.vestsToSteem(account.delegated_vesting_shares, gprops);
-        return Asset(Math.trunc(vesting_steem)
-            + Math.trunc(received_vesting_shares)
-            - Math.trunc(delegated_vesting_shares), 3, 'GOLOS');
+        return Asset(vesting_steem
+            + received_vesting_shares
+            - delegated_vesting_shares, 3, 'GOLOS');
     }
 
     render() {

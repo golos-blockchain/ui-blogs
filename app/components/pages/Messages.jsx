@@ -1,5 +1,5 @@
 import React from 'react';
-import golos from 'golos-classic-js';
+import golos from 'golos-lib-js';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { LinkWithDropdown } from 'react-foundation-components/lib/global/dropdown';

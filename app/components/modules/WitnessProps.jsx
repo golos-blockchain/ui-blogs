@@ -24,7 +24,6 @@ class WitnessProps extends React.Component {
         [
             ['maximum_block_size', 'raw'],
             ['custom_ops_bandwidth_multiplier', 'raw'],
-            ['negrep_bandwidth_power'],
             ['min_invite_balance', 'golos'],
         ],
         [
@@ -51,6 +50,8 @@ class WitnessProps extends React.Component {
             ['votes_window', 'raw'],
             ['votes_per_window', 'raw'],
             ['vote_regeneration_per_day', 'raw'],
+            ['negrep_posting_window', 'raw'],
+            ['negrep_posting_per_window', 'raw'],
         ],
         [
             ['min_curation_percent'],
