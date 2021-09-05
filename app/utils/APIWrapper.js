@@ -33,8 +33,8 @@ export function getAssets(creator='', names=[], from='', limit=5000) {
     return api.getAssetsAsync(creator, names, from, limit)
 }
 
-export function getAccountHistory(account, from, limit, filter_ops) {
-    return api.getAccountHistoryAsync(account, from, limit, {filter_ops})
+export function getAccountHistory(account, from, limit, filter_ops, select_ops = undefined) {
+    return api.getAccountHistoryAsync(account, from, limit, {filter_ops, select_ops})
 }
 
 export function getRepliesByLastUpdate(startAuthor, startPermlink, limit, voteLimit) {

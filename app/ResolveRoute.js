@@ -68,6 +68,9 @@ export default function resolveRoute(path)
     if (path === '/workers') {
         return {page: 'Workers'};
     }
+    if (path === '/minused_accounts') {
+        return {page: 'MinusedAccounts'};
+    }
     if (path === '/nodes') {
         return {page: 'Nodes'};
     }

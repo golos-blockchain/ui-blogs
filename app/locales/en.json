@@ -54,6 +54,13 @@
     "downvoted": " decreased your reputation by ",
     "empty_NAME": "There are no yet operations with %(NAME)s's  reputation."
   },
+  "minused_accounts_jsx": {
+    "title": "Accounts With Negative Reputation",
+    "description": "There are accounts, whose reputation was downvoted recently.",
+    "row_text": " downvoted by ",
+    "empty": "No downvoted accounts yet.",
+    "link_title": "Downvoted Users"
+  },
   "g": {
     "golos_fest": "Golos.id News",
     "APP_NAME": "Golos",

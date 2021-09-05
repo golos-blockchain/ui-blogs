@@ -76,6 +76,7 @@ export function* fetchState(location_change_action) {
         state.prev_posts = []
         state.assets = {}
         state.worker_requests = {}
+        state.minused_accounts = {}
         state.accounts = {}
 
         let accounts = new Set()
@@ -360,6 +361,15 @@ export function* fetchState(location_change_action) {
                     state.worker_requests[url].myVote = (myVote && myVote.voter == voter) ? myVote : null
                 }
             }
+        } else if (parts[0] === 'minused_accounts') {
+            const mhistory = yield call([api, api.getAccountHistoryAsync], 'null', -1, 1000, {select_ops: ['minus_reputation']});
+            state.minused_accounts = [];
+            mhistory.forEach(operation => {
+                const op = operation[1].op;
+                if (op[0] === 'minus_reputation' && op[1].author !== 'null') {
+                    state.minused_accounts.push(operation);
+                }
+            });
         } else if (Object.keys(PUBLIC_API).includes(parts[0])) {
 
             yield call(fetchData, {payload: { order: parts[0], category : tag }})
