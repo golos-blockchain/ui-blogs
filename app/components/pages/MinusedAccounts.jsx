@@ -27,7 +27,6 @@ class MinusedAccounts extends React.Component {
         let rep = golos.formatter.reputation(op[1].reputation_after, true);
         rep -= golos.formatter.reputation(op[1].reputation_before, true);
         let repFixed = parseFloat(rep.toFixed(3));
-        repFixed = Math.abs(repFixed);
         if (repFixed === 0) {
             repFixed = '-0.001';
         }
@@ -40,7 +39,7 @@ class MinusedAccounts extends React.Component {
                 </Tooltip>
             </td>
             <td>
-                <Link to={`/@${author}`}>{author}</Link>
+                <Link to={`/@${author}/reputation`}>{author}</Link>
                 {text}
                 <Link to={`/@${voter}`}>{voter}</Link>
             </td>

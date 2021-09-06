@@ -45,7 +45,7 @@
     "foundation-sites": "^6.4.3",
     "git-rev-sync": "^1.12.0",
     "gmail-send": "^1.8.10",
-    "golos-lib-js": "file:../libs/golos-lib-js",
+    "golos-lib-js": "^0.9.1",
     "history": "^2.0.0-rc2",
     "immutable": "^3.8.2",
     "imports-loader": "0.7.1",

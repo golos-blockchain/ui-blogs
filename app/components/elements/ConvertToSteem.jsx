@@ -80,7 +80,7 @@ class ConvertToSteem extends React.Component {
         } else {
             toAmount = value.mul(base).div(quote);
         }
-        toAmount = Asset(toAmount, 3, to);
+        toAmount.symbol = to;
         this.setState({ toAmount, fee, });
     };
 

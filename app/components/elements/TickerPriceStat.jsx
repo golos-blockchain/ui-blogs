@@ -18,7 +18,7 @@ export default class TickerPriceStat extends React.Component {
                 if (trade.date < now) break;
                 open = trade.price;
                 const asset2 = trade.asset2 * Math.pow(10, precision);
-                asset2_volume.amount += asset2;
+                asset2_volume = asset2_volume.plus(asset2);
             }
         }
 
