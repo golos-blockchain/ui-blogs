@@ -262,10 +262,11 @@ class PostsIndex extends React.Component {
                         <span className="strike"><a target="_blank" href="/@lex/zapusk-foruma-golostalk-com">{tt('g.more_hint')}</a></span>
                     </p>
 
-                    <iframe data-aa='1148471' src='//ad.a-ads.com/1148471?size=240x400' scrolling='no'
+                    {$STM_Config.show_adv_banners ?
+                    (<iframe data-aa='1148471' src='//ad.a-ads.com/1148471?size=240x400' scrolling='no'
                     style={{width:'240px', height:'400px', border:'0px', padding:'0', overflow:'hidden'}}
-                    allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe>
-                      
+                    allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe>) : null}
+
                     </div>
                 </div>
             </div>

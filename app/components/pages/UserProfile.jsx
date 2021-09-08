@@ -248,7 +248,7 @@ export default class UserProfile extends React.Component {
         else if( section === 'followed' ) {
             if (following && following.has('blog_result')) {
                 tab_content = <UserList
-                    title="Followed"
+                    title={tt('user_profile.followed')}
                     account={account}
                     users={following.get('blog_result')}
                     />
@@ -415,8 +415,6 @@ export default class UserProfile extends React.Component {
                     <Link target="_blank" className="UserProfile__menu-item" to={`/msgs`}>
                         {tt('g.messages')} {isMyAccount && <NotifiCounter fields="message" />}
                     </Link>
-                    <Link className="UserProfile__menu-item" to={`/search/@${accountname}`}>{tt('g.search')}
-                    </Link>
                     <LinkWithDropdown
                         closeOnClickOutside
                         dropdownPosition="bottom"
@@ -443,6 +441,7 @@ export default class UserProfile extends React.Component {
                             <Link className="UserProfile__menu-item" to={`/@${accountname}/settings`} activeClassName="active">{tt('g.settings')}</Link>
                             : null
                         }
+                        <Link target="_blank" className="UserProfile__menu-item" to={`/search/@${accountname}`}>{tt('g.search')}</Link>
                     </div>
                 </div>
             </div>

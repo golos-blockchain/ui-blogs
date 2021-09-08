@@ -25,6 +25,7 @@ class WitnessProps extends React.Component {
             ['maximum_block_size', 'raw'],
             ['custom_ops_bandwidth_multiplier', 'raw'],
             ['min_invite_balance', 'golos'],
+            ['invite_transfer_interval_sec', 'time'],
         ],
         [
             ['sbd_interest_rate'],
@@ -67,6 +68,7 @@ class WitnessProps extends React.Component {
             ['vesting_reward_percent'],
         ],
         [
+            ['asset_creation_fee', 'gbg'],
             ['worker_request_creation_fee', 'gbg'],
             ['worker_request_approve_min_percent'],
         ],
@@ -75,10 +77,6 @@ class WitnessProps extends React.Component {
             ['witness_idleness_time', 'time'],
             ['account_idleness_time', 'time'],
             ['claim_idleness_time', 'time'],
-        ],
-        [
-            ['asset_creation_fee', 'gbg'],
-            ['invite_transfer_interval_sec', 'time'],
         ],
     ];
 

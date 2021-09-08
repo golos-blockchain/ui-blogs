@@ -199,18 +199,20 @@ class Voting extends React.Component {
             post_obj.get('pending_author_payout_in_golos');
         reward = Asset(reward);
 
+        const non_payout = post_obj.get('max_accepted_payout') === '0.000 GBG';
+
         let donateTitle = undefined;
         if (donateItems.length)
-            donateTitle = tt('g.pool_payout_short') + reward;
+            donateTitle = non_payout ? tt('voting_jsx.payouts_declined') : tt('g.pool_payout_short') + reward;
 
         let donateSum = Asset(post_obj.get('donates'))
         if (reward.amount !== 0) 
             donateSum = Asset(donateSum.amount + reward.amount, 3, 'GOLOS');
 
         const donatesEl = <DropdownMenu className="Voting__donates_list" el="div" items={donateItems} title={donateTitle}>
-            <span title={tt('g.pool_payout_short') + reward}>
-                <Icon size="0_95x" name="tips" />&nbsp;{donateSum.toString()}
-                {donateItems.length > 0 && <Icon name="dropdown-arrow" />}
+            <Icon size="0_95x" name="tips" />&nbsp;
+            <span style={non_payout ? {'text-decoration': 'line-through'} : {}} title={non_payout ? tt('voting_jsx.payouts_declined') : tt('g.pool_payout_short') + reward}>
+                {donateSum.toString()}{donateItems.length > 0 && <Icon name="dropdown-arrow" />}
             </span>
         </DropdownMenu>;
 
