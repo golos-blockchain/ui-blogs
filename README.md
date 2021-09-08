@@ -38,34 +38,6 @@ yarn start
 
 You now have your development front end running at localhost:8080, connected to the main public golos blockchain. You don't need to run ```golos``` locally, by default you will connect to ```https://api-full.golos.id```.  Use your regular account name and credentials to login -- there is no separate dev login.
 
-#### Install mysql server
-
-```bash
-sudo apt-get update
-sudo apt-get install mysql-server
-```
-
-On Ubuntu 16.04+ you may be unable to connect to mysql without root access, if
-so update the mysql root user as follows::
-
-```bash
-mysql -u root -pgolosdev -e "GRANT ALL PRIVILEGES ON *.* TO 'golosdev'@'%'; FLUSH PRIVILEGES;"
-```
-
-Now launch mysql client and create golos_dev database:
-```bash
-mysql -u root
-> CREATE DATABASE golos_dev CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-```
-
-Install `sequelize-cli` globally:
-
-```bash
-yarn global add sequelize sequelize-cli mysql2
-```
-
-Run `sequelize db:migrate` in `db/` directory.
-
 ### Production
 Generate a new crypto_key and save under server_session_secret in /config/default.json.
 

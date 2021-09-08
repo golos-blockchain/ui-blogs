@@ -512,6 +512,7 @@
     "users_permissions": "%(name)s's permissions",
     "recent_replies_to_users_posts": "Recent replies to %(name)s's posts",
     "followers": "Followers",
+    "followed": "Followed",
     "this_is_users_reputations_score_it_is_based_on_history_of_votes": "This is %(name)s's reputation score.\n\nThe reputation score is based on the history of votes received by the account, and is used to hide low quality content.",
     "follower_count": {
       "zero":  "No followers",
