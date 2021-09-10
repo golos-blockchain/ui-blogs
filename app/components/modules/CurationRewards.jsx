@@ -32,7 +32,7 @@ class CurationRewards extends React.Component {
         const totalVestingFundSteem = Asset(total_vesting_fund_steem).amount;
         const totalVestingShares = Asset(total_vesting_shares).amount;
         const vesting_shares = Asset(vestingShares).amount;
-        return totalVestingFundSteem * (vesting_shares / totalVestingShares);
+        return totalVestingFundSteem * vesting_shares / totalVestingShares;
     }
 
     effectiveVestingShares(account, gprops) {
