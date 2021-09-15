@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from 'app/components/elements/Icon';
 import ReactTooltip from 'react-tooltip'
+import { authUrl, } from 'app/utils/AuthApiClient';
 
 class Start extends React.Component {
     state = {
@@ -41,7 +42,7 @@ class Start extends React.Component {
                         </div>
                         <div className='column small-12 medium-6 large-6'>
                             <p className='landing-start-block-title-text'>Пишите, комментируйте, репостите, участвуйте в конкурсах и получайте <span data-tip='Токены, которыми вознаграждаются посты/комментарии/репосты можно перевести в любую валюту.'>вознаграждения</span>!<ReactTooltip type='light' effect="solid" /></p>
-                            <a href="/create_account" className="button">Создать аккаунт</a>
+                            <a href={authUrl("/register")} className="button">Создать аккаунт</a>
                         </div>
                     </div>
                 </div>
@@ -145,7 +146,7 @@ class Start extends React.Component {
                         </div>
                     </div>
                     <div className='landing-start-block-center column large-12 medium-12 small-12'>
-                        <a href="/create_account" className="button">Создать аккаунт</a>
+                        <a href={authUrl("/register")} className="button">Создать аккаунт</a>
                     </div>
                 </div>
                 <div className='landing-start-block'>

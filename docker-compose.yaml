@@ -13,18 +13,8 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SDC_TARANTOOL_HOSTNAME: db
       SDC_CLIENT_WEBSOCKET_URL: https://api-full.golos.id
       SDC_SERVER_WEBSOCKET_URL: https://api-full.golos.id
       SDC_MSGS_WEBSOCKET_URL: wss://api-full.golos.id/ws
       
   # other parameters in config/custom-environment-variables.json
-
-  db:
-    image: golosblockchain/web-ui:db
-    restart: always
-    build:
-      context: .
-      dockerfile: Dockerfile-db
-    volumes:
-      - ./tarantool:/var/lib/tarantool

@@ -1,23 +1,5 @@
 {
   "REST_API": "https://golos.id",
-  "grant": {
-    "vk": {
-      "key": "7729925",
-      "secret": "XDpHjeomxnZJOIwnp0SM"
-    },
-    "facebook": {
-      "key": "400946054546292",
-      "secret": "62fefc26e01cce7c56aed3e2b0c2f5bf"
-    },
-    "mailru": {
-      "key": "783069",
-      "secret": "61f78ffeb9411b6289150d46a93ee034"
-    },
-    "yandex": {
-      "key": "9e9787bd59204b95812bc7e438939616",
-      "secret": "ca10592646784980a11179cc72146344"
-    }
-  },
   "google_analytics_id": "UA-146157213-1",
   "helmet": {
     "directives": {
@@ -33,8 +15,8 @@
       "frameAncestors": "'none'"
     }
   },
-  "img_proxy_prefix": "https://images.golos.today/",
-  "img_proxy_backup_prefix": "https://steemitimages.com/",
+  "img_proxy_prefix": "https://images.golos.today",
+  "img_proxy_backup_prefix": "https://steemitimages.com",
   "hide_comment_neg_rep": false,
   "show_adv_banners": true,
   "read_only_mode": false,
@@ -42,12 +24,6 @@
     "show": false,
     "link": "/@lex/obmen-lichnymi-soobsheniyami-i-nachalo-dlya-golos-messenger",
     "title": "Обмен личными сообщениями и начало для Golos Messenger"
-  },
-  "registrar": {
-    "account": "id-demiurge",
-    "fee": "1.000 GOLOS",
-    "signing_key": "5Hv...",
-    "delegation": "33060.000000 GESTS"
   },
   "server_session_secret": "exiKdyF+IwRIXJDmtGIl4vWUz4i3eVSISpfZoeYc0s4=",
   "session_cookie_key": "gls.session",
@@ -58,23 +34,16 @@
   "ws_connection_server": "wss://api-full.golos.id/ws",
   "ws_connection_msgs": "wss://api-full.golos.id/ws",
   "chain_id": "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12",
-  "tarantool": {
-    "host": "127.0.0.1",
-    "port": "3301",
-    "username": "guest",
-    "password": ""
+  "auth_service": {
+    "host": "https://auth.golos.today"
   },
   "notify_service": {
-    "host": "https://notify.golos.today/"
+    "host": "https://notify.golos.today"
   },
   "elastic_search": {
     "url": "https://search.golos.today",
     "login": "golosclient",
     "password": "golosclient"
-  },
-  "gmail_send": {
-    "user": false,
-    "pass": false
   },
   "forums": {
     "white_list": ["fm-golostalk", "fm-prizmtalk", "fm-graphenetalks", "fm-kostroma"],

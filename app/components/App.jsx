@@ -22,6 +22,7 @@ import tt from 'counterpart';
 import PageViewsCounter from '@elements/PageViewsCounter';
 import DialogManager from 'app/components/elements/common/DialogManager';
 import { init as initAnchorHelper } from 'app/utils/anchorHelper';
+import { authUrl, } from 'app/utils/AuthApiClient';
 
 import {
     APP_ICON,
@@ -243,7 +244,7 @@ class App extends React.Component {
 
         const route = resolveRoute(location.pathname);
         const lp = false; //location.pathname === '/';
-        let miniHeader = location.pathname === '/create_account';
+        let miniHeader = false;
         const params_keys = Object.keys(params);
         const ip =
             location.pathname === '/' ||
@@ -338,7 +339,7 @@ class App extends React.Component {
                                 )}
                             </h4>
                             <br />
-                            <a className="button" href={"/create_account" + (invite ? ("?invite=" + invite) : "")}>
+                            <a className="button" href={authUrl("/register" + (invite ? ("?invite=" + invite) : ""))}>
                                 {' '}
                                 <b>{tt('navigation.sign_up')}</b>{' '}
                             </a>
@@ -416,7 +417,6 @@ export default connect(
             flash: state.offchain.get('flash'),
             new_visitor:
                 !state.user.get('current') &&
-                !state.offchain.get('user') &&
                 !state.offchain.get('account') &&
                 state.offchain.get('new_visit'),
             nightmodeEnabled: nightmodeEnabled

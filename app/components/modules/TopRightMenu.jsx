@@ -15,6 +15,7 @@ import tt from 'counterpart';
 import { LIQUID_TICKER, DEBT_TICKER } from 'app/client_config';
 import LocalizedCurrency from 'app/components/elements/LocalizedCurrency';
 import { vestsToSteem, toAsset } from 'app/utils/StateFunctions';
+import { authUrl, } from 'app/utils/AuthApiClient';
 
 const defaultNavigate = (e) => {
     if (e.metaKey || e.ctrlKey) {
@@ -104,7 +105,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     if (!loggedIn) {
         additional_menu.push(
             { link: '/login.html', onClick: showLogin, value: tt('g.login'), className: 'show-for-small-only' },
-            { link: "/create_account" + (invite ? ("?invite=" + invite) : ""), value: tt('g.sign_up'), className: 'show-for-small-only' }
+            { link: authUrl("/register" + (invite ? ("?invite=" + invite) : "")), value: tt('g.sign_up'), className: 'show-for-small-only' }
         )
     }
     additional_menu.push(
@@ -212,7 +213,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
               <a href="/login.html" onClick={showLogin} className={!vertical && 'button small violet hollow'}>{tt('g.login')}</a>
             </li>}
             {!probablyLoggedIn && <li className={scn}>
-              <a href={"/create_account" + (invite ? ("?invite=" + invite) : "")} className={!vertical && 'button small alert'}>{tt('g.sign_up')}</a>
+              <a href={authUrl("/register" + (invite ? ("?invite=" + invite) : ""))} className={!vertical && 'button small alert'}>{tt('g.sign_up')}</a>
             </li>}
             {probablyLoggedIn && <li className={lcn}>
               <LoadingIndicator type="circle" inline />

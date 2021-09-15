@@ -4,6 +4,7 @@ import {accountAuthLookup} from 'app/redux/AuthSaga'
 import user from 'app/redux/User'
 import {getAccount} from 'app/redux/SagaShared'
 import {browserHistory} from 'react-router'
+import {authApiLogin, authApiLogout} from 'app/utils/AuthApiClient';
 import {notifyApiLogin, notifyApiLogout} from 'app/utils/NotifyApiClient';
 import {serverApiLogin, serverApiLogout} from 'app/utils/ServerApiClient';
 import {serverApiRecordEvent} from 'app/utils/ServerApiClient';
@@ -309,28 +310,57 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     if (!autopost && saveLogin && !operationType)
         yield put(user.actions.saveLogin());
 
+    let alreadyAuthorized = false;
     try {
-        const res = yield notifyApiLogin(username, null);
-        if (!res.already_authorized) {
-            console.log('login_challenge', res.login_challenge);
-
-            const signatures = {};
-            const challenge = {token: res.login_challenge};
-            const bufSha = hash.sha256(JSON.stringify(challenge, null, 0));
-            const sign = (role, d) => {
-                if (!d) return;
-                const sig = Signature.signBufferSha256(bufSha, d);
-                signatures[role] = sig.toHex();
-            };
-            sign('posting', private_keys.get('posting_private'));
-            const res2 = yield notifyApiLogin(username, signatures);
-            if (res2.guid) {
-                localStorage.setItem('guid', res2.guid)
-            }
-        }
+        const res = yield notifyApiLogin(username, localStorage.getItem('X-Auth-Session'));
+        alreadyAuthorized = (res.status === 'ok');
     } catch(error) {
         // Does not need to be fatal
-        console.error('Notify Login Error', error);
+        console.error('Notify Login Checking Error', error);
+        alreadyAuthorized = null;
+    }
+    if (alreadyAuthorized === false) {
+        let authorized = false;
+        try {
+            const res = yield authApiLogin(username, null);
+            if (!res.already_authorized) {
+                console.log('login_challenge', res.login_challenge);
+
+                const signatures = {};
+                const challenge = {token: res.login_challenge};
+                const bufSha = hash.sha256(JSON.stringify(challenge, null, 0));
+                const sign = (role, d) => {
+                    if (!d) return;
+                    const sig = Signature.signBufferSha256(bufSha, d);
+                    signatures[role] = sig.toHex();
+                };
+                sign('posting', private_keys.get('posting_private'));
+                const res2 = yield authApiLogin(username, signatures);
+                if (res2.guid) {
+                    localStorage.setItem('guid', res2.guid)
+                }
+                if (res2.status === 'ok') {
+                    authorized = true;
+                } else {
+                    throw new Error(res2); 
+                }
+            }
+        } catch(error) {
+            // Does not need to be fatal
+            console.error('Auth Login Error', error);
+        }
+
+        if (authorized)
+            try {
+                const res = yield notifyApiLogin(username, localStorage.getItem('X-Auth-Session'));
+
+                if (res.status !== 'ok') {
+                    throw new Error(res); 
+                }
+            } catch(error) {
+                // Does not need to be fatal
+                console.error('Notify Login Error', error);
+            }
     }
     try {
         const offchainData = yield select(state => state.offchain)
@@ -398,6 +428,7 @@ function* logout() {
         localStorage.removeItem('autopost2')
         localStorage.removeItem('guid')
     }
+    authApiLogout();
     notifyApiLogout();
     serverApiLogout();
 }
