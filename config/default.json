@@ -1,5 +1,4 @@
 {
-  "REST_API": "https://golos.id",
   "google_analytics_id": "UA-146157213-1",
   "helmet": {
     "directives": {
