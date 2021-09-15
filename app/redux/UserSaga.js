@@ -342,7 +342,7 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
                 if (res2.status === 'ok') {
                     authorized = true;
                 } else {
-                    throw new Error(res2); 
+                    throw new Error(JSON.stringify(res2)); 
                 }
             }
         } catch(error) {
@@ -380,24 +380,26 @@ function* saveLogin_localStorage() {
         console.error('Non-browser environment, skipping localstorage')
         return
     }
-    localStorage.removeItem('autopost2')
     const [username, private_keys, login_owner_pubkey] = yield select(state => ([
         state.user.getIn(['current', 'username']),
         state.user.getIn(['current', 'private_keys']),
         state.user.getIn(['current', 'login_owner_pubkey']),
     ]))
     if (!username) {
+        localStorage.removeItem('autopost2')
         console.error('Not logged in')
         return
     }
     // Save the lowest security key
     const posting_private = private_keys.get('posting_private')
     if (!posting_private) {
+        localStorage.removeItem('autopost2')
         console.error('No posting key to save?')
         return
     }
     const account = yield select(state => state.global.getIn(['accounts', username]))
     if(!account) {
+        localStorage.removeItem('autopost2')
         console.error('Missing global.accounts[' + username + ']')
         return
     }
@@ -412,6 +414,7 @@ function* saveLogin_localStorage() {
                 throw 'Login will not be saved, posting key is the same as owner key'
         })
     } catch(e) {
+        localStorage.removeItem('autopost2')
         console.error(e)
         return
     }
