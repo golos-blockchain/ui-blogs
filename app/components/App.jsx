@@ -22,7 +22,7 @@ import tt from 'counterpart';
 import PageViewsCounter from '@elements/PageViewsCounter';
 import DialogManager from 'app/components/elements/common/DialogManager';
 import { init as initAnchorHelper } from 'app/utils/anchorHelper';
-import { authUrl, } from 'app/utils/AuthApiClient';
+import { authRegisterUrl, } from 'app/utils/AuthApiClient';
 
 import {
     APP_ICON,
@@ -339,7 +339,7 @@ class App extends React.Component {
                                 )}
                             </h4>
                             <br />
-                            <a className="button" href={authUrl("/register" + (invite ? ("?invite=" + invite) : ""))}>
+                            <a className="button" href={authRegisterUrl() + (invite ? ("?invite=" + invite) : "")}>
                                 {' '}
                                 <b>{tt('navigation.sign_up')}</b>{' '}
                             </a>

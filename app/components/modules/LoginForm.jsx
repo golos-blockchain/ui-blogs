@@ -12,7 +12,7 @@ import reactForm from 'app/utils/ReactForm'
 import tt from 'counterpart';
 import { APP_DOMAIN } from 'app/client_config';
 import { translateError } from 'app/utils/ParsersAndFormatters';
-import { authUrl, } from 'app/utils/AuthApiClient';
+import { authRegisterUrl, } from 'app/utils/AuthApiClient';
 
 class LoginForm extends Component {
 
@@ -227,7 +227,7 @@ class LoginForm extends Component {
                     {!cancelIsRegister && this.props.onCancel && !isMemo && <button type="button float-right" disabled={submitting} className="button hollow" onClick={onCancel}>
                         {tt('g.cancel')}
                     </button>}
-                    {cancelIsRegister && !isMemo && <a href={authUrl("/register")} target='_blank' type="button float-right" disabled={submitting} className="button hollow" onClick={this.checkRegisterEnabled}>
+                    {cancelIsRegister && !isMemo && <a href={authRegisterUrl()} target='_blank' type="button float-right" disabled={submitting} className="button hollow" onClick={this.checkRegisterEnabled}>
                         {tt('g.sign_up')}
                     </a>}
                 </div>

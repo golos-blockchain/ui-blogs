@@ -16,6 +16,14 @@ export const authUrl = (pathname) => {
     return new URL(pathname, $STM_Config.auth_service.host).toString();
 };
 
+export const authRegisterUrl = () => {
+    let pathname = '/register';
+    if (authAvailable() && $STM_Config.auth_service.custom_client) {
+        pathname = '/' + $STM_Config.auth_service.custom_client + pathname;
+    }
+    return authUrl(pathname);
+};
+
 function setSession(request) {
     request.headers['X-Auth-Session'] = localStorage.getItem('X-Auth-Session');
 }

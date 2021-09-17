@@ -4,7 +4,7 @@ import SvgImage from 'app/components/elements/SvgImage';
 import tt from 'counterpart';
 import { formatCoins } from 'app/utils/FormatCoins';
 import { APP_DOMAIN } from 'app/client_config';
-import { authUrl, } from 'app/utils/AuthApiClient';
+import { authRegisterUrl, } from 'app/utils/AuthApiClient';
 
 class SignUp extends React.Component {
     constructor() {
@@ -30,7 +30,7 @@ class SignUp extends React.Component {
                     <SvgImage name="golos" width="64px" height="64px" />
                 </div>
                 <div className="column large-8">
-                    <a href={authUrl("/register")} className="button secondary">Продолжить с электронной почтой</a>
+                    <a href={authRegisterUrl()} className="button secondary">Продолжить с электронной почтой</a>
                 </div>
             </div>
             <div className="row">

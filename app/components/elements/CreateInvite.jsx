@@ -13,7 +13,7 @@ import {PrivateKey} from 'golos-classic-js/lib/auth/ecc';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import Icon from 'app/components/elements/Icon';
-import { authUrl, } from 'app/utils/AuthApiClient';
+import { authRegisterUrl, } from 'app/utils/AuthApiClient';
 
 class CreateInvite extends Component {
     static propTypes = {
@@ -56,7 +56,7 @@ class CreateInvite extends Component {
     updatePrivateKey = (pk) => {
         this.state.private_key.props.onChange(pk);
 
-        const register_link = authUrl(`/register?invite=${pk}`);
+        const register_link = authRegisterUrl() + `?invite=${pk}`;
         this.state.register_link.props.onChange(register_link);
     }
 
