@@ -56,7 +56,6 @@ export async function serverRender({
     location,
     offchain,
     ErrorPage,
-    // tarantool
 }) {
     let error, redirect, renderProps;
 

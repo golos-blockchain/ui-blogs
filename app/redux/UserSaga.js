@@ -4,6 +4,7 @@ import {accountAuthLookup} from 'app/redux/AuthSaga'
 import user from 'app/redux/User'
 import {getAccount} from 'app/redux/SagaShared'
 import {browserHistory} from 'react-router'
+import {authApiLogin, authApiLogout} from 'app/utils/AuthApiClient';
 import {notifyApiLogin, notifyApiLogout} from 'app/utils/NotifyApiClient';
 import {serverApiLogin, serverApiLogout} from 'app/utils/ServerApiClient';
 import {serverApiRecordEvent} from 'app/utils/ServerApiClient';
@@ -309,28 +310,57 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     if (!autopost && saveLogin && !operationType)
         yield put(user.actions.saveLogin());
 
+    let alreadyAuthorized = false;
     try {
-        const res = yield notifyApiLogin(username, null);
-        if (!res.already_authorized) {
-            console.log('login_challenge', res.login_challenge);
-
-            const signatures = {};
-            const challenge = {token: res.login_challenge};
-            const bufSha = hash.sha256(JSON.stringify(challenge, null, 0));
-            const sign = (role, d) => {
-                if (!d) return;
-                const sig = Signature.signBufferSha256(bufSha, d);
-                signatures[role] = sig.toHex();
-            };
-            sign('posting', private_keys.get('posting_private'));
-            const res2 = yield notifyApiLogin(username, signatures);
-            if (res2.guid) {
-                localStorage.setItem('guid', res2.guid)
-            }
-        }
+        const res = yield notifyApiLogin(username, localStorage.getItem('X-Auth-Session'));
+        alreadyAuthorized = (res.status === 'ok');
     } catch(error) {
         // Does not need to be fatal
-        console.error('Notify Login Error', error);
+        console.error('Notify Login Checking Error', error);
+        alreadyAuthorized = null;
+    }
+    if (alreadyAuthorized === false) {
+        let authorized = false;
+        try {
+            const res = yield authApiLogin(username, null);
+            if (!res.already_authorized) {
+                console.log('login_challenge', res.login_challenge);
+
+                const signatures = {};
+                const challenge = {token: res.login_challenge};
+                const bufSha = hash.sha256(JSON.stringify(challenge, null, 0));
+                const sign = (role, d) => {
+                    if (!d) return;
+                    const sig = Signature.signBufferSha256(bufSha, d);
+                    signatures[role] = sig.toHex();
+                };
+                sign('posting', private_keys.get('posting_private'));
+                const res2 = yield authApiLogin(username, signatures);
+                if (res2.guid) {
+                    localStorage.setItem('guid', res2.guid)
+                }
+                if (res2.status === 'ok') {
+                    authorized = true;
+                } else {
+                    throw new Error(JSON.stringify(res2)); 
+                }
+            }
+        } catch(error) {
+            // Does not need to be fatal
+            console.error('Auth Login Error', error);
+        }
+
+        if (authorized)
+            try {
+                const res = yield notifyApiLogin(username, localStorage.getItem('X-Auth-Session'));
+
+                if (res.status !== 'ok') {
+                    throw new Error(res); 
+                }
+            } catch(error) {
+                // Does not need to be fatal
+                console.error('Notify Login Error', error);
+            }
     }
     try {
         const offchainData = yield select(state => state.offchain)
@@ -350,24 +380,26 @@ function* saveLogin_localStorage() {
         console.error('Non-browser environment, skipping localstorage')
         return
     }
-    localStorage.removeItem('autopost2')
     const [username, private_keys, login_owner_pubkey] = yield select(state => ([
         state.user.getIn(['current', 'username']),
         state.user.getIn(['current', 'private_keys']),
         state.user.getIn(['current', 'login_owner_pubkey']),
     ]))
     if (!username) {
+        localStorage.removeItem('autopost2')
         console.error('Not logged in')
         return
     }
     // Save the lowest security key
     const posting_private = private_keys.get('posting_private')
     if (!posting_private) {
+        localStorage.removeItem('autopost2')
         console.error('No posting key to save?')
         return
     }
     const account = yield select(state => state.global.getIn(['accounts', username]))
     if(!account) {
+        localStorage.removeItem('autopost2')
         console.error('Missing global.accounts[' + username + ']')
         return
     }
@@ -382,6 +414,7 @@ function* saveLogin_localStorage() {
                 throw 'Login will not be saved, posting key is the same as owner key'
         })
     } catch(e) {
+        localStorage.removeItem('autopost2')
         console.error(e)
         return
     }
@@ -398,6 +431,7 @@ function* logout() {
         localStorage.removeItem('autopost2')
         localStorage.removeItem('guid')
     }
+    authApiLogout();
     notifyApiLogout();
     serverApiLogout();
 }
