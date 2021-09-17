@@ -782,25 +782,6 @@
     "crowdsale": "Crowdsale",
     "following": "Following"
   },
-  "enter_confirm_email_jsx": {
-    "thank_you_for_providing_your_email_address": "Thank you for providing your email address",
-    "to_continue_please_click_on_the_link_in_the_email_weve_sent_you": "To continue please click on the link in the email we've sent you",
-    "user_not_found": "user not found",
-    "please_provide_your_email_address_to_continue_the_registration_process": "Please provide your email address to continue the registration process",
-    "email_address_cannot_be_changed_at_this_moment_sorry_for_inconvenience": "Email address cannot be changed at this moment, sorry for the inconvenience",
-    "email_address": "Email Address",
-    "please_prove_an_email_address": "Please provide an email address",
-    "not_valid_email_address": "Not valid email address",
-    "this_email_has_already_been_taken": "This email has already been taken",
-    "failed_captcha_verification_please_try_again": "Failed captcha verification, please try again",
-    "re_send_email": "Re-send email",
-    "email_confirmation": "Email Confirmation",
-    "next_3_strings": {
-      "by_verifying_you_agree_with": "By verifying your account you agree to the",
-      "by_verifying_you_agree_with_privacy_policy": "Privacy Policy",
-      "by_verifying_you_agree_with_privacy_policy_of_website_APP_DOMAIN": "of %(APP_DOMAIN)s"
-    }
-  },
   "markdownviewer_jsx": {
     "images_were_hidden_due_to_low_ratings": "Images were hidden due to low ratings."
   },

@@ -33,15 +33,6 @@ class SignUp extends React.Component {
                     <a href={authRegisterUrl()} className="button secondary">Продолжить с электронной почтой</a>
                 </div>
             </div>
-            <div className="row">
-                <div className="column">
-                      <br />
-                    <p className="secondary">
-                        {tt('enter_confirm_email_jsx.next_3_strings.by_verifying_you_agree_with') + ' '}
-                        {' ' + tt('enter_confirm_email_jsx.next_3_strings.by_verifying_you_agree_with_privacy_policy_of_website_APP_DOMAIN', {APP_DOMAIN})}.
-                    </p>
-                </div>
-            </div>
         </div>
     }
 }

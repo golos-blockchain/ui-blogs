@@ -85,25 +85,6 @@
     "curation_rewards_last_week": "Кураторские награды за неделю",
     "curation_rewards_history": "История кураторских наград"
   },
-  "enter_confirm_email_jsx": {
-    "thank_you_for_providing_your_email_address": "Благодарим вас за предоставление вашей электронной почты",
-    "to_continue_please_click_on_the_link_in_the_email_weve_sent_you": "Для продолжения, перейдите по ссылке в письме, которое мы вам прислали",
-    "user_not_found": "пользователь не найден",
-    "please_provide_your_email_address_to_continue_the_registration_process": "Пожалуйста, укажите адрес вашей электронной почты для продолжения процесса регистрации",
-    "email_address_cannot_be_changed_at_this_moment_sorry_for_inconvenience": "Адрес электронной почты на данный момент не может быть изменен, извините за неудобства",
-    "email_address": "Адрес электронной почты",
-    "please_prove_an_email_address": "Пожалуйста укажите адрес электронной почты",
-    "not_valid_email_address": "Указан некорректный адрес электронной почты",
-    "this_email_has_already_been_taken": "Этот адрес электронной почты уже занят",
-    "failed_captcha_verification_please_try_again": "Ошибка проверки капчи, попробуйте еще раз",
-    "re_send_email": "Повторная отправка электронной почты",
-    "email_confirmation": "Подтверждение электронной почты",
-    "next_3_strings": {
-      "by_verifying_you_agree_with": "Подтверждая ваш аккаунт вы соглашаетесь с",
-      "by_verifying_you_agree_with_privacy_policy": "Политикой конфиденциальности",
-      "by_verifying_you_agree_with_privacy_policy_of_website_APP_DOMAIN": "сайта %(APP_DOMAIN)s"
-    }
-  },
   "explorepost_jsx": {
     "copied": "Скопировано!",
     "copy": "Скопировать",
@@ -371,7 +352,7 @@
     "curation_rewards": "Кураторские награды",
     "donates_from": "Отправленные донаты",
     "donates_to": "Полученные донаты",
-    "top_donates": "Топ пользователей по донатам",
+    "top_donates": "Рейтинг пользователей по донатам",
     "sorted_by_payouts": "с сортировкой по выплатам из пула",
     "referral_link": "Реферальная ссылка",
     "referral_link_title": "В течение года 10%% от вознаграждений пользователей (зарегистрированных после перехода по реферальной ссылке)\nбудут поступать на ваш баланс.",
@@ -1011,7 +992,7 @@
     "next_power_down_is_scheduled": "запланировано",
     "transfers_are_temporary_disabled": "Переводы временно отключены.",
     "cancel_power_down": "Отменить понижение Силы Голоса",
-    "top_dpos": "Топ-100 пользователей по Силе Голоса",
+    "top_dpos": "Рейтинг пользователей по Силе Голоса",
     "account_idleness": "На аккаунте давно не было действий с использованием активного ключа",
     "worker_foundation": "Фонд сообщества",
     "history_viewing": "История операций",

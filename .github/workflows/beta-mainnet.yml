@@ -19,4 +19,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: vizlex/golos-ui-test:beta-mainnet
+          tags: testuigolos/blogs:beta-mainnet
