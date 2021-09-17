@@ -42,8 +42,6 @@ export default {
             cb(null, [require('@pages/TagsIndex')]);
         } else if (route.page === 'ChangePassword') {
             cb(null, [require('@pages/ChangePasswordPage')]);
-        } else if (route.page === 'CreateAccount') {
-            cb(null, [require('@pages/CreateAccount')]);
         } else if (route.page === 'Witnesses') {
             cb(null, [require('@pages/WitnessesLoader')]);
         } else if (route.page === 'Workers') {
