@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import golos from 'golos-classic-js';
+import golos from 'golos-lib-js';
 import tt from 'counterpart';
 import reactForm from 'app/utils/ReactForm';
 import transaction from 'app/redux/Transaction';

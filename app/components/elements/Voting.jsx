@@ -12,7 +12,7 @@ import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import FoundationDropdown from 'app/components/elements/FoundationDropdown';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
 import tt from 'counterpart';
-import { Asset } from 'golos-classic-js/lib/utils';
+import { Asset } from 'golos-lib-js/lib/utils';
 
 const MAX_VOTES_DISPLAY = 20;
 const VOTE_WEIGHT_DROPDOWN_THRESHOLD = 1.0 * 1000.0 * 1000.0;

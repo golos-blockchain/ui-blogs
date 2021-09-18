@@ -2,7 +2,7 @@ import { fromJS } from 'immutable'
 import { fork, call, put, select, takeEvery } from 'redux-saga/effects';
 import g from 'app/redux/GlobalReducer'
 import constants from './constants';
-import { api } from 'golos-classic-js';
+import { api } from 'golos-lib-js';
 
 export function* sharedWatches() {
     yield fork(watchTransactionErrors)

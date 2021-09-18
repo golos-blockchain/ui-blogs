@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { Link, browserHistory } from 'react-router';
 import tt from 'counterpart';
-import {api, broadcast} from 'golos-classic-js'
+import {api, broadcast} from 'golos-lib-js'
 import transaction from 'app/redux/Transaction';
 import {longToAsset} from 'app/utils/ParsersAndFormatters';
 import TransactionError from 'app/components/elements/TransactionError';

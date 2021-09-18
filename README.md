@@ -1,6 +1,6 @@
 # [GOLOS.id](https://golos.id)
 
-React.js web interface to the blockchain-based social media platform. It uses [Golos blockchain](https://github.com/golos-blockchain/golos), a fork of Steem blockchain powered by Graphene 2.0 technology to store JSON-based content for a plethora of web applications.   
+React.js web interface to the blockchain-based social media platform. It uses [Golos blockchain](https://github.com/golos-blockchain/chain-node), a fork of Steem blockchain powered by Graphene 2.0 technology to store JSON-based content for a plethora of web applications.   
 ## Why would I want to use GOLOS.id?
 * Learning how to build blockchain-based applications using GOLOS as a content storage
 * Reviewing the inner workings of the GOLOS.id social media platform
@@ -12,8 +12,8 @@ We recommend using docker to run in production. This is how we run the live site
 
 #### Clone the repository and make a tmp folder
 ```bash
-git clone https://github.com/golos-blockchain/golos-ui
-cd golos-ui
+git clone https://github.com/golos-blockchain/ui-blogs
+cd ui-blogs
 mkdir tmp
 ```
 

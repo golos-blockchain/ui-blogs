@@ -16,8 +16,9 @@ import Dialogs from '@modules/Dialogs';
 import Modals from '@modules/Modals';
 import Icon from '@elements/Icon';
 import ScrollButton from '@elements/ScrollButton';
-import { key_utils } from 'golos-classic-js/lib/auth/ecc';
+import { key_utils } from 'golos-lib-js/lib/auth/ecc';
 import MiniHeader from '@modules/MiniHeader';
+import golos from 'golos-lib-js';
 import tt from 'counterpart';
 import PageViewsCounter from '@elements/PageViewsCounter';
 import DialogManager from 'app/components/elements/common/DialogManager';
@@ -80,7 +81,7 @@ class App extends React.Component {
 
     componentDidMount() {
         if (process.env.BROWSER) {
-            console.log('golos-ui version:', $STM_Config.ui_version);
+            console.log('ui-blogs version:', $STM_Config.ui_version);
         }
 
         const { nightmodeEnabled } = this.props;

@@ -61,7 +61,7 @@ class UserWallet extends React.Component {
         const CLAIM_TOKEN = tt('token_names.CLAIM_TOKEN')
 
         const {showDeposit, depositType, toggleDivestError} = this.state
-        const {convertToSteem, price_per_golos, savings_withdraws, account, current_user, open_orders} = this.props
+        const {showConvertDialog, price_per_golos, savings_withdraws, account, current_user, open_orders} = this.props
         const gprops = this.props.gprops.toJS();
 
         if (!account) return null;
@@ -230,6 +230,7 @@ class UserWallet extends React.Component {
             { value: tt('userwallet_jsx.transfer_to_tip'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'Transfer to TIP' ) },
             { value: tt('userwallet_jsx.power_up'), link: '#', onClick: showTransfer.bind( this, VEST_TICKER, 'Transfer to Account' ) },
             { value: tt('userwallet_jsx.transfer_to_savings'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'Transfer to Savings' ) },
+            { value: tt('userwallet_jsx.convert_to_DEBT_TOKEN', {DEBT_TOKEN}), link: '#', onClick: showConvertDialog.bind(this, LIQUID_TICKER, DEBT_TICKER) },
         ]
         let power_menu = [
             { value: tt('userwallet_jsx.power_down'), link: '#', onClick: powerDown.bind(this, false) },
@@ -244,7 +245,7 @@ class UserWallet extends React.Component {
         let dollar_menu = [
             { value: tt('g.transfer'), link: '#', onClick: showTransfer.bind( this, DEBT_TICKER, 'Transfer to Account' ) },
             { value: tt('userwallet_jsx.transfer_to_savings'), link: '#', onClick: showTransfer.bind( this, DEBT_TICKER, 'Transfer to Savings' ) },
-            { value: tt('userwallet_jsx.convert_to_LIQUID_TOKEN', {LIQUID_TOKEN}), link: '#', onClick: convertToSteem },
+            { value: tt('userwallet_jsx.convert_to_LIQUID_TOKEN', {LIQUID_TOKEN}), link: '#', onClick: showConvertDialog.bind(this, DEBT_TICKER, LIQUID_TICKER) },
             { value: tt('g.buy_or_sell'), link: '/market/GBG/GOLOS' },
         ]
         const isWithdrawScheduled = new Date(account.get('next_vesting_withdrawal') + 'Z').getTime() > Date.now()
@@ -525,10 +526,10 @@ export default connect(
     },
     // mapDispatchToProps
     dispatch => ({
-        convertToSteem: (e) => {
+        showConvertDialog: (from, to, e) => {
             e.preventDefault()
             const name = 'convertToSteem'
-            dispatch(g.actions.showDialog({name}))
+            dispatch(g.actions.showDialog({name, params: {from, to}}))
         },
         showChangePassword: (username) => {
             const name = 'changePassword'
