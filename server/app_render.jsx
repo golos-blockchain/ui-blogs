@@ -4,7 +4,6 @@ import golos from 'golos-lib-js';
 import stringToStream from 'string-to-stream';
 import multiStream from 'multistream';
 import { ServerStyleSheet } from 'styled-components'
-import Tarantool from 'db/tarantool';
 import ServerHTML from './server-html';
 import { serverRender } from '../shared/UniversalRender';
 import secureRandom from 'secure-random';
@@ -36,37 +35,6 @@ async function appRender(ctx) {
             select_tags
         };
 
-        const user_id = parseInt(ctx.session.user);
-        if (!isNaN(user_id)) {
-            let user = null;
-            if (appRender.dbStatus.ok || (new Date() - appRender.dbStatus.lastAttempt) > DB_RECONNECT_TIMEOUT) {
-                try {
-                    user = await Tarantool.instance('tarantool').select('users', 'primary',
-                        1, 0, 'eq', [user_id]);
-                    appRender.dbStatus = {ok: true};
-                } catch (e) {
-                    appRender.dbStatus = {ok: false, lastAttempt: new Date()};
-                    console.error('WARNING! tarantool user query failed: ', e.toString());
-                    offchain.serverBusy = true;
-                }
-            } else {
-                offchain.serverBusy = true;
-            }
-            if (user && user[0]) {
-                let account = await Tarantool.instance('tarantool').select('accounts', 'by_user_id',
-                    1, 0, 'eq', [user_id]);
-                account = account[0] ? account[0][2] : null;
-                offchain.user = {
-                    id: user_id,
-                    name: user.name,
-                    email: user.email,
-                    picture: user.picture_small,
-                    prv: ctx.session.prv,
-                    account,
-                }
-            }
-        }
-
         const start = new Date()
         const {
           body,
@@ -78,7 +46,6 @@ async function appRender(ctx) {
           store,
           offchain,
           ErrorPage,
-          // tarantool: Tarantool.instance('tarantool')
         });
 
         // Assets name are found in `webpack-stats` file
@@ -117,5 +84,4 @@ async function appRender(ctx) {
     }
 }
 
-appRender.dbStatus = {ok: true};
 module.exports = appRender;

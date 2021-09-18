@@ -8,6 +8,8 @@ ecurrex-dash
 glsmp
 ecurrex-hive
 ecurrex-steem
+ecurrex-tron
+ecurrex-tether
 `
 .trim()
 .split('\n');

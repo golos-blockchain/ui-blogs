@@ -122,6 +122,27 @@ class Services extends React.Component {
                 </div>
                 <div className='landing-services-block'>
                     <div className='column large-12 medium-12 small-12'>
+                        <div className='column large-12 medium-12 small-12'>
+                            <hr/>
+                        </div>
+                        <div className='column large-12 medium-12 small-12'>
+                            <div className='row'>
+                                <div className='column large-12 medium-12 small-12' align='center'>
+                                <h4><a target="_blank" href="https://t.me/gacinfobot"><Icon name="new/telegram" /> gacinfobot</a> и <a target="_blank" href="https://t.me/golosyakabot"><Icon name="new/telegram" /> golosyakabot</a></h4>
+                                Разработчик телеграм-ботов <a target="_blank" href="/@jackvote">@jackvote</a>
+                                </div>
+                                <div className='column large-12 medium-12 small-12'>
+                                    <br />gacinfobot - бот с подробной информацией об аккаунтах на Голосе, golosyakabot - сканер о событиях в блокчейне с подпиской на интересуемые аккаунты и/или операции... <a target="_blank" href="/@jackvote/informaciya-s-gakom-ili-bot-informator-ob-akkauntakh-golosa">{tt('g.more_hint')}</a> <Icon name="extlink" />
+                                </div>
+                            </div>
+                        </div>
+                        <div className='column large-12 medium-12 small-12'>
+                            <hr/>
+                        </div>
+                    </div>
+                </div>
+                <div className='landing-services-block'>
+                    <div className='column large-12 medium-12 small-12'>
                         <div className='row'>
                             <div className='column large-12 medium-12 small-12'>
                                 <p className='landing-services-block-text landing-services-block-center'>

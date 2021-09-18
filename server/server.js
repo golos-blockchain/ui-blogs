@@ -9,7 +9,6 @@ import favicon from 'koa-favicon';
 import staticCache from 'koa-static-cache';
 import useRedirects from './redirects';
 import useGeneralApi from './api/general';
-import useRegistrationApi from './api/registration';
 import useUserJson from './json/user_json';
 import usePostJson from './json/post_json';
 import isBot from 'koa-isbot';
@@ -101,12 +100,6 @@ app.use(function*(next) {
             return;
         }
     }
-    // start registration process if user get to create_account page and has no id in session yet
-    // if (this.url === '/create_account' && !this.session.user) {
-    //     this.status = 302;
-    //     this.redirect('/enter_email');
-    //     return;
-    // }
     // remember ch, cn, r url params in the session and remove them from url
     if (this.method === 'GET' && /\?[^\w]*(ch=|cn=|r=)/.test(this.url)) {
         let redir = this.url.replace(/((ch|cn|r)=[^&]+)/gi, r => {
@@ -167,7 +160,6 @@ app.use(function*(next) {
 });
 
 useRedirects(app);
-useRegistrationApi(app);
 useUserJson(app);
 usePostJson(app);
 useGeneralApi(app);

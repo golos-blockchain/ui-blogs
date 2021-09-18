@@ -83,6 +83,7 @@ export default async function getState(api, url, options, offchain = {}) {
                             case 'convert_sbd_debt':
                             case 'convert':
                             case 'fill_convert_request':
+                            case 'interest':
                             case 'worker_reward':
                                 state.accounts[uname].transfer_history.push(operation)
                             break

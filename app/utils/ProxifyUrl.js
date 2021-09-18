@@ -12,14 +12,21 @@ const rProxyDomain = /^http(s)?:\/\/images.golos.today\//g;
 const rProxyDomainsDimensions = /http(s)?:\/\/images.golos.today\/([0-9]+x[0-9]+)\//g;
 const NATURAL_SIZE = '0x0/';
 
+const fixHost = (host) => {
+    if (host.endsWith('/')) {
+        host = host.slice(0, -1);
+    }
+    return host;
+};
+
 export const proxifyImageUrl = (url, dimensions = '0x0') => {
     if (!$STM_Config || !dimensions)
       return url;
     if (dimensions[dimensions.length - 1] !== '/')
       dimensions += '/';
     let prefix = '';
-    if ($STM_Config.img_proxy_prefix) prefix += $STM_Config.img_proxy_prefix + dimensions;
-    if ($STM_Config.img_proxy_backup_prefix) prefix += $STM_Config.img_proxy_backup_prefix + dimensions;
+    if ($STM_Config.img_proxy_prefix) prefix += fixHost($STM_Config.img_proxy_prefix) + '/' + dimensions;
+    if ($STM_Config.img_proxy_backup_prefix) prefix += fixHost($STM_Config.img_proxy_backup_prefix) + '/' + dimensions;
     return prefix + url;
 };
 

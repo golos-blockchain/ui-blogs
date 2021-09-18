@@ -130,6 +130,7 @@ export function* fetchState(location_change_action) {
                                 case 'convert_sbd_debt':
                                 case 'convert':
                                 case 'fill_convert_request':
+                                case 'interest':
                                 case 'worker_reward':
                                     state.accounts[uname].transfer_history.push(operation)
                                 break
@@ -270,10 +271,13 @@ export function* fetchState(location_change_action) {
 
             yield put(GlobalReducer.actions.receiveState(state))
 
-            // Filtering comments from authors with a negative reputation
-            const replies =  yield call([api, api.getAllContentRepliesAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT, 0, [], [], true)
-            // const replies =  yield call([api, api.getAllContentRepliesAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT)
-            
+            let replies = [];
+            if ($STM_Config.hide_comment_neg_rep) {
+                replies =  yield call([api, api.getAllContentRepliesAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT, 0, [], [], true)
+            } else {
+                replies =  yield call([api, api.getAllContentRepliesAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT)
+            }
+
             for (let key in replies) {
                 let reply = replies[key]
                 const link = `${reply.author}/${reply.permlink}`

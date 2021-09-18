@@ -13,6 +13,7 @@ import {PrivateKey} from 'golos-lib-js/lib/auth/ecc';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import Icon from 'app/components/elements/Icon';
+import { authRegisterUrl, } from 'app/utils/AuthApiClient';
 
 class CreateInvite extends Component {
     static propTypes = {
@@ -55,7 +56,7 @@ class CreateInvite extends Component {
     updatePrivateKey = (pk) => {
         this.state.private_key.props.onChange(pk);
 
-        const register_link = `https://${$STM_Config.site_domain}/create_account?invite=${pk}`
+        const register_link = authRegisterUrl() + `?invite=${pk}`;
         this.state.register_link.props.onChange(register_link);
     }
 
@@ -185,7 +186,7 @@ class CreateInvite extends Component {
 
         let publicKeyLink = null;
         if (createdInvite) {
-            publicKeyLink = `${$STM_Config.golos_lib_gui}database_api/get_invite?invite_key=${createdInvite}`;
+            publicKeyLink = `https://gapi.golos.today/steemjs/api/database_api/get_invite?invite_key=${createdInvite}`;
             publicKeyLink=(<span>{tt('invites_jsx.public_key_can_be_checked') + ' '}
                     <a href={publicKeyLink} target='_blank' rel='noopener noreferrer'>{tt('g.here')}</a>
                     <Icon name="extlink" size="1_5x" />

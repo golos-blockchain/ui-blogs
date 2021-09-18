@@ -12,6 +12,7 @@ import reactForm from 'app/utils/ReactForm'
 import tt from 'counterpart';
 import { APP_DOMAIN } from 'app/client_config';
 import { translateError } from 'app/utils/ParsersAndFormatters';
+import { authRegisterUrl, } from 'app/utils/AuthApiClient';
 
 class LoginForm extends Component {
 
@@ -32,7 +33,7 @@ class LoginForm extends Component {
         let cryptographyFailure = false;
         this.SignUp = this.SignUp.bind(this);
         if (cryptoTestResult !== undefined) {
-            console.error('CreateAccount - cryptoTestResult: ', cryptoTestResult);
+            console.error('LoginForm - cryptoTestResult: ', cryptoTestResult);
             cryptographyFailure = true
         }
         this.state = {cryptographyFailure};
@@ -226,7 +227,7 @@ class LoginForm extends Component {
                     {!cancelIsRegister && this.props.onCancel && !isMemo && <button type="button float-right" disabled={submitting} className="button hollow" onClick={onCancel}>
                         {tt('g.cancel')}
                     </button>}
-                    {cancelIsRegister && !isMemo && <a href='/create_account' target='_blank' type="button float-right" disabled={submitting} className="button hollow" onClick={this.checkRegisterEnabled}>
+                    {cancelIsRegister && !isMemo && <a href={authRegisterUrl()} target='_blank' type="button float-right" disabled={submitting} className="button hollow" onClick={this.checkRegisterEnabled}>
                         {tt('g.sign_up')}
                     </a>}
                 </div>
@@ -329,7 +330,6 @@ export default connect(
             initialUsername,
             loginDefault,
             msg,
-            offchain_user: state.offchain.get('user')
         }
     },
 

@@ -180,11 +180,12 @@ class Post extends React.Component {
                 </div>
 
                 <div className="row hfeed">
-                    <iframe data-aa='1150095' src='//acceptable.a-ads.com/1150095' scrolling='no'
+                    {$STM_Config.show_adv_banners ?
+                    (<iframe data-aa='1150095' src='//acceptable.a-ads.com/1150095' scrolling='no'
                     style={{width:'100%', maxWidth:'50rem', margin:'0 auto', border:'0px', padding:'0', overflow:'hidden'}}
-                    allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe>
+                    allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe>) : null}
                 </div>
-          
+        
                 <div id="comments" className="Post_comments row hfeed">
                     <div className="column large-12">
                         <div className="Post_comments__content">
@@ -207,8 +208,6 @@ class Post extends React.Component {
                 <p align="center">
                     <a target="_blank" href="/msgs"><img src={require("app/assets/images/msgbanner-footer.png")} width="800" height="100" /></a>
                     <span className="strike"><a target="_blank" href="/@lex/obmen-lichnymi-soobsheniyami-i-nachalo-dlya-golos-messenger">{tt('g.more_hint')}</a></span>
-                    {/* <a target="_blank" href="https://golostalk.com"><img src={require("app/assets/images/golostalk-footer.png")} width="800" height="100" /></a>
-                    <span className="strike"><a target="_blank" href="/@lex/zapusk-foruma-golostalk-com">{tt('g.more_hint')}</a></span> */}
                 </p>
 
             </div>

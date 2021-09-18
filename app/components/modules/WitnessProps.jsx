@@ -25,6 +25,7 @@ class WitnessProps extends React.Component {
             ['maximum_block_size', 'raw'],
             ['custom_ops_bandwidth_multiplier', 'raw'],
             ['min_invite_balance', 'golos'],
+            ['invite_transfer_interval_sec', 'time'],
         ],
         [
             ['sbd_interest_rate'],
@@ -73,6 +74,7 @@ class WitnessProps extends React.Component {
             ['vesting_of_remain_percent'],
         ],
         [
+            ['asset_creation_fee', 'gbg'],
             ['worker_request_creation_fee', 'gbg'],
             ['worker_request_approve_min_percent'],
         ],
