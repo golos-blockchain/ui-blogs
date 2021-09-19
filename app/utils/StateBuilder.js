@@ -60,7 +60,7 @@ export default async function getState(api, url, options, offchain = {}) {
 
             switch (parts[1]) {
                 case 'transfers':
-                    const history = await api.getAccountHistory(uname, -1, 1000, ['producer_reward'])
+                    const history = await api.getAccountHistory(uname, -1, 1000, ['producer_reward', 'comment_mention'])
                     account.transfer_history = []
                     account.other_history = []
 
@@ -171,7 +171,7 @@ export default async function getState(api, url, options, offchain = {}) {
                 break
 
                 case 'reputation':
-                    const rhistory = await api.getAccountHistory(uname, -1, 1000, ['producer_reward']);
+                    const rhistory = await api.getAccountHistory(uname, -1, 1000, ['producer_reward', 'comment_mention']);
                     account.reputation_history = [];
 
                     rhistory.forEach(operation => {
@@ -315,7 +315,7 @@ export default async function getState(api, url, options, offchain = {}) {
             }
         }
     } else if (parts[0] === 'minused_accounts') {
-        const mhistory = await api.getAccountHistory('null', -1, 1000, ['producer_reward'], ['minus_reputation']);
+        const mhistory = await api.getAccountHistory('null', -1, 1000, ['producer_reward', 'comment_mention'], ['minus_reputation']);
         state.minused_accounts = [];
         mhistory.forEach(operation => {
             const op = operation[1].op;

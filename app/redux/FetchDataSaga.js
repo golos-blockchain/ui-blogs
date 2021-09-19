@@ -107,7 +107,7 @@ export function* fetchState(location_change_action) {
 
                 switch (parts[1]) {
                     case 'transfers':
-                        const history = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {filter_ops: ['producer_reward']})
+                        const history = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {filter_ops: ['producer_reward', 'comment_mention']})
                         account.transfer_history = []
                         account.other_history = []
 
@@ -214,7 +214,7 @@ export function* fetchState(location_change_action) {
                     break
 
                     case 'reputation':
-                        const rhistory = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {filter_ops: ['producer_reward']});
+                        const rhistory = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {filter_ops: ['producer_reward', 'comment_mention']});
                         account.reputation_history = [];
                         rhistory.forEach(operation => {
                             const op = operation[1].op;
@@ -366,7 +366,7 @@ export function* fetchState(location_change_action) {
                 }
             }
         } else if (parts[0] === 'minused_accounts') {
-            const mhistory = yield call([api, api.getAccountHistoryAsync], 'null', -1, 1000, {select_ops: ['minus_reputation']});
+            const mhistory = yield call([api, api.getAccountHistoryAsync], 'null', -1, 1000, {filter_ops: ['producer_reward', 'comment_mention'], select_ops: ['minus_reputation']});
             state.minused_accounts = [];
             mhistory.forEach(operation => {
                 const op = operation[1].op;
