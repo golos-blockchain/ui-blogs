@@ -464,8 +464,8 @@ function* preBroadcast_comment({operation, username}) {
         const isPost = parent_author === '';
         const {
             // max_accepted_payout = ["1000000.000", DEBT_TICKER].join(" "),
-            max_accepted_payout = [isPost ? "1000000.000" : "40.000", DEBT_TICKER].join(" "),
-            percent_steem_dollars = 10000, // 10000 === 100%
+            max_accepted_payout = [isPost ? "1000000.000" : "20.000", DEBT_TICKER].join(" "),
+            percent_steem_dollars = 0, // 10000 === 100%
             allow_votes = true,
             allow_curation_rewards = true,
             curator_rewards_percent = null,
