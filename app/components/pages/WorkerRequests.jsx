@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import golos from 'golos-classic-js';
+import golos from 'golos-lib-js';
 import tt from 'counterpart';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
 import Reveal from 'react-foundation-components/lib/global/reveal';

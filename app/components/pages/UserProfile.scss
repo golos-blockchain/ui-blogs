@@ -141,6 +141,10 @@
         font-weight: 200;
     }
 
+    .UserProfile__rep-btn {
+       cursor: pointer;
+    }
+
     .UserProfile__bio {
         margin: -0.4rem auto 0.5rem;
         font-size: 95%;
@@ -171,6 +175,72 @@
             position: relative;
             top: -5px;
         }
+    }
+}
+
+.UserProfile__rep-panel {
+    .Icon {
+        margin-left: 5px;
+    }
+    .UserProfile__rep-btn-up {
+        circle {
+            stroke: #4BA2F2;
+            fill: #4BA2F2;
+        }
+        path {
+            fill: #FFFFFF;
+        }
+    }
+    .UserProfile__rep-btn-up:hover:not(.disabled) {
+        circle {
+            stroke: #4BA2F2;
+            fill: #FFFFFF;
+        }
+        path {
+            fill: #4BA2F2;
+        }
+    }
+    .UserProfile__rep-btn-up.disabled {
+        circle {
+            stroke: #FFFFFF;
+            fill: transparent;
+        }
+        path {
+            fill: #FFFFFF;
+        }
+    }
+    .UserProfile__rep-btn-down {
+        circle {
+            stroke: #fc544e;
+            fill: #fc544e;
+        }
+        path {
+            fill: #FFFFFF;
+        }
+    }
+    .UserProfile__rep-btn-down:hover:not(.disabled) {
+        circle {
+            stroke: #fd8582;
+            fill: #FFFFFF;
+        }
+        path {
+            fill: #fd8582;
+        }
+    }
+    .UserProfile__rep-btn-down.disabled {
+        circle {
+            stroke: #FFFFFF;
+            fill: transparent;
+        }
+        path {
+            fill: #FFFFFF;
+        }
+    }
+
+    .LoadingIndicator {
+        display: inline-block;
+        height: 20px;
+        margin-left: 10px;
     }
 }
 

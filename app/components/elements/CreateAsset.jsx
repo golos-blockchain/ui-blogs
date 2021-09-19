@@ -13,7 +13,7 @@ import {cleanReduxInput} from 'app/utils/ReduxForms'
 import reactForm from 'app/utils/ReactForm';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import Slider from 'golos-ui/Slider';
-import {api} from 'golos-classic-js';
+import {api} from 'golos-lib-js';
 
 class CreateAsset extends Component {
     static propTypes = {

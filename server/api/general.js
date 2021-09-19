@@ -4,7 +4,9 @@ import config from 'config';
 import recordWebEvent from 'server/record_web_event';
 import {rateLimitReq, checkCSRF} from 'server/utils/misc';
 import coBody from 'co-body';
-import {api} from 'golos-classic-js';
+import {PublicKey, Signature, hash} from 'golos-lib-js/lib/auth/ecc';
+import {api, broadcast} from 'golos-lib-js';
+import { getDynamicGlobalProperties } from 'app/utils/APIWrapper'
 
 export default function useGeneralApi(app) {
     const router = koa_router({prefix: '/api/v1'});

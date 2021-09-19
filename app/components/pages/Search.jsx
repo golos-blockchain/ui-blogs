@@ -1,5 +1,5 @@
 import React from 'react';
-import golos from 'golos-classic-js';
+import golos from 'golos-lib-js';
 import { Link } from 'react-router';
 import { browserHistory } from 'react-router';
 import tt from 'counterpart';

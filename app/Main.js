@@ -6,13 +6,17 @@ import plugins from 'app/utils/JsPlugins';
 import { serverApiRecordEvent } from 'app/utils/ServerApiClient';
 import Iso from 'iso';
 import { clientRender } from 'shared/UniversalRender';
-import * as golos from 'golos-classic-js';
+import * as golos from 'golos-lib-js';
 
 // window.onerror = error => {
 //     if (window.$STM_csrf) serverApiRecordEvent('client_error', error);
 // };
 
-function runApp(initialState) {
+async function runApp(initialState) {
+    if (process.env.BROWSER) {
+        await golos.importNativeLib();
+    }
+
     const config = initialState.offchain.config
     golos.config.set('websocket', config.ws_connection_client)
     golos.config.set('chain_id', config.chain_id);
