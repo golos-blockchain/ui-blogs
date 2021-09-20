@@ -221,7 +221,7 @@ export default class UserProfile extends React.Component {
         let upvoteRep = this.upvoteRep;
         let downvoteRep = this.downvoteRep;
 
-        if (current_account) {
+        if (current_account && typeof(BigInt) !== 'undefined') { // Safari < 14
             const current_rep = BigInt(current_account.get('reputation'));
             if (current_rep < 0) {
                 cannotUpvote = tt('reputation_panel_jsx.cannot_vote_neg_rep');
