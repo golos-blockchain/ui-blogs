@@ -3469,10 +3469,10 @@ core-js@^2.4.0, core-js@^2.4.1, core-js@^2.5.0, core-js@^2.5.7:
   version "2.5.7"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.7.tgz#f972608ff0cead68b841a16a932d0b183791814e"
 
-core-js@^3.17.2:
-  version "3.17.2"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.17.2.tgz#f960eae710dc62c29cca93d5332e3660e289db10"
-  integrity sha512-XkbXqhcXeMHPRk2ItS+zQYliAMilea2euoMsnpRRdDad6b2VY6CQQcwz1K8AnWesfw4p165RzY0bTnr3UrbYiA==
+core-js@^3.17.3:
+  version "3.18.0"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.18.0.tgz#9af3f4a6df9ba3428a3fb1b171f1503b3f40cc49"
+  integrity sha512-WJeQqq6jOYgVgg4NrXKL0KLQhi0CT4ZOCvFL+3CQ5o7I6J8HkT5wd53EadMfqTDp1so/MT1J+w2ujhWcCJtN7w==
 
 core-js@^3.6.0:
   version "3.12.1"
@@ -5627,10 +5627,10 @@ globule@^1.0.0:
     lodash "~4.17.10"
     minimatch "~3.0.2"
 
-golos-lib-js@^0.9.1:
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/golos-lib-js/-/golos-lib-js-0.9.1.tgz#f6f17e2d6d9d2c938e11284d5088b5c5ec9904df"
-  integrity sha512-MY23dihB5i49eTVyQacv4POcLVeHC2xJTQigZf+kQiBytKEYP8Dgbp1ZVt4Kb3J9Dj3fx+bh1lbvESTdhGN13A==
+golos-lib-js@^0.9.4:
+  version "0.9.4"
+  resolved "https://registry.yarnpkg.com/golos-lib-js/-/golos-lib-js-0.9.4.tgz#d49d6c9fd633f0f7f1327c58d75a40bb437c4a6d"
+  integrity sha512-BnbqlpR8tt101uToaHXilOq6AFKr0W6p9xDINdsvhtFnjOi5ddTC+0/+NxSfaUw6xSIrYV27Jct0SVpD+utpwg==
   dependencies:
     bigi "^1.4.2"
     bluebird "^3.7.2"
@@ -5638,6 +5638,7 @@ golos-lib-js@^0.9.1:
     bs58 "^4.0.0"
     buffer "^5.0.6"
     bytebuffer "^5.0.1"
+    core-js "^3.17.3"
     create-hash "^1.1.2"
     create-hmac "^1.1.4"
     cross-env "^5.0.0"
@@ -5646,10 +5647,9 @@ golos-lib-js@^0.9.1:
     detect-node "^2.0.3"
     ecurve "^1.0.5"
     lodash "^4.16.4"
+    regenerator-runtime "^0.13.9"
     secure-random "^1.1.1"
     ws "^1.1.1"
-  optionalDependencies:
-    core-js "^3.17.2"
 
 got@^6.7.1:
   version "6.7.1"
@@ -6085,7 +6085,7 @@ ieee754@^1.1.11:
   version "1.1.12"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.12.tgz#50bf24e5b9c8bb98af4964c941cdb0918da7b60b"
 
-ieee754@^1.1.13, ieee754@^1.1.4, ieee754@^1.1.8:
+ieee754@^1.1.13, ieee754@^1.1.4:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.2.1.tgz#8eb7a10a63fff25d15a57b001586d177d1b0d352"
   integrity sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==
@@ -10126,6 +10126,11 @@ regenerator-runtime@^0.13.4:
   version "0.13.7"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.7.tgz#cac2dacc8a1ea675feaabaeb8ae833898ae46f55"
   integrity sha512-a54FxoJDIr27pgf7IgeQGxmqUNYrcV338lf/6gH456HZ/PhX+5BcwHXG9ajESmwe6WRO0tAzRUrRmNONWgkrew==
+
+regenerator-runtime@^0.13.9:
+  version "0.13.9"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.9.tgz#8925742a98ffd90814988d7566ad30ca3b263b52"
+  integrity sha512-p3VT+cOEgxFsRRA9X4lkI1E+k2/CtnKtU4gcxyaCUreilL/vqI6CdZ3wxVUx3UOUg+gnUOQQcRI7BmSI656MYA==
 
 regenerator-transform@^0.10.0:
   version "0.10.1"
