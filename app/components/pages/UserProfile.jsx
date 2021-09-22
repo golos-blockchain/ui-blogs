@@ -553,7 +553,6 @@ export default class UserProfile extends React.Component {
                             <Link className='UserProfile__menu-item' to={`/@${accountname}/settings`} activeClassName='active'>{tt('g.settings')}</Link>
                             : null
                         }
-                        <Link target="_blank" className="UserProfile__menu-item" to={`/search/@${accountname}`}>{tt('g.search')}</Link>
                     </div>
                 </div>
             </div>
