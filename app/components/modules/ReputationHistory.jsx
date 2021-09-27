@@ -68,7 +68,7 @@ class ReputationHistory extends Component {
                     <Link to='/minused_accounts'><Icon name="new/downvote" size="2x" /> {tt('minused_accounts_jsx.link_title')}</Link>
                 </span>
                 <span style={{float: 'right', fontSize: '85%'}}>
-                    <a target="_blank" rel="noopener noreferrer" href="https://dpos.space/golos/top/reputation"><Icon name="hf/hf18" size="2x" /> {tt('reputation_history_jsx.top_reputation')}</a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://dpos.space/golos/top/reputation"><Icon name="hf/hf18" size="2x" /> {tt('reputation_history_jsx.rating')}</a> {tt('g.and')} <a target="_blank" rel="noopener noreferrer" href="https://pisolog.net/stats/accounts/toprepchanges">{tt('reputation_history_jsx.top')}</a> {tt('reputation_history_jsx.reputation')}
                 </span>
                 <h4 className='uppercase'>{tt('reputation_history_jsx.title')}</h4>
                 {history.length ? (<table>

@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import SvgImage from 'app/components/elements/SvgImage';
 import tt from 'counterpart';
 import { formatCoins } from 'app/utils/FormatCoins';
-import { APP_DOMAIN } from 'app/client_config';
 import { authRegisterUrl, } from 'app/utils/AuthApiClient';
 
 class SignUp extends React.Component {

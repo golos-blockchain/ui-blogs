@@ -78,7 +78,7 @@ class Services extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className='landing-services-block'>
+                {/* <div className='landing-services-block'>
                     <div className='column large-12 medium-12 small-12'>
                         <div className='column large-12 medium-12 small-12'>
                             <hr/>
@@ -98,7 +98,7 @@ class Services extends React.Component {
                             <hr/>
                         </div>
                     </div>
-                </div>
+                </div> */}
                 <div className='landing-services-block'>
                     <div className='column large-12 medium-12 small-12'>
                         <div className='column large-12 medium-12 small-12'>

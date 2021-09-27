@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import golos from 'golos-lib-js';
 import tt from 'counterpart';
+import Icon from 'app/components/elements/Icon';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Tooltip from 'app/components/elements/Tooltip';
 
@@ -61,7 +62,9 @@ class MinusedAccounts extends React.Component {
                 <div className='row'>
                     <h3 className='uppercase'>{tt('minused_accounts_jsx.title')}</h3>
                     <div className='secondary' style={{ paddingBottom: '10px', }}>
-                        {tt('minused_accounts_jsx.description')}
+                        {tt('minused_accounts_jsx.description')} 
+                        <br /> <a target="_blank" rel="noopener noreferrer" href="https://pisolog.net/stats/votes/allvotes?flag=true&acc=true">{tt('minused_accounts_jsx.stats')} <Icon name="extlink" /></a>  
+                         /  <a target="_blank" rel="noopener noreferrer" href="https://pisolog.net/stats/accounts/toprepchanges">{tt('minused_accounts_jsx.changes')} <Icon name="extlink" /></a>
                     </div>
                     {history.length ? (<table>
                         <tbody>
