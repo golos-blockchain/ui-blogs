@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { Link, browserHistory } from 'react-router';
 import tt from 'counterpart';
-import {api, broadcast} from 'golos-classic-js'
+import {api, broadcast} from 'golos-lib-js'
 import transaction from 'app/redux/Transaction';
 import {longToAsset} from 'app/utils/ParsersAndFormatters';
 import TransactionError from 'app/components/elements/TransactionError';
@@ -13,6 +13,7 @@ import DropdownMenu from 'app/components/elements/DropdownMenu';
 import PriceChart from 'app/components/elements/PriceChart';
 import Orderbook from 'app/components/elements/Orderbook';
 import OrderHistory from 'app/components/elements/OrderHistory';
+import MarkNotificationRead from 'app/components/elements/MarkNotificationRead';
 import { Order, TradeHistory } from 'app/utils/MarketClasses';
 import { roundUp, roundDown } from 'app/utils/MarketUtils';
 import TickerPriceStat from 'app/components/elements/TickerPriceStat';
@@ -783,6 +784,8 @@ class Market extends Component {
 
         return (
             <div>
+                {(account && account.name) ? <MarkNotificationRead fields='fill_order' account={account.name}
+                            /> : null}
                 <div className="row">
                     <div className="column small-8 show-for-medium">
                         <PriceChart

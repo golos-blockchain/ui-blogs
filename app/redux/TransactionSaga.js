@@ -8,8 +8,8 @@ import tr from 'app/redux/Transaction'
 import getSlug from 'speakingurl'
 import {DEBT_TICKER} from 'app/client_config'
 import {serverApiRecordEvent} from 'app/utils/ServerApiClient'
-import {PrivateKey, PublicKey} from 'golos-classic-js/lib/auth/ecc'
-import {api, broadcast, auth, memo} from 'golos-classic-js'
+import {PrivateKey, PublicKey} from 'golos-lib-js/lib/auth/ecc'
+import {api, broadcast, auth, memo} from 'golos-lib-js'
 import constants from './constants';
 import tt from 'counterpart';
 
@@ -464,8 +464,8 @@ function* preBroadcast_comment({operation, username}) {
         const isPost = parent_author === '';
         const {
             // max_accepted_payout = ["1000000.000", DEBT_TICKER].join(" "),
-            max_accepted_payout = [isPost ? "1000000.000" : "40.000", DEBT_TICKER].join(" "),
-            percent_steem_dollars = 10000, // 10000 === 100%
+            max_accepted_payout = [isPost ? "1000000.000" : "20.000", DEBT_TICKER].join(" "),
+            percent_steem_dollars = 0, // 10000 === 100%
             allow_votes = true,
             allow_curation_rewards = true,
             curator_rewards_percent = null,

@@ -1,10 +1,10 @@
 export const routeRegex = {
     PostsIndex: /^\/(@[\w\.\d-]+)\/feed\/?$/,
     UserProfile1: /^\/(@[\w\.\d-]+)\/?$/,
-    UserProfile2: /^\/(@[\w\.\d-]+)\/(blog|posts|comments|transfers|assets|create-asset|invites|curation-rewards|author-rewards|donates-from|donates-to|permissions|created|recent-replies|feed|password|witness|followed|followers|settings)\/??(?:&?[^=&]*=[^=&]*)*$/,
+    UserProfile2: /^\/(@[\w\.\d-]+)\/(blog|posts|comments|transfers|assets|create-asset|invites|curation-rewards|author-rewards|donates-from|donates-to|reputation|mentions|permissions|created|recent-replies|feed|password|witness|followed|followers|settings)\/??(?:&?[^=&]*=[^=&]*)*$/,
     UserProfile3: /^\/(@[\w\.\d-]+)\/[\w\.\d-]+/,
     UserAssetEndPoints: /^\/(@[\w\.\d-]+)\/assets\/([\w\d.-]+)\/(update|transfer)$/,
-    UserEndPoints: /^(blog|posts|comments|transfers|assets|create-asset|invites|curation-rewards|author-rewards|donates-from|donates-to|permissions|created|recent-replies|feed|password|witness|followed|followers|settings)$/,
+    UserEndPoints: /^(blog|posts|comments|transfers|assets|create-asset|invites|curation-rewards|author-rewards|donates-from|donates-to|reputation|mentions|permissions|created|recent-replies|feed|password|witness|followed|followers|settings)$/,
     CategoryFilters: /^\/(hot|responses|donates|forums|trending|promoted|allposts|allcomments|created|active)\/?$/ig,
     PostNoCategory: /^\/(@[\w\.\d-]+)\/([\w\d-]+)/,
     Post: /^\/([\w\d\-\/]+)\/(\@[\w\d\.-]+)\/([\w\d-]+)\/?($|\?)/,
@@ -64,6 +64,9 @@ export default function resolveRoute(path)
     }
     if (path === '/workers') {
         return {page: 'Workers'};
+    }
+    if (path === '/minused_accounts') {
+        return {page: 'MinusedAccounts'};
     }
     if (path === '/nodes') {
         return {page: 'Nodes'};

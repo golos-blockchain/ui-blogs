@@ -150,7 +150,7 @@ class Assets extends Component {
         return (<div>
             <div className="row">
                 <div className="column secondary">
-                    {tt('assets_jsx.assets_info')} <a target="_blank" href="/@allforyou/torguem-na-vnutrennei-birzhe-golosa">{tt('g.more_hint')}</a> <Icon name="extlink" size="1_5x" />
+                    {tt('assets_jsx.assets_info')} <a href="/@allforyou/torguem-na-vnutrennei-birzhe-golosa">{tt('g.more_hint')}</a> <Icon name="extlink" size="1_5x" />
                 <hr />
                 </div>
             </div>

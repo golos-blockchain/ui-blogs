@@ -2,7 +2,7 @@
   "name": "Golos.id",
   "repository": {
     "type": "git",
-    "url": "https://github.com/golos-blockchain/golos-ui.git"
+    "url": "https://github.com/golos-blockchain/ui-blogs.git"
   },
   "version": "1.0.0",
   "description": "Голос - социальная сеть, построенная на публичном блокчейне.",
@@ -44,7 +44,7 @@
     "file-loader": "1.1.11",
     "foundation-sites": "^6.4.3",
     "git-rev-sync": "^1.12.0",
-    "golos-classic-js": "^0.8.8",
+    "golos-lib-js": "^0.9.8",
     "history": "^2.0.0-rc2",
     "immutable": "^3.8.2",
     "imports-loader": "0.7.1",

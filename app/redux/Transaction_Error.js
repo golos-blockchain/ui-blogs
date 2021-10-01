@@ -32,6 +32,11 @@ export default function transactionErrorReducer(
                     errorKey = 'Insufficient balance.';
                 }
                 break;
+            case 'convert':
+                if (errorStr.includes('amount is too low')) {
+                    errorKey = errorStr;
+                }
+                break;
             case 'invite_claim':
                 if (errorStr.includes('Missing invite')) {
                     errorKey = errorStr = tt('invites_jsx.claim_wrong_secret_fatal');

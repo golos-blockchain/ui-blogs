@@ -27,6 +27,7 @@ export default async function getState(api, url, options, offchain = {}) {
     state.prev_posts = []
     state.assets = {}
     state.worker_requests = {}
+    state.minused_accounts = []
     state.accounts = {}
     state.witnesses = {}
     state.discussion_idx = {}
@@ -59,7 +60,7 @@ export default async function getState(api, url, options, offchain = {}) {
 
             switch (parts[1]) {
                 case 'transfers':
-                    const history = await api.getAccountHistory(uname, -1, 1000, ['producer_reward'])
+                    const history = await api.getAccountHistory(uname, -1, 1000, [], ['claim', 'donate', 'transfer', 'author_reward', 'curation_reward', 'transfer_to_tip', 'transfer_from_tip', 'transfer_to_vesting', 'withdraw_vesting', 'asset_issue', 'invite', 'transfer_to_savings', 'transfer_from_savings', 'convert_sbd_debt', 'convert', 'fill_convert_request', 'interest', 'worker_reward'])
                     account.transfer_history = []
                     account.other_history = []
 
@@ -169,6 +170,17 @@ export default async function getState(api, url, options, offchain = {}) {
                     }
                 break
 
+                case 'reputation':
+                    const rhistory = await api.getAccountHistory(uname, -1, 1000, [], ['account_reputation']);
+                    account.reputation_history = [];
+
+                    rhistory.forEach(operation => {
+                        const op = operation[1].op;
+                        if (op[0] === 'account_reputation' && op[1].author === uname) {
+                            state.accounts[uname].reputation_history.push(operation);
+                        }
+                    });
+                break
                 case 'blog':
                 default:
                     const blogEntries = await api.getBlogEntries(uname, 0, 20)
@@ -302,6 +314,15 @@ export default async function getState(api, url, options, offchain = {}) {
                 state.worker_requests[url].myVote = (myVote && myVote.voter == voter) ? myVote : null;
             }
         }
+    } else if (parts[0] === 'minused_accounts') {
+        const mhistory = await api.getAccountHistory('null', -1, 1000, [], ['minus_reputation']);
+        state.minused_accounts = [];
+        mhistory.forEach(operation => {
+            const op = operation[1].op;
+            if (op[0] === 'minus_reputation' && op[1].author !== 'null') {
+                state.minused_accounts.push(operation);
+            }
+        });
     } else if (Object.keys(PUBLIC_API).includes(parts[0])) {
         let args = { limit: 20, truncate_body: 0 }
         const discussionsType = parts[0]

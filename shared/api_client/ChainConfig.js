@@ -1,4 +1,4 @@
-import * as golos from 'golos-classic-js';
+import * as golos from 'golos-lib-js';
 
 golos.config.set('address_prefix','GLS');
 

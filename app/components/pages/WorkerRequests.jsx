@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import golos from 'golos-classic-js';
+import golos from 'golos-lib-js';
 import tt from 'counterpart';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
 import Reveal from 'react-foundation-components/lib/global/reveal';
@@ -332,10 +332,10 @@ class WorkerRequests extends React.Component {
     ];
     return (
       <div className="App-workers">
-        <a target="_blank" href="https://t.me/golos_workers" className="golos-btn btn-secondary btn-round" style={{ float: 'right', marginTop: '0.75rem' }}><Icon name="new/telegram" /> {tt('workers.chat_workers')}</a>
+        <a target="_blank" href="https://t.me/golosworkers" className="golos-btn btn-secondary btn-round" style={{ float: 'right', marginTop: '0.75rem' }}><Icon name="new/telegram" /> {tt('workers.chat_workers')}</a>
         <div><h2>{tt('workers.worker_proposals')}</h2></div>
         <div className="column secondary">
-          {tt('workers.workers_info')} <a target="_blank" href="/@lex/interfeis-dlya-zayavok-vorkerov">{tt('g.more_hint')}</a> <Icon name="extlink" size="1_5x" />
+          {tt('workers.workers_info')} <a href="/@lex/interfeis-dlya-zayavok-vorkerov">{tt('g.more_hint')}</a> <Icon name="extlink" size="1_5x" />
           <hr />
         </div>
         <Button onClick={this.createRequest} round="true" type="primary">+ {tt('workers.create_request')}</Button>

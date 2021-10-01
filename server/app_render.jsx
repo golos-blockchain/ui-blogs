@@ -1,5 +1,6 @@
 import React from 'react';
 import { renderToNodeStream } from 'react-dom/server';
+import golos from 'golos-lib-js';
 import stringToStream from 'string-to-stream';
 import multiStream from 'multistream';
 import { ServerStyleSheet } from 'styled-components'
@@ -17,6 +18,8 @@ const DB_RECONNECT_TIMEOUT = process.env.NODE_ENV === 'development' ? 1000 * 60 
 async function appRender(ctx) {
     const store = {};
     try {
+        await golos.importNativeLib();
+
         let select_tags = [];
         try {
             select_tags = JSON.parse(decodeURIComponent(ctx.cookies.get(SELECT_TAGS_KEY) || '[]') || '[]') || [];

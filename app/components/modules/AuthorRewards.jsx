@@ -30,8 +30,7 @@ class AuthorRewards extends React.Component {
         const {state: {historyIndex}} = this
         const account = this.props.account;
 
-        // FIX bug, golos doesn't return transfer_history sometimes
-        if (!account.transfer_history) account.transfer_history = [];
+        const transfer_history = account.transfer_history || [];
 
         /// transfer log
         let rewards24Vests = 0, rewardsWeekVests = 0, totalRewardsVests = 0;
@@ -41,7 +40,7 @@ class AuthorRewards extends React.Component {
         const lastWeek = new Date(today.getTime() - 7 * oneDay ).getTime();
 
         let firstDate, finalDate;
-        let author_log = account.transfer_history.map((item, index) => {
+        let author_log = transfer_history.map((item, index) => {
             // Filter out rewards
             if (item[1].op[0] === "author_reward") {
                 if (!finalDate) {

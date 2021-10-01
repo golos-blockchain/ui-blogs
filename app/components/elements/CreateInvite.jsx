@@ -9,7 +9,7 @@ import user from 'app/redux/User';
 import tt from 'counterpart';
 import {cleanReduxInput} from 'app/utils/ReduxForms'
 import reactForm from 'app/utils/ReactForm';
-import {PrivateKey} from 'golos-classic-js/lib/auth/ecc';
+import {PrivateKey} from 'golos-lib-js/lib/auth/ecc';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import Icon from 'app/components/elements/Icon';
@@ -197,7 +197,7 @@ class CreateInvite extends Component {
             <form onSubmit={this.handleSubmitForm}>
                 <div className="row">
                     <div className="column small-10 secondary">
-                        {tt('invites_jsx.create_invite_info')} <a target="_blank" href="/@lex/cheki-kak-instrument-peredachi-tokenov">{tt('g.more_hint')}</a> <Icon name="extlink" size="1_5x" />
+                        {tt('invites_jsx.create_invite_info')} <a href="/@lex/cheki-kak-instrument-peredachi-tokenov">{tt('g.more_hint')}</a> <Icon name="extlink" size="1_5x" />
                     <hr />
                     </div>
                 </div>

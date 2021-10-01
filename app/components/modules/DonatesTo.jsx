@@ -29,11 +29,10 @@ class DonatesTo extends React.Component {
         const {state: {historyIndex}} = this
         const {account, incoming} = this.props;
 
-        // FIX bug, golos doesn't return transfer_history sometimes
-        if (!account.transfer_history) account.transfer_history = [];
+        const transfer_history = account.transfer_history || [];
 
         /// transfer log
-        let curation_log = account.transfer_history.map((item, index) => {
+        let curation_log = transfer_history.map((item, index) => {
             // Filter out rewards
             if (item[1].op[0] === "donate") {
                 let context = "";

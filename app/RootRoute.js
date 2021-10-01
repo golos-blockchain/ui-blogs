@@ -46,6 +46,8 @@ export default {
             cb(null, [require('@pages/WitnessesLoader')]);
         } else if (route.page === 'Workers') {
             cb(null, [require('@pages/WorkersLoader')]);
+        } else if (route.page === 'MinusedAccounts') {
+            cb(null, [require('@pages/MinusedAccounts')]);
         } else if (route.page === 'Nodes') {
             cb(null, [require('@pages/NodesLoader')]);
         } else if (route.page === 'LeavePage') {

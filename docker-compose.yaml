@@ -10,8 +10,8 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SDC_CLIENT_WEBSOCKET_URL: https://api-full.golos.id
-      SDC_SERVER_WEBSOCKET_URL: https://api-full.golos.id
-      SDC_MSGS_WEBSOCKET_URL: wss://api-full.golos.id/ws
+      SDC_CLIENT_WEBSOCKET_URL: https://apibeta.golos.today
+      SDC_SERVER_WEBSOCKET_URL: https://apibeta.golos.today
+      SDC_MSGS_WEBSOCKET_URL: wss://apibeta.golos.today/ws
       
   # other parameters in config/custom-environment-variables.json

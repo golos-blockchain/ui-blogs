@@ -22,53 +22,53 @@ class WitnessProps extends React.Component {
             ['create_account_delegation_time', 'raw'],
         ],
         [
-            ['maximum_block_size', 'raw'],
-            ['custom_ops_bandwidth_multiplier', 'raw'],
-            ['min_invite_balance', 'golos'],
-            ['invite_transfer_interval_sec', 'time'],
-        ],
-        [
-            ['sbd_interest_rate'],
-            ['sbd_debt_convert_rate'],
-        ],
-        [
-            ['min_delegation', 'golos'],
-            ['max_delegated_vesting_interest_rate'],
-        ],
-        [
             ['max_referral_interest_rate'],
             ['max_referral_term_sec', 'time'],
             ['min_referral_break_fee', 'golos'],
             ['max_referral_break_fee', 'golos'],
         ],
         [
+            ['maximum_block_size', 'raw'],
+            ['worker_emission_percent'],
+            ['vesting_of_remain_percent'],
+        ],
+        [
+            ['sbd_interest_rate'],
+            ['convert_fee_percent'],
+            ['sbd_debt_convert_rate'],
+        ], 
+        [
+            ['asset_creation_fee', 'gbg'],
+            ['min_delegation', 'golos'],
+            ['max_delegated_vesting_interest_rate'],
+        ],
+        [
             ['posts_window', 'raw'],
             ['posts_per_window', 'raw'],
+        ],
+        [
             ['comments_window', 'raw'],
             ['comments_per_window', 'raw'],
         ],
         [
             ['votes_window', 'raw'],
             ['votes_per_window', 'raw'],
-            ['vote_regeneration_per_day', 'raw'],
+            ['vote_regeneration_per_day', 'raw'],           
         ],
         [
+            ['negrep_posting_window', 'raw'],
+            ['negrep_posting_per_window', 'raw'],
+            ['custom_ops_bandwidth_multiplier', 'raw'],
+        ],
+        [
+            ['min_golos_power_to_curate', 'golos'],
+            ['curation_reward_curve', ['bounded','linear','square_root']],
             ['min_curation_percent'],
             ['max_curation_percent'],
-            ['curation_reward_curve', ['bounded','linear','square_root']],
         ],
         [
-            ['auction_window_size', 'raw'],
-            ['allow_distribute_auction_reward', 'bbool'],
-            ['allow_return_auction_reward_to_fund', 'bbool'],
-        ],
-        [
-            ['worker_reward_percent'],
-            ['witness_reward_percent'],
-            ['vesting_reward_percent'],
-        ],
-        [
-            ['asset_creation_fee', 'gbg'],
+            ['min_invite_balance', 'golos'],
+            ['invite_transfer_interval_sec', 'time'],
             ['worker_request_creation_fee', 'gbg'],
             ['worker_request_approve_min_percent'],
         ],
@@ -77,6 +77,16 @@ class WitnessProps extends React.Component {
             ['witness_idleness_time', 'time'],
             ['account_idleness_time', 'time'],
             ['claim_idleness_time', 'time'],
+        ],
+        [
+            ['worker_reward_percent', 'dropped', 0],
+            ['witness_reward_percent', 'dropped', 0],
+            ['vesting_reward_percent', 'dropped', 0],
+        ],
+        [
+            ['auction_window_size', 'dropped', 0],
+            ['allow_distribute_auction_reward', 'dropped', 'true'],
+            ['allow_return_auction_reward_to_fund', 'dropped', 'true'],
         ],
     ];
 
@@ -105,17 +115,19 @@ class WitnessProps extends React.Component {
 
         let props = {};
         for (let prop of this.wp_flat) {
-            if (prop.length === 1 || prop[1] == "raw" || prop[1] == "time") {
+            if (prop.length === 1 || prop[1] == 'raw' || prop[1] == 'time') {
                 props[prop[0]] = parseInt(this.state[prop[0]].value);
+            } else if (prop[1] === 'dropped') {
+                props[prop[0]] = prop[2];
             } else {
                 props[prop[0]] = this.state[prop[0]].value;
             }
         }
-        if (props.curation_reward_curve == "bounded") {
+        if (props.curation_reward_curve == 'bounded') {
             props.curation_reward_curve = 0;
-        } else if (props.curation_reward_curve == "linear") {
+        } else if (props.curation_reward_curve == 'linear') {
             props.curation_reward_curve = 1;
-        } else if (props.curation_reward_curve == "square_root") {
+        } else if (props.curation_reward_curve == 'square_root') {
             props.curation_reward_curve = 2;
         }
         props.create_account_delegation_time = parseInt(props.create_account_delegation_time);
@@ -132,7 +144,7 @@ class WitnessProps extends React.Component {
         props.comments_per_window = parseInt(props.comments_per_window);
         updateChainProperties({
             owner: account.name,
-            props: [5, props],
+            props: [6, props],
             errorCallback: (e) => {
                 if (e === 'Canceled') {
                     this.setState({
@@ -178,41 +190,43 @@ class WitnessProps extends React.Component {
                 const field = this.state[f[0]];
 
                 let input = null;
-                if (f[1] == 'bool') {
-                    input = <input type="checkbox" {...field.props} />
-                } else if (f[1] == 'raw') {
-                    input = <input type="text" {...field.props} />
+                if (f[1] === 'bool') {
+                    input = <input type='checkbox' {...field.props} />
+                } else if (f[1] === 'raw') {
+                    input = <input type='text' {...field.props} />
+                } else if (f[1] === 'dropped') {
+                    return null;
                 } else {
-                    input = <input type="text" {...field.props} />
+                    input = <input type='text' {...field.props} />
                 }
 
                 return (<td key={f[0]}>
                     <label title={tt('g.'+f[0])}>{f[0]}
                     {input}</label>
-                    <div className="error">{field.touched && field.error}</div>
+                    <div className='error'>{field.touched && field.error}</div>
                 </td>);
             });
             return (<tr>{fields}</tr>);
         });
 
-        return (<div className="UserWallet">
+        return (<div className='UserWallet'>
             <WitnessSettings 
                 account={this.props.account} />
-            <form onSubmit={this.handleSubmitForm} className="small-12 medium-8 large-6 columns">
+            <form onSubmit={this.handleSubmitForm} className='small-12 medium-8 large-6 columns'>
                     <div>
-                    <h3 className="inline">Параметры сети</h3>&nbsp;&nbsp;
+                    <h3 className='inline'>Параметры сети</h3>&nbsp;&nbsp;
 
-                    {state.loading && <span><LoadingIndicator type="circle" /><br /></span>}
-                    {!state.loading && <input type="submit" className="button" value="Сохранить" disabled={disabled} />}
+                    {state.loading && <span><LoadingIndicator type='circle' /><br /></span>}
+                    {!state.loading && <input type='submit' className='button' value='Сохранить' disabled={disabled} />}
                     {' '}{
                             state.errorMessage
-                                ? <small className="error">{state.errorMessage}</small>
+                                ? <small className='error'>{state.errorMessage}</small>
                                 : state.successMessage
-                                ? <small className="success uppercase">{state.successMessage}</small>
+                                ? <small className='success uppercase'>{state.successMessage}</small>
                                 : null
                         }
                     </div>
-                    <table className="WitnessPropsTable">
+                    <table className='WitnessPropsTable'>
                         {groups}
                     </table>
 

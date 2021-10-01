@@ -83,7 +83,7 @@ class PostForm extends React.Component {
             rteState: null,
             tags: [],
             postError: null,
-            payoutType: PAYOUT_TYPES.PAY_50,
+            payoutType: PAYOUT_TYPES.PAY_100,
             curationPercent: DEFAULT_CURATION_PERCENT,
             isPosting: false,
             uploadingCount: 0,
