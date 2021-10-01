@@ -9,6 +9,7 @@ import {notifyApiLogin, notifyApiLogout} from 'app/utils/NotifyApiClient';
 import {serverApiLogin, serverApiLogout} from 'app/utils/ServerApiClient';
 import {serverApiRecordEvent} from 'app/utils/ServerApiClient';
 import {loadFollows} from 'app/redux/FollowSaga'
+import {session, signData} from 'golos-lib-js/lib/auth'
 import {PrivateKey, Signature, hash} from 'golos-lib-js/lib/auth/ecc'
 import {api} from 'golos-lib-js'
 import g from 'app/redux/GlobalReducer'
@@ -151,11 +152,11 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     // login, using saved password
     let autopost, memoWif, login_owner_pubkey, login_wif_owner_pubkey
     if (!username && !password) {
-        const data = localStorage.getItem('autopost2')
+        const data = session.load();
         if (data) { // auto-login with a low security key (like a posting key)
             autopost = true; // must use simi-colon
             // The 'password' in this case must be the posting private wif .. See setItme('autopost')
-            [username, password, memoWif, login_owner_pubkey] = new Buffer(data, 'hex').toString().split('\t');
+            [username, password, memoWif, login_owner_pubkey] = data;
             memoWif = clean(memoWif);
             login_owner_pubkey = clean(login_owner_pubkey);
         }
@@ -222,7 +223,7 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     }
     const fullAuths = authority.reduce((r, auth, type) => (auth === 'full' ? r.add(type) : r), Set())
     if (!fullAuths.size) {
-        localStorage.removeItem('autopost2')
+        session.clear();
         const owner_pub_key = account.getIn(['owner', 'key_auths', 0, 0]);
         // const pub_keys = yield select(state => state.user.get('pub_keys_used'))
         // serverApiRecordEvent('login_attempt', JSON.stringify({name: username, ...pub_keys, cur_owner: owner_pub_key}))
@@ -266,7 +267,7 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
             posting_pubkey === active_pubkey
         ) {
             yield put(user.actions.loginError({ error: 'This login gives owner or active permissions and should not be used here.  Please provide a posting only login.' }))
-            localStorage.removeItem('autopost2')
+            session.clear();
             return
         }
     }
@@ -326,15 +327,10 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
             if (!res.already_authorized) {
                 console.log('login_challenge', res.login_challenge);
 
-                const signatures = {};
                 const challenge = {token: res.login_challenge};
-                const bufSha = hash.sha256(JSON.stringify(challenge, null, 0));
-                const sign = (role, d) => {
-                    if (!d) return;
-                    const sig = Signature.signBufferSha256(bufSha, d);
-                    signatures[role] = sig.toHex();
-                };
-                sign('posting', private_keys.get('posting_private'));
+                const signatures = signData(JSON.stringify(challenge, null, 0), {
+                    posting: private_keys.get('posting_private'),
+                });
                 const res2 = yield authApiLogin(username, signatures);
                 if (res2.guid) {
                     localStorage.setItem('guid', res2.guid)
@@ -386,20 +382,20 @@ function* saveLogin_localStorage() {
         state.user.getIn(['current', 'login_owner_pubkey']),
     ]))
     if (!username) {
-        localStorage.removeItem('autopost2')
+        session.clear();
         console.error('Not logged in')
         return
     }
     // Save the lowest security key
     const posting_private = private_keys.get('posting_private')
     if (!posting_private) {
-        localStorage.removeItem('autopost2')
+        session.clear();
         console.error('No posting key to save?')
         return
     }
     const account = yield select(state => state.global.getIn(['accounts', username]))
     if(!account) {
-        localStorage.removeItem('autopost2')
+        session.clear();
         console.error('Missing global.accounts[' + username + ']')
         return
     }
@@ -414,21 +410,18 @@ function* saveLogin_localStorage() {
                 throw 'Login will not be saved, posting key is the same as owner key'
         })
     } catch(e) {
-        localStorage.removeItem('autopost2')
+        session.clear();
         console.error(e)
         return
     }
     const memoKey = private_keys.get('memo_private')
-    const memoWif = memoKey && memoKey.toWif()
-    const data = new Buffer(`${username}\t${posting_private.toWif()}\t${memoWif || ''}\t${login_owner_pubkey || ''}`).toString('hex')
-    // autopost is a auto login for a low security key (like the posting key)
-    localStorage.setItem('autopost2', data)
+    session.save(username, posting_private, memoKey, login_owner_pubkey);
 }
 
 function* logout() {
     yield put(user.actions.saveLoginConfirm(false)) // Just incase it is still showing
     if (process.env.BROWSER) {
-        localStorage.removeItem('autopost2')
+        session.clear();
         localStorage.removeItem('guid')
     }
     authApiLogout();

@@ -1,6 +1,7 @@
 /* eslint react/prop-types: 0 */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
+import {pageSession} from 'golos-lib-js/lib/auth';
 import {PrivateKey, PublicKey} from 'golos-lib-js/lib/auth/ecc'
 import transaction from 'app/redux/Transaction'
 import g from 'app/redux/GlobalReducer'
@@ -342,8 +343,7 @@ export default connect(
                 const {type, operation, trx, successCallback, errorCallback} = loginBroadcastOperation.toJS()
                 const authSaver = () => {
                     if (!/^vote|comment/.test(type) && location.pathname.startsWith('/market')) {
-                        const data = Date.now().toString() + '\t' + new Buffer(password).toString('hex');
-                        sessionStorage.setItem('session_id', data);
+                        pageSession.save(password);
                     }
                     successCallback();
                 };

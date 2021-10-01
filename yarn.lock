@@ -5627,10 +5627,10 @@ globule@^1.0.0:
     lodash "~4.17.10"
     minimatch "~3.0.2"
 
-golos-lib-js@^0.9.4:
-  version "0.9.4"
-  resolved "https://registry.yarnpkg.com/golos-lib-js/-/golos-lib-js-0.9.4.tgz#d49d6c9fd633f0f7f1327c58d75a40bb437c4a6d"
-  integrity sha512-BnbqlpR8tt101uToaHXilOq6AFKr0W6p9xDINdsvhtFnjOi5ddTC+0/+NxSfaUw6xSIrYV27Jct0SVpD+utpwg==
+golos-lib-js@^0.9.8:
+  version "0.9.8"
+  resolved "https://registry.yarnpkg.com/golos-lib-js/-/golos-lib-js-0.9.8.tgz#7f66595431d4185232dd71391978583b058ce512"
+  integrity sha512-IVju5zWHRsedxzt8zd7b6IAy6Csfl3iHvNg5VT8IFSAoaveNAv4pEt/HewSCYq7W3Yhd+nSs3Owu2uYpoNR88A==
   dependencies:
     bigi "^1.4.2"
     bluebird "^3.7.2"
