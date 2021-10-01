@@ -64,7 +64,7 @@ const transfer = (scope, type, op) => {
 };
 
 const comment = (scope, type, op) => {
-    const { author, permlink, parent_author, parent_permlink, _depth, } = op;
+    const { author, permlink, parent_author, parent_permlink, _depth, mentioned, } = op;
 
     let icon = null;
     let message = null;
@@ -84,7 +84,7 @@ const comment = (scope, type, op) => {
         } else {
             message = tt('notify_content.mention_post');
         }
-        url = `/@${author}/${permlink}`;
+        url = `/@${mentioned}/mentions`;
     } else {
         return null;
     }
