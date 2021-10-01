@@ -61,6 +61,13 @@
     "empty": "No downvoted accounts yet.",
     "link_title": "Downvoted Users"
   },
+  "mentions_jsx": {
+    "empty_NAME": "No %(NAME)s mentions yet.",
+    "mention_NAME": " has mentioned %(NAME)s in a ",
+    "mention_post": "post ",
+    "mention_comment": "comment ",
+    "you": "you"
+  },
   "g": {
     "golos_fest": "Golos.id News",
     "APP_NAME": "Golos",
@@ -135,6 +142,7 @@
     "loading": "Loading",
     "login": "Login",
     "logout": "Logout",
+    "mentions": "Mentions",
     "memo": "Memo",
     "messages": "Messages",
     "modified": " (updated)",
@@ -967,6 +975,7 @@
     "notifications_reply": "Reply notifications",
     "notifications_mention": "Mention notifications",
     "notifications_message": "Private message notifications",
+    "notifications_order": "Market order filled",
     "invalid_url": "Invalid URL",
     "name_is_too_long": "Name is too long",
     "name_must_not_begin_with": "Name must not begin with @",

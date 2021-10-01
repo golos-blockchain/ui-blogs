@@ -134,6 +134,7 @@ const icons = new Map([
     ['notification/transfer', require('app/assets/icons/notification/transfer.svg')],
     ['notification/mention', require('app/assets/icons/notification/mention.svg')],
     ['notification/message', require('app/assets/icons/notification/message.svg')],
+    ['notification/order', require('app/assets/icons/notification/order.svg')],
 ]);
 
 const rem_sizes = {

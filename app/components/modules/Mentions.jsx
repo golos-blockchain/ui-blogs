@@ -13,31 +13,34 @@ class Mentions extends Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        if (!this.props.account.reputation_history) return true;
-        if (!nextProps.account.reputation_history) return true;
+        if (!this.props.account.mentions) return true;
+        if (!nextProps.account.mentions) return true;
         return (
-            nextProps.account.reputation_history.length !== this.props.account.reputation_history.length);
+            nextProps.account.mentions.length !== this.props.account.mentions.length);
     }
 
-    _renderReputationHistoryRow(operation, key) {
+    _renderMentionHistoryRow(operation, key) {
         const op = operation[1].op;
 
-        let account = op[1].voter;
-        let text = '';
-        if (op[1].vote_weight > 0){ 
-            text = tt('reputation_history_jsx.upvoted');
-        } else {
-            text = tt('reputation_history_jsx.downvoted');
-        }
+        let account = op[1].author;
+        const { current_user, } = this.props;
+        let isMyAccount = current_user && current_user.get('username') === op[1].mentioned;
 
-        let rep = golos.formatter.reputation(op[1].reputation_after, true);
-        rep -= golos.formatter.reputation(op[1].reputation_before, true);
-        let repFixed = parseFloat(rep.toFixed(3));
-        repFixed = Math.abs(repFixed);
-        if (repFixed === 0) {
-            repFixed = '~0.001';
+        let link = '';
+        let linkTitle = '';
+
+        let text = tt('mentions_jsx.mention_NAME', {
+            NAME: isMyAccount ? tt('mentions_jsx.you') : op[1].mentioned,
+        });
+        if (!op[1].parent_author){ 
+            text += tt('mentions_jsx.mention_post');
+            linkTitle = op[1].author + '/' + op[1].permlink;
+            link = '/@' + linkTitle;
+        } else {
+            text += tt('mentions_jsx.mention_comment');
+            linkTitle = op[1].author + '/' + op[1].permlink;
+            link = '/@' + linkTitle;
         }
-        text += repFixed;
 
         return (<tr key={key}>
             <td style={{fontSize: '85%'}}>
@@ -48,6 +51,7 @@ class Mentions extends Component {
             <td>
                 <Link to={`/@${account}`}>{account}</Link>
                 {text}
+                <Link to={link}>{linkTitle}</Link>
             </td>
         </tr>);
     }
@@ -55,28 +59,22 @@ class Mentions extends Component {
     render() {
         const {account, incoming} = this.props;
 
-        let reputation_history = account.reputation_history || [];
-        reputation_history = reputation_history.reverse();
+        let mentions = account.mentions || [];
+        mentions = mentions.reverse();
 
-        let history = reputation_history.map((operation, index) => {
-            return this._renderReputationHistoryRow(operation, index);
+        let history = mentions.map((operation, index) => {
+            return this._renderMentionHistoryRow(operation, index);
         });
 
         return (
             <div>
-                <span style={{float: 'right', fontSize: '85%', marginLeft: '10px'}}>
-                    <Link to='/minused_accounts'><Icon name="new/downvote" size="2x" /> {tt('minused_accounts_jsx.link_title')}</Link>
-                </span>
-                <span style={{float: 'right', fontSize: '85%'}}>
-                    <a target="_blank" rel="noopener noreferrer" href="https://dpos.space/golos/top/reputation"><Icon name="hf/hf18" size="2x" /> {tt('reputation_history_jsx.top_reputation')}</a>
-                </span>
-                <h4 className='uppercase'>{tt('reputation_history_jsx.title')}</h4>
+                <h4 className='uppercase'>{tt('g.mentions')}</h4>
                 {history.length ? (<table>
                     <tbody>
                         {history}
                     </tbody>
                 </table>) : null}
-                {!history.length ? (<Callout>{tt('reputation_history_jsx.empty_NAME', {
+                {!history.length ? (<Callout>{tt('mentions_jsx.empty_NAME', {
                     NAME: account ? account.name : '',
                 })}</Callout>) : null}
             </div>);
