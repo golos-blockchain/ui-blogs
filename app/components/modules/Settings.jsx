@@ -82,9 +82,12 @@ class Settings extends React.Component {
         if (process.env.BROWSER){
             notifyPresets = localStorage.getItem('notify.presets-' + accountname)
             if (notifyPresets) notifyPresets = JSON.parse(notifyPresets)
+            if (notifyPresets && notifyPresets.fill_order === undefined) {
+                notifyPresets.fill_order = true;
+            }
         }
         if (!notifyPresets) notifyPresets = {
-            receive: true, donate: true, comment_reply: true, mention: true, message: true,
+            receive: true, donate: true, comment_reply: true, mention: true, message: true, fill_order: true,
         }
         this.setState({notifyPresets})
     }
@@ -284,11 +287,7 @@ class Settings extends React.Component {
 
     onNotifyPresetChange = e => {
         let notifyPresets = {...this.state.notifyPresets};
-        if (e.target.checked) {
-            notifyPresets[e.target.dataset.type] = true;
-        } else {
-            delete notifyPresets[e.target.dataset.type];
-        }
+        notifyPresets[e.target.dataset.type] = e.target.checked;
         this.setState({
             notifyPresets,
             notifyPresetsTouched: true,
@@ -563,6 +562,11 @@ class Settings extends React.Component {
                             <input type='checkbox' checked={!!notifyPresets.message} data-type='message' onChange={this.onNotifyPresetChange} />
                             <Icon name='notification/message' size='2x' />
                             <span>{tt('settings_jsx.notifications_message')}</span>
+                        </label>
+                        <label>
+                            <input type='checkbox' checked={!!notifyPresets.fill_order} data-type='fill_order' onChange={this.onNotifyPresetChange} />
+                            <Icon name='notification/order' size='2x' />
+                            <span>{tt('settings_jsx.notifications_order')}</span>
                         </label>
                         <br />
                         <input

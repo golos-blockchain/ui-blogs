@@ -149,6 +149,13 @@
     "empty": "Пока ни один аккаунт не введен в минус.",
     "link_title": "Заминусованные пользователи"
   },
+  "mentions_jsx": {
+    "empty_NAME": "Пока что упоминаний %(NAME)s не было.",
+    "mention_NAME": " упомянул %(NAME)s в ",
+    "mention_post": "посте ",
+    "mention_comment": "комментарии ",
+    "you": "вас"
+  },
   "g": {
     "golos_fest": "Новости",
     "APP_NAME": "Голос",
@@ -769,6 +776,7 @@
     "notifications_reply": "Ответ на комментарий или пост",
     "notifications_mention": "Упоминание имени в посте или комментарии",
     "notifications_message": "Новое сообщение",
+    "notifications_order": "Сработал ордер на бирже",
     "invalid_url": "Недопустимый URL-адрес",
     "invalid_ws": "wss://api-full.golos.id/ws",
     "invalid_ip_port": "Пример: 120.16.10.18:2001",

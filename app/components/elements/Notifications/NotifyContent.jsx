@@ -4,6 +4,7 @@ import Icon from 'app/components/elements/Icon';
 import Userpic from 'app/components/elements/Userpic';
 import iconCross from 'app/assets/icons/cross.svg';
 import tt from 'counterpart';
+import { Asset } from 'golos-lib-js/lib/utils';
 
 const actionStyle = {
     // fixme
@@ -63,7 +64,7 @@ const transfer = (scope, type, op) => {
 };
 
 const comment = (scope, type, op) => {
-    const { author, permlink, parent_author, parent_permlink, _depth, } = op;
+    const { author, permlink, parent_author, parent_permlink, _depth, mentioned, } = op;
 
     let icon = null;
     let message = null;
@@ -76,14 +77,14 @@ const comment = (scope, type, op) => {
             message = tt('notify_content.reply_post');
         }
         url = `/@${parent_author}/recent-replies`;
-    } else if (scope === 'comment_mention') {
+    } else if (scope === 'mention') {
         icon = 'notification/mention';
         if (parent_author) {
             message = tt('notify_content.mention_comment');
         } else {
             message = tt('notify_content.mention_post');
         }
-        url = `/@${author}/${permlink}`;
+        url = `/@${mentioned}/mentions`;
     } else {
         return null;
     }
@@ -173,14 +174,19 @@ const fillOrder = (scope, type, op) => {
 
 function render(action) {
     const { scope, type, op } = action;
-    return (
-        type === 'transfer' ? transfer(scope, type, op) :
-        type === 'donate' ? transfer(scope, type, op) :
-        (type === 'comment' || type === 'comment_reply' || type === 'comment_mention') ? comment(scope, type, op) :
-        type === 'private_message' ? message(scope, type, op) :
-        type === 'fill_order' ? fillOrder(scope, type, op) :
-        null
-    );
+    try {
+        return (
+            type === 'transfer' ? transfer(scope, type, op) :
+            type === 'donate' ? transfer(scope, type, op) :
+            (type === 'comment' || type === 'comment_reply' || type === 'comment_mention') ? comment(scope, type, op) :
+            type === 'private_message' ? message(scope, type, op) :
+            type === 'fill_order' ? fillOrder(scope, type, op) :
+            null
+        );
+    } catch (err) {
+        console.error('NotifyContent', err);
+        throw err;
+    }
 }
 
 export default action => ({

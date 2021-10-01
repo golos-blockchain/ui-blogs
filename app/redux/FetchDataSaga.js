@@ -223,6 +223,17 @@ export function* fetchState(location_change_action) {
                             }
                         });
                     break
+
+                    case 'mentions':
+                        const mhistory = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {select_ops: ['comment_mention']});
+                        account.mentions = [];
+                        mhistory.forEach(operation => {
+                            const op = operation[1].op;
+                            if (op[0] === 'comment_mention' && op[1].mentioned === uname) {
+                                state.accounts[uname].mentions.push(operation);
+                            }
+                        });
+                    break
                     case 'blog':
                     default:
                         const blogEntries = yield call([api, api.getBlogEntriesAsync], uname, 0, 20, ['fm-'])

@@ -23,7 +23,7 @@ import DonatesTo from 'app/components/modules/DonatesTo';
 import CurationRewards from 'app/components/modules/CurationRewards';
 import AuthorRewards from 'app/components/modules/AuthorRewards';
 import ReputationHistory from 'app/components/modules/ReputationHistory'
-//import Mentions from 'app/components/modules/Mentions'
+import Mentions from 'app/components/modules/Mentions'
 import UserList from 'app/components/elements/UserList';
 import Follow from 'app/components/elements/Follow';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
@@ -432,7 +432,7 @@ export default class UserProfile extends React.Component {
                 </div>
             );
         }
-        /*else if( (section === 'mentions')) {
+        else if( (section === 'mentions')) {
             tab_content = (
                 <div>
                     <Mentions
@@ -440,9 +440,10 @@ export default class UserProfile extends React.Component {
                         current_user={current_user}
                         loading={fetching}
                     />
+                    { isMyAccount && <div><MarkNotificationRead fields='mention' account={account.name} /></div> }
                 </div>
             );
-        }*/
+        }
         else if( section === 'permissions' && isMyAccount ) {
             walletClass = 'active'
             tab_content = <div>
