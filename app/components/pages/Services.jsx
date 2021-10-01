@@ -24,10 +24,10 @@ class Services extends React.Component {
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
                                 <h4><a target="_blank" rel="noopener noreferrer" href="https://dpos.space/golos/"><Icon name="new/monitor" /> Сервисы dpos.space</a></h4>
-                                Разработчик сервисов <a target="_blank" href="/@denis-skripnik">@denis-skripnik</a>
+                                Разработчик сервисов <a href="/@denis-skripnik">@denis-skripnik</a>
                                 </div>
                                 <div className='column large-12 medium-12 small-12'>
-                                    <br />Большое количество разнообразных инструментов для работы с блокчейном и получения из него информации... <a target="_blank" href="/@denis-skripnik/dpos-space-services-worker">{tt('g.more_hint')}</a> <Icon name="extlink" />
+                                    <br />Большое количество разнообразных инструментов для работы с блокчейном и получения из него информации... <a href="/@denis-skripnik/dpos-space-services-worker">{tt('g.more_hint')}</a> <Icon name="extlink" />
                                 </div>
                             </div>
                         </div>
@@ -45,10 +45,10 @@ class Services extends React.Component {
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
                                 <h4><a target="_blank" rel="noopener noreferrer" href="https://golos.cf/"><Icon name="new/monitor" /> Сервисы golos.cf</a></h4>
-                                Разработчик сервисов <a target="_blank" href="/@vik">@vik</a>
+                                Разработчик сервисов <a href="/@vik">@vik</a>
                                 </div>
                                 <div className=' column large-12 medium-12 small-12'>
-                                    <br />Функциональный и удобный сервис для получения информации из блокчейна о любом аккаунте и истории операций... <a target="_blank" href="/@vik/explorer-guide">{tt('g.more_hint')}</a> <Icon name="extlink" />
+                                    <br />Функциональный и удобный сервис для получения информации из блокчейна о любом аккаунте и истории операций... <a href="/@vik/explorer-guide">{tt('g.more_hint')}</a> <Icon name="extlink" />
                                 </div>
                             </div>
                         </div>
@@ -66,10 +66,10 @@ class Services extends React.Component {
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
                                 <h4><a target="_blank" href="https://t.me/golosclassicbot"><Icon name="new/telegram" /> golosclassicbot</a></h4>
-                                Разработчик телеграм-бота <a target="_blank" href="/@rudex">@rudex</a>
+                                Разработчик телеграм-бота <a href="/@rudex">@rudex</a>
                                 </div>
                                 <div className='column large-12 medium-12 small-12'>
-                                    <br />Легко настраиваемый бот, который позволяет получать уведомления о разных событиях, связанных с выбранным пользователем (упоминания, комментарии, переводы, подписка)... <a target="_blank" href="/@vict0r/samyi-priyatnyi-bot-na-golose">{tt('g.more_hint')}</a> <Icon name="extlink" />
+                                    <br />Легко настраиваемый бот, который позволяет получать уведомления о разных событиях, связанных с выбранным пользователем (упоминания, комментарии, переводы, подписка)... <a href="/@vict0r/samyi-priyatnyi-bot-na-golose">{tt('g.more_hint')}</a> <Icon name="extlink" />
                                 </div>
                             </div>
                         </div>
@@ -78,7 +78,7 @@ class Services extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div className='landing-services-block'>
+                {/* <div className='landing-services-block'>
                     <div className='column large-12 medium-12 small-12'>
                         <div className='column large-12 medium-12 small-12'>
                             <hr/>
@@ -87,10 +87,10 @@ class Services extends React.Component {
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
                                 <h4><a target="_blank" href="https://t.me/upit_bot"><Icon name="new/telegram" /> upit_bot</a></h4>
-                                Разработчик телеграм-бота <a target="_blank" href="/@vvk">@vvk</a>
+                                Разработчик телеграм-бота <a href="/@vvk">@vvk</a>
                                 </div>
                                 <div className='column large-12 medium-12 small-12'>
-                                    <br />Бот, позволяющий подписываться на новые комментарии к постам с возможностью ответа на них, а также лайков/дизлайков, вознаграждений... <a target="_blank" href="/@upit/upit-comments-subscriptions">{tt('g.more_hint')}</a> <Icon name="extlink" />
+                                    <br />Бот, позволяющий подписываться на новые комментарии к постам с возможностью ответа на них, а также лайков/дизлайков, вознаграждений... <a href="/@upit/upit-comments-subscriptions">{tt('g.more_hint')}</a> <Icon name="extlink" />
                                 </div>
                             </div>
                         </div>
@@ -98,7 +98,7 @@ class Services extends React.Component {
                             <hr/>
                         </div>
                     </div>
-                </div>
+                </div> */}
                 <div className='landing-services-block'>
                     <div className='column large-12 medium-12 small-12'>
                         <div className='column large-12 medium-12 small-12'>
@@ -108,10 +108,10 @@ class Services extends React.Component {
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
                                 <h4><a target="_blank" href="https://t.me/tip23bot"><Icon name="new/telegram" /> tip23bot</a></h4>
-                                Разработчик телеграм-бота <a target="_blank" href="/@ksantoprotein">@ksantoprotein</a>
+                                Разработчик телеграм-бота <a href="/@ksantoprotein">@ksantoprotein</a>
                                 </div>
                                 <div className='column large-12 medium-12 small-12'>
-                                    <br />Бот позволяет вознаграждать токенами других пользователей в телеграм-группах, а также автоматически получать токены с вашего CLAIM-баланса... <a target="_blank" href="/@ksantoprotein/tip23bot-telegramm-bot-dlya-laikov-avtokleminga-i-igr">{tt('g.more_hint')}</a> <Icon name="extlink" />
+                                    <br />Бот позволяет вознаграждать токенами других пользователей в телеграм-группах, а также автоматически получать токены с вашего CLAIM-баланса... <a href="/@ksantoprotein/tip23bot-telegramm-bot-dlya-laikov-avtokleminga-i-igr">{tt('g.more_hint')}</a> <Icon name="extlink" />
                                 </div>
                             </div>
                         </div>
@@ -129,10 +129,10 @@ class Services extends React.Component {
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
                                 <h4><a target="_blank" href="https://t.me/gacinfobot"><Icon name="new/telegram" /> gacinfobot</a> и <a target="_blank" href="https://t.me/golosyakabot"><Icon name="new/telegram" /> golosyakabot</a></h4>
-                                Разработчик телеграм-ботов <a target="_blank" href="/@jackvote">@jackvote</a>
+                                Разработчик телеграм-ботов <a href="/@jackvote">@jackvote</a>
                                 </div>
                                 <div className='column large-12 medium-12 small-12'>
-                                    <br />gacinfobot - бот с подробной информацией об аккаунтах на Голосе, golosyakabot - сканер о событиях в блокчейне с подпиской на интересуемые аккаунты и/или операции... <a target="_blank" href="/@jackvote/informaciya-s-gakom-ili-bot-informator-ob-akkauntakh-golosa">{tt('g.more_hint')}</a> <Icon name="extlink" />
+                                    <br />gacinfobot - бот с подробной информацией об аккаунтах на Голосе, golosyakabot - сканер о событиях в блокчейне с подпиской на интересуемые аккаунты и/или операции... <a href="/@jackvote/informaciya-s-gakom-ili-bot-informator-ob-akkauntakh-golosa">{tt('g.more_hint')}</a> <Icon name="extlink" />
                                 </div>
                             </div>
                         </div>

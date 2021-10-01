@@ -48,7 +48,9 @@
     "confirm_downvote_ACCOUNT_NAME": "Are you sure you want to downvote @%(ACCOUNT_NAME)s? It will be saved in their reputation history."
   },
   "reputation_history_jsx": {
-    "top_reputation": "Rating of users by reputation",
+    "rating": "Rating",
+    "top": "tops of changes",
+    "reputation": "reputation",
     "title": "Reputation History",
     "upvoted": " increased your reputation by ",
     "downvoted": " decreased your reputation by ",
@@ -56,6 +58,8 @@
   },
   "minused_accounts_jsx": {
     "title": "Accounts With Negative Reputation",
+    "stats": "Voting by reputation from the profile",
+    "changes": "Tops of reputation changes for the week",
     "description": "There are accounts, whose reputation was downvoted recently.",
     "row_text": " downvoted by ",
     "empty": "No downvoted accounts yet.",
@@ -1057,7 +1061,7 @@
     "next_power_down_is_scheduled": "scheduled",
     "transfers_are_temporary_disabled": "Transfers are temporary disabled.",
     "cancel_power_down": "Cancel Power Down",
-    "top_dpos": "Top 100 users by Golos Power",
+    "top_dpos": "User rating on",
     "account_idleness": "Your account has not had any actions using the active key for a long time",
     "worker_foundation": "Workers foundation",
     "history_viewing": "Operation history",
@@ -1189,7 +1193,7 @@
   },
   "workers": {
     "workers_info": "For any work useful for the Golos Blockchain, you can get a reward by submitting an application, describing in detail what was done (development, design, advertising, documentation), anything if this initiative is supported by the community.",
-    "chat_workers": "Workers Chat",
+    "chat_workers": "Notifications for proposals",
     "worker_proposals": "Worker proposals",
     "create_request": "Create a proposal",
     "created": "Voting",

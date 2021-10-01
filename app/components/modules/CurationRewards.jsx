@@ -50,10 +50,8 @@ class CurationRewards extends React.Component {
         const {state: {historyIndex}} = this
         const { account, current_user, cprops, gprops, } = this.props;
 
-        const isMyAccount = current_user && current_user.get('username') === account.name;
-
         let gpDeficit = '';
-        if (isMyAccount && account.vesting_shares && gprops && cprops) {
+        if (account.vesting_shares && gprops && cprops) {
             let gpExists = this.effectiveVestingShares(account, gprops.toJS());
             let gpMin = cprops.get('min_golos_power_to_curate');
             if (gpMin) {
@@ -139,9 +137,11 @@ class CurationRewards extends React.Component {
             </div>
 
             {gpDeficit && <Callout>
-                <Link to={`/@${account.name}/transfers`}>{tt('curationrewards_jsx.replenish_golos_power')}</Link>
+                <div align="center"><Link to={`/@${account.name}/transfers`}>{tt('curationrewards_jsx.replenish_golos_power')}</Link>
                 {tt('curationrewards_jsx.replenish_golos_power_AMOUNT', {AMOUNT: gpDeficit})}
+                <br /><Icon name="golos" size="2x" /></div>
             </Callout>}
+
             {/*  -- These estimates have been causing issus, see #600 --
             <div className="UserWallet__balance UserReward__row row">
                 <div className="column small-12 medium-8">

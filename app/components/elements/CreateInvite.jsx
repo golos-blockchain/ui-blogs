@@ -197,7 +197,7 @@ class CreateInvite extends Component {
             <form onSubmit={this.handleSubmitForm}>
                 <div className="row">
                     <div className="column small-10 secondary">
-                        {tt('invites_jsx.create_invite_info')} <a target="_blank" href="/@lex/cheki-kak-instrument-peredachi-tokenov">{tt('g.more_hint')}</a> <Icon name="extlink" size="1_5x" />
+                        {tt('invites_jsx.create_invite_info')} <a href="/@lex/cheki-kak-instrument-peredachi-tokenov">{tt('g.more_hint')}</a> <Icon name="extlink" size="1_5x" />
                     <hr />
                     </div>
                 </div>
