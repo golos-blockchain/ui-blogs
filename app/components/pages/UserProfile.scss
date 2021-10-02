@@ -306,6 +306,12 @@
   margin-bottom: 0px;
 }
 
+.FilledOrders__market-link {
+    svg {
+        fill: #0078C4;
+    }
+}
+
 @media screen and (max-width: 39.9375em) {
 
     .UserProfile__menu-item {

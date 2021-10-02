@@ -234,6 +234,17 @@ export function* fetchState(location_change_action) {
                             }
                         });
                     break
+
+                    case 'filled-orders':
+                        const fohistory = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {select_ops: ['fill_order']});
+                        account.filled_orders = [];
+                        fohistory.forEach(operation => {
+                            const op = operation[1].op;
+                            if (op[0] === 'fill_order') {
+                                state.accounts[uname].filled_orders.push(operation);
+                            }
+                        });
+                    break
                     case 'blog':
                     default:
                         const blogEntries = yield call([api, api.getBlogEntriesAsync], uname, 0, 20, ['fm-'])
