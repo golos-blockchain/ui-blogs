@@ -24,6 +24,7 @@ import CurationRewards from 'app/components/modules/CurationRewards';
 import AuthorRewards from 'app/components/modules/AuthorRewards';
 import ReputationHistory from 'app/components/modules/ReputationHistory'
 import Mentions from 'app/components/modules/Mentions'
+import FilledOrders from 'app/components/modules/FilledOrders'
 import UserList from 'app/components/elements/UserList';
 import Follow from 'app/components/elements/Follow';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
@@ -444,6 +445,18 @@ export default class UserProfile extends React.Component {
                 </div>
             );
         }
+        else if( (section === 'filled-orders')) {
+            tab_content = (
+                <div>
+                    <FilledOrders
+                        account={account}
+                        current_user={current_user}
+                        loading={fetching}
+                    />
+                    { isMyAccount && <div><MarkNotificationRead fields='fill_order' account={account.name} /></div> }
+                </div>
+            );
+        }
         else if( section === 'permissions' && isMyAccount ) {
             walletClass = 'active'
             tab_content = <div>
@@ -550,6 +563,10 @@ export default class UserProfile extends React.Component {
                         <a href={`/@${accountname}/transfers`} className={`${walletClass} UserProfile__menu-item`} onClick={e => { e.preventDefault(); browserHistory.push(e.target.pathname); return false; }}>
                             {tt('g.wallet')} {isMyAccount && <NotifiCounter fields='send,receive' />}
                         </a>
+                        {isMyAccount ?
+                            <Link className='UserProfile__menu-item' to={`/@${accountname}/filled-orders`} activeClassName='active'>{tt('navigation.market2')} <NotifiCounter fields="fill_order" /></Link>
+                            : null
+                        }
                         {isMyAccount ?
                             <Link className='UserProfile__menu-item' to={`/@${accountname}/settings`} activeClassName='active'>{tt('g.settings')}</Link>
                             : null

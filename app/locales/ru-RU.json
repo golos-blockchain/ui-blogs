@@ -156,6 +156,12 @@
     "mention_comment": "комментарии ",
     "you": "вас"
   },
+  "filled_orders_jsx": {
+    "title": "История сделок на бирже",
+    "empty_NAME": "У %(NAME)s еще не было ни одной сделки. Купить и продать токены можно на ",
+    "empty2": "бирже",
+    "exchanged": "Обмен %(AMOUNT)s на %(AMOUNT2)s"
+  },
   "g": {
     "golos_fest": "Новости",
     "APP_NAME": "Голос",
@@ -774,7 +780,7 @@
     "notifications_transfer": "Перевод средств",
     "notifications_donate": "Вознаграждения (донаты)",
     "notifications_reply": "Ответ на комментарий или пост",
-    "notifications_mention": "Упоминание имени в посте или комментарии",
+    "notifications_mention": "Упоминание @ника в посте или комментарии",
     "notifications_message": "Новое сообщение",
     "notifications_order": "Сработал ордер на бирже",
     "invalid_url": "Недопустимый URL-адрес",
