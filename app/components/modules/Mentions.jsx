@@ -68,6 +68,9 @@ class Mentions extends Component {
 
         return (
             <div>
+                <span style={{float: 'right', fontSize: '85%'}}>
+                    <Link style={{fill: "#3e7bc6"}} to='/services'><Icon name="new/monitor" size="2x" /> {tt('navigation.services')}</Link>
+                </span>
                 <h4 className='uppercase'>{tt('g.mentions')}</h4>
                 {history.length ? (<table>
                     <tbody>

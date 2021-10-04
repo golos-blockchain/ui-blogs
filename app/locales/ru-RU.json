@@ -158,6 +158,7 @@
   },
   "filled_orders_jsx": {
     "title": "История сделок на бирже",
+    "orders_info": "На блокчейне Голос есть свой внутренний DEX (decentralized exchange - децентрализованная биржа), а значит обменивать токены GOLOS и UIA (эмитированные пользователями активы к другим криптовалютам) возможно прямо здесь.",
     "empty_NAME": "У %(NAME)s еще не было ни одной сделки. Купить и продать токены можно на ",
     "empty2": "бирже",
     "exchanged": "Обмен %(AMOUNT)s на %(AMOUNT2)s"
@@ -1040,7 +1041,7 @@
     "convert_to_LIQUID_TOKEN": "Конвертация в GOLOS",
     "withdraw_LIQUID_TOKEN": "Вывести GOLOS на основной баланс",
     "withdraw_DEBT_TOKENS": "Вывести GBG на основной баланс",
-    "tokens_worth_about_1_of_LIQUID_TICKER": "Торгуемые на внутренней бирже токены, цена которых стремится к стоимости %(TOKEN_WORTH)s в токенах ГОЛОС.",
+    "tokens_worth_about_1_of_LIQUID_TICKER": "Торгуемые на внутренней бирже токены, цена которых равна стоимости %(TOKEN_WORTH)s в токенах ГОЛОС.",
     "balances": "БАЛАНСЫ",
     "buy_LIQUID_TOKEN_or_VESTING_TOKEN": "Купить %(LIQUID_TOKEN)s или %(VESTING_TOKEN2)s",
     "savings": "СЕЙФ",

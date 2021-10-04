@@ -74,6 +74,7 @@
   },
   "filled_orders_jsx": {
     "title": "Filled market orders",
+    "orders_info": "Golos blockchain has its own internal DEX (decentralized exchange), which means it is possible to exchange GOLOS and UIA tokens (user-issued assets to other cryptocurrencies) right here.",
     "empty_NAME": "%(NAME)s have no filled orders yet. You can buy or sell tokens in the ",
     "empty2": "market",
     "exchanged": "Exchange %(AMOUNT)s for %(AMOUNT2)s"
