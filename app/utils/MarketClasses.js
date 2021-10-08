@@ -83,6 +83,8 @@ class Order {
         return (
             this.getStringAsset2() === order.getStringAsset2() &&
             this.getStringAsset1() === order.getStringAsset1() &&
+            this.getStringAsset2Cur() === order.getStringAsset2Cur() &&
+            this.getStringAsset1Cur() === order.getStringAsset1Cur() &&
             this.getStringPrice() === order.getStringPrice()
         );
     }
