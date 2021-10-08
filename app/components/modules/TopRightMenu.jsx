@@ -102,11 +102,18 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
         }
     }
 
+    const registerUrl = authRegisterUrl() + (invite ? ('?invite=' + invite) : '');
+
     const additional_menu = []
     if (!loggedIn) {
         additional_menu.push(
             { link: '/login.html', onClick: showLogin, value: tt('g.login'), className: 'show-for-small-only' },
-            { link: authRegisterUrl() + (invite ? ("?invite=" + invite) : ""), value: tt('g.sign_up'), className: 'show-for-small-only' }
+            { link: registerUrl,
+                onClick: (e) => {
+                    e.preventDefault();
+                    window.location.href = registerUrl;
+                },
+                value: tt('g.sign_up'), className: 'show-for-small-only' }
         )
     }
     additional_menu.push(
@@ -216,7 +223,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
               <a href="/login.html" onClick={showLogin} className={!vertical && 'button small violet hollow'}>{tt('g.login')}</a>
             </li>}
             {!probablyLoggedIn && <li className={scn}>
-              <a href={authRegisterUrl() + (invite ? ("?invite=" + invite) : "")} className={!vertical && 'button small alert'}>{tt('g.sign_up')}</a>
+              <a href={registerUrl} className={!vertical && 'button small alert'}>{tt('g.sign_up')}</a>
             </li>}
             {probablyLoggedIn && <li className={lcn}>
               <LoadingIndicator type="circle" inline />
