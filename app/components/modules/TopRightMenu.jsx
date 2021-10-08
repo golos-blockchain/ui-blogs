@@ -80,6 +80,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     const mentionsLink = `/@${username}/mentions`;
     const donatesLink = `/@${username}/donates-to`;
     const messagesLink = `/msgs`;
+    const ordersLink = `/@${username}/filled-orders`;
 
     const faqItem = <li className={scn}>
         <Link to="/faq" title={tt('navigation.faq')}><Icon name="info_o" size="1_5x" />
@@ -153,7 +154,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
             {link: mentionsLink, icon: 'new/mention', value: tt('g.mentions'), addon: <NotifiCounter fields="mention" />},
             {link: donatesLink, icon: 'editor/coin', value: tt('g.rewards'), addon: <NotifiCounter fields="donate" />},
             {link: walletLink, icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields="send,receive" />},
-            {link: '/market/GOLOS/GBG', icon: 'trade', value: tt('navigation.market2'), addon: <NotifiCounter fields="fill_order" />},
+            {link: ordersLink, icon: 'trade', value: tt('navigation.market2'), addon: <NotifiCounter fields="fill_order" />},
             {link: settingsLink, icon: 'new/setting', value: tt('g.settings')},            
             loggedIn ?
                 {link: '#', icon: 'new/logout', onClick: logout, value: tt('g.logout')} :

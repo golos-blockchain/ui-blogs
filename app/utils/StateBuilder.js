@@ -181,6 +181,30 @@ export default async function getState(api, url, options, offchain = {}) {
                         }
                     });
                 break
+
+                case 'mentions':
+                    const mhistory = await api.getAccountHistory(uname, -1, 1000, [], ['comment_mention']);
+                    account.mentions = [];
+
+                    mhistory.forEach(operation => {
+                        const op = operation[1].op;
+                        if (op[0] === 'comment_mention' && op[1].mentioned === uname) {
+                            state.accounts[uname].mentions.push(operation);
+                        }
+                    });
+                break
+
+                case 'filled-orders':
+                    const fohistory = await api.getAccountHistory(uname, -1, 1000, [], ['fill_order']);
+                    account.filled_orders = [];
+
+                    fohistory.forEach(operation => {
+                        const op = operation[1].op;
+                        if (op[0] === 'fill_order') {
+                            state.accounts[uname].filled_orders.push(operation);
+                        }
+                    });
+                break
                 case 'blog':
                 default:
                     const blogEntries = await api.getBlogEntries(uname, 0, 20)

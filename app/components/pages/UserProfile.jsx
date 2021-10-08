@@ -24,6 +24,7 @@ import CurationRewards from 'app/components/modules/CurationRewards';
 import AuthorRewards from 'app/components/modules/AuthorRewards';
 import ReputationHistory from 'app/components/modules/ReputationHistory'
 import Mentions from 'app/components/modules/Mentions'
+import FilledOrders from 'app/components/modules/FilledOrders'
 import UserList from 'app/components/elements/UserList';
 import Follow from 'app/components/elements/Follow';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
@@ -441,6 +442,18 @@ export default class UserProfile extends React.Component {
                         loading={fetching}
                     />
                     { isMyAccount && <div><MarkNotificationRead fields='mention' account={account.name} /></div> }
+                </div>
+            );
+        }
+        else if( (section === 'filled-orders')) {
+            tab_content = (
+                <div>
+                    <FilledOrders
+                        account={account}
+                        current_user={current_user}
+                        loading={fetching}
+                    />
+                    { isMyAccount && <div><MarkNotificationRead fields='fill_order' account={account.name} /></div> }
                 </div>
             );
         }
