@@ -343,7 +343,7 @@ export default connect(
                 const {type, operation, trx, successCallback, errorCallback} = loginBroadcastOperation.toJS()
                 const authSaver = () => {
                     if (!/^vote|comment/.test(type) && location.pathname.startsWith('/market')) {
-                        pageSession.save(password);
+                        pageSession.save(password, username, 'active');
                     }
                     successCallback();
                 };
