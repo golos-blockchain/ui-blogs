@@ -73,6 +73,9 @@ class FilledOrders extends Component {
                     <a href='/market/GOLOS/GBG' className='FilledOrders__market-link'><Icon name='trade' size='2x' /> {tt('filled_orders_jsx.open_market')}</a>
                 </span>
                 <h4 className='uppercase'>{tt('filled_orders_jsx.title')}</h4>
+                <div className="column secondary">
+                    {tt('filled_orders_jsx.orders_info')} <a href="/@allforyou/torguem-na-vnutrennei-birzhe-golosa">{tt('g.more_hint')}</a> <Icon name="extlink" size="1_5x" /><br /><br />
+                </div>
                 {history.length ? (<table>
                     <tbody>
                         {history}

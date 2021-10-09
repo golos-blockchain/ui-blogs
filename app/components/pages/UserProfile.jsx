@@ -564,6 +564,10 @@ export default class UserProfile extends React.Component {
                             {tt('g.wallet')} {isMyAccount && <NotifiCounter fields='send,receive' />}
                         </a>
                         {isMyAccount ?
+                            <Link className='UserProfile__menu-item' to={`/@${accountname}/filled-orders`} activeClassName='active'>{tt('navigation.market2')} <NotifiCounter fields="fill_order" /></Link>
+                            : null
+                        }
+                        {isMyAccount ?
                             <Link className='UserProfile__menu-item' to={`/@${accountname}/settings`} activeClassName='active'>{tt('g.settings')}</Link>
                             : null
                         }
