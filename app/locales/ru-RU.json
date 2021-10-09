@@ -160,7 +160,8 @@
     "title": "Сработавшие сделки на бирже",
     "empty_NAME": "У %(NAME)s еще не было ни одной сделки. Купить и продать токены можно на ",
     "empty2": "бирже",
-    "exchanged": "Обмен %(AMOUNT)s на %(AMOUNT2)s"
+    "exchanged": "Обмен %(AMOUNT)s на %(AMOUNT2)s",
+    "open_market": "Перейти к бирже"
   },
   "g": {
     "golos_fest": "Новости",

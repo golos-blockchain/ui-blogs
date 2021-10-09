@@ -70,7 +70,7 @@ class FilledOrders extends Component {
         return (
             <div>
                 <span style={{float: 'right', fontSize: '85%', marginLeft: '10px'}}>
-                    <a href='/market/GOLOS/GBG' className='FilledOrders__market-link'><Icon name='trade' size='2x' /> {tt('navigation.market2')}</a>
+                    <a href='/market/GOLOS/GBG' className='FilledOrders__market-link'><Icon name='trade' size='2x' /> {tt('filled_orders_jsx.open_market')}</a>
                 </span>
                 <h4 className='uppercase'>{tt('filled_orders_jsx.title')}</h4>
                 {history.length ? (<table>
