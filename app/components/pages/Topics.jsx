@@ -47,9 +47,13 @@ export default class Topics extends React.Component {
     }
 
     onSaveTags = () => {
-      if (this.props.updateSubscribe)
-        this.props.updateSubscribe()
-    }
+        if (this.props.updateSubscribe)
+            this.props.updateSubscribe(() => {
+                this.setState({
+                    needUpdateSubscribe: false,
+                });
+            });
+    };
 
     onSelectTag = key => {
       let keys = this.state.selected
