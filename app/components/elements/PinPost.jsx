@@ -47,22 +47,21 @@ export default class PinPost extends React.Component {
 
       metadata.pinnedPosts = pinnedPosts;
 
-      this.setState({loading: true})
+      this.setState({ loading: true, })
       updateAccount({
           json_metadata: JSON.stringify(metadata),
           account: account.name,
-          memo_key: account.memo_key,
           errorCallback: (err) => {
-              this.setState({loading: false})
+              this.setState({ loading: false, });
               if (e !== 'Canceled') {
                   notify(tt('g.server_returned_error'), 10000);
                   console.log('updateAccount ERROR', err);
               }
           },
           successCallback: () => {
-              this.setState({active: !this.state.active, loading: false})
+              this.setState({ active: !this.state.active, loading: false, });
 
-              //this.props.pinned(this.props.author + '/' + this.props.permlink)
+              //this.props.pinned(this.props.author + '/' + this.props.permlink);
               notify(tt('g.saved') + '!', 10000);
           },
       });

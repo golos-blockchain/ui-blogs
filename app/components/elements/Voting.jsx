@@ -173,7 +173,7 @@ class Voting extends React.Component {
         let donateItems = [];
         let donateUiaItems = [];
         let donates = post_obj.get('donate_list');
-        if (donates !== undefined) {
+        if (showList && donates !== undefined) {
             donates = donates.toJS();
             let i = 0;
             donates.forEach((donate) => {
@@ -184,7 +184,7 @@ class Voting extends React.Component {
         }
 
         let donates_uia = post_obj.get('donate_uia_list');
-        if (donates_uia !== undefined) {
+        if (showList && donates_uia !== undefined) {
             donates_uia = donates_uia.toJS();
             let i = 0;
             donates_uia.forEach((donate) => {

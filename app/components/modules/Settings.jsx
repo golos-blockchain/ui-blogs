@@ -510,28 +510,6 @@ class Settings extends React.Component {
                         />
                     </div>
                 </div>}
-            {ignores && ignores.size > 0 &&
-                <div className="row">
-                    <div className="small-12 columns">
-                        <br /><br />
-                        <UserList title={tt('settings_jsx.muted_users')} account={account} users={ignores} />
-                    </div>
-                </div>}
-            {mutedInNew && mutedInNew.size > 0 &&
-                <div className="row">
-                    <div className="small-12 columns">
-                        <br /><br />
-                        <UserList title={tt('settings_jsx.muted_in_new_users')} account={account} users={mutedInNew} muteOnlyNew={true} />
-                    </div>
-                </div>}
-            {mutedUIA && mutedUIA.length > 0 &&
-                <div className="row">
-                    <div className="small-12 columns">
-                        <br /><br />
-                        <h3>{tt('settings_jsx.muted_uia')}</h3>
-                        {mutedUIAlist}
-                    </div>
-                </div>}
 
             {isOwnAccount &&
                 <div className="row">
@@ -578,6 +556,32 @@ class Settings extends React.Component {
                         />
                     </div>
                 </div>}
+
+            {mutedUIA && mutedUIA.length > 0 &&
+                <div className="row">
+                    <div className="small-12 columns">
+                        <br /><br />
+                        <h3>{tt('settings_jsx.muted_uia')}</h3>
+                        {mutedUIAlist}
+                    </div>
+                </div>}
+
+            {ignores && ignores.size > 0 &&
+                <div className="row">
+                    <div className="small-12 columns">
+                        <br /><br />
+                        <UserList title={tt('settings_jsx.muted_users')} account={account} users={ignores} />
+                    </div>
+                </div>}
+
+            {mutedInNew && mutedInNew.size > 0 &&
+                <div className="row">
+                    <div className="small-12 columns">
+                        <br /><br />
+                        <UserList title={tt('settings_jsx.muted_in_new_users')} account={account} users={mutedInNew} muteOnlyNew={true} />
+                    </div>
+                </div>}
+
         </div>
     }
 }
