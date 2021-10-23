@@ -27,7 +27,9 @@ class FilledOrders extends Component {
         let isMyAccount = current_user && current_user.get('username') === op[1].mentioned;
 
         const {
+            current_owner,
             current_pays,
+            open_owner,
             open_pays,
         } = op[1];
         if (!current_pays || !open_pays) { // additional protection
@@ -35,7 +37,9 @@ class FilledOrders extends Component {
         }
 
         let text = tt('filled_orders_jsx.exchanged', {
+            OWNER: current_owner,
             AMOUNT: current_pays,
+            OWNER2: open_owner,
             AMOUNT2: open_pays,
         });
 

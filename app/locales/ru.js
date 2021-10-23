@@ -106,7 +106,7 @@ const ru = {
   all_accounts_refunded: 'Все потери по восстанавливаемым аккаунтам были полностью компенсированы',
   APP_URL_is_now_open_source: APP_DOMAIN + ' теперь Open Source',
   // this is mainly from ReplyEditor
-  tag_your_story: 'Добавь тэги (до 5 штук), первый тэг станет основной категорией.',
+  tag_your_story: 'Добавьте тэги, первый станет категорией.',
   select_a_tag: 'Выбрать тэг',
   required: 'Обязательно',
   shorten_title: 'Сократите заголовок',

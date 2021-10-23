@@ -17,7 +17,7 @@
     "author_rewards_history": "История авторских наград"
   },
   "category_selector_jsx": {
-    "tag_your_story": "Добавь тэги (до 5 штук), первый тэг станет основной категорией.",
+    "tag_your_story": "Добавьте тэги, первый станет категорией.",
     "select_a_tag": "Выбрать тэг",
     "select_a_category": "Выберите категорию",
     "maximum_tag_length_is_24_characters": "Максимальная длина категории 24 знака",
@@ -161,7 +161,7 @@
     "orders_info": "На блокчейне Голос есть свой внутренний DEX (decentralized exchange - децентрализованная биржа), а значит обменивать токены GOLOS и UIA (эмитированные пользователями активы к другим криптовалютам) возможно прямо здесь.",
     "empty_NAME": "У %(NAME)s еще не было ни одной сделки. Купить и продать токены можно на ",
     "empty2": "бирже",
-    "exchanged": "Обмен %(AMOUNT)s на %(AMOUNT2)s",
+    "exchanged": "Обмен %(AMOUNT)s %(OWNER)s на %(AMOUNT2)s %(OWNER2)s",
     "open_market": "Перейти к бирже"
   },
   "g": {
@@ -1224,7 +1224,7 @@
     "add_image": "Добавить картинку",
     "add_link": "Добавить ссылку",
     "add_video": "Добавить мультимедиа (youtube/vimeo/coub)",
-    "add_image_from_computer": "Добавить изображение с компьютера",
+    "add_image_from_computer": "Добавить изображение с устройства",
     "add_image_via_link": "Добавить изображение ссылкой",
     "enter_video_link": "Вставьте ссылку на YouTube/Vimeo",
     "enter_link": "Вставьте ссылку",

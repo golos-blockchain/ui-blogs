@@ -158,19 +158,6 @@ export const replyAction = (dispatch, remarkable) => ({
         return;
     }
 
-    if (meta.tags.length > 5) {
-        const includingCategory = isEdit
-            ? ` (including the category '${rootCategory}')`
-            : '';
-
-        errorCallback(
-            `You have ${
-                meta.tags.length
-            } tags total${includingCategory}.  Please use only 5 in your post and category line.`
-        );
-        return;
-    }
-
     startLoadingIndicator();
 
     const originalBody = isEdit ? originalPost.body : null;

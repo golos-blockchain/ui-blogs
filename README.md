@@ -1,20 +1,20 @@
-# [GOLOS.id](https://golos.id)
+# [golos.id](https://golos.id) and [golos.in](https://golos.in)
 
-React.js web interface to the blockchain-based social media platform. It uses [Golos blockchain](https://github.com/golos-blockchain/chain-node), a fork of Steem blockchain powered by Graphene 2.0 technology to store JSON-based content for a plethora of web applications.   
-## Why would I want to use GOLOS.id?
+React.js web interface to the blockchain-based social media platform. It uses [Golos blockchain](https://github.com/golos-blockchain/chain-node), a fork of Steem blockchain powered by Graphene 2.0 technology to store JSON-based content for a plethora of web applications. 
+
+## Why would I want to use?
 * Learning how to build blockchain-based applications using GOLOS as a content storage
-* Reviewing the inner workings of the GOLOS.id social media platform
+* Reviewing the inner workings of the social media platform
 * Assisting with software development for GOLOS blockchain
 
 ## Installation
 
 We recommend using docker to run in production. This is how we run the live site and it is the most supported method of both building and running application. We will always have the latest version available on [Docker Hub](https://hub.docker.com/r/golosblockchain/web-ui/tags).
 
-#### Clone the repository and make a tmp folder
+#### Clone the repository
 ```bash
-git clone https://github.com/golos-blockchain/ui-blogs
+git clone https://github.com/golos-blockchain/ui-blogs &&
 cd ui-blogs
-mkdir tmp
 ```
 
 Run all services (production mode):
@@ -25,8 +25,8 @@ sudo docker-compose up
 #### Install for Development mode
 
 ```bash
-# Install Node ver. 16 if you don't already have it.
 curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+
 sudo apt-get install -y nodejs
 
 npm install -g yarn
@@ -36,7 +36,7 @@ yarn install
 yarn start
 ```
 
-You now have your development front end running at localhost:8080, connected to the main public golos blockchain. You don't need to run ```golos``` locally, by default you will connect to ```https://api-full.golos.id```.  Use your regular account name and credentials to login -- there is no separate dev login.
+You now have your development front end running at localhost:8080, connected to the public GOLOS blockchain.
 
 ### Production
 Generate a new crypto_key and save under server_session_secret in /config/default.json.
@@ -44,12 +44,6 @@ Generate a new crypto_key and save under server_session_secret in /config/defaul
 ```bash
 node
 > crypto.randomBytes(32).toString('base64')
-```
-
-If you want to test it locally in production mode, just run the following commands:
-
-```bash
-yarn production
 ```
 
 ### Style Guides
