@@ -53,9 +53,6 @@ export function validateTag(tag) {
     if (!/[a-zа-яё0-9ґєії]$/.test(tag)) {
         return tt('category_selector_jsx.must_end_with_a_letter_or_number');
     }
-    if (tag === 'stihi-io') {
-        return tt('category_selector_jsx.denied_to_publish_the_posts_with_tag');
-    }
     return null;
 }
 

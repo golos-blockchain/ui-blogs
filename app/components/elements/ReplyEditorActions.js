@@ -16,7 +16,6 @@ export const replyAction = (dispatch, remarkable) => ({
     parent_permlink,
     isHtml,
     isStory,
-    isFeedback,
     type,
     originalPost,
     autoVote = false,
@@ -28,10 +27,6 @@ export const replyAction = (dispatch, remarkable) => ({
     startLoadingIndicator,
 }) => {
     const username = state.user.getIn(['current', 'username']);
-
-    if (isFeedback) {
-        category = 'обратная-связь';
-    }
 
     if (category) {
         category = category
@@ -111,10 +106,6 @@ export const replyAction = (dispatch, remarkable) => ({
 
     if (/^[-a-z\d]+$/.test(rootCategory)) {
         allCategories = allCategories.add(rootCategory);
-    }
-
-    if (allCategories.has('stihi-io')) {
-        allCategories = allCategories.delete('stihi-io');
     }
 
     // merge
