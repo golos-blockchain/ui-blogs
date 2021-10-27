@@ -34,7 +34,6 @@ class ReplyEditor extends React.Component {
         // html component attributes
         formId: PropTypes.string.isRequired, // unique form id for each editor
         type: PropTypes.oneOf([
-            'submit_feedback',
             'submit_story',
             'submit_comment',
             'edit',
@@ -164,7 +163,6 @@ class ReplyEditor extends React.Component {
     initForm(props) {
         const { isStory, type, fields } = props;
         const isEdit = type === 'edit';
-        const isFeedback = type === 'submit_feedback';
         const maxKb = isStory ? 100 : 16;
         reactForm({
             fields,
@@ -181,7 +179,6 @@ class ReplyEditor extends React.Component {
                             : null),
                 category:
                     isStory &&
-                    !isFeedback &&
                     validateCategory(values.category, !isEdit),
                 body: !values.body
                     ? tt('g.required')
@@ -402,7 +399,6 @@ class ReplyEditor extends React.Component {
         };
 
         const isEdit = type === 'edit';
-        const isFeedback = type === 'submit_feedback';
         const isHtml = rte || isHtmlTest(body.value);
         // Be careful, autoVote can reset curation rewards.  Never autoVote on edit..
         const autoVoteValue = !isEdit && autoVote.value;
@@ -416,7 +412,6 @@ class ReplyEditor extends React.Component {
             originalPost,
             isHtml,
             isStory,
-            isFeedback,
             jsonMetadata,
             autoVote: autoVoteValue,
             payoutType,
@@ -455,42 +450,6 @@ class ReplyEditor extends React.Component {
         return (
             <div className="ReplyEditor row">
                 <div className="column small-12">
-                    {isFeedback && (
-                        <div>
-                            <h4>
-                                {tt('reply_editor.feedback_welcome.dear_users')}
-                            </h4>
-                            <p>
-                                {tt('reply_editor.feedback_welcome.message1')}
-                            </p>
-                            <p>
-                                {tt('reply_editor.feedback_welcome.message2')}
-                            </p>
-                            <p>
-                                {tt('reply_editor.feedback_welcome.message3')}
-                                <Link to="/submit">
-                                    <Icon name="pencil" />{' '}
-                                    {tt('g.submit_a_story')}
-                                </Link>
-                                {tt('reply_editor.feedback_welcome.message4')}
-                            </p>
-                            <p>
-                                {tt('reply_editor.questions_or_requests')}{' '}
-                                <a href={'mailto:' + SUPPORT_EMAIL}>
-                                    {SUPPORT_EMAIL}
-                                </a>.
-                            </p>
-                            <p>
-                                {tt('reply_editor.support_by_telegram')} —{' '}
-                                <a href="https://t.me/golos_id">
-                                    https://t.me/golos_id
-                                </a>.
-                            </p>
-                            <p>
-                                {tt('reply_editor.feedback_welcome.message5')}
-                            </p>
-                        </div>
-                    )}
                     <form
                         className={vframe_class}
                         onSubmit={handleSubmit(({ data }) => {
@@ -607,17 +566,7 @@ class ReplyEditor extends React.Component {
                                             }
                                             disabled={loading}
                                             rows={isStory ? 10 : 3}
-                                            placeholder={
-                                                isFeedback
-                                                    ? tt(
-                                                          'reply_editor.feedback_placeholder'
-                                                      )
-                                                    : isStory
-                                                        ? tt(
-                                                              'g.write_your_story'
-                                                          ) + '...'
-                                                        : tt('g.reply')
-                                            }
+                                            placeholder={isStory ? tt('g.write_your_story') + '...' : tt('g.reply')}
                                             autoComplete="off"
                                             tabIndex={2}
                                         />
@@ -668,8 +617,7 @@ class ReplyEditor extends React.Component {
                             className={vframe_section_shrink_class}
                             style={{ marginTop: '0.5rem' }}
                         >
-                            {isStory &&
-                                !isFeedback && (
+                            {isStory && (
                                     <span>
                                         <CategorySelector
                                             {...category.props}
@@ -681,18 +629,6 @@ class ReplyEditor extends React.Component {
                                             {(category.touched ||
                                                 category.value) &&
                                                 category.error}&nbsp;
-                                        </div>
-                                    </span>
-                                )}
-                            {isStory &&
-                                isFeedback && (
-                                    <span>
-                                        <div className="TagList__horizontal">
-                                            <a href="/created/ru--obratnaya-svyazx">
-                                                {tt('navigation.feedback')
-                                                    .split(' ')
-                                                    .join('-')}
-                                            </a>
                                         </div>
                                     </span>
                                 )}
@@ -802,17 +738,6 @@ class ReplyEditor extends React.Component {
                                         'Preview ' + vframe_section_shrink_class
                                     }
                                 >
-                                    {!isHtml && (
-                                        <div className="float-right">
-                                            <a
-                                                href="/@on0tole/osnovy-oformleniya-postov-na-golose-polnyi-kurs-po-rabote-s-markdown"
-                                            >
-                                                {tt(
-                                                    'reply_editor.markdown_styling_guide'
-                                                )}
-                                            </a>
-                                        </div>
-                                    )}
                                     <h6>{tt('g.preview')}</h6>
                                     <MarkdownViewer
                                         formId={formId}
@@ -893,7 +818,7 @@ export default formId =>
             const { type, parent_author, jsonMetadata } = ownProps;
             const isEdit = type === 'edit';
             const isStory =
-                /submit_story|submit_feedback/.test(type) ||
+                /submit_story/.test(type) ||
                 (isEdit && parent_author === '');
 
             if (isStory) fields.push('title');

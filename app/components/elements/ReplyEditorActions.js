@@ -16,7 +16,6 @@ export const replyAction = (dispatch, remarkable) => ({
     parent_permlink,
     isHtml,
     isStory,
-    isFeedback,
     type,
     originalPost,
     autoVote = false,
@@ -28,10 +27,6 @@ export const replyAction = (dispatch, remarkable) => ({
     startLoadingIndicator,
 }) => {
     const username = state.user.getIn(['current', 'username']);
-
-    if (isFeedback) {
-        category = 'обратная-связь';
-    }
 
     if (category) {
         category = category
@@ -113,10 +108,6 @@ export const replyAction = (dispatch, remarkable) => ({
         allCategories = allCategories.add(rootCategory);
     }
 
-    if (allCategories.has('stihi-io')) {
-        allCategories = allCategories.delete('stihi-io');
-    }
-
     // merge
     const meta = isEdit ? jsonMetadata : {};
     if (allCategories.size) {
@@ -155,19 +146,6 @@ export const replyAction = (dispatch, remarkable) => ({
 
     if (sanitizeErrors.length) {
         errorCallback(sanitizeErrors.join('.  '));
-        return;
-    }
-
-    if (meta.tags.length > 5) {
-        const includingCategory = isEdit
-            ? ` (including the category '${rootCategory}')`
-            : '';
-
-        errorCallback(
-            `You have ${
-                meta.tags.length
-            } tags total${includingCategory}.  Please use only 5 in your post and category line.`
-        );
         return;
     }
 
