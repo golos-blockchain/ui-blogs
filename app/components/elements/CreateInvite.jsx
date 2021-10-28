@@ -7,7 +7,6 @@ import {connect} from 'react-redux';
 import transaction from 'app/redux/Transaction'
 import user from 'app/redux/User';
 import tt from 'counterpart';
-import {cleanReduxInput} from 'app/utils/ReduxForms'
 import reactForm from 'app/utils/ReactForm';
 import {PrivateKey} from 'golos-lib-js/lib/auth/ecc';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';

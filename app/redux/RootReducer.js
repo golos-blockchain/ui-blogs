@@ -7,7 +7,6 @@ import marketReducerModule from './MarketReducer';
 import user from './User';
 import transaction from './Transaction';
 import offchain from './Offchain';
-import {reducer as formReducer} from 'redux-form'; // @deprecated, instead use: app/utils/ReactForm.js
 import {contentStats, fromJSGreedy} from 'app/utils/StateFunctions'
 
 function initReducer(reducer, type) {
@@ -53,7 +52,6 @@ export default combineReducers({
     discussion: initReducer((state = {}) => state),
     routing: initReducer(routerReducer),
     app: initReducer(appReducer),
-    form: formReducer
 });
 
 /*
