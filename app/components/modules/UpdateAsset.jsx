@@ -1,14 +1,14 @@
-import React, {Component} from 'react'
-import PropTypes from 'prop-types'
-import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import {countDecimals, formatAsset, formatAmount, longToAsset} from 'app/utils/ParsersAndFormatters';
-import g from 'app/redux/GlobalReducer'
+import g from 'app/redux/GlobalReducer';
 import {connect} from 'react-redux';
 import { browserHistory } from 'react-router';
 import transaction from 'app/redux/Transaction'
 import user from 'app/redux/User';
 import tt from 'counterpart';
-import reactForm from 'app/utils/ReactForm';
+import { Formik, Field, ErrorMessage, } from 'formik';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import { Link } from 'react-router';
 
@@ -27,186 +27,194 @@ class UpdateAsset extends Component {
         this.state = {
             errorMessage: '',
             successMessage: '',
-            assetCost: '',
-        }
-        this.initForm(props)
+        };
+        this.initForm(props);
     }
 
     initForm(props) {
-        const fields = ['fee_percent', 'symbols_whitelist', 'description', 'image_url']
         let fee_percent = props.asset.fee_percent
         fee_percent = longToAsset(fee_percent, '', 2).trim()
-        let description = ''
-        let image_url = ''
+        let description = '';
+        let image_url = '';
         if (props.asset.json_metadata.startsWith('{')) {
-            let json_metadata = JSON.parse(props.asset.json_metadata)
-            description = json_metadata.description
-            image_url = json_metadata.image_url
+            const json_metadata = JSON.parse(props.asset.json_metadata);
+            description = json_metadata.description;
+            image_url = json_metadata.image_url;
         }
-        reactForm({
-            name: 'update_asset',
-            instance: this, fields,
-            initialValues: {
-                fee_percent,
-                description,
-                image_url,
-                symbols_whitelist: props.asset.symbols_whitelist.join('\n')
-            },
-            validation: values => ({
-            })
-        })
-        this.handleSubmitForm =
-            this.state.update_asset.handleSubmit(args => this.handleSubmit(args))
+        this.state.initialValues = {
+            fee_percent,
+            description,
+            image_url,
+            symbols_whitelist: props.asset.symbols_whitelist.join('\n'),
+        };
     }
 
-    onChangeFeePercent = (e) => {
-        let {value} = e.target
+    onFeePercentChange = (e, values, handle) => {
+        let { value, } = e.target;
+        value = value.replace(',','.');
+        if (isNaN(value)
+            || parseFloat(value) < 0
+            || parseFloat(value) > 100) {
+            e.target.value = values.fee_percent || '';
+            return;
+        }
         let parts = value.split('.')
-        if (parseFloat(value) == NaN || parseFloat(value) < 0 || parseFloat(value) > 100) return
-        if (parts.length > 2) return
-        this.state.fee_percent.props.onChange(value.replace(',','.'))
-    }
+        if (parts.length > 2) {
+            e.target.value = values.fee_percent || '';
+            return;
+        }
+        e.target.value = value;
+        return handle(e);
+    };
 
-    onBlurFeePercent = (e) => {
-        let {value} = e.target
-        this.state.fee_percent.props.onChange(parseFloat(value).toFixed(2))
-    }
+    onFeePercentBlur = (e, values, handle, setFieldValue) => {
+        let value = parseFloat(values.fee_percent);
+        if (isNaN(value)) value = 0;
+        setFieldValue('fee_percent', value.toFixed(2));
+        return handle(e);
+    };
 
-    onChangeSymbolsWhitelist = (e) => {
-        let {value} = e.target
+    onSymbolsWhitelistChange = (e, values, handle) => {
+        let value = e.target.value;
         let lines = value.split('\n')
         let lines2 = []
         for (let i = 0; i < lines.length; ++i) {
             let line = lines[i].trim().toUpperCase()
             if (line != '' || (i == lines.length - 1)) lines2.push(line)
         }
-        this.state.symbols_whitelist.props.onChange(lines2.join('\n'))
-    }
+        e.target.value = lines2.join('\n');
+        return handle(e);
+    };
 
-    onChangeDescription = (e) => {
-        let {value} = e.target
-        this.state.description.props.onChange(value)
-    }
-
-    onChangeImageUrl = (e) => {
-        let {value} = e.target
-        this.state.image_url.props.onChange(value)
-    }
-
-    handleSubmit = ({updateInitialValues}) => {
-        const {updateAsset, accountName, symbol} = this.props
-        const {fee_percent, symbols_whitelist, description, image_url} = this.state
-        this.setState({loading: true});
-        updateAsset({symbol, fee_percent, symbols_whitelist, image_url, description, accountName,
+    _onSubmit = (values, { setSubmitting, }) => {
+        const {
+            updateAsset, accountName, symbol,
+        } = this.props;
+        const {
+            fee_percent, symbols_whitelist, description, image_url,
+        } = values;
+        updateAsset({ symbol, fee_percent, symbols_whitelist,
+            image_url, description, accountName,
             errorCallback: (e) => {
                 if (e === 'Canceled') {
                     this.setState({
-                        loading: false,
-                        errorMessage: ''
-                    })
+                        errorMessage: '',
+                    });
+                    setSubmitting(false);
                 } else {
                     console.log('updateAsset ERROR', e)
                     this.setState({
-                        loading: false,
-                        errorMessage: tt('g.server_returned_error')
-                    })
+                        errorMessage: tt('g.server_returned_error'),
+                    });
+                    setSubmitting(false);
                 }
             },
             successCallback: () => {
                 window.location.href = `/@${accountName}/assets`;
-            }})
+            },
+        });
     }
 
     render() {
-        const {props: {account, isMyAccount, cprops, symbol, asset}} = this
-        if (!asset) return (<div></div>)
-        const {fee_percent, symbols_whitelist, description, image_url, loading, successMessage, errorMessage} = this.state
-        const {submitting, valid} = this.state.update_asset
+        const {props: {account, isMyAccount, cprops, symbol, asset}} = this;
+        if (!asset) return (<div></div>);
+        const { initialValues, successMessage, errorMessage, } = this.state;
         const account_name = account.get('name');
 
         return (<div>
-            <form onSubmit={this.handleSubmitForm}>
-                <div className="row">
-                    <div className="column small-10">
+            <Formik
+                initialValues={initialValues}
+                onSubmit={this._onSubmit}
+            >
+            {({
+                handleSubmit, isValid, isSubmitting, errors, values,
+                handleChange, handleBlur, setFieldValue,
+            }) => (
+            <form
+                onSubmit={handleSubmit}
+                autoComplete='off'
+            >
+                <div className='row'>
+                    <div className='column small-10'>
                         <h4>{tt('assets_jsx.update_asset') + ' ' + symbol}</h4>
                     </div>
                 </div>
 
-                <div className="row">
-                    <div className="column small-10">
+                <div className='row'>
+                    <div className='column small-10'>
                         {tt('assets_jsx.fee_percent')}
-                        <div className="input-group">
-                            <input
-                                className="input-group-field bold"
-                                type="text"
+                        <div className='input-group'>
+                            <Field name='fee_percent'
+                                className='input-group-field bold'
+                                type='text'
                                 title={asset.allow_fee ? '' : tt('assets_jsx.fee_not_allowed')}
                                 disabled={!asset.allow_fee}
-                                {...fee_percent.props} maxlength="6" onChange={(e) => this.onChangeFeePercent(e)} onBlur={(e) => this.onBlurFeePercent(e)}
+                                maxLength='6'
+                                onChange={e => this.onFeePercentChange(e, values, handleChange)}
+                                onBlur={(e) => this.onFeePercentBlur(e, values, handleBlur, setFieldValue)}
                             />
                         </div>
-                        {fee_percent.touched && fee_percent.blur && fee_percent.error &&
-                            <div className="error">{fee_percent.error}&nbsp;</div>
-                        }
+                        <ErrorMessage name='fee_percent' component='div' className='error' />
                     </div>
                 </div>
 
-                <div className="row">
-                    <div className="column small-10">
+                <div className='row'>
+                    <div className='column small-10'>
                         {tt('assets_jsx.symbols_whitelist')}
-                    <textarea 
-                            {...symbols_whitelist.props} rows="10" onChange={(e) => this.onChangeSymbolsWhitelist(e)}/>
+                        <Field name='symbols_whitelist'
+                            as='textarea'
+                            rows='10'
+                            onChange={e => this.onSymbolsWhitelistChange(e, values, handleChange)}
+                        />
                     </div>
                 </div>
 <br/>
-                <div className="row">
-                    <div className="column small-10">
+                <div className='row'>
+                    <div className='column small-10'>
                         {tt('assets_jsx.description')}
-                        <div className="input-group" style={{marginBottom: "0rem"}}>
-                            <input
-                                className="input-group-field bold"
-                                {...description.props}
-                                maxlength="500"
-                                type="text"
-                                 onChange={(e) => this.onChangeDescription(e)}
+                        <div className='input-group' style={{marginBottom: '0rem'}}>
+                            <Field name='description'
+                                className='input-group-field bold'
+                                maxLength='500'
+                                type='text'
                             />
                         </div>
                     </div>
                 </div>
 <br/>
-                <div className="row">
-                    <div className="column small-10">
+                <div className='row'>
+                    <div className='column small-10'>
                         {tt('assets_jsx.image_with_text')}
-                        <div className="input-group" style={{marginBottom: "1.25rem"}}>
-                            <input
-                                className="input-group-field bold"
-                                {...image_url.props}
-                                maxlength="512"
-                                type="text"
-                                 onChange={(e) => this.onChangeImageUrl(e)}
+                        <div className='input-group' style={{marginBottom: '1.25rem'}}>
+                            <Field name='image_url'
+                                className='input-group-field bold'
+                                maxLength='512'
+                                type='text'
                             />
                         </div>
                     </div>
                 </div>
 
-                <div className="row">
-                    <div className="column small-10">
-                        {loading && <span><LoadingIndicator type="circle" /><br /></span>}
-                        {!loading && <input type="submit" className="button" value={tt('assets_jsx.update_btn')} disabled={submitting || !valid} />}
+                <div className='row'>
+                    <div className='column small-10'>
+                        {isSubmitting && <span><LoadingIndicator type='circle' /><br /></span>}
+                        {!isSubmitting && <input type='submit' className='button' value={tt('assets_jsx.update_btn')} disabled={isSubmitting || !isValid} />}
                         {' '}{
                             errorMessage
-                                ? <small className="error">{errorMessage}</small>
+                                ? <small className='error'>{errorMessage}</small>
                                 : successMessage
-                                ? <small className="success uppercase">{successMessage}</small>
+                                ? <small className='success uppercase'>{successMessage}</small>
                                 : null
                         }
-                        <Link to={`/@${account_name}/assets/${symbol}/transfer`} className="button hollow no-border Assets__noMarginBottom">
+                        <Link to={`/@${account_name}/assets/${symbol}/transfer`} className='button hollow no-border Assets__noMarginBottom'>
                             {tt('assets_jsx.transfer_asset_btn')}
                         </Link>
                     </div>
                 </div>
             </form>
-            <div className="row">
-                <div className="column small-10">
+            )}</Formik>
+            <div className='row'>
+                <div className='column small-10'>
                     <hr />
                 </div>
             </div>
@@ -214,7 +222,7 @@ class UpdateAsset extends Component {
     }
 }
 const AssetBalance = ({onClick, balanceValue}) =>
-    <a onClick={onClick} style={{borderBottom: '#A09F9F 1px dotted', cursor: 'pointer'}}>{tt('transfer_jsx.balance') + ": " + balanceValue}</a>
+    <a onClick={onClick} style={{borderBottom: '#A09F9F 1px dotted', cursor: 'pointer'}}>{tt('transfer_jsx.balance') + ': ' + balanceValue}</a>
 
 export default connect(
     (state, ownProps) => {
@@ -234,32 +242,32 @@ export default connect(
         updateAsset: ({
             symbol, fee_percent, symbols_whitelist, image_url, description, accountName, successCallback, errorCallback
         }) => {
-            let sw = symbols_whitelist.value.split('\n')
-            let set = new Set()
+            let sw = symbols_whitelist.split('\n');
+            let set = new Set();
             for (let i = 0; i < sw.length; ++i) {
-                if (sw[i] != '') set.add(sw[i])
+                if (sw[i] != '') set.add(sw[i]);
             }
 
             const operation = {
                 creator: accountName,
                 symbol,
-                fee_percent: parseInt(fee_percent.value.replace('.','').replace(',','')),
+                fee_percent: parseInt(fee_percent.replace('.','').replace(',','')),
                 symbols_whitelist: [...set],
-                json_metadata: JSON.stringify({image_url: image_url.value, description: description.value})
-            }
+                json_metadata: JSON.stringify({image_url, description, }),
+            };
 
             const success = () => {
-                dispatch(user.actions.getAccount())
-                successCallback()
-            }
+                dispatch(user.actions.getAccount());
+                successCallback();
+            };
 
             dispatch(transaction.actions.broadcastOperation({
                 type: 'asset_update',
                 accountName,
                 operation,
                 successCallback: success,
-                errorCallback
-            }))
+                errorCallback,
+            }));
         },
     })
 )(UpdateAsset)
