@@ -147,7 +147,7 @@ export async function serverRender({
             }
         }
 
-        if (!url.match(routeRegex.PostsIndex) && !url.match(routeRegex.UserProfile1) && !url.match(routeRegex.UserProfile2) && url.match(routeRegex.PostNoCategory)) {
+        if (!url.match(routeRegex.PostsIndex) && !url.match(routeRegex.UserProfile1) && !url.match(routeRegex.UserProfile2) && !url.match(routeRegex.UserAssetEndPoints) && url.match(routeRegex.PostNoCategory)) {
             const params = url.substr(2, url.length - 1).split("/");
             const content = await api.getContent(params[0], params[1].split('?')[0]);
             if (content.author && content.permlink) { // valid short post url
