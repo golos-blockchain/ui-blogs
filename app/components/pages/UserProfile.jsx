@@ -9,10 +9,10 @@ import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
 import Icon from 'app/components/elements/Icon'
 import UserKeys from 'app/components/elements/UserKeys';
-import CreateAsset from 'app/components/modules/CreateAsset';
-import Assets from 'app/components/modules/Assets';
-import UpdateAsset from 'app/components/modules/UpdateAsset';
-import TransferAsset from 'app/components/modules/TransferAsset';
+import CreateAsset from 'app/components/modules/uia/CreateAsset';
+import Assets from 'app/components/modules/uia/Assets';
+import UpdateAsset from 'app/components/modules/uia/UpdateAsset';
+import TransferAsset from 'app/components/modules/uia/TransferAsset';
 import Invites from 'app/components/elements/Invites';
 import PasswordReset from 'app/components/elements/PasswordReset';
 import UserWallet from 'app/components/modules/UserWallet';

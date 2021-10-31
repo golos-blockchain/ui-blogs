@@ -1,16 +1,16 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+import { browserHistory, Link, } from 'react-router';
+import tt from 'counterpart';
+import { Formik, Field, ErrorMessage, } from 'formik';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import {countDecimals, formatAsset, formatAmount, longToAsset} from 'app/utils/ParsersAndFormatters';
 import g from 'app/redux/GlobalReducer';
-import {connect} from 'react-redux';
-import { browserHistory } from 'react-router';
 import transaction from 'app/redux/Transaction'
 import user from 'app/redux/User';
-import tt from 'counterpart';
-import { Formik, Field, ErrorMessage, } from 'formik';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
-import { Link } from 'react-router';
+import AssetEditWithdrawal from 'app/components/modules/uia/AssetEditWithdrawal';
 
 class UpdateAsset extends Component {
     static propTypes = {
@@ -29,6 +29,7 @@ class UpdateAsset extends Component {
             successMessage: '',
         };
         this.initForm(props);
+        this.aewRef = React.createRef();
     }
 
     initForm(props) {
@@ -36,16 +37,24 @@ class UpdateAsset extends Component {
         fee_percent = longToAsset(fee_percent, '', 2).trim()
         let description = '';
         let image_url = '';
+        let withdrawal = null;
         if (props.asset.json_metadata.startsWith('{')) {
             const json_metadata = JSON.parse(props.asset.json_metadata);
             description = json_metadata.description;
             image_url = json_metadata.image_url;
+            withdrawal = json_metadata.withdrawal;
         }
+        if (!withdrawal) withdrawal = {
+            details: '',
+        };
+        if (!withdrawal.ways || !withdrawal.ways[0])
+            withdrawal.ways = [{ name: '', memo: '', prefix: '', }];
         this.state.initialValues = {
             fee_percent,
             description,
             image_url,
             symbols_whitelist: props.asset.symbols_whitelist.join('\n'),
+            withdrawal,
         };
     }
 
@@ -86,6 +95,33 @@ class UpdateAsset extends Component {
         return handle(e);
     };
 
+    validate = (values) => {
+        let errors = {};
+
+        const { aewRef, } = this;
+        if (aewRef.current) {
+            errors = {...errors, ...aewRef.current.validateWays(values)};
+        } else {
+            console.error('No aewRef');
+        }
+
+        return errors;
+    };
+
+    _sanitizeWithdrawal = (withdrawal) => {
+        let obj = {...withdrawal};
+        if (withdrawal.ways) {
+            let newWays = [];
+            for (let way of withdrawal.ways) {
+                if (way.memo || way.name) {
+                    newWays.push(way);
+                }
+            }
+            obj.ways = newWays;
+        }
+        return obj;
+    };
+
     _onSubmit = (values, { setSubmitting, }) => {
         const {
             updateAsset, accountName, symbol,
@@ -93,8 +129,9 @@ class UpdateAsset extends Component {
         const {
             fee_percent, symbols_whitelist, description, image_url,
         } = values;
+        const withdrawal = this._sanitizeWithdrawal(values.withdrawal);
         updateAsset({ symbol, fee_percent, symbols_whitelist,
-            image_url, description, accountName,
+            image_url, description, withdrawal, accountName,
             errorCallback: (e) => {
                 if (e === 'Canceled') {
                     this.setState({
@@ -115,6 +152,14 @@ class UpdateAsset extends Component {
         });
     }
 
+    onFormSubmit = (e, handle) => {
+        const { aewRef, } = this;
+        if (aewRef.current) {
+            aewRef.current.submit();
+        }
+        return handle(e);
+    };
+
     render() {
         const {props: {account, isMyAccount, cprops, symbol, asset}} = this;
         if (!asset) return (<div></div>);
@@ -124,6 +169,7 @@ class UpdateAsset extends Component {
         return (<div>
             <Formik
                 initialValues={initialValues}
+                validate={this.validate}
                 onSubmit={this._onSubmit}
             >
             {({
@@ -131,7 +177,7 @@ class UpdateAsset extends Component {
                 handleChange, handleBlur, setFieldValue,
             }) => (
             <form
-                onSubmit={handleSubmit}
+                onSubmit={e => this.onFormSubmit(e, handleSubmit)}
                 autoComplete='off'
             >
                 <div className='row'>
@@ -195,6 +241,13 @@ class UpdateAsset extends Component {
                     </div>
                 </div>
 
+                <AssetEditWithdrawal
+                    name='withdrawal'
+                    ref={this.aewRef}
+                    values={values}
+                    handleChange={handleChange}
+                />
+
                 <div className='row'>
                     <div className='column small-10'>
                         {isSubmitting && <span><LoadingIndicator type='circle' /><br /></span>}
@@ -240,7 +293,9 @@ export default connect(
     },
     dispatch => ({
         updateAsset: ({
-            symbol, fee_percent, symbols_whitelist, image_url, description, accountName, successCallback, errorCallback
+            symbol, fee_percent, symbols_whitelist, image_url, description,
+            withdrawal,
+            accountName, successCallback, errorCallback
         }) => {
             let sw = symbols_whitelist.split('\n');
             let set = new Set();
@@ -253,7 +308,11 @@ export default connect(
                 symbol,
                 fee_percent: parseInt(fee_percent.replace('.','').replace(',','')),
                 symbols_whitelist: [...set],
-                json_metadata: JSON.stringify({image_url, description, }),
+                json_metadata: JSON.stringify({
+                    image_url,
+                    description,
+                    withdrawal,
+                }),
             };
 
             const success = () => {
