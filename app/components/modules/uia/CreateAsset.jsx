@@ -9,7 +9,6 @@ import transaction from 'app/redux/Transaction'
 import user from 'app/redux/User';
 import tt from 'counterpart';
 import Icon from 'app/components/elements/Icon';
-import {cleanReduxInput} from 'app/utils/ReduxForms'
 import reactForm from 'app/utils/ReactForm';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import Slider from 'golos-ui/Slider';

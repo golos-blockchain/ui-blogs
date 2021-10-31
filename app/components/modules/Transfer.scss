@@ -65,3 +65,21 @@
 .PresetSelector__container {
   display: inline-block;
 }
+
+.Withdrawal__way {
+  display: inline-block;
+  margin-right: 1rem;
+
+  label {
+    color: #0078C4;
+    text-transform: none;
+    cursor: pointer;
+    font-size: 100%;
+    user-select: none;
+
+    input {
+      vertical-align: middle;
+      cursor: pointer;
+    }
+  }
+}
