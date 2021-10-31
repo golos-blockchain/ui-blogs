@@ -25,31 +25,36 @@ function setMemos(memos) {
     localStorage.setItem(stKey, JSON.stringify(memos));
 }
 
-export function saveMemo(id, memo, prefix) {
+function _key(sym, id) {
+    return sym.toUpperCase().trim() + '|' + id;
+}
+
+export function saveMemo(sym, id, memo, prefix) {
     try {
         if (!localStorageAvailable()) return;
         let memos = getMemos();
-        memos[id] = { memo, prefix, time: Date.now(), };
+        memos[_key(sym, id)] = { memo, prefix, time: Date.now(), };
         setMemos(memos);
     } catch (err0) {
         console.error('saveMemo', err0);
     }
 }
 
-export function loadMemo(id, prefix) {
+export function loadMemo(sym, id, prefix) {
     let res = null;
     try {
         if (!localStorageAvailable()) return res;
         let memos = getMemos();
-        if (!memos[id]) {
+        const i = _key(sym, id);
+        if (!memos[i]) {
             console.warn('loadMemo', 'no memo');
             return res;
         }
-        if (!memos[id].memo || memos[id].prefix !== prefix) {
+        if (!memos[i].memo || memos[i].prefix !== prefix) {
             console.warn('loadMemo', 'wrong memo');
             return res;
         }
-        return memos[id].memo;
+        return memos[i].memo;
     } catch (err0) {
         console.error('loadMemo', err0);
         return res;

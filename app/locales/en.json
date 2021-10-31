@@ -730,7 +730,13 @@
     "trade_asset": "Go to trading on the internal exchange",
     "mute_asset": "Do not show asset",
     "mute_asset_confirm_TICKER": "Confirm muting of %(TICKER)s? You will be able to unmute this asset in Settings of your profile.",
+    "deposit": "Deposit",
     "withdrawal": "Withdrawal"
+  },
+  "asset_edit_deposit_jsx": {
+    "title": "Deposit Rules",
+    "details_placeholder": "Where to send tokens, min. amount, fee...",
+    "transfer_title_SYM": "Deposit Of %(SYM)s"
   },
   "asset_edit_withdrawal_jsx": {
     "title": "Withdrawal Rules",
@@ -746,7 +752,7 @@
     "way_prefix_placeholder": "e.g.: advcash:",
     "way_add": "Add another method",
     "way_name_error": "Please set way name which will be displaying to user.",
-    "way_prefix_error": "If prefix set, memo should start with it.",
+    "way_prefix_error": "Do not prepend memo itself with the prefix.",
     "wrong_prefix_end": "Prefix should end with one of these characters: : - _",
     "wrong_prefix_start": "Prefix should not start with space.",
     "wrong_memo_start": "Memo should not start with space.",

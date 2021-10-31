@@ -10,6 +10,7 @@ import g from 'app/redux/GlobalReducer';
 import transaction from 'app/redux/Transaction'
 import user from 'app/redux/User';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
+import AssetEditDeposit from 'app/components/modules/uia/AssetEditDeposit';
 import AssetEditWithdrawal from 'app/components/modules/uia/AssetEditWithdrawal';
 
 class UpdateAsset extends Component {
@@ -37,13 +38,18 @@ class UpdateAsset extends Component {
         fee_percent = longToAsset(fee_percent, '', 2).trim()
         let description = '';
         let image_url = '';
+        let deposit = null;
         let withdrawal = null;
         if (props.asset.json_metadata.startsWith('{')) {
             const json_metadata = JSON.parse(props.asset.json_metadata);
             description = json_metadata.description;
             image_url = json_metadata.image_url;
+            deposit = json_metadata.deposit;
             withdrawal = json_metadata.withdrawal;
         }
+        if (!deposit) deposit = {
+            details: '',
+        };
         if (!withdrawal) withdrawal = {
             details: '',
         };
@@ -55,6 +61,7 @@ class UpdateAsset extends Component {
             image_url,
             symbols_whitelist: props.asset.symbols_whitelist.join('\n'),
             withdrawal,
+            deposit,
         };
     }
 
@@ -129,9 +136,10 @@ class UpdateAsset extends Component {
         const {
             fee_percent, symbols_whitelist, description, image_url,
         } = values;
+        const deposit = values.deposit;
         const withdrawal = this._sanitizeWithdrawal(values.withdrawal);
         updateAsset({ symbol, fee_percent, symbols_whitelist,
-            image_url, description, withdrawal, accountName,
+            image_url, description, deposit, withdrawal, accountName,
             errorCallback: (e) => {
                 if (e === 'Canceled') {
                     this.setState({
@@ -241,6 +249,10 @@ class UpdateAsset extends Component {
                     </div>
                 </div>
 
+                <AssetEditDeposit
+                    name='deposit'
+                />
+
                 <AssetEditWithdrawal
                     name='withdrawal'
                     ref={this.aewRef}
@@ -294,7 +306,7 @@ export default connect(
     dispatch => ({
         updateAsset: ({
             symbol, fee_percent, symbols_whitelist, image_url, description,
-            withdrawal,
+            deposit, withdrawal,
             accountName, successCallback, errorCallback
         }) => {
             let sw = symbols_whitelist.split('\n');
@@ -311,6 +323,7 @@ export default connect(
                 json_metadata: JSON.stringify({
                     image_url,
                     description,
+                    deposit,
                     withdrawal,
                 }),
             };

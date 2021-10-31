@@ -53,7 +53,7 @@ class TransferForm extends Component {
                 ReactDOM.findDOMNode(this.refs.amount).focus()
         }, 300)
         const { withdrawal, } = this.props.initialValues;
-        if (withdrawal.ways && withdrawal.ways[0]) {
+        if (withdrawal && withdrawal.ways && withdrawal.ways[0]) {
             this._setWithdrawalWay(withdrawal.ways[0].name);
         }
         runTests()
@@ -74,7 +74,7 @@ class TransferForm extends Component {
         const minAmount = parseFloat(withdrawal.min_amount);
         amount = parseFloat(amount);
         if (minAmount && amount && amount < minAmount)
-            return tt('asset_edit_withdrawal_jsx.min_amount') + withdrawal.min_amount;
+            return tt('asset_edit_withdrawal_jsx.min_amount') + withdrawal.min_amount + ' ' + this.props.sym;
         return null;
     };
 
@@ -243,12 +243,15 @@ class TransferForm extends Component {
 
     _renderWithdrawalDetails() {
         const { withdrawal, } = this.props.initialValues;
+        const { sym, } = this.props;
 
         // null if fee not set, NaN or zero
         let fee = (withdrawal.fee && parseFloat(withdrawal.fee) )?
             <div><b>
                 {tt('asset_edit_withdrawal_jsx.fee')}
                 {withdrawal.fee.toString()}
+                {' '}
+                {sym}
             </b></div> : null;
 
         if (!fee &&
@@ -257,7 +260,7 @@ class TransferForm extends Component {
         return (<div className='row' style={{ marginBottom: '1.25rem', }}>
             <div className='column small-2'>
             </div>
-            <div className='column small-10'>
+            <div className='column small-10' style={{ whiteSpace: 'pre-line', }}>
                 {fee}
                 {withdrawal.details.toString()}
             </div></div>);
@@ -282,9 +285,8 @@ class TransferForm extends Component {
         let memoInitial = memo;
         if (prefix && typeof prefix === 'string') {
             memoPrefix = prefix;
-            memoInitial = memoInitial.replace(memoPrefix, '');
         }
-        memo = loadMemo(name, memoPrefix) || memoInitial;
+        memo = loadMemo(this.props.sym, name, memoPrefix) || memoInitial;
         
         this.state.memo.props.onChange(memo);
         this.setState({
@@ -666,7 +668,9 @@ export default connect(
             }
 
             if (withdrawalWay) {
+                operation.memo = withdrawalWay.prefix + operation.memo;
                 saveMemo(
+                    asset,
                     withdrawalWay.name,
                     memo || '',
                     withdrawalWay.prefix);

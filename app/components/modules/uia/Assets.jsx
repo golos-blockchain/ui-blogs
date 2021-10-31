@@ -79,6 +79,10 @@ class Assets extends Component {
             });
         };
 
+        const showDeposit = (asset,  deposit) => {
+            this.showAssetRules({...deposit, isDeposit: true}, asset);
+        };
+
         const showWithdrawal = (asset, precision, withdrawal) => {
             if (!withdrawal.ways || !withdrawal.ways.length) {
                 this.showAssetRules(withdrawal, asset);
@@ -124,17 +128,26 @@ class Assets extends Component {
 
             let description = ""
             let image_url = ""
+            let deposit = null;
             let withdrawal = null;
             if (item.json_metadata.startsWith('{')) {
                 let json_metadata = JSON.parse(item.json_metadata)
                 description = json_metadata.description
                 image_url = json_metadata.image_url
+                deposit = json_metadata.deposit;
                 withdrawal = json_metadata.withdrawal;
             }
 
+            const hasDeposit = deposit
+                && (deposit.details);
             const hasWithdrawal = withdrawal
                 && (withdrawal.to
                     || withdrawal.details);
+
+            const depositDisabled = 
+                (hasDeposit && deposit.unavailable) ?
+                tt('asset_edit_withdrawal_jsx.unavailable') : 
+                undefined;
 
             const withdrawalDisabled = 
                 (hasWithdrawal && withdrawal.unavailable) ?
@@ -170,6 +183,11 @@ class Assets extends Component {
                         /> : item.balance}
                     <br/>
                     {tradable_with_golos ? <Link style={{fill: "#3e7bc6"}} to={"/market/"+sym+"/GOLOS"}><Icon name="trade" title={tt('assets_jsx.trade_asset')} /></Link> : null}&nbsp;<small>{tt('assets_jsx.balance')}</small>
+                    {hasDeposit && <button
+                        onClick={() => showDeposit(sym, deposit)}
+                        disabled={depositDisabled}
+                        title={depositDisabled}
+                        className='button tiny Assets__inlineBtn'>{tt('assets_jsx.deposit')}</button>}
                     {hasWithdrawal && <button
                         onClick={() => showWithdrawal(sym, item.precision, withdrawal)}
                         disabled={withdrawalDisabled}

@@ -84,9 +84,7 @@ class AssetEditWithdrawal extends React.Component {
                 } else if (!/[:_-]$/.test(prefix)) {
                     error(i, tt('asset_edit_withdrawal_jsx.wrong_prefix_end'));
                     continue;
-                } else if (!memo
-                        || !memo.startsWith(prefix)
-                        || memo === prefix) {
+                } else if (memo && memo.startsWith(prefix)) {
                     error(i, tt('asset_edit_withdrawal_jsx.way_prefix_error'));
                     continue;
                 }
@@ -142,17 +140,6 @@ class AssetEditWithdrawal extends React.Component {
                                     />
                                 </div>
                             </div>
-                            <div className='column small-5'>
-                                <div className='input-group'>
-                                    <Field
-                                        name={`${name}.ways.${index}.memo`}
-                                        component='input'
-                                        type='text'
-                                        className='input-group-field bold'
-                                        maxLength='256'
-                                    />
-                                </div>
-                            </div>
                             <div className='column small-4'>
                                 <div className='input-group'>
                                     <Field
@@ -162,6 +149,17 @@ class AssetEditWithdrawal extends React.Component {
                                         className='input-group-field bold'
                                         maxLength='64'
                                         placeholder={tt('asset_edit_withdrawal_jsx.way_prefix_placeholder')}
+                                    />
+                                </div>
+                            </div>
+                            <div className='column small-5'>
+                                <div className='input-group'>
+                                    <Field
+                                        name={`${name}.ways.${index}.memo`}
+                                        component='input'
+                                        type='text'
+                                        className='input-group-field bold'
+                                        maxLength='256'
                                     />
                                     <Icon 
                                         className='remove-way'
@@ -206,11 +204,11 @@ class AssetEditWithdrawal extends React.Component {
                         <div className='column small-3'>
                             {tt('asset_edit_withdrawal_jsx.way_name')}
                         </div>
-                        <div className='column small-5'>
-                            {tt('asset_edit_withdrawal_jsx.way_memo')}
-                        </div>
                         <div className='column small-4'>
                             {tt('asset_edit_withdrawal_jsx.way_prefix')}
+                        </div>
+                        <div className='column small-5'>
+                            {tt('asset_edit_withdrawal_jsx.way_memo')}
                         </div>
                     </div>
                     {wayFields}
