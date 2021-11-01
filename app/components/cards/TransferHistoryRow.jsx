@@ -106,6 +106,7 @@ class TransferHistoryRow extends React.Component {
                 }
                 description_start += tt('transferhistoryrow_jsx.for');
                 other_account = data.memo.target.author + '/' + data.memo.target.permlink;
+                description_end += ' [' + data.memo.app + ']';
             } else {
                 description_start += data.amount;
                 if (context === "from") {
