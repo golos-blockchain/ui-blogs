@@ -260,7 +260,7 @@ class TransferForm extends Component {
         return (<div className='row' style={{ marginBottom: '1.25rem', }}>
             <div className='column small-2'>
             </div>
-            <div className='column small-10' style={{ whiteSpace: 'pre-line', }}>
+            <div className='column small-10' style={{ whiteSpace: 'pre-line', fontSize: '85%' }}>
                 {fee}
                 {withdrawal.details.toString()}
             </div></div>);

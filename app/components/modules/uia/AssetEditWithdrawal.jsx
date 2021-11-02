@@ -160,6 +160,7 @@ class AssetEditWithdrawal extends React.Component {
                                         type='text'
                                         className='input-group-field bold'
                                         maxLength='256'
+                                        placeholder={tt('asset_edit_withdrawal_jsx.way_memo_placeholder')}
                                     />
                                     <Icon 
                                         className='remove-way'
