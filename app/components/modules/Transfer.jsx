@@ -318,7 +318,7 @@ class TransferForm extends Component {
             <div className="column small-10">
                 <small>{tt('transfer_jsx.this_memo_is') + isMemoPrivate ? tt('transfer_jsx.public') : tt('transfer_jsx.private')}</small>
                 {input}
-                <div className="error">{memo.touched && memo.error && memo.error}&nbsp;</div>
+                <div className="error">{memo.touched && memo.error && memo.error}</div>
             </div>
         </div>)
     };
