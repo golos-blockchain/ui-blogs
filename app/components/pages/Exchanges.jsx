@@ -24,7 +24,7 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <a target="_blank" href="https://coins.black/"><img src={require("app/assets/images/coinsblack.png")} width="275" /></a>
+                                <a target="_blank" href="https://coins.black/"><img src={require("app/assets/images/exchanges/coinsblack.png")} width="275" /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
                                     <a target="_blank" href="https://coins.black/xchange_SBERRUB_to_GLS/?summ=1000&schet2=&lock2=true" className="button">{tt('g.buy')} GOLOS</a>
@@ -46,7 +46,7 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <a target="_blank" href="https://rudex.org/"><img src={require("app/assets/images/rudex.png")} width="275" /></a>
+                                <a target="_blank" href="https://rudex.org/"><img src={require("app/assets/images/exchanges/rudex.png")} width="275" /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
                                     <a href="/@allforyou/golos-delistyat-s-kuny-perekhodim-na-rudex">{tt('exchanges_jsx.guide_user')}</a> <Icon name="extlink" />
@@ -69,7 +69,7 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <a href="/market"><img src={require("app/assets/images/golosdex.png")} width="285" /></a>
+                                <a href="/market"><img src={require("app/assets/images/exchanges/golosdex.png")} width="285" /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
                                     <p><a href="/@allforyou/torguem-na-vnutrennei-birzhe-golosa">Внутренняя биржа</a>, на которой также возможно покупать/продавать токены GOLOS через пользовательские шлюзы, напр. к <small>DOGE, DASH, TRON</small> и другим активам.</p>
@@ -93,7 +93,7 @@ class Exchanges extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <a target="_blank" href="https://steem-engine.net/"><img src={require("app/assets/images/steemengine.png")} width="182" /></a>
+                                <a target="_blank" href="https://steem-engine.net/"><img src={require("app/assets/images/exchanges/steemengine.png")} width="182" /></a>
                                 </div>
                                 <div className='landing-exchanges-block-center column large-12 medium-12 small-12'>
                                     <a href="/@allforyou/zavodim-i-vyvodim-golosa-s-birzhi-steem-engine">{tt('exchanges_jsx.guide_user')}</a> <Icon name="extlink" />
