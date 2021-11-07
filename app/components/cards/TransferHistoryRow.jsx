@@ -22,10 +22,11 @@ class TransferHistoryRow extends React.Component {
         const amount = data.amount;
 
         /*  all transfers involve up to 2 accounts, context and 1 other. */
-        let description_start = ""
-        let code_key = "";
+        let description_start = "";
         let other_account = null;
+        let code_key = "";
         let description_end = "";
+        let target_hint = "";
         let data_memo = data.memo;
 
         if (type === 'claim') {
@@ -106,7 +107,7 @@ class TransferHistoryRow extends React.Component {
                 }
                 description_start += tt('transferhistoryrow_jsx.for');
                 other_account = data.memo.target.author + '/' + data.memo.target.permlink;
-                description_end += ' [' + data.memo.app + ']';
+                target_hint += data.memo.app;
             } else {
                 description_start += data.amount;
                 if (context === "from") {
@@ -239,6 +240,7 @@ class TransferHistoryRow extends React.Component {
                         {code_key && <span style={{fontSize: "85%"}}>{code_key}</span>}
                         {other_account && <Link to={`/@${other_account}`}>{other_account}</Link>}
                         {description_end}
+                        {target_hint && <span style={{fontSize: "85%", padding: "5px"}}>[{target_hint}]</span>}
                     </td>
                     <td className="show-for-medium" style={{maxWidth: "25rem", wordWrap: "break-word", fontSize: "85%"}}>
                         <Memo text={data_memo} data={data} username={context} />

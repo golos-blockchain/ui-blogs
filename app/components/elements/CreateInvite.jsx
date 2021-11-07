@@ -185,7 +185,7 @@ class CreateInvite extends Component {
 
         let publicKeyLink = null;
         if (createdInvite) {
-            publicKeyLink = `https://gapi.golos.today/steemjs/api/database_api/get_invite?invite_key=${createdInvite}`;
+            publicKeyLink = `https://gapi.golos.today/api/database_api/get_invite?invite_key=${createdInvite}`;
             publicKeyLink=(<span>{tt('invites_jsx.public_key_can_be_checked') + ' '}
                     <a href={publicKeyLink} target='_blank' rel='noopener noreferrer'>{tt('g.here')}</a>
                     <Icon name="extlink" size="1_5x" />

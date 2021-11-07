@@ -240,19 +240,18 @@ class PostsIndex extends React.Component {
                     <div className="sticky-right-ad">
 
                     <p align="center">
-                        <a target="_blank" href={"https://coins.black/xchange_SBERRUB_to_GLS/?summ=1000&schet2=" + active_user + "&lock2=true"}><img src={require("app/assets/images/coinsblack-banner.png")} width="220" height="150" /></a>
-                        <span className="strike"><a href="/@on0tole/pryamaya-pokupka-tokenov-golos-za-rubli-i-ne-tolko">{tt('g.more_hint')}</a></span>
+                        <a target="_blank" href={"https://coins.black/xchange_SBERRUB_to_GLS/?summ=1000&schet2=" + active_user + "&lock2=true"}><img src={require("app/assets/images/banners/coinsblack.png")} width="220" height="150" /></a>
+                        <span className="strike"><a target="_blank" href="/@on0tole/pryamaya-pokupka-tokenov-golos-za-rubli-i-ne-tolko">{tt('g.more_hint')}</a></span>
                     </p>
 
                     <p align="center">
-                        <a target="_blank" href="https://golostalk.com"><img src={require("app/assets/images/golostalk-right.png")} width="220" height="180" /></a>
-                        <span className="strike"><a href="/@lex/zapusk-foruma-golostalk-com">{tt('g.more_hint')}</a></span>
+                        <a target="_blank" href="/@allforyou/torguem-na-vnutrennei-birzhe-golosa"><img src={require("app/assets/images/banners/golosdex2.png")} width="220" height="160" /></a>
                     </p>
 
                     {$STM_Config.show_adv_banners ?
                     (<iframe data-aa='1148471' src='//ad.a-ads.com/1148471?size=240x400' scrolling='no'
                     style={{width:'240px', height:'400px', border:'0px', padding:'0', overflow:'hidden'}}
-                    allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe>) : null}
+                    allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe>) : (<p align='center'><a target='_blank' href='https://golostalk.com'><img src={require('app/assets/images/banners/golostalk2.png')} width='220' height='180' /></a></p>)}
 
                     </div>
                 </div>
