@@ -5225,10 +5225,9 @@ formidable@~1.0.14:
   version "1.0.17"
   resolved "https://registry.yarnpkg.com/formidable/-/formidable-1.0.17.tgz#ef5491490f9433b705faa77249c99029ae348559"
 
-formik@^2.2.9:
+"formik@https://gitpkg.now.sh/golos-blockchain/formik/packages/formik?b697b6ef3f13c795bb862b35589fffde442ab465":
   version "2.2.9"
-  resolved "https://registry.yarnpkg.com/formik/-/formik-2.2.9.tgz#8594ba9c5e2e5cf1f42c5704128e119fc46232d0"
-  integrity sha512-LQLcISMmf1r5at4/gyJigGn0gOwFbeEAlji+N9InZF6LIMXnFNkO42sCI8Jt84YZggpD4cPWObAZaxpEFtSzNA==
+  resolved "https://gitpkg.now.sh/golos-blockchain/formik/packages/formik?b697b6ef3f13c795bb862b35589fffde442ab465#1dfdbd4ea0331625cd063e826dbb86330fe9244c"
   dependencies:
     deepmerge "^2.1.1"
     hoist-non-react-statics "^3.3.0"

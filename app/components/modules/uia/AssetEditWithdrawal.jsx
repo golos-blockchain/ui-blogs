@@ -1,6 +1,6 @@
 import React from 'react';
 import tt from 'counterpart';
-import { Field, FieldArray, ErrorMessage, } from 'formik';
+import { Field, FieldArray, FieldArrayItem, ErrorMessage, } from 'formik';
 import { api, } from 'golos-lib-js';
 import Icon from 'app/components/elements/Icon';
 import Expandable from 'app/components/elements/Expandable';
@@ -60,46 +60,29 @@ class AssetEditWithdrawal extends React.Component {
         return handle(e);
     };
 
-    validateWays = (values) => {
-        let errors = {};
-        const { name, } = this.props;
-        const ways = values[name] && values[name].ways;
-        if (!ways) {
-            return errors;
-        }
-        const error = (i, msg) => {
-            errors[name] = errors[name] || {};
-            errors[name].ways = errors[name].ways || {};
-            errors[name].ways[i] = msg;
-        };
+    validateWay = (way) => {
         const spaceStart = /^[ \t]/;
         const spaceEnd = /[ \t]$/;
-        for (const i in ways) {
-            if (!ways[i]) continue; // row not yet filled
-            const { name, memo, prefix, } = ways[i];
-            if (prefix) {
-                if (spaceStart.test(prefix)) {
-                    error(i, tt('asset_edit_withdrawal_jsx.wrong_prefix_start'));
-                    continue;
-                } else if (!/[:_-]$/.test(prefix)) {
-                    error(i, tt('asset_edit_withdrawal_jsx.wrong_prefix_end'));
-                    continue;
-                } else if (memo && memo.startsWith(prefix)) {
-                    error(i, tt('asset_edit_withdrawal_jsx.way_prefix_error'));
-                    continue;
-                }
-            }
-            if (memo) {
-                if (spaceStart.test(memo)) {
-                    error(i, tt('asset_edit_withdrawal_jsx.wrong_memo_start'));
-                } else if (spaceEnd.test(memo)) {
-                    error(i, tt('asset_edit_withdrawal_jsx.wrong_memo_end'));
-                } else if (!name) {
-                    error(i, tt('asset_edit_withdrawal_jsx.way_name_error'));
-                }
+        const { name, memo, prefix, } = way;
+        if (prefix) {
+            if (spaceStart.test(prefix)) {
+                return tt('asset_edit_withdrawal_jsx.wrong_prefix_start');
+            } else if (!/[:_-]$/.test(prefix)) {
+                return tt('asset_edit_withdrawal_jsx.wrong_prefix_end');
+            } else if (memo && memo.startsWith(prefix)) {
+                return tt('asset_edit_withdrawal_jsx.way_prefix_error');
             }
         }
-        return errors;
+        if (memo) {
+            if (spaceStart.test(memo)) {
+                return tt('asset_edit_withdrawal_jsx.wrong_memo_start');
+            } else if (spaceEnd.test(memo)) {
+                return tt('asset_edit_withdrawal_jsx.wrong_memo_end');
+            } else if (!name) {
+                return tt('asset_edit_withdrawal_jsx.way_name_error');
+            }
+        }
+        return undefined; 
     };
 
     validateDetails = (value, values) => {
@@ -127,6 +110,10 @@ class AssetEditWithdrawal extends React.Component {
                 return (<React.Fragment>
                 {(ways && ways.length) ? ways.map((memo, index) => (
                     <React.Fragment key={index}>
+                        <FieldArrayItem
+                            name={`${name}.ways.${index}`}
+                            validate={this.validateWay}
+                        />
                         <div className='row'>
                             <div className='column small-3'>
                                 <div className='input-group'>

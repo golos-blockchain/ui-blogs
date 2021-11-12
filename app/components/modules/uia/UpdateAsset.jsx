@@ -50,6 +50,9 @@ class UpdateAsset extends Component {
         if (!deposit) deposit = {
             details: '',
         };
+        if (!deposit.to_type)
+            deposit.to_type = 'fixed';
+        console.log(deposit);
         if (!withdrawal) withdrawal = {
             details: '',
         };
@@ -102,18 +105,6 @@ class UpdateAsset extends Component {
         return handle(e);
     };
 
-    validate = (values) => {
-        let errors = {};
-
-        const { aewRef, } = this;
-        if (aewRef.current) {
-            errors = {...errors, ...aewRef.current.validateWays(values)};
-        } else {
-            console.error('No aewRef');
-        }
-
-        return errors;
-    };
 
     _sanitizeWithdrawal = (withdrawal) => {
         let obj = {...withdrawal};
@@ -177,7 +168,6 @@ class UpdateAsset extends Component {
         return (<div>
             <Formik
                 initialValues={initialValues}
-                validate={this.validate}
                 onSubmit={this._onSubmit}
             >
             {({
@@ -251,6 +241,8 @@ class UpdateAsset extends Component {
 
                 <AssetEditDeposit
                     name='deposit'
+                    values={values}
+                    handleChange={handleChange}
                 />
 
                 <AssetEditWithdrawal

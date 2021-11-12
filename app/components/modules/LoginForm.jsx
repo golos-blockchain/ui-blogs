@@ -224,7 +224,7 @@ class LoginForm extends Component {
                     <button type="submit" disabled={submitting || disabled} className="button" onClick={this.SignIn}>
                         {submitLabel}
                     </button>
-                    {!cancelIsRegister && this.props.onCancel && !isMemo && <button type="button float-right" disabled={submitting} className="button hollow" onClick={onCancel}>
+                    {!cancelIsRegister && this.props.onCancel && (!isMemo || !loginDefault.get('unclosable')) && <button type="button float-right" disabled={submitting} className="button hollow" onClick={onCancel}>
                         {tt('g.cancel')}
                     </button>}
                     {cancelIsRegister && !isMemo && <a href={authRegisterUrl()} target='_blank' type="button float-right" disabled={submitting} className="button hollow" onClick={this.checkRegisterEnabled}>
