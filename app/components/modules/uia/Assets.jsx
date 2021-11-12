@@ -12,7 +12,6 @@ import Button from 'app/components/elements/Button';
 import FoundationDropdownMenu from 'app/components/elements/FoundationDropdownMenu';
 import tt from 'counterpart';
 import AssetRules from 'app/components/modules/uia/AssetRules';
-import CloseButton from 'react-foundation-components/lib/global/close-button';
 import Reveal from 'react-foundation-components/lib/global/reveal';
 
 class Assets extends Component {
@@ -248,10 +247,10 @@ class Assets extends Component {
             </div>
 
             <Reveal show={showAssetRules}>
-                <CloseButton onClick={this.hideAssetRules} />
                 <AssetRules
                     rules={assetRules}
                     sym={assetRules && assetRules.sym}
+                    onClose={this.hideAssetRules}
                     />
             </Reveal>
         </div>)

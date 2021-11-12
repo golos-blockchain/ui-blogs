@@ -50,6 +50,9 @@ class UpdateAsset extends Component {
         if (!deposit) deposit = {
             details: '',
         };
+        if (!deposit.to_type)
+            deposit.to_type = 'fixed';
+        console.log(deposit);
         if (!withdrawal) withdrawal = {
             details: '',
         };
@@ -238,6 +241,8 @@ class UpdateAsset extends Component {
 
                 <AssetEditDeposit
                     name='deposit'
+                    values={values}
+                    handleChange={handleChange}
                 />
 
                 <AssetEditWithdrawal
