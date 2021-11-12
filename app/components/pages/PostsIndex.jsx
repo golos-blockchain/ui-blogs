@@ -251,7 +251,7 @@ class PostsIndex extends React.Component {
                     {$STM_Config.show_adv_banners ?
                     (<iframe data-aa='1148471' src='//ad.a-ads.com/1148471?size=240x400' scrolling='no'
                     style={{width:'240px', height:'400px', border:'0px', padding:'0', overflow:'hidden'}}
-                    allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe>) : (<p align='center'><a target='_blank' href='https://golostalk.com'><img src={require('app/assets/images/banners/golostalk2.png')} width='220' height='180' /></a></p>)}
+                    allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe>) : null}
 
                     </div>
                 </div>

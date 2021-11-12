@@ -285,7 +285,7 @@
     "account_updated": "Account Updated",
     "password_must_be_characters_or_more": "Password must be %(amount)s characters or more",
     "need_password_or_key": "You need a private password or key (not a public key)",
-    "login_to_see_memo": "It is an encrypted memo.",
+    "login_to_see_memo": "Encrypted memo",
     "new_password": "New Password",
     "incorrect_password": "Incorrect password",
     "username_does_not_exist": "Username does not exist",
@@ -736,7 +736,6 @@
   },
   "asset_edit_deposit_jsx": {
     "title": "Deposit Rules",
-    "details_placeholder": "Where to send tokens, min. amount, fee...",
     "to_type_fixed": "Fixed gate address",
     "to_type_transfer": "Requesting gate address",
     "to_fixed": "Where to send tokens:",

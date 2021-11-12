@@ -138,7 +138,9 @@ class Assets extends Component {
             }
 
             const hasDeposit = deposit
-                && (deposit.details);
+                && (deposit.to_transfer
+                    || deposit.to_fixed
+                    || deposit.details);
             const hasWithdrawal = withdrawal
                 && (withdrawal.to
                     || withdrawal.details);
