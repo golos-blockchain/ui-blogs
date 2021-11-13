@@ -78,8 +78,8 @@ class Assets extends Component {
             });
         };
 
-        const showDeposit = (asset,  deposit) => {
-            this.showAssetRules({...deposit, isDeposit: true}, asset);
+        const showDeposit = (asset, creator, deposit) => {
+            this.showAssetRules({...deposit, creator, isDeposit: true}, asset);
         };
 
         const showWithdrawal = (asset, precision, withdrawal) => {
@@ -185,7 +185,7 @@ class Assets extends Component {
                     <br/>
                     {tradable_with_golos ? <Link style={{fill: "#3e7bc6"}} to={"/market/"+sym+"/GOLOS"}><Icon name="trade" title={tt('assets_jsx.trade_asset')} /></Link> : null}&nbsp;<small>{tt('assets_jsx.balance')}</small>
                     {hasDeposit && <button
-                        onClick={() => showDeposit(sym, deposit)}
+                        onClick={() => showDeposit(sym, item.creator, deposit)}
                         disabled={depositDisabled}
                         title={depositDisabled}
                         className='button tiny Assets__inlineBtn'>{tt('assets_jsx.deposit')}</button>}

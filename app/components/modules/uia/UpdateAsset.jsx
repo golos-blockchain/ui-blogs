@@ -52,7 +52,6 @@ class UpdateAsset extends Component {
         };
         if (!deposit.to_type)
             deposit.to_type = 'fixed';
-        console.log(deposit);
         if (!withdrawal) withdrawal = {
             details: '',
         };
