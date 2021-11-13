@@ -15,6 +15,7 @@ import { LIQUID_TICKER, DEBT_TICKER , VESTING_TOKEN2 } from 'app/client_config';
 import Slider from 'golos-ui/Slider';
 import VerifiedExchangeList from 'app/utils/VerifiedExchangeList';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
+import Icon from 'app/components/elements/Icon';
 
 /** Warning .. This is used for Power UP too. */
 class TransferForm extends Component {
@@ -296,6 +297,17 @@ class TransferForm extends Component {
         });
     };
 
+    toggleMemoEncryption = () => {
+        let memo = this.state.memo.props.value;
+        if (/^#/.test(memo)) {
+            memo = memo.replace('#', '');
+            if (memo[0] === ' ') memo = memo.substring(1);
+            this.state.memo.props.onChange(memo);
+        } else {
+            this.state.memo.props.onChange('# ' + memo);
+        }
+    }
+
     _renderMemo(memo, memoPrefix, disableMemo, isMemoPrivate, loading) {
         let input = (<input type="text"
             placeholder={tt('transfer_jsx.memo_placeholder')}
@@ -312,11 +324,20 @@ class TransferForm extends Component {
                     </span>
                     {input}
                 </div>);
+        } else {
+            input = (<div className='input-group'>
+                    {input}
+                    <span class='input-group-label' style={{ cursor: 'pointer', }}
+                        title={isMemoPrivate ? tt('transfer_jsx.memo_unlock') : tt('transfer_jsx.memo_lock')}
+                        onClick={this.toggleMemoEncryption}>
+                        <Icon name={isMemoPrivate ? 'ionicons/lock-closed-outline' : 'ionicons/lock-open-outline'} />
+                    </span>
+                </div>);
         }
         return (<div className="row">
             <div className="column small-2" style={{paddingTop: 33}}>{tt('transfer_jsx.memo')}</div>
             <div className="column small-10">
-                <small>{tt('transfer_jsx.this_memo_is') + isMemoPrivate ? tt('transfer_jsx.public') : tt('transfer_jsx.private')}</small>
+                <small>{isMemoPrivate ? tt('transfer_jsx.private') : tt('transfer_jsx.public')}</small>
                 {input}
                 <div className="error">{memo.touched && memo.error && memo.error}</div>
             </div>
