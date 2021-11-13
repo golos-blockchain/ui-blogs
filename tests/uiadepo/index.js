@@ -1,8 +1,8 @@
 const { config, api, broadcast, importNativeLib, memo, } = require('golos-lib-js');
 
-const acc = 'lex';
+const acc = 'ecurrex-tether';
 const accActive = '5JFZC7AtEe1wF2ce6vPAUxDeevzYkPgmtR14z9ZVgvCCtrFAaLw';
-const memoIn = 'test23';
+const memoIn = 'deposit';
 const memoOut = '# This is test of UIA deposit';
 
 config.set('websocket', 'wss://apibeta.golos.today/ws');

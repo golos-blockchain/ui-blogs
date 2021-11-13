@@ -8,6 +8,7 @@ import CloseButton from 'react-foundation-components/lib/global/close-button';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import Memo from 'app/components/elements/Memo';
 import transaction from 'app/redux/Transaction';
+import { clearOldAddresses, loadAddress, saveAddress, } from 'app/utils/UIA';
 
 const TransferState = {
     initial: 0,
@@ -20,6 +21,23 @@ const TransferState = {
 class AssetRules extends Component {
     state = {
         transferState: TransferState.initial,
+    }
+
+    componentDidMount() {
+        const { rules, sym, } = this.props;
+        const { isDeposit, creator, } = rules;
+        if (isDeposit) {
+            clearOldAddresses();
+            const addr = loadAddress(sym, creator);
+            if (addr) {
+                this.setState({
+                    transferState: TransferState.received,
+                    receivedTransfer: {
+                        memo: addr,
+                    },
+                });
+            }
+        }
     }
 
     balanceValue = () => {
@@ -45,7 +63,7 @@ class AssetRules extends Component {
     waitingTimeout = (5 + 1) * 60 * 1000;
 
     transferAndWait = () => {
-        const { rules, dispatchTransfer, currentUser, } = this.props;
+        const { sym, rules, dispatchTransfer, currentUser, } = this.props;
         const { to_transfer, memo_transfer, } = rules;
         let stopper;
         let stopStream = api.streamOperations((err, op) => {
@@ -53,6 +71,7 @@ class AssetRules extends Component {
                 && op[1].to === currentUser.get('username')) {
                 stopStream();
                 clearTimeout(stopper);
+                saveAddress(sym, rules.creator, op[1].memo);
                 this.setState({
                     transferState: TransferState.received,
                     receivedTransfer: op[1],
@@ -91,13 +110,6 @@ class AssetRules extends Component {
             {tt('asset_edit_withdrawal_jsx.to')}<br/>
             <b>{addr}</b><br/>
             </div> : null;
-    }
-
-    _renderMemo = (memo_fixed) => {
-        {memo_fixed ? <div>
-            {tt('asset_edit_deposit_jsx.memo_fixed')}<br/>
-            <b>{memo_fixed}</b><br/>
-            </div> : null}
     }
 
     _renderParams = (withDetails = true) => {
@@ -193,8 +205,8 @@ class AssetRules extends Component {
 
     render() {
         const { rules, sym, onClose, } = this.props;
-        const { to, to_type, to_fixed, to_transfer,
-            min_amount, memo_fixed, fee, details, isDeposit, } = rules;
+        const { to, to_type, to_fixed, to_transfer, memo_fixed,
+            min_amount, fee, details, isDeposit, } = rules;
         if (isDeposit && to_type === 'transfer') {
             return this._renderTransfer();
         }
@@ -207,7 +219,10 @@ class AssetRules extends Component {
                 })}
             </h4>
             {this._renderTo(to, to_fixed)}
-            {this._renderMemo(memo_fixed)}
+            {memo_fixed ? <div>
+                    {tt('asset_edit_deposit_jsx.memo_fixed')}<br/>
+                    <b>{memo_fixed}</b><br/>
+                </div> : null}
             {this._renderParams()}
         </div>);
     }
