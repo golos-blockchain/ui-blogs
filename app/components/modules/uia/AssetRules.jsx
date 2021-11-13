@@ -115,15 +115,15 @@ class AssetRules extends Component {
     _renderParams = (withDetails = true) => {
         const { rules, sym, } = this.props;
         const { min_amount, fee, details, } = rules;
-        return <div style={{fontSize: "85%"}}>
+        return <div style={{fontSize: "90%"}}>
             <hr />
+            {details && <div style={{ whiteSpace: 'pre-line', }}>
+                {details}
+            <br/><br/></div>}
             {min_amount && <div>
                 {tt('asset_edit_withdrawal_jsx.min_amount')} <b>{min_amount} {sym || ''}</b></div>}
             {fee && <div>
                 {tt('asset_edit_withdrawal_jsx.fee')} <b>{fee} {sym || ''}</b></div>}
-            {(withDetails && details) ? <div style={{ whiteSpace: 'pre-line', }}><br/>
-                {details}
-            </div> : null}
         </div>;
     }
 
@@ -183,7 +183,6 @@ class AssetRules extends Component {
             <b>{to_transfer || ''}</b>
             {tt('asset_edit_deposit_jsx.transfer_desc_2')}
             <b>{memo_transfer || ''}</b>
-            <br/>
             {transferring ?
                 <span><LoadingIndicator type='circle' /></span> : null}
             <button type='submit' disabled={!enough || transferring} className='button float-center' onClick={this.transfer}>
