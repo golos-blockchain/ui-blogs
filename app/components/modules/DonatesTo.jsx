@@ -47,7 +47,7 @@ class DonatesTo extends React.Component {
                 } else {
                     return null;
                 }
-                return <TransferHistoryRow key={index} op={item} context={context}/>;
+                return <TransferHistoryRow key={index} op={item} context={context} acc={account.name}/>;
             }
             return null;
         }).filter(el => !!el);

@@ -1063,6 +1063,7 @@
     "asset": "Asset",
     "private": "Private",
     "public": "Public",
+    "public_obsolete": "# character will not encrypt memo anymore. Click the lock icon please.",
     "power_up": "Power Up",
     "submit": "Submit",
     "basic": "Basic",

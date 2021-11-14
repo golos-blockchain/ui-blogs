@@ -31,14 +31,6 @@ class DonatesFrom extends React.Component {
 
         const transfer_history = account.transfer_history || [];
 
-        /// transfer log
-        let rewards24 = 0, rewardsWeek = 0, totalRewards = 0;
-        let today = new Date();
-        let oneDay = 86400 * 1000;
-        let yesterday = new Date(today.getTime() - oneDay ).getTime();
-        let lastWeek = new Date(today.getTime() - 7 * oneDay ).getTime();
-
-        let firstDate, finalDate;
         let curation_log = transfer_history.map((item, index) => {
             // Filter out rewards
             if (item[1].op[0] === "donate") {
@@ -48,23 +40,11 @@ class DonatesFrom extends React.Component {
                 if (!incoming && item[1].op[1].to != account.name) {
                     return null;
                 }
-                if (!finalDate) {
-                    finalDate = new Date(item[1].timestamp).getTime();
-                }
-                firstDate = new Date(item[1].timestamp).getTime();
-                const vest = assetFloat(item[1].op[1].reward, VEST_TICKER);
-                if (new Date(item[1].timestamp).getTime() > yesterday) {
-                    rewards24 += vest;
-                    rewardsWeek += vest;
-                } else if (new Date(item[1].timestamp).getTime() > lastWeek) {
-                    rewardsWeek += vest;
-                }
-                totalRewards += vest;
 
                 if (incoming)
-                    return <TransferHistoryRow key={index} op={item} context="from"/>;
+                    return <TransferHistoryRow key={index} op={item} context="from" acc={account.name} />;
                 else
-                    return <TransferHistoryRow key={index} op={item} context="to"/>;
+                    return <TransferHistoryRow key={index} op={item} context="to" acc={account.name} />;
             }
             return null;
         }).filter(el => !!el);

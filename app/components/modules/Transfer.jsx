@@ -35,7 +35,10 @@ class TransferForm extends Component {
           this.flag = flag
         }
         const {transferToSelf} = props
-        this.state = {advanced: !transferToSelf}
+        this.state = {
+            advanced: !transferToSelf,
+            isMemoPrivate: false,
+        };
         this.initForm(props)
     }
 
@@ -81,7 +84,6 @@ class TransferForm extends Component {
 
     _memoWithdrawal = (memo) => {
         const { memoInitial, } = this.state;
-        console.log(memo, memoInitial)
         if (!memoInitial)
             return null;
         if (!(memo.trim()) || memo === memoInitial) {
@@ -136,8 +138,6 @@ class TransferForm extends Component {
                     props.toVesting ? null :
                     ! values.asset ? tt('g.required') : null,
                 memo:
-                    values.memo && (!browserTests.memo_encryption && /^#/.test(values.memo)) ?
-                    'Encrypted memos are temporarily unavailable (issue #98)' :
                     checkMemo(values.memo) ? tt('transfer_jsx.private_key_in_memo') :
                     this._memoWithdrawal(values.memo) || null,
             })
@@ -297,47 +297,88 @@ class TransferForm extends Component {
         });
     };
 
-    toggleMemoEncryption = () => {
+    toggleMemoEncryption = (autoCall = false) => {
+        const { currentUser, loginMemo, } = this.props;
+        const { isMemoPrivate, } = this.state;
         let memo = this.state.memo.props.value;
-        if (/^#/.test(memo)) {
-            memo = memo.replace('#', '');
-            if (memo[0] === ' ') memo = memo.substring(1);
-            this.state.memo.props.onChange(memo);
-        } else {
-            this.state.memo.props.onChange('# ' + memo);
+        if (!isMemoPrivate) {
+            const memoPrivate = currentUser ?
+                currentUser.getIn(['private_keys', 'memo_private']) : null;
+            if (!memoPrivate) {
+                if (currentUser && (!this.autoToggleMemoEncrypt || !autoCall)) {
+                    loginMemo(currentUser);
+                    this.autoToggleMemoEncrypt = true;
+                }
+                return false;
+            }
+
+            if (/^#/.test(memo)) {
+                memo = memo.replace('#', '');
+                if (memo[0]) memo = memo.substring(1);
+                this.state.memo.props.onChange(memo);
+            }
+        }
+        this.setState({
+            isMemoPrivate: !isMemoPrivate,
+        });
+        return true;
+    }
+
+    componentDidUpdate() {
+        if (this.autoToggleMemoEncrypt) {
+            if (this.toggleMemoEncryption(true)) {
+               this.autoToggleMemoEncrypt = false;
+            }
         }
     }
 
+    componentWillUnmount() {
+        this.autoToggleMemoEncrypt = false;
+    }
+
     _renderMemo(memo, memoPrefix, disableMemo, isMemoPrivate, loading) {
+        const isObsoletePrivate = /^#/.test(memo.value);
         let input = (<input type="text"
             placeholder={tt('transfer_jsx.memo_placeholder')}
             {...memo.props}
             ref="memo"
             autoComplete="on" autoCorrect="off" autoCapitalize="off"
             spellCheck="false" disabled={disableMemo || loading}
-            className={memoPrefix ? 'input-group-field' : ''}
+            className={(memoPrefix ? 'input-group-field' : '') +
+                    (!isObsoletePrivate ?
+                        (isMemoPrivate ?
+                        ' Transfer__encrypted' :
+                        '')
+                    : ' Transfer__wrong-encrypt')}
         />);
+        const lock = 
+            (<span class='input-group-label' style={{ cursor: 'pointer', }}
+                title={isMemoPrivate ? tt('transfer_jsx.memo_unlock') : tt('transfer_jsx.memo_lock')}
+                onClick={e => this.toggleMemoEncryption()}>
+                <Icon name={isMemoPrivate ? 'ionicons/lock-closed-outline' : 'ionicons/lock-open-outline'} />
+            </span>);
         if (memoPrefix) {
             input = (<div className='input-group'>
                     <span class='input-group-label'>
                         {memoPrefix}
                     </span>
-                    {input}
+                    {input}{lock}
                 </div>);
         } else {
             input = (<div className='input-group'>
-                    {input}
-                    <span class='input-group-label' style={{ cursor: 'pointer', }}
-                        title={isMemoPrivate ? tt('transfer_jsx.memo_unlock') : tt('transfer_jsx.memo_lock')}
-                        onClick={this.toggleMemoEncryption}>
-                        <Icon name={isMemoPrivate ? 'ionicons/lock-closed-outline' : 'ionicons/lock-open-outline'} />
-                    </span>
+                    {input}{lock}
                 </div>);
         }
         return (<div className="row">
             <div className="column small-2" style={{paddingTop: 33}}>{tt('transfer_jsx.memo')}</div>
             <div className="column small-10">
-                <small>{isMemoPrivate ? tt('transfer_jsx.private') : tt('transfer_jsx.public')}</small>
+                <small>
+                    {isObsoletePrivate ?
+                        tt('transfer_jsx.public_obsolete') :
+                        (isMemoPrivate ?
+                        tt('transfer_jsx.memo_locked') :
+                        tt('transfer_jsx.public'))}
+                </small>
                 {input}
                 <div className="error">{memo.touched && memo.error && memo.error}</div>
             </div>
@@ -363,7 +404,7 @@ class TransferForm extends Component {
 		const powerTip2 = tt('tips_js.VESTING_TOKEN_is_non_transferrable_and_requires_convert_back_to_LIQUID_TOKEN', {LIQUID_TOKEN: LIQUID_TICKER, VESTING_TOKEN2})
 		const powerTip3 = tt('tips_js.converted_VESTING_TOKEN_can_be_sent_to_yourself_but_can_not_transfer_again', {LIQUID_TOKEN, VESTING_TOKEN})
         const { to, amount, asset, memo,
-                memoPrefix, memoInitial, } = this.state
+                memoPrefix, memoInitial, isMemoPrivate, } = this.state
         const { loading, trxError, advanced, } = this.state
         const {currentAccount, currentUser, sym, toVesting, transferToSelf, dispatchSubmit} = this.props
         const { transferType,
@@ -373,7 +414,6 @@ class TransferForm extends Component {
                 disableAmount = false,
                 withdrawal, } = this.props.initialValues
         const {submitting, valid, handleSubmit} = this.state.transfer
-        const isMemoPrivate = memo && /^#/.test(memo.value)
         const isIssueUIA = (transferType === 'Issue UIA')
         const isUIA = this.props.uia != undefined
 
@@ -417,7 +457,7 @@ class TransferForm extends Component {
             <form onSubmit={handleSubmit(({data}) => {
                 this.setState({loading: true})
                 dispatchSubmit({...data, isUIA, precision, flag: this.flag, errorCallback: this.errorCallback, currentUser, toVesting, transferType,
-                    withdrawalWay, })
+                    withdrawalWay, isMemoPrivate, })
             })}
                 onChange={this.clearError}
             >
@@ -596,11 +636,20 @@ export default connect(
             uia = uias.get(initialValues.asset)
         }
 
-        return {...ownProps, currentUser, currentAccount, uias, uia, toVesting, sym: initialValues.asset, transferToSelf, initialValues}
+        return {...ownProps,
+            currentUser, currentAccount,
+            uias, uia, toVesting, sym: initialValues.asset,
+            transferToSelf, initialValues}
     },
 
     // mapDispatchToProps
     dispatch => ({
+        loginMemo: (currentUser) => {
+            if (!currentUser) return;
+            dispatch(user.actions.showLogin({
+                loginDefault: { username: currentUser.get('username'), authType: 'memo', unclosable: false }
+            }));
+        },
         setTransferDefaults: ({
             transferDefaults
         }) => {
@@ -609,7 +658,7 @@ export default connect(
         dispatchSubmit: ({
             flag,
             to, amount, isUIA, asset, precision, memo, transferType,
-            withdrawalWay,
+            withdrawalWay, isMemoPrivate,
             toVesting, currentUser, errorCallback
         }) => {
             if(!toVesting && !isUIA && !/Transfer to Account|Transfer to Savings|Savings Withdraw|Claim|Transfer to TIP|TIP to Account|Issue UIA/.test(transferType))
@@ -696,6 +745,9 @@ export default connect(
                     memo || '',
                     withdrawalWay.prefix);
             }
+
+            if (isMemoPrivate)
+                operation._memo_private = true;
 
             dispatch(transaction.actions.broadcastOperation({
                 type: toVesting ? (

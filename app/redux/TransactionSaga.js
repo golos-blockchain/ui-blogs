@@ -33,6 +33,8 @@ export function* watchForUpdateMeta() {
 const hook = {
     preBroadcast_comment,
     preBroadcast_transfer,
+    preBroadcast_transfer_to_tip: preBroadcast_transfer,
+    preBroadcast_donate,
     preBroadcast_vote,
     preBroadcast_account_witness_vote,
     preBroadcast_custom_json,
@@ -49,26 +51,39 @@ const hook = {
     accepted_worker_request_vote,
 }
 
+function* encryptMemoIfNeed(memoStr, to) {
+    memoStr = toStringUtf8(memoStr);
+    memoStr = memoStr.trim();
+    const memo_private = yield select(
+        state => state.user.getIn(['current', 'private_keys', 'memo_private'])
+    );
+    if(!memo_private) throw new Error('Unable to encrypt memo, missing memo private key');
+    const account = yield call(getAccount, to);
+    if(!account) throw new Error(`Unknown to account ${to}`);
+    const memo_key = account.get('memo_key');
+    memoStr = '# ' + memoStr;
+    memoStr = memo.encode(memo_private, memo_key, memoStr);
+    return memoStr;
+}
+const toStringUtf8 = o => (o ? Buffer.isBuffer(o) ? o.toString('utf-8') : o.toString() : o)
+
 function* preBroadcast_transfer({operation}) {
-    let memoStr = operation.memo
-    if(memoStr) {
-        memoStr = toStringUtf8(memoStr)
-        memoStr = memoStr.trim()
-        if(/^#/.test(memoStr)) {
-            const memo_private = yield select(
-                state => state.user.getIn(['current', 'private_keys', 'memo_private'])
-            )
-            if(!memo_private) throw new Error('Unable to encrypt memo, missing memo private key')
-            const account = yield call(getAccount, operation.to)
-            if(!account) throw new Error(`Unknown to account ${operation.to}`)
-            const memo_key = account.get('memo_key')
-            memoStr = memo.encode(memo_private, memo_key, memoStr)
-            operation.memo = memoStr
-        }
+    let memoStr = operation.memo;
+    if (memoStr && operation._memo_private) {
+        operation.memo = yield encryptMemoIfNeed(memoStr, operation.to);
+        delete operation._memo_private;
     }
     return operation
 }
-const toStringUtf8 = o => (o ? Buffer.isBuffer(o) ? o.toString('utf-8') : o.toString() : o)
+
+function* preBroadcast_donate({operation}) {
+    let memoStr = operation.memo && operation.memo.comment;
+    if (memoStr && operation._memo_private) {
+        operation.memo.comment = yield encryptMemoIfNeed(memoStr, operation.to);
+        delete operation._memo_private;
+    }
+    return operation
+}
 
 function* preBroadcast_vote({operation, username}) {
     if (!operation.voter) operation.voter = username
