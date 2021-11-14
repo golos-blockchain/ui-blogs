@@ -1,9 +1,9 @@
 
 const wwKey = 'withdrawal.ways';
-const memoLifetimeSec = 60*24*60*60;
+const memoLifetimeSec = 30*24*60*60;
 
 const daKey = 'deposit.addresses';
-const addressLifetimeSec = 7*24*60*60;
+const addressLifetimeSec = 30*24*60*60;
 
 function localStorageAvailable() {
     return typeof(localStorage) !== 'undefined';

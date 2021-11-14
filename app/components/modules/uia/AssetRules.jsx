@@ -115,17 +115,15 @@ class AssetRules extends Component {
     _renderParams = (withDetails = true) => {
         const { rules, sym, } = this.props;
         const { min_amount, fee, details, } = rules;
-        return <div>
+        return <div style={{fontSize: "90%"}}>
+            <hr />
+            {details && <div style={{ whiteSpace: 'pre-line', }}>
+                {details}
+            <br/><br/></div>}
             {min_amount && <div>
-                {tt('asset_edit_withdrawal_jsx.min_amount')}<br/>
-                <b>{min_amount} {sym || ''}</b></div>}
+                {tt('asset_edit_withdrawal_jsx.min_amount')} <b>{min_amount} {sym || ''}</b></div>}
             {fee && <div>
-                {tt('asset_edit_withdrawal_jsx.fee')}<br/>
-                <b>{fee} {sym || ''}</b></div>}
-            {(withDetails && details) ? <div style={{ whiteSpace: 'pre-line', }}>
-                    <hr />
-                    {details}
-                </div> : null}
+                {tt('asset_edit_withdrawal_jsx.fee')} <b>{fee} {sym || ''}</b></div>}
         </div>;
     }
 
@@ -185,21 +183,15 @@ class AssetRules extends Component {
             <b>{to_transfer || ''}</b>
             {tt('asset_edit_deposit_jsx.transfer_desc_2')}
             <b>{memo_transfer || ''}</b>
+            {transferring ?
+                <span><LoadingIndicator type='circle' /></span> : null}
+            <button type='submit' disabled={!enough || transferring} className='button float-center' onClick={this.transfer}>
+                {tt('g.submit')}
+            </button>
             {!enough ? <div className='error'>
                 {tt('transfer_jsx.insufficient_funds')}
             </div> : null}
-            <hr />
             {this._renderParams()}
-            <div style={{ marginTop: '1.25rem', }}>
-                {transferring ?
-                    <span><LoadingIndicator type='circle' /></span> : null}
-                <button type='button' disabled={transferring} className='button hollow float-right' onClick={onClose}>
-                    {tt('g.cancel')}
-                </button>
-                <button type='submit' disabled={!enough || transferring} className='button float-right' onClick={this.transfer}>
-                    {tt('g.submit')}
-                </button>
-            </div>
         </div>);
     }
 

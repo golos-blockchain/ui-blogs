@@ -233,7 +233,7 @@ class AssetEditWithdrawal extends React.Component {
                                 name={`${name}.details`}
                                 as='textarea'
                                 maxLength='512'
-                                rows='2'
+                                rows='3'
                                 validate={value => this.validateDetails(value, values)}
                             />
                         </div>

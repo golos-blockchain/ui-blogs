@@ -140,13 +140,17 @@ class AssetEditDeposit extends React.Component {
                         </div>
                         <ErrorMessage name={`${name}.fee`} component='div' className='error' />
                     </div>
-                    <Field
-                        name={`${name}.details`}
-                        as='textarea'
-                        maxLength='512'
-                        rows='4'
-                        placeholder={tt('asset_edit_deposit_jsx.details_placeholder')}
-                    />
+                    <div>
+                        {tt('asset_edit_withdrawal_jsx.details')}
+                        <div className='input-group'>
+                            <Field
+                                name={`${name}.details`}
+                                as='textarea'
+                                maxLength='512'
+                                rows='3'
+                            />
+                        </div>
+                    </div>
                     <div>
                         <div className='input-group' style={{ marginBottom: '0rem', marginTop: '1.25rem', }}>
                             <label>
