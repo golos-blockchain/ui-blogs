@@ -1,0 +1,17 @@
+.AssetEditWithdrawal {
+    .input-group {
+        margin-bottom: 1.25rem;
+    }
+    .add-way {
+        display: block;
+        margin-bottom: 1.25rem;
+    }
+    .remove-way {
+        cursor: pointer;
+        margin-left: 0.75rem;
+        padding-top: 0.75rem;
+        path {
+            fill: #ff0000;
+        }
+    }
+}

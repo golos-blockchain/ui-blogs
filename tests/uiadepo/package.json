@@ -1,0 +1,12 @@
+{
+  "name": "uiadepo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "golos-lib-js": "^0.9.18"
+  },
+  "scripts": {
+    "start": "node index.js"
+  }
+}

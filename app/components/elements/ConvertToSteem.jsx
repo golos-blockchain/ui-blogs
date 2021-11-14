@@ -1,14 +1,13 @@
 /* eslint react/prop-types: 0 */
 import React from 'react'
 import ReactDOM from 'react-dom';
-import {reduxForm} from 'redux-form'; // @deprecated, instead use: app/utils/ReactForm.js
+import { connect, } from 'react-redux';
+import { Formik, Field, ErrorMessage, } from 'formik';
 import transaction from 'app/redux/Transaction'
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
 import Icon from 'app/components/elements/Icon'
 import TransactionError from 'app/components/elements/TransactionError'
 import LoadingIndicator from 'app/components/elements/LoadingIndicator'
-import {cleanReduxInput} from 'app/utils/ReduxForms'
-import {formatAmount} from 'app/utils/ParsersAndFormatters';
 import tt from 'counterpart';
 import { DEBT_TICKER, LIQUID_TOKEN, LIQUID_TICKER } from 'app/client_config';
 import { Asset } from 'golos-lib-js/lib/utils';
@@ -36,33 +35,53 @@ class ConvertToSteem extends React.Component {
             fee: Asset(0, 3, from),
             toAmount: Asset(0, 3, to),
         };
+        this.amtRef = React.createRef();
     }
 
     componentDidMount() {
-        ReactDOM.findDOMNode(this.refs.amt).focus()
+        this.amtRef.current.focus();
     }
 
     shouldComponentUpdate = shouldComponentUpdate(this, 'ConvertToSteem')
 
-    dispatchSubmit = () => {
-        const { convert, owner, from, to, onClose } = this.props;
-        const { amount } = this.props.fields;
-        const success = () => {
-            if (onClose) onClose();
-            this.setState({ loading: false, });
-        };
-        const error = () => {
-            this.setState({ loading: false, });
-        };
-        convert(owner, amount.value, from, to, success, error);
-        this.setState({ loading: true, });
+    validate = (values) => {
+        const { maxBalance, from, cprops, } = this.props;
+        const errors = {};
+        if (values.amount) {
+            if (isNaN(values.amount)
+                || parseFloat(values.amount) <= 0) {
+                errors.amount = tt('g.required');
+            } else if (parseFloat(values.amount) > maxBalance) {
+                errors.amount = tt('g.insufficient_balance');
+            } else if (from === 'GOLOS' && !calcFee(floatToAsset(values.amount), cprops).amount) {
+                errors.amount = tt('converttosteem_jsx.too_low_amount');
+            }
+        } else {
+            errors.amount = tt('g.required');
+        }
+        return errors;
     };
 
-    onChangeAmount = (e) => {
-        let { value } = e.target;
-        value = formatAmount(value);
+    _onSubmit = (values, { setSubmitting, }) => {
+        const { convert, owner, from, to, onClose } = this.props;
+        const { amount } = values;
+        const success = () => {
+            if (onClose) onClose();
+            setSubmitting(false);
+        };
+        const error = () => {
+            setSubmitting(false);
+        };
+        convert(owner, amount, from, to, success, error);
+    };
 
-        this.props.fields.amount.onChange(value);
+    onAmountChange = (e, values, handle) => {
+        let value = e.target.value.trim().toLowerCase();
+        if (isNaN(value) || parseFloat(value) < 0) {
+            e.target.value = values.amount || '';
+            return;
+        }
+        e.target.value = value;
 
         const { from, to, feed, cprops } = this.props;
         let fee = Asset(0, 3, from);
@@ -70,7 +89,7 @@ class ConvertToSteem extends React.Component {
         let { base, quote } = feed;
         base = Asset(base);
         quote = Asset(quote);
-        value = floatToAsset(value, from);
+        value = floatToAsset(parseFloat(value), from);
         if (from === 'GOLOS' && cprops) {
             fee = calcFee(value, cprops);
             value.amount = value.amount - fee.amount;
@@ -82,15 +101,15 @@ class ConvertToSteem extends React.Component {
         }
         toAmount.symbol = to;
         this.setState({ toAmount, fee, });
+
+        return handle(e);
     };
 
     render() {
         const DEBT_TOKEN = tt('token_names.DEBT_TOKEN')
 
-        const {dispatchSubmit} = this
-        const {from, to, cprops, onClose, handleSubmit, submitting, valid} = this.props
-        const {amount} = this.props.fields
-        const {loading, fee, toAmount} = this.state
+        const { from, to, cprops, onClose, } = this.props
+        const { fee, toAmount, } = this.state
 
         let feePercent = 0;
         if (cprops && from === 'GOLOS') {
@@ -98,9 +117,20 @@ class ConvertToSteem extends React.Component {
         }
 
         return (
-            <form onSubmit={handleSubmit(data => {dispatchSubmit(data)})}>
-                <div className="row">
-                    <div className="small-12 columns">
+            <Formik
+                initialValues={{ amount: '', }}
+                validate={this.validate}
+                onSubmit={this._onSubmit}
+            >
+            {({
+                handleSubmit, isSubmitting, errors, values, handleChange,
+            }) => (
+            <form
+                onSubmit={handleSubmit}
+                autoComplete='off'
+            >
+                <div className='row'>
+                    <div className='small-12 columns'>
                         <h3>{tt('converttosteem_jsx.title_FROM_TO', {FROM: from, TO: to})}</h3>
                         <p>{tt('converttosteem_jsx.this_will_take_days')}
                             <Icon name='info_o' title={tt('converttosteem_jsx.this_will_take_days_hint')} />
@@ -108,22 +138,28 @@ class ConvertToSteem extends React.Component {
                         <p>{tt('converttosteem_jsx.tokens_will_be_unavailable')}</p>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="column small-2" style={{paddingTop: 5}}>{tt('g.amount')}</div>
-                    <div className="column small-10" style={{marginBottom: 5}}>
-                        <div className="input-group" style={{marginBottom: 5}}>
-                            <input type="text" ref="amt" {...cleanReduxInput(amount)} autoComplete="off" disabled={loading} onChange={this.onChangeAmount} />
-                            <span className="input-group-label" style={{paddingLeft: 0, paddingRight: 0}}>
-                                <select placeholder={tt('transfer_jsx.asset')} style={{minWidth: "5rem", height: "inherit", backgroundColor: "transparent", border: "none"}}>
+                <div className='row'>
+                    <div className='column small-2' style={{paddingTop: 5}}>{tt('g.amount')}</div>
+                    <div className='column small-10' style={{marginBottom: 5}}>
+                        <div className='input-group' style={{marginBottom: 5}}>
+                            <Field name='amount'
+                                type='text'
+                                innerRef={input => this.amtRef.current = input}
+                                autoComplete='off'
+                                disabled={isSubmitting}
+                                onChange={e => this.onAmountChange(e, values, handleChange)}
+                            />
+                            <span className='input-group-label' style={{paddingLeft: 0, paddingRight: 0}}>
+                                <select placeholder={tt('transfer_jsx.asset')} style={{minWidth: '5rem', height: 'inherit', backgroundColor: 'transparent', border: 'none'}}>
                                     <option value={from}>{from}</option>
                                 </select>
                             </span>
                         </div>
-                        {amount.touched && amount.error && (<div className="error">{amount.error}&nbsp;</div>)}
+                        <ErrorMessage name='amount' component='div' className='error' />
                     </div>
                 </div>
-                <div className="row">
-                    <div className="small-12 columns">
+                <div className='row'>
+                    <div className='small-12 columns'>
                         {feePercent ? <span>
                             {tt('converttosteem_jsx.fee')}
                             <b>
@@ -134,8 +170,8 @@ class ConvertToSteem extends React.Component {
                         }
                     </div>
                 </div>
-                <div className="row">
-                    <div className="small-12 columns">
+                <div className='row'>
+                    <div className='small-12 columns'>
                         {tt('converttosteem_jsx.you_will_receive')}
                         <b>
                             {tt('g.approximately')}
@@ -145,26 +181,26 @@ class ConvertToSteem extends React.Component {
                         </b>
                     </div>
                 </div>
-                <div className="row" style={{marginTop: 15}}>
-                    <div className="small-12 columns">
-                        <TransactionError opType="convert" />
-                        {loading && <span><LoadingIndicator type="circle" /></span>}
+                <div className='row' style={{marginTop: 15}}>
+                    <div className='small-12 columns'>
+                        <TransactionError opType='convert' />
+                        {isSubmitting && <span><LoadingIndicator type='circle' /></span>}
                         <div>
-                            <button type="submit" className="button" disabled={loading || !valid}>
+                            <button type='submit' className='button' disabled={isSubmitting || !values.amount || errors.amount}>
                                 {tt('g.convert')}
                             </button>
-                            <button type="button" disabled={submitting} className="button hollow float-right" onMouseDown={onClose}>
+                            <button type='button' disabled={isSubmitting} className='button hollow float-right' onMouseDown={onClose}>
                                 {tt('g.cancel')}
                             </button>
                         </div>
                     </div>
                 </div>
             </form>
+            )}</Formik>
         )
     }
 }
-export default reduxForm(
-    { form: 'convertToSteem', fields: ['amount'] },
+export default connect(
     // mapStateToProps
     (state, ownProps) => {
         const { from, to } = ownProps;
@@ -175,25 +211,18 @@ export default reduxForm(
         const sbd_balance = account.get('sbd_balance');
         const cprops = state.global.get('cprops');
         const max = Asset(from === DEBT_TICKER ? sbd_balance : balance).amountFloat;
-        const validate = values => ({
-            amount: ! values.amount ? tt('g.required') :
-                isNaN(values.amount) || parseFloat(values.amount) <= 0 ? tt('g.invalid_amount') :
-                parseFloat(values.amount) > max ? tt('g.insufficient_balance') :
-                from === 'GOLOS' && !calcFee(floatToAsset(values.amount), cprops).amount ? tt('converttosteem_jsx.too_low_amount') :
-                null,
-        });
         return {
             ...ownProps,
-            validate,
             owner: username,
             feed: state.global.get('feed_price').toJS(),
             cprops,
+            maxBalance: max,
         };
     },
     // mapDispatchToProps
     dispatch => ({
         convert: (owner, amt, from, to, success, error) => {
-            const amount = [parseFloat(amt).toFixed(3), from].join(" ")
+            const amount = [parseFloat(amt).toFixed(3), from].join(' ')
             const requestid = Math.floor(Date.now() / 1000)
             const conf = tt('postfull_jsx.in_week_convert_DEBT_TOKEN_to_LIQUID_TOKEN',
                 { amount: amount.split(' ')[0], DEBT_TOKEN: from, LIQUID_TOKEN: to, })
@@ -210,7 +239,7 @@ export default reduxForm(
                 successCallback: () => {
                     success()
                     dispatch({type: 'ADD_NOTIFICATION', payload:
-                        {key: "convert_sd_to_steem_" + Date.now(),
+                        {key: 'convert_sd_to_steem_' + Date.now(),
                          message: tt('g.order_placed') + ': ' + conf,
                          dismissAfter: 5000}
                     })

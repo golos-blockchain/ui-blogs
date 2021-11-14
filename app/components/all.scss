@@ -16,6 +16,7 @@
 @import "./elements/CircularProgress";
 @import "./elements/DropdownMenu";
 @import "./elements/EmojiPicker";
+ @import "./elements/Expandable";
 @import "./elements/FoundationDropdownMenu";
 @import "./elements/HorizontalMenu";
 @import "./elements/Icon";
@@ -58,6 +59,7 @@
 @import "./dialogs/LinkOptionsDialog/index";
 
 // modules
+@import "./modules/uia/AssetEditWithdrawal";
 @import "./modules/BottomPanel";
 @import "./modules/Footer";
 @import "./modules/Header";

@@ -3,11 +3,8 @@ form {
     input, input:active, input:focus {
       border-color: $alert-color;
     }
-    label, .help-text {
+    label {
       color: $alert-color;
-    }
-    .help-text {
-      margin-top: 0.4rem;
     }
   }
   .success {

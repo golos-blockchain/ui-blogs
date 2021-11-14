@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import tt from 'counterpart';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
-import {cleanReduxInput} from 'app/utils/ReduxForms'
 import { validateTags } from 'app/utils/tags';
 
 class CategorySelector extends React.Component {
@@ -60,10 +59,10 @@ class CategorySelector extends React.Component {
 
         const impProps = {...this.props}
         const categoryInput =
-            <input type="text" {...cleanReduxInput(impProps)} ref="categoryRef" tabIndex={tabIndex} disabled={disabled} />
+            <input type="text" ref="categoryRef" tabIndex={tabIndex} disabled={disabled} />
 
         const categorySelect = (
-            <select {...cleanReduxInput(this.props)} onChange={this.categorySelectOnChange} ref="categoryRef" tabIndex={tabIndex} disabled={disabled}>
+            <select onChange={this.categorySelectOnChange} ref="categoryRef" tabIndex={tabIndex} disabled={disabled}>
                 <option value="">{tt('category_selector_jsx.select_a_tag')}...</option>
                 {categoryOptions}
                 <option value="new">{this.props.placeholder}</option>

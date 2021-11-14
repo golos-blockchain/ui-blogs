@@ -76,7 +76,6 @@ class UserWallet extends React.Component {
         const lastActiveOp = new Date(lastActiveOperation).getTime();
         const accountIdleness = lastActiveOp < new Date().setDate(new Date().getDate() - 180);
 
-        const disabledWarning = false;
         // isMyAccount = false; // false to hide wallet transactions
 
         const showTransfer = (asset, transferType, e) => {
@@ -167,7 +166,6 @@ class UserWallet extends React.Component {
 
             const timestamp = new Date(item.getIn([1, 'timestamp'])).getTime();
             const finishTime = timestamp + (86400000 * 3.5); // add 3.5day conversion delay
-            // const finishTime = timestamp + (86400000 * (timestamp <= 1481040000000 ? 7 : 3.5)); // add conversion delay before/after hardfork change
             if(finishTime < currentTime) return out;
 
             const amount = parseFloat(item.getIn([1, 'op', 1, 'amount']).replace(' ' + DEBT_TICKER, ''));
@@ -232,6 +230,7 @@ class UserWallet extends React.Component {
             { value: tt('userwallet_jsx.power_up'), link: '#', onClick: showTransfer.bind( this, VEST_TICKER, 'Transfer to Account' ) },
             { value: tt('userwallet_jsx.transfer_to_savings'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'Transfer to Savings' ) },
             { value: tt('userwallet_jsx.convert_to_DEBT_TOKEN', {DEBT_TOKEN}), link: '#', onClick: showConvertDialog.bind(this, LIQUID_TICKER, DEBT_TICKER) },
+            { value: tt('g.buy_or_sell'), link: '/market/GOLOS/GBG' },
         ]
         let power_menu = [
             { value: tt('userwallet_jsx.power_down'), link: '#', onClick: powerDown.bind(this, false) },
@@ -469,13 +468,12 @@ class UserWallet extends React.Component {
                     <TransactionError opType="withdraw_vesting" />
                 </div>
             </div>
-            {disabledWarning && <div className="row">
-                <div className="column small-12">
-                    <div className="callout warning">
-                        {tt('userwallet_jsx.transfers_are_temporary_disabled')}
-                    </div>
-                </div>
-            </div>}
+
+            <div align="center">
+                <Link to={"/@" + account.get('name') + "/assets"}><img src={require("app/assets/images/banners/golosdex.png")} width="800" height="100" /></Link>
+                <span className="strike"><a target="_blank" href="/@allforyou/torguem-na-vnutrennei-birzhe-golosa">{tt('g.more_hint')}</a></span>
+            </div>
+
             <div className="row">
                 <div className="column small-12">
                     <hr />
