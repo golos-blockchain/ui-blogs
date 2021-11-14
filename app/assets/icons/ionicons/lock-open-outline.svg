@@ -1,0 +1,9 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" class="ionicon">
+ <title>Lock Open</title>
+
+ <g>
+  <title>Layer 1</title>
+  <path id="svg_1" stroke-width="32" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="none" d="m460,108a80,80 0 0 0 -160,0l0,96"/>
+  <rect id="svg_2" stroke-width="32" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="none" ry="48" rx="48" height="272" width="320" y="208" x="59"/>
+ </g>
+</svg>

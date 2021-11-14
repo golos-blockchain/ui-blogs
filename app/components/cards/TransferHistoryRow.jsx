@@ -14,7 +14,8 @@ class TransferHistoryRow extends React.Component {
     render() {
         const VESTING_TOKENS = tt('token_names.VESTING_TOKENS')
 
-        const {op, context, curation_reward, author_reward} = this.props
+        const {op, curation_reward, author_reward} = this.props
+        let { context, } = this.props;
         // context -> account perspective
 
         const type = op[1].op[0];
@@ -120,11 +121,13 @@ class TransferHistoryRow extends React.Component {
             }
 
             // Here is a workaround to not throw in Memo component which is for old (string, not object) memo format
-            if (data.memo.hasOwnProperty('comment') && data.memo.comment != '') {
+            if (data.memo.comment) {
                 data_memo = data.memo.comment;
             } else {
                 data_memo = '';
             }
+
+            context = this.props.acc;
         }
 
         else if( type === 'withdraw_vesting' ) {
