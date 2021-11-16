@@ -13,5 +13,5 @@ const items = [
   {value: 'Кошелек', active: true},
 ]
 
-storiesOf('Tabs', module)
+storiesOf('Golos UI/Tabs', module)
     .add('default', () => <Tabs items={items} />);
