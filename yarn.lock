@@ -2,6 +2,14 @@
 # yarn lockfile v1
 
 
+"@appigram/react-rangeslider@2.2.5":
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/@appigram/react-rangeslider/-/react-rangeslider-2.2.5.tgz#6d8dc42223154eff18f5486adf217117080ca6b2"
+  integrity sha512-lfCTrr8n5HtUId8VNRJdyfkWlYbwpphQ27TpfivuVLpgeKMUWhQtIU0HjzikeUzr+HZdNmlTvTmjbiU4/n7hsQ==
+  dependencies:
+    classnames "^2.2.6"
+    resize-observer-polyfill "^1.5.1"
+
 "@babel/cli@^7.16.0":
   version "7.16.0"
   resolved "https://registry.yarnpkg.com/@babel/cli/-/cli-7.16.0.tgz#a729b7a48eb80b49f48a339529fc4129fd7bcef3"
@@ -4068,7 +4076,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@^2.2.3, classnames@^2.2.5:
+classnames@^2.2.5:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
 
@@ -11903,13 +11911,6 @@ react-portal@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/react-portal/-/react-portal-2.2.1.tgz#0cde8c35eeb0cce9a67b1e1255d5e4a2d147d1cf"
 
-react-rangeslider@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/react-rangeslider/-/react-rangeslider-2.2.0.tgz#4362b01f4f5a455f0815d371d496f69ca4c6b5aa"
-  dependencies:
-    classnames "^2.2.3"
-    resize-observer-polyfill "^1.4.2"
-
 react-redux@^5.1.2:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-5.1.2.tgz#b19cf9e21d694422727bf798e934a916c4080f57"
@@ -12548,9 +12549,14 @@ require-uncached@^1.0.3:
     caller-path "^0.1.0"
     resolve-from "^1.0.0"
 
-resize-observer-polyfill@^1.4.2, resize-observer-polyfill@^1.5.0:
+resize-observer-polyfill@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/resize-observer-polyfill/-/resize-observer-polyfill-1.5.0.tgz#660ff1d9712a2382baa2cad450a4716209f9ca69"
+
+resize-observer-polyfill@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/resize-observer-polyfill/-/resize-observer-polyfill-1.5.1.tgz#0e9020dd3d21024458d4ebd27e23e40269810464"
+  integrity sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==
 
 resolve-cwd@^2.0.0:
   version "2.0.0"

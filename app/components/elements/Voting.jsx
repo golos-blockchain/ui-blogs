@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
-import Slider from 'react-rangeslider';
+import Slider from '@appigram/react-rangeslider';
 import Icon from 'app/components/elements/Icon';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import DropdownMenu from 'app/components/elements/DropdownMenu';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Slider from 'react-rangeslider';
+import Slider from '@appigram/react-rangeslider';
 import tt from 'counterpart';
 import * as globalActions from 'app/redux/GlobalReducer';
 import user from 'app/redux/User';
