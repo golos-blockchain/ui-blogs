@@ -242,7 +242,9 @@ function proxifyImages(doc) {
         return;
     }
 
-    for (let node of [...doc.getElementsByTagName('img')]) {
+    let nodes = doc.getElementsByTagName('img');
+    for (let i = 0; i < nodes.length; ++i) {
+        let node = nodes.item(i);
         let url = node.getAttribute('src');
 
         // url = url.replace(/postimg.org/, 'postimg.cc'); // postimg.org moved to another domain

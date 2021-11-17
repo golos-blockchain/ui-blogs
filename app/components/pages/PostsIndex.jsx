@@ -278,7 +278,7 @@ module.exports = {
         (dispatch) => {
             return {
                 requestData: (args) => dispatch({ type: 'REQUEST_DATA', payload: args, }),
-                updateAccount: ({ successCallback, errorCallback, ...operation, }) => {
+                updateAccount: ({ successCallback, errorCallback, ...operation }) => {
                     dispatch(transaction.actions.broadcastOperation({
                         type: 'account_metadata',
                         operation,
