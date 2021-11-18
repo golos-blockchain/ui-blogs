@@ -184,12 +184,12 @@ class Assets extends Component {
                         /> : item.balance}
                     <br/>
                     {tradable_with_golos ? <Link style={{fill: "#3e7bc6"}} to={"/market/"+sym+"/GOLOS"}><Icon name="trade" title={tt('assets_jsx.trade_asset')} /></Link> : null}&nbsp;<small>{tt('assets_jsx.balance')}</small>
-                    {hasDeposit && <button
+                    {isMyAccount && hasDeposit && <button
                         onClick={() => showDeposit(sym, item.creator, deposit)}
                         disabled={depositDisabled}
                         title={depositDisabled}
                         className='button tiny Assets__inlineBtn'>{tt('assets_jsx.deposit')}</button>}
-                    {hasWithdrawal && <button
+                    {isMyAccount && hasWithdrawal && <button
                         onClick={() => showWithdrawal(sym, item.precision, withdrawal)}
                         disabled={withdrawalDisabled}
                         title={withdrawalDisabled}
