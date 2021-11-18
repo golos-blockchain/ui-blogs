@@ -1,12 +1,11 @@
 {
-    "presets": ["env", "stage-2", "react"],
+    "presets": ["@babel/preset-env", "@babel/preset-react"],
     "plugins": [
-        "transform-regenerator",
+        "@babel/plugin-transform-regenerator",
         [
-            "transform-runtime",
+            "@babel/plugin-transform-runtime",
             {
                 "helpers": true,
-                "polyfill": true,
                 "regenerator": true
             }
         ],
@@ -15,7 +14,8 @@
             {
                 "ssr": true
             }
-        ]
+        ],
+        '@babel/plugin-transform-modules-commonjs'
     ],
     "env": {
         "development": {
@@ -27,9 +27,6 @@
                     }
                 ]
             ]
-        },
-        "production": {
-            "presets": ["react-optimize"]
         }
     }
 }
