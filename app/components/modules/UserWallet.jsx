@@ -62,7 +62,7 @@ class UserWallet extends React.Component {
         const CLAIM_TOKEN = tt('token_names.CLAIM_TOKEN')
 
         const {showDeposit, depositType, toggleDivestError} = this.state
-        const {showConvertDialog, price_per_golos, savings_withdraws, account, current_user, open_orders} = this.props
+        const { showConvertDialog, price_per_golos, savings_withdraws, account, current_user, } = this.props;
         const gprops = this.props.gprops.toJS();
 
         if (!account) return null;
@@ -188,18 +188,8 @@ class UserWallet extends React.Component {
         const sbd_balance = parseFloat(account.get('sbd_balance'))
         const sbd_balance_savings = parseFloat(savings_sbd_balance.split(' ')[0]);
 
-        const sbdOrders = (!open_orders || !isMyAccount) ? 0 : open_orders.reduce((o, order) => {
-            if (order.sell_price.base.indexOf(DEBT_TICKER) !== -1) {
-                o += order.for_sale;
-            }
-            return o;
-        }, 0) / assetPrecision;
-        const steemOrders = (!open_orders || !isMyAccount) ? 0 : open_orders.reduce((o, order) => {
-            if (order.sell_price.base.indexOf(LIQUID_TICKER) !== -1) {
-                o += order.for_sale;
-            }
-            return o;
-        }, 0) / assetPrecision;
+        const sbdOrders = parseFloat(account.get('market_sbd_balance'));
+        const steemOrders = parseFloat(account.get('market_balance'));
 
         /// transfer log
         let idx = 0
@@ -515,7 +505,6 @@ export default connect(
 
         return {
             ...ownProps,
-            open_orders: state.market.get('open_orders'),
             price_per_golos,
             savings_withdraws,
             sbd_interest,
