@@ -350,7 +350,7 @@ export function* fetchState(location_change_action) {
             state.prev_posts = prev_posts.slice(0, 3);
 
             if (localStorage.getItem('invite')) {
-                state.assets = (yield call([api, api.getAccountsBalances], [localStorage.getItem('invite')]))[0]
+                state.assets = (yield call([api, api.getAccountsBalancesAsync], [localStorage.getItem('invite')]))[0]
             }
 
             console.log('Full post load');
