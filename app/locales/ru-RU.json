@@ -617,6 +617,7 @@
     "asset_": "Эмитент актива ",
     "market_fee_percent_": "Комиссия рынка ",
     "market_depth_": "глубина рынка",
+    "market_pair": "Торговая пара",
     "your_order": "Ваш заказ",
     "orders_canceled": "Ордеры успешно отменены."
   },

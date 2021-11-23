@@ -527,6 +527,7 @@
     "asset_": "Token issuer ",
     "market_fee_percent_": "Trade fee ",
     "market_depth_": "market depth",
+    "market_pair": "Market Pair",
     "your_order": "Your order",
     "orders_canceled": "Selected orders successfully cancelled."
   },
