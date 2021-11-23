@@ -43,7 +43,7 @@
     "formik": "https://gitpkg.now.sh/golos-blockchain/formik/packages/formik?b697b6ef3f13c795bb862b35589fffde442ab465",
     "foundation-sites": "^6.4.3",
     "git-rev-sync": "^1.12.0",
-    "golos-lib-js": "^0.9.9",
+    "golos-lib-js": "^0.9.19",
     "history": "^2.0.0-rc2",
     "immutable": "^3.8.2",
     "intl": "^1.2.5",

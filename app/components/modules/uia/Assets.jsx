@@ -13,6 +13,7 @@ import FoundationDropdownMenu from 'app/components/elements/FoundationDropdownMe
 import tt from 'counterpart';
 import AssetRules from 'app/components/modules/uia/AssetRules';
 import Reveal from 'react-foundation-components/lib/global/reveal';
+import Tooltip from 'app/components/elements/Tooltip';
 
 class Assets extends Component {
     static propTypes = {
@@ -157,6 +158,10 @@ class Assets extends Component {
 
             const tradable_with_golos = !item.symbols_whitelist.length || item.symbols_whitelist.includes('GOLOS')
 
+            const orders = item.market_balance ? parseFloat(item.market_balance) : 0.0;
+
+            const ordersStr = item.market_balance;
+
             my_assets.push(<tr key={sym}>
                 <td>
                 {description.length ? (<a target="_blank" href={description} rel="noopener noreferrer">
@@ -182,7 +187,9 @@ class Assets extends Component {
                             label={item.balance}
                             menu={balance_menu}
                         /> : item.balance}
-                    <br/>
+                    {orders ? <div style={{paddingRight: isMyAccount ? "0.85rem" : null}}>
+                            <Link to={"/market/" + sym + "/GOLOS"}><small><Tooltip t={tt('market_jsx.open_orders')}>+ {ordersStr}</Tooltip></small></Link>
+                          </div> : <br/>}
                     {tradable_with_golos ? <Link style={{fill: "#3e7bc6"}} to={"/market/"+sym+"/GOLOS"}><Icon name="trade" title={tt('assets_jsx.trade_asset')} /></Link> : null}&nbsp;<small>{tt('assets_jsx.balance')}</small>
                     {isMyAccount && hasDeposit && <button
                         onClick={() => showDeposit(sym, item.creator, deposit)}
