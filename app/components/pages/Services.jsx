@@ -44,6 +44,27 @@ class Services extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
+                                <h4><a target="_blank" rel="noopener noreferrer" href="https://sol.pisolog.net"><Icon name="new/monitor" /> Игра Пасьянс</a> + <a target="_blank" rel="noopener noreferrer" href="https://pisolog.net/stats/accounts/allaccounts">статистика на pisolog.net</a></h4>
+                                Разработчик сервисов <a href="/@bitwheeze">@bitwheeze</a>
+                                </div>
+                                <div className='column large-12 medium-12 small-12'>
+                                    <br />Наглядная статистика по аккаунтам, кураторам, репутации, изменениям Силы Голоса, а также всем знакомый пасьянс... <a href="/@bitwheeze/upakovka-brambuletov">{tt('g.more_hint')}</a> об игре <Icon name="extlink" />
+                                </div>
+                            </div>
+                        </div>
+                        <div className='column large-12 medium-12 small-12'>
+                            <hr/>
+                        </div>
+                    </div>
+                </div>
+                <div className='landing-services-block'>
+                    <div className='column large-12 medium-12 small-12'>
+                        <div className='column large-12 medium-12 small-12'>
+                            <hr/>
+                        </div>
+                        <div className='column large-12 medium-12 small-12'>
+                            <div className='row'>
+                                <div className='column large-12 medium-12 small-12' align='center'>
                                 <h4><a target="_blank" rel="noopener noreferrer" href="https://golos.cf/"><Icon name="new/monitor" /> Сервисы golos.cf</a></h4>
                                 Разработчик сервисов <a href="/@vik">@vik</a>
                                 </div>
@@ -128,11 +149,12 @@ class Services extends React.Component {
                         <div className='column large-12 medium-12 small-12'>
                             <div className='row'>
                                 <div className='column large-12 medium-12 small-12' align='center'>
-                                <h4><a target="_blank" href="https://t.me/gacinfobot"><Icon name="new/telegram" /> gacinfobot</a> и <a target="_blank" href="https://t.me/golosyakabot"><Icon name="new/telegram" /> golosyakabot</a></h4>
+                                <h4><a target="_blank" href="https://t.me/golosyakabot"><Icon name="new/telegram" /> golosyakabot</a> и <a target="_blank" href="https://t.me/gacinfobot"><Icon name="new/telegram" /> gacinfobot</a></h4>
                                 Разработчик телеграм-ботов <a href="/@jackvote">@jackvote</a>
                                 </div>
                                 <div className='column large-12 medium-12 small-12'>
-                                    <br />gacinfobot - бот с подробной информацией об аккаунтах на Голосе, golosyakabot - сканер о событиях в блокчейне с подпиской на интересуемые аккаунты и/или операции... <a href="/@jackvote/informaciya-s-gakom-ili-bot-informator-ob-akkauntakh-golosa">{tt('g.more_hint')}</a> <Icon name="extlink" />
+                                    <br />golosyakabot - сканер о событиях в блокчейне с подпиской на интересуемые аккаунты и/или операции...
+                                    <br />gacinfobot - бот с подробной информацией об аккаунтах на Голосе... <a href="/@jackvote/informaciya-s-gakom-ili-bot-informator-ob-akkauntakh-golosa">{tt('g.more_hint')}</a> <Icon name="extlink" />
                                 </div>
                             </div>
                         </div>
@@ -146,7 +168,7 @@ class Services extends React.Component {
                         <div className='row'>
                             <div className='column large-12 medium-12 small-12'>
                                 <p className='landing-services-block-text landing-services-block-center'>
-                                    Если вы считаете, что здесь не хватает какого-то сервиса, напишите в телеграм-чат <a target="_blank" href='https://t.me/golos_id_issue'>golos_id_issue</a> или добавьте пост на Голосе.
+                                    Если здесь не хватает какого-то сервиса, напишите в телеграм-чат <a target="_blank" href='https://t.me/golos_id_issue'>golos_id_issue</a> или добавьте пост на Голосе.
                                 </p>
                             </div>
                         </div>
