@@ -13,6 +13,7 @@ import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import Powerdown from 'app/components/modules/Powerdown';
 import {NotificationStack} from 'react-notification';
 import MessageBox from 'app/components/modules/Messages';
+import OpenOrders from 'app/components/modules/OpenOrders';
 
 let keyIndex = 0;
 
@@ -34,6 +35,8 @@ class Modals extends React.Component {
         removeNotification: PropTypes.func,
         show_messages_modal: PropTypes.bool,
         hideMessages: PropTypes.func.isRequired,
+        show_open_orders_modal: PropTypes.bool,
+        hideOpenOrders: PropTypes.func.isRequired,
     };
 
     constructor() {
@@ -62,8 +65,9 @@ class Modals extends React.Component {
             notifications,
             removeNotification,
             show_messages_modal,
-            hideMessages
-
+            hideMessages,
+            show_open_orders_modal,
+            hideOpenOrders,
         } = this.props;
 
         const notifications_array = notifications ? notifications.toArray().map(n => {
@@ -100,7 +104,11 @@ class Modals extends React.Component {
                 {show_messages_modal && <Reveal onHide={hideMessages} show={show_messages_modal} size="large" revealClassName="MessagesBox">
                     <CloseButton onClick={hideMessages} />
                     <MessageBox />
-                </Reveal>} 
+                </Reveal>}
+                {show_open_orders_modal && <Reveal onHide={hideOpenOrders} show={show_open_orders_modal} size="large" revealClassName="OpenOrders">
+                    <CloseButton onClick={hideOpenOrders} />
+                    <OpenOrders />
+                </Reveal>}
                 <NotificationStack
                     style={false}
                     notifications={notifications_array}
@@ -124,7 +132,8 @@ export default connect(
             show_signup_modal: state.user.get('show_signup_modal'),
             show_powerdown_modal: state.user.get('show_powerdown_modal'),
             notifications: state.app.get('notifications'),
-            show_messages_modal: state.user.get('show_messages_modal')
+            show_messages_modal: state.user.get('show_messages_modal'),
+            show_open_orders_modal: state.user.get('show_open_orders_modal'),
         }
     },
     dispatch => ({
@@ -158,6 +167,10 @@ export default connect(
         hideMessages: e => {
             if (e) e.preventDefault();
             dispatch(user.actions.hideMessages())
-        }
+        },
+        hideOpenOrders: e => {
+            if (e) e.preventDefault();
+            dispatch(user.actions.hideOpenOrders())
+        },
     })
 )(Modals)

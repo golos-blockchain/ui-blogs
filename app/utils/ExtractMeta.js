@@ -1,6 +1,7 @@
 import extractContent from 'app/utils/ExtractContent';
 import {objAccessor} from 'app/utils/Accessors';
 import normalizeProfile from 'app/utils/NormalizeProfile';
+import { contentStats, } from 'app/utils/StateFunctions';
 import {
     SEO_TITLE,
     APP_NAME,
@@ -35,8 +36,15 @@ export default function extractMeta(chain_data, rp) {
         const profile = normalizeProfile(author);
         if (content && content.id !== '0.0.0') { // API currently returns 'false' data with id 0.0.0 for posts that do not exist
             const d = extractContent(objAccessor, content, false);
+
+            const hide = contentStats(content).hide;
+            if (hide) {
+                metas.push({name: 'robots', content: 'noindex, nofollow'});
+                return metas;
+            }
+
             const url = 'https://' + APP_DOMAIN + d.link;
-            const title = d.title + ' | ' + SEO_TITLE;
+            const title = hide.title + ' | ' + SEO_TITLE;
             const desc  = d.desc + " by " + d.author;
             const image = d.image_link || profile.profile_image || SHARE_IMAGE
             const {category, created} = d

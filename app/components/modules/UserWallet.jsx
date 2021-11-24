@@ -19,6 +19,7 @@ import {List} from 'immutable';
 import Callout from 'app/components/elements/Callout';
 import { LIQUID_TICKER, VEST_TICKER, DEBT_TICKER} from 'app/client_config';
 import transaction from 'app/redux/Transaction';
+import user from 'app/redux/User';
 
 const assetPrecision = 1000;
 
@@ -271,6 +272,11 @@ class UserWallet extends React.Component {
 
         const vesting_withdraw_rate_str = vestsToSteem(account.get('vesting_withdraw_rate'), gprops);
 
+        const showOpenOrders = (e, sym) => {
+            e.preventDefault();
+            this.props.showOpenOrders({ sym, });
+        };
+
         return (<div className="UserWallet">
             <div className="row">
                 <div className="columns small-10 medium-12 medium-expand">
@@ -387,7 +393,9 @@ class UserWallet extends React.Component {
                     }
                     {steemOrders
                         ? <div style={{paddingRight: isMyAccount ? "0.85rem" : null}}>
-                            <Link to="/market/GBG/GOLOS"><small><Tooltip t={tt('market_jsx.open_orders')}>+ {steem_orders_balance_str}</Tooltip></small></Link>
+                            <Link to={'/market/GOLOS'} onClick={e => showOpenOrders(e, 'GOLOS')}>
+                                <small><Tooltip t={tt('market_jsx.open_orders')}>+ {steem_orders_balance_str}</Tooltip></small>
+                            </Link>
                          </div>
                         : null
                     }
@@ -415,7 +423,9 @@ class UserWallet extends React.Component {
                     }
                     {sbdOrders 
                         ? <div style={{paddingRight: isMyAccount ? "0.85rem" : null}}>
-                            <Link to="/market/GBG/GOLOS"><small><Tooltip t={tt('market_jsx.open_orders')}>+ {sbd_orders_balance_str}</Tooltip></small></Link>
+                            <Link to={'/market/GBG'} onClick={e => showOpenOrders(e, 'GBG')}>
+                                <small><Tooltip t={tt('market_jsx.open_orders')}>+ {sbd_orders_balance_str}</Tooltip></small>
+                            </Link>
                           </div>
                         : null
                     }
@@ -529,6 +539,10 @@ export default connect(
         },
         showDelegatedVesting: (account, type) => {
             dispatch(g.actions.showDialog({name: 'delegate_vesting_info', params: {account, type}}))
+        },
+        showOpenOrders: defaults => {
+            dispatch(user.actions.setOpenOrdersDefaults(defaults));
+            dispatch(user.actions.showOpenOrders());
         },
         claim: (username, amount) => {
             const successCallback = () => {

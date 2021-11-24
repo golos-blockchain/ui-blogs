@@ -336,10 +336,10 @@ class TransferForm extends Component {
         this.autoToggleMemoEncrypt = false;
     }
 
-    _renderMemo(memo, memoPrefix, disableMemo, isMemoPrivate, loading) {
+    _renderMemo(memo, memoInitial, memoPrefix, disableMemo, isMemoPrivate, loading) {
         const isObsoletePrivate = /^#/.test(memo.value);
         let input = (<input type="text"
-            placeholder={tt('transfer_jsx.memo_placeholder')}
+            placeholder={memoInitial || tt('transfer_jsx.memo_placeholder')}
             {...memo.props}
             ref="memo"
             autoComplete="on" autoCorrect="off" autoCapitalize="off"
@@ -577,7 +577,7 @@ class TransferForm extends Component {
                 </div>}
 
                 {(memo && !disableMemo) && !isIssueUIA &&
-                    this._renderMemo(memo, memoPrefix, disableMemo, isMemoPrivate, loading)}
+                    this._renderMemo(memo, memoInitial, memoPrefix, disableMemo, isMemoPrivate, loading)}
 
                 {loading && <span><LoadingIndicator type="circle" /><br /></span>}
                 {!loading && <span>

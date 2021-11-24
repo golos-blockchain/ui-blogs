@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
 import {longToAsset} from 'app/utils/ParsersAndFormatters';
 import g from 'app/redux/GlobalReducer'
+import user from 'app/redux/User';
 import {connect} from 'react-redux';
 import { Link } from 'react-router';
 import DialogManager from 'app/components/elements/common/DialogManager';
@@ -97,6 +98,11 @@ class Assets extends Component {
             });
         };
 
+        const showOpenOrders = (e, sym) => {
+            e.preventDefault();
+            this.props.showOpenOrders({ sym, });
+        };
+
         let mutedUIA = [];
         if (process.env.BROWSER && isMyAccount) {
             mutedUIA = localStorage.getItem('mutedUIA');
@@ -188,7 +194,9 @@ class Assets extends Component {
                             menu={balance_menu}
                         /> : item.balance}
                     {orders ? <div style={{paddingRight: isMyAccount ? "0.85rem" : null}}>
-                            <Link to={"/market/" + sym + "/GOLOS"}><small><Tooltip t={tt('market_jsx.open_orders')}>+ {ordersStr}</Tooltip></small></Link>
+                            <Link to={"/market/" + sym} onClick={e => showOpenOrders(e, sym)}>
+                                <small><Tooltip t={tt('market_jsx.open_orders')}>+ {ordersStr}</Tooltip></small>
+                            </Link>
                           </div> : <br/>}
                     {tradable_with_golos ? <Link style={{fill: "#3e7bc6"}} to={"/market/"+sym+"/GOLOS"}><Icon name="trade" title={tt('assets_jsx.trade_asset')} /></Link> : null}&nbsp;<small>{tt('assets_jsx.balance')}</small>
                     {isMyAccount && hasDeposit && <button
@@ -273,5 +281,9 @@ export default connect(
         }
     },
     dispatch => ({
+        showOpenOrders: defaults => {
+            dispatch(user.actions.setOpenOrdersDefaults(defaults));
+            dispatch(user.actions.showOpenOrders());
+        },
     })
 )(Assets)

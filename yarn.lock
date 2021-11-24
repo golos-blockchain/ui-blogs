@@ -7151,10 +7151,10 @@ globule@^1.0.0:
     lodash "~4.17.10"
     minimatch "~3.0.2"
 
-golos-lib-js@^0.9.19:
-  version "0.9.19"
-  resolved "https://registry.yarnpkg.com/golos-lib-js/-/golos-lib-js-0.9.19.tgz#6de1e89859e73cac1f1265a544067cb15e17c142"
-  integrity sha512-+qujOutGSFBch+3FkJKXxZS1tdG9fAgnX5emDa530drFH6iktRuqUmzvLForiMBSDPWz2a7QC6hFMErtj8hA5g==
+golos-lib-js@^0.9.21:
+  version "0.9.21"
+  resolved "https://registry.yarnpkg.com/golos-lib-js/-/golos-lib-js-0.9.21.tgz#1fc02ba12c2c22911ba26bc65f58cabfea68a79f"
+  integrity sha512-rnRbOu7qeVnYNBAkKnSmFDfmlvkFec2GbAVVxpHa/NSw7qtiBZGe3q+RL12yGtNFT1XP0z6WTGBb//Zv1jYDSw==
   dependencies:
     assert "^2.0.0"
     bigi "^1.4.2"
@@ -15440,9 +15440,9 @@ ws@^4.0.0:
     safe-buffer "~5.1.0"
 
 ws@^8.2.3:
-  version "8.2.3"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.2.3.tgz#63a56456db1b04367d0b721a0b80cae6d8becbba"
-  integrity sha512-wBuoj1BDpC6ZQ1B7DWQBYVLphPWkm8i9Y0/3YdHjHKHiohOJ1ws+3OccDWtH+PoC9DZD5WOTrJvNbWvjS6JWaA==
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.3.0.tgz#7185e252c8973a60d57170175ff55fdbd116070d"
+  integrity sha512-Gs5EZtpqZzLvmIM59w4igITU57lrtYVFneaa434VROv4thzJyV6UjIL3D42lslWlI+D4KzLYnxSwtfuiO79sNw==
 
 x-xss-protection@1.1.0:
   version "1.1.0"
