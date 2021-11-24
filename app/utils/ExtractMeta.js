@@ -44,7 +44,7 @@ export default function extractMeta(chain_data, rp) {
             }
 
             const url = 'https://' + APP_DOMAIN + d.link;
-            const title = hide.title + ' | ' + SEO_TITLE;
+            const title = d.title + ' | ' + SEO_TITLE;
             const desc  = d.desc + " by " + d.author;
             const image = d.image_link || profile.profile_image || SHARE_IMAGE
             const {category, created} = d
