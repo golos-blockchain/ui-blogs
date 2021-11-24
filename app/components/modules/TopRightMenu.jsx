@@ -58,9 +58,9 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     const scn = vertical ? '' : 'show-for-medium';
     const nav = navigate || defaultNavigate;
     const topbutton = <li className={lcn + ' submit-story'}>
-        <a target="blank" href="https://golostalk.com" className={'button small topbutton'}>
-            <Icon name="voters" size="0_95x" />{tt('g.topbutton')}
-        </a>
+        <Link to='/services' className='button small topbutton'>
+            <Icon name="new/monitor" size="0_95x" />{tt('g.topbutton')}
+        </Link>
     </li>;
     const submitStory = <li className={scn + ' submit-story'}>
         <a href="/submit" onClick={nav} className={'button small alert'}>
@@ -69,7 +69,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     </li>;
     const submitStoryPencil = <li className="hide-for-medium submit-story-pencil">
         <Link to="/submit" className="button small alert">
-            <Icon name="new/add" size="0_95x"/>
+            <Icon name="new/add" size="0_95x" />
         </Link>
     </li>;
     const feedLink = `/@${username}/feed`;
