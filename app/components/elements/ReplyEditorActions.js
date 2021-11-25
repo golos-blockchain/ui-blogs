@@ -117,19 +117,19 @@ export const replyAction = (dispatch, remarkable) => ({
     }
 
     if (rtags.usertags.size) {
-        meta.users = rtags.usertags;
+        meta.users = [...rtags.usertags];
     } else {
         delete meta.users;
     }
 
     if (rtags.images.size) {
-        meta.image = rtags.images;
+        meta.image = [...rtags.images];
     } else {
         delete meta.image;
     }
 
     if (rtags.links.size) {
-        meta.links = rtags.links;
+        meta.links = [...rtags.links];
     } else {
         delete meta.links;
     }

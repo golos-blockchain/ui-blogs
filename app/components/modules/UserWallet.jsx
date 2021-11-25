@@ -19,6 +19,7 @@ import {List} from 'immutable';
 import Callout from 'app/components/elements/Callout';
 import { LIQUID_TICKER, VEST_TICKER, DEBT_TICKER} from 'app/client_config';
 import transaction from 'app/redux/Transaction';
+import user from 'app/redux/User';
 
 const assetPrecision = 1000;
 
@@ -62,7 +63,7 @@ class UserWallet extends React.Component {
         const CLAIM_TOKEN = tt('token_names.CLAIM_TOKEN')
 
         const {showDeposit, depositType, toggleDivestError} = this.state
-        const {showConvertDialog, price_per_golos, savings_withdraws, account, current_user, open_orders} = this.props
+        const { showConvertDialog, price_per_golos, savings_withdraws, account, current_user, } = this.props;
         const gprops = this.props.gprops.toJS();
 
         if (!account) return null;
@@ -188,18 +189,8 @@ class UserWallet extends React.Component {
         const sbd_balance = parseFloat(account.get('sbd_balance'))
         const sbd_balance_savings = parseFloat(savings_sbd_balance.split(' ')[0]);
 
-        const sbdOrders = (!open_orders || !isMyAccount) ? 0 : open_orders.reduce((o, order) => {
-            if (order.sell_price.base.indexOf(DEBT_TICKER) !== -1) {
-                o += order.for_sale;
-            }
-            return o;
-        }, 0) / assetPrecision;
-        const steemOrders = (!open_orders || !isMyAccount) ? 0 : open_orders.reduce((o, order) => {
-            if (order.sell_price.base.indexOf(LIQUID_TICKER) !== -1) {
-                o += order.for_sale;
-            }
-            return o;
-        }, 0) / assetPrecision;
+        const sbdOrders = parseFloat(account.get('market_sbd_balance'));
+        const steemOrders = parseFloat(account.get('market_balance'));
 
         /// transfer log
         let idx = 0
@@ -280,6 +271,11 @@ class UserWallet extends React.Component {
         EMISSION_STAKE = numberWithCommas(EMISSION_STAKE.toFixed(3)) + ' ' + LIQUID_TICKER;
 
         const vesting_withdraw_rate_str = vestsToSteem(account.get('vesting_withdraw_rate'), gprops);
+
+        const showOpenOrders = (e, sym) => {
+            e.preventDefault();
+            this.props.showOpenOrders({ sym, });
+        };
 
         return (<div className="UserWallet">
             <div className="row">
@@ -397,7 +393,9 @@ class UserWallet extends React.Component {
                     }
                     {steemOrders
                         ? <div style={{paddingRight: isMyAccount ? "0.85rem" : null}}>
-                            <Link to="/market/GBG/GOLOS"><small><Tooltip t={tt('market_jsx.open_orders')}>+ {steem_orders_balance_str}</Tooltip></small></Link>
+                            <Link to={'/market/GOLOS'} onClick={e => showOpenOrders(e, 'GOLOS')}>
+                                <small><Tooltip t={tt('market_jsx.open_orders')}>+ {steem_orders_balance_str}</Tooltip></small>
+                            </Link>
                          </div>
                         : null
                     }
@@ -425,7 +423,9 @@ class UserWallet extends React.Component {
                     }
                     {sbdOrders 
                         ? <div style={{paddingRight: isMyAccount ? "0.85rem" : null}}>
-                            <Link to="/market/GBG/GOLOS"><small><Tooltip t={tt('market_jsx.open_orders')}>+ {sbd_orders_balance_str}</Tooltip></small></Link>
+                            <Link to={'/market/GBG'} onClick={e => showOpenOrders(e, 'GBG')}>
+                                <small><Tooltip t={tt('market_jsx.open_orders')}>+ {sbd_orders_balance_str}</Tooltip></small>
+                            </Link>
                           </div>
                         : null
                     }
@@ -515,7 +515,6 @@ export default connect(
 
         return {
             ...ownProps,
-            open_orders: state.market.get('open_orders'),
             price_per_golos,
             savings_withdraws,
             sbd_interest,
@@ -540,6 +539,10 @@ export default connect(
         },
         showDelegatedVesting: (account, type) => {
             dispatch(g.actions.showDialog({name: 'delegate_vesting_info', params: {account, type}}))
+        },
+        showOpenOrders: defaults => {
+            dispatch(user.actions.setOpenOrdersDefaults(defaults));
+            dispatch(user.actions.showOpenOrders());
         },
         claim: (username, amount) => {
             const successCallback = () => {

@@ -9,10 +9,11 @@ const defaultState = fromJS({
     show_transfer_modal: false,
     show_promote_post_modal: false,
     show_signup_modal: false,
+    show_messages_modal: false,
+    show_open_orders_modal: false,
     pub_keys_used: null,
     locale: DEFAULT_LANGUAGE,
-    show_messages_modal: false,
-    nightmodeEnabled: false
+    nightmodeEnabled: false,
 });
 
 if (process.env.BROWSER) {
@@ -90,6 +91,11 @@ export default createModule({
         { action: 'HIDE_PROMOTE_POST', reducer: state => state.set('show_promote_post_modal', false) },
         { action: 'SET_TRANSFER_DEFAULTS', reducer: (state, {payload}) => state.set('transfer_defaults', fromJS(payload)) },
         { action: 'CLEAR_TRANSFER_DEFAULTS', reducer: (state) => state.remove('transfer_defaults') },
+        { action: 'SHOW_MESSAGES', reducer: state => state.set('show_messages_modal', true)  },
+        { action: 'HIDE_MESSAGES', reducer: state => state.set('show_messages_modal', false) },
+        { action: 'SHOW_OPEN_ORDERS', reducer: state => state.set('show_open_orders_modal', true)  },
+        { action: 'HIDE_OPEN_ORDERS', reducer: state => state.set('show_open_orders_modal', false) },
+        { action: 'SET_OPEN_ORDERS_DEFAULTS', reducer: (state, {payload}) => state.set('open_orders_defaults', fromJS(payload)) },
         {
             action: 'USERNAME_PASSWORD_LOGIN',
             reducer: state => state, // saga
@@ -159,7 +165,5 @@ export default createModule({
         },
         { action: 'NOTIFICATION_CHANNEL_CREATED', reducer: state => state.set('notification_channel_created', true) },
         { action: 'NOTIFICATION_CHANNEL_DESTROYED', reducer: state => state.set('notification_channel_created', false) },
-        { action: 'SHOW_MESSAGES', reducer: state => state.set('show_messages_modal', true)  },
-        { action: 'HIDE_MESSAGES', reducer: state => state.set('show_messages_modal', false) },
     ]
 });

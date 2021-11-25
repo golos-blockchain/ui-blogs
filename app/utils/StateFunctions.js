@@ -110,7 +110,7 @@ export function contentStats(content) {
     const authorRepLog10 = repLog10(content.get('author_reputation'))
 
     const gray = authorRepLog10 < 0 || (authorRepLog10 < 70 && meetsGrayThreshold) || meetsGrayThreshold2
-    const hide = authorRepLog10 < 0 || meetsHideThreshold
+    const hide = authorRepLog10 < -25 || meetsHideThreshold
     const pictures = !gray
 
     // Combine tags+category to check nsfw status

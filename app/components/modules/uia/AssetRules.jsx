@@ -60,7 +60,7 @@ class AssetRules extends Component {
         });
     }
 
-    waitingTimeout = (5 + 1) * 60 * 1000;
+    waitingTimeout = (10 + 1) * 60 * 1000;
 
     transferAndWait = () => {
         const { sym, rules, dispatchTransfer, currentUser, } = this.props;
