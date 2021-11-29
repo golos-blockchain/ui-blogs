@@ -300,12 +300,19 @@ export default async function getState(api, url, options, offchain = {}) {
 
         state.assets = (await api.getAccountsBalances([offchain.account]))[0]
     } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
+        let witnessIds = [];
         const witnesses = await api.getWitnessesByVote('', 100)
-        witnesses.forEach( witness => {
+        witnesses.forEach(witness => {
             state.witnesses[witness.owner] = witness;
             accounts.add(witness.owner);
-        })
-  
+            witnessIds.push(witness.id);
+        });
+
+        const voteMap = await api.getWitnessVotes(witnessIds);
+        witnesses.forEach(witness => {
+            const voteList = voteMap[witness.id];
+            state.witnesses[witness.owner].vote_list = voteList || [];
+        });
     }  else if (parts[0] === 'nodes') {
         const witnesses = await api.getWitnessesByVote('', 100)
         witnesses.forEach( witness => {

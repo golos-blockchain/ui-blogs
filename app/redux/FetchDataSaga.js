@@ -356,12 +356,25 @@ export function* fetchState(location_change_action) {
             console.log('Full post load');
         } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
             state.witnesses = {};
-            const witnesses =  yield call([api, api.getWitnessesByVoteAsync], '', 100)
 
-            witnesses.forEach( witness => {
-                state.witnesses[witness.owner] = witness
-            })
+            let witnessIds = [];
+            console.time('WW0');
+            const witnesses = yield call([api, api.getWitnessesByVoteAsync], '', 100);
+            
+            console.timeEnd('WW0');
 
+            console.time('WW1');
+            witnesses.forEach(witness => {
+                state.witnesses[witness.owner] = witness;
+                witnessIds.push(witness.id);
+            });
+
+            const voteMap = yield call([api, api.getWitnessVotesAsync], witnessIds, 21, 0);
+            witnesses.forEach(witness => {
+                const voteList = voteMap[witness.id];
+                state.witnesses[witness.owner].vote_list = voteList || [];
+            });
+            console.timeEnd('WW1');
         }  else if (parts[0] === 'workers') {
             accounts.add('workers');
             state.cprops = yield call([api, api.getChainPropertiesAsync])

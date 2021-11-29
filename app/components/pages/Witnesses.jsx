@@ -5,9 +5,11 @@ import { Link } from 'react-router';
 import ByteBuffer from 'bytebuffer';
 import { is } from 'immutable';
 import tt from 'counterpart';
+import { api, } from 'golos-lib-js';
 import links from 'app/utils/Links';
 import Button from 'app/components/elements/Button';
 import Icon from 'app/components/elements/Icon';
+import PagedDropdownMenu from 'app/components/elements/PagedDropdownMenu';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import transaction from 'app/redux/Transaction';
 import g from 'app/redux/GlobalReducer';
@@ -49,6 +51,28 @@ class Witnesses extends Component {
         e.preventDefault();
         this.setState({showAfter50: true}, () => { this.forceUpdate(); });
     }
+
+    loadMoreVotes = async ({ newPage, items }) => {
+        const lastItem = items[items.length - 1];
+        let { _witness, } = lastItem;
+        const res = await api.getWitnessVotesAsync([_witness], 21, newPage*20);
+        const nextItems = res[_witness];
+        const oneM = Math.pow(10, 6);
+        let voteList = [];
+        for (let vote of nextItems) {
+            let rshares = vote.rshares;
+            rshares = vestsToSteem((rshares / oneM).toString() + '.000000 GESTS', this.props.gprops.toJS());
+            rshares = Math.trunc(rshares) + ' GOLOS';
+            voteList.push({
+                _witness,
+                key: vote.account,
+                value: ' + ' + vote.account,
+                link: '/@' + vote.account,
+                data: rshares,
+            });
+        }
+        return voteList;
+    };
 
     render() {
         const { witnessVotes, currentProxy, totalVestingShares, witness_vote_size } = this.props;
@@ -128,6 +152,21 @@ class Witnesses extends Component {
                     );
                 }
             }
+
+            let voteList = [];
+            let vote_list = item.get('vote_list');
+            for (let vote of vote_list ? vote_list.toJS() : []) {
+                let rshares = vote.rshares;
+                rshares = vestsToSteem((rshares / oneM).toString() + '.000000 GESTS', this.props.gprops.toJS());
+                rshares = Math.trunc(rshares) + ' GOLOS';
+                voteList.push({
+                    _witness: item.get('id'),
+                    key: vote.account,
+                    value: ' + ' + vote.account,
+                    link: '/@' + vote.account,
+                    data: rshares,
+                });
+            }
             return (
                 <tr
                     key={owner}
@@ -145,6 +184,7 @@ class Witnesses extends Component {
                     }
                 >
                     <td width="75">
+                    {item.get('id')}
                         {rank < 10 && '0'}
                         {rank++}
                         &nbsp;&nbsp;
@@ -168,10 +208,14 @@ class Witnesses extends Component {
                         <Link to={'/nodes'}>{seed_node && <img src="images/seed.png" width="33" height="17" title={tt('witnesses_jsx.what_is_seed')} />}</Link>
                     </td>
                     <td>
-                        {formatAsset(approval + ' GOLOS', false)}
-                        <span style={{ fontSize: '65%', opacity: '.5' }}>
-                            СГ
-                        </span>
+                        <PagedDropdownMenu className='Witnesses__vote-list' el='div' items={voteList}
+                            perPage={20}
+                            onLoadMore={this.loadMoreVotes}>
+                            {formatAsset(approval + ' GOLOS', false)}
+                            <span style={{ fontSize: '65%', opacity: '.5' }}>
+                                СГ
+                            </span>
+                        </PagedDropdownMenu>
                     </td>
                     <td style={{ textAlign: 'center' }}>
                         {percentage.toFixed(2)}%

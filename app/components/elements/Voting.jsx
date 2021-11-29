@@ -7,7 +7,7 @@ import Slider from '@appigram/react-rangeslider';
 import Icon from 'app/components/elements/Icon';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
-import PagedDropdownMenu from 'app/components/elements/PagedDropdownMenu';
+import OldPagedDropdownMenu from 'app/components/elements/OldPagedDropdownMenu';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import FoundationDropdown from 'app/components/elements/FoundationDropdown';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
@@ -247,7 +247,7 @@ class Voting extends React.Component {
               <a className="Voting__votes_pagination" onClick={has_more_votes ? this.nextVoteListPage : null}>{has_more_votes ? tt('g.more_list') + ' >' : ''}</a></span>});
         }
 
-        voters_list = <PagedDropdownMenu selected={total_votes.toString()} className="Voting__voters_list" items={voters} el="div" noArrow={true} />;
+        voters_list = <OldPagedDropdownMenu selected={total_votes.toString()} className="Voting__voters_list" items={voters} el="div" noArrow={true} />;
 
         let voteUpClick = this.voteUp;
         let dropdown = null;

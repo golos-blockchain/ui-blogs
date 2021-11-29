@@ -69,6 +69,10 @@ export function getWitnessesByVote(from, limit) {
     return api.getWitnessesByVoteAsync(from, limit)
 }
 
+export function getWitnessVotes(witnessIds) {
+    return api.getWitnessVotesAsync(witnessIds, 21, 0)
+}
+
 export function getContent(author, permlink, voteLimit) {
     return api.getContentAsync(author, permlink, voteLimit)
 }

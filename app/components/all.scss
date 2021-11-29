@@ -16,13 +16,14 @@
 @import "./elements/CircularProgress";
 @import "./elements/DropdownMenu";
 @import "./elements/EmojiPicker";
- @import "./elements/Expandable";
+@import "./elements/Expandable";
 @import "./elements/FoundationDropdownMenu";
 @import "./elements/HorizontalMenu";
 @import "./elements/Icon";
 @import "./elements/LoadingIndicator";
 @import "./elements/Notifications/NotifyContent";
 @import "./elements/NotifiCounter";
+@import "./elements/PagedDropdownMenu";
 @import "./elements/QrKeyView";
 @import "./elements/Reblog";
 @import "./elements/ReplyEditor";
@@ -91,3 +92,4 @@
 @import "./pages/TagsIndex";
 @import "./pages/Topics";
 @import "./pages/UserProfile";
+@import "./pages/Witnesses";

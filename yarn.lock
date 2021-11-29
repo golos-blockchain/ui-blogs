@@ -7151,10 +7151,10 @@ globule@^1.0.0:
     lodash "~4.17.10"
     minimatch "~3.0.2"
 
-golos-lib-js@^0.9.21:
-  version "0.9.21"
-  resolved "https://registry.yarnpkg.com/golos-lib-js/-/golos-lib-js-0.9.21.tgz#1fc02ba12c2c22911ba26bc65f58cabfea68a79f"
-  integrity sha512-rnRbOu7qeVnYNBAkKnSmFDfmlvkFec2GbAVVxpHa/NSw7qtiBZGe3q+RL12yGtNFT1XP0z6WTGBb//Zv1jYDSw==
+golos-lib-js@^0.9.22:
+  version "0.9.22"
+  resolved "https://registry.yarnpkg.com/golos-lib-js/-/golos-lib-js-0.9.22.tgz#6892575a1ea30489a9daf1dc9ddd5b837d624997"
+  integrity sha512-IyywR19jAXNtYVXE1Qy8AAe4GVo/WS6d8U7BwMtA27KptZTF1+nIguq08YUQWJQStw20OKRVy+4joMv+6lXGQA==
   dependencies:
     assert "^2.0.0"
     bigi "^1.4.2"
