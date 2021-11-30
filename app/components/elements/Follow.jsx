@@ -54,7 +54,7 @@ export default class Follow extends React.Component {
             updateFollow(follower, following, type, done)
         };
         this.follow = upd.bind(null, 'blog', '' /*tt('g.confirm_follow')*/)
-        this.unfollow = upd.bind(null, null, '' /*tt('g.confirm_unfollow')*/)
+        this.unfollow = upd.bind(null, null, tt('g.confirm_unfollow'))
         this.ignore = upd.bind(null, 'ignore', tt('g.confirm_ignore'))
         this.unignore = upd.bind(null, null, '' /*tt('g.confirm_unignore')*/)
     }
