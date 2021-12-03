@@ -11,6 +11,7 @@ const LEGALList = `
 /ru--prochee/@oldpages/masterokst-zakonno-li-videonablyudenie-v-podezde
 /ru--megagalxyan/@chin/once-upon-a-time-in-hollywood-odnazhdy-v-gollivude-2019-g
 /ru--kino/@nichosee/devushka-podayushaya-nadezhdy-promising-young-woman
+/ru--kino/@huckster/kosmicheskii-styob-pank-serial-2021-kovboi-bibop
 `
 .trim()
 .split('\n');

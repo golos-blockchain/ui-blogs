@@ -54,6 +54,7 @@ const availableDomains = [
     'twitter.com',
     'vk.com',
     'facebook.com',
+    'instagram.com',
     'coinmarketcap.com',
     'sharpay.io',
     'coins.black',
