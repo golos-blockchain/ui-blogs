@@ -97,13 +97,13 @@ export default class PagedDropdownMenu extends React.Component {
     };
 
     render() {
-        const { el, selected, children, className, title, href, noArrow, } = this.props;
+        const { el, selected, children, className, title, href, noArrow, perPage, } = this.props;
         const { items, loading, } = this.state;
 
         let itemsWithPaginator = [];
         if (!loading) {
             itemsWithPaginator = [...items];
-            if (hideLastItem) {
+            if (items.length > perPage && hideLastItem) {
                 itemsWithPaginator.pop();
             }
             const paginator = this._renderPaginator();

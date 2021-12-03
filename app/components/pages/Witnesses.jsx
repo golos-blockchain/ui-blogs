@@ -55,14 +55,14 @@ class Witnesses extends Component {
     loadMoreVotes = async ({ newPage, items }) => {
         const lastItem = items[items.length - 1];
         let { _witness, } = lastItem;
-        const res = await api.getWitnessVotesAsync([_witness], 21, newPage*20);
+        const res = await api.getWitnessVotesAsync([_witness], 21, newPage*20, '1.000 GOLOS');
         const nextItems = res[_witness];
         const oneM = Math.pow(10, 6);
         let voteList = [];
         for (let vote of nextItems) {
             let rshares = vote.rshares;
             rshares = vestsToSteem((rshares / oneM).toString() + '.000000 GESTS', this.props.gprops.toJS());
-            rshares = Math.trunc(rshares) + ' GOLOS';
+            rshares = formatAsset(rshares + ' GOLOS', false) + ' ' + tt('g.gp');
             voteList.push({
                 _witness,
                 key: vote.account,
@@ -158,7 +158,7 @@ class Witnesses extends Component {
             for (let vote of vote_list ? vote_list.toJS() : []) {
                 let rshares = vote.rshares;
                 rshares = vestsToSteem((rshares / oneM).toString() + '.000000 GESTS', this.props.gprops.toJS());
-                rshares = Math.trunc(rshares) + ' GOLOS';
+                rshares = formatAsset(rshares + ' GOLOS', false) + ' ' + tt('g.gp');
                 voteList.push({
                     _witness: item.get('id'),
                     key: vote.account,
@@ -184,7 +184,6 @@ class Witnesses extends Component {
                     }
                 >
                     <td width="75">
-                    {item.get('id')}
                         {rank < 10 && '0'}
                         {rank++}
                         &nbsp;&nbsp;
@@ -213,7 +212,7 @@ class Witnesses extends Component {
                             onLoadMore={this.loadMoreVotes}>
                             {formatAsset(approval + ' GOLOS', false)}
                             <span style={{ fontSize: '65%', opacity: '.5' }}>
-                                СГ
+                                {tt('g.gp')}
                             </span>
                         </PagedDropdownMenu>
                     </td>

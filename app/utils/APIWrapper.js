@@ -70,7 +70,7 @@ export function getWitnessesByVote(from, limit) {
 }
 
 export function getWitnessVotes(witnessIds) {
-    return api.getWitnessVotesAsync(witnessIds, 21, 0)
+    return api.getWitnessVotesAsync(witnessIds, 21, 0, '1.000 GOLOS')
 }
 
 export function getContent(author, permlink, voteLimit) {
