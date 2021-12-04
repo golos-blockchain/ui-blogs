@@ -38,13 +38,15 @@ const calculateEstimateOutput = ({ account, price_per_golos, savings_withdraws, 
   }
 
   const total_sbd = 0 
-    + parseFloat(account.get('sbd_balance'))
+    + parseFloat(toAsset(account.get('sbd_balance')).amount)
+    + parseFloat(toAsset(account.get('market_sbd_balance')).amount)
     + parseFloat(toAsset(account.get('savings_sbd_balance')).amount)
 
   const total_steem = 0
     + parseFloat(toAsset(account.get('balance')).amount)
-    + parseFloat(toAsset(account.get('tip_balance')).amount)
     + parseFloat(toAsset(account.get('savings_balance')).amount)
+    + parseFloat(toAsset(account.get('tip_balance')).amount)
+    + parseFloat(toAsset(account.get('market_balance')).amount)
     + parseFloat(vestsToSteem(account.get('vesting_shares'), globalprops.toJS()))
 
   return Number(((total_steem * price_per_golos) + total_sbd).toFixed(2) );
