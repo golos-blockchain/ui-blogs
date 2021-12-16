@@ -214,6 +214,7 @@ class Witnesses extends Component {
                             <span style={{ fontSize: '65%', opacity: '.5' }}>
                                 {tt('g.gp')}
                             </span>
+                            <Icon name="dropdown-arrow" />
                         </PagedDropdownMenu>
                     </td>
                     <td style={{ textAlign: 'center' }}>

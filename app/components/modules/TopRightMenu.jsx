@@ -38,13 +38,15 @@ const calculateEstimateOutput = ({ account, price_per_golos, savings_withdraws, 
   }
 
   const total_sbd = 0 
-    + parseFloat(account.get('sbd_balance'))
+    + parseFloat(toAsset(account.get('sbd_balance')).amount)
+    + parseFloat(toAsset(account.get('market_sbd_balance')).amount)
     + parseFloat(toAsset(account.get('savings_sbd_balance')).amount)
 
   const total_steem = 0
     + parseFloat(toAsset(account.get('balance')).amount)
-    + parseFloat(toAsset(account.get('tip_balance')).amount)
     + parseFloat(toAsset(account.get('savings_balance')).amount)
+    + parseFloat(toAsset(account.get('tip_balance')).amount)
+    + parseFloat(toAsset(account.get('market_balance')).amount)
     + parseFloat(vestsToSteem(account.get('vesting_shares'), globalprops.toJS()))
 
   return Number(((total_steem * price_per_golos) + total_sbd).toFixed(2) );
@@ -58,18 +60,18 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     const scn = vertical ? '' : 'show-for-medium';
     const nav = navigate || defaultNavigate;
     const topbutton = <li className={lcn + ' submit-story'}>
-        <a target="blank" href="https://golostalk.com" className={'button small topbutton'}>
-            <Icon name="voters" size="0_95x" />{tt('g.topbutton')}
-        </a>
+        <Link to='/services' className='button small topbutton'>
+            <Icon name="new/monitor" size="0_95x" />{tt('g.topbutton')}
+        </Link>
     </li>;
     const submitStory = <li className={scn + ' submit-story'}>
-        <a href="/submit" onClick={nav} className={'button small alert'}>
+        <a href="/submit" onClick={nav} className={'button small topbutton alert'}>
             <Icon name="new/add" size="0_95x" />{tt('g.submit_a_story')}
         </a>
     </li>;
     const submitStoryPencil = <li className="hide-for-medium submit-story-pencil">
         <Link to="/submit" className="button small alert">
-            <Icon name="new/add" size="0_95x"/>
+            <Icon name="new/add" size="0_95x" />
         </Link>
     </li>;
     const feedLink = `/@${username}/feed`;
