@@ -356,12 +356,19 @@ export function* fetchState(location_change_action) {
             console.log('Full post load');
         } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
             state.witnesses = {};
-            const witnesses =  yield call([api, api.getWitnessesByVoteAsync], '', 100)
 
-            witnesses.forEach( witness => {
-                state.witnesses[witness.owner] = witness
-            })
+            let witnessIds = [];
+            const witnesses = yield call([api, api.getWitnessesByVoteAsync], '', 100);
+            witnesses.forEach(witness => {
+                state.witnesses[witness.owner] = witness;
+                witnessIds.push(witness.id);
+            });
 
+            const voteMap = yield call([api, api.getWitnessVotesAsync], witnessIds, 21, 0, '1.000 GOLOS');
+            witnesses.forEach(witness => {
+                let voteList = voteMap[witness.id];
+                state.witnesses[witness.owner].vote_list = voteList || [];
+            });
         }  else if (parts[0] === 'workers') {
             accounts.add('workers');
             state.cprops = yield call([api, api.getChainPropertiesAsync])

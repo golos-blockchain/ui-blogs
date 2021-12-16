@@ -7,7 +7,7 @@ import Button from 'app/components/elements/Button';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Author from 'app/components/elements/Author';
 import PercentSelect from 'app/components/elements/PercentSelect';
-import PagedDropdownMenu from 'app/components/elements/PagedDropdownMenu';
+import OldPagedDropdownMenu from 'app/components/elements/OldPagedDropdownMenu';
 import Icon from 'app/components/elements/Icon';
 import { formatDecimal, formatAsset, ERR, assetToLong } from 'app/utils/ParsersAndFormatters';
 
@@ -210,7 +210,7 @@ class ViewWorkerRequest extends React.Component {
               &nbsp;
               <Button round="true" type={(request.myVote && request.myVote.vote_percent < 0) ? "primary" : "secondary"} onClick={this.downVote}><Icon name="new/downvote" /> ({downvotes})</Button>
               &nbsp;
-              <PagedDropdownMenu className="VoteList above" items={vote_list} selected={(upvotes+downvotes) + ' ' + tt('workers.votes')} el="span" />
+              <OldPagedDropdownMenu className="VoteList above" items={vote_list} selected={(upvotes+downvotes) + ' ' + tt('workers.votes')} el="span" />
             </div>
           </div>
           {author_menu}

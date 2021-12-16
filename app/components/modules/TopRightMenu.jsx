@@ -65,7 +65,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
         </Link>
     </li>;
     const submitStory = <li className={scn + ' submit-story'}>
-        <a href="/submit" onClick={nav} className={'button small alert'}>
+        <a href="/submit" onClick={nav} className={'button small topbutton alert'}>
             <Icon name="new/add" size="0_95x" />{tt('g.submit_a_story')}
         </a>
     </li>;
