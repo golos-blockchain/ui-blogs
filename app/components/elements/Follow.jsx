@@ -46,17 +46,17 @@ export default class Follow extends React.Component {
         const upd = (type, msg) => {
             if(this.state.busy) return;
 
-            // const c = !msg || !confirm || confirm(msg)
-            // if (!c) return
+            const c = !msg || !confirm || confirm(msg);
+            if (!c) return;
 
             this.setState({busy: true});
             const done = () => {this.setState({busy: false})};
             updateFollow(follower, following, type, done)
         };
-        this.follow = upd.bind(null, 'blog', tt('g.confirm_follow'))
+        this.follow = upd.bind(null, 'blog', '' /*tt('g.confirm_follow')*/)
         this.unfollow = upd.bind(null, null, tt('g.confirm_unfollow'))
         this.ignore = upd.bind(null, 'ignore', tt('g.confirm_ignore'))
-        this.unignore = upd.bind(null, null, tt('g.confirm_unignore'))
+        this.unignore = upd.bind(null, null, '' /*tt('g.confirm_unignore')*/)
     }
 
     followLoggedOut = (e) => {

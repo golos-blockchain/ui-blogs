@@ -107,6 +107,7 @@ const icons = new Map([
     ['new/wikipedia', require('app/assets/icons/new/wikipedia.svg')],
     ['new/envelope', require('app/assets/icons/new/envelope.svg')],
     ['new/monitor', require('app/assets/icons/new/monitor.svg')],
+    ['new/mention', require('app/assets/icons/new/mention.svg')],
     ['editor/plus-18', require('app/assets/icons/editor/plus-18.svg')],
     ['editor/coin', require('app/assets/icons/editor/coin.svg')],
     ['editor/share', require('app/assets/icons/editor/share.svg')],
@@ -128,12 +129,15 @@ const icons = new Map([
     ['editor-toolbar/search', require('app/assets/icons/editor-toolbar/search.svg')],
     ['ionicons/happy-outline', require('app/assets/icons/ionicons/happy-outline.svg')],
     ['ionicons/image-outline', require('app/assets/icons/ionicons/image-outline.svg')],
+    ['ionicons/lock-closed-outline', require('app/assets/icons/ionicons/lock-closed-outline.svg')],
+    ['ionicons/lock-open-outline', require('app/assets/icons/ionicons/lock-open-outline.svg')],
     ['ionicons/trash-outline', require('app/assets/icons/ionicons/trash-outline.svg')],
     ['notification/comment', require('app/assets/icons/notification/comment.svg')],
     ['notification/donate', require('app/assets/icons/notification/donate.svg')],
     ['notification/transfer', require('app/assets/icons/notification/transfer.svg')],
     ['notification/mention', require('app/assets/icons/notification/mention.svg')],
     ['notification/message', require('app/assets/icons/notification/message.svg')],
+    ['notification/order', require('app/assets/icons/notification/order.svg')],
 ]);
 
 const rem_sizes = {

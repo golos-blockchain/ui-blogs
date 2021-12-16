@@ -121,7 +121,7 @@ class Footer extends React.Component {
                         {$STM_Config.show_adv_banners ?
                         (<iframe data-aa='1148805' src='//ad.a-ads.com/1148805?size=728x90' scrolling='no'
                         style={{width:'728px', height:'90px', border:'0px', padding:'0', overflow:'hidden'}}
-                        allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe>) : (<div><a target='_blank' href='https://golostalk.com'><img src={require('app/assets/images/golostalk-footer.png')} width='800' height='100' /></a></div>)}
+                        allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe>) : (<div><a target='_blank' href='https://golostalk.com'><img src={require('app/assets/images/banners/golostalk.png')} width='800' height='100' /></a></div>)}
 
                     </div>
                 </div>

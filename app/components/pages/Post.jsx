@@ -206,7 +206,7 @@ class Post extends React.Component {
                 </div>
 
                 <p align="center">
-                    <a target="_blank" href="/msgs"><img src={require("app/assets/images/msgbanner-footer.png")} width="800" height="100" /></a>
+                    <a target="_blank" href="/msgs"><img src={require("app/assets/images/banners/messenger.png")} width="800" height="100" /></a>
                     <span className="strike"><a target="_blank" href="/@lex/obmen-lichnymi-soobsheniyami-i-nachalo-dlya-golos-messenger">{tt('g.more_hint')}</a></span>
                 </p>
 

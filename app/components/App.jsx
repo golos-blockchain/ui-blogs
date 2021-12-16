@@ -19,6 +19,7 @@ import ScrollButton from '@elements/ScrollButton';
 import { key_utils } from 'golos-lib-js/lib/auth/ecc';
 import MiniHeader from '@modules/MiniHeader';
 import golos from 'golos-lib-js';
+import {pageSession} from 'golos-lib-js/lib/auth';
 import tt from 'counterpart';
 import PageViewsCounter from '@elements/PageViewsCounter';
 import DialogManager from 'app/components/elements/common/DialogManager';
@@ -40,18 +41,20 @@ const availableDomains = [
     'golos.id',
     'golos.in',
     'golos.today',
+    'golos.app',
     'golostalk.com',
     'prizmtalk.com',
     'gph.ai',
     'golos.cf',
     'dpos.space',
+    'pisolog.net',
     'rudex.org',
-    'steem-engine.net',
     'github.com',
     't.me',
     'twitter.com',
     'vk.com',
     'facebook.com',
+    'instagram.com',
     'coinmarketcap.com',
     'sharpay.io',
     'coins.black',
@@ -111,13 +114,13 @@ class App extends React.Component {
 
     savedAuthCleaner() {
         setInterval(() => {
-            const saved = sessionStorage.getItem('session_id');
+            const saved = pageSession.load();
             if (saved) {
-                const created = parseInt(saved.split('\t')[0]);
+                const created = saved[0];
                 const now = Date.now();
                 if (now - created >= 3600000) {
                     console.log('session_id cleaned');
-                    sessionStorage.removeItem('session_id');
+                    pageSession.clear();
                 }
             }
         }, 1000)

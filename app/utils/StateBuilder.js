@@ -60,7 +60,7 @@ export default async function getState(api, url, options, offchain = {}) {
 
             switch (parts[1]) {
                 case 'transfers':
-                    const history = await api.getAccountHistory(uname, -1, 1000, ['producer_reward'])
+                    const history = await api.getAccountHistory(uname, -1, 1000, [], ['claim', 'donate', 'transfer', 'author_reward', 'curation_reward', 'transfer_to_tip', 'transfer_from_tip', 'transfer_to_vesting', 'withdraw_vesting', 'asset_issue', 'invite', 'transfer_to_savings', 'transfer_from_savings', 'convert_sbd_debt', 'convert', 'fill_convert_request', 'interest', 'worker_reward'])
                     account.transfer_history = []
                     account.other_history = []
 
@@ -171,13 +171,37 @@ export default async function getState(api, url, options, offchain = {}) {
                 break
 
                 case 'reputation':
-                    const rhistory = await api.getAccountHistory(uname, -1, 1000, ['producer_reward']);
+                    const rhistory = await api.getAccountHistory(uname, -1, 1000, [], ['account_reputation']);
                     account.reputation_history = [];
 
                     rhistory.forEach(operation => {
                         const op = operation[1].op;
                         if (op[0] === 'account_reputation' && op[1].author === uname) {
                             state.accounts[uname].reputation_history.push(operation);
+                        }
+                    });
+                break
+
+                case 'mentions':
+                    const mhistory = await api.getAccountHistory(uname, -1, 1000, [], ['comment_mention']);
+                    account.mentions = [];
+
+                    mhistory.forEach(operation => {
+                        const op = operation[1].op;
+                        if (op[0] === 'comment_mention' && op[1].mentioned === uname) {
+                            state.accounts[uname].mentions.push(operation);
+                        }
+                    });
+                break
+
+                case 'filled-orders':
+                    const fohistory = await api.getAccountHistory(uname, -1, 1000, [], ['fill_order']);
+                    account.filled_orders = [];
+
+                    fohistory.forEach(operation => {
+                        const op = operation[1].op;
+                        if (op[0] === 'fill_order') {
+                            state.accounts[uname].filled_orders.push(operation);
                         }
                     });
                 break
@@ -276,12 +300,19 @@ export default async function getState(api, url, options, offchain = {}) {
 
         state.assets = (await api.getAccountsBalances([offchain.account]))[0]
     } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
+        let witnessIds = [];
         const witnesses = await api.getWitnessesByVote('', 100)
-        witnesses.forEach( witness => {
+        witnesses.forEach(witness => {
             state.witnesses[witness.owner] = witness;
             accounts.add(witness.owner);
-        })
-  
+            witnessIds.push(witness.id);
+        });
+
+        const voteMap = await api.getWitnessVotes(witnessIds);
+        witnesses.forEach(witness => {
+            const voteList = voteMap[witness.id];
+            state.witnesses[witness.owner].vote_list = voteList || [];
+        });
     }  else if (parts[0] === 'nodes') {
         const witnesses = await api.getWitnessesByVote('', 100)
         witnesses.forEach( witness => {
@@ -315,7 +346,7 @@ export default async function getState(api, url, options, offchain = {}) {
             }
         }
     } else if (parts[0] === 'minused_accounts') {
-        const mhistory = await api.getAccountHistory('null', -1, 1000, ['producer_reward'], ['minus_reputation']);
+        const mhistory = await api.getAccountHistory('null', -1, 1000, [], ['minus_reputation']);
         state.minused_accounts = [];
         mhistory.forEach(operation => {
             const op = operation[1].op;

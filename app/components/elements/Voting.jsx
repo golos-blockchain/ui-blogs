@@ -3,11 +3,11 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
-import Slider from 'react-rangeslider';
+import Slider from '@appigram/react-rangeslider';
 import Icon from 'app/components/elements/Icon';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
-import PagedDropdownMenu from 'app/components/elements/PagedDropdownMenu';
+import OldPagedDropdownMenu from 'app/components/elements/OldPagedDropdownMenu';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import FoundationDropdown from 'app/components/elements/FoundationDropdown';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
@@ -173,7 +173,7 @@ class Voting extends React.Component {
         let donateItems = [];
         let donateUiaItems = [];
         let donates = post_obj.get('donate_list');
-        if (donates !== undefined) {
+        if (showList && donates !== undefined) {
             donates = donates.toJS();
             let i = 0;
             donates.forEach((donate) => {
@@ -184,7 +184,7 @@ class Voting extends React.Component {
         }
 
         let donates_uia = post_obj.get('donate_uia_list');
-        if (donates_uia !== undefined) {
+        if (showList && donates_uia !== undefined) {
             donates_uia = donates_uia.toJS();
             let i = 0;
             donates_uia.forEach((donate) => {
@@ -247,7 +247,7 @@ class Voting extends React.Component {
               <a className="Voting__votes_pagination" onClick={has_more_votes ? this.nextVoteListPage : null}>{has_more_votes ? tt('g.more_list') + ' >' : ''}</a></span>});
         }
 
-        voters_list = <PagedDropdownMenu selected={total_votes.toString()} className="Voting__voters_list" items={voters} el="div" noArrow={true} />;
+        voters_list = <OldPagedDropdownMenu selected={total_votes.toString()} className="Voting__voters_list" items={voters} el="div" noArrow={true} />;
 
         let voteUpClick = this.voteUp;
         let dropdown = null;

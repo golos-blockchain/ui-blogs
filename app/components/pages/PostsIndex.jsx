@@ -34,18 +34,12 @@ class PostsIndex extends React.Component {
     static defaultProps = {
         showSpam: false,
         loading: false,
-        changed: false,
-        errorMessage: '',
-        successMessage: '',
     }
 
     constructor() {
         super();
-        this.state = {}
-        this.loadMore = this.loadMore.bind(this);
-        this.shouldComponentUpdate = shouldComponentUpdate(this, 'PostsIndex')
-        this.loadSelected = this.loadSelected.bind(this);
-        this.updateSubscribe = this.updateSubscribe.bind(this);
+        this.state = {};
+        this.shouldComponentUpdate = shouldComponentUpdate(this, 'PostsIndex');
         this.listRef = React.createRef();
     }
 
@@ -72,12 +66,12 @@ class PostsIndex extends React.Component {
         return topic_discussions.get(order);
     }
 
-    updateSubscribe() {
-        const {accounts, username} = this.props
-        const account = accounts.get(username) ? accounts.get(username).toJS() : {}
-        let metaData = account ? getMetadataReliably(account.json_metadata) : {}
+    updateSubscribe = (onSuccess) => {
+        const { accounts, username, } = this.props;
+        const account = accounts.get(username) ? accounts.get(username).toJS() : {};
+        let metaData = account ? getMetadataReliably(account.json_metadata) : {};
         if (!metaData.profile)
-            metaData.profile = {}
+            metaData.profile = {};
 
         let select_tags = cookie.load(SELECT_TAGS_KEY);
         metaData.profile.select_tags = typeof select_tags === 'object' ? select_tags : '';
@@ -87,58 +81,51 @@ class PostsIndex extends React.Component {
         this.props.updateAccount({
             json_metadata: JSON.stringify(metaData),
             account: account.name,
-            memo_key: account.memo_key,
             errorCallback: (e) => {
-                if (e === 'Canceled') {
-                    this.setState({
-                        loading: false,
-                        errorMessage: ''
-                    })
-                } else {
-                    console.log('updateAccount ERROR', e)
-                    this.setState({
-                        loading: false,
-                        changed: false,
-                        errorMessage: tt('g.server_returned_error')
-                    })
+                if (e !== 'Canceled') {
+                    console.log('updateAccount ERROR', e);
                 }
+                this.setState({
+                    loading: false,
+                });
             },
             successCallback: () => {
                 this.setState({
                     loading: false,
-                    changed: false,
-                    errorMessage: '',
-                    successMessage: tt('g.saved') + '!',
-                })
-                // remove successMessage after a while
-                setTimeout(() => this.setState({successMessage: ''}), 4000)
-            }
-        })
+                });
+                if (onSuccess) onSuccess();
+            },
+        });
     }
 
-    loadMore(last_post) {
+    loadMore = (last_post) => {
         if (!last_post) return;
-        let {accountname} = this.props.routeParams
-        let {category, order = constants.DEFAULT_SORT_ORDER} = this.props.routeParams;
+        let { accountname, } = this.props.routeParams;
+        let {
+            category,
+            order = constants.DEFAULT_SORT_ORDER,
+        } = this.props.routeParams;
         if (category === 'feed') {
             accountname = order.slice(1);
             order = 'by_feed';
         }
         if (isFetchingOrRecentlyUpdated(this.props.status, order, category)) return;
-        const [author, permlink] = last_post.split('/');
-        this.props.requestData({author, permlink, order, category, accountname});
-    }
+        const [ author, permlink, ] = last_post.split('/');
+        this.props.requestData({ author, permlink, order, category, accountname, });
+    };
 
-    loadSelected(keys) {
-        let {accountname} = this.props.routeParams
-        let {category, order = constants.DEFAULT_SORT_ORDER} = this.props.routeParams;
+    loadSelected = (keys) => {
+        let { accountname,
+            category,
+            order = constants.DEFAULT_SORT_ORDER,
+        } = this.props.routeParams;
         if (category === 'feed') {
             accountname = order.slice(1);
             order = 'by_feed';
         }
         // if (isFetchingOrRecentlyUpdated(this.props.status, order, category)) return;
-        this.props.requestData({order, keys});
-    }
+        this.props.requestData({ order, keys, });
+    };
 
     onShowSpam = () => {
         this.setState({showSpam: !this.state.showSpam})
@@ -229,7 +216,7 @@ class PostsIndex extends React.Component {
                 <div className="coinmarketcap-currency-widget"
                     data-currencyid="4834" // GOLOS
                     data-base="RUB"
-                    data-secondary="BTC"
+                    data-secondary="USD"
                     data-ticker="false"
                     data-rank="false"
                     data-marketcap="false"
@@ -253,13 +240,12 @@ class PostsIndex extends React.Component {
                     <div className="sticky-right-ad">
 
                     <p align="center">
-                        <a target="_blank" href={"https://coins.black/xchange_SBERRUB_to_GLS/?summ=1000&schet2=" + active_user + "&lock2=true"}><img src={require("app/assets/images/coinsblack-banner.png")} width="220" height="150" /></a>
+                        <a target="_blank" href={"https://coins.black/xchange_SBERRUB_to_GLS/?summ=1000&schet2=" + active_user + "&lock2=true"}><img src={require("app/assets/images/banners/coinsblack.png")} width="220" height="150" /></a>
                         <span className="strike"><a target="_blank" href="/@on0tole/pryamaya-pokupka-tokenov-golos-za-rubli-i-ne-tolko">{tt('g.more_hint')}</a></span>
                     </p>
 
                     <p align="center">
-                        <a target="_blank" href="https://golostalk.com"><img src={require("app/assets/images/golostalk-right.png")} width="220" height="180" /></a>
-                        <span className="strike"><a target="_blank" href="/@lex/zapusk-foruma-golostalk-com">{tt('g.more_hint')}</a></span>
+                        <a target="_blank" href="/@allforyou/torguem-na-vnutrennei-birzhe-golosa"><img src={require("app/assets/images/banners/golosdex2.png")} width="220" height="160" /></a>
                     </p>
 
                     {$STM_Config.show_adv_banners ?
@@ -291,12 +277,15 @@ module.exports = {
         },
         (dispatch) => {
             return {
-                requestData: (args) => dispatch({type: 'REQUEST_DATA', payload: args}),
-                updateAccount: ({successCallback, errorCallback, ...operation}) => {
-                    const options = {type: 'account_update', operation, successCallback, errorCallback}
-                    dispatch(transaction.actions.broadcastOperation(options))
-                }
-            }
+                requestData: (args) => dispatch({ type: 'REQUEST_DATA', payload: args, }),
+                updateAccount: ({ successCallback, errorCallback, ...operation }) => {
+                    dispatch(transaction.actions.broadcastOperation({
+                        type: 'account_metadata',
+                        operation,
+                        successCallback, errorCallback,
+                    }));
+                },
+            };
         }
     )(PostsIndex)
 };

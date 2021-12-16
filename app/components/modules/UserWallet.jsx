@@ -16,8 +16,10 @@ import Tooltip from 'app/components/elements/Tooltip';
 import Icon from 'app/components/elements/Icon';
 import tt from 'counterpart';
 import {List} from 'immutable';
+import Callout from 'app/components/elements/Callout';
 import { LIQUID_TICKER, VEST_TICKER, DEBT_TICKER} from 'app/client_config';
 import transaction from 'app/redux/Transaction';
+import user from 'app/redux/User';
 
 const assetPrecision = 1000;
 
@@ -61,7 +63,7 @@ class UserWallet extends React.Component {
         const CLAIM_TOKEN = tt('token_names.CLAIM_TOKEN')
 
         const {showDeposit, depositType, toggleDivestError} = this.state
-        const {showConvertDialog, price_per_golos, savings_withdraws, account, current_user, open_orders} = this.props
+        const { showConvertDialog, price_per_golos, savings_withdraws, account, current_user, } = this.props;
         const gprops = this.props.gprops.toJS();
 
         if (!account) return null;
@@ -75,7 +77,6 @@ class UserWallet extends React.Component {
         const lastActiveOp = new Date(lastActiveOperation).getTime();
         const accountIdleness = lastActiveOp < new Date().setDate(new Date().getDate() - 180);
 
-        const disabledWarning = false;
         // isMyAccount = false; // false to hide wallet transactions
 
         const showTransfer = (asset, transferType, e) => {
@@ -166,7 +167,6 @@ class UserWallet extends React.Component {
 
             const timestamp = new Date(item.getIn([1, 'timestamp'])).getTime();
             const finishTime = timestamp + (86400000 * 3.5); // add 3.5day conversion delay
-            // const finishTime = timestamp + (86400000 * (timestamp <= 1481040000000 ? 7 : 3.5)); // add conversion delay before/after hardfork change
             if(finishTime < currentTime) return out;
 
             const amount = parseFloat(item.getIn([1, 'op', 1, 'amount']).replace(' ' + DEBT_TICKER, ''));
@@ -189,18 +189,8 @@ class UserWallet extends React.Component {
         const sbd_balance = parseFloat(account.get('sbd_balance'))
         const sbd_balance_savings = parseFloat(savings_sbd_balance.split(' ')[0]);
 
-        const sbdOrders = (!open_orders || !isMyAccount) ? 0 : open_orders.reduce((o, order) => {
-            if (order.sell_price.base.indexOf(DEBT_TICKER) !== -1) {
-                o += order.for_sale;
-            }
-            return o;
-        }, 0) / assetPrecision;
-        const steemOrders = (!open_orders || !isMyAccount) ? 0 : open_orders.reduce((o, order) => {
-            if (order.sell_price.base.indexOf(LIQUID_TICKER) !== -1) {
-                o += order.for_sale;
-            }
-            return o;
-        }, 0) / assetPrecision;
+        const sbdOrders = parseFloat(account.get('market_sbd_balance'));
+        const steemOrders = parseFloat(account.get('market_balance'));
 
         /// transfer log
         let idx = 0
@@ -231,6 +221,7 @@ class UserWallet extends React.Component {
             { value: tt('userwallet_jsx.power_up'), link: '#', onClick: showTransfer.bind( this, VEST_TICKER, 'Transfer to Account' ) },
             { value: tt('userwallet_jsx.transfer_to_savings'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'Transfer to Savings' ) },
             { value: tt('userwallet_jsx.convert_to_DEBT_TOKEN', {DEBT_TOKEN}), link: '#', onClick: showConvertDialog.bind(this, LIQUID_TICKER, DEBT_TICKER) },
+            { value: tt('g.buy_or_sell'), link: '/market/GOLOS/GBG' },
         ]
         let power_menu = [
             { value: tt('userwallet_jsx.power_down'), link: '#', onClick: powerDown.bind(this, false) },
@@ -281,19 +272,24 @@ class UserWallet extends React.Component {
 
         const vesting_withdraw_rate_str = vestsToSteem(account.get('vesting_withdraw_rate'), gprops);
 
+        const showOpenOrders = (e, sym) => {
+            e.preventDefault();
+            this.props.showOpenOrders({ sym, });
+        };
+
         return (<div className="UserWallet">
             <div className="row">
                 <div className="columns small-10 medium-12 medium-expand">
                     <WalletSubMenu account_name={account.get('name')} isMyAccount={isMyAccount} />
                 </div>
             </div>
-            {accountIdleness && <div className="row column">
-                <div className="callout" align="center">
-                    <b>{tt('userwallet_jsx.account_idleness')}. <a target="_blank" href="https://wiki.golos.id/users/update#ponizhenie-sily-golosa-pri-neaktivnosti">{tt('g.more_hint')} <Icon name="extlink" /></a></b>
-                    <br /><Icon name="golos" size="2x" /><br />
-                    Рекомендуем прочитать и об <a target="_blank" href="https://wiki.golos.id/users/update">изменениях</a> на Голосе за последнее время...
-                </div>
-            </div>}
+
+            {accountIdleness && <Callout>
+                <div align="center">{tt('userwallet_jsx.account_idleness')}. <a target="_blank" href="https://wiki.golos.id/users/update#ponizhenie-sily-golosa-pri-neaktivnosti">{tt('g.more_hint')} <Icon name="extlink" /></a>
+                <br /><Icon name="golos" size="2x" /><br />
+                Рекомендуем прочитать и об <a target="_blank" href="https://wiki.golos.id/users/update">изменениях</a> на Голосе за последнее время...</div>
+            </Callout>}
+
             <div className="UserWallet__balance row">
                 <div className="column small-12 medium-8">
                     {TIP_TOKEN.toUpperCase()}<br />
@@ -342,7 +338,7 @@ class UserWallet extends React.Component {
                 <div className="column small-12 medium-8">
                     {VESTING_TOKEN.toUpperCase()}<br />
                     <span className="secondary">{powerTip.split(".").map((a, index) => {if (a) {return <div key={index}>{a}.</div>;} return null;})}
-                    <Link to="/workers">{tt('userwallet_jsx.worker_foundation')}</Link> | {tt('userwallet_jsx.top_dpos')} - <a target="_blank" rel="noopener noreferrer" href="https://dpos.space/golos/top/gp">dpos.space <Icon name="extlink" /></a></span>
+                    <Link to="/workers">{tt('userwallet_jsx.worker_foundation')}</Link> | {tt('userwallet_jsx.top_dpos')} <a target="_blank" rel="noopener noreferrer" href="https://dpos.space/golos/top/gp">dpos.space <Icon name="extlink" /></a> {tt('g.and')} <a target="_blank" rel="noopener noreferrer" href="https://pisolog.net/stats/accounts/allaccounts">pisolog.net <Icon name="extlink" /></a></span>
                 </div>
                 <div className="column small-12 medium-4">
                     {isMyAccount
@@ -397,7 +393,9 @@ class UserWallet extends React.Component {
                     }
                     {steemOrders
                         ? <div style={{paddingRight: isMyAccount ? "0.85rem" : null}}>
-                            <Link to="/market/GBG/GOLOS"><small><Tooltip t={tt('market_jsx.open_orders')}>+ {steem_orders_balance_str}</Tooltip></small></Link>
+                            <Link to={'/market/GOLOS'} onClick={e => showOpenOrders(e, 'GOLOS')}>
+                                <small><Tooltip t={tt('market_jsx.open_orders')}>+ {steem_orders_balance_str}</Tooltip></small>
+                            </Link>
                          </div>
                         : null
                     }
@@ -425,7 +423,9 @@ class UserWallet extends React.Component {
                     }
                     {sbdOrders 
                         ? <div style={{paddingRight: isMyAccount ? "0.85rem" : null}}>
-                            <Link to="/market/GBG/GOLOS"><small><Tooltip t={tt('market_jsx.open_orders')}>+ {sbd_orders_balance_str}</Tooltip></small></Link>
+                            <Link to={'/market/GBG'} onClick={e => showOpenOrders(e, 'GBG')}>
+                                <small><Tooltip t={tt('market_jsx.open_orders')}>+ {sbd_orders_balance_str}</Tooltip></small>
+                            </Link>
                           </div>
                         : null
                     }
@@ -468,13 +468,12 @@ class UserWallet extends React.Component {
                     <TransactionError opType="withdraw_vesting" />
                 </div>
             </div>
-            {disabledWarning && <div className="row">
-                <div className="column small-12">
-                    <div className="callout warning">
-                        {tt('userwallet_jsx.transfers_are_temporary_disabled')}
-                    </div>
-                </div>
-            </div>}
+
+            <div align="center">
+                <Link to={"/@" + account.get('name') + "/assets"}><img src={require("app/assets/images/banners/golosdex.png")} width="800" height="100" /></Link>
+                <span className="strike"><a target="_blank" href="/@allforyou/torguem-na-vnutrennei-birzhe-golosa">{tt('g.more_hint')}</a></span>
+            </div>
+
             <div className="row">
                 <div className="column small-12">
                     <hr />
@@ -516,7 +515,6 @@ export default connect(
 
         return {
             ...ownProps,
-            open_orders: state.market.get('open_orders'),
             price_per_golos,
             savings_withdraws,
             sbd_interest,
@@ -541,6 +539,10 @@ export default connect(
         },
         showDelegatedVesting: (account, type) => {
             dispatch(g.actions.showDialog({name: 'delegate_vesting_info', params: {account, type}}))
+        },
+        showOpenOrders: defaults => {
+            dispatch(user.actions.setOpenOrdersDefaults(defaults));
+            dispatch(user.actions.showOpenOrders());
         },
         claim: (username, amount) => {
             const successCallback = () => {

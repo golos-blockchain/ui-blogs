@@ -11,19 +11,21 @@ let webpush_params = null;
 
 export default function* pollData() {
     while(true) {
-        //yield call(wait, 20000);
-        yield call(wait, 10000);
-
-        const username = yield select(state => state.user.getIn(['current', 'username']));
-        if (username) {
-            let counters = null;
-            try {
-                counters = yield call(getNotifications, username, webpush_params);
-            } catch (error) {
-                console.error('getNotifications', error);
+        if (document.visibilityState !== 'hidden') {
+            const username = yield select(state => state.user.getIn(['current', 'username']));
+            if (username) {
+                let counters = null;
+                try {
+                    counters = yield call(getNotifications, username, webpush_params);
+                } catch (error) {
+                    console.error('getNotifications', error);
+                }
+                if (counters)
+                    yield put({type: 'UPDATE_NOTIFICOUNTERS', payload: counters});
             }
-            if (counters)
-                yield put({type: 'UPDATE_NOTIFICOUNTERS', payload: counters});
+            yield call(wait, 5000);
+        } else {
+            yield call(wait, 500);
         }
     }
 }

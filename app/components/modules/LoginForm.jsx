@@ -1,6 +1,7 @@
 /* eslint react/prop-types: 0 */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
+import {pageSession} from 'golos-lib-js/lib/auth';
 import {PrivateKey, PublicKey} from 'golos-lib-js/lib/auth/ecc'
 import transaction from 'app/redux/Transaction'
 import g from 'app/redux/GlobalReducer'
@@ -192,7 +193,6 @@ class LoginForm extends Component {
             <center>
             <form onSubmit={handleSubmit(({data}) => {
                 this.state.password.props.onChange('');
-                // bind redux-form to react-redux
                 return dispatchSubmit(data, loginBroadcastOperation, afterLoginRedirectToWelcome)
             })}
                 onChange={this.props.clearError}
@@ -224,7 +224,7 @@ class LoginForm extends Component {
                     <button type="submit" disabled={submitting || disabled} className="button" onClick={this.SignIn}>
                         {submitLabel}
                     </button>
-                    {!cancelIsRegister && this.props.onCancel && !isMemo && <button type="button float-right" disabled={submitting} className="button hollow" onClick={onCancel}>
+                    {!cancelIsRegister && this.props.onCancel && (!isMemo || !loginDefault.get('unclosable')) && <button type="button float-right" disabled={submitting} className="button hollow" onClick={onCancel}>
                         {tt('g.cancel')}
                     </button>}
                     {cancelIsRegister && !isMemo && <a href={authRegisterUrl()} target='_blank' type="button float-right" disabled={submitting} className="button hollow" onClick={this.checkRegisterEnabled}>
@@ -342,8 +342,7 @@ export default connect(
                 const {type, operation, trx, successCallback, errorCallback} = loginBroadcastOperation.toJS()
                 const authSaver = () => {
                     if (!/^vote|comment/.test(type) && location.pathname.startsWith('/market')) {
-                        const data = Date.now().toString() + '\t' + new Buffer(password).toString('hex');
-                        sessionStorage.setItem('session_id', data);
+                        pageSession.save(password, username, 'active');
                     }
                     successCallback();
                 };

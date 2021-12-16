@@ -4,6 +4,7 @@ import user from 'app/redux/User'
 import {getAccount} from 'app/redux/SagaShared'
 import {PrivateKey} from 'golos-lib-js/lib/auth/ecc';
 import {api} from 'golos-lib-js';
+import {pageSession} from 'golos-lib-js/lib/auth';
 
 // operations that require only posting authority
 const postingOps = Set(`vote, comment, delete_comment, custom_json, account_metadata, claim, donate, worker_request_vote`.trim().split(/,\s*/))
@@ -104,8 +105,8 @@ export function* findSigningKey({opType, username, password}) {
     else {
         authTypes = 'active, owner'
         if (location.pathname.startsWith('/market')) {
-            const saved = sessionStorage.getItem('session_id')
-            if (saved) return new Buffer(saved.split('\t')[1], 'hex').toString()
+            const saved = pageSession.load();
+            if (saved) return saved[1];
         }
     }
     authTypes = authTypes.split(', ')

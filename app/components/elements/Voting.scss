@@ -198,7 +198,10 @@
 }
 
 .DropdownMenu.Voting__donates_list ul {
-  min-width: 230px;
+  min-width: 130px;
+  li {
+    min-width: 230px;
+  }
 }
 
 .Voting__donates_uia_sum {

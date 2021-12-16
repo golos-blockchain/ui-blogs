@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
 import {longToAsset} from 'app/utils/ParsersAndFormatters';
 import g from 'app/redux/GlobalReducer'
+import user from 'app/redux/User';
 import {connect} from 'react-redux';
 import { Link } from 'react-router';
 import DialogManager from 'app/components/elements/common/DialogManager';
@@ -11,6 +12,9 @@ import Author from 'app/components/elements/Author';
 import Button from 'app/components/elements/Button';
 import FoundationDropdownMenu from 'app/components/elements/FoundationDropdownMenu';
 import tt from 'counterpart';
+import AssetRules from 'app/components/modules/uia/AssetRules';
+import Reveal from 'react-foundation-components/lib/global/reveal';
+import Tooltip from 'app/components/elements/Tooltip';
 
 class Assets extends Component {
     static propTypes = {
@@ -24,7 +28,9 @@ class Assets extends Component {
     }
 
     state = {
-      show_full_list: false
+        show_full_list: false,
+        assetRules: null,
+        showAssetRules: false,
     }
 
     loadMore = async () => {
@@ -47,10 +53,24 @@ class Assets extends Component {
         window.location.reload()
     }
 
+    showAssetRules = (rules, sym) => {
+        this.setState({
+            showAssetRules: true,
+            assetRules: {...rules, sym},
+        });
+    }
+
+    hideAssetRules = () => {
+        this.setState({
+            showAssetRules: false,
+        });
+    }
+
     render() {
         const {account, isMyAccount} = this.props
         const account_name = account.get('name');
 
+        const { assetRules, showAssetRules, } = this.state;
 
         const showTransfer = (to, asset, precision, transferType, e) => {
             e.preventDefault();
@@ -58,6 +78,29 @@ class Assets extends Component {
                 to,
                 asset, precision, transferType
             });
+        };
+
+        const showDeposit = (asset, creator, deposit) => {
+            this.showAssetRules({...deposit, creator, isDeposit: true}, asset);
+        };
+
+        const showWithdrawal = (asset, precision, withdrawal) => {
+            if (!withdrawal.ways || !withdrawal.ways.length) {
+                this.showAssetRules(withdrawal, asset);
+                return;
+            }
+            this.props.showTransfer({
+                to: withdrawal.to,
+                disableTo: true,
+                asset, precision,
+                transferType: 'Transfer to Account',
+                withdrawal,
+            });
+        };
+
+        const showOpenOrders = (e, sym) => {
+            e.preventDefault();
+            this.props.showOpenOrders({ sym, });
         };
 
         let mutedUIA = [];
@@ -91,13 +134,39 @@ class Assets extends Component {
 
             let description = ""
             let image_url = ""
+            let deposit = null;
+            let withdrawal = null;
             if (item.json_metadata.startsWith('{')) {
                 let json_metadata = JSON.parse(item.json_metadata)
                 description = json_metadata.description
                 image_url = json_metadata.image_url
+                deposit = json_metadata.deposit;
+                withdrawal = json_metadata.withdrawal;
             }
 
+            const hasDeposit = deposit
+                && (deposit.to_transfer
+                    || deposit.to_fixed
+                    || deposit.details);
+            const hasWithdrawal = withdrawal
+                && (withdrawal.to
+                    || withdrawal.details);
+
+            const depositDisabled = 
+                (hasDeposit && deposit.unavailable) ?
+                tt('asset_edit_withdrawal_jsx.unavailable') : 
+                undefined;
+
+            const withdrawalDisabled = 
+                (hasWithdrawal && withdrawal.unavailable) ?
+                tt('asset_edit_withdrawal_jsx.unavailable') : 
+                undefined;
+
             const tradable_with_golos = !item.symbols_whitelist.length || item.symbols_whitelist.includes('GOLOS')
+
+            const orders = item.market_balance ? parseFloat(item.market_balance) : 0.0;
+
+            const ordersStr = item.market_balance;
 
             my_assets.push(<tr key={sym}>
                 <td>
@@ -124,8 +193,22 @@ class Assets extends Component {
                             label={item.balance}
                             menu={balance_menu}
                         /> : item.balance}
-                    <br/>
+                    {orders ? <div style={{paddingRight: isMyAccount ? "0.85rem" : null}}>
+                            <Link to={"/market/" + sym} onClick={e => showOpenOrders(e, sym)}>
+                                <small><Tooltip t={tt('market_jsx.open_orders')}>+ {ordersStr}</Tooltip></small>
+                            </Link>
+                          </div> : <br/>}
                     {tradable_with_golos ? <Link style={{fill: "#3e7bc6"}} to={"/market/"+sym+"/GOLOS"}><Icon name="trade" title={tt('assets_jsx.trade_asset')} /></Link> : null}&nbsp;<small>{tt('assets_jsx.balance')}</small>
+                    {isMyAccount && hasDeposit && <button
+                        onClick={() => showDeposit(sym, item.creator, deposit)}
+                        disabled={depositDisabled}
+                        title={depositDisabled}
+                        className='button tiny Assets__inlineBtn'>{tt('assets_jsx.deposit')}</button>}
+                    {isMyAccount && hasWithdrawal && <button
+                        onClick={() => showWithdrawal(sym, item.precision, withdrawal)}
+                        disabled={withdrawalDisabled}
+                        title={withdrawalDisabled}
+                        className='button tiny Assets__inlineBtn'>{tt('assets_jsx.withdrawal')}</button>}
                 </td>
                 <td title={item.allow_override_transfer ? tt('assets_jsx.overridable_no_tip') : ''} className={item.allow_override_transfer ? 'Assets__disabled' : ''}>
 
@@ -150,16 +233,19 @@ class Assets extends Component {
         return (<div>
             <div className="row">
                 <div className="column secondary">
-                    {tt('assets_jsx.assets_info')} <a target="_blank" href="/@allforyou/torguem-na-vnutrennei-birzhe-golosa">{tt('g.more_hint')}</a> <Icon name="extlink" size="1_5x" />
+                    {tt('assets_jsx.assets_info')} <a href="/@allforyou/torguem-na-vnutrennei-birzhe-golosa">{tt('g.more_hint')}</a> <Icon name="extlink" size="1_5x" />
                 <hr />
                 </div>
             </div>
             <div className="row">
                 <div className="column small-12">
                     <h4 className="Assets__header">{this.state.show_full_list ? tt('assets_jsx.all_assets') : tt('assets_jsx.my_assets')}</h4>
-                    {isMyAccount && <Link to={`/@${account_name}/create-asset`} className="button float-right">
+                    <Link style={{marginLeft: "5px"}} to={`/market/YMRUB/GOLOS`} className="button float-right">
+                        {tt('navigation.market2')}
+                    </Link>
+                    {isMyAccount && <Link to={`/@${account_name}/create-asset`} className="button hollow float-right">
                         {tt('assets_jsx.create_btn')}
-                    </Link>}
+                    </Link>}                    
                 </div>
             </div>
             <div className="row">
@@ -177,6 +263,13 @@ class Assets extends Component {
                 </div>
             </div>
 
+            <Reveal show={showAssetRules}>
+                <AssetRules
+                    rules={assetRules}
+                    sym={assetRules && assetRules.sym}
+                    onClose={this.hideAssetRules}
+                    />
+            </Reveal>
         </div>)
     }
 }
@@ -188,5 +281,9 @@ export default connect(
         }
     },
     dispatch => ({
+        showOpenOrders: defaults => {
+            dispatch(user.actions.setOpenOrdersDefaults(defaults));
+            dispatch(user.actions.showOpenOrders());
+        },
     })
 )(Assets)

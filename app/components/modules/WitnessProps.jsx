@@ -22,59 +22,53 @@ class WitnessProps extends React.Component {
             ['create_account_delegation_time', 'raw'],
         ],
         [
-            ['maximum_block_size', 'raw'],
-            ['custom_ops_bandwidth_multiplier', 'raw'],
-            ['min_invite_balance', 'golos'],
-            ['invite_transfer_interval_sec', 'time'],
-        ],
-        [
-            ['sbd_interest_rate'],
-            ['sbd_debt_convert_rate'],
-        ],
-        [
-            ['min_delegation', 'golos'],
-            ['max_delegated_vesting_interest_rate'],
-        ],
-        [
             ['max_referral_interest_rate'],
             ['max_referral_term_sec', 'time'],
             ['min_referral_break_fee', 'golos'],
             ['max_referral_break_fee', 'golos'],
         ],
         [
+            ['maximum_block_size', 'raw'],
+            ['worker_emission_percent'],
+            ['vesting_of_remain_percent'],
+        ],
+        [
+            ['sbd_interest_rate'],
+            ['convert_fee_percent'],
+            ['sbd_debt_convert_rate'],
+        ], 
+        [
+            ['asset_creation_fee', 'gbg'],
+            ['min_delegation', 'golos'],
+            ['max_delegated_vesting_interest_rate'],
+        ],
+        [
             ['posts_window', 'raw'],
             ['posts_per_window', 'raw'],
+        ],
+        [
             ['comments_window', 'raw'],
             ['comments_per_window', 'raw'],
         ],
         [
             ['votes_window', 'raw'],
             ['votes_per_window', 'raw'],
-            ['vote_regeneration_per_day', 'raw'],
+            ['vote_regeneration_per_day', 'raw'],           
+        ],
+        [
             ['negrep_posting_window', 'raw'],
             ['negrep_posting_per_window', 'raw'],
+            ['custom_ops_bandwidth_multiplier', 'raw'],
         ],
         [
+            ['min_golos_power_to_curate', 'golos'],
+            ['curation_reward_curve', ['bounded','linear','square_root']],
             ['min_curation_percent'],
             ['max_curation_percent'],
-            ['curation_reward_curve', ['bounded','linear','square_root']],
         ],
         [
-            ['auction_window_size', 'dropped', 0],
-            ['allow_distribute_auction_reward', 'dropped', 'true'],
-            ['allow_return_auction_reward_to_fund', 'dropped', 'true'],
-        ],
-        [
-            ['worker_reward_percent', 'dropped', 0],
-            ['witness_reward_percent', 'dropped', 0],
-            ['vesting_reward_percent', 'dropped', 0],
-        ],
-        [
-            ['worker_emission_percent'],
-            ['vesting_of_remain_percent'],
-        ],
-        [
-            ['asset_creation_fee', 'gbg'],
+            ['min_invite_balance', 'golos'],
+            ['invite_transfer_interval_sec', 'time'],
             ['worker_request_creation_fee', 'gbg'],
             ['worker_request_approve_min_percent'],
         ],
@@ -85,14 +79,14 @@ class WitnessProps extends React.Component {
             ['claim_idleness_time', 'time'],
         ],
         [
-            ['asset_creation_fee', 'gbg'],
-            ['invite_transfer_interval_sec', 'time'],
+            ['worker_reward_percent', 'dropped', 0],
+            ['witness_reward_percent', 'dropped', 0],
+            ['vesting_reward_percent', 'dropped', 0],
         ],
         [
-            ['convert_fee_percent'],
-        ],
-        [
-            ['min_golos_power_to_curate', 'golos'],
+            ['auction_window_size', 'dropped', 0],
+            ['allow_distribute_auction_reward', 'dropped', 'true'],
+            ['allow_return_auction_reward_to_fund', 'dropped', 'true'],
         ],
     ];
 

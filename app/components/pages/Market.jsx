@@ -819,10 +819,8 @@ class Market extends Component {
 {assets && assets_right[sym2].allow_override_transfer && (<p className="text-center"><Icon name="info_o" /> <small>{tt('market_jsx.asset_') + sym2 + tt('market_jsx.asset_is_overridable')} <a target="_blank" href="https://wiki.golos.id/users/faq#chto-takoe-otzyvnye-uia-tokeny">{tt('g.more_hint')} ></a></small></p>)}
                     </div>
                 </div>
-                <div className="row">
-                    <div className="column small-12">
-                        <TransactionError opType="limit_order_create" />
-                    </div>
+                <div className="column small-12 error">
+                    <TransactionError opType="limit_order_create" />
                 </div>
                 <div className="row">
                     <div className="small-12 medium-6 columns">

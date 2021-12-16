@@ -82,9 +82,12 @@ class Settings extends React.Component {
         if (process.env.BROWSER){
             notifyPresets = localStorage.getItem('notify.presets-' + accountname)
             if (notifyPresets) notifyPresets = JSON.parse(notifyPresets)
+            if (notifyPresets && notifyPresets.fill_order === undefined) {
+                notifyPresets.fill_order = true;
+            }
         }
         if (!notifyPresets) notifyPresets = {
-            receive: true, donate: true, comment_reply: true, mention: true, message: true,
+            receive: true, donate: true, comment_reply: true, mention: true, message: true, fill_order: true,
         }
         this.setState({notifyPresets})
     }
@@ -284,11 +287,7 @@ class Settings extends React.Component {
 
     onNotifyPresetChange = e => {
         let notifyPresets = {...this.state.notifyPresets};
-        if (e.target.checked) {
-            notifyPresets[e.target.dataset.type] = true;
-        } else {
-            delete notifyPresets[e.target.dataset.type];
-        }
+        notifyPresets[e.target.dataset.type] = e.target.checked;
         this.setState({
             notifyPresets,
             notifyPresetsTouched: true,
@@ -511,28 +510,6 @@ class Settings extends React.Component {
                         />
                     </div>
                 </div>}
-            {ignores && ignores.size > 0 &&
-                <div className="row">
-                    <div className="small-12 columns">
-                        <br /><br />
-                        <UserList title={tt('settings_jsx.muted_users')} account={account} users={ignores} />
-                    </div>
-                </div>}
-            {mutedInNew && mutedInNew.size > 0 &&
-                <div className="row">
-                    <div className="small-12 columns">
-                        <br /><br />
-                        <UserList title={tt('settings_jsx.muted_in_new_users')} account={account} users={mutedInNew} muteOnlyNew={true} />
-                    </div>
-                </div>}
-            {mutedUIA && mutedUIA.length > 0 &&
-                <div className="row">
-                    <div className="small-12 columns">
-                        <br /><br />
-                        <h3>{tt('settings_jsx.muted_uia')}</h3>
-                        {mutedUIAlist}
-                    </div>
-                </div>}
 
             {isOwnAccount &&
                 <div className="row">
@@ -564,6 +541,11 @@ class Settings extends React.Component {
                             <Icon name='notification/message' size='2x' />
                             <span>{tt('settings_jsx.notifications_message')}</span>
                         </label>
+                        <label>
+                            <input type='checkbox' checked={!!notifyPresets.fill_order} data-type='fill_order' onChange={this.onNotifyPresetChange} />
+                            <Icon name='notification/order' size='2x' />
+                            <span>{tt('settings_jsx.notifications_order')}</span>
+                        </label>
                         <br />
                         <input
                             type="submit"
@@ -574,6 +556,32 @@ class Settings extends React.Component {
                         />
                     </div>
                 </div>}
+
+            {mutedUIA && mutedUIA.length > 0 &&
+                <div className="row">
+                    <div className="small-12 columns">
+                        <br /><br />
+                        <h3>{tt('settings_jsx.muted_uia')}</h3>
+                        {mutedUIAlist}
+                    </div>
+                </div>}
+
+            {ignores && ignores.size > 0 &&
+                <div className="row">
+                    <div className="small-12 columns">
+                        <br /><br />
+                        <UserList title={tt('settings_jsx.muted_users')} account={account} users={ignores} />
+                    </div>
+                </div>}
+
+            {mutedInNew && mutedInNew.size > 0 &&
+                <div className="row">
+                    <div className="small-12 columns">
+                        <br /><br />
+                        <UserList title={tt('settings_jsx.muted_in_new_users')} account={account} users={mutedInNew} muteOnlyNew={true} />
+                    </div>
+                </div>}
+
         </div>
     }
 }

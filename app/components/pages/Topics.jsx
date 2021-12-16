@@ -47,9 +47,13 @@ export default class Topics extends React.Component {
     }
 
     onSaveTags = () => {
-      if (this.props.updateSubscribe)
-        this.props.updateSubscribe()
-    }
+        if (this.props.updateSubscribe)
+            this.props.updateSubscribe(() => {
+                this.setState({
+                    needUpdateSubscribe: false,
+                });
+            });
+    };
 
     onSelectTag = key => {
       let keys = this.state.selected
@@ -153,7 +157,6 @@ export default class Topics extends React.Component {
                   {selectedKeys.length ? selectedKeys : <div><span>{tt('g.no_tags_selected')}</span></div>}
                 </li>
                 <li className="Topics__filter__expand" key="filter__expand_action">{expandFilterButton}</li>
-                <li className="Topics__title" key={'*'}>{tt('g.tags_and_topics')}</li>
                 {categories}
                 {!expanded && <li className="show-more">
                         <Link to={`/tags`}>{tt('g.show_more_topics')}</Link>

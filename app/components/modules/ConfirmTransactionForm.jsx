@@ -11,7 +11,7 @@ class ConfirmTransactionForm extends Component {
         //Steemit
         onCancel: PropTypes.func,
         warning: PropTypes.string,
-        // redux-form
+        // form
         confirm: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
         confirmBroadcastOperation: PropTypes.object,
         confirmErrorCallback: PropTypes.func,

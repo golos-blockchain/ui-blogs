@@ -1,0 +1,22 @@
+.Witnesses__vote-list {
+    .VerticalMenu {
+        min-width: 272px;
+
+        a {
+            font-weight: 600;
+            color: #788187 !important;
+            padding: 0 0.5rem;
+            line-height: 1.25;
+            @include hoverUnderline;
+            span {
+                position: absolute;
+                right: 5px;
+            }
+        }
+    }
+}
+
+.Icon.dropdown-arrow {
+    position: relative;
+    top: 2px;
+}

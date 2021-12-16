@@ -38,13 +38,15 @@ const calculateEstimateOutput = ({ account, price_per_golos, savings_withdraws, 
   }
 
   const total_sbd = 0 
-    + parseFloat(account.get('sbd_balance'))
+    + parseFloat(toAsset(account.get('sbd_balance')).amount)
+    + parseFloat(toAsset(account.get('market_sbd_balance')).amount)
     + parseFloat(toAsset(account.get('savings_sbd_balance')).amount)
 
   const total_steem = 0
     + parseFloat(toAsset(account.get('balance')).amount)
-    + parseFloat(toAsset(account.get('tip_balance')).amount)
     + parseFloat(toAsset(account.get('savings_balance')).amount)
+    + parseFloat(toAsset(account.get('tip_balance')).amount)
+    + parseFloat(toAsset(account.get('market_balance')).amount)
     + parseFloat(vestsToSteem(account.get('vesting_shares'), globalprops.toJS()))
 
   return Number(((total_steem * price_per_golos) + total_sbd).toFixed(2) );
@@ -58,18 +60,18 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     const scn = vertical ? '' : 'show-for-medium';
     const nav = navigate || defaultNavigate;
     const topbutton = <li className={lcn + ' submit-story'}>
-        <a target="blank" href="https://golostalk.com" className={'button small topbutton'}>
-            <Icon name="voters" size="0_95x" />{tt('g.topbutton')}
-        </a>
+        <Link to='/services' className='button small topbutton'>
+            <Icon name="new/monitor" size="0_95x" />{tt('g.topbutton')}
+        </Link>
     </li>;
     const submitStory = <li className={scn + ' submit-story'}>
-        <a href="/submit" onClick={nav} className={'button small alert'}>
+        <a href="/submit" onClick={nav} className={'button small topbutton alert'}>
             <Icon name="new/add" size="0_95x" />{tt('g.submit_a_story')}
         </a>
     </li>;
     const submitStoryPencil = <li className="hide-for-medium submit-story-pencil">
         <Link to="/submit" className="button small alert">
-            <Icon name="new/add" size="0_95x"/>
+            <Icon name="new/add" size="0_95x" />
         </Link>
     </li>;
     const feedLink = `/@${username}/feed`;
@@ -77,8 +79,10 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     const walletLink = `/@${username}/transfers`;
     const settingsLink = `/@${username}/settings`;
     const accountLink = `/@${username}`;
+    const mentionsLink = `/@${username}/mentions`;
     const donatesLink = `/@${username}/donates-to`;
     const messagesLink = `/msgs`;
+    const ordersLink = `/@${username}/filled-orders`;
 
     const faqItem = <li className={scn}>
         <Link to="/faq" title={tt('navigation.faq')}><Icon name="info_o" size="1_5x" />
@@ -101,14 +105,22 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
         }
     }
 
+    const registerUrl = authRegisterUrl() + (invite ? ('?invite=' + invite) : '');
+
     const additional_menu = []
     if (!loggedIn) {
         additional_menu.push(
             { link: '/login.html', onClick: showLogin, value: tt('g.login'), className: 'show-for-small-only' },
-            { link: authRegisterUrl() + (invite ? ("?invite=" + invite) : ""), value: tt('g.sign_up'), className: 'show-for-small-only' }
+            { link: registerUrl,
+                onClick: (e) => {
+                    e.preventDefault();
+                    window.location.href = registerUrl;
+                },
+                value: tt('g.sign_up'), className: 'show-for-small-only' }
         )
     }
     additional_menu.push(
+        { link: '#', onClick: toggleNightmode, icon: 'editor/eye', value: tt('g.night_mode') },
         { link: '/market/GOLOS/GBG', icon: 'trade', value: tt("navigation.market") },
         { link: 'https://golostalk.com/', icon: 'chatboxes', value: tt("navigation.forum"), target: 'blank' },
         { link: '/search', icon: 'new/search', value: tt("navigation.search") },
@@ -141,10 +153,11 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
             {link: accountLink, icon: 'new/blogging', value: tt('g.blog')},
             {link: repliesLink, icon: 'new/answer', value: tt('g.replies'), addon: <NotifiCounter fields="comment_reply" />},
             {link: messagesLink, icon: 'new/envelope', value: tt('g.messages'), target: '_blank', addon: <NotifiCounter fields="message" />},
+            {link: mentionsLink, icon: 'new/mention', value: tt('g.mentions'), addon: <NotifiCounter fields="mention" />},
             {link: donatesLink, icon: 'editor/coin', value: tt('g.rewards'), addon: <NotifiCounter fields="donate" />},
             {link: walletLink, icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields="send,receive" />},
-            {link: settingsLink, icon: 'new/setting', value: tt('g.settings')},
-            {link: '#', onClick: toggleNightmode, icon: 'editor/eye', value: tt('g.night_mode')},
+            {link: ordersLink, icon: 'trade', value: tt('navigation.market2'), addon: <NotifiCounter fields="fill_order" />},
+            {link: settingsLink, icon: 'new/setting', value: tt('g.settings')},            
             loggedIn ?
                 {link: '#', icon: 'new/logout', onClick: logout, value: tt('g.logout')} :
                 {link: '#', onClick: showLogin, value: tt('g.login')}
@@ -213,7 +226,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
               <a href="/login.html" onClick={showLogin} className={!vertical && 'button small violet hollow'}>{tt('g.login')}</a>
             </li>}
             {!probablyLoggedIn && <li className={scn}>
-              <a href={authRegisterUrl() + (invite ? ("?invite=" + invite) : "")} className={!vertical && 'button small alert'}>{tt('g.sign_up')}</a>
+              <a href={registerUrl} className={!vertical && 'button small alert'}>{tt('g.sign_up')}</a>
             </li>}
             {probablyLoggedIn && <li className={lcn}>
               <LoadingIndicator type="circle" inline />

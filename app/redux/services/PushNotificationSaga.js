@@ -14,12 +14,15 @@ function getScopePresets(username) {
     let presets = localStorage.getItem('notify.presets-' + username);
     if (!presets) {
         presets = {
-            receive: true, donate: true, comment_reply: true, mention: true, message: true,
+            receive: true, donate: true, comment_reply: true, mention: true, message: true, fill_order: true,
         };
     } else {
         presets = JSON.parse(presets);
+        if (presets.fill_order === undefined) {
+            presets.fill_order = true;
+        }
     }
-    return Object.keys(presets);
+    return Object.keys(presets).filter(k => presets[k]);
 }
 
 function* onUserLogin(action) {

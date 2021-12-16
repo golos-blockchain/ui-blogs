@@ -290,7 +290,7 @@ export default ({
             const attrs = { href };
 
             // If it's not a (relative or absolute) golos URL...
-            if (!href.match(/^(\/(?!\/)|https:\/\/(golos.id|golos.in|golos.today))/)) {
+            if (!href.match(/^(\/(?!\/)|https:\/\/(golos.id|golos.in|golos.today|golos.app))/)) {
                 attrs.rel = highQualityPost ? 'noopener' : 'nofollow noopener';
             }
 

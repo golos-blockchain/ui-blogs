@@ -246,15 +246,15 @@ class CommentForm extends React.Component {
         }
 
         if (rtags.usertags.size) {
-            meta.users = rtags.usertags;
+            meta.users = [...rtags.usertags];
         }
 
         if (rtags.images.size) {
-            meta.image = rtags.images;
+            meta.image = [...rtags.images];
         }
 
         if (rtags.links.size) {
-            meta.links = rtags.links;
+            meta.links = [...rtags.links];
         }
 
         const data = {

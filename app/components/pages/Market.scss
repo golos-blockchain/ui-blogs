@@ -39,6 +39,13 @@ input.sell-color:hover {
   background-color: smart-scale($sell-color, 90%) !important;
 }
 
+.error {
+  background-color: rgb(252,84,78);
+  color: $sell-color !important;
+  font-weight: bold;
+  text-align: center;
+}
+
 .Market__orderbook {
   tbody > tr {
     cursor: pointer;

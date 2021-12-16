@@ -1,0 +1,42 @@
+.Expandable {
+    margin-bottom: 0.5rem;
+
+    .Expander {
+        display: inline-block; // do not stretch clickable area 
+        color: #0078C4;
+        cursor: pointer;
+        margin-bottom: 0.75rem;
+        user-select: none;
+        h5 {
+            display: inline;
+            line-height: 1;
+            vertical-align: middle;
+        }
+        .Icon {
+            display: inline;
+            svg {
+                vertical-align: middle;
+                circle {
+                    stroke: transparent;
+                }
+                path {
+                    fill: #0078C4;
+                }
+            }
+        }
+    }
+
+    .Expandable__content {
+        display: none;
+    }
+
+    &.opened {
+        .Expander {
+            margin-bottom: 0.75rem;
+        }
+        .Expandable__content {
+            display: block;
+        }
+        padding-bottom: 0.5rem;
+    }
+}

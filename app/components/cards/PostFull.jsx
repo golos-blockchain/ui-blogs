@@ -396,7 +396,7 @@ class PostFull extends React.Component {
         const url = `/${category}/@${author}/${permlink}`;
         let contentBody;
 
-        if (LEGALList.includes(url)) {
+        if (LEGALList.includes(url) && !username) {
             contentBody = tt(
                 'postfull_jsx.this_post_is_not_available_due_to_breach_of_legislation'
             );

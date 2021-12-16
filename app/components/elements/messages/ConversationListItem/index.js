@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router';
-//import shave from 'shave';
 import truncate from 'lodash/truncate';
 
 import './ConversationListItem.css';

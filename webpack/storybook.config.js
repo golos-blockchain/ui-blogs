@@ -3,8 +3,8 @@ const webpack = require('webpack');
 const merge = require('webpack-merge');
 const alias = require('./alias');
 
-module.exports = (baseConfig, env, defaultConfig) =>
-    merge(removeSvgLoaders(defaultConfig), {
+module.exports = ({ config, mode, }) =>
+    merge(removeSvgLoaders(config), {
         resolve: {
             modules: [path.resolve(__dirname, '..'), 'node_modules'],
             extensions: ['.js', '.json', '.jsx'],

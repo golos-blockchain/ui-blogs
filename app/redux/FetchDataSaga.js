@@ -107,7 +107,7 @@ export function* fetchState(location_change_action) {
 
                 switch (parts[1]) {
                     case 'transfers':
-                        const history = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {filter_ops: ['producer_reward']})
+                        const history = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {select_ops: ['claim', 'donate', 'transfer', 'author_reward', 'curation_reward', 'transfer_to_tip', 'transfer_from_tip', 'transfer_to_vesting', 'withdraw_vesting', 'asset_issue', 'invite', 'transfer_to_savings', 'transfer_from_savings', 'convert_sbd_debt', 'convert', 'fill_convert_request', 'interest', 'worker_reward']})
                         account.transfer_history = []
                         account.other_history = []
 
@@ -214,12 +214,34 @@ export function* fetchState(location_change_action) {
                     break
 
                     case 'reputation':
-                        const rhistory = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {filter_ops: ['producer_reward']});
+                        const rhistory = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {select_ops: ['account_reputation']});
                         account.reputation_history = [];
                         rhistory.forEach(operation => {
                             const op = operation[1].op;
                             if (op[0] === 'account_reputation' && op[1].author === uname) {
                                 state.accounts[uname].reputation_history.push(operation);
+                            }
+                        });
+                    break
+
+                    case 'mentions':
+                        const mhistory = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {select_ops: ['comment_mention']});
+                        account.mentions = [];
+                        mhistory.forEach(operation => {
+                            const op = operation[1].op;
+                            if (op[0] === 'comment_mention' && op[1].mentioned === uname) {
+                                state.accounts[uname].mentions.push(operation);
+                            }
+                        });
+                    break
+
+                    case 'filled-orders':
+                        const fohistory = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {select_ops: ['fill_order']});
+                        account.filled_orders = [];
+                        fohistory.forEach(operation => {
+                            const op = operation[1].op;
+                            if (op[0] === 'fill_order') {
+                                state.accounts[uname].filled_orders.push(operation);
                             }
                         });
                     break
@@ -328,18 +350,25 @@ export function* fetchState(location_change_action) {
             state.prev_posts = prev_posts.slice(0, 3);
 
             if (localStorage.getItem('invite')) {
-                state.assets = (yield call([api, api.getAccountsBalances], [localStorage.getItem('invite')]))[0]
+                state.assets = (yield call([api, api.getAccountsBalancesAsync], [localStorage.getItem('invite')]))[0]
             }
 
             console.log('Full post load');
         } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
             state.witnesses = {};
-            const witnesses =  yield call([api, api.getWitnessesByVoteAsync], '', 100)
 
-            witnesses.forEach( witness => {
-                state.witnesses[witness.owner] = witness
-            })
+            let witnessIds = [];
+            const witnesses = yield call([api, api.getWitnessesByVoteAsync], '', 100);
+            witnesses.forEach(witness => {
+                state.witnesses[witness.owner] = witness;
+                witnessIds.push(witness.id);
+            });
 
+            const voteMap = yield call([api, api.getWitnessVotesAsync], witnessIds, 21, 0, '1.000 GOLOS');
+            witnesses.forEach(witness => {
+                let voteList = voteMap[witness.id];
+                state.witnesses[witness.owner].vote_list = voteList || [];
+            });
         }  else if (parts[0] === 'workers') {
             accounts.add('workers');
             state.cprops = yield call([api, api.getChainPropertiesAsync])

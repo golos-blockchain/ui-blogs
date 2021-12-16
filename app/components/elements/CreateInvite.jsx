@@ -7,7 +7,6 @@ import {connect} from 'react-redux';
 import transaction from 'app/redux/Transaction'
 import user from 'app/redux/User';
 import tt from 'counterpart';
-import {cleanReduxInput} from 'app/utils/ReduxForms'
 import reactForm from 'app/utils/ReactForm';
 import {PrivateKey} from 'golos-lib-js/lib/auth/ecc';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
@@ -186,7 +185,7 @@ class CreateInvite extends Component {
 
         let publicKeyLink = null;
         if (createdInvite) {
-            publicKeyLink = `https://gapi.golos.today/steemjs/api/database_api/get_invite?invite_key=${createdInvite}`;
+            publicKeyLink = `https://gapi.golos.today/api/database_api/get_invite?invite_key=${createdInvite}`;
             publicKeyLink=(<span>{tt('invites_jsx.public_key_can_be_checked') + ' '}
                     <a href={publicKeyLink} target='_blank' rel='noopener noreferrer'>{tt('g.here')}</a>
                     <Icon name="extlink" size="1_5x" />
@@ -197,7 +196,7 @@ class CreateInvite extends Component {
             <form onSubmit={this.handleSubmitForm}>
                 <div className="row">
                     <div className="column small-10 secondary">
-                        {tt('invites_jsx.create_invite_info')} <a target="_blank" href="/@lex/cheki-kak-instrument-peredachi-tokenov">{tt('g.more_hint')}</a> <Icon name="extlink" size="1_5x" />
+                        {tt('invites_jsx.create_invite_info')} <a href="/@lex/cheki-kak-instrument-peredachi-tokenov">{tt('g.more_hint')}</a> <Icon name="extlink" size="1_5x" />
                     <hr />
                     </div>
                 </div>

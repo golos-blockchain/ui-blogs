@@ -9,10 +9,10 @@ import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
 import Icon from 'app/components/elements/Icon'
 import UserKeys from 'app/components/elements/UserKeys';
-import CreateAsset from 'app/components/elements/CreateAsset';
-import Assets from 'app/components/elements/Assets';
-import UpdateAsset from 'app/components/elements/UpdateAsset';
-import TransferAsset from 'app/components/elements/TransferAsset';
+import CreateAsset from 'app/components/modules/uia/CreateAsset';
+import Assets from 'app/components/modules/uia/Assets';
+import UpdateAsset from 'app/components/modules/uia/UpdateAsset';
+import TransferAsset from 'app/components/modules/uia/TransferAsset';
 import Invites from 'app/components/elements/Invites';
 import PasswordReset from 'app/components/elements/PasswordReset';
 import UserWallet from 'app/components/modules/UserWallet';
@@ -23,6 +23,8 @@ import DonatesTo from 'app/components/modules/DonatesTo';
 import CurationRewards from 'app/components/modules/CurationRewards';
 import AuthorRewards from 'app/components/modules/AuthorRewards';
 import ReputationHistory from 'app/components/modules/ReputationHistory'
+import Mentions from 'app/components/modules/Mentions'
+import FilledOrders from 'app/components/modules/FilledOrders'
 import UserList from 'app/components/elements/UserList';
 import Follow from 'app/components/elements/Follow';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
@@ -220,7 +222,7 @@ export default class UserProfile extends React.Component {
         let upvoteRep = this.upvoteRep;
         let downvoteRep = this.downvoteRep;
 
-        if (current_account) {
+        if (current_account && typeof(BigInt) !== 'undefined') { // Safari < 14
             const current_rep = BigInt(current_account.get('reputation'));
             if (current_rep < 0) {
                 cannotUpvote = tt('reputation_panel_jsx.cannot_vote_neg_rep');
@@ -431,6 +433,30 @@ export default class UserProfile extends React.Component {
                 </div>
             );
         }
+        else if( (section === 'mentions')) {
+            tab_content = (
+                <div>
+                    <Mentions
+                        account={account}
+                        current_user={current_user}
+                        loading={fetching}
+                    />
+                    { isMyAccount && <div><MarkNotificationRead fields='mention' account={account.name} /></div> }
+                </div>
+            );
+        }
+        else if( (section === 'filled-orders')) {
+            tab_content = (
+                <div>
+                    <FilledOrders
+                        account={account}
+                        current_user={current_user}
+                        loading={fetching}
+                    />
+                    { isMyAccount && <div><MarkNotificationRead fields='fill_order' account={account.name} /></div> }
+                </div>
+            );
+        }
         else if( section === 'permissions' && isMyAccount ) {
             walletClass = 'active'
             tab_content = <div>
@@ -538,10 +564,13 @@ export default class UserProfile extends React.Component {
                             {tt('g.wallet')} {isMyAccount && <NotifiCounter fields='send,receive' />}
                         </a>
                         {isMyAccount ?
+                            <Link className='UserProfile__menu-item' to={`/@${accountname}/filled-orders`} activeClassName='active'>{tt('navigation.market2')} <NotifiCounter fields="fill_order" /></Link>
+                            : null
+                        }
+                        {isMyAccount ?
                             <Link className='UserProfile__menu-item' to={`/@${accountname}/settings`} activeClassName='active'>{tt('g.settings')}</Link>
                             : null
                         }
-                        <Link target="_blank" className="UserProfile__menu-item" to={`/search/@${accountname}`}>{tt('g.search')}</Link>
                     </div>
                 </div>
             </div>
