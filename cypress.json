@@ -1,3 +1,7 @@
 {
-    "baseUrl": "https://beta.golos.today"
+    "baseUrl": "https://beta.golos.today",
+    "env": {
+        "ACC": "lex",
+        "ACC_POSTING": "5K1aJ8JayUA7c2Ptg9Y2DetKxSvXGXa5GCcvYeHtn1Xh3v4egPS"
+    }
 }
