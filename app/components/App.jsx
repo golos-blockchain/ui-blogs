@@ -42,6 +42,7 @@ const availableDomains = [
     'golos.in',
     'golos.today',
     'golos.app',
+    'golosdex.com',
     'golostalk.com',
     'prizmtalk.com',
     'gph.ai',

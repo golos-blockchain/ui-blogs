@@ -1238,6 +1238,16 @@
     "official_channels": "Official channels",
     "footer_message": "We will never ask for your private keys or money. If someone introduces themselves as members of the Golos Blockchain team and asks for such information, please contact us."
   },
+  "services": {
+    "title_1": "Most popular services, games and bots",
+    "title_2": "which may be useful for interacting with the Golos blockchain",
+    "developer": "Developer",
+    "services": "Services",
+    "games": "Games",
+    "bots": "Bots",
+    "footer_1": "If there is not enough service/game/bot in the list, write to the Telegram chat",
+    "footer_2": "or add a post on the Golos"
+  },
   "workers": {
     "workers_info": "For any work useful for the Golos Blockchain, you can get a reward by submitting an application, describing in detail what was done (development, design, advertising, documentation), anything if this initiative is supported by the community.",
     "chat_workers": "Notifications for proposals",

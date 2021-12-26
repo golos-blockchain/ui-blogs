@@ -69,9 +69,9 @@ class Footer extends React.Component {
 
     render() {
         const { currentSupply } = this.state;
+        const year = new Date().getFullYear();
 
         const menuItems = [];
-
         menuItems.push(
             {
                 name: tt('g.social_network'),
@@ -129,7 +129,7 @@ class Footer extends React.Component {
                     <div className="row">
                         <div className="small-12 medium-12 columns">
                             <span className="left">
-                                © 2016-2021 {tt('g.about_project')}
+                                © 2016-{year} {tt('g.about_project')}
                             </span>
                             <span className="right">
                                 <a href={'mailto:' + SUPPORT_EMAIL}><Icon name="new/envelope" /> Contact Us</a>
