@@ -13,7 +13,7 @@ class Exchanges extends React.Component {
                     </div>
                     <br />
                     <div className='row'>                            
-                            <a target="_blank" href="https://golosdex.com" className="golos-btn btn-secondary btn-round"><Icon name="trade" /> Golos Exchange</a>&nbsp;<a target="_blank" href="https://explorer.golos.id/" className="golos-btn btn-secondary btn-round"><Icon name="cog" /> Block Explorer</a>&nbsp;<a target="_blank" href="https://github.com/golos-blockchain" className="golos-btn btn-secondary btn-round"><Icon name="github" /> Source Code</a>&nbsp;<a target="_blank" href="https://coinmarketcap.com/currencies/golos-blockchain/" className="golos-btn btn-secondary btn-round"><Icon name="extlink" /> CoinMarketCap</a>&nbsp;<a href="mailto:info@golos.id" className="golos-btn btn-secondary btn-round"><Icon name="new/envelope" /> Contact Us</a>
+                            <a target="_blank" href="https://gls.exchange" className="golos-btn btn-secondary btn-round"><Icon name="trade" /> Golos Exchange</a>&nbsp;<a target="_blank" href="https://explorer.golos.id/" className="golos-btn btn-secondary btn-round"><Icon name="cog" /> Block Explorer</a>&nbsp;<a target="_blank" href="https://github.com/golos-blockchain" className="golos-btn btn-secondary btn-round"><Icon name="github" /> Source Code</a>&nbsp;<a target="_blank" href="https://coinmarketcap.com/currencies/golos-blockchain/" className="golos-btn btn-secondary btn-round"><Icon name="extlink" /> CoinMarketCap</a>&nbsp;<a href="mailto:info@golos.id" className="golos-btn btn-secondary btn-round"><Icon name="new/envelope" /> Contact Us</a>
                     </div>
                 </div>
                 <div className='landing-exchanges-block'>
@@ -76,7 +76,7 @@ class Exchanges extends React.Component {
                                     <p><Icon name="line" /> <a target="_blank" href="/@ecurrex-ru/ymrub-umer-da-zdravstvuet-ymrub">YMRUB</a> <small>(эквивалент рубля, с поддержкой ADVcash и PAYEER)</small>, обсуждение сервиса <a target="_blank" href="https://golostalk.com/services/@ecurrex-ru/ecurrex-tokeny-ymxxx">на форуме</a></p>                                    
                                     <p><Icon name="line" /> <a target="_blank" href="/@ecurrex-ru/anons-shlyuza-dash">YMDASH</a>, <a target="_blank" href="/@ecurrex-ru/anons-shlyuzov-dlya-hive-i-steem">YMHIVE и YMSTEEM</a>, <a target="_blank" href="/@ecurrex-ru/prizm-na-golose">YMPZM</a> от эмитента <a href="/@ecurrex-ru">@ecurrex-ru</a></p>                                    
                                     <p><Icon name="line" /> <a target="_blank" href="/@ecurrex-ru/anons-novye-shlyuzy-tron-trx-i-usdt-trc-20">USDT</a> <small> TRC-20 (позволяющий вести обмен через популярные биржи)</small></p>
-                                    <p><b>Новый интерфейс</b> на <a target="_blank" href="https://golosdex.com">GolosDEX.com</a>, прежний также <a href="/market">доступен</a>.</p>
+                                    <p><b>Новый интерфейс</b> на <a target="_blank" href="https://golosdex.com">GolosDEX.com</a> или <a target="_blank" href="https://gls.exchange">GLS.exchange</a>, прежний доступен <a href="/market">здесь</a>.</p>
                                 </div>
                             </div>
                         </div>

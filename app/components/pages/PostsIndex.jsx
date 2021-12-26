@@ -245,7 +245,8 @@ class PostsIndex extends React.Component {
                     </p>
 
                     <p align="center">
-                        <a target="_blank" href="/@allforyou/torguem-na-vnutrennei-birzhe-golosa"><img src={require("app/assets/images/banners/golosdex2.png")} width="220" height="160" /></a>
+                        <a target="_blank" href="https://golosdex.com"><img src={require("app/assets/images/banners/golosdex2.png")} width="220" height="160" /></a>
+                        <span className="strike"><a target="_blank" href="/@graphenelab/reliz-novoi-birzhi-golos">{tt('g.more_hint')}</a></span>
                     </p>
 
                     {$STM_Config.show_adv_banners ?

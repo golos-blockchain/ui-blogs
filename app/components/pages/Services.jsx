@@ -13,7 +13,7 @@ class Services extends React.Component {
                     </div>                    
                     <br />
                     <div className='row'>                            
-                        <a target="_blank" href="https://golosdex.com" className="golos-btn btn-secondary btn-round"><Icon name="trade" /> Golos Exchange <span className='new'>new</span></a>&nbsp;<a target="_blank" href="/msgs" className="golos-btn btn-secondary btn-round"><Icon name="new/envelope" /> Golos Messenger</a>&nbsp;<a target="_blank" href="https://golostalk.com" className="golos-btn btn-secondary btn-round"><Icon name="chatboxes" /> Golos Forum </a>&nbsp;<a target="_blank" href="/search" className="golos-btn btn-secondary btn-round"><Icon name="new/search" /> Golos Search</a>&nbsp;<a target="_blank" href="https://golos.app" className="golos-btn btn-secondary btn-round"><Icon name="key" /> Golos Signer</a>
+                        <a target="_blank" href="https://gls.exchange" className="golos-btn btn-secondary btn-round"><Icon name="trade" /> Golos Exchange <span className='new'>new</span></a>&nbsp;<a target="_blank" href="/msgs" className="golos-btn btn-secondary btn-round"><Icon name="new/envelope" /> Golos Messenger</a>&nbsp;<a target="_blank" href="https://golostalk.com" className="golos-btn btn-secondary btn-round"><Icon name="chatboxes" /> Golos Forum </a>&nbsp;<a target="_blank" href="/search" className="golos-btn btn-secondary btn-round"><Icon name="new/search" /> Golos Search</a>&nbsp;<a target="_blank" href="https://golos.app" className="golos-btn btn-secondary btn-round"><Icon name="key" /> Golos Signer</a>
                     </div>
                 </div>
                 <div className='landing-services-block'>
