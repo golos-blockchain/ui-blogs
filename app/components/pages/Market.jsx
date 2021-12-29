@@ -689,8 +689,8 @@ class Market extends Component {
                 normalizeOpenOrders(openOrders).map(o => (
                     <tr key={o.orderid}>
                         <td>{o.created.replace('T', ' ')}</td>
-                        <td>{tt(need_reverse ? (o.type === 'bid' ? 'g.sell' : 'g.buy') : (o.type === 'ask' ? 'g.sell' : 'g.buy'))}</td>
-                        <td>
+                        <td className={need_reverse ? (o.type === 'bid' ? 'sell-color' : 'buy-color') : (o.type === 'ask' ? 'sell-color' : 'buy-color')}>{tt(need_reverse ? (o.type === 'bid' ? 'g.sell' : 'g.buy') : (o.type === 'ask' ? 'g.sell' : 'g.buy'))}</td>
+                        <td className={need_reverse ? (o.type === 'bid' ? 'sell-color' : 'buy-color') : (o.type === 'ask' ? 'sell-color' : 'buy-color')}>
                             {sym2} {o.price.toFixed(assets_right[sym2].precision)}
                         </td>
                         <td>{o.asset1}</td>
@@ -817,8 +817,10 @@ class Market extends Component {
                     <p className="text-center"><Icon name="info_o" /> <small>Попробуйте торговать и через новый интерфейс на <a target="_blank" href="https://golosdex.com">GolosDEX.com</a> или <a target="_blank" href="https://gls.exchange">GLS.exchange</a> (подробнее <a target="_blank" href="/@graphenelab/reliz-novoi-birzhi-golos">в посте</a>).</small></p>
                     </div>
                 </div>
-                <div className="column small-12 error">
-                    <TransactionError opType="limit_order_create" />
+                <div className="row">
+                    <div className="column small-12" style={{background: "rgb(252,84,78)"}}>
+                        <TransactionError opType="limit_order_create" />
+                    </div>
                 </div>
                 <div className="row">
                     <div className="small-12 medium-6 columns">
