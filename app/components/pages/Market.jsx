@@ -689,9 +689,9 @@ class Market extends Component {
                 normalizeOpenOrders(openOrders).map(o => (
                     <tr key={o.orderid}>
                         <td>{o.created.replace('T', ' ')}</td>
-                        <td>{tt(need_reverse ? (o.type === 'bid' ? 'g.sell' : 'g.buy') : (o.type === 'ask' ? 'g.sell' : 'g.buy'))}</td>
-                        <td>
-                            {sym2} {o.price.toFixed(assets_right[sym2].precision)}
+                        <td className={need_reverse ? (o.type === 'bid' ? 'sell-color' : 'buy-color') : (o.type === 'ask' ? 'sell-color' : 'buy-color')}>{tt(need_reverse ? (o.type === 'bid' ? 'g.sell' : 'g.buy') : (o.type === 'ask' ? 'g.sell' : 'g.buy'))}</td>
+                        <td className={need_reverse ? (o.type === 'bid' ? 'sell-color' : 'buy-color') : (o.type === 'ask' ? 'sell-color' : 'buy-color')}>
+                            {o.price.toFixed(assets_right[sym2].precision)}
                         </td>
                         <td>{o.asset1}</td>
                         <td>{o.asset2.replace('SBD', DEBT_TOKEN_SHORT)}</td>
@@ -812,15 +812,15 @@ class Market extends Component {
                         <TickerPriceStat ticker={ticker} trades={trades} symbol={sym2} precision={assets_right[sym2].precision} />
                     </div>
                 </div>
-
                 <div className="row">
                     <div className="column small-12">
-{assets && assets_right[sym1].allow_override_transfer && (<p className="text-center"><Icon name="info_o" /> <small>{tt('market_jsx.asset_') + sym1 + tt('market_jsx.asset_is_overridable')} <a target="_blank" href="https://wiki.golos.id/users/faq#chto-takoe-otzyvnye-uia-tokeny">{tt('g.more_hint')} ></a></small></p>)}
-{assets && assets_right[sym2].allow_override_transfer && (<p className="text-center"><Icon name="info_o" /> <small>{tt('market_jsx.asset_') + sym2 + tt('market_jsx.asset_is_overridable')} <a target="_blank" href="https://wiki.golos.id/users/faq#chto-takoe-otzyvnye-uia-tokeny">{tt('g.more_hint')} ></a></small></p>)}
+                    <p className="text-center"><Icon name="info_o" /> <small>Попробуйте торговать и через новый интерфейс на <a target="_blank" href="https://golosdex.com">GolosDEX.com</a> или <a target="_blank" href="https://gls.exchange">GLS.exchange</a> (подробнее <a target="_blank" href="/@graphenelab/reliz-novoi-birzhi-golos">в посте</a>).</small></p>
                     </div>
                 </div>
-                <div className="column small-12 error">
-                    <TransactionError opType="limit_order_create" />
+                <div className="row">
+                    <div className="column small-12" style={{background: "rgb(252,84,78)"}}>
+                        <TransactionError opType="limit_order_create" />
+                    </div>
                 </div>
                 <div className="row">
                     <div className="small-12 medium-6 columns">
@@ -1481,6 +1481,13 @@ class Market extends Component {
                                 </div>
                             </div>
                         </form>
+                    </div>
+                </div>
+
+                <div className="row">
+                    <div className="column small-12">
+{assets && assets_right[sym1].allow_override_transfer && (<p className="text-center"><Icon name="info_o" /> <small>{tt('market_jsx.asset_') + sym1 + tt('market_jsx.asset_is_overridable')} <a target="_blank" href="https://wiki.golos.id/users/faq#chto-takoe-otzyvnye-uia-tokeny">{tt('g.more_hint')} ></a></small></p>)}
+{assets && assets_right[sym2].allow_override_transfer && (<p className="text-center"><Icon name="info_o" /> <small>{tt('market_jsx.asset_') + sym2 + tt('market_jsx.asset_is_overridable')} <a target="_blank" href="https://wiki.golos.id/users/faq#chto-takoe-otzyvnye-uia-tokeny">{tt('g.more_hint')} ></a></small></p>)}
                     </div>
                 </div>
 
