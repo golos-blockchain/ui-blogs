@@ -691,7 +691,7 @@ class Market extends Component {
                         <td>{o.created.replace('T', ' ')}</td>
                         <td className={need_reverse ? (o.type === 'bid' ? 'sell-color' : 'buy-color') : (o.type === 'ask' ? 'sell-color' : 'buy-color')}>{tt(need_reverse ? (o.type === 'bid' ? 'g.sell' : 'g.buy') : (o.type === 'ask' ? 'g.sell' : 'g.buy'))}</td>
                         <td className={need_reverse ? (o.type === 'bid' ? 'sell-color' : 'buy-color') : (o.type === 'ask' ? 'sell-color' : 'buy-color')}>
-                            {sym2} {o.price.toFixed(assets_right[sym2].precision)}
+                            {o.price.toFixed(assets_right[sym2].precision)}
                         </td>
                         <td>{o.asset1}</td>
                         <td>{o.asset2.replace('SBD', DEBT_TOKEN_SHORT)}</td>

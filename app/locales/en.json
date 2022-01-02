@@ -498,6 +498,7 @@
   "market_jsx": {
     "action": "Action",
     "date_created": "Date Created",
+    "date_trade": "Date Trade",
     "last_price": "Last price",
     "24h_volume": "24h volume",
     "spread": "Spread",
@@ -528,7 +529,6 @@
     "market_fee_percent_": "Trade fee ",
     "market_depth_": "market depth",
     "market_pair": "Market Pair",
-    "your_order": "Your order",
     "orders_canceled": "Selected orders successfully cancelled."
   },
   "user_profile": {

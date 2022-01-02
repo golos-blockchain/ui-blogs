@@ -588,6 +588,7 @@
   "market_jsx": {
     "action": "Действие",
     "date_created": "Дата создания",
+    "date_trade": "Дата сделки",
     "last_price": "Цена",
     "24h_volume": "Объём за 24 часа",
     "spread": "Разница (спред)",
@@ -618,7 +619,6 @@
     "market_fee_percent_": "Комиссия рынка ",
     "market_depth_": "глубина рынка",
     "market_pair": "Торговая пара",
-    "your_order": "Ваш заказ",
     "orders_canceled": "Ордеры успешно отменены."
   },
   "navigation": {
