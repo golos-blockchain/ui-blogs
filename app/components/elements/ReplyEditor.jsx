@@ -862,7 +862,7 @@ export default formId =>
             uploadImage: (file, progress) => {
                 dispatch({
                     type: 'user/UPLOAD_IMAGE',
-                    payload: { file, progress },
+                    payload: { file, progress, useGolosImages: true, },
                 });
             },
             reply: replyAction(dispatch, remarkable),

@@ -1,5 +1,6 @@
 import tt from 'counterpart';
 import { select, takeEvery } from 'redux-saga/effects';
+import { signData } from 'golos-lib-js/lib/auth'
 import { Signature, hash } from 'golos-lib-js/lib/auth/ecc/index';
 
 const MAX_UPLOAD_IMAGE_SIZE = 1024 * 1024;
@@ -30,7 +31,7 @@ const ERRORS_MATCH = [
 ];
 
 function* uploadImage(action) {
-    const { file, dataUrl, filename = 'image.txt', progress } = action.payload;
+    const { file, dataUrl, filename = 'image.txt', progress, useGolosImages = false } = action.payload;
 
     function onError(txt) {
         progress({
@@ -43,27 +44,7 @@ function* uploadImage(action) {
         return;
     }
 
-    //const user = yield select(state => state.user);
-    //const username = user.getIn(['current', 'username']);
-    //const postingKey = user.getIn([
-    //    'current',
-    //    'private_keys',
-    //    'posting_private',
-    //]);
     //
-
-    //const username = 'golosimages';
-    //const postingKey = '5JdwhQrmKCaspEEDfvWKZiRSpfAaa2hHpFmh1no3wSLx4zB6dnd';
-
-    //if (!username) {
-    //    onError(tt('user_saga_js.image_upload.error.login_first'));
-    //    return;
-    //}
-
-    //if (!postingKey) {
-    //    onError(tt('user_saga_js.image_upload.error.login_with_posting_key'));
-    //    return;
-    //}
 
     if (!file && !dataUrl) {
         onError(tt('user_saga_js.error_file_or_data_url_required'));
@@ -87,9 +68,30 @@ function* uploadImage(action) {
         data = new Buffer(dataBase64, 'base64');
     }
 
+    let postUrl = $STM_Config.upload_image
+    let golosImages = false
     if (file && file.size > MAX_UPLOAD_IMAGE_SIZE) {
-        onError(tt('user_saga_js.image_upload.error.image_size_is_too_large'));
-        return;
+        if (useGolosImages) {
+            const user = yield select(state => state.user);
+            const username = user.getIn(['current', 'username']);
+            const postingKey = user.getIn([
+                'current',
+                'private_keys',
+                'posting_private',
+            ]);
+            if (!username || !postingKey) {
+                onError(tt('user_saga_js.image_upload.error.login_first'));
+                return;
+            }
+            const signatures = signData(data, {
+                posting: postingKey,
+            })
+            postUrl = new URL('/@' + username + '/' + signatures.posting, $STM_Config.img_proxy_prefix).toString();
+            golosImages = true
+        } else {
+            onError(tt('user_saga_js.image_upload.error.image_size_is_too_large'));
+            return;
+        }
     }
 
     /**
@@ -109,17 +111,14 @@ function* uploadImage(action) {
         formData.append('image', dataBase64);
     }
 
-    //const sig = Signature.signBufferSha256(bufSha, postingKey);
-    //const postUrl = `${$STM_Config.upload_image}/${username}/${sig.toHex()}`;
-  //
-    const postUrl = $STM_Config.upload_image
-
     let imgurFailCounter = 0;
 
     const xhr = new XMLHttpRequest();
 
     xhr.open('POST', postUrl);
-    xhr.setRequestHeader('Authorization', 'Client-ID 6c09ebf8c548126')
+    if (!golosImages) {
+        xhr.setRequestHeader('Authorization', 'Client-ID 6c09ebf8c548126')
+    }
 
     xhr.onload = function() {
         let data;
@@ -131,7 +130,7 @@ function* uploadImage(action) {
             return;
         }
 
-        const { success } = data;
+        const success = golosImages ? data.status !== 'err' : data.success;
         //const { url, error } = data;
 
         if (!success) {
@@ -147,28 +146,36 @@ function* uploadImage(action) {
             //}
 
             console.error('Cannot upload image:', xhr.responseText);
+
             let repeat = false;
-            if (xhr.responseText.includes('Invalid client')) {
-                ++imgurFailCounter;
-                if (imgurFailCounter < 5) {
-                    repeat = true;
-                    setTimeout(() => {
-                        xhr.open('POST', postUrl);
-                        xhr.setRequestHeader('Authorization', 'Client-ID 6c09ebf8c548126')
-                        xhr.send(formData);
-                    }, 1000);
+            if (!golosImages) {
+                if (xhr.responseText.includes('Invalid client')) {
+                    ++imgurFailCounter;
+                    if (imgurFailCounter < 5) {
+                        repeat = true;
+                        setTimeout(() => {
+                            xhr.open('POST', postUrl);
+                            xhr.setRequestHeader('Authorization', 'Client-ID 6c09ebf8c548126')
+                            xhr.send(formData);
+                        }, 1000);
+                    }
                 }
             }
             if (!repeat) {
                 onError(xhr.responseText);
             }
         } else {
-            const { link, width, height } = data.data;
-            progress({
-                url: link,
-                width,
-                height,
-            });
+            let result = {}
+            if (!golosImages) {
+                result.url = data.data.link;
+                result.width = data.data.width;
+                result.height = data.data.height;
+            } else {
+                result.url = data.url;
+                result.width = data.meta.width;
+                result.height = data.meta.height;
+            }
+            progress(result);
         }
     };
 
