@@ -36,13 +36,13 @@ export default class Reblog extends React.Component {
 
     reblog = e => {
         e.preventDefault()
-        if(this.state.active) return
         this.setState({loading: true})
         const {reblog, account, author, permlink} = this.props
-        reblog(account, author, permlink,
-            () => {this.setState({active: true, loading: false})
-                   this.setReblogged(account)},
-            () => {this.setState({active: false, loading: false})},
+        const { active } = this.state
+        reblog(account, author, permlink, active,
+            () => {this.setState({active: !active, loading: false})
+                   this.setReblogged(account, !active)},
+            () => {this.setState({loading: false})},
         )
     }
 
@@ -51,24 +51,30 @@ export default class Reblog extends React.Component {
         return getRebloggedList(account).includes(author + '/' + permlink)
     }
 
-    setReblogged(account) {
+    setReblogged(account, val) {
         const {author, permlink} = this.props
         clearRebloggedCache()
+        const id = author + '/' + permlink
         let posts = getRebloggedList(account)
-        posts.push(author + '/' + permlink)
-        if(posts.length > 200)
-            posts.shift(1)
 
+        if (val) {
+            posts.push(id)
+            if (posts.length > 200)
+                posts.shift(1)
+        } else {
+            posts = posts.filter(p => p !== id)
+        }
         localStorage.setItem("reblogged_" + account, JSON.stringify(posts))
     }
 
     render() {
+        const { active } = this.state
         if(this.props.author == this.props.account) return null;
 
         const state = this.state.active ? 'active' : 'inactive'
         const loading = this.state.loading ? ' loading' : ''
         return <span className={'Reblog__button Reblog__button-'+state + loading}>
-            <a href="#" onClick={this.reblog} title={tt('g.reblog')}><Icon name="reblog" /></a>
+            <a href="#" onClick={this.reblog} title={tt(active ? 'g.delete_reblog' : 'g.reblog')}><Icon name="reblog" /></a>
         </span>
     }
 }
@@ -78,8 +84,10 @@ module.exports = connect(
         return {...ownProps, account}
     },
     dispatch => ({
-        reblog: (account, author, permlink, successCallback, errorCallback) => {
-            const json = ['reblog', {account, author, permlink}]
+        reblog: (account, author, permlink, cancel, successCallback, errorCallback) => {
+            const json = [cancel ? 'delete_reblog' : 'reblog',
+                {account, author, permlink}]
+            const title = cancel ? tt('g.delete_reblog') : tt('g.resteem_this_post')
             dispatch(transaction.actions.broadcastOperation({
                 type: 'custom_json',
                 confirm: tt('g.are_you_sure'),
@@ -87,7 +95,7 @@ module.exports = connect(
                     id: 'follow',
                     required_posting_auths: [account],
                     json: JSON.stringify(json),
-                    __config: {title: tt('g.resteem_this_post')}
+                    __config: {title}
                 },
                 successCallback, errorCallback,
             }))

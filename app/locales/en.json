@@ -298,6 +298,7 @@
     "vote_currently_exists_user_must_be_indicate_a_to_reject_witness": "vote currently exists, user must be indicate a desire to reject witness",
     "only_one_APP_NAME_account_allowed_per_ip_address_every_10_minutes": "Only one Steem account allowed per IP address every 10 minutes",
     "resteem_this_post": "Reblog This Post",
+    "delete_reblog": "Delete Reblog",
     "reblog": "Reblog",
     "write_your_story": "Write your story",
     "remember_voting_and_posting_key": "Remember voting & posting key",
