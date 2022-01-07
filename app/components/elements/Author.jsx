@@ -7,6 +7,7 @@ import Follow from 'app/components/elements/Follow';
 import Icon from 'app/components/elements/Icon';
 import { Link } from 'react-router';
 import {authorNameAndRep} from 'app/utils/ComponentFormatters';
+import { getGameLevel } from 'app/utils/GameUtils'
 import Reputation from 'app/components/elements/Reputation';
 import Userpic from 'app/components/elements/Userpic';
 import tt from 'counterpart';
@@ -55,8 +56,15 @@ class Author extends React.Component {
         const {author, follow, mute, authorRepLog10, donateUrl} = this.props; // html
         const {username} = this.props; // redux
 
+        let level = null
+        const { levelUrl } = getGameLevel(this.props.account, this.props.gprops, true)
+        if (levelUrl) {
+            level = (<img src={levelUrl} style={{ height: '24px', marginRight: '2px' }} />)
+        }
+
         const author_link = <span className="author" itemProp="author" itemScope itemType="http://schema.org/Person">
-            <Link to={'/@' + author}><strong>{author}</strong></Link> <Reputation value={authorRepLog10} />
+            <Link to={'/@' + author}><strong>{author}</strong></Link>
+            {!(follow || mute) ? <Reputation value={authorRepLog10} /> : level}
         </span>;
 
         if(!(follow || mute) || username === author)
@@ -100,7 +108,7 @@ class Author extends React.Component {
                         <Icon name="dropdown-arrow" />
                     </span>
                 </LinkWithDropdown>
-                <Reputation value={authorRepLog10} />
+                {level}
                 <a href={`/msgs/@${author}`} target='_blank' title={tt('g.write_message_long')} className='Author__write'>
                     <Icon name="new/envelope" />
                 </a>
@@ -115,10 +123,12 @@ export default connect(
         const {author, follow, mute, authorRepLog10} = ownProps;
         const username = state.user.getIn(['current', 'username']);
         const account = state.global.getIn(['accounts', author]);
+        const gprops = state.global.get('props')
         return {
             author, follow, mute, authorRepLog10,
             username,
             account,
+            gprops,
         }
     },
 )(Author)

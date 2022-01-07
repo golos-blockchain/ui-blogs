@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 import cn from 'classnames';
+import tt from 'counterpart'
 import CircularProgress from './CircularProgress'
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import { proxifyImageUrlWithStrip } from 'app/utils/ProxifyUrl';
@@ -91,7 +92,7 @@ class Userpic extends Component {
     }
 
     render() {
-        const { width, height, votingPower, showProgress, onClick } = this.props
+        const { width, height, votingPower, reputation, showProgress, onClick } = this.props
 
         const style = {
             width: `${width}px`,
@@ -108,7 +109,12 @@ class Userpic extends Component {
                     {percentage ? this.getVotingIndicator(percentage) : null}
                 </div>
             )
-        } else {
+        } else if (reputation !== undefined) {
+            return <div className="Userpic_parent" onClick={onClick}>
+                    <div className="Userpic" style={style}></div>
+                    <div className="Userpic__badge" title={tt('g.reputation')}>{reputation}</div>
+                </div>
+       } else {
             return <div className="Userpic" style={style} onClick={onClick} />
         }
     }

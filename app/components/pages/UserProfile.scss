@@ -136,6 +136,11 @@
         vertical-align: middle;
     }
 
+    .GameLevel {
+        margin-left: 0.75rem;
+        height: 48px;
+    }
+
     .UserProfile__rep {
         font-size: 80%;
         font-weight: 200;
@@ -331,6 +336,10 @@
 
     .UserProfile__banner .Userpic {
         width: 36px !important;
+        height: 36px !important;
+    }
+
+    .GameLevel {
         height: 36px !important;
     }
 
