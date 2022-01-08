@@ -92,7 +92,7 @@ class Userpic extends Component {
     }
 
     render() {
-        const { width, height, votingPower, reputation, showProgress, onClick } = this.props
+        const { width, height, votingPower, reputation, hideReputationForSmall, showProgress, onClick } = this.props
 
         const style = {
             width: `${width}px`,

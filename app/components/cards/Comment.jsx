@@ -264,7 +264,7 @@ class CommentImpl extends PureComponent {
                         </div>
                         <span className="Comment__header-user">
                             <div className="Comment__Userpic-small">
-                                <Userpic account={comment.author} reputation={authorRepLog10} />
+                                <Userpic account={comment.author} />
                             </div>
                             <Author
                                 author={comment.author}

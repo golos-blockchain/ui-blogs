@@ -61,16 +61,20 @@ class Author extends React.Component {
         const {author, follow, mute, authorRepLog10, donateUrl} = this.props; // html
         const {username} = this.props; // redux
 
+        let levelTitle
         let level = () => null
-        const { levelUrl, levelTitle, levelName } = getGameLevel(this.props.account, this.props.gprops, true)
-        if (levelUrl) {
-            level = (myAccount = false, clickable = false) => 
-                (<img src={levelUrl} title={levelName} onClick={clickable ? this.onLevelClick : undefined} style={{
-                    height: '24px',
-                    marginRight: myAccount ? '1px' : '3px',
-                    marginLeft: myAccount ? '6px' : '1px',
-                    cursor: clickable ? 'pointer' : 'auto',
-                }} />)
+        if (this.props.account) {
+            const levData = getGameLevel(this.props.account, this.props.gprops, true)
+            levelTitle = levData.levelTitle
+            if (levData.levelUrl) {
+                level = (myAccount = false, clickable = false) => 
+                    (<img src={levData.levelUrl} title={levData.levelName} onClick={clickable ? this.onLevelClick : undefined} style={{
+                        height: '24px',
+                        marginRight: myAccount ? '1px' : '3px',
+                        marginLeft: myAccount ? '6px' : '1px',
+                        cursor: clickable ? 'pointer' : 'auto',
+                    }} />)
+            }
         }
 
         const author_link = <span className="author" itemProp="author" itemScope itemType="http://schema.org/Person">
