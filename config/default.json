@@ -54,16 +54,26 @@
   },
   "gamefication": {
     "levels": [
-      {"power_from": 0, "imgs": ["newbie.png"],
-        "title": ["Гольян", "Minnow"]},
-      {"power_from": 1000, "imgs": ["fish.png", "fish2.png"],
-        "title": ["Карп", "Carp"]},
-      {"power_from": 100000, "imgs": ["dolphin.png", "dolphin2.png"],
+      {"power_from": 0.000, "imgs": ["newbie.png"],
+        "title": ["Малёк", "Whitebait"]},
+      {"power_from": 0.002, "imgs": ["fish.png", "fish2.png"],
+        "title": ["Пескарь", "Minnow"]},
+      {"power_from": 0.005, "imgs": ["fish.png", "fish2.png"],
+        "title": ["Карась", "Carp"]},
+      {"power_from": 0.020, "imgs": ["fish.png", "fish2.png"],
+        "title": ["Сом", "Catfish"]},
+      {"power_from": 0.050, "imgs": ["dolphin.png", "dolphin2.png"],
+        "title": ["Барракуда", "Barracuda"]},
+      {"power_from": 0.100, "imgs": ["dolphin.png", "dolphin2.png"],
         "title": ["Дельфин", "Dolphin"]},
-      {"power_from": 500000, "imgs": ["grampus.png", "grampus2.png"],
-        "title": ["Касатка", "Grampus"]},
-      {"power_from": 1000000, "imgs": ["whale.png", "whale2.png"],
-        "title": ["Кит", "Whale"]}
+      {"power_from": 0.250, "imgs": ["grampus.png", "grampus2.png"],
+        "title": ["Акула", "Shark"]},
+      {"power_from": 0.500, "imgs": ["grampus.png", "grampus2.png"],
+        "title": ["Касатка", "Orca"]},
+      {"power_from": 1.000, "imgs": ["whale.png", "whale2.png"],
+        "title": ["Кит", "Whale"]},
+      {"power_from": 5.000, "imgs": ["whale.png", "whale2.png"],
+        "title": ["Посейдон", "Poseidon"]}
     ]
   }
 }

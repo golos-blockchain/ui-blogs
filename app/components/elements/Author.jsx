@@ -31,6 +31,7 @@ class Author extends React.Component {
     constructor() {
         super();
         this.showProfileCtrl = this.showProfileCtrl.bind(this);
+        this.openDropdown = React.createRef()
     }
 
     componentDidMount() {
@@ -51,37 +52,54 @@ class Author extends React.Component {
         }
     }
 
+    onLevelClick = () => {
+        this.openDropdown.current.click()
+    }
+
     shouldComponentUpdate = shouldComponentUpdate(this, 'Author');
     render() {
         const {author, follow, mute, authorRepLog10, donateUrl} = this.props; // html
         const {username} = this.props; // redux
 
-        let level = null
-        const { levelUrl } = getGameLevel(this.props.account, this.props.gprops, true)
+        let level = () => null
+        const { levelUrl, levelTitle, levelName } = getGameLevel(this.props.account, this.props.gprops, true)
         if (levelUrl) {
-            level = (<img src={levelUrl} style={{ height: '24px', marginRight: '2px' }} />)
+            level = (myAccount = false, clickable = false) => 
+                (<img src={levelUrl} title={levelName} onClick={clickable ? this.onLevelClick : undefined} style={{
+                    height: '24px',
+                    marginRight: myAccount ? '1px' : '3px',
+                    marginLeft: myAccount ? '6px' : '1px',
+                    cursor: clickable ? 'pointer' : 'auto',
+                }} />)
         }
 
         const author_link = <span className="author" itemProp="author" itemScope itemType="http://schema.org/Person">
             <Link to={'/@' + author}><strong>{author}</strong></Link>
-            {!(follow || mute) ? <Reputation value={authorRepLog10} /> : level}
+            {!(follow || mute) ? <Reputation value={authorRepLog10} /> : level(true)}
         </span>;
 
         if(!(follow || mute) || username === author)
             return author_link;
 
-        const {name, about} = this.props.account ? normalizeProfile(this.props.account.toJS()) : {};
+        const {name, gender, about} = this.props.account ? normalizeProfile(this.props.account.toJS()) : {};
+
+        let genderIcon;
+        if (gender && gender != 'undefined')
+            genderIcon = <span><Icon className='Author__gender' name={gender} /></span>
 
         const dropdown = <div className="Author__dropdown">
             <Link to={'/@' + author}>
-                <Userpic account={author} width="75" height="75" />
+                <Userpic account={author} width="75" height="75"
+                    reputation={authorRepLog10} />
             </Link>
             <Link to={'/@' + author} className="Author__name">
                 {name}
+                {name ? genderIcon : null}
             </Link>
             <Link to={'/@' + author} className="Author__username">
                 @{author}
             </Link>
+            {!name ? genderIcon : null}
             <div>
                 <Follow className="float-right" follower={username} following={author} what="blog"
                         showFollow={follow} showMute={mute} donateUrl={donateUrl}
@@ -90,6 +108,11 @@ class Author extends React.Component {
 
             <div className="Author__bio">
                 {about}
+                {levelTitle ? (<div style={{
+                    marginTop: ((about && about.length) ? '0.5rem' : '0px'),
+                    fontSize: '75%',
+                    color: '#8a8a8a'
+                }}>{levelTitle}</div>) : null}
             </div>
         </div>;
 
@@ -101,14 +124,14 @@ class Author extends React.Component {
                     dropdownAlignment="left"
                     dropdownContent={dropdown}
                 >
-                    <span className="FoundationDropdownMenu__label">
+                    <span ref={this.openDropdown} className="FoundationDropdownMenu__label">
                         <span itemProp="author" itemScope itemType="http://schema.org/Person">
                             <strong>{author}</strong>
                         </span>
                         <Icon name="dropdown-arrow" />
                     </span>
                 </LinkWithDropdown>
-                {level}
+                {level(false, true)}
                 <a href={`/msgs/@${author}`} target='_blank' title={tt('g.write_message_long')} className='Author__write'>
                     <Icon name="new/envelope" />
                 </a>
