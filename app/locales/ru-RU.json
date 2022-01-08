@@ -390,6 +390,7 @@
     "vote_currently_exists_user_must_be_indicate_a_to_reject_witness": "голос уже существует, пользователь должен обозначить желание убрать делегата",
     "only_one_APP_NAME_account_allowed_per_ip_address_every_10_minutes": "Только один %(APP_NAME)s аккаунт разрешен с одного IP адреса каждые десять минут",
     "resteem_this_post": "Поделиться этим постом",
+    "delete_reblog": "Удалить репост",
     "reblog": "Поделиться",
     "write_your_story": "Написать свою историю",
     "remember_voting_and_posting_key": "Запомнить голос и постинг ключ",
