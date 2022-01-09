@@ -58,7 +58,7 @@ class Author extends React.Component {
 
     shouldComponentUpdate = shouldComponentUpdate(this, 'Author');
     render() {
-        const {author, follow, mute, authorRepLog10, donateUrl} = this.props; // html
+        const {author, follow, mute, authorRepLog10, donateUrl, forceMsgs} = this.props; // html
         const {username} = this.props; // redux
 
         let levelTitle
@@ -77,9 +77,14 @@ class Author extends React.Component {
             }
         }
 
+        const msgs_btn = <a href={`/msgs/@${author}`} target='_blank' title={tt('g.write_message_long')} className='Author__write'>
+                <Icon name="new/envelope" />
+            </a>
+
         const author_link = <span className="author" itemProp="author" itemScope itemType="http://schema.org/Person">
             <Link to={'/@' + author}><strong>{author}</strong></Link>
             {!(follow || mute) ? <Reputation value={authorRepLog10} /> : level(true)}
+            {forceMsgs ? msgs_btn : null}
         </span>;
 
         if(!(follow || mute) || username === author)
@@ -136,9 +141,7 @@ class Author extends React.Component {
                     </span>
                 </LinkWithDropdown>
                 {level(false, true)}
-                <a href={`/msgs/@${author}`} target='_blank' title={tt('g.write_message_long')} className='Author__write'>
-                    <Icon name="new/envelope" />
-                </a>
+                {msgs_btn}
             </span>
         )
     }

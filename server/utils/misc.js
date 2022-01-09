@@ -5,7 +5,7 @@ function rateLimitReq(ctx, req, limit, suffix) {
     const now = Date.now()
 
     if (suffix !== undefined) ip += suffix;
-    // purge hits older than minutes_max
+    // purge hits older than seconds_max
     ip_last_hit.forEach((v, k) => {
         const seconds = (now - v) / 1000;
         if (seconds > limit) {
