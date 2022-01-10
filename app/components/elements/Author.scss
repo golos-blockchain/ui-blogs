@@ -2,7 +2,7 @@
   width: 290px;
   min-height: 108px;
 
-  .Userpic {
+  .Userpic_parent {
     margin-right: 1rem;
     float: left;
   }
@@ -26,6 +26,13 @@
     clear: both;
     font-size: 90%;
     padding-top: 15px;
+  }
+
+  .Author__gender {
+    margin-left: 0.25rem;
+    svg {
+      fill: #0078C4;
+    }
   }
 }
 

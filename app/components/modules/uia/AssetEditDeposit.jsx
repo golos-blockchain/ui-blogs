@@ -3,6 +3,7 @@ import tt from 'counterpart';
 import { Field, ErrorMessage, } from 'formik';
 import { api, } from 'golos-lib-js';
 import Expandable from 'app/components/elements/Expandable';
+import Icon from 'app/components/elements/Icon'
 import { validate_account_name, } from 'app/utils/ChainValidation';
 
 class AssetEditDeposit extends React.Component {
@@ -30,6 +31,26 @@ class AssetEditDeposit extends React.Component {
         return error;
     };
 
+    onToApiChange = (e, handle) => {
+        let value = e.target.value.trim()
+        e.target.value = value;
+        return handle(e);
+    };
+
+    validateToApi = async (value, values) => {
+        let error;
+        if (!value) return error;
+        try {
+            new URL(value)
+        } catch (err) {
+            error = tt('asset_edit_deposit_jsx.to_api_error_url')
+        }
+        if (!error && !value.includes('<account>')) {
+            error = tt('asset_edit_deposit_jsx.to_api_error')
+        }
+        return error;
+    };
+
     onAmountChange = (e, values, fieldName, handle) => {
         let value = e.target.value.trim().toLowerCase();
         value = value.replace(',','.');
@@ -41,18 +62,34 @@ class AssetEditDeposit extends React.Component {
         return handle(e);
     };
 
-    _renderTo(isTransferring, show) {
+    _renderTo(toType, show) {
         const { name, values, handleChange, } = this.props;
-        const field = !isTransferring ? 'to_fixed' : 'to_transfer';
-        const fieldProps = !isTransferring ? {
+        const isApi = (toType === 'api')
+        const isFixed = (toType === 'fixed')
+        const field = isApi ? 'to_api' :
+            (isFixed ? 'to_fixed' : 'to_transfer');
+        const fieldProps = isApi ? {
+            maxLength: '512',
+            placeholder: tt('asset_edit_deposit_jsx.to_api_example'),
+            onChange: e => this.onToApiChange(e, handleChange),
+            validate: value => this.validateToApi(value, values),
+        } : isFixed ? {
             maxLength: '256',
         } : {
             maxLength: '20',
             onChange: e => this.onToTransferChange(e, handleChange),
             validate: value => this.validateToTransfer(value, values),
         };
+        var title
+        if (isApi) {
+            title = tt('asset_edit_deposit_jsx.to_api_description')
+            title += '\n'
+            title += '{"address": "dWvWVDfHMZtN"}'
+            title = <Icon name='info_o' title={title} />
+        }
         return <div style={{ display: show ? 'block' : 'none', }}>
             {tt(`asset_edit_deposit_jsx.${field}`)}
+            {title}
             <div className='input-group'>
                 <Field
                     name={`${name}.${field}`}
@@ -65,9 +102,14 @@ class AssetEditDeposit extends React.Component {
         </div>
     };
 
-    _renderMemo(isTransferring, show) {
+    _renderMemo(toType, show) {
         const { name, values, handleChange, } = this.props;
-        const field = isTransferring ? 'memo_transfer' : 'memo_fixed';
+        const isApi = (toType === 'api')
+        if (isApi) {
+            return null
+        }
+        const isFixed = (toType === 'fixed')
+        const field = isFixed ? 'memo_fixed' : 'memo_transfer';
         return (<div style={{ display: show ? 'block' : 'none', }}>
             {tt(`asset_edit_deposit_jsx.${field}`)}
             <div className='input-group'>
@@ -84,7 +126,9 @@ class AssetEditDeposit extends React.Component {
 
     render() {
         const { name, values, handleChange, } = this.props;
-        const isTransferring = values && values[name] && values[name].to_type === 'transfer';
+        const toType = values && values[name] && values[name].to_type
+        const isApi = (toType === 'api')
+        const isFixed = (toType === 'fixed')
         return (<div className='AssetEditWithdrawal row'>
             <div className='column small-10'>
                 <Expandable title={tt('asset_edit_deposit_jsx.title')}>
@@ -108,12 +152,22 @@ class AssetEditDeposit extends React.Component {
                                 />
                                 {tt('asset_edit_deposit_jsx.to_type_transfer')}
                             </label>
+                            <label style={{ marginLeft: '1.25rem', }}>
+                                <Field
+                                    name={`${name}.to_type`}
+                                    value='api'
+                                    type='radio'
+                                    className='input-group-field bold'
+                                />
+                                {tt('asset_edit_deposit_jsx.to_type_api')}
+                            </label>
                         </div>
                     </div>
-                    {this._renderTo(false, !isTransferring)}
-                    {this._renderTo(true, isTransferring)}
-                    {this._renderMemo(false, !isTransferring)}
-                    {this._renderMemo(true, isTransferring)}
+                    {this._renderTo('fixed', isFixed)}
+                    {this._renderTo('transfer', !isFixed && !isApi)}
+                    {this._renderTo('api', isApi)}
+                    {this._renderMemo('fixed', isFixed)}
+                    {this._renderMemo('transfer', !isFixed && !isApi)}
                     <div>
                         {tt('asset_edit_withdrawal_jsx.min_amount')}
                         <div className='input-group'>

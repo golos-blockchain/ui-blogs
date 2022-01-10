@@ -386,6 +386,7 @@ export default connect(
 
                         progress(data);
                     },
+                    useGolosImages: true,
                 },
             });
         },

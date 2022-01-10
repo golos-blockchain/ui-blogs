@@ -29,6 +29,7 @@ global.$STM_Config = {
     auth_service: config.get('auth_service'),
     notify_service: config.get('notify_service'),
     forums: config.get('forums'),
+    gamefication: config.get('gamefication'),
     ui_version: version || '1.0-unknown',
 };
 

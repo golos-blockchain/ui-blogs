@@ -52,7 +52,7 @@ function TimeAuthorCategoryLarge({ content, authorRepLog10 }) {
                 date={content.created}
                 className="updated float-right"
             />
-            <Userpic account={content.author} />
+            <Userpic account={content.author} reputation={authorRepLog10} />
             <div className="right-side">
                 <Author
                     author={content.author}
