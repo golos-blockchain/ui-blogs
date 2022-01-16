@@ -251,10 +251,10 @@ export default class UserProfile extends React.Component {
             </span>);
         }
 
-        let { levelUrl, levelTitle, } = getGameLevel(accountImm, this.props.gprops)
+        let { levelUrl, levelTitle, levelName } = getGameLevel(accountImm, this.props.gprops)
         let level = null
         if (levelUrl) {
-            level = (<img className="GameLevel" src={levelUrl} title={levelTitle} alt='' />)
+            level = (<img className="GameLevel" src={levelUrl} title={levelTitle} alt={levelName} />)
         }
 
         let tab_content = null;

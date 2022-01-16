@@ -73,7 +73,6 @@ export const USER_GENDER = ['undefined', 'male', 'female']
 export const CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME = 1568627859000
 
 export const CATEGORIES = [
-    'новыйгод',
     'голос',
     'авто',
     'бизнес',
