@@ -90,6 +90,15 @@ class Powerdown extends React.Component {
         };
 
         const notes = [];
+
+        let AMOUNT =  vestsToSteem(`${new_withdraw} ${VEST_TICKER}`, this.props.gprops) / 4
+        AMOUNT = AMOUNT.toFixed(AMOUNT >= 10 ? 0 : 1);
+        notes.push(
+            <li key="per_week">
+                {tt('powerdown_jsx.per_week', { AMOUNT, LIQUID_TICKER })}
+            </li>
+        );
+
         if (to_withdraw - withdrawn > 0) {
             const AMOUNT = formatSp(to_withdraw);
             const WITHDRAWN = formatSp(withdrawn);
@@ -103,20 +112,12 @@ class Powerdown extends React.Component {
                 </li>
             );
         }
+
         if (delegated_vesting_shares !== 0) {
             const AMOUNT = formatSp(delegated_vesting_shares);
             notes.push(
                 <li key="delegating">
                     {tt('powerdown_jsx.delegating', { AMOUNT, LIQUID_TICKER })}
-                </li>
-            );
-        }
-        if (notes.length === 0) {
-            let AMOUNT =  vestsToSteem(`${new_withdraw} ${VEST_TICKER}`, this.props.gprops) / 4
-            AMOUNT = AMOUNT.toFixed(AMOUNT >= 10 ? 0 : 1);
-            notes.push(
-                <li key="per_week">
-                    {tt('powerdown_jsx.per_week', { AMOUNT, LIQUID_TICKER })}
                 </li>
             );
         }

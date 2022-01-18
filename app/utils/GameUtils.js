@@ -34,7 +34,7 @@ export function getGameLevel(account, gprops, smallIcon = false) {
 
             url = $STM_Config.site_domain
             if (!url.startsWith('http')) {
-                url = 'http://' + url
+                url = 'https://' + url
             }
             url = new URL('/images/gamefication/' + level.imgs[smallIcon ? 0 : level.imgs.length - 1], url).toString()
             //url = proxifyImageUrl(url, '48x48')
