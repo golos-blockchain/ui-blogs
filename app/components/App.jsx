@@ -219,7 +219,7 @@ class App extends React.Component {
         if (process.env.BROWSER) {
             if (!localStorage.getItem('infobox')) {
                 const init = {
-                    id: 1512732747890, //initial value
+                    id: Date.now(), // initial value 1512732747890
                     show: true,
                 };
                 localStorage.setItem('infobox', JSON.stringify(init));
@@ -263,7 +263,7 @@ class App extends React.Component {
         let callout = null;
         const notifyLink = $STM_Config.add_notify_site.link;
         const notifyTitle = $STM_Config.add_notify_site.title;
-        const showInfoBox = $STM_Config.add_notify_site.show; // && this.isShowInfoBox();
+        const showInfoBox = $STM_Config.add_notify_site.show && this.isShowInfoBox();
 
         if (this.state.showCallout && (alert || warning || success)) {
             callout = (

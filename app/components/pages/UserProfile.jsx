@@ -29,6 +29,7 @@ import UserList from 'app/components/elements/UserList';
 import Follow from 'app/components/elements/Follow';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import PostsList from 'app/components/cards/PostsList';
+import { getGameLevel } from 'app/utils/GameUtils'
 import {isFetchingOrRecentlyUpdated} from 'app/utils/StateFunctions';
 import {repLog10} from 'app/utils/ParsersAndFormatters';
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
@@ -248,6 +249,12 @@ export default class UserProfile extends React.Component {
                     <Icon size='1_25x' name='chevron-down-circle' />
                 </a>}
             </span>);
+        }
+
+        let { levelUrl, levelTitle, levelName } = getGameLevel(accountImm, this.props.gprops)
+        let level = null
+        if (levelUrl) {
+            level = (<img className="GameLevel" src={levelUrl} title={levelTitle} alt={levelName} />)
         }
 
         let tab_content = null;
@@ -576,7 +583,7 @@ export default class UserProfile extends React.Component {
             </div>
          </div>;
 
-        const { name, gender, location, about, website, cover_image } = normalizeProfile(account)
+        const { name, location, about, website, cover_image } = normalizeProfile(account)
         const website_label = website ? website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '') : null
 
         let cover_image_style = {}
@@ -584,10 +591,6 @@ export default class UserProfile extends React.Component {
             const cover_image_url = proxifyImageUrl(cover_image);
             cover_image_style = {backgroundImage: 'url(' + cover_image_url + ')'}
         }
-
-        let genderIcon;
-        if (gender && gender != 'undefined')
-            genderIcon = <span><Icon name={gender} /></span>
 
         const lastSeen = getLastSeen(account);
 
@@ -607,12 +610,12 @@ export default class UserProfile extends React.Component {
                         <h1>
                             <Userpic account={account.name} hideIfDefault />
                             {name || account.name}{' '}
-                            {genderIcon}
 
                             {!this.state.repLoading && <Link to={`/@${account.name}/reputation`}>
                                 <span className='UserProfile__rep UserProfile__rep-btn' title={tt('user_profile.this_is_users_reputations_score_it_is_based_on_history_of_votes', {name: accountname})}>({rep})</span>
                             </Link>}
                             {repPanel}
+                            {level}
                         </h1>
 
                         <div>
@@ -665,11 +668,13 @@ module.exports = {
             const wifShown = state.global.get('UserKeys_wifShown')
             const current_user = state.user.get('current')
             const current_account = current_user && state.global.getIn(['accounts', current_user.get('username')])
+            const gprops = state.global.get('props')
 
             return {
                 discussions: state.global.get('discussion_idx'),
                 current_user,
                 current_account,
+                gprops,
                 wifShown,
                 loading: state.app.get('loading'),
                 global_status: state.global.get('status'),

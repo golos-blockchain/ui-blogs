@@ -284,6 +284,10 @@ ul.PostsList__summaries {
     font-weight: bold;
     @include hoverUnderline;
   }
+  .PostSummary__delete_reblog {
+    cursor: pointer;
+    margin-left: 0.25rem;
+  }
 }
 
 /* Small only */

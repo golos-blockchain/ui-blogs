@@ -5,7 +5,9 @@ import { Map, } from 'immutable';
 import { api, } from 'golos-lib-js';
 import { Asset, } from 'golos-lib-js/lib/utils';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
+import Author from 'app/components/elements/Author'
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
+import Icon from 'app/components/elements/Icon';
 import Memo from 'app/components/elements/Memo';
 import transaction from 'app/redux/Transaction';
 import { clearOldAddresses, loadAddress, saveAddress, } from 'app/utils/UIA';
@@ -18,24 +20,84 @@ const TransferState = {
     timeouted: 4,
 };
 
+class APIError extends Error {
+    constructor(errReason, errData) {
+        super('API Error')
+        this.reason = errReason
+        this.data = errData
+    }
+}
+
 class AssetRules extends Component {
     state = {
         transferState: TransferState.initial,
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         const { rules, sym, } = this.props;
-        const { isDeposit, creator, } = rules;
+        const { to_type, to_api, isDeposit, creator, } = rules;
         if (isDeposit) {
-            clearOldAddresses();
-            const addr = loadAddress(sym, creator);
-            if (addr) {
+            if (to_type === 'transfer') {
+                clearOldAddresses();
+                const addr = loadAddress(sym, creator);
+                if (addr) {
+                    this.setState({
+                        transferState: TransferState.received,
+                        receivedTransfer: {
+                            memo: addr,
+                        },
+                    });
+                }
+            } else if (to_type === 'api') {
+                this.doAPI()
+            }
+        }
+    }
+
+    async doAPI() {
+        const { rules, sym, currentAccount, } = this.props
+        try {
+            const acc = currentAccount.get('name')
+            if (!acc) return
+            const url = '/api/v1/uia_address/' + sym + '/' + acc
+            const retried = 0
+            const retryReq = async () => {
+                let res = await fetch(url)
+                res = await res.json()
+                if (res.status === 'err') {
+                    if (retried < 3 &&
+                        (res.error === 'too_many_requests'
+                            || res.error === 'cannot_connect_gateway')) {
+                        console.error('Repeating /uia_address', res)
+                        ++retried
+                        setTimeout(retryReq, 1100)
+                        return
+                    }
+                    throw new APIError(res.error, res.error_data)
+                }
+
                 this.setState({
-                    transferState: TransferState.received,
-                    receivedTransfer: {
-                        memo: addr,
-                    },
-                });
+                    apiLoaded: {
+                        address: res.address
+                    }
+                })
+            }
+            await retryReq()
+        } catch (err) {
+            console.error('/uia_address', err)
+            if (err instanceof APIError) {
+                this.setState({
+                    apiLoaded: {
+                        error: err.reason,
+                        errData: err.data
+                    }
+                })
+            } else {
+                this.setState({
+                    apiLoaded: {
+                        error: 'error_on_golos_blockchain_side',
+                    }
+                })
             }
         }
     }
@@ -127,6 +189,52 @@ class AssetRules extends Component {
         </div>;
     }
 
+    _renderApi = () => {
+        const { sym, onClose } = this.props
+        const header = (<h4>
+            {tt('asset_edit_deposit_jsx.transfer_title_SYM', {
+                SYM: sym || ' ',
+            })}
+        </h4>)
+        const { apiLoaded  } = this.state
+        if (!apiLoaded) {
+            const { sym } = this.props
+            return (<div>
+                <CloseButton onClick={onClose} />
+                {header}
+                <br />
+                <center>
+                    <LoadingIndicator type='circle' size='70px' />
+                </center>
+                <br />
+            </div>);
+        }
+        if (apiLoaded.error) {
+            const { creator } = this.props.rules
+            return (<div>
+                <CloseButton onClick={onClose} />
+                {header}
+                {tt('asset_edit_deposit_jsx.api_error') + sym + ':'}
+                <p style={{marginTop: '0.3rem', marginBottom: '0.3rem'}}>
+                    <Author author={creator} forceMsgs={true} />
+                </p>
+                {tt('asset_edit_deposit_jsx.api_error_details')}
+                <pre style={{marginTop: '0.3rem'}}>
+                    {apiLoaded.error}
+                    {'\n'}
+                    {apiLoaded.errData ? JSON.stringify(apiLoaded.errData) : null}
+                </pre>
+            </div>)
+        }
+        const { address } = apiLoaded
+        return (<div>
+            <CloseButton onClick={onClose} />
+            {header}
+            {this._renderTo(address, null)}
+            {this._renderParams(false)}
+        </div>)
+    }
+
     _renderTransfer = () => {
         const { rules, sym, onClose, } = this.props;
         const { to_transfer, memo_transfer, } = rules;
@@ -199,6 +307,9 @@ class AssetRules extends Component {
         const { rules, sym, onClose, } = this.props;
         const { to, to_type, to_fixed, to_transfer, memo_fixed,
             min_amount, fee, details, isDeposit, } = rules;
+        if (isDeposit && to_type === 'api') {
+            return this._renderApi();
+        }
         if (isDeposit && to_type === 'transfer') {
             return this._renderTransfer();
         }
