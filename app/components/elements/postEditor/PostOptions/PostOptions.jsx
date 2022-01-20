@@ -5,8 +5,6 @@ import tt from 'counterpart';
 import { isNil } from 'ramda';
 import { api } from 'golos-lib-js';
 import {connect} from 'react-redux';
-
-
 import styled from 'styled-components';
 import Slider from 'golos-ui/Slider';
 import Icon from 'app/components/elements/Icon';
@@ -14,7 +12,6 @@ import Hint from 'app/components/elements/common/Hint';
 import RadioGroup from 'app/components/elements/common/RadioGroup';
 import { PAYOUT_OPTIONS } from 'app/components/modules/PostForm/PostForm';
 import './PostOptions.scss';
-
 
 const SliderStyled = styled(Slider)`
     margin-top: 20px;
@@ -34,16 +31,16 @@ const CuratorValue = styled.b`
     font-weight: 500;
 `;
 
-
-
 class PostOptions extends React.PureComponent {
     static propTypes = {
         nsfw: PropTypes.bool.isRequired,
+        onlyblog: PropTypes.bool.isRequired,
         payoutType: PropTypes.number.isRequired,
         curationPercent: PropTypes.number.isRequired,
 
         editMode: PropTypes.bool,
         onNsfwClick: PropTypes.func.isRequired,
+        onOnlyblogClick: PropTypes.func.isRequired,
         onPayoutChange: PropTypes.func.isRequired,
         onCurationPercentChange: PropTypes.func.isRequired,
     };
@@ -72,10 +69,6 @@ class PostOptions extends React.PureComponent {
 
     render() {
       const { showCoinMenu, showCuratorMenu, curatorPercent, minCurationPercent, maxCurationPercent } = this.state;
-
-
-			//{isNil(minCurationPercent) || minCurationPercent === maxCurationPercent ? null : (
-
         return (
             <div className="PostOptions">
                 <span className="PostOptions__item-wrapper">
@@ -103,6 +96,18 @@ class PostOptions extends React.PureComponent {
                         name="editor/plus-18"
                         size="1_5x"
                         data-tooltip={tt('post_editor.nsfw_hint')}
+                    />
+                </span>
+                <span
+                    className={cn('PostOptions__item', {
+                        PostOptions__item_warning: this.props.onlyblog,
+                    })}
+                    onClick={this.props.onOnlyblogClick}
+                >
+                    <Icon
+                        name="editor/onlyblog"
+                        size="1_5x"
+                        data-tooltip={tt('post_editor.onlyblog_hint')}
                     />
                 </span>
             </div>

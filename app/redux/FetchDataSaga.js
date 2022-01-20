@@ -683,7 +683,7 @@ export function* fetchExchangeRates() {
 
   try {
     const created = 0;
-    let pickedCurrency = GOLOS;
+    let pickedCurrency = 'GOLOS';
     if (pickedCurrency.localeCompare(DEBT_TOKEN_SHORT) == 0) {
         storeExchangeValues(1, 1, 1, DEBT_TOKEN_SHORT); // For GBG currency on site #687
         return;
