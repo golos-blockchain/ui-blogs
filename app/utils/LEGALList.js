@@ -12,6 +12,7 @@ const LEGALList = `
 /ru--megagalxyan/@chin/once-upon-a-time-in-hollywood-odnazhdy-v-gollivude-2019-g
 /ru--kino/@nichosee/devushka-podayushaya-nadezhdy-promising-young-woman
 /ru--kino/@huckster/kosmicheskii-styob-pank-serial-2021-kovboi-bibop
+/ru--kino/@id-svetpro/nebo-2021
 `
 .trim()
 .split('\n');

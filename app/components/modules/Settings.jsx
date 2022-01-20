@@ -13,18 +13,7 @@ import {fromJS, Set, Map} from 'immutable'
 import UserList from 'app/components/elements/UserList';
 import cookie from "react-cookie";
 import Dropzone from 'react-dropzone'
-import {
-    CURRENCIES,
-    DEFAULT_CURRENCY,
-    CURRENCY_COOKIE_KEY,
-    LANGUAGES,
-    DEFAULT_LANGUAGE,
-    LOCALE_COOKIE_KEY,
-    USER_GENDER,
-    FRACTION_DIGITS,
-    FRACTION_DIGITS_MARKET,
-    MIN_VESTING_SHARES
-} from 'app/client_config'
+import { LANGUAGES, DEFAULT_LANGUAGE, LOCALE_COOKIE_KEY, USER_GENDER } from 'app/client_config'
 
 class Settings extends React.Component {
 

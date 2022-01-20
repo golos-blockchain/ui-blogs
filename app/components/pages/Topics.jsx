@@ -5,7 +5,7 @@ import { browserHistory } from 'react-router';
 import tt from 'counterpart';
 import { detransliterate } from 'app/utils/ParsersAndFormatters';
 import { isCyrillicTag, processCyrillicTag } from 'app/utils/tags';
-import { IGNORE_TAGS, SELECT_TAGS_KEY } from 'app/client_config';
+import { SELECT_TAGS_KEY } from 'app/client_config';
 import cookie from "react-cookie";
 
 export default class Topics extends React.Component {
@@ -126,11 +126,6 @@ export default class Topics extends React.Component {
                     return <option key={cat} value={link}>{cat}</option>
                 })}
             </select>;
-        }
-
-        if (IGNORE_TAGS) {
-            const ignoreTags = [...IGNORE_TAGS];
-            categories = categories.filter(val => ignoreTags.indexOf(val) === -1);
         }
 
         categories = categories.map((cat) => {

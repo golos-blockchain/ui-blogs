@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import tt from 'counterpart';
 import { api } from 'golos-lib-js';
 import Icon from 'app/components/elements/Icon';
-import { SUPPORT_EMAIL } from 'app/client_config';
 
 class Footer extends React.Component {
     state = {
@@ -132,7 +131,7 @@ class Footer extends React.Component {
                                 © 2016-{year} {tt('g.about_project')}
                             </span>
                             <span className="right">
-                                <a href={'mailto:' + SUPPORT_EMAIL}><Icon name="new/envelope" /> Contact Us</a>
+                                <a href='mailto:info@golos.id'><Icon name="new/envelope" /> Contact Us</a>
                             </span>
                         </div>
                     </div>

@@ -21,7 +21,7 @@ import {Map} from 'immutable';
 import Author from 'app/components/elements/Author';
 import UserNames from 'app/components/elements/UserNames';
 import tt from 'counterpart';
-import { APP_ICON, CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config';
+import { CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config';
 import { detransliterate } from 'app/utils/ParsersAndFormatters';
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
 import PostSummaryThumb from 'app/components/elements/PostSummaryThumb'

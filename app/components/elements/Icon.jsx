@@ -109,6 +109,7 @@ const icons = new Map([
     ['new/monitor', require('app/assets/icons/new/monitor.svg')],
     ['new/mention', require('app/assets/icons/new/mention.svg')],
     ['editor/plus-18', require('app/assets/icons/editor/plus-18.svg')],
+    ['editor/onlyblog', require('app/assets/icons/editor/onlyblog.svg')],
     ['editor/coin', require('app/assets/icons/editor/coin.svg')],
     ['editor/share', require('app/assets/icons/editor/share.svg')],
     ['editor/info', require('app/assets/icons/editor/info.svg')],

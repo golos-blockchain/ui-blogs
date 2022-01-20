@@ -2,14 +2,11 @@ import 'isomorphic-fetch';
 import React from 'react';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-// import cc from 'currency-codes';
-// import { injectIntl } from 'react-intl';
 import g from 'app/redux/GlobalReducer';
 import { getSymbolFromCurrency } from 'currency-symbol-map';
-import { FRACTION_DIGITS, DEFAULT_CURRENCY, DEBT_TOKEN_SHORT, LIQUID_TICKER, FRACTION_DIGITS_MARKET } from 'app/client_config';
+import { DEBT_TOKEN_SHORT, LIQUID_TICKER } from 'app/client_config';
 import { short as shortAmount } from 'app/utils/FormatNumbers'
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
-
 
 class LocalizedCurrency extends React.Component {
 
@@ -93,13 +90,6 @@ class LocalizedCurrency extends React.Component {
      */
     // depending on exchange rates data parse local currency or default one
     localizedCurrency = (number, options) => {
-      // const currencyAmount =   formatNumber(
-      // exchangeRate
-      // вознаграждение руб = Сумма Золотых х (Биржевая цена унции в USD / 31103.4768) * курс USD ЦБ РФ (или любая другая валюта)
-      // ? number * (exchangeRateGold / 31103.4768) * exchangeRate
-      // : number,
-      // options
-      // )
       let currencyAmount = 0;
       if (symbol.localeCompare(DEBT_TOKEN_SHORT) == 0) {
         currencyAmount = number;
@@ -123,9 +113,9 @@ class LocalizedCurrency extends React.Component {
           nRounding = localStorage.getItem('xchange.rounding')
           if(!nRounding) {
             if(vesting_shares < 10000000 && vesting_shares != 0) //FIXME this is vesting_shares param. Move to config file needed
-              nRounding = FRACTION_DIGITS_MARKET
+              nRounding = 3
             else
-              nRounding = FRACTION_DIGITS
+              nRounding = 2
           }
         }
       }
