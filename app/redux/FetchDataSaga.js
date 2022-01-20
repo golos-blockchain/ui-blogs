@@ -1,11 +1,11 @@
 import { call, put, select, fork, cancelled, takeLatest, takeEvery } from 'redux-saga/effects';
-import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile'
+import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile';
 import {loadFollows, fetchFollowCount} from 'app/redux/FollowSaga';
 import {getContent} from 'app/redux/SagaShared';
 import GlobalReducer from './GlobalReducer';
 import constants from './constants';
 import { reveseTag } from 'app/utils/tags';
-import { CATEGORIES, DEBT_TOKEN_SHORT, LIQUID_TICKER, DEFAULT_CURRENCY, IGNORE_TAGS, PUBLIC_API, SELECT_TAGS_KEY } from 'app/client_config';
+import { PUBLIC_API, CATEGORIES, IGNORE_TAGS, SELECT_TAGS_KEY, DEBT_TOKEN_SHORT, LIQUID_TICKER } from 'app/client_config';
 import cookie from "react-cookie";
 import {config, api} from 'golos-lib-js';
 
@@ -683,9 +683,8 @@ export function* fetchExchangeRates() {
 
   try {
     const created = 0;
-    let pickedCurrency = DEFAULT_CURRENCY;
+    let pickedCurrency = GOLOS;
     if (pickedCurrency.localeCompare(DEBT_TOKEN_SHORT) == 0) {
-        // pickedCurrency = DEFAULT_CURRENCY;
         storeExchangeValues(1, 1, 1, DEBT_TOKEN_SHORT); // For GBG currency on site #687
         return;
     }
