@@ -343,7 +343,7 @@ class PostFull extends React.Component {
     }
 
     _renderPostEditor(replyParams, jsonMetadata, content) {
-        if (window.IS_MOBILE) {
+        /*if (window.IS_MOBILE) {
             return (
                 <this.PostFullEditor
                     {...replyParams}
@@ -353,7 +353,7 @@ class PostFull extends React.Component {
                     onCancel={this._onEditFinish}
                 />
             );
-        } else {
+        } else */{
             if (content.depth) {
                 return this._renderReplyEditor(replyParams, jsonMetadata, true);
             } else {

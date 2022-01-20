@@ -85,6 +85,50 @@ export default class PostFooter extends PureComponent {
             };
         }
 
+        let isMobile = false;
+        if (process.env.BROWSER) {
+            isMobile = window.matchMedia('screen and (max-width: 39.9375em)').matches;
+        }
+
+        const buttons = (<div className="PostFooter__buttons" style={{ 'marginTop': isMobile ? '15px' : '0px' }}>
+            <div className="PostFooter__button">
+                {editMode ? (
+                    <Button onClick={this.props.onCancelClick}>
+                        {tt('g.cancel')}
+                    </Button>
+                ) : null}
+            </div>
+            <div
+                className={cn('PostFooter__button', {
+                    'PostFooter__button_hint-disabled': postDisabled,
+                })}
+            >
+                {postDisabled && disabledHint ? (
+                    <Hint
+                        key="1"
+                        warning
+                        align="right"
+                        className="PostFooter__disabled-hint"
+                    >
+                        {disabledHint}
+                    </Hint>
+                ) : temporaryErrorText ? (
+                    <Hint key="2" error align="right">
+                        {temporaryErrorText}
+                    </Hint>
+                ) : null}
+                <Button
+                    primary
+                    disabled={postDisabled}
+                    onClick={this.props.onPostClick}
+                >
+                    {editMode
+                        ? tt('post_editor.update')
+                        : tt('g.post')}
+                </Button>
+            </div>
+        </div>)
+
         return (
             <div
                 className={cn('PostFooter', {
@@ -124,44 +168,7 @@ export default class PostFooter extends PureComponent {
                         onPayoutChange={this.props.onPayoutTypeChange}
                         onCurationPercentChange={this.props.onCurationPercentChange}
                     />
-                    <div className="PostFooter__buttons">
-                        <div className="PostFooter__button">
-                            {editMode ? (
-                                <Button onClick={this.props.onCancelClick}>
-                                    {tt('g.cancel')}
-                                </Button>
-                            ) : null}
-                        </div>
-                        <div
-                            className={cn('PostFooter__button', {
-                                'PostFooter__button_hint-disabled': postDisabled,
-                            })}
-                        >
-                            {postDisabled && disabledHint ? (
-                                <Hint
-                                    key="1"
-                                    warning
-                                    align="right"
-                                    className="PostFooter__disabled-hint"
-                                >
-                                    {disabledHint}
-                                </Hint>
-                            ) : temporaryErrorText ? (
-                                <Hint key="2" error align="right">
-                                    {temporaryErrorText}
-                                </Hint>
-                            ) : null}
-                            <Button
-                                primary
-                                disabled={postDisabled}
-                                onClick={this.props.onPostClick}
-                            >
-                                {editMode
-                                    ? tt('post_editor.update')
-                                    : tt('g.post')}
-                            </Button>
-                        </div>
-                    </div>
+                    {isMobile ? null : buttons}
                 </div>
                 {singleLine ? null : (
                     <TagsEditLine
@@ -172,6 +179,7 @@ export default class PostFooter extends PureComponent {
                         onChange={onTagsChange}
                     />
                 )}
+                {isMobile ? buttons : null}
             </div>
         );
     }
