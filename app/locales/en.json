@@ -1166,13 +1166,13 @@
     "vdo_exists": "You already have delegated some GP to this account. You could edit its amount, or revoke it at all." 
   },
   "post_editor": {
-    "new_editor": "Markdown editor",
+    "new_editor": "Markdown",
     "html_editor": "HTML editor",
     "preview_mode": "Preview mode",
     "edit_mode": "Go back to edit mode",
     "payout_hint": "Payout method",
     "nsfw_hint": "Mark for not safe for children",
-    "onlyblog_hint": "Display only in the blog (for subscribers)",
+    "onlyblog_hint": "Display only in the blog",
     "title_placeholder": "Enter the title",
     "payout_option_100": "Power of voice 100%%",
     "payout_option_100_hint": "Receive all payout in Golos tokens",
