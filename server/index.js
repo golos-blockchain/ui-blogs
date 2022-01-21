@@ -19,7 +19,6 @@ global.$STM_Config = {
     img_proxy_backup_prefix: config.get('img_proxy_backup_prefix'),
     hide_comment_neg_rep: config.get('hide_comment_neg_rep'),
     show_adv_banners: config.get('show_adv_banners'),
-    read_only_mode: config.get('read_only_mode'),
     add_notify_site: config.get('add_notify_site'),
     upload_image: config.get('upload_image'),
     site_domain: config.get('site_domain'),

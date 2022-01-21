@@ -20,12 +20,12 @@ import config from 'config';
 import { routeRegex } from 'app/ResolveRoute';
 import { blockedUsers } from 'app/utils/IllegalContent';
 import secureRandom from 'secure-random';
-import { APP_NAME_LATIN } from 'app/client_config';
+import { APP_NAME_UP } from 'app/client_config';
 
 console.log('application server starting, please wait.');
 
 const app = new Koa();
-app.name = APP_NAME_LATIN + ' app';
+app.name = APP_NAME_UP + ' app';
 const env = process.env.NODE_ENV || 'development';
 // cache of a thousand days
 const cacheOpts = { maxAge: 86400000, gzip: true };

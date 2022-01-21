@@ -12,9 +12,8 @@ import MarkNotificationRead from 'app/components/elements/MarkNotificationRead';
 import tt from 'counterpart';
 import Immutable from "immutable";
 import Callout from 'app/components/elements/Callout';
-import {APP_NAME} from 'app/client_config';
+import { APP_NAME, SELECT_TAGS_KEY } from 'app/client_config';
 import cookie from "react-cookie";
-import { SELECT_TAGS_KEY } from 'app/client_config';
 import transaction from 'app/redux/Transaction'
 import { getMetadataReliably } from 'app/utils/NormalizeProfile';
 

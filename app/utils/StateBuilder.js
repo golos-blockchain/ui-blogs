@@ -1,9 +1,6 @@
-import { PUBLIC_API } from 'app/client_config'
-import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile'
-import { CATEGORIES } from 'app/client_config'
-
-
-import { reveseTag, prepareTrendingTags } from 'app/utils/tags'
+import { PUBLIC_API, CATEGORIES, IGNORE_TAGS } from 'app/client_config';
+import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile';
+import { reveseTag, prepareTrendingTags } from 'app/utils/tags';
 
 const DEFAULT_VOTE_LIMIT = 10000
 
@@ -392,7 +389,7 @@ export default async function getState(api, url, options, offchain = {}) {
 
                 })
                 args.select_categories = selectTags;
-                args.filter_tags = state.filter_tags = options.IGNORE_TAGS
+                args.filter_tags = IGNORE_TAGS
             }
         }
         

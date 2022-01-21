@@ -6,7 +6,7 @@ import { browserHistory } from 'react-router';
 import { numberWithCommas } from 'app/utils/StateFunctions';
 import tt from 'counterpart';
 import { detransliterate } from 'app/utils/ParsersAndFormatters';
-import { IGNORE_TAGS, SELECT_TAGS_KEY } from 'app/client_config';
+import { SELECT_TAGS_KEY } from 'app/client_config';
 import cookie from "react-cookie";
 
 export default class TagsIndex extends React.Component {
@@ -57,8 +57,6 @@ export default class TagsIndex extends React.Component {
         const { state: { order, selected }, onSelectTag } = this;
         let tags = tagsAll;
         let isSelected = false
-
-        if (IGNORE_TAGS) tags = tags.filter(tag => IGNORE_TAGS.indexOf(tag.get('name')) === -1);
 
         const rows = tags.filter(
             // there is a blank tag present, as well as some starting with #. filter them out.

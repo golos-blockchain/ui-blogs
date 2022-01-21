@@ -17,7 +17,6 @@ import Dropzone from 'react-dropzone';
 import { LinkWithDropdown } from 'react-foundation-components/lib/global/dropdown';
 import VerticalMenu from 'app/components/elements/VerticalMenu';
 import tt from 'counterpart';
-import { SUPPORT_EMAIL } from 'app/client_config';
 import Icon from 'app/components/elements/Icon';
 import { detransliterate } from 'app/utils/ParsersAndFormatters';
 import { replyAction } from './ReplyEditorActions';

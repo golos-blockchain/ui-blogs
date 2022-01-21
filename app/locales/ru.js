@@ -1,4 +1,4 @@
-import { APP_NAME, APP_DOMAIN, LANDING_PAGE_URL, LIQUID_TOKEN, DEBT_TOKEN, DEBT_TOKEN_SHORT, CURRENCY_SIGN, VESTING_TOKEN, LIQUID_TICKER } from 'app/client_config';
+import { APP_NAME, APP_DOMAIN, LANDING_PAGE_URL, LIQUID_TOKEN, DEBT_TOKEN, DEBT_TOKEN_SHORT, VESTING_TOKEN, LIQUID_TICKER } from 'app/client_config';
 /**
  * see: app/locales/README.md
  */
@@ -244,7 +244,7 @@ const ru = {
   order_cancelled: 'Order {order_id} cancelled.', //FIXME
   higher: 'Дороже', // context is about prices
   lower: 'Дешевле', // context is about prices
-  total_DEBT_TOKEN_SHORT_CURRENCY_SIGN: "Сумма " + DEBT_TOKEN_SHORT + ' (' + CURRENCY_SIGN + ')',
+  total_DEBT_TOKEN_SHORT_CURRENCY_SIGN: "Сумма " + DEBT_TOKEN_SHORT,
   // RecoverAccountStep1.jsx // recover account stuff
   not_valid: 'Недействительно',
   account_name_is_not_found: 'Имя аккаунта не найдено',

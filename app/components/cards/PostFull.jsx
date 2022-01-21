@@ -26,7 +26,7 @@ import { getEditDraftPermLink } from 'app/utils/postForm';
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
 import Confetti from 'react-dom-confetti';
 import PostSummaryThumb from 'app/components/elements/PostSummaryThumb';
-import { APP_ICON, SEO_TITLE, LIQUID_TICKER, CONFETTI_CONFIG, CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config';
+import { SEO_TITLE, LIQUID_TICKER, CONFETTI_CONFIG, CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config';
 
 function TimeAuthorCategory({ content, authorRepLog10, showTags }) {
     return (
