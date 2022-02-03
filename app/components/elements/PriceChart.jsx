@@ -2,7 +2,6 @@ import React from 'react';
 import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
 import tt from 'counterpart';
-import { DEBT_TOKEN_SHORT, LIQUID_TICKER, CURRENCY_SIGN } from 'app/client_config';
 import { createChart, CrosshairMode } from 'lightweight-charts';
 
 function addDays(date, days) {

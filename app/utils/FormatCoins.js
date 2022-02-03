@@ -1,4 +1,4 @@
-import { APP_NAME, LIQUID_TOKEN, LIQUID_TOKEN_UPPERCASE, DEBT_TOKEN, DEBT_TOKEN_SHORT, CURRENCY_SIGN, VESTING_TOKEN } from 'app/client_config';
+import { LIQUID_TOKEN, LIQUID_TOKEN_UPPERCASE, DEBT_TOKEN_SHORT, VESTING_TOKEN } from 'app/client_config';
 
 // TODO add comments and explanations
 // TODO change name to formatCoinTypes?
@@ -10,6 +10,5 @@ export function formatCoins(string) {
 	string = string.replace('SBD', DEBT_TOKEN_SHORT ).replace('SD', DEBT_TOKEN_SHORT)
 		  		   .replace('Steem Power', VESTING_TOKEN).replace('STEEM POWER', VESTING_TOKEN)
 		    	   .replace('Steem', LIQUID_TOKEN).replace('STEEM', LIQUID_TOKEN_UPPERCASE)
-				   .replace('$', CURRENCY_SIGN)
 	return string
 }

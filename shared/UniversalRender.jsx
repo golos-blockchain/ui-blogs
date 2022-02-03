@@ -27,7 +27,7 @@ import Translator from 'app/Translator';
 import getState from 'app/utils/StateBuilder';
 import {routeRegex} from "app/ResolveRoute";
 import {contentStats} from 'app/utils/StateFunctions'
-import {APP_NAME, IGNORE_TAGS, PUBLIC_API, SEO_TITLE} from 'app/client_config';
+import {APP_NAME, SEO_TITLE} from 'app/client_config';
 import constants from 'app/redux/constants';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -125,9 +125,7 @@ export async function serverRender({
         if (url.indexOf('/donates-from') !== -1) url = url.replace(/\/donates-from$/, '/transfers');
         if (url.indexOf('/donates-to') !== -1) url = url.replace(/\/donates-to$/, '/transfers');
 
-        const options = { IGNORE_TAGS }
-
-        onchain = await getState(api, url, options, offchain)
+        onchain = await getState(api, url, offchain)
 
          // protect for invalid account
         if (Object.getOwnPropertyNames(onchain.accounts).length === 0 && (location.match(routeRegex.UserProfile1) || location.match(routeRegex.UserProfile3))) {

@@ -1,7 +1,6 @@
 import React from "react";
 import OrderHistoryRow from "./OrderhistoryRow.jsx";
 import tt from 'counterpart';
-import { DEBT_TOKEN_SHORT } from 'app/client_config';
 import { Order, TradeHistory } from 'app/utils/MarketClasses';
 
 export default class OrderHistory extends React.Component {

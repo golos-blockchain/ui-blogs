@@ -26,7 +26,6 @@ import { fitToPreview } from 'app/utils/ImageUtils';
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
 import { notificationSubscribe, notificationTake, sendOffchainMessage } from 'app/utils/NotifyApiClient';
 import { flash, unflash } from 'app/components/elements/messages/FlashTitle';
-import { APP_NAME_UP, APP_ICON } from 'app/client_config';
 
 function getProfileImageLazy(account, cachedProfileImages) {
     if (!account)

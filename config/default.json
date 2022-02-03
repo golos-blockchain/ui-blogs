@@ -18,7 +18,6 @@
   "img_proxy_backup_prefix": "https://steemitimages.com",
   "hide_comment_neg_rep": false,
   "show_adv_banners": true,
-  "read_only_mode": false,
   "add_notify_site": {
     "show": false,
     "link": "/@lex/obmen-lichnymi-soobsheniyami-i-nachalo-dlya-golos-messenger",
@@ -46,11 +45,10 @@
     "password": "golosclient"
   },
   "forums": {
-    "white_list": ["fm-golostalk", "fm-prizmtalk", "fm-graphenetalks", "fm-kostroma"],
+    "white_list": ["fm-golostalk", "fm-prizmtalk", "fm-graphenetalks"],
     "fm-golostalk": {"domain": "golostalk.com"},
     "fm-prizmtalk": {"domain": "prizmtalk.com"},
-    "fm-graphenetalks": {"domain": "forum.gph.ai"},
-    "fm-kostroma": {"domain": "kostromaforum.ru"}
+    "fm-graphenetalks": {"domain": "forum.gph.ai"}
   },
   "gamefication": {
     "levels": [

@@ -4,6 +4,7 @@ import { detransliterate } from './ParsersAndFormatters';
 export const TAGS_MAX_LENGTH = 24;
 export const NSFW_TAG = 'nsfw';
 export const NSFW_TAG_NUMERIC = '18+';
+export const ONLYBLOG_TAG = 'onlyblog';
 
 const FAVORITE_KEY = 'golos.favorite-tags';
 

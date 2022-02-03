@@ -7,7 +7,7 @@ import TagsEditLine from 'app/components/elements/postEditor/TagsEditLine';
 import PostOptions from 'app/components/elements/postEditor/PostOptions/PostOptions';
 import Button from 'app/components/elements/common/Button';
 import Hint from 'app/components/elements/common/Hint';
-import { NSFW_TAG } from 'app/utils/tags';
+import { NSFW_TAG, ONLYBLOG_TAG } from 'app/utils/tags';
 import './PostFooter.scss';
 
 export default class PostFooter extends PureComponent {
@@ -85,6 +85,50 @@ export default class PostFooter extends PureComponent {
             };
         }
 
+        let isMobile = false;
+        if (process.env.BROWSER) {
+            isMobile = window.matchMedia('screen and (max-width: 39.9375em)').matches;
+        }
+
+        const buttons = (<div className="PostFooter__buttons" style={{ 'marginTop': isMobile ? '15px' : '0px' }}>
+            <div className="PostFooter__button">
+                {editMode ? (
+                    <Button onClick={this.props.onCancelClick}>
+                        {tt('g.cancel')}
+                    </Button>
+                ) : null}
+            </div>
+            <div
+                className={cn('PostFooter__button', {
+                    'PostFooter__button_hint-disabled': postDisabled,
+                })}
+            >
+                {postDisabled && disabledHint ? (
+                    <Hint
+                        key="1"
+                        warning
+                        align="right"
+                        className="PostFooter__disabled-hint"
+                    >
+                        {disabledHint}
+                    </Hint>
+                ) : temporaryErrorText ? (
+                    <Hint key="2" error align="right">
+                        {temporaryErrorText}
+                    </Hint>
+                ) : null}
+                <Button
+                    primary
+                    disabled={postDisabled}
+                    onClick={this.props.onPostClick}
+                >
+                    {editMode
+                        ? tt('post_editor.update')
+                        : tt('g.post')}
+                </Button>
+            </div>
+        </div>)
+
         return (
             <div
                 className={cn('PostFooter', {
@@ -117,51 +161,16 @@ export default class PostFooter extends PureComponent {
                     </div>
                     <PostOptions
                         nsfw={this.props.tags.includes(NSFW_TAG)}
+                        onlyblog={this.props.tags.includes(ONLYBLOG_TAG)}
                         onNsfwClick={this._onNsfwClick}
+                        onOnlyblogClick={this._onOnlyblogClick}
                         payoutType={this.props.payoutType}
                         curationPercent={this.props.curationPercent}
                         editMode={editMode}
                         onPayoutChange={this.props.onPayoutTypeChange}
                         onCurationPercentChange={this.props.onCurationPercentChange}
                     />
-                    <div className="PostFooter__buttons">
-                        <div className="PostFooter__button">
-                            {editMode ? (
-                                <Button onClick={this.props.onCancelClick}>
-                                    {tt('g.cancel')}
-                                </Button>
-                            ) : null}
-                        </div>
-                        <div
-                            className={cn('PostFooter__button', {
-                                'PostFooter__button_hint-disabled': postDisabled,
-                            })}
-                        >
-                            {postDisabled && disabledHint ? (
-                                <Hint
-                                    key="1"
-                                    warning
-                                    align="right"
-                                    className="PostFooter__disabled-hint"
-                                >
-                                    {disabledHint}
-                                </Hint>
-                            ) : temporaryErrorText ? (
-                                <Hint key="2" error align="right">
-                                    {temporaryErrorText}
-                                </Hint>
-                            ) : null}
-                            <Button
-                                primary
-                                disabled={postDisabled}
-                                onClick={this.props.onPostClick}
-                            >
-                                {editMode
-                                    ? tt('post_editor.update')
-                                    : tt('g.post')}
-                            </Button>
-                        </div>
-                    </div>
+                    {isMobile ? null : buttons}
                 </div>
                 {singleLine ? null : (
                     <TagsEditLine
@@ -172,6 +181,7 @@ export default class PostFooter extends PureComponent {
                         onChange={onTagsChange}
                     />
                 )}
+                {isMobile ? buttons : null}
             </div>
         );
     }
@@ -206,6 +216,19 @@ export default class PostFooter extends PureComponent {
             newTags = tags.filter(t => t !== NSFW_TAG);
         } else {
             newTags = tags.concat(NSFW_TAG);
+        }
+
+        this.props.onTagsChange(newTags);
+    };
+
+    _onOnlyblogClick = () => {
+        const tags = this.props.tags;
+        let newTags;
+
+        if (tags.includes(ONLYBLOG_TAG)) {
+            newTags = tags.filter(t => t !== ONLYBLOG_TAG);
+        } else {
+            newTags = tags.concat(ONLYBLOG_TAG);
         }
 
         this.props.onTagsChange(newTags);

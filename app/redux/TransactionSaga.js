@@ -269,15 +269,6 @@ function* broadcastOperation(
 }
 
 function* broadcastPayload({payload: {operations, keys, username, hideErrors, successCallback, errorCallback}}) {
-    if ($STM_Config.read_only_mode) {
-        yield put({type: 'ADD_NOTIFICATION', payload: {
-            key: "trx_" + Date.now(),
-            message: tt('g.read_only_mode_notify'),
-            dismissAfter: 5000
-        }})
-        return;
-    }
-    
     for (const [type] of operations) // see also transaction/ERROR
         yield put(tr.actions.remove({key: ['TransactionError', type]}))
 

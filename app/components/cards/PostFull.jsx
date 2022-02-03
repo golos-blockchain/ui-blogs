@@ -26,7 +26,7 @@ import { getEditDraftPermLink } from 'app/utils/postForm';
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
 import Confetti from 'react-dom-confetti';
 import PostSummaryThumb from 'app/components/elements/PostSummaryThumb';
-import { APP_ICON, SEO_TITLE, LIQUID_TICKER, CONFETTI_CONFIG, CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config';
+import { SEO_TITLE, LIQUID_TICKER, CONFETTI_CONFIG, CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config';
 
 function TimeAuthorCategory({ content, authorRepLog10, showTags }) {
     return (
@@ -343,7 +343,7 @@ class PostFull extends React.Component {
     }
 
     _renderPostEditor(replyParams, jsonMetadata, content) {
-        if (window.IS_MOBILE) {
+        /*if (window.IS_MOBILE) {
             return (
                 <this.PostFullEditor
                     {...replyParams}
@@ -353,7 +353,7 @@ class PostFull extends React.Component {
                     onCancel={this._onEditFinish}
                 />
             );
-        } else {
+        } else */{
             if (content.depth) {
                 return this._renderReplyEditor(replyParams, jsonMetadata, true);
             } else {

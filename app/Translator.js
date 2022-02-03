@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { addLocaleData, IntlProvider } from 'react-intl';
-import { DEFAULT_LANGUAGE } from 'app/client_config';
+import { DEFAULT_LANGUAGE, LOCALE_COOKIE_KEY } from 'app/client_config';
 import tt from 'counterpart';
 import en from 'react-intl/locale-data/en';
 import ru from 'react-intl/locale-data/ru';
 import cookie from "react-cookie";
-import { LOCALE_COOKIE_KEY } from 'app/client_config';
 
 addLocaleData([...en, ...ru]);
 

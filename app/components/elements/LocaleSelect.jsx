@@ -1,13 +1,10 @@
-import { LOCALE_COOKIE_KEY } from 'app/client_config';
+import { LOCALE_COOKIE_KEY, LANGUAGES } from 'app/client_config';
 import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import cookie from "react-cookie";
 import is from 'styled-is';
 import user from 'app/redux/User';
-
-import { LANGUAGES } from 'app/client_config';
-
 
 const HIDE_CHEVRON_WIDTH = 500;
 

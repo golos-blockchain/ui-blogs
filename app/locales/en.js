@@ -1,4 +1,4 @@
-import { APP_NAME, APP_DOMAIN, LANDING_PAGE_URL, DEBT_TOKEN, DEBT_TOKEN_SHORT, LIQUID_TOKEN, CURRENCY_SIGN, VESTING_TOKEN } from 'app/client_config';
+import { APP_NAME, APP_DOMAIN, LANDING_PAGE_URL, DEBT_TOKEN, DEBT_TOKEN_SHORT, LIQUID_TOKEN, VESTING_TOKEN } from 'app/client_config';
 /**
  * see: app/locales/README.md
  */
@@ -243,7 +243,7 @@ const en =  {
   order_cancelled: 'Order {order_id} cancelled.',
   higher: 'Higher', // context is about prices
   lower: 'Lower', // context is about prices
-  total_DEBT_TOKEN_SHORT_CURRENCY_SIGN: "Total " + DEBT_TOKEN_SHORT + ' (' + CURRENCY_SIGN + ')',
+  total_DEBT_TOKEN_SHORT_CURRENCY_SIGN: "Total " + DEBT_TOKEN_SHORT,
   // RecoverAccountStep1.jsx // recover account stuff
   not_valid: 'Not valid',
   account_name_is_not_found: 'Account name is not found',
