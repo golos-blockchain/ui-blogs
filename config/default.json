@@ -9,8 +9,6 @@
       "imgSrc": "* data:",
       "fontSrc": "data: fonts.gstatic.com",
       "connectSrc": "'self' api.imgur.com wss://apibeta.golos.today *.golos.today golos.app *.golos.app app.sharpay.io *.coinmarketcap.com www.google-analytics.com cdn.jsdelivr.net/npm/emoji-picker-element-data@%5E1/",
-      "reportUri": "/api/v1/csp_violation",
-      "objectSrc": "'self'",
       "frameAncestors": "'none'"
     }
   },
