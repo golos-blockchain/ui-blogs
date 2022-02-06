@@ -7,6 +7,7 @@ import coBody from 'co-body';
 import {PublicKey, Signature, hash} from 'golos-lib-js/lib/auth/ecc';
 import {api, broadcast} from 'golos-lib-js';
 import { getDynamicGlobalProperties } from 'app/utils/APIWrapper'
+import useGetAddressHandler from 'server/api/uia_address'
 
 export default function useGeneralApi(app) {
     const router = koa_router({prefix: '/api/v1'});
@@ -96,4 +97,6 @@ export default function useGeneralApi(app) {
     router.post('/page_view', koaBody, function *() {
         this.body = JSON.stringify({views: 1});
     });
+
+    useGetAddressHandler(router)
 }

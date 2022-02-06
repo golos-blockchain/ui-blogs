@@ -99,8 +99,6 @@
     "please": "Please",    
     "active": "Active key",    
     "owner": "Owner key",
-    "read_only_mode_notify": "Server under maintenance",
-    "read_only_mode": "Due to server maintenance, the site is running in read mode.",
     "are_you_sure": "Are you sure?",
     "ask": "Ask",
     "auto": "auto",
@@ -298,6 +296,7 @@
     "vote_currently_exists_user_must_be_indicate_a_to_reject_witness": "vote currently exists, user must be indicate a desire to reject witness",
     "only_one_APP_NAME_account_allowed_per_ip_address_every_10_minutes": "Only one Steem account allowed per IP address every 10 minutes",
     "resteem_this_post": "Reblog This Post",
+    "delete_reblog": "Delete Reblog",
     "reblog": "Reblog",
     "write_your_story": "Write your story",
     "remember_voting_and_posting_key": "Remember voting & posting key",
@@ -498,6 +497,7 @@
   "market_jsx": {
     "action": "Action",
     "date_created": "Date Created",
+    "date_trade": "Date Trade",
     "last_price": "Last price",
     "24h_volume": "24h volume",
     "spread": "Spread",
@@ -528,7 +528,6 @@
     "market_fee_percent_": "Trade fee ",
     "market_depth_": "market depth",
     "market_pair": "Market Pair",
-    "your_order": "Your order",
     "orders_canceled": "Selected orders successfully cancelled."
   },
   "user_profile": {
@@ -540,6 +539,8 @@
     "if_you_recently_added_new_users_to_follow": "If you recently added new users to follow, your personalized feed will populate once new content is available.",
     "explore_APP_NAME": "Explore %(APP_NAME)s",
     "full_faq": "The full F.A.Q on %(APP_NAME)s",
+    "game_level": "Level %(LEVEL)s, stake in blockchain is %(STAKE)s%% (%(GP)s Golos Power).\n",
+    "next_game_level": "To achieve next level %(LEVEL)s required ~%(GP_DIFF)s GP more.",
     "users_blog": "%(name)s's blog",
     "users_posts": "%(name)s's posts",
     "users_wallet": "%(name)s's wallet",
@@ -739,15 +740,24 @@
     "title": "Deposit Rules",
     "to_type_fixed": "Fixed gate address",
     "to_type_transfer": "Requesting gate address",
+    "to_type_api": "Gate address from API",
     "to_fixed": "Where to send tokens:",
     "to_transfer": "Where to send 0.001 GOLOS in order to request address:",
+    "to_api": "Template of request URL, to insert current user account:",
+    "to_api_example": "Example: https://site.ru/get_address/<account>",
+    "to_api_confirm": "We hope your API supports requests like that: ",
+    "to_api_description": "Response should be a JSON object.\nIt should have format like in following example:",
+    "to_api_error_url": "URL should start with http:// or https://",
+    "to_api_error": "Template should include <account> - a place for  name.",
     "memo_fixed": "Memo:",
     "memo_transfer": "Memo (for 0.001 GOLOS transfer):",
     "transfer_title_SYM": "Deposit Of %(SYM)s",
     "transfer_desc": "To receive a deposit address, please send 0.001 GOLOS to ",
     "transfer_desc_2": " with memo: ",
     "waiting": "Transfer of 0.001 GOLOS was sent. Responding transfer with address will acquire in ~5 minutes...",
-    "timeouted": "Transfer with address is not acquired. Try again or contact the issuer of "
+    "timeouted": "Transfer with address is not acquired. Try again or contact the issuer of ",
+    "api_error": "Cannot get address. Try again later. If problem still occurs, contact the issuer of ",
+    "api_error_details": "and send the error details:"
   },
   "asset_edit_withdrawal_jsx": {
     "title": "Withdrawal Rules",
@@ -1156,12 +1166,13 @@
     "vdo_exists": "You already have delegated some GP to this account. You could edit its amount, or revoke it at all." 
   },
   "post_editor": {
-    "new_editor": "Markdown editor",
+    "new_editor": "Markdown",
     "html_editor": "HTML editor",
     "preview_mode": "Preview mode",
     "edit_mode": "Go back to edit mode",
     "payout_hint": "Payout method",
     "nsfw_hint": "Mark for not safe for children",
+    "onlyblog_hint": "Display only in the blog",
     "title_placeholder": "Enter the title",
     "payout_option_100": "Power of voice 100%%",
     "payout_option_100_hint": "Receive all payout in Golos tokens",
@@ -1237,6 +1248,16 @@
     "blog": "news golos",
     "official_channels": "Official channels",
     "footer_message": "We will never ask for your private keys or money. If someone introduces themselves as members of the Golos Blockchain team and asks for such information, please contact us."
+  },
+  "services": {
+    "title_1": "Most popular services, games and bots",
+    "title_2": "which may be useful for interacting with the Golos blockchain",
+    "developer": "Developer",
+    "services": "Services",
+    "games": "Games",
+    "bots": "Bots",
+    "footer_1": "If there is not enough service/game/bot in the list, write to the Telegram chat",
+    "footer_2": "or add a post on the Golos"
   },
   "workers": {
     "workers_info": "For any work useful for the Golos Blockchain, you can get a reward by submitting an application, describing in detail what was done (development, design, advertising, documentation), anything if this initiative is supported by the community.",

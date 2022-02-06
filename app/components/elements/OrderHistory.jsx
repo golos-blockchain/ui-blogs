@@ -1,7 +1,6 @@
 import React from "react";
 import OrderHistoryRow from "./OrderhistoryRow.jsx";
 import tt from 'counterpart';
-import { DEBT_TOKEN_SHORT } from 'app/client_config';
 import { Order, TradeHistory } from 'app/utils/MarketClasses';
 
 export default class OrderHistory extends React.Component {
@@ -90,7 +89,7 @@ export default class OrderHistory extends React.Component {
                 <table className="Market__trade-history">
                     <thead>
                         <tr>
-                            <th>{tt('g.date')}</th>
+                            <th>{tt('market_jsx.date_trade')}</th>
                             <th>Buy/Sell</th>
                             <th>{tt('g.price')}</th>
                             <th>{sym1}</th>

@@ -4,7 +4,6 @@ import normalizeProfile from 'app/utils/NormalizeProfile';
 import { contentStats, } from 'app/utils/StateFunctions';
 import {
     SEO_TITLE,
-    APP_NAME,
     APP_DOMAIN,
     SITE_DESCRIPTION,
     TWITTER_HANDLE,

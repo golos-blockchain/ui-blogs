@@ -9,8 +9,6 @@
       "imgSrc": "* data:",
       "fontSrc": "data: fonts.gstatic.com",
       "connectSrc": "'self' api.imgur.com wss://apibeta.golos.today *.golos.today golos.app *.golos.app app.sharpay.io *.coinmarketcap.com www.google-analytics.com cdn.jsdelivr.net/npm/emoji-picker-element-data@%5E1/",
-      "reportUri": "/api/v1/csp_violation",
-      "objectSrc": "'self'",
       "frameAncestors": "'none'"
     }
   },
@@ -18,7 +16,6 @@
   "img_proxy_backup_prefix": "https://steemitimages.com",
   "hide_comment_neg_rep": false,
   "show_adv_banners": true,
-  "read_only_mode": false,
   "add_notify_site": {
     "show": false,
     "link": "/@lex/obmen-lichnymi-soobsheniyami-i-nachalo-dlya-golos-messenger",
@@ -46,10 +43,33 @@
     "password": "golosclient"
   },
   "forums": {
-    "white_list": ["fm-golostalk", "fm-prizmtalk", "fm-graphenetalks", "fm-kostroma"],
+    "white_list": ["fm-golostalk", "fm-prizmtalk", "fm-graphenetalks"],
     "fm-golostalk": {"domain": "golostalk.com"},
     "fm-prizmtalk": {"domain": "prizmtalk.com"},
-    "fm-graphenetalks": {"domain": "forum.gph.ai"},
-    "fm-kostroma": {"domain": "kostromaforum.ru"}
+    "fm-graphenetalks": {"domain": "forum.gph.ai"}
+  },
+  "gamefication": {
+    "levels": [
+      {"power_from": 0.000, "imgs": ["1.png", "1big.png"],
+        "title": ["Креветки", "Shrimp"]},
+      {"power_from": 0.002, "imgs": ["2.png", "2big.png"],
+        "title": ["Крабы", "Crabs"]},
+      {"power_from": 0.005, "imgs": ["3.png", "3big.png"],
+        "title": ["Осьминоги", "Octopuses"]},
+      {"power_from": 0.020, "imgs": ["4.png", "4big.png"],
+        "title": ["Рыбы", "Fish"]},
+      {"power_from": 0.050, "imgs": ["5.png", "5big.png"],
+        "title": ["Черепахи", "Turtles"]},
+      {"power_from": 0.100, "imgs": ["6.png", "6big.png"],
+        "title": ["Дельфины", "Dolphins"]},
+      {"power_from": 0.250, "imgs": ["7.png", "7big.png"],
+        "title": ["Акулы", "Sharks"]},
+      {"power_from": 0.500, "imgs": ["8.png", "8big.png"],
+        "title": ["Косатки", "Orca"]},
+      {"power_from": 1.000, "imgs": ["9.png", "9big.png"],
+        "title": ["Киты", "Whales"]},
+      {"power_from": 5.000, "imgs": ["10.png", "10big.png"],
+        "title": ["Повелители морей", "Lords of the Seas"]}
+    ]
   }
 }

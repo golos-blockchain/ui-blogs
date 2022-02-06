@@ -44,3 +44,21 @@
   }
 
 }
+
+.Userpic_parent {
+  position: relative;
+}
+
+.Userpic__badge {
+  position: absolute;
+  z-index: 10;
+  bottom: 3px;
+  right: -2px;
+  background-color: white;
+  font-size: 0.65rem;
+  border-radius: 50%;
+  border: 1px solid #dadada;
+  color: $dark-gray;
+  padding-left: 3px;
+  padding-right: 3px;
+}

@@ -245,7 +245,7 @@ class CommentImpl extends PureComponent {
             >
                 {this._renderDepthIndicator()}
                 <div className="Comment__Userpic show-for-medium">
-                    <Userpic account={comment.author} />
+                    <Userpic account={comment.author} reputation={authorRepLog10} />
                 </div>
                 <div
                     className={cn({

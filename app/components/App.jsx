@@ -25,11 +25,7 @@ import PageViewsCounter from '@elements/PageViewsCounter';
 import DialogManager from 'app/components/elements/common/DialogManager';
 import { init as initAnchorHelper } from 'app/utils/anchorHelper';
 import { authRegisterUrl, } from 'app/utils/AuthApiClient';
-
-import {
-    APP_ICON,
-    VEST_TICKER,
-} from 'app/client_config';
+import { APP_ICON, VEST_TICKER, } from 'app/client_config';
 
 const GlobalStyle = createGlobalStyle`
     body {
@@ -42,6 +38,8 @@ const availableDomains = [
     'golos.in',
     'golos.today',
     'golos.app',
+    'golosdex.com',
+    'gls.exchange',
     'golostalk.com',
     'prizmtalk.com',
     'gph.ai',
@@ -217,7 +215,7 @@ class App extends React.Component {
         if (process.env.BROWSER) {
             if (!localStorage.getItem('infobox')) {
                 const init = {
-                    id: 1512732747890, //initial value
+                    id: 1512732747890, // initial value
                     show: true,
                 };
                 localStorage.setItem('infobox', JSON.stringify(init));
@@ -261,7 +259,7 @@ class App extends React.Component {
         let callout = null;
         const notifyLink = $STM_Config.add_notify_site.link;
         const notifyTitle = $STM_Config.add_notify_site.title;
-        const showInfoBox = $STM_Config.add_notify_site.show; // && this.isShowInfoBox();
+        const showInfoBox = $STM_Config.add_notify_site.show && this.isShowInfoBox();
 
         if (this.state.showCallout && (alert || warning || success)) {
             callout = (
@@ -292,23 +290,6 @@ class App extends React.Component {
                             <Link className="link" to={notifyLink}>
                                 <Icon className="logo-icon" name={APP_ICON} /> {notifyTitle}
                             </Link>
-                        </div>
-                    </div>
-                </div>
-            );
-        }
-
-        if ($STM_Config.read_only_mode && this.state.showCallout) {
-            callout = (
-                <div className="App__announcement row">
-                    <div className="column">
-                        <div align="center" className="callout warning" style={{backgroundColor: 'rgb(252,84,78)', color: 'white'}}>
-                            <CloseButton
-                                onClick={() =>
-                                    this.setState({ showCallout: false })
-                                }
-                            />
-                            <p>{tt('g.read_only_mode')}</p>
                         </div>
                     </div>
                 </div>

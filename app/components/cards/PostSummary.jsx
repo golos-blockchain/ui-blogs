@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Icon from 'app/components/elements/Icon';
 import { connect } from 'react-redux';
+import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
 import Reblog from 'app/components/elements/Reblog';
 import MuteAuthorInNew from 'app/components/elements/MuteAuthorInNew';
@@ -20,7 +21,7 @@ import {Map} from 'immutable';
 import Author from 'app/components/elements/Author';
 import UserNames from 'app/components/elements/UserNames';
 import tt from 'counterpart';
-import { APP_ICON, CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config';
+import { CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config';
 import { detransliterate } from 'app/utils/ParsersAndFormatters';
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
 import PostSummaryThumb from 'app/components/elements/PostSummaryThumb'
@@ -77,6 +78,14 @@ class PostSummary extends React.Component {
         this.setState({revealNsfw: true})
     }
 
+    onDeleteReblog = (account, post) => {
+        this.props.deleteReblog(account, post.get('author'), post.get('permlink'),
+            () => {
+                window.location.reload()
+            }, (err) => {
+            })
+    }
+
     render() {
         const {currentCategory, thumbSize, ignore, onClick} = this.props;
         const {post, content, pending_payout, total_payout, cashout_time, blockEye} = this.props;
@@ -98,16 +107,24 @@ class PostSummary extends React.Component {
             reblogged_by = [content.get('first_reblogged_by')]
         }
 
-
         if(reblogged_by) {
           reblogged_by = <div className="PostSummary__reblogged_by">
                              <Icon name="reblog" /> {tt('postsummary_jsx.resteemed_by')} <UserNames names={reblogged_by} />
                          </div>
         }
 
+        const myAccount = account === username
+
         if(account && account != content.get('author')) {
           reblogged_by = <div className="PostSummary__reblogged_by">
                              <Icon name="reblog" /> {tt('postsummary_jsx.resteemed')}
+                             {myAccount ? <Icon
+                                className="PostSummary__delete_reblog"
+                                name="cross"
+                                size="0_75x"
+                                title={tt('g.delete')}
+                                onClick={() => this.onDeleteReblog(account, content)}
+                                /> : null}
                          </div>
         }
 
@@ -278,6 +295,20 @@ export default connect(
 
     (dispatch) => ({
         dispatchSubmit: data => { dispatch(user.actions.usernamePasswordLogin({...data})) },
-        clearError: () => { dispatch(user.actions.loginError({error: null})) }
+        clearError: () => { dispatch(user.actions.loginError({error: null})) },
+        deleteReblog: (account, author, permlink, successCallback, errorCallback) => {
+            const json = ['delete_reblog', {account, author, permlink}]
+            dispatch(transaction.actions.broadcastOperation({
+                type: 'custom_json',
+                confirm: tt('g.are_you_sure'),
+                operation: {
+                    id: 'follow',
+                    required_posting_auths: [account],
+                    json: JSON.stringify(json),
+                    __config: {title: tt('g.delete_reblog')}
+                },
+                successCallback, errorCallback,
+            }))
+        },
     })
 )(PostSummary)

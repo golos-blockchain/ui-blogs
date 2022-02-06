@@ -12,9 +12,8 @@ import MarkNotificationRead from 'app/components/elements/MarkNotificationRead';
 import tt from 'counterpart';
 import Immutable from "immutable";
 import Callout from 'app/components/elements/Callout';
-import {APP_NAME} from 'app/client_config';
+import { APP_NAME, SELECT_TAGS_KEY } from 'app/client_config';
 import cookie from "react-cookie";
-import { SELECT_TAGS_KEY } from 'app/client_config';
 import transaction from 'app/redux/Transaction'
 import { getMetadataReliably } from 'app/utils/NormalizeProfile';
 
@@ -245,7 +244,8 @@ class PostsIndex extends React.Component {
                     </p>
 
                     <p align="center">
-                        <a target="_blank" href="/@allforyou/torguem-na-vnutrennei-birzhe-golosa"><img src={require("app/assets/images/banners/golosdex2.png")} width="220" height="160" /></a>
+                        <a target="_blank" href="https://golosdex.com"><img src={require("app/assets/images/banners/golosdex2.png")} width="220" height="160" /></a>
+                        <span className="strike"><a target="_blank" href="/@graphenelab/reliz-novoi-birzhi-golos">{tt('g.more_hint')}</a></span>
                     </p>
 
                     {$STM_Config.show_adv_banners ?

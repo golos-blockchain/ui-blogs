@@ -17,7 +17,6 @@ import Dropzone from 'react-dropzone';
 import { LinkWithDropdown } from 'react-foundation-components/lib/global/dropdown';
 import VerticalMenu from 'app/components/elements/VerticalMenu';
 import tt from 'counterpart';
-import { SUPPORT_EMAIL } from 'app/client_config';
 import Icon from 'app/components/elements/Icon';
 import { detransliterate } from 'app/utils/ParsersAndFormatters';
 import { replyAction } from './ReplyEditorActions';
@@ -862,7 +861,7 @@ export default formId =>
             uploadImage: (file, progress) => {
                 dispatch({
                     type: 'user/UPLOAD_IMAGE',
-                    payload: { file, progress },
+                    payload: { file, progress, useGolosImages: true, },
                 });
             },
             reply: replyAction(dispatch, remarkable),
