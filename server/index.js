@@ -15,12 +15,10 @@ require('module').Module._initPaths();
 global.$STM_Config = {
     ws_connection_client: config.get('ws_connection_client'),
     ws_connection_msgs: config.get('ws_connection_msgs'),
-    img_proxy_prefix: config.get('img_proxy_prefix'),
-    img_proxy_backup_prefix: config.get('img_proxy_backup_prefix'),
     hide_comment_neg_rep: config.get('hide_comment_neg_rep'),
     show_adv_banners: config.get('show_adv_banners'),
     add_notify_site: config.get('add_notify_site'),
-    upload_image: config.get('upload_image'),
+    images: config.get('images'),
     site_domain: config.get('site_domain'),
     google_analytics_id: config.get('google_analytics_id'),
     chain_id: config.get('chain_id'),
