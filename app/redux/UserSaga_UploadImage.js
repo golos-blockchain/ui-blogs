@@ -39,7 +39,7 @@ function* uploadImage(action) {
         });
     }
 
-    if (!$STM_Config.upload_image) {
+    if (!$STM_Config.images.upload_image) {
         onError('NO_UPLOAD_URL');
         return;
     }
@@ -68,7 +68,7 @@ function* uploadImage(action) {
         data = new Buffer(dataBase64, 'base64');
     }
 
-    let postUrl = $STM_Config.upload_image
+    let postUrl = $STM_Config.images.upload_image
     let golosImages = false
     if (file && file.size > MAX_UPLOAD_IMAGE_SIZE) {
         if (useGolosImages) {
@@ -86,7 +86,7 @@ function* uploadImage(action) {
             const signatures = signData(data, {
                 posting: postingKey,
             })
-            postUrl = new URL('/@' + username + '/' + signatures.posting, $STM_Config.img_proxy_prefix).toString();
+            postUrl = new URL('/@' + username + '/' + signatures.posting, $STM_Config.images.img_proxy_prefix).toString();
             golosImages = true
         } else {
             onError(tt('user_saga_js.image_upload.error.image_size_is_too_large'));
@@ -117,7 +117,7 @@ function* uploadImage(action) {
 
     xhr.open('POST', postUrl);
     if (!golosImages) {
-        xhr.setRequestHeader('Authorization', 'Client-ID 6c09ebf8c548126')
+        xhr.setRequestHeader('Authorization', 'Client-ID ' + $STM_Config.images.client_id)
     }
 
     xhr.onload = function() {
@@ -155,7 +155,7 @@ function* uploadImage(action) {
                         repeat = true;
                         setTimeout(() => {
                             xhr.open('POST', postUrl);
-                            xhr.setRequestHeader('Authorization', 'Client-ID 6c09ebf8c548126')
+                            xhr.setRequestHeader('Authorization', 'Client-ID ' + $STM_Config.images.client_id)
                             xhr.send(formData);
                         }, 1000);
                     }

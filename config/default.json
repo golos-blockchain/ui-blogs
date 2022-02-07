@@ -12,8 +12,6 @@
       "frameAncestors": "'none'"
     }
   },
-  "img_proxy_prefix": "https://devimages.golos.today",
-  "img_proxy_backup_prefix": "https://steemitimages.com",
   "hide_comment_neg_rep": false,
   "show_adv_banners": true,
   "add_notify_site": {
@@ -25,11 +23,16 @@
   "session_cookie_key": "gls.session",
   "session_key": "golos",
   "site_domain": "dev.golos.today",
-  "upload_image": "https://api.imgur.com/3/image",
   "ws_connection_client": "https://apibeta.golos.today",
   "ws_connection_server": "wss://apibeta.golos.today/ws",
   "ws_connection_msgs": "wss://apibeta.golos.today/ws",
   "chain_id": "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12",
+  "images": {
+    "img_proxy_prefix": "https://devimages.golos.today",
+    "img_proxy_backup_prefix": "https://steemitimages.com",
+    "upload_image": "https://api.imgur.com/3/image",
+    "client_id": "6c09ebf8c548126"
+  },
   "auth_service": {
     "host": "https://dev.golos.app",
     "custom_client": "blogs"

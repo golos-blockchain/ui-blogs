@@ -90,13 +90,29 @@ export default class PostFooter extends PureComponent {
             isMobile = window.matchMedia('screen and (max-width: 39.9375em)').matches;
         }
 
+        const options = (<PostOptions
+            nsfw={this.props.tags.includes(NSFW_TAG)}
+            onlyblog={this.props.tags.includes(ONLYBLOG_TAG)}
+            onNsfwClick={this._onNsfwClick}
+            onOnlyblogClick={this._onOnlyblogClick}
+            payoutType={this.props.payoutType}
+            curationPercent={this.props.curationPercent}
+            editMode={editMode}
+            onPayoutChange={this.props.onPayoutTypeChange}
+            onCurationPercentChange={this.props.onCurationPercentChange}
+        />)
+
         const buttons = (<div className="PostFooter__buttons" style={{ 'marginTop': isMobile ? '15px' : '0px' }}>
             <div className="PostFooter__button">
                 {editMode ? (
-                    <Button onClick={this.props.onCancelClick}>
+                    <Button style={{'minWidth': '140px'}} onClick={this.props.onCancelClick}>
                         {tt('g.cancel')}
                     </Button>
-                ) : null}
+                ) : (
+                    <Button style={{'minWidth': '140px'}} onClick={this.props.onResetClick}>
+                        {tt('g.clear')}
+                    </Button>
+                )}
             </div>
             <div
                 className={cn('PostFooter__button', {
@@ -121,6 +137,7 @@ export default class PostFooter extends PureComponent {
                     primary
                     disabled={postDisabled}
                     onClick={this.props.onPostClick}
+                    style={{'minWidth': '140px'}}
                 >
                     {editMode
                         ? tt('post_editor.update')
@@ -159,17 +176,7 @@ export default class PostFooter extends PureComponent {
                         ) : null}
                         <TagInput tags={tagsNoCat} onChange={onTagsChange} />
                     </div>
-                    <PostOptions
-                        nsfw={this.props.tags.includes(NSFW_TAG)}
-                        onlyblog={this.props.tags.includes(ONLYBLOG_TAG)}
-                        onNsfwClick={this._onNsfwClick}
-                        onOnlyblogClick={this._onOnlyblogClick}
-                        payoutType={this.props.payoutType}
-                        curationPercent={this.props.curationPercent}
-                        editMode={editMode}
-                        onPayoutChange={this.props.onPayoutTypeChange}
-                        onCurationPercentChange={this.props.onCurationPercentChange}
-                    />
+                    {isMobile ? null : options}
                     {isMobile ? null : buttons}
                 </div>
                 {singleLine ? null : (
@@ -181,6 +188,7 @@ export default class PostFooter extends PureComponent {
                         onChange={onTagsChange}
                     />
                 )}
+                {isMobile ? options : null}
                 {isMobile ? buttons : null}
             </div>
         );

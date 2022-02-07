@@ -25,8 +25,8 @@ export const proxifyImageUrl = (url, dimensions = '0x0') => {
     if (dimensions[dimensions.length - 1] !== '/')
       dimensions += '/';
     let prefix = '';
-    if ($STM_Config.img_proxy_prefix) prefix += fixHost($STM_Config.img_proxy_prefix) + '/' + dimensions;
-    if ($STM_Config.img_proxy_backup_prefix) prefix += fixHost($STM_Config.img_proxy_backup_prefix) + '/' + dimensions;
+    if ($STM_Config.images.img_proxy_prefix) prefix += fixHost($STM_Config.images.img_proxy_prefix) + '/' + dimensions;
+    if ($STM_Config.images.img_proxy_backup_prefix) prefix += fixHost($STM_Config.images.img_proxy_backup_prefix) + '/' + dimensions;
     return prefix + url;
 };
 
@@ -45,7 +45,7 @@ export const proxifyImageUrlWithStrip = (url, dimensions = false) => {
     const lastProxy = proxyList[proxyList.length - 1];
     respUrl = url.substring(url.lastIndexOf(lastProxy) + lastProxy.length);
   }
-  if (dimensions && $STM_Config && ($STM_Config.img_proxy_prefix || $STM_Config.img_proxy_backup_prefix)) {
+  if (dimensions && $STM_Config && ($STM_Config.images.img_proxy_prefix || $STM_Config.images.img_proxy_backup_prefix)) {
     let dims = dimensions + '/';
     if (typeof dimensions !== 'string') {
       dims = proxyList
