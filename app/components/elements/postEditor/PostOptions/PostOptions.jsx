@@ -71,21 +71,6 @@ class PostOptions extends React.PureComponent {
       const { showCoinMenu, showCuratorMenu, curatorPercent, minCurationPercent, maxCurationPercent } = this.state;
         return (
             <div className="PostOptions">
-                <span className="PostOptions__item-wrapper">
-                    <span
-                        className={cn('PostOptions__item', {
-                            PostOptions__item_active: showCoinMenu,
-                        })}
-                        onClick={this._onCoinClick}
-                    >
-                        <Icon
-                            name="editor/coin"
-                            size="1_5x"
-                            data-tooltip={tt('post_editor.payout_hint')}
-                        />
-                    </span>
-                    {showCoinMenu ? this._renderCoinMenu() : null}
-                </span>
                 <span
                     className={cn('PostOptions__item', {
                         PostOptions__item_warning: this.props.nsfw,
@@ -109,6 +94,21 @@ class PostOptions extends React.PureComponent {
                         size="1_5x"
                         data-tooltip={tt('post_editor.onlyblog_hint')}
                     />
+                </span>
+                <span className="PostOptions__item-wrapper">
+                    <span
+                        className={cn('PostOptions__item', {
+                            PostOptions__item_active: showCoinMenu,
+                        })}
+                        onClick={this._onCoinClick}
+                    >
+                        <Icon
+                            name="editor/coin"
+                            size="1_5x"
+                            data-tooltip={tt('post_editor.payout_hint')}
+                        />
+                    </span>
+                    {showCoinMenu ? this._renderCoinMenu() : null}
                 </span>
             </div>
         );
