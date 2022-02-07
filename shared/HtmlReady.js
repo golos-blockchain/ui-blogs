@@ -151,8 +151,9 @@ function traverse(node, state, depth = 0) {
 
 function link(state, child) {
     let url = child.getAttribute('href');
+    const newurl = 'https://' + $STM_Config.site_domain;
 
-    url = url.replace(/(?:https?:)\/\/(golos.io|golos.blog)/, 'https://golos.id')    
+    url = url.replace(/(?:https?:)\/\/(golos.io|golos.blog|golos.id|golos.in)/, newurl)    
     child.setAttribute('href', url);
 
     if (url) {
@@ -234,7 +235,7 @@ function img(state, child) {
 
 // For all img elements with non-local URLs
 function proxifyImages(doc) {
-    if (!$STM_Config.img_proxy_prefix && !$STM_Config.img_proxy_backup_prefix) {
+    if (!$STM_Config.images.img_proxy_prefix && !$STM_Config.images.img_proxy_backup_prefix) {
         return;
     }
 
@@ -308,7 +309,8 @@ function linkifyNode(state, child) {
 
 function linkify(state, content) {
     // hashtag
-    content = content.replace(/(?:https?:)\/\/(golos.io|golos.blog)/, 'https://golos.id');
+    const newurl = 'https://' + $STM_Config.site_domain;
+    content = content.replace(/(?:https?:)\/\/(golos.io|golos.blog|golos.id|golos.in)/, newurl);
     content = content.replace(/(^|\s)(#[-a-zа-яёґєії\d]+)/gi, tag => {
         // Don't allow numbers to be tags
         if (/#[\d]+$/.test(tag)) {
