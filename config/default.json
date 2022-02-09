@@ -19,7 +19,7 @@
     "link": "/@lex/obmen-lichnymi-soobsheniyami-i-nachalo-dlya-golos-messenger",
     "title": "Обмен личными сообщениями и начало для Golos Messenger"
   },
-  "server_session_secret": "exiKdyF+IwRIXJDmtGIl4vWUz4i3eVSISpfZoeYc0s4=",
+  "server_session_secret": "exiKdyF+IwRIXJDmtGIl4vWUz4i3eVSISpfZoeYc0s4=", // Generated via Node - crypto.randomBytes(32).toString('base64')
   "session_cookie_key": "gls.session",
   "session_key": "golos",
   "site_domain": "dev.golos.today",

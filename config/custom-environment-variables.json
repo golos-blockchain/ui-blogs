@@ -4,5 +4,6 @@
   "site_domain": "SDC_SITE_DOMAIN",
   "ws_connection_client": "SDC_CLIENT_WEBSOCKET_URL",
   "ws_connection_server": "SDC_SERVER_WEBSOCKET_URL",
-  "ws_connection_msgs": "SDC_MSGS_WEBSOCKET_URL"
 }
+
+// other parameters in config/default.json
