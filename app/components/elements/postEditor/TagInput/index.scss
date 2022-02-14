@@ -13,6 +13,10 @@
     box-shadow: 0 2px 12px 0 rgba(0,0,0,0.18);
     background-color: #FFF;
 
+    @media screen and (max-width: 39.9375em) {
+      width: 160px;
+    }
+
     &::placeholder {
       font-size: 15px;
     }
