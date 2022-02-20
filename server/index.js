@@ -27,6 +27,8 @@ global.$STM_Config = {
     notify_service: config.get('notify_service'),
     forums: config.get('forums'),
     gamefication: config.get('gamefication'),
+    blocked_users: config.get('blocked_users'),
+    blocked_posts: config.get('blocked_posts'),
     ui_version: version || '1.0-unknown',
 };
 

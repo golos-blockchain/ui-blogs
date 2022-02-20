@@ -18,7 +18,6 @@ import flash from 'koa-flash';
 import minimist from 'minimist';
 import config from 'config';
 import { routeRegex } from 'app/ResolveRoute';
-import { blockedUsers } from 'app/utils/IllegalContent';
 import secureRandom from 'secure-random';
 import { APP_NAME_UP } from 'app/client_config';
 
@@ -80,7 +79,7 @@ app.use(function*(next) {
 		} else {
 			userCheck = p.split("/")[1].slice(1);
 		}
-		if (blockedUsers.includes(userCheck)) {
+		if ($STM_Config.blocked_users.includes(userCheck)) {
 			console.log('Illegal content user found blocked', `@${userCheck}`);
 			this.status = 451;
 			return;

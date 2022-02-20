@@ -12,7 +12,6 @@ import PinPost from 'app/components/elements/PinPost';
 import Voting from 'app/components/elements/Voting';
 import {immutableAccessor} from 'app/utils/Accessors';
 import extractContent from 'app/utils/ExtractContent';
-import { blockedUsers } from 'app/utils/IllegalContent'
 import { browserHistory } from 'react-router';
 import VotesAndComments from 'app/components/elements/VotesAndComments';
 import TagList from 'app/components/elements/TagList';
@@ -95,7 +94,7 @@ class PostSummary extends React.Component {
 
         const myPost = username === content.get('author')
 
-        if(blockedUsers.includes(content.get('author'))) {
+        if ($STM_Config.blocked_users.includes(content.get('author'))) {
 			return null;
 		}
 
