@@ -1363,7 +1363,8 @@
     "proposal": "заявки",
     "payment_in_GP": "Выплата в СГ",
     "voting_time": "Время голосования (суток)",
-    "proposal_fee": "Будет списано"
+    "proposal_fee": "Будет списано",
+    "worker_post": "заявка в фонд"
   },
   "emoji_i18n": {
     "categoriesLabel": "Категории",

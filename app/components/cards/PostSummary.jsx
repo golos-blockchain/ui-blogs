@@ -190,12 +190,18 @@ class PostSummary extends React.Component {
         const warn = (isNsfw && nsfwPref === 'warn' && !myPost);
         const promosumm = tt('g.promoted_post') + content.get('promoted');
 
+        let worker_post = content.get('has_worker_request')
+        if (worker_post) {
+            worker_post = '/workers/created/@' + content.get('author') + '/' + content.get('permlink')
+        }
+
         let content_title = <h3 className="entry-title">
             <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum)}>
                 {warn && <span className="nsfw-flag">{detransliterate(nsfwTitle)}</span>}
                 {title_text}
             </a>
             {promoted_post && <a target="_blank" href="https://wiki.golos.id/users/welcome#prodvinut-post"><span className="promoted_post" title={promosumm}>{tt('g.promoted_title')}</span></a>}
+            {worker_post && <a target="_blank" href={worker_post}><span className="worker_post">{tt('workers.worker_post')}</span></a>}
         </h3>;
 
         // author and category
@@ -253,7 +259,7 @@ class PostSummary extends React.Component {
         if(gray || ignore) commentClasses.push('downvoted') // rephide
 
         return (
-            <article className={'PostSummary hentry' + (thumb ? ' with-image ' : ' ') + commentClasses.join(' ')} itemScope itemType ="http://schema.org/blogPost">
+            <article className={'PostSummary hentry' + (thumb ? ' with-image ' : ' ') + (worker_post ? ' blue-bg ' : ' ') + commentClasses.join(' ')} itemScope itemType ="http://schema.org/blogPost">
                 {reblogged_by}
                 <div className="PostSummary__header show-for-small-only">
                     {content_title}
