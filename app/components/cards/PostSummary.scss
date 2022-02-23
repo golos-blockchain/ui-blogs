@@ -47,6 +47,17 @@ ul.PostsList__summaries {
      margin: 0 0.5rem;
      padding: 0 0.2rem;
   }
+
+  .worker_post {
+     color: #3f46ad;
+     border: 1px solid #3f46ad;
+     font-size: 75%;
+     border-radius: 3px;
+     font-weight: normal;
+     font-family: Arial;
+     margin: 0 0.5rem;
+     padding: 0 0.2rem;
+  }
 }
 
 .PostSummary__image {
@@ -117,6 +128,15 @@ ul.PostsList__summaries {
 .PostSummary.with-image .PostSummary__reblogged_by,
 .PostSummary.with-image .PostSummary__content {
   margin-left: 8.5rem;
+}
+
+.PostSummary.blue-bg {
+  background-color: #ebeeff; 
+}
+.theme-dark {
+  .PostSummary.blue-bg {
+    background-color: #0f2c46; 
+  }
 }
 
 .PostSummary__header {

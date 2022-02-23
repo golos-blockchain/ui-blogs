@@ -179,11 +179,14 @@ class WorkerRequests extends React.Component {
   }
 
   hideCreateRequest = (needReload) => {
-    this.setState({
-      showCreateRequest: false
-    }, () => {
-      //if (needReload === 'yes') this.reloadList(); // TODO: wait for block
-    });
+    needReload = needReload === 'yes'
+    setTimeout(() => {
+      this.setState({
+        showCreateRequest: false
+      }, () => {
+        if (needReload) this.reloadList()
+      });
+    }, needReload ? 2000 : 1)
   }
 
   viewRequest = (event) => {

@@ -7,6 +7,7 @@ import { APP_DOMAIN } from 'app/client_config';
 import Button from 'app/components/elements/Button';
 import { formatAsset, ERR } from 'app/utils/ParsersAndFormatters';
 import { toAsset } from 'app/utils/StateFunctions';
+import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import WorkerFunds from 'app/components/elements/WorkerFunds';
 import { getAuthorPermlink } from 'app/utils/ParsersAndFormatters';
 
@@ -142,6 +143,11 @@ class AddEditWorkerRequest extends React.Component {
     }
     let duration = parseInt(req.duration)*24*60*60;
     if (duration == 0) duration = 5*60;
+
+    this.setState({
+      submitting: true
+    })
+
     golos.broadcast.workerRequest(auth.posting_key,
       arr[0], arr[1], req.worker, required_amount_min, required_amount_max, req.vest_reward, duration, [],
       (err, result) => {
@@ -207,11 +213,13 @@ class AddEditWorkerRequest extends React.Component {
             </label>
             <p>{workerError}</p>
         </div>
-        <div>
+        {this.state.submitting ? <div>
+          <LoadingIndicator type='circle' />
+        </div> : <div>
           {(!postError && !workerError && !amountError && !voteEndError) && <Button round="true" type="primary" onClick={this.sendOp}>{tt('g.submit')}</Button>}&nbsp;
           <Button round="true" type="secondary" onClick={(event) => {event.preventDefault(); this.props.hider('closed');}}>{tt('g.cancel')}</Button>
           {creation_fee}
-        </div>
+        </div>}
       </form>
       </div>
     );

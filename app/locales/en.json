@@ -1299,7 +1299,8 @@
     "proposal": "proposal",
     "payment_in_GP": "Payment in GP",
     "voting_time": "Voting time (days)",
-    "proposal_fee": "Will be debited"
+    "proposal_fee": "Will be debited",
+    "worker_post": "worker request"
   },
   "emoji_i18n": {
     "categoriesLabel": "Categories",
