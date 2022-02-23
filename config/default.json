@@ -25,7 +25,6 @@
   "site_domain": "dev.golos.today",
   "ws_connection_client": "https://apibeta.golos.today",
   "ws_connection_server": "wss://apibeta.golos.today/ws",
-  "ws_connection_msgs": "wss://apibeta.golos.today/ws",
   "chain_id": "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12",
   "images": {
     "img_proxy_prefix": "https://devimages.golos.today",
@@ -39,6 +38,9 @@
   },
   "notify_service": {
     "host": "https://devnotify.golos.app"
+  },
+  "messenger_service": {
+    "host": "https://devchat.golos.app"
   },
   "elastic_search": {
     "url": "https://search.golos.today",

@@ -49,8 +49,22 @@ function convertEntriesToArrays(obj) {
     }, {});
 }
 
+// for redirects
+let messengerHost
+try {
+    messengerHost = config.get('messenger_service.host')
+} catch (err) {
+    console.warn('messenger_service.host is not set')
+}
+
 // some redirects
 app.use(function*(next) {
+    if (messengerHost && (this.url === '/msgs' || this.url.startsWith('/msgs/'))) {
+        this.url = this.url.replace('/msgs', '') // only 1st occurence
+        this.url = new URL(this.url, messengerHost).toString()
+        this.redirect(this.url)
+        return
+    }
     // normalize url for %40 opportunity for @ in posts
     if (this.url.indexOf('%40') !== -1) {
       const transfer = this.url.split("?")[0].split(`/`).includes(`transfers`);

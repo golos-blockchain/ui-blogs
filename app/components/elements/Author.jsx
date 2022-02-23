@@ -1,17 +1,19 @@
 /* eslint react/prop-types: 0 */
 import React from 'react';
 import PropTypes from 'prop-types'
-import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
+import { Link } from 'react-router';
+import tt from 'counterpart';
 import { LinkWithDropdown } from 'react-foundation-components/lib/global/dropdown'
+
+import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
 import Follow from 'app/components/elements/Follow';
 import Icon from 'app/components/elements/Icon';
-import { Link } from 'react-router';
 import {authorNameAndRep} from 'app/utils/ComponentFormatters';
 import { getGameLevel } from 'app/utils/GameUtils'
 import Reputation from 'app/components/elements/Reputation';
 import Userpic from 'app/components/elements/Userpic';
-import tt from 'counterpart';
 import normalizeProfile from 'app/utils/NormalizeProfile';
+import { msgsHost, msgsLink } from 'app/utils/ExtLinkUtils'
 
 const {string, bool, number} = PropTypes;
 
@@ -77,9 +79,9 @@ class Author extends React.Component {
             }
         }
 
-        const msgs_btn = <a href={`/msgs/@${author}`} target='_blank' title={tt('g.write_message_long')} className='Author__write'>
+        const msgs_btn = msgsHost() ? (<a href={msgsLink(author)} rel='noopener noreferrer' target='_blank' title={tt('g.write_message_long')} className='Author__write'>
                 <Icon name="new/envelope" />
-            </a>
+            </a>) : null
 
         const author_link = <span className="author" itemProp="author" itemScope itemType="http://schema.org/Person">
             <Link to={'/@' + author}><strong>{author}</strong></Link>

@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router';
+import tt from 'counterpart';
+import { Asset } from 'golos-lib-js/lib/utils';
+
 import Icon from 'app/components/elements/Icon';
 import Userpic from 'app/components/elements/Userpic';
 import iconCross from 'app/assets/icons/cross.svg';
-import tt from 'counterpart';
-import { Asset } from 'golos-lib-js/lib/utils';
+import { msgsLink } from 'app/utils/ExtLinkUtils'
 
 const actionStyle = {
     // fixme
@@ -115,7 +117,7 @@ const message = (scope, type, op) => {
 
     let icon = 'notification/message';
     let message = tt('notify_content.message');
-    let url = `/msgs/@${from}`;
+    let url = msgsLink(from)
 
     return (
         <div className='NotificationContent__container'>
@@ -125,7 +127,7 @@ const message = (scope, type, op) => {
                 </span>
             </div>
             <div className='NotificationContent__container_center'>
-                <a href={url} target='_blank'>
+                <a href={url} target='_blank' rel='noopener noreferrer'>
                     <span className='NotificationContent__action_source'>
                         {from}
                         <span style={{ color: '#919191', fontWeight: '450', }}>
