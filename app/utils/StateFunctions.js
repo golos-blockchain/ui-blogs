@@ -131,6 +131,7 @@ export function contentStats(content) {
     tags = filterTags(tags)
 
     const isNsfw = tags.filter(tag => tag && tag.match(/^nsfw$|^ru--mat$|^18\+$/i)).length > 0;
+    const isOnlyblog = tags.filter(tag => tag && tag.match(/^onlyblog$/i)).length > 0;
 
     return {
         hide,
@@ -139,6 +140,7 @@ export function contentStats(content) {
         authorRepLog10,
         allowDelete,
         isNsfw,
+        isOnlyblog,
         flagWeight,
         total_votes,
         up_votes
