@@ -26,25 +26,14 @@ ul.PostsList__summaries {
     }
   }
 
-  .nsfw-flag {
+  .nsfw_post {
      color: #C00;
      border: 1px solid #C00;
      font-size: 75%;
      border-radius: 3px;
      font-weight: normal;
      font-family: Arial;
-     margin: 0 0.1rem;
-     padding: 0 0.2rem;
-  }
-
-  .promoted_post {
-     color: darkgoldenrod;
-     border: 1px solid darkgoldenrod;
-     font-size: 75%;
-     border-radius: 3px;
-     font-weight: normal;
-     font-family: Arial;
-     margin: 0 0.5rem;
+     margin: 0 0 0 0.5rem;
      padding: 0 0.2rem;
   }
 
@@ -55,7 +44,18 @@ ul.PostsList__summaries {
      border-radius: 3px;
      font-weight: normal;
      font-family: Arial;
-     margin: 0 0.5rem;
+     margin: 0 0 0 0.5rem;
+     padding: 0 0.2rem;
+  }
+
+  .promoted_post {
+     color: darkgoldenrod;
+     border: 1px solid darkgoldenrod;
+     font-size: 75%;
+     border-radius: 3px;
+     font-weight: normal;
+     font-family: Arial;
+     margin: 0 0 0 0.5rem;
      padding: 0 0.2rem;
   }
 }
@@ -170,12 +170,6 @@ ul.PostsList__summaries {
         vertical-align: 5%;
       }
     }
-  }
-  .nsfw-flag {
-    margin-right: 0.25rem;
-  }
-  .nsfw-flag {
-    margin-right: 0.25rem;
   }
 }
 .PostSummary__collapse {

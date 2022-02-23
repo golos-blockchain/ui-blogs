@@ -13,7 +13,7 @@ class Services extends React.Component {
                     </div>                    
                     <br />
                     <div className='row'>                            
-                        <a target="_blank" href="https://golosdex.com" className="golos-btn btn-secondary btn-round"><Icon name="trade" /> Golos Exchange <span className='new'>new</span></a>&nbsp;<a target="_blank" href="/msgs" className="golos-btn btn-secondary btn-round"><Icon name="new/envelope" /> Golos Messenger</a>&nbsp;<a target="_blank" href="https://golostalk.com" className="golos-btn btn-secondary btn-round"><Icon name="chatboxes" /> Golos Forum </a>&nbsp;<a target="_blank" href="/search" className="golos-btn btn-secondary btn-round"><Icon name="new/search" /> Golos Search</a>&nbsp;<a target="_blank" href="https://golos.app" className="golos-btn btn-secondary btn-round"><Icon name="key" /> Golos Signer</a>
+                        <a target="_blank" href="https://golosdex.com" className="golos-btn btn-secondary btn-round"><Icon name="trade" /> Golos Exchange <span className='new'>new</span></a>&nbsp;<a target="_blank" href="https://chat.golos.app" className="golos-btn btn-secondary btn-round"><Icon name="new/envelope" /> Golos Messenger</a>&nbsp;<a target="_blank" href="https://golostalk.com" className="golos-btn btn-secondary btn-round"><Icon name="chatboxes" /> Golos Forum </a>&nbsp;<a target="_blank" href="/search" className="golos-btn btn-secondary btn-round"><Icon name="new/search" /> Golos Search</a>&nbsp;<a target="_blank" href="https://golos.app" className="golos-btn btn-secondary btn-round"><Icon name="key" /> Golos Signer</a>
                     </div>
                 </div>
                 <div className='landing-services-block'>
@@ -52,9 +52,12 @@ class Services extends React.Component {
                                     <h3><Icon name="golos" size="2x" /> {tt('services.games')}</h3><br />
                                 </div>
                                 <div className=' column large-12 medium-12 small-12'>
-                                    <h4><a target="_blank" rel="noopener noreferrer" href="https://sol.pisolog.net"><Icon name="new/monitor" /> пасьянс <span className='new'>new</span></a></h4>
+                                    <h4><a target="_blank" rel="noopener noreferrer" href="https://sol.pisolog.net"><Icon name="new/monitor" /> пасьянс косынка <span className='new'>new</span></a></h4>
                                     {tt('services.developer')} <a href="/@bitwheeze">@bitwheeze</a>
                                     <p>Всем знакомая игра в пасьянс, ставки, выигрыши токенами... <a href="/@bitwheeze/upakovka-brambuletov">{tt('g.more_hint')}</a> <Icon name="extlink" /></p>
+                                    <h4><a target="_blank" href="/@one-armed"><Icon name="new/monitor" /> однорукий бандит</a></h4>
+                                    {tt('services.developer')} <a href="/@jackvote">@jackvote</a>
+                                    <p>Классическая слот-машина "однорукий бандит" с тремя барабанами... <a href="/@one-armed/slot-mashina-tri-kita">{tt('g.more_hint')}</a> <Icon name="extlink" /></p>
                                 </div>
                             </div>
                         </div>

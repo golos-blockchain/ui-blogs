@@ -127,7 +127,7 @@ class PostSummary extends React.Component {
                          </div>
         }
 
-        const {gray, pictures, authorRepLog10, flagWeight, isNsfw} = content.get('stats', Map()).toJS()
+        const {gray, pictures, authorRepLog10, flagWeight, isNsfw, isOnlyblog} = content.get('stats', Map()).toJS()
         const p = extractContent(immutableAccessor, content);
         const nsfwTags = ['nsfw', 'ru--mat', '18+']
         let nsfwTitle = nsfwTags[0]
@@ -187,6 +187,7 @@ class PostSummary extends React.Component {
             <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum)}>{desc}</a>
         </div>;
 
+        const onlyblog = isOnlyblog;
         const warn = (isNsfw && nsfwPref === 'warn' && !myPost);
         const promosumm = tt('g.promoted_post') + content.get('promoted');
 
@@ -197,11 +198,12 @@ class PostSummary extends React.Component {
 
         let content_title = <h3 className="entry-title">
             <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum)}>
-                {warn && <span className="nsfw-flag">{detransliterate(nsfwTitle)}</span>}
                 {title_text}
             </a>
-            {promoted_post && <a target="_blank" href="https://wiki.golos.id/users/welcome#prodvinut-post"><span className="promoted_post" title={promosumm}>{tt('g.promoted_title')}</span></a>}
+            {onlyblog && <span className="nsfw_post" title={tt('post_editor.onlyblog_hint')}>{tt('g.for_followers')}</span>}
+            {warn && <span className="nsfw_post" title={tt('post_editor.nsfw_hint')}>{detransliterate(nsfwTitle)}</span>}
             {worker_post && <a target="_blank" href={worker_post}><span className="worker_post">{tt('workers.worker_post')}</span></a>}
+            {promoted_post && <a target="_blank" href="https://wiki.golos.id/users/welcome#prodvinut-post"><span className="promoted_post" title={promosumm}>{tt('g.promoted_title')}</span></a>}
         </h3>;
 
         // author and category
