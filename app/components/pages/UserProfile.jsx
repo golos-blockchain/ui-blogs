@@ -30,6 +30,7 @@ import Follow from 'app/components/elements/Follow';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import PostsList from 'app/components/cards/PostsList';
 import { getGameLevel } from 'app/utils/GameUtils'
+import { msgsHost, msgsLink } from 'app/utils/ExtLinkUtils'
 import {isFetchingOrRecentlyUpdated} from 'app/utils/StateFunctions';
 import {repLog10} from 'app/utils/ParsersAndFormatters';
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
@@ -545,9 +546,9 @@ export default class UserProfile extends React.Component {
                     <Link className='UserProfile__menu-item' to={`/@${accountname}/recent-replies`} activeClassName='active'>
                         {tt('g.replies')} {isMyAccount && <NotifiCounter fields='comment_reply' />}
                     </Link>
-                    <Link target='_blank' className='UserProfile__menu-item' to={`/msgs`}>
+                    {msgsHost() ? <a target='_blank' rel='noopener noreferrer' className='UserProfile__menu-item' href={msgsLink()}>
                         {tt('g.messages')} {isMyAccount && <NotifiCounter fields='message' />}
-                    </Link>
+                    </a> : null}
                     <LinkWithDropdown
                         closeOnClickOutside
                         dropdownPosition='bottom'
@@ -602,7 +603,7 @@ export default class UserProfile extends React.Component {
                     <div className='column' style={cover_image_style}>
                         <div className='UserProfile__buttons-wrapper'>
                             <div className='UserProfile__buttons'>
-                                {(!username || username !== accountname) ? <a href={'/msgs/@' + accountname} target='_blank'><label className='button slim hollow secondary '>{tt('g.write_message')}</label></a> : null}
+                                {(msgsHost() && (!username || username !== accountname)) ? <a href={msgsLink(accountname)} target='_blank' rel='noopener noreferrer'><label className='button slim hollow secondary '>{tt('g.write_message')}</label></a> : null}
                                 <Follow follower={username} following={accountname} />
                             </div>
                         </div>

@@ -412,38 +412,6 @@ export function* fetchState(location_change_action) {
             const trending_tags = yield call([api, api.getTrendingTagsAsync], '', 250)
             trending_tags.forEach (tag => tags[tag.name] = tag)
             state.tags = tags
-        } else if (parts[0] == 'msgs') {
-            const { ws_connection_msgs } = $STM_Config;
-            if (ws_connection_msgs)
-                config.set('websocket', ws_connection_msgs);
-            state.contacts = [];
-            state.messages = [];
-            state.messages_update = '0';
-
-            const offchainAccount = yield select(state => state.user.getIn(['current', 'username']));
-            if (offchainAccount) {
-                accounts.add(offchainAccount);
-
-                console.time('fcon');
-                state.contacts = yield call([api, api.getContactsAsync], offchainAccount, 'unknown', 100, 0);
-                console.timeEnd('fcon');
-
-                if (parts[1]) {
-                    const to = parts[1].replace('@', '');
-                    accounts.add(to);
-
-                    console.time('fmsg');
-                    state.messages = yield call([api, api.getThreadAsync], offchainAccount, to, {});
-                    if (state.messages.length) {
-                        state.messages_update = state.messages[state.messages.length - 1].nonce;
-                    }
-                    console.timeEnd('fmsg');
-
-                }
-            }
-            for (let contact of state.contacts) {
-                accounts.add(contact.contact);
-            }
         }
 
         if (accounts.size > 0) {
