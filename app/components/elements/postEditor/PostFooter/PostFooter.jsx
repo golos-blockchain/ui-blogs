@@ -7,7 +7,8 @@ import TagsEditLine from 'app/components/elements/postEditor/TagsEditLine';
 import PostOptions from 'app/components/elements/postEditor/PostOptions/PostOptions';
 import Button from 'app/components/elements/common/Button';
 import Hint from 'app/components/elements/common/Hint';
-import { NSFW_TAG, ONLYBLOG_TAG } from 'app/utils/tags';
+import { NSFW_TAG, ONLYBLOG_TAG, ONLYAPP_TAG } from 'app/utils/tags';
+import { VISIBLE_TYPES } from 'app/components/modules/PostForm/PostForm';
 import './PostFooter.scss';
 
 export default class PostFooter extends PureComponent {
@@ -90,14 +91,19 @@ export default class PostFooter extends PureComponent {
             isMobile = window.matchMedia('screen and (max-width: 39.9375em)').matches;
         }
 
+        const visibleType = this.props.tags.includes(ONLYAPP_TAG) ?
+            VISIBLE_TYPES.ONLY_APP :
+            (this.props.tags.includes(ONLYBLOG_TAG) ?
+            VISIBLE_TYPES.ONLY_BLOG : VISIBLE_TYPES.ALL)
+
         const options = (<PostOptions
             nsfw={this.props.tags.includes(NSFW_TAG)}
-            onlyblog={this.props.tags.includes(ONLYBLOG_TAG)}
+            visibleType={visibleType}
             onNsfwClick={this._onNsfwClick}
-            onOnlyblogClick={this._onOnlyblogClick}
             payoutType={this.props.payoutType}
             curationPercent={this.props.curationPercent}
             editMode={editMode}
+            onVisibleTypeChange={this._onVisibleTypeChange}
             onPayoutChange={this.props.onPayoutTypeChange}
             onCurationPercentChange={this.props.onCurationPercentChange}
         />)
@@ -229,16 +235,16 @@ export default class PostFooter extends PureComponent {
         this.props.onTagsChange(newTags);
     };
 
-    _onOnlyblogClick = () => {
-        const tags = this.props.tags;
-        let newTags;
+    _onVisibleTypeChange = (visibleType) => {
+        const tags = this.props.tags
+        let newTags = tags.filter(t => t !== ONLYBLOG_TAG && t !== ONLYAPP_TAG)
 
-        if (tags.includes(ONLYBLOG_TAG)) {
-            newTags = tags.filter(t => t !== ONLYBLOG_TAG);
-        } else {
-            newTags = tags.concat(ONLYBLOG_TAG);
+        if (visibleType === VISIBLE_TYPES.ONLY_BLOG) {
+            newTags = newTags.concat(ONLYBLOG_TAG)
+        } else if (visibleType === VISIBLE_TYPES.ONLY_APP) {
+            newTags = newTags.concat(ONLYAPP_TAG)
         }
 
-        this.props.onTagsChange(newTags);
-    };
+        this.props.onTagsChange(newTags)
+    }
 }

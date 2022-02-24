@@ -40,6 +40,12 @@ export const PAYOUT_TYPES = {
     PAY_100: 3,
 };
 
+export const VISIBLE_TYPES = {
+    ALL: 1,
+    ONLY_BLOG: 2,
+    ONLY_APP: 3,
+};
+
 const DEFAULT_CURATION_PERCENT = 5000; // 50%
 
 export const PAYOUT_OPTIONS = [
@@ -57,6 +63,22 @@ export const PAYOUT_OPTIONS = [
         id: PAYOUT_TYPES.PAY_0,
         title: 'post_editor.payout_option_0',
         hint: 'post_editor.payout_option_0_hint',
+    },
+];
+
+export const VISIBLE_OPTIONS = [
+    {
+        id: VISIBLE_TYPES.ALL,
+        title: 'post_editor.visible_option_all',
+    },
+    {
+        id: VISIBLE_TYPES.ONLY_BLOG,
+        title: 'post_editor.visible_option_onlyblog',
+    },
+    {
+        id: VISIBLE_TYPES.ONLY_APP,
+        title: 'post_editor.visible_option_onlyapp',
+        hint: 'post_editor.visible_option_onlyapp_hint',
     },
 ];
 
@@ -198,6 +220,8 @@ class PostForm extends React.Component {
             uploadingCount,
             isPosting,
         } = this.state;
+
+
 
         const disallowPostCode = this._checkDisallowPost();
 

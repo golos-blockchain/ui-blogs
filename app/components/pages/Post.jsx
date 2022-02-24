@@ -53,7 +53,7 @@ class Post extends React.Component {
     }
 
     render() {
-        const {ignoring, content, negativeCommenters} = this.props
+        const {ignoring, content, negativeCommenters, current_user} = this.props
         const {showNegativeComments, commentHidden, showAnyway} = this.state
         let { post } = this.props;
         const { aiPosts } = this.props;
@@ -65,8 +65,10 @@ class Post extends React.Component {
 
         if (!dis) return null;
 
+        const stats = dis.get('stats').toJS()
+
         if(!showAnyway) {
-            const {gray} = dis.get('stats').toJS()
+            const {gray} = stats
             if(gray) {
                 return (
                     <div className="Post">
@@ -147,7 +149,12 @@ class Post extends React.Component {
                 link: selflink + '?sort=' + sort_orders[o] + '#comments'
             });
         }
-        const emptyPost = dis.get('created') === '1970-01-01T00:00:00' && dis.get('body') === ''
+        let emptyPost = dis.get('created') === '1970-01-01T00:00:00' && dis.get('body') === ''
+        if (stats.isOnlyapp) {
+            if (!current_user || current_user.get('username') !== dis.get('author')) {
+                emptyPost = true
+            }
+        }
         if(emptyPost)
             return <center>
                 <div className="NotFound float-center">

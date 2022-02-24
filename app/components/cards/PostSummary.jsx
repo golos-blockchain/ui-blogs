@@ -127,7 +127,12 @@ class PostSummary extends React.Component {
                          </div>
         }
 
-        const {gray, pictures, authorRepLog10, flagWeight, isNsfw, isOnlyblog} = content.get('stats', Map()).toJS()
+        const {gray, pictures, authorRepLog10, flagWeight, isNsfw, isOnlyblog, isOnlyapp} = content.get('stats', Map()).toJS()
+
+        if (isOnlyapp && !myAccount) {
+            return null
+        }
+
         const p = extractContent(immutableAccessor, content);
         const nsfwTags = ['nsfw', 'ru--mat', '18+']
         let nsfwTitle = nsfwTags[0]
@@ -201,6 +206,7 @@ class PostSummary extends React.Component {
                 {title_text}
             </a>
             {onlyblog && <span className="nsfw_post" title={tt('post_editor.onlyblog_hint')}>{tt('g.for_followers')}</span>}
+            {isOnlyapp && <span className="nsfw_post" title={tt('post_editor.visible_option_onlyapp_hint')}>{tt('g.only_app')}</span>}
             {warn && <span className="nsfw_post" title={tt('post_editor.nsfw_hint')}>{detransliterate(nsfwTitle)}</span>}
             {worker_post && <a target="_blank" href={worker_post}><span className="worker_post">{tt('workers.worker_post')}</span></a>}
             {promoted_post && <a target="_blank" href="https://wiki.golos.id/users/welcome#prodvinut-post"><span className="promoted_post" title={promosumm}>{tt('g.promoted_title')}</span></a>}
