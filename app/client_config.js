@@ -33,7 +33,7 @@ export const SITE_DESCRIPTION = 'Голос - платформа блогов н
 
 export const FIRST_DATE = new Date(Date.UTC(2016, 7, 1)); //1 september
 // ignore special tags, dev-tags, partners tags
-export const IGNORE_TAGS = ['test', 'onlyblog']
+export const IGNORE_TAGS = ['test', 'onlyblog', 'onlyapp']
 export const SELECT_TAGS_KEY = 'gls.select.tags'
 export const PUBLIC_API = {
   created:         'getDiscussionsByCreatedAsync',
