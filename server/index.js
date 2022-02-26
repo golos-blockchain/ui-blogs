@@ -14,7 +14,6 @@ require('module').Module._initPaths();
 
 global.$STM_Config = {
     ws_connection_client: config.get('ws_connection_client'),
-    ws_connection_msgs: config.get('ws_connection_msgs'),
     hide_comment_neg_rep: config.get('hide_comment_neg_rep'),
     show_adv_banners: config.get('show_adv_banners'),
     add_notify_site: config.get('add_notify_site'),
@@ -25,8 +24,11 @@ global.$STM_Config = {
     elastic_search: config.get('elastic_search'),
     auth_service: config.get('auth_service'),
     notify_service: config.get('notify_service'),
+    messenger_service: config.get('messenger_service'),
     forums: config.get('forums'),
     gamefication: config.get('gamefication'),
+    blocked_users: config.get('blocked_users'),
+    blocked_posts: config.get('blocked_posts'),
     ui_version: version || '1.0-unknown',
 };
 

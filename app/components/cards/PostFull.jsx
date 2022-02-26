@@ -8,7 +8,6 @@ import transaction from 'app/redux/Transaction';
 import { repLog10, parsePayoutAmount } from 'app/utils/ParsersAndFormatters';
 import extractContent from 'app/utils/ExtractContent';
 import { immutableAccessor, objAccessor } from 'app/utils/Accessors';
-import LEGALList from 'app/utils/LEGALList';
 import { isPostVisited, visitPost } from 'app/utils/helpers';
 import { serverApiRecordEvent } from 'app/utils/ServerApiClient';
 import Icon from 'app/components/elements/Icon';
@@ -396,7 +395,7 @@ class PostFull extends React.Component {
         const url = `/${category}/@${author}/${permlink}`;
         let contentBody;
 
-        if (LEGALList.includes(url) && !username) {
+        if ($STM_Config.blocked_posts.includes(url) && !username) {
             contentBody = tt(
                 'postfull_jsx.this_post_is_not_available_due_to_breach_of_legislation'
             );

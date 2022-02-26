@@ -109,20 +109,6 @@
     "or": " или ",
     "google": "Google"
   },
-  "messages": {
-    "last_seen": "был(а) ",
-    "search": "Поиск людей",
-    "search_not_found": "Никого не найдено",
-    "type_a_message": "Напишите сообщение",
-    "cannot_load_image_try_again": "Не удалось загрузить картинку. Попробуйте другую или еще раз.",
-    "cannot_select_too_much_messages": "Невозможно одновременно выбрать более 10 сообщений.",
-    "new_message1": " новое сообщение",
-    "new_message234": " новых сообщения",
-    "new_message5": " новых сообщений",
-    "invalid_message": "(Это сообщение не может быть отображено в Golos Messenger)",
-    "sync_error": "Ошибка синхронизации. Для получения новых сообщений обновляйте страницу.",
-    "sync_error_short": "Ошибка синхронизации."
-  },
   "reputation_panel_jsx": {
     "cannot_vote_neg_rep": "Вы не можете голосовать за или против пользователей, у вас отрицательная репутация",
     "cannot_downvote_lower_rep_ACCOUNT_NAME": "Вы не можете голосовать против пользователя, поскольку ваша репутация ниже чем у @%(ACCOUNT_NAME)s",
@@ -272,6 +258,7 @@
     "power_up": "Увеличить %(VESTING_TOKEN2)s",
     "promoted_title": "продвижение",
     "promoted_post": "Этот пост был продвинут за ",
+    "for_followers": "для подписчиков",
     "preview": "Предварительный просмотр",
     "previous": "Предыдущий",
     "price": "Цена",
@@ -1363,7 +1350,8 @@
     "proposal": "заявки",
     "payment_in_GP": "Выплата в СГ",
     "voting_time": "Время голосования (суток)",
-    "proposal_fee": "Будет списано"
+    "proposal_fee": "Будет списано",
+    "worker_post": "заявка в фонд"
   },
   "emoji_i18n": {
     "categoriesLabel": "Категории",

@@ -346,23 +346,20 @@ class App extends React.Component {
 
         const themeClass = nightmodeEnabled ? ' theme-dark' : ' theme-light';
 
-        const noHeader = location.pathname.startsWith('/msgs');
         const noFooter = location.pathname.startsWith('/submit')
-            || location.pathname.startsWith('/msgs');
+
         return (
             <div
                 className={
                     'App' + ' ' + themeClass +
                     (lp ? ' LP' : '') +
                     (ip ? ' index-page' : '') +
-                    (miniHeader ? ' mini-' : '') +
-                    (noHeader ? ' no-header' : '')
+                    (miniHeader ? ' mini-' : '')
                 }
                 onMouseMove={this.onEntropyEvent}
             >
-                {noHeader ? null : (miniHeader ? <MiniHeader /> : <Header />)}
-                <div className={cn('App__content' +
-                    (noHeader ? ' no-header' : ''), {
+                {miniHeader ? <MiniHeader /> : <Header />}
+                <div className={cn('App__content', {
                     'App__content_hide-sub-menu': route.hideSubMenu,
                 })}>
                     {welcome_screen}

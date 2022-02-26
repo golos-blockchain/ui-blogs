@@ -5,7 +5,6 @@ import { Link } from 'react-router';
 import { Long } from 'bytebuffer';
 import cn from 'classnames';
 import tt from 'counterpart';
-import { blockedUsers } from 'app/utils/IllegalContent';
 import { sortComments } from 'app/utils/comments';
 import user from 'app/redux/User';
 import transaction from 'app/redux/Transaction';
@@ -164,7 +163,7 @@ class CommentImpl extends PureComponent {
         let body = null;
         let controls = null;
 
-        if (blockedUsers.includes(comment.author)) {
+        if ($STM_Config.blocked_users.includes(comment.author)) {
             return null;
         } else if (!this.state.collapsed && !hideBody) {
             body = (

@@ -52,6 +52,7 @@
 @import "./elements/postEditor/PostTitle/PostTitle";
 @import "./elements/postEditor/TagsEditLine/index";
 @import "./elements/postEditor/TagInput/index";
+@import "./elements/workers/WorkerRequestVoting";
 
 // dialogs
 @import "./dialogs/DialogFrame/index";
@@ -75,7 +76,6 @@
 @import "./modules/TopRightMenu";
 @import "./modules/UserWallet";
 @import "./modules/Powerdown.scss";
-@import "./modules/Messages";
 @import "./modules/Modals";
 @import "./modules/PostForm/PostForm";
 
@@ -84,7 +84,6 @@
 @import "./pages/Exchanges";
 @import "./pages/Services";
 @import "./pages/LeavePage";
-@import "./pages/Messages";
 @import "./pages/Search";
 @import "./pages/Post";
 @import "./pages/PostsIndex";

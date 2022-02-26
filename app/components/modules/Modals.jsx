@@ -12,7 +12,6 @@ import tr from 'app/redux/Transaction';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import Powerdown from 'app/components/modules/Powerdown';
 import {NotificationStack} from 'react-notification';
-import MessageBox from 'app/components/modules/Messages';
 import OpenOrders from 'app/components/modules/OpenOrders';
 
 let keyIndex = 0;
@@ -33,8 +32,6 @@ class Modals extends React.Component {
         hidePromotePost: PropTypes.func.isRequired,
         notifications: PropTypes.object,
         removeNotification: PropTypes.func,
-        show_messages_modal: PropTypes.bool,
-        hideMessages: PropTypes.func.isRequired,
         show_open_orders_modal: PropTypes.bool,
         hideOpenOrders: PropTypes.func.isRequired,
     };
@@ -64,8 +61,6 @@ class Modals extends React.Component {
             hideSignUp,
             notifications,
             removeNotification,
-            show_messages_modal,
-            hideMessages,
             show_open_orders_modal,
             hideOpenOrders,
         } = this.props;
@@ -101,10 +96,6 @@ class Modals extends React.Component {
                     <CloseButton onClick={hideSignUp} />
                     <SignUp />
                 </Reveal>}
-                {show_messages_modal && <Reveal onHide={hideMessages} show={show_messages_modal} size="large" revealClassName="MessagesBox">
-                    <CloseButton onClick={hideMessages} />
-                    <MessageBox />
-                </Reveal>}
                 {show_open_orders_modal && <Reveal onHide={hideOpenOrders} show={show_open_orders_modal} size="large" revealClassName="OpenOrders">
                     <CloseButton onClick={hideOpenOrders} />
                     <OpenOrders />
@@ -132,7 +123,6 @@ export default connect(
             show_signup_modal: state.user.get('show_signup_modal'),
             show_powerdown_modal: state.user.get('show_powerdown_modal'),
             notifications: state.app.get('notifications'),
-            show_messages_modal: state.user.get('show_messages_modal'),
             show_open_orders_modal: state.user.get('show_open_orders_modal'),
         }
     },
@@ -164,10 +154,6 @@ export default connect(
         // example: addNotification: ({key, message}) => dispatch({type: 'ADD_NOTIFICATION', payload: {key, message}}),
         removeNotification: (key) => dispatch({type: 'REMOVE_NOTIFICATION', payload: {key}}),
         
-        hideMessages: e => {
-            if (e) e.preventDefault();
-            dispatch(user.actions.hideMessages())
-        },
         hideOpenOrders: e => {
             if (e) e.preventDefault();
             dispatch(user.actions.hideOpenOrders())

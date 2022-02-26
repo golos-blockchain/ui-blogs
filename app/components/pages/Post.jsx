@@ -10,7 +10,6 @@ import IllegalContentMessage from 'app/components/elements/IllegalContentMessage
 import {Set} from 'immutable'
 import tt from 'counterpart';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
-import { blockedUsers } from 'app/utils/IllegalContent';
 
 class Post extends React.Component {
     static propTypes = {
@@ -167,7 +166,7 @@ class Post extends React.Component {
                 </div>
             </center>
 
-          if(blockedUsers.includes(post.split("/")[0])) {
+          if($STM_Config.blocked_users.includes(post.split("/")[0])) {
             return (<IllegalContentMessage />)
           }
           

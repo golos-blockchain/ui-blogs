@@ -1,0 +1,22 @@
+.WRVoting__button-up, .WRVoting__button-down {
+  display: inline-block;
+  position: relative;
+
+  .dropdown-pane {
+    top: -10px;
+    left: 10px;
+    width: 350px;
+  }
+}
+
+.WRVoting__button-down {
+  .weight-display {
+    color: #C00 !important;
+  }
+}
+
+.WRVoting__button-down {
+  .weight-display {
+    color: #C00 !important;
+  }
+}

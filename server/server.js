@@ -18,7 +18,6 @@ import flash from 'koa-flash';
 import minimist from 'minimist';
 import config from 'config';
 import { routeRegex } from 'app/ResolveRoute';
-import { blockedUsers } from 'app/utils/IllegalContent';
 import secureRandom from 'secure-random';
 import { APP_NAME_UP } from 'app/client_config';
 
@@ -50,8 +49,22 @@ function convertEntriesToArrays(obj) {
     }, {});
 }
 
+// for redirects
+let messengerHost
+try {
+    messengerHost = config.get('messenger_service.host')
+} catch (err) {
+    console.warn('messenger_service.host is not set')
+}
+
 // some redirects
 app.use(function*(next) {
+    if (messengerHost && (this.url === '/msgs' || this.url.startsWith('/msgs/'))) {
+        this.url = this.url.replace('/msgs', '') // only 1st occurence
+        this.url = new URL(this.url, messengerHost).toString()
+        this.redirect(this.url)
+        return
+    }
     // normalize url for %40 opportunity for @ in posts
     if (this.url.indexOf('%40') !== -1) {
       const transfer = this.url.split("?")[0].split(`/`).includes(`transfers`);
@@ -80,7 +93,7 @@ app.use(function*(next) {
 		} else {
 			userCheck = p.split("/")[1].slice(1);
 		}
-		if (blockedUsers.includes(userCheck)) {
+		if ($STM_Config.blocked_users.includes(userCheck)) {
 			console.log('Illegal content user found blocked', `@${userCheck}`);
 			this.status = 451;
 			return;

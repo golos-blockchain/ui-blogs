@@ -63,9 +63,6 @@ function* onUserLogin(action) {
                 removeTaskIds = yield notificationTake(action.username, removeTaskIds,
                     (type, op, timestamp, id, scope) => {
                         if (op._offchain) return;
-                        if (window.location.pathname.startsWith('/msgs')) {
-                            return;
-                        }
                         if (!getScopePresets(action.username).includes(scope)) {
                             return;
                         }

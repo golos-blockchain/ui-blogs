@@ -26,20 +26,6 @@
     "or": " or ",
     "google": "Google"
   },
-  "messages": {
-    "last_seen": "last seen ",
-    "search": "Search people",
-    "search_not_found": "Nobody found",
-    "type_a_message": "Type a message",
-    "cannot_load_image_try_again": "Cannot upload image. Try again or another one.",
-    "cannot_select_too_much_messages": "Cannot select more than 10 messages at once.",
-    "new_message1": " notification",
-    "new_message234": " notifications",
-    "new_message5": " notifications",
-    "invalid_message": "(This message could not be displayed in Golos Messenger)",
-    "sync_error": "Sync error. To receive new messages please refresh the page.",
-    "sync_error_short": "Sync error."
-  },
   "reputation_panel_jsx": {
     "cannot_vote_neg_rep": "You cannot upvote/downvote account reputations, because your reputation is negative",
     "cannot_downvote_lower_rep_ACCOUNT_NAME": "You cannot downvote @%(ACCOUNT_NAME)s, because your reputation is lesser than their",
@@ -184,6 +170,7 @@
     "voting_capacity": "Golos Power",
     "promoted_title": "promoted",
     "promoted_post": "This post was promoted for ",
+    "for_followers": "for followers",
     "preview": "Preview",
     "previous": "Previous",
     "price": "Price",
@@ -1299,7 +1286,8 @@
     "proposal": "proposal",
     "payment_in_GP": "Payment in GP",
     "voting_time": "Voting time (days)",
-    "proposal_fee": "Will be debited"
+    "proposal_fee": "Will be debited",
+    "worker_post": "worker request"
   },
   "emoji_i18n": {
     "categoriesLabel": "Categories",
