@@ -157,10 +157,10 @@ class PostsList extends PureComponent {
             topPosition(el) + el.offsetHeight - scrollTop - window.innerHeight <
             10
         ) {
-            const { loadMore, posts, category } = this.props;
+            const { loadMore, posts, category, next_from } = this.props;
 
             if (loadMore && posts && posts.size) {
-                loadMore(posts.last(), category);
+                loadMore(posts.last(), category, next_from);
             }
         }
 
@@ -312,6 +312,7 @@ export default connect(
             ...props,
             username,
             content: state.global.get('content'),
+            next_from: state.global.get('next_from'),
             ignoreResult: state.global.getIn([
                 'follow',
                 'getFollowingAsync',

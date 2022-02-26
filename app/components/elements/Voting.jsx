@@ -165,7 +165,9 @@ class Voting extends React.Component {
                 </span>
         }
 
-        const total_votes = post_obj.getIn(['stats', 'total_votes']);
+        const total_votes = post_obj.get('from_search') ?
+            post_obj.get('net_votes') :
+            post_obj.getIn(['stats', 'total_votes'])
 
         const up = <Icon name={votingUpActive ? 'empty' : 'chevron-up-circle'} />;
         const classUp = 'Voting__button Voting__button-up' + (myVote > 0 ? ' Voting__button--upvoted' : '') + (votingUpActive ? ' votingUp' : '');

@@ -178,6 +178,7 @@
     "print": "Print",
     "promote": "Promote",
     "promote_block": "Promoted content",
+    "and_more_search_posts_COUNT": "Found %(COUNT)s posts older than 7 days:",
     "more_post": "Go to advanced post search",
     "promoted": "promoted",
     "re": "RE",

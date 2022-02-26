@@ -314,6 +314,8 @@ export default createModule({
                     category,
                     permlink: startPermLink,
                     accountname,
+                    has_from_search,
+                    next_from,
                 } = payload;
                 let newState = state;
 
@@ -372,6 +374,9 @@ export default createModule({
                         }
                     }
                 );
+
+                newState = newState.set('has_from_search', has_from_search)
+                    .set('next_from', next_from)
 
                 return newState;
             },
