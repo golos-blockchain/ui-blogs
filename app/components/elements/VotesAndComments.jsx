@@ -13,6 +13,7 @@ class VotesAndComments extends React.Component {
         post: PropTypes.string.isRequired,
         commentsLink: PropTypes.string.isRequired,
         isForum: PropTypes.bool,
+        fromSearch: PropTypes.bool,
 
         // Redux connect properties
         votes: PropTypes.number,
@@ -25,8 +26,8 @@ class VotesAndComments extends React.Component {
     }
 
     onClick = (event) => {
-        const { isForum, commentsLink } = this.props;
-        if (isForum) {
+        const { isForum, fromSearch, commentsLink } = this.props;
+        if (isForum || fromSearch) {
             event.preventDefault();
             window.open(commentsLink, '_blank');
         }
