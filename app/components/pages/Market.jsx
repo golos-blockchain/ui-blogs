@@ -810,7 +810,7 @@ class Market extends Component {
                 </div>
                 <div className="row">
                     <div className="column small-12">
-                    <p className="text-center"><Icon name="info_o" /> <small>Попробуйте торговать и через новый интерфейс на <a target="_blank" href="https://golosdex.com">GolosDEX.com</a> или <a target="_blank" href="https://gls.exchange">GLS.exchange</a> (подробнее <a target="_blank" href="/@graphenelab/reliz-novoi-birzhi-golos">в посте</a>).</small></p>
+                    <p className="text-center"><Icon name="info_o" /> <small>Попробуйте торговать и через новый интерфейс на <a target="_blank" href="https://dex.golos.app">dex.golos.app</a> или <a target="_blank" href="https://gls.exchange">gls.exchange</a> (подробнее <a target="_blank" href="/@graphenelab/reliz-novoi-birzhi-golos">в посте</a>).</small></p>
                     </div>
                 </div>
                 <div className="row">

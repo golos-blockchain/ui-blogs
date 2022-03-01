@@ -205,7 +205,7 @@ class Post extends React.Component {
                 </div>
 
                 <p align="center">
-                    <a target="_blank" href="https://golosdex.com"><img src={require("app/assets/images/banners/golosdex.png")} width="800" height="100" /></a>
+                    <a target="_blank" href="https://dex.golos.app"><img src={require("app/assets/images/banners/golosdex.png")} width="800" height="100" /></a>
                     <span className="strike"><a target="_blank" href="/@graphenelab/reliz-novoi-birzhi-golos">{tt('g.more_hint')}</a></span>
                 </p>
 
