@@ -4592,9 +4592,9 @@ core-js@^3.0.4, core-js@^3.19.0, core-js@^3.19.1, core-js@^3.6.5, core-js@^3.8.2
   integrity sha512-Tnc7E9iKd/b/ff7GFbhwPVzJzPztGrChB8X8GLqoYGdEOG8IpLnK1xPyo3ZoO3HsK6TodJS58VGPOxA+hLHQMg==
 
 core-js@^3.17.3:
-  version "3.19.2"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.19.2.tgz#ae216d7f4f7e924d9a2e3ff1e4b1940220f9157b"
-  integrity sha512-ciYCResnLIATSsXuXnIOH4CbdfgV+H1Ltg16hJFN7/v6OxqnFr/IFGeLacaZ+fHLAm0TBbXwNK9/DNBzBUrO/g==
+  version "3.21.1"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.21.1.tgz#f2e0ddc1fc43da6f904706e8e955bc19d06a0d94"
+  integrity sha512-FRq5b/VMrWlrmCzwRrpDYNxyHP9BcAZC+xHJaqTgIE5091ZV1NTmyh0sGOg5XqpnHvR0svdy0sv1gWA1zmhxig==
 
 core-js@^3.6.0:
   version "3.12.1"
@@ -7156,10 +7156,10 @@ globule@^1.0.0:
     lodash "~4.17.10"
     minimatch "~3.0.2"
 
-golos-lib-js@^0.9.23:
-  version "0.9.23"
-  resolved "https://registry.yarnpkg.com/golos-lib-js/-/golos-lib-js-0.9.23.tgz#a49e0fbdbf4520a4a5ffb5a004a948b9329115ab"
-  integrity sha512-Hc95en2KMXRt9JDul33hUxcOMgbyE3k+nqKE0toTSsdNZ1RgHwFX7WoOa2d7DJWTTjTp1ifWiWN0uNdzeZAQ/A==
+golos-lib-js@^0.9.25:
+  version "0.9.25"
+  resolved "https://registry.yarnpkg.com/golos-lib-js/-/golos-lib-js-0.9.25.tgz#352c12b829fa42e4dcd6ca3adaa564ba94b6d09e"
+  integrity sha512-yuxDQQ09UXDf2lpkH1Yzqq1V/poBgFpeVGA/TQ61ZorUtCoLOSISfn0LJm3fxCtPltE515DwQv3/4pjsFuAUPw==
   dependencies:
     assert "^2.0.0"
     bigi "^1.4.2"
@@ -15441,9 +15441,9 @@ ws@^4.0.0:
     safe-buffer "~5.1.0"
 
 ws@^8.2.3:
-  version "8.3.0"
-  resolved "https://registry.yarnpkg.com/ws/-/ws-8.3.0.tgz#7185e252c8973a60d57170175ff55fdbd116070d"
-  integrity sha512-Gs5EZtpqZzLvmIM59w4igITU57lrtYVFneaa434VROv4thzJyV6UjIL3D42lslWlI+D4KzLYnxSwtfuiO79sNw==
+  version "8.5.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.5.0.tgz#bfb4be96600757fe5382de12c670dab984a1ed4f"
+  integrity sha512-BWX0SWVgLPzYwF8lTzEy1egjhS4S4OEAHfsO8o65WOVsrnSRGaSiUaa9e0ggGlkMTtBlmOpEXiie9RUcBO86qg==
 
 x-xss-protection@1.1.0:
   version "1.1.0"
