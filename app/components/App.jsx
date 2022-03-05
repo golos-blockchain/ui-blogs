@@ -292,9 +292,14 @@ class App extends React.Component {
                                     this.closeBox($STM_Config.add_notify_site);
                                 }}
                             />
-                            <Link className="link" to={notifyLink}>
-                                <Icon className="logo-icon" name={APP_ICON} /> {notifyTitle}
-                            </Link>
+                            {$STM_Config.add_notify_site.new_tab ? 
+                                <a className="link" href={notifyLink} target='_blank'>
+                                    <Icon className="logo-icon" name={APP_ICON} /> {notifyTitle}
+                                </a>
+                                :
+                                <Link className="link" to={notifyLink}>
+                                    <Icon className="logo-icon" name={APP_ICON} /> {notifyTitle}
+                                </Link>}
                         </div>
                     </div>
                 </div>
@@ -351,7 +356,10 @@ class App extends React.Component {
 
         const themeClass = nightmodeEnabled ? ' theme-dark' : ' theme-light';
 
-        const noFooter = location.pathname.startsWith('/submit')
+        const isApp = process.env.IS_APP && location.pathname.startsWith('/__app_')
+
+        const noHeader = isApp
+        const noFooter = isApp || location.pathname.startsWith('/submit')
 
         return (
             <div
@@ -359,12 +367,14 @@ class App extends React.Component {
                     'App' + ' ' + themeClass +
                     (lp ? ' LP' : '') +
                     (ip ? ' index-page' : '') +
-                    (miniHeader ? ' mini-' : '')
+                    (miniHeader ? ' mini-' : '') +
+                    (noHeader ? ' no-header' : '')
                 }
                 onMouseMove={this.onEntropyEvent}
             >
-                {miniHeader ? <MiniHeader /> : <Header />}
-                <div className={cn('App__content', {
+                {noHeader ? null : (miniHeader ? <MiniHeader /> : <Header />)}
+                <div className={cn('App__content' +
+                    (noHeader ? ' no-header' : ''), {
                     'App__content_hide-sub-menu': route.hideSubMenu,
                 })}>
                     {welcome_screen}

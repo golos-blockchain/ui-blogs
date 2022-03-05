@@ -7,7 +7,7 @@ import {loadFollows, fetchFollowCount} from 'app/redux/FollowSaga';
 import {getContent} from 'app/redux/SagaShared';
 import GlobalReducer from './GlobalReducer';
 import constants from './constants';
-import { reveseTag } from 'app/utils/tags';
+import { reveseTag, ONLYAPP_TAG } from 'app/utils/tags';
 import { PUBLIC_API, CATEGORIES, IGNORE_TAGS, SELECT_TAGS_KEY, DEBT_TOKEN_SHORT, LIQUID_TICKER } from 'app/client_config';
 import { SearchRequest, searchData } from 'app/utils/SearchClient'
 
@@ -452,6 +452,11 @@ export function* fetchData(action) {
         from,
     } = action.payload;
 
+    let ignore_tags = [...IGNORE_TAGS]
+    if (!process.env.IS_APP) {
+        ignore_tags.push(ONLYAPP_TAG)
+    }
+
     let { category } = action.payload;
 
     if( !category ) category = "";
@@ -505,7 +510,7 @@ export function* fetchData(action) {
                 
             })
             args[0].select_categories = selectTags;
-            args[0].filter_tags = IGNORE_TAGS
+            args[0].filter_tags = ignore_tags
         }
     }
 
@@ -601,7 +606,7 @@ export function* fetchData(action) {
                 .setFrom(from)
                 .onlyPosts()
                 .olderThan(odt)
-                .filterTags(IGNORE_TAGS)
+                .filterTags(ignore_tags)
             if (args[0].select_categories) {
                 req = req.byOneOfCategories(args[0].select_categories)
             } else if (args[0].select_tags) {

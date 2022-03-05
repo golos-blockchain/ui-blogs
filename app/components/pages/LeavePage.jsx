@@ -7,7 +7,12 @@ class LeavePage extends Component {
     }
 
     leaveOut = target => () => {
-        window.location.assign(target)
+        if (process.env.IS_APP) {
+            window.open(target, '_blank')
+            window.close()
+        } else {
+            window.location.assign(target)
+        }
     }
 
     render() {
