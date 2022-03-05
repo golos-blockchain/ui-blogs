@@ -32,11 +32,7 @@ export function getGameLevel(account, gprops, smallIcon = false) {
                 level = levels[0]
             }
 
-            url = $STM_Config.site_domain
-            if (!url.startsWith('http')) {
-                url = 'https://' + url
-            }
-            url = new URL('/images/gamefication/' + level.imgs[smallIcon ? 0 : level.imgs.length - 1], url).toString()
+            url = '/images/gamefication/' + level.imgs[smallIcon ? 0 : level.imgs.length - 1]
             //url = proxifyImageUrl(url, '48x48')
 
             const locale = tt.getLocale().startsWith('ru') ? 0 : 1

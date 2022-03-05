@@ -150,7 +150,7 @@ class Post extends React.Component {
             });
         }
         let emptyPost = dis.get('created') === '1970-01-01T00:00:00' && dis.get('body') === ''
-        if (stats.isOnlyapp) {
+        if (stats.isOnlyapp && !process.env.IS_APP) {
             if (!current_user || current_user.get('username') !== dis.get('author')) {
                 emptyPost = true
             }

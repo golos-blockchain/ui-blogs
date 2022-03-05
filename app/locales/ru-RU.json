@@ -1404,5 +1404,19 @@
     "mention_post": " упомянул вас в своем посте",
     "mention_comment": " упомянул вас в комментарии",
     "message": " написал вам сообщение"
+  },
+  "app_settings": {
+    "ws_connection_client": "Адрес ноды GOLOS",
+    "img_proxy_prefix": "Использовать прокси для изображений",
+    "auth_service": "Golos Auth & Registration Service (для уведомлений)",
+    "notify_service": "Golos Notify Service (для уведомлений)",
+    "messenger_service": "Мессенджер",
+    "elastic_search": "Поиск",
+    "save_and_restart": "Сохранить и перезапустить",
+    "cancel": "Отмена"
+  },
+  "app_update": {
+    "notify_VERSION": "Доступна новая версия GOLOS Блогов - %(VERSION)s",
+    "download": "Скачать"
   }
 }

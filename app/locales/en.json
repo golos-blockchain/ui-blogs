@@ -1340,5 +1340,19 @@
     "mention_post": " mentioned you in their post",
     "mention_comment": " mentioned you in their comment",
     "message": " sent you a private message"
+  },
+  "app_settings": {
+    "ws_connection_client": "GOLOS node URL",
+    "img_proxy_prefix": "Use Proxy For Images",
+    "auth_service": "Golos Auth & Registration Service (for notifications)",
+    "notify_service": "Golos Notify Service (for notifications)",
+    "messenger_service": "Messenger",
+    "elastic_search": "Search",
+    "save_and_restart": "Save and restart",
+    "cancel": "Cancel"
+  },
+  "app_update": {
+    "notify_VERSION": "Доступна новая версия GOLOS Блогов - %(VERSION)s",
+    "download": "Download"
   }
 }
