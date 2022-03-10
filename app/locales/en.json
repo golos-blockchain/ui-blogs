@@ -1173,6 +1173,7 @@
     "visible_option_onlyblog": "Followers only",
     "visible_option_onlyapp": "Application only",
     "visible_option_onlyapp_hint": "Golos Blogs desktop application only",
+    "onlyapp_cannot_be_removed": "You are yet published post. Cannot make it available on web UI",
     "tags_input_placeholder": "Add tags",
     "convert_to_md_warning": "Converting to Markdown may cause some changes and markup loses. Are you sure?",
     "convert_to_html_warning": "Converting to HTML may cause some changes and markup loses. Are you sure?",

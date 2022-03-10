@@ -118,7 +118,9 @@ class PostOptions extends React.PureComponent {
     }
 
     _renderEyeMenu() {
-        const { visibleType } = this.props;
+        const { editMode, visibleType } = this.props;
+
+        const disableChoice = editMode && visibleType === VISIBLE_TYPES.ONLY_APP
 
         return (
             <Hint align="center" innerRef={this._popupEyeRef}>
@@ -126,6 +128,8 @@ class PostOptions extends React.PureComponent {
                     {tt('post_editor.set_visible_type')}:
                 </div>
                 <RadioGroup
+                    disabled={disableChoice}
+                    title={disableChoice ? tt('post_editor.onlyapp_cannot_be_removed') : ''}
                     options={VISIBLE_OPTIONS.map(({ id, title, hint }) => ({
                         id,
                         title: tt(title) + ' ',
