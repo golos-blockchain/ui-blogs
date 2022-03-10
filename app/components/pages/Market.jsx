@@ -757,18 +757,18 @@ class Market extends Component {
                     <thead>
                         <tr>
                             <th>
-                                <a href='#' onClick={(e) => toggleOrdersSorting(e, BY_DATE)} style={{ textDecoration: 'underline dotted' }}>
-                                    {tt('market_jsx.date_created')}
+                                <a href='#' onClick={(e) => toggleOrdersSorting(e, BY_DATE)}>
+                                    {tt('market_jsx.date_created')} <Icon name="sorting" />
                                 </a>
                             </th>
                             <th>
-                                <a href='#' onClick={(e) => toggleOrdersSorting(e, BY_TYPE)} style={{ textDecoration: 'underline dotted' }}>
-                                    {tt('g.type')}
+                                <a href='#' onClick={(e) => toggleOrdersSorting(e, BY_TYPE)}>
+                                    {tt('g.type')} <Icon name="sorting" />
                                 </a>
                             </th>
                             <th>
-                                <a href='#' onClick={(e) => toggleOrdersSorting(e, BY_PRICE)} style={{ textDecoration: 'underline dotted' }}>
-                                    {tt('g.price')}
+                                <a href='#' onClick={(e) => toggleOrdersSorting(e, BY_PRICE)}>
+                                    {tt('g.price')} <Icon name="sorting" />
                                 </a>
                             </th>
                             <th className="uppercase">{sym1}</th>
