@@ -1350,7 +1350,8 @@
     "messenger_service": "Messenger",
     "elastic_search": "Search",
     "save_and_restart": "Save and restart",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "node_error_NODE": "Не удалось подключиться к ноде %(NODE)s. Возможно, это проблемы с интернетом. Или попробуйте задать другую ноду GOLOS в меню Настройки."
   },
   "app_update": {
     "notify_VERSION": "Доступна новая версия GOLOS Блогов - %(VERSION)s",

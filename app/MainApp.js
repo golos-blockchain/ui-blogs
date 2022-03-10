@@ -1,5 +1,6 @@
 import renderApp from 'app/renderApp'
 import golos from 'golos-lib-js'
+import tt from 'counterpart'
 
 import * as api from 'app/utils/APIWrapper'
 import getState from 'app/utils/StateBuilder'
@@ -25,6 +26,15 @@ const initialState = {
 window.$STM_Config = initialState.offchain.config
 window.$STM_csrf = null // not used in app
 
+function closeSplash() {
+    if (window.appSplash)
+        window.appSplash.contentLoaded()
+}
+
+function showNodeError() {
+    alert(tt('app_settings.node_error_NODE', { NODE: $STM_Config.ws_connection_client }))
+}
+
 async function initState() {
     // these are need for getState
     await golos.importNativeLib();
@@ -47,10 +57,26 @@ async function initState() {
         alert('Cannot check updates' + err)
     }
 
-    const onchain = await getState(api, pathname, initialState.offchain)
+    let splashTimeout = setTimeout(() => {
+        closeSplash()
+        showNodeError()
+    }, 30000)
 
-    if (window.appSplash)
-        window.appSplash.contentLoaded()
+    let onchain
+    let nodeError = null
+    try {
+        onchain = await getState(api, pathname, initialState.offchain)
+    } catch (error) {
+        nodeError = error
+    }
+
+    clearTimeout(splashTimeout)
+    closeSplash()
+
+    if (nodeError) {
+        showNodeError()
+        throw nodeError
+    }
 
     return onchain
 }
