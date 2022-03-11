@@ -1351,7 +1351,8 @@
     "elastic_search": "Search",
     "save_and_restart": "Save and restart",
     "cancel": "Cancel",
-    "node_error_NODE": "Не удалось подключиться к ноде %(NODE)s. Возможно, это проблемы с интернетом. Или попробуйте задать другую ноду GOLOS в меню Настройки."
+    "node_error_NODE": "Не удалось подключиться к ноде %(NODE)s. Возможно, это проблемы с интернетом. Или попробуйте задать другую ноду GOLOS в меню Настройки.",
+    "to_save_click_button": "To save settings, click \"Save and restart\" button at bottom of the window."
   },
   "app_update": {
     "notify_VERSION": "Доступна новая версия GOLOS Блогов - %(VERSION)s",

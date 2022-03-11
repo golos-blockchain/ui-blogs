@@ -87,6 +87,9 @@ class AppSettings extends React.Component {
     render() {
         return <div>
             <h1 style={{marginLeft: '0.5rem', marginTop: '1rem'}}>{tt('g.settings')}</h1>
+            <div className='secondary' style={{ paddingLeft: '0.625rem', marginBottom: '0.25rem' }}>
+                {tt('app_settings.to_save_click_button')}
+            </div>
             <Formik
                 initialValues={this.initialValues}
                 onSubmit={this._onSubmit}
