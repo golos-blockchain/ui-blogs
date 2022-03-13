@@ -757,18 +757,18 @@ class Market extends Component {
                     <thead>
                         <tr>
                             <th>
-                                <a href='#' onClick={(e) => toggleOrdersSorting(e, BY_DATE)} style={{ textDecoration: 'underline dotted' }}>
-                                    {tt('market_jsx.date_created')}
+                                <a href='#' onClick={(e) => toggleOrdersSorting(e, BY_DATE)}>
+                                    {tt('market_jsx.date_created')} <Icon name="sorting" />
                                 </a>
                             </th>
                             <th>
-                                <a href='#' onClick={(e) => toggleOrdersSorting(e, BY_TYPE)} style={{ textDecoration: 'underline dotted' }}>
-                                    {tt('g.type')}
+                                <a href='#' onClick={(e) => toggleOrdersSorting(e, BY_TYPE)}>
+                                    {tt('g.type')} <Icon name="sorting" />
                                 </a>
                             </th>
                             <th>
-                                <a href='#' onClick={(e) => toggleOrdersSorting(e, BY_PRICE)} style={{ textDecoration: 'underline dotted' }}>
-                                    {tt('g.price')}
+                                <a href='#' onClick={(e) => toggleOrdersSorting(e, BY_PRICE)}>
+                                    {tt('g.price')} <Icon name="sorting" />
                                 </a>
                             </th>
                             <th className="uppercase">{sym1}</th>
@@ -872,7 +872,7 @@ class Market extends Component {
                 </div>
                 <div className="row">
                     <div className="column small-12">
-                    <p className="text-center"><Icon name="info_o" /> <small>Попробуйте торговать и через новый интерфейс на <a target="_blank" href="https://golosdex.com">GolosDEX.com</a> или <a target="_blank" href="https://gls.exchange">GLS.exchange</a> (подробнее <a target="_blank" href="/@graphenelab/reliz-novoi-birzhi-golos">в посте</a>).</small></p>
+                    <p className="text-center"><Icon name="info_o" /> <small>Попробуйте торговать и через новый интерфейс на <a target="_blank" href="https://dex.golos.app">dex.golos.app</a> или <a target="_blank" href="https://gls.exchange">gls.exchange</a> (подробнее <a target="_blank" href="/@graphenelab/reliz-novoi-birzhi-golos">в посте</a>).</small></p>
                     </div>
                 </div>
                 <div className="row">

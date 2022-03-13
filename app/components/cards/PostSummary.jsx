@@ -272,7 +272,7 @@ class PostSummary extends React.Component {
 
         total_search = total_search ? <span class="strike" style={{ fontSize: '1rem', paddingBottom: '1rem' }}>
                 {tt('g.and_more_search_posts_COUNT', { COUNT: total_search })}
-                <img className="float-center" src={require("app/assets/images/search.png")} width="500" />
+                <img className="float-center" src={require("app/assets/images/search.png")} width="400" />
             </span> : null
 
         if (content.get('force_hide')) {

@@ -244,7 +244,7 @@ class PostsIndex extends React.Component {
                     </p>
 
                     <p align="center">
-                        <a target="_blank" href="https://golosdex.com"><img src={require("app/assets/images/banners/golosdex2.png")} width="220" height="160" /></a>
+                        <a target="_blank" href="https://dex.golos.app"><img src={require("app/assets/images/banners/golosdex2.png")} width="220" height="160" /></a>
                         <span className="strike"><a target="_blank" href="/@graphenelab/reliz-novoi-birzhi-golos">{tt('g.more_hint')}</a></span>
                     </p>
 
