@@ -1,6 +1,6 @@
 import { PUBLIC_API, CATEGORIES, IGNORE_TAGS } from 'app/client_config';
 import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile';
-import { reveseTag, prepareTrendingTags } from 'app/utils/tags';
+import { reveseTag, prepareTrendingTags, ONLYAPP_TAG } from 'app/utils/tags';
 
 const DEFAULT_VOTE_LIMIT = 10000
 
@@ -388,6 +388,9 @@ export default async function getState(api, url, options, offchain = {}) {
                 })
                 args.select_categories = selectTags;
                 args.filter_tags = IGNORE_TAGS
+                if (!process.env.IS_APP) {
+                    args.filter_tags = [...args.filter_tags, ONLYAPP_TAG]
+                }
             }
         }
         

@@ -71,7 +71,7 @@ function* uploadImage(action) {
     let postUrl = $STM_Config.images.upload_image
     let golosImages = false
     if (file && file.size > MAX_UPLOAD_IMAGE_SIZE) {
-        if (useGolosImages) {
+        if (useGolosImages && $STM_Config.images.use_img_proxy !== false) {
             const user = yield select(state => state.user);
             const username = user.getIn(['current', 'username']);
             const postingKey = user.getIn([

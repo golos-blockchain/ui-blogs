@@ -68,6 +68,17 @@ export default function resolveRoute(path)
     if (path === '/minused_accounts') {
         return {page: 'MinusedAccounts'};
     }
+    if (process.env.IS_APP) {
+        if (path === '/__app_splash') {
+            return {page: 'AppSplash'};
+        }
+        if (path === '/__app_settings') {
+            return {page: 'AppSettings'};
+        }
+        if (path === '/__app_update') {
+            return {page: 'AppUpdate'};
+        }
+    }
     if (path === '/nodes') {
         return {page: 'Nodes'};
     }
