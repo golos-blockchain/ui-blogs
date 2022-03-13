@@ -11,6 +11,7 @@ import TransactionError from 'app/components/elements/TransactionError';
 import Icon from 'app/components/elements/Icon';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
 import PriceChart from 'app/components/elements/PriceChart';
+import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Orderbook from 'app/components/elements/Orderbook';
 import OrderHistory from 'app/components/elements/OrderHistory';
 import { Order, TradeHistory } from 'app/utils/MarketClasses';
@@ -18,6 +19,12 @@ import { roundUp, roundDown } from 'app/utils/MarketUtils';
 import TickerPriceStat from 'app/components/elements/TickerPriceStat';
 import { DEBT_TOKEN_SHORT, LIQUID_TICKER } from 'app/client_config';
 import './Market.scss';
+
+const BY_TYPE = 'type'
+const BY_DATE = 'date'
+const BY_DATE_ASC = 'date_asc'
+const BY_PRICE = 'price'
+const BY_PRICE_ASC = 'price_asc'
 
 class Market extends Component {
     static propTypes = {
@@ -36,7 +43,8 @@ class Market extends Component {
         buySteemFeePct: '0%',
         sellSteemFeePct: '0%',
         sym1_list_page: 0,
-        sym2_list_page: 0
+        sym2_list_page: 0,
+        ordersSorting: BY_TYPE
     };
 
     UNSAFE_componentWillReceiveProps(np) {
@@ -650,8 +658,8 @@ class Market extends Component {
         let open_orders = this.props.open_orders;
         let orderbook = aggOrders(normalizeOrders(this.props.orderbook));
 
-        function normalizeOpenOrders(openOrders) {
-            return openOrders.map(o => {
+        const normalizeOpenOrders = (openOrders) => {
+            let res = openOrders.map(o => {
                 const type =
                     o.sell_price.base.indexOf(sym1) > 0
                         ? 'ask'
@@ -669,10 +677,49 @@ class Market extends Component {
                         type === 'bid' ? o.asset1 : o.asset2,
                 };
             });
+            let compare = null
+            const { ordersSorting } = this.state
+            if (ordersSorting === BY_DATE) {
+                compare = (a, b) => {
+                    return new Date(b.created) - new Date(a.created)
+                }
+            } else if (ordersSorting === BY_DATE_ASC) {
+                compare = (a, b) => {
+                    return new Date(a.created) - new Date(b.created)
+                }
+            } else if (ordersSorting === BY_PRICE) {
+                compare = (a, b) => {
+                    return b.price - a.price
+                }
+            } else if (ordersSorting === BY_PRICE_ASC) {
+                compare = (a, b) => {
+                    return a.price - b.price
+                }
+            } 
+            if (compare) {
+                res.sort(compare)
+            }
+            return res
+        }
+
+        const toggleOrdersSorting = (e, type) => {
+            e.preventDefault()
+            let ordersSorting = type
+            if (this.state.ordersSorting === ordersSorting) {
+                if (ordersSorting === BY_DATE) {
+                    ordersSorting = BY_DATE_ASC
+                }
+                if (ordersSorting === BY_PRICE) {
+                    ordersSorting = BY_PRICE_ASC
+                }
+            }
+            this.setState({
+                ordersSorting
+            })
         }
 
         // Logged-in user's open orders
-        function openOrdersTable(sym1, sym2, openOrders) {
+        const openOrdersTable = (sym1, sym2, openOrders) => {
             let need_reverse = false;
             let sym1_ = sym1.toUpperCase()
             let sym2_ = sym2.toUpperCase()
@@ -684,7 +731,10 @@ class Market extends Component {
                 openOrders &&
                 normalizeOpenOrders(openOrders).map(o => (
                     <tr key={o.orderid}>
-                        <td>{o.created.replace('T', ' ')}</td>
+                        <td>{(this.state.ordersSorting === BY_DATE || this.state.ordersSorting === BY_DATE_ASC) ?
+                            (<TimeAgoWrapper date={o.created} />) :
+                            (o.created.replace('T', ' '))
+                        }</td>
                         <td className={need_reverse ? (o.type === 'bid' ? 'sell-color' : 'buy-color') : (o.type === 'ask' ? 'sell-color' : 'buy-color')}>{tt(need_reverse ? (o.type === 'bid' ? 'g.sell' : 'g.buy') : (o.type === 'ask' ? 'g.sell' : 'g.buy'))}</td>
                         <td className={need_reverse ? (o.type === 'bid' ? 'sell-color' : 'buy-color') : (o.type === 'ask' ? 'sell-color' : 'buy-color')}>
                             {o.price.toFixed(assets_right[sym2].precision)}
@@ -706,9 +756,21 @@ class Market extends Component {
                 <table className="Market__open-orders">
                     <thead>
                         <tr>
-                            <th>{tt('market_jsx.date_created')}</th>
-                            <th>{tt('g.type')}</th>
-                            <th>{tt('g.price')}</th>
+                            <th>
+                                <a href='#' onClick={(e) => toggleOrdersSorting(e, BY_DATE)}>
+                                    {tt('market_jsx.date_created')} <Icon name="sorting" />
+                                </a>
+                            </th>
+                            <th>
+                                <a href='#' onClick={(e) => toggleOrdersSorting(e, BY_TYPE)}>
+                                    {tt('g.type')} <Icon name="sorting" />
+                                </a>
+                            </th>
+                            <th>
+                                <a href='#' onClick={(e) => toggleOrdersSorting(e, BY_PRICE)}>
+                                    {tt('g.price')} <Icon name="sorting" />
+                                </a>
+                            </th>
                             <th className="uppercase">{sym1}</th>
                             <th>{sym2}</th>
                             <th>{tt('market_jsx.action')}<br/>
@@ -810,7 +872,7 @@ class Market extends Component {
                 </div>
                 <div className="row">
                     <div className="column small-12">
-                    <p className="text-center"><Icon name="info_o" /> <small>Попробуйте торговать и через новый интерфейс на <a target="_blank" href="https://golosdex.com">GolosDEX.com</a> или <a target="_blank" href="https://gls.exchange">GLS.exchange</a> (подробнее <a target="_blank" href="/@graphenelab/reliz-novoi-birzhi-golos">в посте</a>).</small></p>
+                    <p className="text-center"><Icon name="info_o" /> <small>Попробуйте торговать и через новый интерфейс на <a target="_blank" href="https://dex.golos.app">dex.golos.app</a> или <a target="_blank" href="https://gls.exchange">gls.exchange</a> (подробнее <a target="_blank" href="/@graphenelab/reliz-novoi-birzhi-golos">в посте</a>).</small></p>
                     </div>
                 </div>
                 <div className="row">

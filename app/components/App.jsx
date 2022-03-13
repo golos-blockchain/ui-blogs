@@ -38,7 +38,6 @@ const availableDomains = [
     'golos.in',
     'golos.today',
     'golos.app',
-    'golosdex.com',
     'gls.exchange',
     'golostalk.com',
     'prizmtalk.com',
@@ -211,26 +210,31 @@ class App extends React.Component {
         else console.log('onEntropyEvent Unknown', e.type, e);
     }
 
-    isShowInfoBox() {
+    isShowInfoBox(notifySite) {
         if (process.env.BROWSER) {
             if (!localStorage.getItem('infobox')) {
-                const init = {
-                    id: 1512732747890, // initial value
+                localStorage.setItem('infobox', JSON.stringify({
+                    id: notifySite.id,
                     show: true,
-                };
-                localStorage.setItem('infobox', JSON.stringify(init));
+                }));
                 return true;
             } else {
                 const value = JSON.parse(localStorage.getItem('infobox'));
-                return value.show;
+                if (value.id === notifySite.id) {
+                    return value.show;
+                } else {
+                    return true
+                }
             }
         }
         return false;
     }
 
-    closeBox() {
-        const infoBox = JSON.parse(localStorage.getItem('infobox'));
-        infoBox.show = false;
+    closeBox(notifySite) {
+        const infoBox = {
+            id: notifySite.id,
+            show: false,
+        }
         localStorage.setItem('infobox', JSON.stringify(infoBox));
     }
 
@@ -259,7 +263,7 @@ class App extends React.Component {
         let callout = null;
         const notifyLink = $STM_Config.add_notify_site.link;
         const notifyTitle = $STM_Config.add_notify_site.title;
-        const showInfoBox = $STM_Config.add_notify_site.show && this.isShowInfoBox();
+        const showInfoBox = $STM_Config.add_notify_site.show && this.isShowInfoBox($STM_Config.add_notify_site);
 
         if (this.state.showCallout && (alert || warning || success)) {
             callout = (
@@ -284,7 +288,7 @@ class App extends React.Component {
                             <CloseButton
                                 onClick={() => {
                                     this.setState({ showCallout: false });
-                                    this.closeBox();
+                                    this.closeBox($STM_Config.add_notify_site);
                                 }}
                             />
                             <Link className="link" to={notifyLink}>

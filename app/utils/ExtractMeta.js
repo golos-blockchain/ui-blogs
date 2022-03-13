@@ -36,10 +36,17 @@ export default function extractMeta(chain_data, rp) {
         if (content && content.id !== '0.0.0') { // API currently returns 'false' data with id 0.0.0 for posts that do not exist
             const d = extractContent(objAccessor, content, false);
 
-            const hide = contentStats(content).hide;
+            const { hide, isOnlyapp } = contentStats(content)
             if (hide) {
                 metas.push({name: 'robots', content: 'noindex, nofollow'});
                 return metas;
+            }
+            if (isOnlyapp) {
+                d.title = ''
+                d.desc = ''
+                d.author = ''
+                delete d.image_link
+                d.link = '/@/'
             }
 
             const url = 'https://' + APP_DOMAIN + d.link;

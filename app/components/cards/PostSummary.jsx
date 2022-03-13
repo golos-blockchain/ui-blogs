@@ -33,8 +33,8 @@ function isModifiedEvent(event) {
     return !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey)
 }
 
-function navigate(e, onClick, post, url, isForum) {
-    if (isForum)
+function navigate(e, onClick, post, url, isForum, isSearch) {
+    if (isForum || isSearch)
         return;
     if (isModifiedEvent(e) || !isLeftClickEvent(e)) return;
     e.preventDefault();
@@ -127,7 +127,12 @@ class PostSummary extends React.Component {
                          </div>
         }
 
-        const {gray, pictures, authorRepLog10, flagWeight, isNsfw, isOnlyblog} = content.get('stats', Map()).toJS()
+        const {gray, pictures, authorRepLog10, flagWeight, isNsfw, isOnlyblog, isOnlyapp} = content.get('stats', Map()).toJS()
+
+        if (isOnlyapp && !myAccount) {
+            return null
+        }
+
         const p = extractContent(immutableAccessor, content);
         const nsfwTags = ['nsfw', 'ru--mat', '18+']
         let nsfwTitle = nsfwTags[0]
@@ -178,13 +183,15 @@ class PostSummary extends React.Component {
             }
         }
 
+        let from_search = content.get('from_search')
+
         if (username && !is_forum)
             title_link_url += "?invite=" + username;
 
-        const link_target = is_forum ? '_blank' : undefined;
+        const link_target = (is_forum || from_search) ? '_blank' : undefined;
 
         let content_body = <div className="PostSummary__body entry-content">
-            <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum)}>{desc}</a>
+            <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search)}>{desc}</a>
         </div>;
 
         const onlyblog = isOnlyblog;
@@ -196,11 +203,14 @@ class PostSummary extends React.Component {
             worker_post = '/workers/created/@' + content.get('author') + '/' + content.get('permlink')
         }
 
+        let total_search = content.get('total_search')
+
         let content_title = <h3 className="entry-title">
-            <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum)}>
+            <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search)}>
                 {title_text}
             </a>
             {onlyblog && <span className="nsfw_post" title={tt('post_editor.onlyblog_hint')}>{tt('g.for_followers')}</span>}
+            {isOnlyapp && <span className="nsfw_post" title={tt('post_editor.visible_option_onlyapp_hint')}>{tt('g.only_app')}</span>}
             {warn && <span className="nsfw_post" title={tt('post_editor.nsfw_hint')}>{detransliterate(nsfwTitle)}</span>}
             {worker_post && <a target="_blank" href={worker_post}><span className="worker_post">{tt('workers.worker_post')}</span></a>}
             {promoted_post && <a target="_blank" href="https://wiki.golos.id/users/welcome#prodvinut-post"><span className="promoted_post" title={promosumm}>{tt('g.promoted_title')}</span></a>}
@@ -208,7 +218,7 @@ class PostSummary extends React.Component {
 
         // author and category
         let author_category = <span className="vcard">
-            <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum)}><TimeAgoWrapper date={is_forum ? p.active : p.created} className="updated" /></a>
+            <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search)}><TimeAgoWrapper date={is_forum ? p.active : p.created} className="updated" /></a>
             {' '}
             {blockEye && <MuteAuthorInNew author={p.author} />}
             <Author author={p.author} authorRepLog10={authorRepLog10} follow={false} mute={false} />
@@ -217,7 +227,7 @@ class PostSummary extends React.Component {
 
         const content_footer = <div className="PostSummary__footer">
             <Voting post={post} showList={false} />
-            <VotesAndComments post={post} commentsLink={comments_link} isForum={is_forum} />
+            <VotesAndComments post={post} commentsLink={comments_link} isForum={is_forum} fromSearch={from_search} />
             <span className="PostSummary__time_author_category">
             
             <PinPost author={p.author} permlink={p.permlink} />
@@ -255,13 +265,23 @@ class PostSummary extends React.Component {
               src={url}
               href={title_link_url}
               target={link_target}
-              onClick={e => navigate(e, onClick, post, title_link_url, is_forum)} />
+              onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search)} />
         }
         const commentClasses = []
         if(gray || ignore) commentClasses.push('downvoted') // rephide
 
+        total_search = total_search ? <span class="strike" style={{ fontSize: '1rem', paddingBottom: '1rem' }}>
+                {tt('g.and_more_search_posts_COUNT', { COUNT: total_search })}
+                <img className="float-center" src={require("app/assets/images/search.png")} width="400" />
+            </span> : null
+
+        if (content.get('force_hide')) {
+            return total_search
+        }
+
         return (
             <article className={'PostSummary hentry' + (thumb ? ' with-image ' : ' ') + (worker_post ? ' blue-bg ' : ' ') + commentClasses.join(' ')} itemScope itemType ="http://schema.org/blogPost">
+                {total_search}
                 {reblogged_by}
                 <div className="PostSummary__header show-for-small-only">
                     {content_title}

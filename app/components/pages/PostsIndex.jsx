@@ -97,7 +97,7 @@ class PostsIndex extends React.Component {
         });
     }
 
-    loadMore = (last_post) => {
+    loadMore = (last_post, _category, from) => {
         if (!last_post) return;
         let { accountname, } = this.props.routeParams;
         let {
@@ -110,7 +110,7 @@ class PostsIndex extends React.Component {
         }
         if (isFetchingOrRecentlyUpdated(this.props.status, order, category)) return;
         const [ author, permlink, ] = last_post.split('/');
-        this.props.requestData({ author, permlink, order, category, accountname, });
+        this.props.requestData({ author, permlink, order, category, accountname, from, });
     };
 
     loadSelected = (keys) => {
@@ -131,7 +131,7 @@ class PostsIndex extends React.Component {
     }
 
     render() {
-        let { loggedIn, categories } = this.props;
+        let { loggedIn, categories, has_from_search } = this.props;
         let {category, order = constants.DEFAULT_SORT_ORDER} = this.props.routeParams;
         let topics_order = order;
         let posts = [];
@@ -171,7 +171,7 @@ class PostsIndex extends React.Component {
         const active_user = this.props.username || ''
 
         let promo_posts = []
-        if (['created', 'responses', 'donates', 'trending'].includes(order) && posts && posts.size) {
+        if (!has_from_search && ['created', 'responses', 'donates', 'trending'].includes(order) && posts && posts.size) {
           const slice_step = order == 'trending' ? 3 : 1
           promo_posts = posts.slice(0, slice_step)
           posts = posts.slice(slice_step)
@@ -244,7 +244,7 @@ class PostsIndex extends React.Component {
                     </p>
 
                     <p align="center">
-                        <a target="_blank" href="https://golosdex.com"><img src={require("app/assets/images/banners/golosdex2.png")} width="220" height="160" /></a>
+                        <a target="_blank" href="https://dex.golos.app"><img src={require("app/assets/images/banners/golosdex2.png")} width="220" height="160" /></a>
                         <span className="strike"><a target="_blank" href="/@graphenelab/reliz-novoi-birzhi-golos">{tt('g.more_hint')}</a></span>
                     </p>
 
@@ -267,6 +267,7 @@ module.exports = {
             return {
                 discussions: state.global.get('discussion_idx'),
                 status: state.global.get('status'),
+                has_from_search: state.global.get('has_from_search'),
                 loading: state.app.get('loading'),
                 accounts: state.global.get('accounts'),
                 loggedIn: !!state.user.get('current'),

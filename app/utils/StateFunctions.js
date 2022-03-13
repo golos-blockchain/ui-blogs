@@ -61,7 +61,7 @@ export function isFetchingOrRecentlyUpdated(global_status, order, category) {
     return false;
 }
 
-export function contentStats(content) {
+export function contentStats0(content) {
     if(!content) return {}
     if(!(content instanceof Map)) content = fromJS(content);
 
@@ -95,6 +95,10 @@ export function contentStats(content) {
     // take negative rshares, divide by 2, truncate 10 digits (plus neg sign), count digits
     // creates a cheap log10, stake-based flag weight
     const flagWeight = Math.max(String(neg_rshares.div(2)).length - 11, 0)
+
+    if (content.get('from_search')) {
+        net_rshares_adj = Long.fromString(String(content.get('net_rshares')))
+    }
 
     // post must have non-trivial negative rshares to be grayed out
 
@@ -133,6 +137,8 @@ export function contentStats(content) {
     const isNsfw = tags.filter(tag => tag && tag.match(/^nsfw$|^ru--mat$|^18\+$/i)).length > 0;
     const isOnlyblog = tags.filter(tag => tag && tag.match(/^onlyblog$/i)).length > 0;
 
+    const isOnlyapp = tags.filter(tag => tag && tag.match(/^onlyapp/i)).length > 0;
+
     return {
         hide,
         gray,
@@ -141,9 +147,19 @@ export function contentStats(content) {
         allowDelete,
         isNsfw,
         isOnlyblog,
+        isOnlyapp,
         flagWeight,
         total_votes,
         up_votes
+    }
+}
+
+export function contentStats(content) {
+    try {
+        return contentStats0(content)
+    } catch (err) {
+        console.error(err)
+        throw err
     }
 }
 

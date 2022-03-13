@@ -1,4 +1,7 @@
 import { call, put, select, fork, cancelled, takeLatest, takeEvery } from 'redux-saga/effects';
+import cookie from "react-cookie";
+import {config, api} from 'golos-lib-js';
+
 import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile';
 import {loadFollows, fetchFollowCount} from 'app/redux/FollowSaga';
 import {getContent} from 'app/redux/SagaShared';
@@ -6,8 +9,7 @@ import GlobalReducer from './GlobalReducer';
 import constants from './constants';
 import { reveseTag } from 'app/utils/tags';
 import { PUBLIC_API, CATEGORIES, IGNORE_TAGS, SELECT_TAGS_KEY, DEBT_TOKEN_SHORT, LIQUID_TICKER } from 'app/client_config';
-import cookie from "react-cookie";
-import {config, api} from 'golos-lib-js';
+import { SearchRequest, searchData } from 'app/utils/SearchClient'
 
 export function* fetchDataWatches () {
     yield fork(watchLocationChange);
@@ -446,8 +448,10 @@ export function* fetchData(action) {
         author,
         permlink,
         accountname,
-        keys
+        keys,
+        from,
     } = action.payload;
+
     let { category } = action.payload;
 
     if( !category ) category = "";
@@ -569,17 +573,57 @@ export function* fetchData(action) {
     try {
         let posts = []
 
-        let data = yield call([api, api[call_name]], ...args);
+        let data = []
 
-        if (order === 'forums') {
-            data = data['fm-'];
+        if (!from) {
+            data =yield call([api, api[call_name]], ...args);
+
+            if (order === 'forums') {
+                data = data['fm-'];
+            }
+
+            if (['created', 'responses', 'donates', 'trending'].includes(order) && !args[0].start_author) {
+              // Add top 3 from promo to tranding and 1 to hot, created
+              args[0].limit = order == 'trending' ? 3 : 1
+              const promo_posts = yield call([api, api[PUBLIC_API.promoted]], ...args);
+              posts = posts.concat(promo_posts)
+            }
         }
 
-        if (['created', 'responses', 'donates', 'trending'].includes(order) && !args[0].start_author) {
-          // Add top 3 from promo to tranding and 1 to hot, created
-          args[0].limit = order == 'trending' ? 3 : 1
-          const promo_posts = yield call([api, api[PUBLIC_API.promoted]], ...args);
-          posts = posts.concat(promo_posts)
+        let has_from_search = false
+        let next_from = 0
+
+        if (['created', 'responses', 'donates', 'trending'].includes(order) && data.length < constants.FETCH_DATA_BATCH_SIZE) {
+            let odt = new Date()
+            odt.setDate(odt.getDate() - 7)
+            let req = new SearchRequest()
+                .setLimit(50)
+                .setFrom(from)
+                .onlyPosts()
+                .olderThan(odt)
+                .filterTags(IGNORE_TAGS)
+            if (args[0].select_categories) {
+                req = req.byOneOfCategories(args[0].select_categories)
+            } else if (args[0].select_tags) {
+                req = req.byOneOfTags(args[0].select_tags)
+            }
+            let { results, total }= yield searchData(req)
+            let sepAdded = !!from
+            results.forEach(post => {
+                post.from_search = true
+                if (!post.net_rshares && !post.net_votes && !post.children) {
+                    post.force_hide = true
+                }
+                if (!sepAdded) {
+                    post.total_search = total
+                    sepAdded = true
+                }
+                data.push(post)
+            })
+            if (!author && !permlink) {
+                has_from_search = true
+            }
+            next_from = (from || 0) + results.length
         }
 
         data.forEach(post => {
@@ -595,6 +639,8 @@ export function* fetchData(action) {
                 permlink,
                 accountname,
                 keys,
+                has_from_search,
+                next_from,
             })
         );
 
