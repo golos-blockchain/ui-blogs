@@ -12,9 +12,15 @@ git clone https://github.com/golos-blockchain/ui-blogs
 
 1. Установите Node.js 16 ([Windows](https://nodejs.org/dist/v16.14.0/node-v16.14.0-x64.msi), [Linux](https://github.com/nodesource/distributions/blob/master/README.md)). В случае Windows тщательно проследите, нет ли в установщике флажка "Добавить Node.js в переменную PATH", и если он есть, то отметьте его.
 
-2. Скачайте репозиторий с помощью git clone (команда есть выше).
+2. Установите глобальные зависимости:
+```sh
+yarn global add electron@17.1.2 electron-builder@22.14.13
+```
 
-3. Внесите все **настройки** в файле `config/default.json`:
+3. Скачайте репозиторий с помощью git clone (команда есть выше).
+
+
+4. Внесите все **настройки** в файле `config/default.json`:
 
 - hide_comment_neg_rep
 - site_domain (пример: golos.id)
@@ -28,25 +34,25 @@ git clone https://github.com/golos-blockchain/ui-blogs
 - forums
 - gamefication
 
-4. Установите все зависимости (для сборки).
+5. Установите все зависимости (для сборки).
 
 ```sh
 npx yarn install
 ```
 
-5. Соберите интерфейс клиента.
+6. Соберите интерфейс клиента.
 
 ```sh
 npx yarn run build:app
 ```
 
-6. После сборки интерфейса можно запустить его в тестовом режиме, используя команду:
+7. После сборки интерфейса можно запустить его в тестовом режиме, используя команду:
 
 ```sh
 npx yarn run start:app
 ```
 
-7. Или собрать дистрибутивы приложения:
+8. Или собрать дистрибутивы приложения:
 
 ```sh
 npx yarn run pack:app
