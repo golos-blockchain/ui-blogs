@@ -872,7 +872,10 @@
   },
   "comment_jsx": {
     "collapse_or_expand": "Collapse/Expand",
-    "reveal_comment": "Reveal comment"
+    "reveal_comment": "Reveal comment",
+    "show_1_more_reply": "Show 1 more reply",
+    "show_N_more_replies": "Show %(N)s more replies",
+    "show_N_more_replies_2": "Show %(N)s more replies"
   },
   "postsummary_jsx": {
     "resteemed": "Reposted",
