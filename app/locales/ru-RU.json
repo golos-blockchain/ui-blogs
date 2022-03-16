@@ -571,7 +571,10 @@
   },
   "comment_jsx": {
     "collapse_or_expand": "Свернуть/Развернуть",
-    "reveal_comment": "Показать комментарий"
+    "reveal_comment": "Показать комментарий",
+    "show_1_more_reply": "Еще 1 комментарий",
+    "show_N_more_replies": "Еще %(N)s комментариев",
+    "show_N_more_replies_2": "Еще %(N)s комментария"
   },
   "market_jsx": {
     "action": "Действие",
