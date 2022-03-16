@@ -151,8 +151,6 @@
     "core-js": "^3.19.1",
     "cross-env": "^7.0.3",
     "dirty-chai": "^1.2.2",
-    "electron": "^17.1.0",
-    "electron-builder": "^22.14.13",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.6",
     "eslint": "^4.9.0",
