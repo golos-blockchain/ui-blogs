@@ -6121,11 +6121,6 @@ electron-builder@^22.14.13:
     update-notifier "^5.1.0"
     yargs "^17.0.1"
 
-electron-cookies@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/electron-cookies/-/electron-cookies-1.1.0.tgz#7935a82fd0e0e883d981935d5e64b6dd302f4315"
-  integrity sha1-eTWoL9Dg6IPZgZNdXmS23TAvQxU=
-
 electron-osx-sign@^0.5.0:
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/electron-osx-sign/-/electron-osx-sign-0.5.0.tgz#fc258c5e896859904bbe3d01da06902c04b51c3a"
