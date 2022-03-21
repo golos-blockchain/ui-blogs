@@ -129,7 +129,7 @@ class PostSummary extends React.Component {
 
         const {gray, pictures, authorRepLog10, flagWeight, isNsfw, isOnlyblog, isOnlyapp} = content.get('stats', Map()).toJS()
 
-        if (isOnlyapp && !myAccount) {
+        if (isOnlyapp && !process.env.IS_APP && !myAccount) {
             return null
         }
 
@@ -272,7 +272,7 @@ class PostSummary extends React.Component {
 
         total_search = total_search ? <span class="strike" style={{ fontSize: '1rem', paddingBottom: '1rem' }}>
                 {tt('g.and_more_search_posts_COUNT', { COUNT: total_search })}
-                <img className="float-center" src={require("app/assets/images/search.png")} width="400" />
+                <a target="_blank" href="/search"><img className="float-center" src={require("app/assets/images/search.png")} width="400" /></a>
             </span> : null
 
         if (content.get('force_hide')) {

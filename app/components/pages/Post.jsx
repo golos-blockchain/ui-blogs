@@ -75,8 +75,11 @@ class Post extends React.Component {
                         <div className="row">
                             <div className="column">
                                 <div className="PostFull">
-                                    <p onClick={this.showAnywayClick}>{tt('promote_post_jsx.this_post_was_hidden_due_to_low_ratings')}.{' '}
-                                    <button style={{marginBottom: 0}} className="button hollow tiny float-right" onClick={this.showAnywayClick}>{tt('g.show')}</button></p>
+                                    <p onClick={current_user ? this.showAnywayClick : undefined}>{tt('promote_post_jsx.this_post_was_hidden_due_to_low_ratings')}.{' '}
+                                        {current_user ? 
+                                            <button style={{marginBottom: 0}} className="button hollow tiny float-right" onClick={this.showAnywayClick}>{tt('g.show')}</button>
+                                        : null}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -128,9 +131,9 @@ class Post extends React.Component {
             (<div className="hentry Comment root Comment__negative_group">
                 <br /><p>
                     {tt(showNegativeComments ? 'post_jsx.now_showing_comments_with_low_ratings' : 'post_jsx.comments_were_hidden_due_to_low_ratings')}.{' '}
-                    <button className="button hollow tiny float-right" onClick={e => this.toggleNegativeReplies(e)}>
+                    {(current_user || showNegativeComments) ? <button className="button hollow tiny float-right" onClick={e => this.toggleNegativeReplies(e)}>
                         {tt(showNegativeComments ? 'g.hide' :'g.show')}
-                    </button>
+                    </button> : null}
                 </p>
             </div>);
 
@@ -150,7 +153,7 @@ class Post extends React.Component {
             });
         }
         let emptyPost = dis.get('created') === '1970-01-01T00:00:00' && dis.get('body') === ''
-        if (stats.isOnlyapp) {
+        if (stats.isOnlyapp && !process.env.IS_APP) {
             if (!current_user || current_user.get('username') !== dis.get('author')) {
                 emptyPost = true
             }

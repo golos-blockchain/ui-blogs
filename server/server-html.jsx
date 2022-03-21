@@ -1,9 +1,13 @@
 import React from 'react';
-import { LIQUID_TOKEN } from 'app/client_config';
+import { LIQUID_TOKEN } from '../app/client_config';
 import config from 'config';
 
-export default function ServerHTML({ body, assets, locale, title, meta, analytics }) {
+export default function ServerHTML({ body, assets, locale, title, meta, analytics, relativeSrc }) {
     let page_title = title;
+    const fixSrc = (src) => {
+        if (!relativeSrc) return src
+        if (src[0] === '/') return src.substring(1)
+    }
     return (
         <html>
         <head>
@@ -51,7 +55,7 @@ export default function ServerHTML({ body, assets, locale, title, meta, analytic
 
             {/* styles (will be present only in production with webpack extract text plugin) */}
             {Object.keys(assets.styles).map((style, i) =>
-                <link href={assets.styles[style]} key={i} media="screen, projection"
+                <link href={fixSrc(assets.styles[style])} key={i} media="screen, projection"
                     rel="stylesheet" type="text/css" />)}
 
             {/* resolves the initial style flash (flicker) on page load in development mode */}
@@ -67,7 +71,7 @@ export default function ServerHTML({ body, assets, locale, title, meta, analytic
             {/* (usually one for each "entry" in webpack configuration) */}
             {/* (for more informations on "entries" see https://github.com/petehunt/webpack-howto/) */}
             {Object.keys(assets.javascript).map((script, i) =>
-                <script src={assets.javascript[script]} key={i} />
+                <script src={fixSrc(assets.javascript[script])} key={i} />
             )}
         </body>
         </html>

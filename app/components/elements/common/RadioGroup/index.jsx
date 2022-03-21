@@ -17,9 +17,9 @@ export default class RadioGroup extends React.PureComponent {
     };
 
     render() {
-        const { options, name, value, className, disabled } = this.props;
+        const { title, options, name, value, className, disabled } = this.props;
 
-        return <div className={cn('RadioGroup', { RadioGroup_disabled: disabled }, className)}>
+        return <div title={title} className={cn('RadioGroup', { RadioGroup_disabled: disabled }, className)}>
                 {options.map(item => (
                     <div key={item.id} className="RadioGroup__item">
                         <label

@@ -872,7 +872,10 @@
   },
   "comment_jsx": {
     "collapse_or_expand": "Collapse/Expand",
-    "reveal_comment": "Reveal comment"
+    "reveal_comment": "Reveal comment",
+    "show_1_more_reply": "Show 1 more reply",
+    "show_N_more_replies": "Show %(N)s more replies",
+    "show_N_more_replies_2": "Show %(N)s more replies"
   },
   "postsummary_jsx": {
     "resteemed": "Reposted",
@@ -1173,6 +1176,7 @@
     "visible_option_onlyblog": "Followers only",
     "visible_option_onlyapp": "Application only",
     "visible_option_onlyapp_hint": "Golos Blogs desktop application only",
+    "onlyapp_cannot_be_removed": "You are yet published post. Cannot make it available on web UI",
     "tags_input_placeholder": "Add tags",
     "convert_to_md_warning": "Converting to Markdown may cause some changes and markup loses. Are you sure?",
     "convert_to_html_warning": "Converting to HTML may cause some changes and markup loses. Are you sure?",
@@ -1340,5 +1344,21 @@
     "mention_post": " mentioned you in their post",
     "mention_comment": " mentioned you in their comment",
     "message": " sent you a private message"
+  },
+  "app_settings": {
+    "ws_connection_client": "GOLOS node URL",
+    "img_proxy_prefix": "Use Proxy For Images",
+    "auth_service": "Golos Auth & Registration Service (for notifications)",
+    "notify_service": "Golos Notify Service (for notifications)",
+    "messenger_service": "Messenger",
+    "elastic_search": "Search",
+    "save_and_restart": "Save and restart",
+    "cancel": "Cancel",
+    "node_error_NODE": "Не удалось подключиться к ноде %(NODE)s. Возможно, это проблемы с интернетом. Или попробуйте задать другую ноду GOLOS в меню Настройки.",
+    "to_save_click_button": "To save settings, click \"Save and restart\" button at bottom of the window."
+  },
+  "app_update": {
+    "notify_VERSION": "Доступна новая версия GOLOS Блогов - %(VERSION)s",
+    "download": "Download"
   }
 }

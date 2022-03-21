@@ -41,7 +41,7 @@ export default function extractMeta(chain_data, rp) {
                 metas.push({name: 'robots', content: 'noindex, nofollow'});
                 return metas;
             }
-            if (isOnlyapp) {
+            if (isOnlyapp && !process.env.IS_APP) {
                 d.title = ''
                 d.desc = ''
                 d.author = ''
