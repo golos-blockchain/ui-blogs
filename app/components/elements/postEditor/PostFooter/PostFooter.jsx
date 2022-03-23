@@ -15,6 +15,7 @@ export default class PostFooter extends PureComponent {
     static propTypes = {
         editMode: PropTypes.bool,
         tags: PropTypes.array,
+        publishedOnlyApp: PropTypes.bool,
         postDisabled: PropTypes.bool,
         disabledHint: PropTypes.string,
         onPayoutTypeChange: PropTypes.func.isRequired,
@@ -99,6 +100,7 @@ export default class PostFooter extends PureComponent {
         const options = (<PostOptions
             nsfw={this.props.tags.includes(NSFW_TAG)}
             visibleType={visibleType}
+            publishedOnlyApp={this.props.publishedOnlyApp}
             onNsfwClick={this._onNsfwClick}
             payoutType={this.props.payoutType}
             curationPercent={this.props.curationPercent}
