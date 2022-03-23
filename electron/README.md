@@ -20,7 +20,7 @@ yarn global add electron@17.1.2 electron-builder@22.14.13
 3. Скачайте репозиторий с помощью git clone (команда есть выше).
 
 
-4. Внесите все **настройки** в файле `config/default.json`:
+4. Внесите все **настройки** в файле `config/desktop.json`:
 
 - hide_comment_neg_rep
 - site_domain (пример: golos.id)

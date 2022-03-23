@@ -29,7 +29,7 @@ fse.copySync('app/assets/images', 'dist/electron/images', { overwrite: true }) /
 
 let cfg = {}
 const copyKey = (key) => {
-	cfg[key] = config.get(key)
+	cfg[key] = config.get('desktop.' + key)
 }
 cfg.app_version = app_version
 copyKey('hide_comment_neg_rep')
