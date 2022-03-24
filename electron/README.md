@@ -14,7 +14,7 @@ git clone https://github.com/golos-blockchain/ui-blogs
 
 2. Установите глобальные зависимости:
 ```sh
-yarn global add electron@17.1.2 electron-builder@22.14.13
+npx yarn global add electron@17.1.2 electron-builder@22.14.13
 ```
 
 3. Скачайте репозиторий с помощью git clone (команда есть выше).
