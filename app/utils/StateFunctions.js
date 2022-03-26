@@ -104,7 +104,7 @@ export function contentStats0(content) {
 
     const grayThreshold = -5000000000000 // dislikes ~100k Golos Power
     const meetsGrayThreshold = net_rshares_adj.compare(grayThreshold) < 0
-    const grayThreshold2 = -50000000000000 // dislikes ~1kk Golos Power
+    const grayThreshold2 = -25000000000000 // dislikes ~500k Golos Power
     const meetsGrayThreshold2 = net_rshares_adj.compare(grayThreshold2) < 0
     const hideThreshold = -500000000000000 // dislikes ~10kk Golos Power
     const meetsHideThreshold = net_rshares_adj.compare(hideThreshold) < 0
