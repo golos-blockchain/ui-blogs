@@ -1409,6 +1409,10 @@
     "mention_comment": " упомянул вас в комментарии",
     "message": " написал вам сообщение"
   },
+  "app_goto_url": {
+    "goto": "Перейти",
+    "wrong_domain_DOMAINS": "Похоже, эта ссылка не с GOLOS Блогов.\nДомены GOLOS Блогов: %(DOMAINS)s\nЭта ссылка будет открыта во внешнем браузере."
+  },
   "app_settings": {
     "ws_connection_client": "Адрес ноды GOLOS",
     "img_proxy_prefix": "Использовать прокси для изображений",

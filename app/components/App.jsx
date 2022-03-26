@@ -6,6 +6,7 @@ import { createGlobalStyle } from 'styled-components';
 import AppPropTypes from 'app/utils/AppPropTypes';
 import Header from 'app/components/modules/Header';
 import Footer from 'app/components/modules/Footer';
+import URLLoader from 'app/components/elements/app/URLLoader';
 import TooltipManager from 'app/components/elements/common/TooltipManager';
 import user from 'app/redux/User';
 import g from 'app/redux/GlobalReducer';
@@ -388,6 +389,7 @@ class App extends React.Component {
                 {process.env.BROWSER ? <TooltipManager /> : null}
                 <PageViewsCounter hidden/>
                 <GlobalStyle />
+                {process.env.IS_APP ? <URLLoader /> : null}
             </div>
 
         );

@@ -14,16 +14,17 @@ git clone https://github.com/golos-blockchain/ui-blogs
 
 2. Установите глобальные зависимости:
 ```sh
-yarn global add electron@17.1.2 electron-builder@22.14.13
+npx yarn global add electron@17.1.2 electron-builder@22.14.13
 ```
 
 3. Скачайте репозиторий с помощью git clone (команда есть выше).
 
 
-4. Внесите все **настройки** в файле `config/default.json`:
+4. Внесите все **настройки** в файле `config/desktop.json`:
 
 - hide_comment_neg_rep
-- site_domain (пример: golos.id)
+- site_domain (пример: golos.id то есть основной домен блогов)
+- another_domains (альтернативные домены Блогов, чтобы можно было вставить ссылку с Блогов и она открылась в десктопном клиенте)
 - ws_connection_app (список нод)
 - images
 - auth_service

@@ -14,3 +14,13 @@ contextBridge.exposeInMainWorld('appSplash', {
         ipcRenderer.send('content-loaded')
     }
 })
+
+contextBridge.exposeInMainWorld('appNavigation', {
+    loadURL: (url) => {
+        ipcRenderer.send('load-url', url)
+    },
+    onRouter: (cb) => {
+        ipcRenderer.removeAllListeners('router-push')
+        ipcRenderer.on('router-push', (event, url) => cb(url))
+    }
+})
