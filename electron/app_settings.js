@@ -29,6 +29,8 @@ function init() {
 
     cfg.platform = process.platform
 
+    cfg.app_version = defaultCfg.app_version
+
     ipcMain.on('get-settings', (e) => {
         e.returnValue = cfg
     })
