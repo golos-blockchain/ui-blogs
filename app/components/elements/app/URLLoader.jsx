@@ -6,7 +6,7 @@ class URLLoader extends React.Component {
         window.appNavigation.onRouter((url) => {
             try {
                 let parsed = new URL(url)
-                browserHistory.push(parsed.pathname + parsed.search)
+                browserHistory.push(parsed.pathname + parsed.search + parsed.hash)
             } catch (error) {
                 console.error(error)
             }
