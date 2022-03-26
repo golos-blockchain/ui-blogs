@@ -76,19 +76,36 @@ function initMenu(appUrl, httpsUrl, appSet, full = true) {
             template[0], // Обновить
             {
                 label: 'Настройки',
-                click: (item, win, e) => {
-                    const settings = new BrowserWindow({
-                        parent: win,
-                        modal: true,
-                        resizable: false,
-                        width: 600,
-                        height: 475,
-                        webPreferences: {
-                            preload: __dirname + '/settings_preload.js'
+                submenu: [
+                    {
+                        label: 'Увеличить масштаб',
+                        role: 'zoomin',
+                        accelerator: 'CommandOrControl+='
+                    },
+                    {
+                        label: 'Увеличить масштаб',
+                        role: 'zoomout',
+                    },
+                    {
+                        type: 'separator'
+                    },
+                    {
+                        label: 'Открыть настройки',
+                        click: (item, win, e) => {
+                            const settings = new BrowserWindow({
+                                parent: win,
+                                modal: true,
+                                resizable: false,
+                                width: 600,
+                                height: 475,
+                                webPreferences: {
+                                    preload: __dirname + '/settings_preload.js'
+                                }
+                            })
+                            settings.loadURL(appUrl + '/__app_settings')
                         }
-                    })
-                    settings.loadURL(appUrl + '/__app_settings')
-                }
+                    }
+                ]
             },
             template[1], // Помощь
         ]

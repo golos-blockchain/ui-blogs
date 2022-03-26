@@ -26,6 +26,16 @@ const isOwnUrl = (url) => {
 const setCommonWindowEvents = (win) => {
     createContextMenu(win)
 
+    win.webContents.on('zoom-changed', (e, zoomDirection) => {
+        let zf = win.webContents.zoomFactor
+        if (zoomDirection === 'in') {
+            zf += 0.2
+        } else if (zoomDirection === 'out') {
+            zf -= 0.2
+        }
+        win.webContents.zoomFactor = zf
+    })
+
     win.webContents.on('will-navigate', (e, url) => {
         if (!isOwnUrl(url)) {
             e.preventDefault()
