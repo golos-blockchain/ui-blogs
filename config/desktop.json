@@ -2,6 +2,10 @@
   "desktop": {
     "hide_comment_neg_rep": false,
     "site_domain": "beta.golos.today",
+    "another_domains": [
+      "golos.id",
+      "golos.in"
+    ],
     "ws_connection_app": [
       { "address": "wss://apibeta.golos.today/ws" },
       { "address": "https://apibeta.golos.today" },

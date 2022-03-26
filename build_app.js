@@ -14,7 +14,7 @@ const props = { body: '', assets, title: '', relativeSrc: false };
 let html = ReactDOMServer.renderToString(<ServerHTML {...props} />)
 html = '<!DOCTYPE html>' + html
 if (!fs.existsSync('dist/electron')) {
-	fs.mkdirSync('dist/electron')
+    fs.mkdirSync('dist/electron')
 }
 fs.writeFileSync('dist/electron/index.html', html)
 fs.copyFileSync('electron/app_settings.js', 'dist/electron/app_settings.js')
@@ -29,11 +29,15 @@ fse.copySync('app/assets/images', 'dist/electron/images', { overwrite: true }) /
 
 let cfg = {}
 const copyKey = (key) => {
-	cfg[key] = config.get('desktop.' + key)
+    cfg[key] = config.get('desktop.' + key)
 }
 cfg.app_version = app_version
 copyKey('hide_comment_neg_rep')
 copyKey('site_domain')
+cfg.url_domains = [...config.get('desktop.another_domains')]
+if (!cfg.url_domains.includes(cfg.site_domain)) {
+    cfg.url_domains.push(cfg.site_domain)
+}
 copyKey('ws_connection_app')
 copyKey('chain_id')
 copyKey('images')

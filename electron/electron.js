@@ -86,7 +86,7 @@ const createWindow = () => {
         splash.close()
     })
 
-    let menu = initMenu(appUrl, appSet)
+    let menu = initMenu(appUrl, httpsUrl, appSet)
     win.setMenu(menu)
 
     setCommonWindowEvents(win)
@@ -153,7 +153,7 @@ app.whenReady().then(() => {
         callback({ path: p})
     })
 
-    let appMenu = initMenu(appUrl, appSet, false)
+    let appMenu = initMenu(appUrl, httpsUrl, appSet, false)
     Menu.setApplicationMenu(appMenu)
 
     createWindow()

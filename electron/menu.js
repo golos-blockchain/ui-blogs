@@ -1,6 +1,8 @@
-const { BrowserWindow, shell, Menu } = require('electron')
+const { BrowserWindow, shell, Menu, ipcMain } = require('electron')
 
-function initMenu(appUrl, appSet, full = true) {
+const { createContextMenu } = require('./context_menu')
+
+function initMenu(appUrl, httpsUrl, appSet, full = true) {
     let template = [
         {
             label: 'Обновить',
@@ -44,6 +46,31 @@ function initMenu(appUrl, appSet, full = true) {
                 label: 'Вперед >',
                 click: (item, win, e) => {
                     win.webContents.goForward()
+                }
+            },
+            {
+                label: 'Перейти',
+                click: (item, win, e) => {
+                    let url = win.webContents.getURL() || ''
+                    url = encodeURI(url)
+                    url = url.replace(appUrl, httpsUrl)
+                    const gotoURL = new BrowserWindow({
+                        parent: win,
+                        modal: true,
+                        resizable: false,
+                        width: 900,
+                        height: 120,
+                        useContentSize: true,
+                        webPreferences: {
+                            preload: __dirname + '/settings_preload.js'
+                        }
+                    })
+                    ipcMain.removeAllListeners('load-url')
+                    ipcMain.once('load-url', async (e, url) => {
+                        win.webContents.send('router-push', url)
+                    })
+                    createContextMenu(gotoURL)
+                    gotoURL.loadURL(appUrl + '/__app_goto_url?' + url)
                 }
             },
             template[0], // Обновить
