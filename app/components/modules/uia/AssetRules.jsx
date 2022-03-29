@@ -185,7 +185,7 @@ class AssetRules extends Component {
             {min_amount && <div>
                 {tt('asset_edit_withdrawal_jsx.min_amount')} <b>{min_amount} {sym || ''}</b></div>}
             {fee && <div>
-                {tt('asset_edit_withdrawal_jsx.fee')} <b>{fee} {sym || ''}</b></div>}
+                {tt('g.fee') + ': '}<b>{fee} {sym || ''}</b></div>}
         </div>;
     }
 

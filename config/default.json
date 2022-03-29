@@ -48,6 +48,13 @@
     "login": "golosclient",
     "password": "golosclient"
   },
+  "apidex_service": {
+    "host": "https://devapi-dex.golos.app"
+  },
+  "hidden_assets": {
+    "RUDEX": true,
+    "PRIZM": true
+  },
   "forums": {
     "white_list": ["fm-golostalk", "fm-prizmtalk", "fm-graphenetalks"],
     "fm-golostalk": {"domain": "golostalk.com"},

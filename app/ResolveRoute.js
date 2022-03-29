@@ -114,6 +114,9 @@ export default function resolveRoute(path)
     if (match) {
         return {page: 'UserProfile', params: match.slice(1)};
     }
+    if (path === '/convert') { 
+        return {page: 'ConvertAssetsLoader', params: []}
+    }
     match = path.match(routeRegex.PostNoCategory);
     if (match) {
         return {page: 'PostNoCategory', params: match.slice(1)};

@@ -55,7 +55,7 @@ class Witnesses extends Component {
     loadMoreVotes = async ({ newPage, items }) => {
         const lastItem = items[items.length - 1];
         let { _witness, } = lastItem;
-        const res = await api.getWitnessVotesAsync([_witness], 21, newPage*20, '1.000 GOLOS');
+        const res = await api.getWitnessVotesAsync([_witness], 21, (newPage-1)*20, '1.000 GOLOS');
         const nextItems = res[_witness];
         const oneM = Math.pow(10, 6);
         let voteList = [];
@@ -208,6 +208,7 @@ class Witnesses extends Component {
                     </td>
                     <td>
                         <PagedDropdownMenu className='Witnesses__vote-list' el='div' items={voteList}
+                            renderItem={item => item}
                             perPage={20}
                             onLoadMore={this.loadMoreVotes}>
                             {formatAsset(approval + ' GOLOS', false)}

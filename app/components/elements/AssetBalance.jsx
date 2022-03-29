@@ -1,4 +1,5 @@
-import tt from 'counterpart';
+import React from 'react'
+import tt from 'counterpart'
 
 const AssetBalance = ({onClick, balanceValue, title}) => {
     let balance = (title || tt('transfer_jsx.balance')) + ': ' + balanceValue;

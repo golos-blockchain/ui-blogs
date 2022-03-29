@@ -249,7 +249,7 @@ class TransferForm extends Component {
         // null if fee not set, NaN or zero
         let fee = (withdrawal.fee && parseFloat(withdrawal.fee) )?
             <div><b>
-                {tt('asset_edit_withdrawal_jsx.fee')}
+                {tt('g.fee') + ': '}
                 {withdrawal.fee.toString()}
                 {' '}
                 {sym}
