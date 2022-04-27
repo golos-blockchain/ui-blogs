@@ -18,8 +18,11 @@ try {
 const appUrl = 'app://' + site_domain
 const httpsUrl = 'https://' + site_domain
 
+const isHttpsURL = (url) => {
+    return url.startsWith(httpsUrl)
+}
 const isOwnUrl = (url) => {
-    return url.startsWith(httpsUrl) || url.startsWith(appUrl)
+    return isHttpsURL(url) || url.startsWith(appUrl)
 }
 
 // events which need to be set for main window and for child windows
@@ -40,6 +43,9 @@ const setCommonWindowEvents = (win) => {
         if (!isOwnUrl(url)) {
             e.preventDefault()
             shell.openExternal(url)
+        } else if (isHttpsURL(url)) {
+            e.preventDefault()
+            win.loadURL(url.replace(httpsUrl, appUrl))
         }
     })
 
@@ -57,7 +63,7 @@ const setCommonWindowEvents = (win) => {
                 }
             }
         } else {
-            win.loadURL(url)
+            win.loadURL(url.replace(httpsUrl, appUrl))
         }
         return { action: 'deny' }
     })
