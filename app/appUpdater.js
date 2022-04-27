@@ -1,12 +1,14 @@
 import semver from 'semver'
 import tt from 'counterpart'
 
+import fetchWithTimeout from 'shared/fetchWithTimeout'
+
 export async function checkUpdates() {
     const url = new URL(
         '/blogs-' + ($STM_Config.platform === 'linux' ? 'linux' : 'win'),
         $STM_Config.app_updater.host
     ).toString()
-    let res = await fetch(url)
+    let res = await fetchWithTimeout(url, 3000)
     res = await res.text()
     const doc = document.createElement('html')
     doc.innerHTML = res
