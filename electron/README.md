@@ -31,6 +31,8 @@ npx yarn global add electron@17.1.2 electron-builder@22.14.13
 - notify_service
 - messenger_service
 - elastic_search
+- apidex_service
+- hidden_assets
 - app_updater
 - forums
 - gamefication
