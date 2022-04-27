@@ -1,0 +1,34 @@
+.Market__orderform {
+    .Market__orderform-cmc {
+        float: right;
+        margin-top: 2px;
+    }
+
+    margin-bottom: 1rem;
+    line-height: 1;
+
+    .input-group-label {
+        min-width: 6rem;
+        font-size: 83%;
+    }
+
+    input[type='text'] {
+        display: inline-block;
+        width: auto;
+        height: auto;
+        padding: 0.1rem 0.5rem 0.1rem 0.25rem;
+        text-align: right;
+    }
+
+    input.price_warning {
+        background: rgb(252,84,78);
+    }
+
+    input.balance_warning {
+        color: rgb(252,84,78);
+    }
+}
+
+.Market__balance {
+    margin-left: -1.5rem;
+}

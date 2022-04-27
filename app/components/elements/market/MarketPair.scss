@@ -1,9 +1,9 @@
 .MarketPair {
     display: inline-block;
-}
 
-.MarketPair.compact .VerticalMenu>li>a {
-    padding: .3rem 1rem;
+    .VerticalMenu>li>a {
+        padding: .3rem 1rem;
+    }
 }
 
 .MarketPair__label {

@@ -444,7 +444,7 @@ class ConvertAssets extends React.Component {
         return (<div className='ConvertAssets'>
             <h3>{tt('g.convert_assets')}</h3>
             <div>
-                <MarketPair assets={assets} compactList={true} itemsPerPage={8}
+                <MarketPair assets={assets} itemsPerPage={8}
                     sym1={this.props.sellSym}
                     sym2={this.props.buySym}
                     label1={tt('convert_assets_jsx.sell')}

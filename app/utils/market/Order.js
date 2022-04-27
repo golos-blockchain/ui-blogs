@@ -5,7 +5,7 @@ class Order {
         this.side = side;
         this.price = parseFloat(order.real_price);
         this.price = side === 'asks' ? roundUp(this.price, 8) : Math.max(roundDown(this.price, 8), 0.00000001);
-        this.stringPrice = this.price.toFixed(prec2);
+        this.stringPrice = this.price.toFixed(8);
         this.asset1 = parseInt(order.asset1, 10);
         this.asset2 = parseInt(order.asset2, 10);
         this.sym1 = sym1

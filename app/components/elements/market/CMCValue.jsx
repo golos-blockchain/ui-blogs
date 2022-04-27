@@ -39,12 +39,17 @@ class CMCValue extends React.Component {
     }
 
     render() {
-        const { renderer } = this.props
+        const { renderer, compact } = this.props
         let cmc = null
         const { cmcPrice } = this.state
         if (cmcPrice) {
             const formatVal = (val, fmt) => {
-                return (val && val.toFixed) ? fmt(val.toFixed(2)) : null
+                if (val && val.toFixed) {
+                    if (val > 1000000) return fmt((val / 1000000).toFixed(3) + 'M')
+                    if (compact && val > 100) return fmt(Math.round(val))
+                    return fmt(val.toFixed(2))
+                }
+                return null
             }
             let mainVal, altVal
             const price_usd = formatVal(cmcPrice.price_usd, v => `$${v}`)

@@ -26,7 +26,7 @@ class TradeHistory {
         this.prec2 = prec2
         this.price = this.asset2 / this.asset1;
         this.price = this.type === 'ask' ? roundUp(this.price, 8) : Math.max(roundDown(this.price, 8), 0.00000001);
-        this.stringPrice = this.price.toFixed(prec2);
+        this.stringPrice = this.price.toFixed(8);
     }
 
     getAsset1Amount() {

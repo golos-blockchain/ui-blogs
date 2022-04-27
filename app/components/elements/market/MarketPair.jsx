@@ -11,7 +11,6 @@ class MarketPair extends React.Component {
         assets: PropTypes.object.isRequired,
         sym1: PropTypes.string,
         sym2: PropTypes.string,
-        compactList: PropTypes.bool,
         slim: PropTypes.bool,
         itemsPerPage: PropTypes.number,
         linkComposer: PropTypes.func,
@@ -79,7 +78,7 @@ class MarketPair extends React.Component {
     }
 
     render() {
-        const { assets, slim, compactList, itemsPerPage, linkComposer, label1, label2 } = this.props
+        const { assets, slim, itemsPerPage, linkComposer, label1, label2 } = this.props
         const { sym1, sym2, symbols1, symbols2 } = this.state
 
         if (!symbols1 && !symbols2) return <div></div>
@@ -134,7 +133,7 @@ class MarketPair extends React.Component {
                 </PagedDropdownMenu>
             </div>
 
-        return (<div className={'MarketPair' + (compactList ? ' compact' : '')}>
+        return (<div className={'MarketPair'}>
             {left}
             &nbsp;
             <a style={{ fill: 'gray',
