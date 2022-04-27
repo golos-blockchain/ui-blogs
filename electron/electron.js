@@ -127,26 +127,56 @@ protocol.registerSchemesAsPrivileged([
 
 app.whenReady().then(() => {
     try {
-        let notify_service = new URL('*', appSet.notify_service.host).toString()
-        let auth_service = new URL('*', appSet.auth_service.host).toString()
-        let app_updater = new URL('*', appSet.app_updater.host).toString()
-        const filter = {
-            urls: [
-                auth_service,
-                notify_service,
-                app_updater
-            ]
+        const notify_service = new URL(appSet.notify_service.host)
+        const auth_service = new URL(appSet.auth_service.host)
+        const app_updater = new URL(appSet.app_updater.host)
+        const isSecureURL = (url) => {
+            try {
+                url = new URL(url)
+                if (url.host === notify_service.host ||
+                    url.host === auth_service.host ||
+                    url.host === app_updater.host) {
+                    return true
+                }
+                return false
+            } catch (err) {
+                console.error('CORS bypassing - cannot check URI', err)
+                return false
+            }
         }
-        session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
-            upsertHeader(details.requestHeaders, 'Origin', httpsUrl)
-            callback({ requestHeaders: details.requestHeaders })
+        const isTrustedPage = (wc) => {
+            if (!wc) {
+                return false
+            }
+            try {
+                let url = wc.getURL()
+                if (!url) {
+                    return false
+                }
+                url = new URL(url)
+                return url.pathname.endsWith('/assets')
+            } catch (err) {
+                console.log(wc.getURL())
+                console.error('CORS bypassing - cannot get page url', err)
+                return false
+            }
+        }
+        session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+            const { url, webContents, requestHeaders} = details
+            if (isSecureURL(url) || isTrustedPage(webContents)) {
+                upsertHeader(requestHeaders, 'Origin', httpsUrl)
+            }
+            callback({ requestHeaders })
         })
-        session.defaultSession.webRequest.onHeadersReceived(filter, (details, callback) => {
-            upsertHeader(details.responseHeaders, 'Access-Control-Allow-Origin', appUrl)
-            callback({ responseHeaders: details.responseHeaders })
+        session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+            const { url, webContents, responseHeaders} = details
+            if (isSecureURL(url)|| isTrustedPage(webContents)) {
+                 upsertHeader(responseHeaders, 'Access-Control-Allow-Origin', appUrl)
+            }
+            callback({ responseHeaders })
         })
     } catch (err) {
-        console.error('Auth/Notify error:', err)
+        console.error('CORS bypassing error:', err)
     }
 
     protocol.registerFileProtocol('app', (request, callback) => {

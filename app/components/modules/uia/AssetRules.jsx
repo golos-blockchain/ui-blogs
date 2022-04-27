@@ -5,12 +5,14 @@ import { Map, } from 'immutable';
 import { api, } from 'golos-lib-js';
 import { Asset, } from 'golos-lib-js/lib/utils';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
+
 import Author from 'app/components/elements/Author'
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import Icon from 'app/components/elements/Icon';
 import Memo from 'app/components/elements/Memo';
 import transaction from 'app/redux/Transaction';
 import { clearOldAddresses, loadAddress, saveAddress, } from 'app/utils/UIA';
+import getUIAAddress from 'shared/getUIAAddress'
 
 const TransferState = {
     initial: 0,
@@ -54,23 +56,47 @@ class AssetRules extends Component {
         }
     }
 
+    doReq = async (acc, sym) => {
+        if (!process.env.IS_APP) {
+            const url = '/api/v1/uia_address/' + sym + '/' + acc
+            let res = await fetch(url)
+            res = await res.json()
+            return res
+        } else {
+            let res
+            await getUIAAddress(acc, sym, (address) => {
+                res = {
+                    status: 'ok',
+                    address
+                }
+            }, (errorName, logData, errorData) => {
+                console.error(...logData)
+                res = {
+                    status: 'err',
+                    error: errorName,
+                    error_data: errorData,
+                }
+            })
+            return res
+        }
+    }
+
     async doAPI() {
         const { rules, sym, currentAccount, } = this.props
         try {
             const acc = currentAccount.get('name')
             if (!acc) return
-            const url = '/api/v1/uia_address/' + sym + '/' + acc
-            const retried = 0
+            let retried = 0
             const retryReq = async () => {
-                let res = await fetch(url)
-                res = await res.json()
+                let res = await this.doReq(acc, sym)
                 if (res.status === 'err') {
                     if (retried < 3 &&
                         (res.error === 'too_many_requests'
                             || res.error === 'cannot_connect_gateway')) {
                         console.error('Repeating /uia_address', res)
                         ++retried
-                        setTimeout(retryReq, 1100)
+                        await new Promise(resolve => setTimeout(resolve, 1100))
+                        await retryReq()
                         return
                     }
                     throw new APIError(res.error, res.error_data)
