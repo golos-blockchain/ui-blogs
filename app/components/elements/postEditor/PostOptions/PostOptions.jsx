@@ -34,6 +34,8 @@ const CuratorValue = styled.b`
 class PostOptions extends React.PureComponent {
     static propTypes = {
         nsfw: PropTypes.bool.isRequired,
+        visibleType: PropTypes.number.isRequired,
+        publishedOnlyApp: PropTypes.bool.isRequired,
         payoutType: PropTypes.number.isRequired,
         curationPercent: PropTypes.number.isRequired,
 
@@ -118,9 +120,9 @@ class PostOptions extends React.PureComponent {
     }
 
     _renderEyeMenu() {
-        const { editMode, visibleType } = this.props;
+        const { editMode, publishedOnlyApp, visibleType } = this.props;
 
-        const disableChoice = editMode && visibleType === VISIBLE_TYPES.ONLY_APP
+        const disableChoice = editMode && publishedOnlyApp
 
         return (
             <Hint align="center" innerRef={this._popupEyeRef}>

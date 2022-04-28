@@ -1,6 +1,8 @@
-const { BrowserWindow, shell, Menu } = require('electron')
+const { BrowserWindow, shell, Menu, ipcMain } = require('electron')
 
-function initMenu(appUrl, appSet, full = true) {
+const { createContextMenu } = require('./context_menu')
+
+function initMenu(appUrl, httpsUrl, appSet, full = true) {
     let template = [
         {
             label: 'Обновить',
@@ -46,22 +48,64 @@ function initMenu(appUrl, appSet, full = true) {
                     win.webContents.goForward()
                 }
             },
-            template[0], // Обновить
             {
-                label: 'Настройки',
+                label: 'Перейти',
                 click: (item, win, e) => {
-                    const settings = new BrowserWindow({
+                    let url = win.webContents.getURL() || ''
+                    url = encodeURI(url)
+                    url = url.replace(appUrl, httpsUrl)
+                    const gotoURL = new BrowserWindow({
                         parent: win,
                         modal: true,
                         resizable: false,
-                        width: 600,
-                        height: 475,
+                        width: 900,
+                        height: 120,
+                        useContentSize: true,
                         webPreferences: {
                             preload: __dirname + '/settings_preload.js'
                         }
                     })
-                    settings.loadURL(appUrl + '/__app_settings')
+                    ipcMain.removeAllListeners('load-url')
+                    ipcMain.once('load-url', async (e, url) => {
+                        win.webContents.send('router-push', url)
+                    })
+                    createContextMenu(gotoURL)
+                    gotoURL.loadURL(appUrl + '/__app_goto_url?' + url)
                 }
+            },
+            template[0], // Обновить
+            {
+                label: 'Настройки',
+                submenu: [
+                    {
+                        label: 'Увеличить масштаб',
+                        role: 'zoomin',
+                        accelerator: 'CommandOrControl+='
+                    },
+                    {
+                        label: 'Увеличить масштаб',
+                        role: 'zoomout',
+                    },
+                    {
+                        type: 'separator'
+                    },
+                    {
+                        label: 'Открыть настройки',
+                        click: (item, win, e) => {
+                            const settings = new BrowserWindow({
+                                parent: win,
+                                modal: true,
+                                resizable: false,
+                                width: 600,
+                                height: 475,
+                                webPreferences: {
+                                    preload: __dirname + '/settings_preload.js'
+                                }
+                            })
+                            settings.loadURL(appUrl + '/__app_settings')
+                        }
+                    }
+                ]
             },
             template[1], // Помощь
         ]

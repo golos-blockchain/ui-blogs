@@ -4,7 +4,7 @@
     "type": "git",
     "url": "https://github.com/golos-blockchain/ui-blogs.git"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Голос - социальная сеть, построенная на публичном блокчейне.",
   "main": "dist/electron/electron.js",
   "scripts": {
@@ -19,8 +19,8 @@
     "start:local": "./.env.start.local.sh",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "build:app": "cross-env NODE_ENV=production NODE_CONFIG_ENV=production ./node_modules/.bin/webpack --config ./webpack/prod-app.config.js",
-    "postbuild:app": "cross-env NODE_ENV=production ./node_modules/@babel/node/bin/babel-node.js ./build_app.js",
+    "build:app": "cross-env NODE_ENV=production NODE_CONFIG_ENV=production,desktop ./node_modules/.bin/webpack --config ./webpack/prod-app.config.js",
+    "postbuild:app": "cross-env NODE_ENV=production NODE_CONFIG_ENV=production,desktop ./node_modules/@babel/node/bin/babel-node.js ./build_app.js",
     "start:app": "electron --no-sandbox .",
     "pack:app": "electron-builder -c.electronVersion=17.1.2"
   },

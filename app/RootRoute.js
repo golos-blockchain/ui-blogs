@@ -48,6 +48,8 @@ export default {
             cb(null, [require('@pages/WorkersLoader')]);
         } else if (route.page === 'MinusedAccounts') {
             cb(null, [require('@pages/MinusedAccounts')]);
+        } else if (route.page === 'AppGotoURL') {
+            cb(null, [require('@pages/app/AppGotoURL')]);
         } else if (route.page === 'AppSplash') {
             cb(null, [require('@pages/app/AppSplash')]);
         } else if (route.page === 'AppSettings') {

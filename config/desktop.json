@@ -1,0 +1,70 @@
+{
+  "desktop": {
+    "hide_comment_neg_rep": false,
+    "site_domain": "beta.golos.today",
+    "another_domains": [
+      "golos.id",
+      "golos.in"
+    ],
+    "ws_connection_app": [
+      { "address": "wss://apibeta.golos.today/ws" },
+      { "address": "https://apibeta.golos.today" },
+      { "address": "https://api-full.golos.id" }
+    ],
+    "chain_id": "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12",
+    "images": {
+      "img_proxy_prefix": "https://devimages.golos.today",
+      "img_proxy_backup_prefix": "https://steemitimages.com",
+      "upload_image": "https://api.imgur.com/3/image",
+      "client_id": "6c09ebf8c548126"
+    },
+    "auth_service": {
+      "host": "https://dev.golos.app",
+      "custom_client": "blogs"
+    },
+    "notify_service": {
+      "host": "https://devnotify.golos.app"
+    },
+    "messenger_service": {
+      "host": "https://devchat.golos.app"
+    },
+    "elastic_search": {
+      "url": "https://search.golos.today",
+      "login": "golosclient",
+      "password": "golosclient"
+    },
+    "app_updater": {
+      "host": "https://files.golos.app"
+    },
+    "forums": {
+      "white_list": ["fm-golostalk", "fm-prizmtalk", "fm-graphenetalks"],
+      "fm-golostalk": {"domain": "golostalk.com"},
+      "fm-prizmtalk": {"domain": "prizmtalk.com"},
+      "fm-graphenetalks": {"domain": "forum.gph.ai"}
+    },
+    "gamefication": {
+      "levels": [
+        {"power_from": 0.000, "imgs": ["1.png", "1big.png"],
+          "title": ["Креветки", "Shrimp"]},
+        {"power_from": 0.002, "imgs": ["2.png", "2big.png"],
+          "title": ["Крабы", "Crabs"]},
+        {"power_from": 0.005, "imgs": ["3.png", "3big.png"],
+          "title": ["Осьминоги", "Octopuses"]},
+        {"power_from": 0.020, "imgs": ["4.png", "4big.png"],
+          "title": ["Рыбы", "Fish"]},
+        {"power_from": 0.050, "imgs": ["5.png", "5big.png"],
+          "title": ["Черепахи", "Turtles"]},
+        {"power_from": 0.100, "imgs": ["6.png", "6big.png"],
+          "title": ["Дельфины", "Dolphins"]},
+        {"power_from": 0.250, "imgs": ["7.png", "7big.png"],
+          "title": ["Акулы", "Sharks"]},
+        {"power_from": 0.500, "imgs": ["8.png", "8big.png"],
+          "title": ["Косатки", "Orca"]},
+        {"power_from": 1.000, "imgs": ["9.png", "9big.png"],
+          "title": ["Киты", "Whales"]},
+        {"power_from": 5.000, "imgs": ["10.png", "10big.png"],
+          "title": ["Повелители морей", "Lords of the Seas"]}
+      ]
+    }
+  }
+}

@@ -26,6 +26,16 @@ const isOwnUrl = (url) => {
 const setCommonWindowEvents = (win) => {
     createContextMenu(win)
 
+    win.webContents.on('zoom-changed', (e, zoomDirection) => {
+        let zf = win.webContents.zoomFactor
+        if (zoomDirection === 'in') {
+            zf += 0.2
+        } else if (zoomDirection === 'out') {
+            zf -= 0.2
+        }
+        win.webContents.zoomFactor = zf
+    })
+
     win.webContents.on('will-navigate', (e, url) => {
         if (!isOwnUrl(url)) {
             e.preventDefault()
@@ -86,7 +96,7 @@ const createWindow = () => {
         splash.close()
     })
 
-    let menu = initMenu(appUrl, appSet)
+    let menu = initMenu(appUrl, httpsUrl, appSet)
     win.setMenu(menu)
 
     setCommonWindowEvents(win)
@@ -153,7 +163,7 @@ app.whenReady().then(() => {
         callback({ path: p})
     })
 
-    let appMenu = initMenu(appUrl, appSet, false)
+    let appMenu = initMenu(appUrl, httpsUrl, appSet, false)
     Menu.setApplicationMenu(appMenu)
 
     createWindow()
