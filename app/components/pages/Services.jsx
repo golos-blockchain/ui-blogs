@@ -18,12 +18,12 @@ class Services extends React.Component {
                             <div className='column large-3 medium-3 small-6'>
                                 <a target="_blank" href="https://wiki.golos.id"><Icon name='blockchain' size='10x'/>
                                 <h5>Golos Blogs</h5></a>
-                                <p className='landing-services-block-icon-text'>Основные веб-клиенты блогов <a target="_blank" href="https://golos.id">golos.id</a> и <a target="_blank" href="https://golos.in">golos.in</a>, альтернативные <a target="_blank" href="https://wiki.golos.id">клиенты</a>, а также <a target="_blank" href="https://files.golos.app">Desktop Blogs</a></p>
+                                <p className='landing-services-block-icon-text'>Основные веб-клиенты блогов <a target="_blank" href="https://golos.id">golos.id</a> и <a target="_blank" href="https://golos.in">golos.in</a>, альтернативные <a target="_blank" href="https://wiki.golos.id">клиенты</a>, а также Golos Desktop (<a target="_blank" href="https://files.golos.app/blogs-win/">Windows</a> и <a target="_blank" href="https://files.golos.app/blogs-linux/">Linux</a>)</p>
                             </div>
                             <div className='column large-3 medium-3 small-6'>
                                 <a target="_blank" href="https://dex.golos.app"><Icon name='money' size='10x'/>
                                 <h5>Golos DEX</h5></a>
-                                <p className='landing-services-block-icon-text'>Торговля и обмен токенами на <a target="_blank" href="/market">внутренней бирже</a>, веб-клиентах <a target="_blank" href="https://dex.golos.app">dex.golos.app</a> или <a target="_blank" href="https://gls.exchange">gls.exchange</a></p>
+                                <p className='landing-services-block-icon-text'>Торговля токенами на <a target="_blank" href="/market">внутренней бирже</a> и <a target="_blank" href="/convert">обменнике</a>, веб-клиентах <a target="_blank" href="https://dex.golos.app">dex.golos.app</a> или <a target="_blank" href="https://gls.exchange">gls.exchange</a></p>
                             </div>
                             <div className='column large-3 medium-3 small-6'>
                                 <a target="_blank" href="https://golostalk.com"><Icon name='team' size='10x'/>

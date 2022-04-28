@@ -194,7 +194,6 @@ class PostSummary extends React.Component {
             <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search)}>{desc}</a>
         </div>;
 
-        const onlyblog = isOnlyblog;
         const warn = (isNsfw && nsfwPref === 'warn' && !myPost);
         const promosumm = tt('g.promoted_post') + content.get('promoted');
 
@@ -209,7 +208,7 @@ class PostSummary extends React.Component {
             <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search)}>
                 {title_text}
             </a>
-            {onlyblog && <span className="nsfw_post" title={tt('post_editor.onlyblog_hint')}>{tt('g.for_followers')}</span>}
+            {isOnlyblog && <span className="nsfw_post" title={tt('post_editor.onlyblog_hint')}>{tt('g.for_followers')}</span>}
             {isOnlyapp && <span className="nsfw_post" title={tt('post_editor.visible_option_onlyapp_hint')}>{tt('g.only_app')}</span>}
             {warn && <span className="nsfw_post" title={tt('post_editor.nsfw_hint')}>{detransliterate(nsfwTitle)}</span>}
             {worker_post && <a target="_blank" href={worker_post}><span className="worker_post">{tt('workers.worker_post')}</span></a>}

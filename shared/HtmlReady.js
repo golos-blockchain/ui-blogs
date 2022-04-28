@@ -376,11 +376,6 @@ function linkify(state, content) {
             return `<img src="${ln}" />`;
         }
 
-        // do not linkify .exe or .zip urls
-        if (/\.(zip|exe)$/i.test(ln)) {
-            return ln;
-        }
-
         if (state.links) {
             state.links.add(ln);
         }

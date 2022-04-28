@@ -215,8 +215,11 @@ class Post extends React.Component {
                 </div>
 
                 <p align="center">
-                    <a target="_blank" href="https://dex.golos.app"><img src={require("app/assets/images/banners/golosdex.png")} width="800" height="100" /></a>
-                    <span className="strike"><a target="_blank" href="/@graphenelab/reliz-novoi-birzhi-golos">{tt('g.more_hint')}</a></span>
+                	{/*<a target="_blank" href="https://dex.golos.app"><img src={require("app/assets/images/banners/golosdex.png")} width="800" height="100" /></a>
+                    <span className="strike"><a target="_blank" href="/@graphenelab/reliz-novoi-birzhi-golos">{tt('g.more_hint')}</a></span>*/}
+
+                    <a target="_blank" href="/@lex/alternativnyi-klient-blogov-golos-desktop-izmeneniya-v-tredakh-kommentariev"><img src={require("app/assets/images/banners/desktop.png")} width="800" height="100" /></a>
+                    <span className="strike"><a target="_blank" href="/@lex/alternativnyi-klient-blogov-golos-desktop-izmeneniya-v-tredakh-kommentariev">{tt('g.more_hint')}</a></span>
                 </p>
 
             </div>

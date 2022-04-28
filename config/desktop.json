@@ -1,32 +1,32 @@
 {
   "desktop": {
     "hide_comment_neg_rep": false,
-    "site_domain": "beta.golos.today",
+    "site_domain": "golos.id",
     "another_domains": [
-      "golos.id",
-      "golos.in"
+      "golos.in",
+      "golos.today"
     ],
     "ws_connection_app": [
-      { "address": "wss://apibeta.golos.today/ws" },
-      { "address": "https://apibeta.golos.today" },
-      { "address": "https://api-full.golos.id" }
+      { "address": "wss://api.golos.id/ws" },
+      { "address": "wss://api.aleksw.space/ws" },
+      { "address": "wss://api-golos.blckchnd.com/ws" }
     ],
     "chain_id": "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12",
     "images": {
-      "img_proxy_prefix": "https://devimages.golos.today",
+      "img_proxy_prefix": "https://images.golos.today",
       "img_proxy_backup_prefix": "https://steemitimages.com",
       "upload_image": "https://api.imgur.com/3/image",
       "client_id": "6c09ebf8c548126"
     },
     "auth_service": {
-      "host": "https://dev.golos.app",
+      "host": "https://golos.app",
       "custom_client": "blogs"
     },
     "notify_service": {
-      "host": "https://devnotify.golos.app"
+      "host": "https://notify.golos.app"
     },
     "messenger_service": {
-      "host": "https://devchat.golos.app"
+      "host": "https://chat.golos.app"
     },
     "elastic_search": {
       "url": "https://search.golos.today",
@@ -53,11 +53,11 @@
       "levels": [
         {"power_from": 0.000, "imgs": ["1.png", "1big.png"],
           "title": ["Креветки", "Shrimp"]},
-        {"power_from": 0.002, "imgs": ["2.png", "2big.png"],
+        {"power_from": 0.005, "imgs": ["2.png", "2big.png"],
           "title": ["Крабы", "Crabs"]},
-        {"power_from": 0.005, "imgs": ["3.png", "3big.png"],
+        {"power_from": 0.010, "imgs": ["3.png", "3big.png"],
           "title": ["Осьминоги", "Octopuses"]},
-        {"power_from": 0.020, "imgs": ["4.png", "4big.png"],
+        {"power_from": 0.025, "imgs": ["4.png", "4big.png"],
           "title": ["Рыбы", "Fish"]},
         {"power_from": 0.050, "imgs": ["5.png", "5big.png"],
           "title": ["Черепахи", "Turtles"]},

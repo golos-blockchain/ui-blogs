@@ -3,12 +3,12 @@
   "helmet": {
     "directives": {
       "defaultSrc": "'self'",
-      "childSrc": "'self' *.a-ads.com www.youtube.com w.soundcloud.com *.facebook.com player.vimeo.com www.google.com coub.com *.yandex.ru vk.com ok.com rutube.ru",
-      "scriptSrc": "'self' 'unsafe-inline' 'unsafe-eval' files.coinmarketcap.com ajax.googleapis.com app.sharpay.io www.google-analytics.com",
+      "childSrc": "'self' *.a-ads.com www.youtube.com w.soundcloud.com player.vimeo.com www.google.com coub.com *.yandex.ru vk.com login.vk.com ok.com rutube.ru",
+      "scriptSrc": "'self' 'unsafe-inline' 'unsafe-eval' app.sharpay.io www.google-analytics.com",
       "styleSrc": "'self' 'unsafe-inline' fonts.googleapis.com",
       "imgSrc": "* data:",
       "fontSrc": "data: fonts.gstatic.com",
-      "connectSrc": "'self' api.imgur.com wss://apibeta.golos.today *.golos.today golos.app *.golos.app app.sharpay.io *.coinmarketcap.com www.google-analytics.com cdn.jsdelivr.net/npm/emoji-picker-element-data@%5E1/",
+      "connectSrc": "'self' api.imgur.com wss://apibeta.golos.today *.golos.today golos.app *.golos.app app.sharpay.io www.google-analytics.com cdn.jsdelivr.net/npm/emoji-picker-element-data@%5E1/",
       "frameAncestors": "'none'"
     }
   },
@@ -24,7 +24,7 @@
   "session_cookie_key": "gls.session",
   "session_key": "golos",
   "site_domain": "beta.golos.today",
-  "ws_connection_client": "https://api-full.golos.id",
+  "ws_connection_client": "wss://apibeta.golos.today/ws",
   "ws_connection_server": "wss://apibeta.golos.today/ws",
   "chain_id": "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12",
   "images": {
@@ -44,7 +44,7 @@
     "host": "https://devchat.golos.app"
   },
   "elastic_search": {
-    "url": "https://search.golos.today",
+    "url": "https://devsearch.golos.today",
     "login": "golosclient",
     "password": "golosclient"
   },
@@ -65,11 +65,11 @@
     "levels": [
       {"power_from": 0.000, "imgs": ["1.png", "1big.png"],
         "title": ["Креветки", "Shrimp"]},
-      {"power_from": 0.002, "imgs": ["2.png", "2big.png"],
+      {"power_from": 0.005, "imgs": ["2.png", "2big.png"],
         "title": ["Крабы", "Crabs"]},
-      {"power_from": 0.005, "imgs": ["3.png", "3big.png"],
+      {"power_from": 0.010, "imgs": ["3.png", "3big.png"],
         "title": ["Осьминоги", "Octopuses"]},
-      {"power_from": 0.020, "imgs": ["4.png", "4big.png"],
+      {"power_from": 0.025, "imgs": ["4.png", "4big.png"],
         "title": ["Рыбы", "Fish"]},
       {"power_from": 0.050, "imgs": ["5.png", "5big.png"],
         "title": ["Черепахи", "Turtles"]},
