@@ -1,5 +1,7 @@
+import { Headers } from 'cross-fetch'
 
 import { detransliterate } from 'app/utils/ParsersAndFormatters'
+import fetchWithTimeout from 'shared/fetchWithTimeout'
 
 const makeTag = (text) => {
     return /^[а-яё]/.test(text)
@@ -149,11 +151,11 @@ export class SearchRequest {
     }
 }
 
-export async function sendSearchRequest(sr) {
+export async function sendSearchRequest(sr, timeoutMsec = 10000) {
     let body = sr.build()
     let url = new URL($STM_Config.elastic_search.url);
     url += 'blog/post/_search?pretty'
-    const response = await fetch(url, {
+    const response = await fetchWithTimeout(url, timeoutMsec, {
         method: 'post',
         headers: new Headers({
             'Authorization': 'Basic ' + btoa($STM_Config.elastic_search.login + ':' + $STM_Config.elastic_search.password),
@@ -174,8 +176,23 @@ const copyField = (obj, hit, fieldName, fallbackValue) => {
     obj[fieldName] = val !== undefined ? val : fallbackValue
 }
 
-export async function searchData(sr) {
-    let preResults = await sendSearchRequest(sr)
+export async function searchData(sr, retries = 3, retryIntervalSec = 2, timeoutMsec = 10000) {
+    const retryMsec = retryIntervalSec * 1000
+    let preResults = null
+    for (let i = 0; i < (retries + 1); ++i) {
+        try {
+            preResults = await sendSearchRequest(sr, timeoutMsec)
+            break
+        } catch (err) {
+            if (i + 1 < retries + 1) {
+                console.error('ElasticSearch failure, retrying after', retryIntervalSec, 'sec...', err)
+                await new Promise(resolve => setTimeout(resolve, retryMsec))
+            } else {
+                console.error('ElasticSearch failure', err)
+                throw err
+            }
+        }
+    }
     let results = preResults.hits.hits.map((hit) => {
         let obj = {}
 

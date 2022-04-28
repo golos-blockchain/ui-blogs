@@ -9,4 +9,8 @@
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     width: 50%;
+
+    &.disabled {
+        cursor: auto;
+    }
 }

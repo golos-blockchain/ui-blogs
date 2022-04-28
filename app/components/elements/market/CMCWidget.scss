@@ -1,0 +1,62 @@
+.CMCWidget {
+    margin-bottom: 10px;
+    width: 12rem;
+
+    .CMCWidget__inner {
+        border: 2px solid #e1e5ea;
+        border-radius: 10px;
+        font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
+        min-width: 285px;
+        min-height: 126px;
+
+        .CMCWidget__inner2 {
+            display: flex;
+            padding: 12px 0px;
+
+            .CMCWidget__icon-parent {
+                width: 33%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                .CMCWidget__icon {
+                    width: 46px;
+                    height: 46px;
+                }
+            }
+
+            .CMCWidget__main-parent {
+                width:67%;
+                border: none;
+                text-align:left;
+                line-height:1.4;
+
+                .CMCWidget__link {
+                    text-decoration: none;
+                    color: rgb(16, 112, 224);
+                }
+
+                .CMCWidget__main-val {
+                    font-size: 20px;
+                    font-weight: 500;
+                }
+
+                .CMCWidget__main-cur {
+                    font-size: 14px;
+                    font-weight: 500;
+                }
+
+                .CMCWidget__sub-parent {
+                    margin-left:6px;
+                    font-weight: 500;
+
+                    .CMCWidget__sub {
+                        font-size: 14px;
+                        color: rgba(39, 52, 64, 0.5);
+                    }
+                }
+            }
+        }
+    }
+}
+

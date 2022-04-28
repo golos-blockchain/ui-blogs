@@ -1,7 +1,9 @@
 import React from "react";
-import OrderHistoryRow from "./OrderhistoryRow.jsx";
 import tt from 'counterpart';
-import { Order, TradeHistory } from 'app/utils/MarketClasses';
+
+import Order from 'app/utils/market/Order'
+import TradeHistory from 'app/utils/market/TradeHistory'
+import OrderHistoryRow from 'app/components/elements/market/OrderHistoryRow'
 
 export default class OrderHistory extends React.Component {
 

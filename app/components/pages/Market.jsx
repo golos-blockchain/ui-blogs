@@ -5,19 +5,23 @@ import { connect } from 'react-redux';
 import { Link, browserHistory } from 'react-router';
 import tt from 'counterpart';
 import {api, broadcast} from 'golos-lib-js'
+
 import transaction from 'app/redux/Transaction';
 import {longToAsset} from 'app/utils/ParsersAndFormatters';
 import TransactionError from 'app/components/elements/TransactionError';
 import Icon from 'app/components/elements/Icon';
-import DropdownMenu from 'app/components/elements/DropdownMenu';
-import PriceChart from 'app/components/elements/PriceChart';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
-import Orderbook from 'app/components/elements/Orderbook';
-import OrderHistory from 'app/components/elements/OrderHistory';
-import { Order, TradeHistory } from 'app/utils/MarketClasses';
-import { roundUp, roundDown } from 'app/utils/MarketUtils';
-import TickerPriceStat from 'app/components/elements/TickerPriceStat';
-import { DEBT_TOKEN_SHORT, LIQUID_TICKER } from 'app/client_config';
+import DropdownMenu from 'app/components/elements/DropdownMenu';
+
+import Order from 'app/utils/market/Order'
+import TradeHistory from 'app/utils/market/TradeHistory'
+import { roundUp, roundDown, normalizeAssets } from 'app/utils/market/utils'
+import MarketPair from 'app/components/elements/market/MarketPair'
+import OrderBook from 'app/components/elements/market/OrderBook';
+import OrderHistory from 'app/components/elements/market/OrderHistory';
+import PriceChart from 'app/components/elements/market/PriceChart';
+import TickerPriceStat from 'app/components/elements/market/TickerPriceStat';
+import OrderForm from 'app/components/elements/market/OrderForm'
 import './Market.scss';
 
 const BY_TYPE = 'type'
@@ -31,44 +35,28 @@ class Market extends Component {
         orderbook: PropTypes.object,
         open_orders: PropTypes.array,
         ticker: PropTypes.object,
-        placeOrder: PropTypes.func.isRequired,
         user: PropTypes.string,
     };
 
     state = {
-        buyDisabled: true,
-        sellDisabled: true,
-        buyPriceWarning: false,
-        sellPriceWarning: false,
-        buySteemFeePct: '0%',
-        sellSteemFeePct: '0%',
-        sym1_list_page: 0,
-        sym2_list_page: 0,
         ordersSorting: BY_TYPE
     };
 
-    UNSAFE_componentWillReceiveProps(np) {
-        if (!this.props.ticker && np.ticker) {
-            const { lowest_ask, highest_bid } = np.ticker;
+    constructor(props) {
+        super(props)
+        this.buyForm = React.createRef()
+        this.sellForm = React.createRef()
+    }
 
-            let {sym1, sym2} = this.props.routeParams
-            sym1 = sym1.toUpperCase()
-            sym2 = sym2.toUpperCase()
+    componentDidUpdate(prevProps) {
+        if (!prevProps.ticker && this.props.ticker) {
+            const { lowest_ask, highest_bid } = this.props.ticker
 
-            let assets = this.props.assets;
-            let assets_right = {}
-            assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-            assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-            for (let [key, value] of Object.entries(assets)) {
-                assets_right[key] = value
+            if (this.buyForm.current) {
+                this.buyForm.current.setPrice(parseFloat(lowest_ask))
             }
-
-            if (this.refs.buySteemPrice) {
-                this.refs.buySteemPrice.value = parseFloat(lowest_ask).toFixed(assets_right[sym2].precision);
-            }
-
-            if (this.refs.sellSteem_price) {
-                this.refs.sellSteem_price.value = parseFloat(highest_bid).toFixed(assets_right[sym2].precision);
+            if (this.sellForm.current) {
+                this.sellForm.current.setPrice(parseFloat(highest_bid))
             }
         }
     }
@@ -147,97 +135,6 @@ class Market extends Component {
         return false;
     };
 
-    buySteem = e => {
-        e.preventDefault();
-
-        let {sym1, sym2} = this.props.routeParams
-        sym1 = sym1.toUpperCase()
-        sym2 = sym2.toUpperCase()
-
-        let assets = this.props.assets;
-        let assets_right = {}
-        assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-        assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-        for (let [key, value] of Object.entries(assets)) {
-            assets_right[key] = value
-        }
-
-        const { placeOrder, user } = this.props;
-        if (!user) return;
-        const amount_to_sell = parseFloat(
-            ReactDOM.findDOMNode(this.refs.buySteemTotal).value
-        );
-        const min_to_receive = parseFloat(
-            ReactDOM.findDOMNode(this.refs.buySteemAmount).value
-        );
-        const price = parseFloat(
-            ReactDOM.findDOMNode(this.refs.buySteemPrice).value
-        );
-        const { lowest_ask } = this.props.ticker;
-        placeOrder(
-            (this.props.assets ? this.props.assets : {}),
-            sym1, sym2,
-            user,
-            `${amount_to_sell} ${sym2}`,
-            `${min_to_receive} ${sym1}`,
-            `${sym2} ${price}/${sym1}`,
-            !!this.state.buyPriceWarning,
-            lowest_ask,
-            msg => {
-                this.props.notify(msg);
-                this.props.reload(user, this.props.location.pathname);
-            }
-        );
-    };
-    sellSteem = e => {
-        e.preventDefault();
-
-        let {sym1, sym2} = this.props.routeParams
-        sym1 = sym1.toUpperCase()
-        sym2 = sym2.toUpperCase()
-
-        let assets = this.props.assets;
-        let assets_right = {}
-        assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-        assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-        for (let [key, value] of Object.entries(assets)) {
-            assets_right[key] = value
-        }
-
-        const { placeOrder, user } = this.props;
-        if (!user) {
-            return;
-        }
-
-        const min_to_receive = parseFloat(
-            ReactDOM.findDOMNode(this.refs.sellSteem_total).value
-        );
-
-        const amount_to_sell = parseFloat(
-            ReactDOM.findDOMNode(this.refs.sellSteem_amount).value
-        );
-
-        const price = parseFloat(
-            ReactDOM.findDOMNode(this.refs.sellSteem_price).value
-        );
-
-        const { highest_bid } = this.props.ticker;
-
-        placeOrder(
-            (this.props.assets ? this.props.assets : {}),
-            sym2, sym1,
-            user,
-            `${amount_to_sell} ${sym1}`,
-            `${min_to_receive} ${sym2}`,
-            `${sym2} ${price}/${sym1}`,
-            !!this.state.sellPriceWarning,
-            highest_bid,
-            msg => {
-                this.props.notify(msg);
-                this.props.reload(user, this.props.location.pathname);
-            }
-        );
-    };
     cancelOrderClick = (e, orderid) => {
         e.preventDefault();
         const { cancelOrder, user } = this.props;
@@ -273,228 +170,10 @@ class Market extends Component {
     };
 
     setFormPrice = price => {
-        const p = parseFloat(price);
-
-        let {sym1, sym2} = this.props.routeParams
-        sym1 = sym1.toUpperCase()
-        sym2 = sym2.toUpperCase()
-
-        let assets = this.props.assets;
-        let assets_right = {}
-        assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-        assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-        for (let [key, value] of Object.entries(assets)) {
-            assets_right[key] = value
-        }
-
-        this.refs.sellSteem_price.value = p.toFixed(assets_right[sym2].precision);
-        this.refs.buySteemPrice.value = p.toFixed(assets_right[sym2].precision);  
-
-        const samount = parseFloat(this.refs.sellSteem_amount.value);
-        if (samount >= 0) {
-            this.refs.sellSteem_total.value = roundDown(p * samount, assets_right[sym1].precision).toFixed(assets_right[sym2].precision);;
-        }
-
-        const bamount = parseFloat(this.refs.buySteemAmount.value);
-        if (bamount >= 0) {
-            this.refs.buySteemTotal.value = roundDown(p * bamount, assets_right[sym2].precision).toFixed(assets_right[sym2].precision);;
-        }
-
-        this.validateBuySteem();
-        this.fixBuyTotal();
-        this.validateSellSteem();
-        this.fixSellTotal();
+        const p = parseFloat(price)
+        this.buyForm.current.setPrice(p)
+        this.sellForm.current.setPrice(p)
     };
-
-    percentDiff = (marketPrice, userPrice) => {
-        marketPrice = parseFloat(marketPrice);
-        return (100 * (userPrice - marketPrice)) / marketPrice;
-    };
-
-    validateBuySteem = () => {
-        const amount = parseFloat(this.refs.buySteemAmount.value);
-        const price = parseFloat(this.refs.buySteemPrice.value);
-        const total = parseFloat(this.refs.buySteemTotal.value);
-
-        const valid = amount > 0 && price > 0 && total > 0;
-        let { lowest_ask } = this.props.ticker;
-
-        this.setState({
-            buyDisabled: !valid,
-            buyPriceWarning: valid && this.percentDiff(lowest_ask, price) > 15,
-        }, async () => {
-            if (valid) {
-                let {sym1, sym2} = this.props.routeParams
-                sym1 = sym1.toUpperCase()
-                sym2 = sym2.toUpperCase()
-
-                let assets = this.props.assets;
-                let assets_right = {}
-                assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-                assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-                for (let [key, value] of Object.entries(assets)) {
-                    assets_right[key] = value
-                }
-
-                this.refs.buySteemFee.value = (amount * assets_right[sym1].fee_percent / 10000).toFixed(assets_right[sym1].precision)
-                this.setState( {
-                    buySteemFeePct: longToAsset(assets_right[sym1].fee_percent, '', 2) + '%'
-                })
-            }
-        });
-    };
-
-    validateSellSteem = () => {
-        const amount = parseFloat(this.refs.sellSteem_amount.value);
-        const price = parseFloat(this.refs.sellSteem_price.value);
-        const total = parseFloat(this.refs.sellSteem_total.value);
-        const valid = amount > 0 && price > 0 && total > 0;
-        let { highest_bid } = this.props.ticker;
-
-        this.setState({
-            sellDisabled: !valid,
-            sellPriceWarning:
-                valid && this.percentDiff(highest_bid, price) < -15,
-        }, async () => {
-            if (valid) {
-                let {sym1, sym2} = this.props.routeParams
-                sym1 = sym1.toUpperCase()
-                sym2 = sym2.toUpperCase()
-
-                let assets = this.props.assets;
-                let assets_right = {}
-                assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-                assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-                for (let [key, value] of Object.entries(assets)) {
-                    assets_right[key] = value
-                }
-
-                this.refs.sellSteem_fee.value = (total * assets_right[sym2].fee_percent / 10000).toFixed(assets_right[sym2].precision)
-                this.setState( {
-                    sellSteemFeePct: longToAsset(assets_right[sym2].fee_percent, '', 2) + '%'
-                })
-            }
-        });
-    };
-
-    toFixedAccur = (str, decs) => {
-        let parts = str.split('.');
-        return parts[0] + (parts[1] ? '.' + parts[1].substring(0, decs) : '');
-    }
-
-    fixBuyTotal = () => {
-        const amount = parseFloat(this.refs.buySteemAmount.value);
-        const price = parseFloat(this.refs.buySteemPrice.value);
-        let total = parseFloat(this.refs.buySteemTotal.value);
-        if (isNaN(total)) return;
-
-        let {sym1, sym2} = this.props.routeParams
-        sym1 = sym1.toUpperCase()
-        sym2 = sym2.toUpperCase()
-
-        let assets = this.props.assets;
-        let assets_right = {}
-        assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-        assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-        for (let [key, value] of Object.entries(assets)) {
-            assets_right[key] = value
-        }
-
-        total = (total + parseFloat(1) / Math.pow(10, assets_right[sym2].precision)).toString();
-        this.refs.buySteemTotal.value = this.toFixedAccur(total, assets_right[sym2].precision);
-    };
-
-    fixSellTotal = () => {
-        const amount = parseFloat(this.refs.sellSteem_amount.value);
-        const price = parseFloat(this.refs.sellSteem_price.value);
-        let total = parseFloat(this.refs.sellSteem_total.value);
-        if (isNaN(total)) return;
-
-        let {sym1, sym2} = this.props.routeParams
-        sym1 = sym1.toUpperCase()
-        sym2 = sym2.toUpperCase()
-
-        let assets = this.props.assets;
-        let assets_right = {}
-        assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-        assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-        for (let [key, value] of Object.entries(assets)) {
-            assets_right[key] = value
-        }
-
-        total = (total + parseFloat(1) / Math.pow(10, assets_right[sym2].precision)).toString();
-        this.refs.sellSteem_total.value = this.toFixedAccur(total, assets_right[sym2].precision);
-    };
-
-    fixBuyAmount = () => {
-        let amount = parseFloat(this.refs.buySteemAmount.value);
-        if (isNaN(amount)) return;
-        const price = parseFloat(this.refs.buySteemPrice.value);
-        let total = parseFloat(this.refs.buySteemTotal.value);
-
-        let {sym1, sym2} = this.props.routeParams
-        sym1 = sym1.toUpperCase()
-        sym2 = sym2.toUpperCase()
-
-        let assets = this.props.assets;
-        let assets_right = {}
-        assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-        assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-        for (let [key, value] of Object.entries(assets)) {
-            assets_right[key] = value
-        }
-
-        amount = (total / price).toFixed(assets_right[sym1].precision);
-        this.refs.buySteemAmount.value = amount;
-    };
-
-    fixSellAmount = () => {
-        let amount = parseFloat(this.refs.sellSteem_amount.value);
-        if (isNaN(amount)) return;
-        const price = parseFloat(this.refs.sellSteem_price.value);
-        let total = parseFloat(this.refs.sellSteem_total.value);
-
-        let {sym1, sym2} = this.props.routeParams
-        sym1 = sym1.toUpperCase()
-        sym2 = sym2.toUpperCase()
-
-        let assets = this.props.assets;
-        let assets_right = {}
-        assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-        assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-        for (let [key, value] of Object.entries(assets)) {
-            assets_right[key] = value
-        }
-
-        amount = (total / price).toFixed(assets_right[sym1].precision);
-        this.refs.sellSteem_amount.value = amount;
-    };
-
-      nextSym1ListPage = () => {
-        this.setState({
-          sym1_list_page: this.state.sym1_list_page+1
-        });
-      }
-
-      prevSym1ListPage = () => {
-        if (this.state.sym1_list_page == 0) return;
-        this.setState({
-          sym1_list_page: this.state.sym1_list_page-1
-        });
-      }
-
-      nextSym2ListPage = () => {
-        this.setState({
-          sym2_list_page: this.state.sym2_list_page+1
-        });
-      }
-
-      prevSym2ListPage = () => {
-        if (this.state.sym2_list_page == 0) return;
-        this.setState({
-          sym2_list_page: this.state.sym2_list_page-1
-        });
-      }
 
     render() {
         let {sym1, sym2} = this.props.routeParams
@@ -536,20 +215,15 @@ class Market extends Component {
             <br/>
         </div>)
 
-        let assets_right = {}
-        assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-        assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-        for (let [key, value] of Object.entries(assets)) {
-            assets_right[key] = value
-        }
-        for (let [key, value] of Object.entries(assets_right)) {
+        let assetsNorm = normalizeAssets(assets)
+        for (let [key, value] of Object.entries(assetsNorm)) {
             if (!value.json_metadata) {
                 return (<div></div>);
             }
         }
 
-        let prec1 = assets_right[sym1].precision
-        let prec2 = assets_right[sym2].precision
+        let prec1 = assetsNorm[sym1].precision
+        let prec2 = assetsNorm[sym2].precision
 
         const LIQUID_TOKEN = tt('token_names.LIQUID_TOKEN');
         const LIQUID_TOKEN_UPPERCASE = tt('token_names.LIQUID_TOKEN_UPPERCASE');
@@ -560,22 +234,7 @@ class Market extends Component {
             cancelOrderClick,
             cancelOrdersClick,
             setFormPrice,
-            validateBuySteem,
-            fixBuyTotal,
-            fixSellTotal,
-            fixBuyAmount,
-            fixSellAmount,
-            validateSellSteem,
         } = this;
-
-        const {
-            buyDisabled,
-            sellDisabled,
-            buyPriceWarning,
-            sellPriceWarning,
-            sym1_list_page,
-            sym2_list_page
-        } = this.state;
 
         let ticker = {
             latest1: 0,
@@ -737,10 +396,10 @@ class Market extends Component {
                         }</td>
                         <td className={need_reverse ? (o.type === 'bid' ? 'sell-color' : 'buy-color') : (o.type === 'ask' ? 'sell-color' : 'buy-color')}>{tt(need_reverse ? (o.type === 'bid' ? 'g.sell' : 'g.buy') : (o.type === 'ask' ? 'g.sell' : 'g.buy'))}</td>
                         <td className={need_reverse ? (o.type === 'bid' ? 'sell-color' : 'buy-color') : (o.type === 'ask' ? 'sell-color' : 'buy-color')}>
-                            {o.price.toFixed(assets_right[sym2].precision)}
+                            {o.price.toFixed(assetsNorm[sym2].precision)}
                         </td>
                         <td>{o.asset1}</td>
-                        <td>{o.asset2.replace('SBD', DEBT_TOKEN_SHORT)}</td>
+                        <td>{o.asset2}</td>
                         <td>
                             <a
                                 href="#"
@@ -787,44 +446,6 @@ class Market extends Component {
             );
         }
 
-        let symbols1 = [];
-        let symbols2 = [];
-        for (let [key, value] of Object.entries(assets_right)) {
-            let description = ""
-            let image_url = ""
-            if (value.json_metadata.startsWith('{')) {
-                let json_metadata = JSON.parse(value.json_metadata)
-                description = json_metadata.description
-                image_url = json_metadata.image_url
-            }
-
-            if (sym1 !== key && sym2 !== key && (!value.symbols_whitelist.length || value.symbols_whitelist.includes(sym2)) && (!assets_right[sym2].symbols_whitelist.length || assets_right[sym2].symbols_whitelist.includes(key)))
-            symbols1.push({key: key, value: key,
-                label: (<span className={"Market__bg-" + key} style={{lineHeight: "28px"}}><img src={image_url} width="28" height="28"/>&nbsp;&nbsp;&nbsp;{key}</span>),
-                link: '/market/' + key + '/' + sym2,
-            onClick: (e) => {window.location.href = '/market/' + key + '/' + sym2}});
-
-            if (sym1 !== key && sym2 !== key && (!value.symbols_whitelist.length || value.symbols_whitelist.includes(sym1)) && (!assets_right[sym1].symbols_whitelist.length || assets_right[sym1].symbols_whitelist.includes(key)))
-            symbols2.push({key: key, value: key,
-                label: (<span className={"Market__bg-" + key} style={{lineHeight: "28px"}}><img src={image_url} width="28" height="28"/>&nbsp;&nbsp;&nbsp;{key}</span>),
-                link: '/market/' + sym1 + '/' + key, 
-            onClick: (e) => {window.location.href = '/market/' + sym1 + '/' + key}});
-        }
-
-        let next_sym1_list = symbols1.slice(10*(sym1_list_page+1), 10*(sym1_list_page+1)+10);
-        symbols1 = symbols1.slice(10*sym1_list_page, 10*sym1_list_page+10);
-
-        symbols1.push({value: <span>
-          <a className="Market__votes_pagination" onClick={this.prevSym1ListPage}>{sym1_list_page > 0 ? '< ' + tt('g.back') : ''}</a>
-          <a className="Market__votes_pagination" onClick={next_sym1_list.length > 0 ? this.nextSym1ListPage : null}>{next_sym1_list.length > 0 ? tt('g.more_list') + ' >' : ''}</a></span>});
-
-        let next_sym2_list = symbols2.slice(10*(sym2_list_page+1), 10*(sym2_list_page+1)+10);
-        symbols2 = symbols2.slice(10*sym2_list_page, 10*sym2_list_page+10);
-
-        symbols2.push({value: <span>
-          <a className="Market__votes_pagination" onClick={this.prevSym2ListPage}>{sym2_list_page > 0 ? '< ' + tt('g.back') : ''}</a>
-          <a className="Market__votes_pagination" onClick={next_sym2_list.length > 0 ? this.nextSym2ListPage : null}>{next_sym2_list.length > 0 ? tt('g.more_list') + ' >' : ''}</a></span>});
-
         const normalizeTrades = trades => trades.map(t => new TradeHistory(t, sym1, sym2, prec1, prec2));
 
         const trades = this.props.history ? normalizeTrades(this.props.history) : [];
@@ -847,27 +468,21 @@ class Market extends Component {
                             trades={trades}
                         />
                     </div>
-                    <div className="column Market__pairs"><br/><h5>
-                        <DropdownMenu el="div" items={symbols1}>
-                            <span>
-                                {sym1 === "GOLOS" ? (<img src="/images/golos.png" width="36" height="36" style={{marginBottom: "4px"}} />) : null}
-                                {sym1 === "GBG" ? (<img src="/images/gold-golos.png" width="36" height="36" style={{marginBottom: "4px"}} />) : null}
-                                {sym1}
-                                {symbols1.length > 0 && <Icon name="dropdown-arrow" />}
-                            </span>
-                        </DropdownMenu>
-                        &nbsp;
-                        <a style={{fill: "gray"}} href={"/market/"+sym2+"/"+sym1}><Icon name="shuffle" /></a>
-                        &nbsp;
-                        <DropdownMenu el="div" items={symbols2}>
-                            <span>
-                                {sym2 === "GOLOS" ? (<img src="/images/golos.png" width="36" height="36" style={{marginBottom: "4px"}} />) : null}
-                                {sym2 === "GBG" ? (<img src="/images/gold-golos.png" width="36" height="36" style={{marginBottom: "4px"}} />) : null}
-                                {sym2}
-                                {symbols2.length > 0 && <Icon name="dropdown-arrow" />}
-                            </span>
-                        </DropdownMenu></h5>
-                        <TickerPriceStat ticker={ticker} trades={trades} symbol={sym2} precision={assets_right[sym2].precision} />
+                    <div className="column"><br/>
+                        <h5>
+                            <MarketPair assets={assetsNorm} sym1={sym1} sym2={sym2}
+                                linkComposer={(sym1, sym2) => {
+                                    return '/market/' + sym1 + '/' + sym2
+                                }}
+                                onChange={({event, link}) => {
+                                    if (event) {
+                                        event.preventDefault()
+                                        window.location.href = link
+                                    }
+                                }}
+                            />
+                        </h5>
+                        <TickerPriceStat ticker={ticker} trades={trades} symbol={sym2} precision={assetsNorm[sym2].precision} />
                     </div>
                 </div>
                 <div className="row">
@@ -887,330 +502,12 @@ class Market extends Component {
                                 LIQUID_TOKEN: sym1,
                             })}  
                         </h4>&nbsp;&nbsp;&nbsp;<div className="inline"><small>({tt('market_jsx.market_depth_') + ': '}<b>{ticker.asset2_depth + ' ' + sym2}</b>)</small></div>
-                        <form className="Market__orderform" onSubmit={buySteem}>
-                            <div className="row">
-                                <div className="column small-3 large-3">
-                                    <label>{tt('g.price')}</label>
-                                </div>
-                                <div className="column small-9 large-7">
-                                    <div className="input-group">
-                                        <input
-                                            className={
-                                                'input-group-field' +
-                                                (buyPriceWarning
-                                                    ? ' price_warning'
-                                                    : '')
-                                            }
-                                            type="text"
-                                            ref="buySteemPrice"
-                                            placeholder="0.0"
-                                            onChange={e => {
-                                                let {sym1, sym2} = this.props.routeParams
-                                                sym1 = sym1.toUpperCase()
-                                                sym2 = sym2.toUpperCase()
-
-                                                let assets = this.props.assets;
-                                                let assets_right = {}
-                                                assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-                                                assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-                                                for (let [key, value] of Object.entries(assets)) {
-                                                    assets_right[key] = value
-                                                }
-
-                                                const amount = parseFloat(
-                                                    this.refs.buySteemAmount
-                                                        .value
-                                                );
-                                                let price = parseFloat(
-                                                    this.refs.buySteemPrice
-                                                        .value
-                                                );
-                                                let new_price = price.toFixed(assets_right[sym2].precision);
-                                                if (new_price.length < price.toString().length) {
-                                                    this.refs.buySteemPrice
-                                                            .value = new_price;
-                                                    price = parseFloat(
-                                                        this.refs.buySteemPrice
-                                                            .value
-                                                    );
-                                                }
-                                                if (amount >= 0 && price >= 0)
-                                                    this.refs.buySteemTotal.value = roundDown(
-                                                        price * amount,
-                                                        assets_right[sym2].precision
-                                                    ).toFixed(assets_right[sym2].precision);
-                                                validateBuySteem();
-                                                fixBuyTotal();
-                                            }}
-                                        />
-                                        <span className="input-group-label uppercase">
-                                            {`${sym2}/${sym1}`}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="row">
-                                <div className="column small-3 large-3">
-                                    <label>{tt('g.amount')}</label>
-                                </div>
-                                <div className="column small-9 large-7">
-                                    <div className="input-group">
-                                        <input
-                                            className="input-group-field"
-                                            type="text"
-                                            ref="buySteemAmount"
-                                            placeholder="0.0"
-                                            onChange={e => {
-                                                let {sym1, sym2} = this.props.routeParams
-                                                sym1 = sym1.toUpperCase()
-                                                sym2 = sym2.toUpperCase()
-
-                                                let assets = this.props.assets;
-                                                let assets_right = {}
-                                                assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-                                                assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-                                                for (let [key, value] of Object.entries(assets)) {
-                                                    assets_right[key] = value
-                                                }
-
-                                                const price = parseFloat(
-                                                    this.refs.buySteemPrice
-                                                        .value
-                                                )
-                                                let amount = parseFloat(
-                                                    this.refs.buySteemAmount
-                                                        .value
-                                                );
-                                                let new_amount = amount.toFixed(assets_right[sym1].precision);
-                                                if (new_amount.length < amount.toString().length) {
-                                                    this.refs.buySteemAmount
-                                                            .value = new_amount;
-                                                    amount = parseFloat(
-                                                        this.refs.buySteemAmount
-                                                            .value
-                                                    );
-                                                }
-                                                if (price >= 0 && amount >= 0) {
-                                                    let res = price * amount
-                                                    this.refs.buySteemTotal.value = roundDown(
-                                                        res,
-                                                        assets_right[sym2].precision
-                                                    ).toFixed(assets_right[sym2].precision)
-                                                }
-                                                validateBuySteem();
-                                                fixBuyTotal();
-                                            }}
-                                        />
-                                        <span className="input-group-label uppercase">
-                                            {' '}
-                                            {sym1}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="row">
-                                <div className="column small-3 large-3">
-                                    <label>{tt('market_jsx.total')}</label>
-                                </div>
-                                <div className="column small-9 large-7">
-                                    <div className="input-group">
-                                        <input
-                                            className="input-group-field"
-                                            type="text"
-                                            ref="buySteemTotal"
-                                            placeholder="0.0"
-                                            onChange={e => {
-                                                let {sym1, sym2} = this.props.routeParams
-                                                sym1 = sym1.toUpperCase()
-                                                sym2 = sym2.toUpperCase()
-
-                                                let assets = this.props.assets;
-                                                let assets_right = {}
-                                                assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-                                                assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-                                                for (let [key, value] of Object.entries(assets)) {
-                                                    assets_right[key] = value
-                                                }
-
-                                                const price = parseFloat(
-                                                    this.refs.buySteemPrice
-                                                        .value
-                                                );
-                                                let total = parseFloat(
-                                                    this.refs.buySteemTotal
-                                                        .value
-                                                );
-                                                let new_total = total.toFixed(assets_right[sym2].precision);
-                                                if (new_total.length < total.toString().length) {
-                                                    this.refs.buySteemTotal
-                                                            .value = new_total;
-                                                    total = parseFloat(
-                                                        this.refs.buySteemTotal
-                                                            .value
-                                                    );
-                                                }
-                                                if (total >= 0 && price >= 0)
-                                                    this.refs.buySteemAmount.value = roundUp(
-                                                        total / price,
-                                                        assets_right[sym1].precision
-                                                    ).toFixed(assets_right[sym1].precision);;
-                                                validateBuySteem();
-                                                fixBuyAmount();
-                                            }}
-                                        />
-                                        <span className="input-group-label">
-                                            {sym2}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="row">
-                                <div className="column small-4 large-3">
-                                    <label>{tt('market_jsx.market_fee_percent_') + this.state.buySteemFeePct}</label>
-                                </div>
-                                <div className="column small-9 large-7">
-                                    <div className="input-group">
-                                        <input
-                                            className="input-group-field"
-                                            type="text"
-                                            disabled
-                                            ref="buySteemFee"
-                                            placeholder="0.0"
-                                        />
-                                        <span className="input-group-label">
-                                            {sym1}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="row">
-                                <div className="column small-3 large-2" />
-                                <div className="column small-9 large-8">
-                                    <input
-                                        disabled={buyDisabled}
-                                        type="submit"
-                                        className="button hollow buy-color float-right uppercase"
-                                        value={tt(
-                                            'navigation.buy_LIQUID_TOKEN',
-                                            { LIQUID_TOKEN: sym1 }
-                                        )}
-                                    />
-
-                                    <div className="Market__balance">
-                                        {(((sym2 === "GBG" || sym2 === "GOLOS") && account) || (assets && sym2 in assets)) && (
-                                        <small>
-                                            <a
-                                                href="#"
-                                                onClick={e => {
-                                                    let {sym1, sym2} = this.props.routeParams
-                                                    sym1 = sym1.toUpperCase()
-                                                    sym2 = sym2.toUpperCase()
-
-                                                    let assets = this.props.assets;
-                                                    let assets_right = {}
-                                                    assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-                                                    assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-                                                    for (let [key, value] of Object.entries(assets)) {
-                                                        assets_right[key] = value
-                                                    }
-
-                                                    e.preventDefault();
-                                                    const price = parseFloat(
-                                                        this.refs.buySteemPrice.value
-                                                    );
-                                                    let total = '';
-                                                    if (sym2 === "GBG") {
-                                                        total = account.sbd_balance.split(
-                                                            ' '
-                                                        )[0];
-                                                    }
-                                                    else if (sym2 === "GOLOS") {
-                                                        total = account.balance.split(
-                                                            ' '
-                                                        )[0];
-                                                    }
-                                                    else {
-                                                        total = assets[sym2].balance.split(
-                                                            ' '
-                                                        )[0];
-                                                    }
-                                                    this.refs.buySteemTotal.value = total;
-                                                    if (price >= 0) {
-                                                        let amount = roundDown(
-                                                            parseFloat(total) / price,
-                                                            assets_right[sym1].precision
-                                                        );
-                                                        this.refs.buySteemAmount.value = amount.toFixed(assets_right[sym1].precision);
-                                                        let res = price * amount
-                                                        this.refs.buySteemTotal.value = roundDown(
-                                                            res,
-                                                            assets_right[sym2].precision
-                                                        ).toFixed(assets_right[sym2].precision)
-                                                    }
-                                                    validateBuySteem();
-                                                    fixBuyTotal();
-                                                }}
-                                            >
-                                                {tt('market_jsx.available')}:
-                                            </a>{' '}
-                                            {sym2 === "GBG" && account.sbd_balance.replace(
-                                                'GBG',
-                                                DEBT_TOKEN_SHORT
-                                            )}
-                                            {sym2 === "GOLOS" && account.balance.replace(
-                                                LIQUID_TICKER,
-                                                LIQUID_TOKEN_UPPERCASE
-                                            )}
-                                            {sym2 !== "GOLOS" && sym2 !== "GBG" && assets[sym2].balance}
-                                        </small>
-                                        )}
-                                        <br/>
-                                        <small>
-                                            <a
-                                                href="#"
-                                                onClick={e => {  
-                                                    let {sym1, sym2} = this.props.routeParams
-                                                    sym1 = sym1.toUpperCase()
-                                                    sym2 = sym2.toUpperCase()
-
-                                                    let assets = this.props.assets;
-                                                    let assets_right = {}
-                                                    assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-                                                    assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-                                                    for (let [key, value] of Object.entries(assets)) {
-                                                        assets_right[key] = value
-                                                    }
-
-                                                    e.preventDefault();
-                                                    const amount = parseFloat(
-                                                        this.refs.buySteemAmount
-                                                            .value
-                                                    );
-                                                    const price = parseFloat(
-                                                        ticker.lowest_ask
-                                                    );
-                                                    this.refs.buySteemPrice.value =
-                                                        ticker.lowest_ask.toFixed(assets_right[sym2].precision);
-                                                    if (amount >= 0)
-                                                        this.refs.buySteemTotal.value = roundDown(
-                                                            amount * price,
-                                                            assets_right[sym2].precision
-                                                        ).toFixed(assets_right[sym2].precision);
-                                                    validateBuySteem();
-                                                }}
-                                            >
-                                                {tt('market_jsx.lowest_ask')}:
-                                            </a>{' '}
-                                            {ticker.lowest_ask.toFixed(assets_right[sym2].precision)}<br/>
-                                        </small>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
+                        <OrderForm ref={this.buyForm} account={account} sym1={sym1} sym2={sym2} assets={assetsNorm}
+                            bestPrice={ticker.lowest_ask}
+                            onCreate={msg => {
+                                this.props.notify(msg);
+                                this.props.reload(user, this.props.location.pathname);
+                            }} />
                     </div>
 
                     <div className="small-12 medium-6 columns">
@@ -1219,340 +516,26 @@ class Market extends Component {
                                 LIQUID_TOKEN: sym1
                             })}
                         </h4>&nbsp;&nbsp;&nbsp;<div className="inline"><small>({tt('market_jsx.market_depth_') + ': '} <b>{ticker.asset1_depth + ' ' + sym1}</b>)</small></div>
-
-                        <form
-                            className="Market__orderform"
-                            onSubmit={sellSteem}
-                        >
-                            <div className="row">
-                                <div className="column small-3 large-3">
-                                    <label>{tt('g.price')}</label>
-                                </div>
-
-                                <div className="column small-9 large-7">
-                                    <div className="input-group">
-                                        <input
-                                            className={
-                                                'input-group-field' +
-                                                (sellPriceWarning
-                                                    ? ' price_warning'
-                                                    : '')
-                                            }
-                                            type="text"
-                                            ref="sellSteem_price"
-                                            placeholder="0.0"
-                                            onChange={e => {
-                                                let {sym1, sym2} = this.props.routeParams
-                                                sym1 = sym1.toUpperCase()
-                                                sym2 = sym2.toUpperCase()
-
-                                                let assets = this.props.assets;
-                                                let assets_right = {}
-                                                assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-                                                assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-                                                for (let [key, value] of Object.entries(assets)) {
-                                                    assets_right[key] = value
-                                                }
-
-                                                let amount = parseFloat(
-                                                    this.refs.sellSteem_amount
-                                                        .value
-                                                );
-                                                let price = parseFloat(
-                                                    this.refs.sellSteem_price
-                                                        .value
-                                                );
-                                                let new_price = price.toFixed(assets_right[sym2].precision);
-                                                if (new_price.length < price.toString().length) {
-                                                    this.refs.sellSteem_price
-                                                            .value = new_price;
-                                                    price = parseFloat(
-                                                        this.refs.sellSteem_price
-                                                            .value
-                                                    );
-                                                }
-                                                if (amount >= 0 && price >= 0)
-                                                    this.refs.sellSteem_total.value = roundDown(
-                                                        price * amount,
-                                                        assets_right[sym2].precision
-                                                    ).toFixed(assets_right[sym2].precision);
-                                                validateSellSteem();
-                                                fixSellTotal();
-                                            }}
-                                        />
-                                        <span className="input-group-label uppercase">
-                                            {`${sym2}/${sym1}`}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="row">
-                                <div className="column small-3 large-3">
-                                    <label>{tt('g.amount')}</label>
-                                </div>
-                                <div className="column small-9 large-7">
-                                    <div className="input-group">
-                                        <input
-                                            className="input-group-field"
-                                            type="text"
-                                            ref="sellSteem_amount"
-                                            placeholder="0.0"
-                                            onChange={() => {
-                                                let {sym1, sym2} = this.props.routeParams
-                                                sym1 = sym1.toUpperCase()
-                                                sym2 = sym2.toUpperCase()
-
-                                                let assets = this.props.assets;
-                                                let assets_right = {}
-                                                assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-                                                assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-                                                for (let [key, value] of Object.entries(assets)) {
-                                                    assets_right[key] = value
-                                                }
-
-                                                const price = parseFloat(
-                                                    this.refs.sellSteem_price
-                                                        .value
-                                                );
-                                                let amount = parseFloat(
-                                                    this.refs.sellSteem_amount
-                                                        .value
-                                                );
-                                                let new_amount = amount.toFixed(assets_right[sym1].precision);
-                                                if (new_amount.length < amount.toString().length) {
-                                                    this.refs.sellSteem_amount
-                                                            .value = new_amount;
-                                                    amount = parseFloat(
-                                                        this.refs.sellSteem_amount
-                                                            .value
-                                                    );
-                                                }
-                                                if (price >= 0 && amount >= 0)
-                                                    this.refs.sellSteem_total.value = roundDown(
-                                                        price * amount,
-                                                        assets_right[sym2].precision
-                                                    ).toFixed(assets_right[sym2].precision);
-                                                validateSellSteem();
-                                                fixSellTotal();
-                                            }}
-                                        />
-                                        <span className="input-group-label uppercase">
-                                            {sym1}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="row">
-                                <div className="column small-3 large-3">
-                                    <label>{tt('market_jsx.total')}</label>
-                                </div>
-                                <div className="column small-9 large-7">
-                                    <div className="input-group">
-                                        <input
-                                            className="input-group-field"
-                                            type="text"
-                                            ref="sellSteem_total"
-                                            placeholder="0.0"
-                                            onChange={e => {
-                                                let {sym1, sym2} = this.props.routeParams
-                                                sym1 = sym1.toUpperCase()
-                                                sym2 = sym2.toUpperCase()
-
-                                                let assets = this.props.assets;
-                                                let assets_right = {}
-                                                assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-                                                assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-                                                for (let [key, value] of Object.entries(assets)) {
-                                                    assets_right[key] = value
-                                                }
-
-                                                const price = parseFloat(
-                                                    this.refs.sellSteem_price
-                                                        .value
-                                                );
-                                                let total = parseFloat(
-                                                    this.refs.sellSteem_total
-                                                        .value
-                                                );
-                                                let new_total = total.toFixed(assets_right[sym2].precision);
-                                                if (new_total.length < total.toString().length) {
-                                                    this.refs.sellSteem_total
-                                                            .value = new_total;
-                                                    total = parseFloat(
-                                                        this.refs.sellSteem_total
-                                                            .value
-                                                    );
-                                                }
-                                                if (price >= 0 && total >= 0)
-                                                    this.refs.sellSteem_amount.value = roundUp(
-                                                        total / price,
-                                                        assets_right[sym1].precision
-                                                    ).toFixed(assets_right[sym1].precision);
-                                                validateSellSteem();
-                                                fixSellAmount();
-                                            }}
-                                        />
-                                        <span className="input-group-label">
-                                            {sym2}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="row">
-                                <div className="column small-4 large-3">
-                                    <label>{tt('market_jsx.market_fee_percent_') + this.state.sellSteemFeePct}</label>
-                                </div>
-                                <div className="column small-9 large-7">
-                                    <div className="input-group">
-                                        <input
-                                            className="input-group-field"
-                                            type="text"
-                                            disabled
-                                            ref="sellSteem_fee"
-                                            placeholder="0.0"
-                                        />
-                                        <span className="input-group-label">
-                                            {sym2}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="row">
-                                <div className="column small-3 large-2" />
-                                <div className="column small-9 large-8">
-                                    <input
-                                        disabled={sellDisabled}
-                                        type="submit"
-                                        className="button hollow sell-color float-right uppercase"
-                                        value={tt(
-                                            'navigation.sell_LIQUID_TOKEN',
-                                            { LIQUID_TOKEN: sym1 }
-                                        )}
-                                    />
-
-                                    <div className="Market__balance">
-                                        {(((sym1 === "GBG" || sym1 === "GOLOS") && account) || (assets && sym1 in assets)) && (
-                                        <small>
-                                            <a
-                                                href="#"
-                                                onClick={e => {
-                                                    let {sym1, sym2} = this.props.routeParams
-                                                    sym1 = sym1.toUpperCase()
-                                                    sym2 = sym2.toUpperCase()
-
-                                                    let assets = this.props.assets;
-                                                    let assets_right = {}
-                                                    assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-                                                    assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-                                                    for (let [key, value] of Object.entries(assets)) {
-                                                        assets_right[key] = value
-                                                    }
-
-                                                    e.preventDefault();
-                                                    const price = parseFloat(
-                                                        this.refs.sellSteem_price.value
-                                                    );
-                                                    let amount = '';
-                                                    if (sym1 === "GBG") {
-                                                        amount = account.sbd_balance.split(
-                                                            ' '
-                                                        )[0];
-                                                    }
-                                                    else if (sym1 === "GOLOS") {
-                                                        amount = account.balance.split(
-                                                            ' '
-                                                        )[0];
-                                                    }
-                                                    else {
-                                                        amount = assets[sym1].balance.split(
-                                                            ' '
-                                                        )[0];
-                                                    }
-                                                    this.refs.sellSteem_amount.value = amount;
-                                                    if (price >= 0)
-                                                        this.refs.sellSteem_total.value = roundDown(
-                                                            price * parseFloat(amount),
-                                                            assets_right[sym2].precision
-                                                        ).toFixed(assets_right[sym2].precision);
-                                                    validateSellSteem();
-                                                    fixSellTotal();
-                                                }}
-                                            >
-                                                {tt('market_jsx.available')}:
-                                            </a>{' '}
-                                            {sym1 === "GBG" && account.sbd_balance.replace(
-                                                'GBG',
-                                                DEBT_TOKEN_SHORT
-                                            )}
-                                            {sym1 === "GOLOS" && account.balance.replace(
-                                                LIQUID_TICKER,
-                                                LIQUID_TOKEN_UPPERCASE
-                                            )}
-                                            {sym1 !== "GOLOS" && sym1 !== "GBG" && assets[sym1].balance}
-                                        </small>
-                                        )}
-                                        <br/>
-                                        <small>
-                                            <a
-                                                href="#"
-                                                onClick={e => {
-                                                    let {sym1, sym2} = this.props.routeParams
-                                                    sym1 = sym1.toUpperCase()
-                                                    sym2 = sym2.toUpperCase()
-
-                                                    let assets = this.props.assets;
-                                                    let assets_right = {}
-                                                    assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-                                                    assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, symbols_whitelist: [], fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-                                                    for (let [key, value] of Object.entries(assets)) {
-                                                        assets_right[key] = value
-                                                    }
-
-                                                    e.preventDefault();
-                                                    const amount = parseFloat(
-                                                        this.refs
-                                                            .sellSteem_amount
-                                                            .value
-                                                    );
-                                                    const price =
-                                                        ticker.highest_bid;
-                                                    this.refs.sellSteem_price.value = price.toFixed(assets_right[sym2].precision);
-                                                    if (amount >= 0)
-                                                        this.refs.sellSteem_total.value = roundDown(
-                                                            parseFloat(price) *
-                                                                amount,
-                                                            assets_right[sym2].precision
-                                                        ).toFixed(assets_right[sym2].precision);
-                                                    validateSellSteem();
-                                                    fixSellTotal();
-                                                }}
-                                            >
-                                                {tt('market_jsx.highest_bid')}:
-                                            </a>{' '}
-                                            {ticker.highest_bid.toFixed(assets_right[sym2].precision)}<br/>
-                                        </small>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
+                        <OrderForm ref={this.sellForm} account={account} sym1={sym1} sym2={sym2} assets={assetsNorm}
+                            isSell={true} bestPrice={ticker.highest_bid}
+                            onCreate={msg => {
+                                this.props.notify(msg);
+                                this.props.reload(user, this.props.location.pathname);
+                            }} />
                     </div>
                 </div>
 
                 <div className="row">
                     <div className="column small-12">
-{assets && assets_right[sym1].allow_override_transfer && (<p className="text-center"><Icon name="info_o" /> <small>{tt('market_jsx.asset_') + sym1 + tt('market_jsx.asset_is_overridable')} <a target="_blank" href="https://wiki.golos.id/users/faq#chto-takoe-otzyvnye-uia-tokeny">{tt('g.more_hint')} ></a></small></p>)}
-{assets && assets_right[sym2].allow_override_transfer && (<p className="text-center"><Icon name="info_o" /> <small>{tt('market_jsx.asset_') + sym2 + tt('market_jsx.asset_is_overridable')} <a target="_blank" href="https://wiki.golos.id/users/faq#chto-takoe-otzyvnye-uia-tokeny">{tt('g.more_hint')} ></a></small></p>)}
+{assets && assetsNorm[sym1].allow_override_transfer && (<p className="text-center"><Icon name="info_o" /> <small>{tt('market_jsx.asset_') + sym1 + tt('market_jsx.asset_is_overridable')} <a target="_blank" href="https://wiki.golos.id/users/faq#chto-takoe-otzyvnye-uia-tokeny">{tt('g.more_hint')} ></a></small></p>)}
+{assets && assetsNorm[sym2].allow_override_transfer && (<p className="text-center"><Icon name="info_o" /> <small>{tt('market_jsx.asset_') + sym2 + tt('market_jsx.asset_is_overridable')} <a target="_blank" href="https://wiki.golos.id/users/faq#chto-takoe-otzyvnye-uia-tokeny">{tt('g.more_hint')} ></a></small></p>)}
                     </div>
                 </div>
 
                 <div className="row show-for-medium">
                     <div className="small-6 columns">
                         <h4>{tt('market_jsx.buy_orders')}</h4>
-                        <Orderbook
+                        <OrderBook
                             sym1={sym1}
                             sym2={sym2}
                             prec1={prec1}
@@ -1568,7 +551,7 @@ class Market extends Component {
 
                     <div className="small-6 columns">
                         <h4>{tt('market_jsx.sell_orders')}</h4>
-                        <Orderbook
+                        <OrderBook
                             sym1={sym1}
                             sym2={sym2}
                             prec1={prec1}
@@ -1600,7 +583,6 @@ class Market extends Component {
         );
     }
 }
-const DEFAULT_EXPIRE = 0xffffffff;
 
 export default connect(
     state => {
@@ -1719,86 +701,6 @@ export default connect(
                     errorCallback: (e) => {
                         console.log(e);
                     }
-                })
-            );
-        },
-        placeOrder: (
-            assets,
-            sym1, sym2,
-            owner,
-            amount_to_sell,
-            min_to_receive,
-            effectivePrice,
-            priceWarning,
-            marketPrice,
-            successCallback,
-            fill_or_kill = false,
-            expiration = DEFAULT_EXPIRE
-        ) => {
-            // create_order jsc 12345 "1.000 SBD" "100.000 STEEM" true 1467122240 false
-
-            let assets_right = {}
-            assets_right['GOLOS'] = {supply: '0.000 GOLOS', precision: 3, fee_percent: 0, json_metadata: '{"image_url": "/images/golos.png"}'}
-            assets_right['GBG'] = {supply: '0.000 GBG', precision: 3, fee_percent: 0, json_metadata: '{"image_url": "/images/gold-golos.png"}'}
-            for (let [key, value] of Object.entries(assets)) {
-                assets_right[key] = value
-            }
-            let prec1 = assets_right[sym1].precision
-            let prec2 = assets_right[sym2].precision
-
-            // Padd amounts to 3 decimal places
-            amount_to_sell = amount_to_sell.replace(
-                amount_to_sell.split(' ')[0],
-                String(parseFloat(amount_to_sell).toFixed(prec2))
-            );
-            min_to_receive = min_to_receive.replace(
-                min_to_receive.split(' ')[0],
-                String(parseFloat(min_to_receive).toFixed(prec1))
-            );
-
-            const isSell = amount_to_sell.indexOf(sym1) > 0;
-            const confirmStr = tt(
-                isSell
-                    ? 'market_jsx.sell_amount_for_atleast'
-                    : 'market_jsx.buy_atleast_amount_for',
-                { amount_to_sell, min_to_receive, effectivePrice }
-            );
-            const successMessage = tt('g.order_placed') + ': ' + confirmStr;
-            const confirm = confirmStr + '?';
-            const warning = priceWarning
-                ? tt(
-                      'market_jsx.price_warning_' +
-                          (isSell ? 'below' : 'above'),
-                      {
-                          marketPrice:
-                              sym2 + ' ' +
-                              parseFloat(marketPrice).toFixed(assets_right[sym2].precision) +
-                              '/' +
-                              sym1,
-                      }
-                  )
-                : null;
-
-            const orderid = Math.floor(Date.now() / 1000);
-
-            const operation = {
-                owner,
-                amount_to_sell,
-                min_to_receive,
-                fill_or_kill,
-                expiration,
-                orderid,
-            }
-
-            dispatch(
-                transaction.actions.broadcastOperation({
-                    type: 'limit_order_create',
-                    operation,
-                    confirm,
-                    warning,
-                    successCallback: () => {
-                        successCallback(successMessage);
-                    },
                 })
             );
         },

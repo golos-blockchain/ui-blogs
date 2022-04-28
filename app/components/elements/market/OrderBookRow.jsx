@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from 'prop-types'
 import tt from 'counterpart';
-import Icon from '@elements/Icon';
+
+import Icon from 'app/components/elements/Icon'
 
 export default class OrderBookRow extends React.Component {
 

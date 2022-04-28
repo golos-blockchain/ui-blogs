@@ -11,7 +11,8 @@ import {Link} from 'react-router';
 import MarkNotificationRead from 'app/components/elements/MarkNotificationRead';
 import tt from 'counterpart';
 import Immutable from "immutable";
-import Callout from 'app/components/elements/Callout';
+import Callout from 'app/components/elements/Callout'
+import CMCWidget from 'app/components/elements/market/CMCWidget'
 import { APP_NAME, SELECT_TAGS_KEY } from 'app/client_config';
 import cookie from "react-cookie";
 import transaction from 'app/redux/Transaction'
@@ -46,15 +47,6 @@ class PostsIndex extends React.Component {
         if (window.innerHeight && window.innerHeight > 3000 && prevProps.discussions !== this.props.discussions) {
             this.listRef.fetchIfNeeded();
         }
-    }
-
-    componentDidMount () {        
-        const script = document.createElement("script");
-
-        script.src = "https://files.coinmarketcap.com/static/widget/currency.js";
-        script.async = true;
-
-        document.body.appendChild(script);
     }
 
     getPosts(order, category) {
@@ -211,17 +203,7 @@ class PostsIndex extends React.Component {
                 </div>
                 <div className="PostsIndex__topics column shrink show-for-large">
 
-                <div className="coinmarketcap-currency-widget"
-                    data-currencyid="4834" // GOLOS
-                    data-base="RUB"
-                    data-secondary="USD"
-                    data-ticker="false"
-                    data-rank="false"
-                    data-marketcap="false"
-                    data-volume="false"
-                    data-statsticker="false"
-                    data-stats="USD">
-                </div>
+                    <CMCWidget />
 
                     <Topics
                         categories={categories}
