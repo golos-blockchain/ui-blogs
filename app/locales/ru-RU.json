@@ -1307,10 +1307,10 @@
     "enter_the_link": "Введите ссылку",
     "add_image": "Добавить картинку",
     "add_link": "Добавить ссылку",
-    "add_video": "Добавить мультимедиа (youtube/vimeo/coub)",
+    "add_video": "Добавить мультимедиа (youtube/telegram/rutube)",
     "add_image_from_computer": "Добавить изображение с устройства",
     "add_image_via_link": "Добавить изображение ссылкой",
-    "enter_video_link": "Вставьте ссылку на YouTube/Vimeo",
+    "enter_video_link": "Вставьте ссылку на YouTube/Telegram/Rutube",
     "enter_link": "Вставьте ссылку",
     "link_text": "Текст отображения",
     "link_value": "Ссылка"
