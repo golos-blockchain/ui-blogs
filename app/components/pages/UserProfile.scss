@@ -323,6 +323,13 @@
     }
 }
 
+.FilledOrders__convert-link {
+    svg {
+        fill: #0078C4;
+        transform: rotate(90deg);
+    }
+}
+
 @media screen and (max-width: 39.9375em) {
 
     .UserProfile__menu-item {
