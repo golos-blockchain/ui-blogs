@@ -8,6 +8,7 @@ import sanitize from 'sanitize-html';
 import HtmlReady from 'shared/HtmlReady';
 import { getTags } from 'shared/HtmlReady'
 import YoutubePlayer from 'app/components/elements/common/YoutubePlayer/YoutubePlayer';
+import TelegramPlayer from 'app/components/elements/common/TelegramPlayer/TelegramPlayer';
 import sanitizeConfig, { noImageText } from 'app/utils/SanitizeConfig';
 import Lightbox from 'lightbox-react';
 import 'lightbox-react/style.css';
@@ -172,7 +173,7 @@ class MarkdownViewer extends Component {
         // HtmlReady inserts ~~~ embed:${id} type ~~~
         for (let section of cleanText.split('~~~ embed:')) {
             const match = section.match(
-                /^([A-Za-z0-9_-]+) (youtube|vimeo|coub|ok_video|rutube) ~~~/
+                /^([A-Za-z0-9_-]+) (youtube|vimeo|coub|ok_video|rutube|telegram) ~~~/
             );
 
             if (match) {
@@ -240,6 +241,11 @@ class MarkdownViewer extends Component {
                                 allow="autoplay"
                             />
                         </div>
+                    );
+                } else if (type === 'telegram') {
+                    let [ author, id2 ] = id.split('_')
+                    sections.push(
+                        <TelegramPlayer author={author} id={id2} key={++idx} />
                     );
                 } else {
                     console.error('MarkdownViewer unknown embed type', type);

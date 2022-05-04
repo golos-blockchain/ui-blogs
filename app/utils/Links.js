@@ -35,6 +35,7 @@ export default {
     coubId: /(?:(?:https?:)?\/\/)?coub\.com\/view\/([A-Za-z0-9]+)/,
     rutubeId: /(?:(?:https?:)?\/\/)?rutube\.ru\/video\/([A-Za-z0-9]+)\/?/,
     okVideoId: /(?:(?:https?:)?\/\/)?ok\.ru\/(?:live|video)\/([A-Za-z0-9]+)/,
+    telegramId: /(?:(?:https?:)?\/\/)(?:www\.)?t\.me\/([A-Za-z0-9]+)\/([0-9]+)/,
     // simpleLink: new RegExp(`<a href="(.*)">(.*)<\/a>`, 'ig'),
     ipfsPrefix: /(https?:\/\/.*)?\/ipfs/i,
     embedContent : /^https?:\/\/([\w_-]+(?:(?:\.[\w_-]+)+))(?:[\w.,@?^=%:/~+#-]*[\w@?^=%/~+#-])?/i,

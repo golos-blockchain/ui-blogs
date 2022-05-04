@@ -1246,7 +1246,7 @@
     "add_video": "Add media (youtube/vimeo/coub...)",
     "add_image_from_computer": "Add image from computer",
     "add_image_via_link": "Add image via link",
-    "enter_video_link": "Enter YouTube/Vimeo link",
+    "enter_video_link": "Enter YouTube/Vimeo/Coub link",
     "enter_link": "Enter the link",
     "link_text": "Link title",
     "link_value": "Link url"
