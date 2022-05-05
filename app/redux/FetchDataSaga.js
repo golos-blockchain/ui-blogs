@@ -7,8 +7,8 @@ import {loadFollows, fetchFollowCount} from 'app/redux/FollowSaga';
 import {getContent} from 'app/redux/SagaShared';
 import GlobalReducer from './GlobalReducer';
 import constants from './constants';
-import { reveseTag, ONLYAPP_TAG } from 'app/utils/tags';
-import { PUBLIC_API, CATEGORIES, IGNORE_TAGS, SELECT_TAGS_KEY, DEBT_TOKEN_SHORT, LIQUID_TICKER } from 'app/client_config';
+import { reveseTag, getFilterTags } from 'app/utils/tags';
+import { PUBLIC_API, CATEGORIES, SELECT_TAGS_KEY, DEBT_TOKEN_SHORT, LIQUID_TICKER } from 'app/client_config';
 import { SearchRequest, searchData } from 'app/utils/SearchClient'
 
 export function* fetchDataWatches () {
@@ -276,11 +276,9 @@ export function* fetchState(location_change_action) {
             // Fetch for ignored follow for hide comments
             yield fork(loadFollows, "getFollowingAsync", account, 'ignore')
 
-            console.time('getContent');
             const curl = `${account}/${permlink}`
             state.content[curl] = yield call([api, api.getContentAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT)
             accounts.add(account)
-            console.timeEnd('getContent');
 
             state.content[curl].donate_list = [];
             if (state.content[curl].donates != '0.000 GOLOS') {
@@ -292,6 +290,15 @@ export function* fetchState(location_change_action) {
                 state.content[curl].donate_uia_list = yield call([api, api.getDonatesAsync], true, {author: account, permlink: permlink}, '', '', 20, 0, true)
             }
             state.content[curl].confetti_active = false
+
+            if (localStorage.getItem('invite')) {
+                let is_follower = localStorage.getItem('invite') === account
+                if (!is_follower) {
+                    const follows = yield call([api, api.getFollowingAsync], localStorage.getItem('invite'), account, 'blog', 1)
+                    is_follower = follows[0] && follows[0].following === account
+                }
+                state.content[curl].is_follower = is_follower
+            }
 
             yield put(GlobalReducer.actions.receiveState(state))
 
@@ -324,7 +331,8 @@ export function* fetchState(location_change_action) {
                 state.content[link].confetti_active = false
             }
 
-            let args = { truncate_body: 128, select_categories: [category], filter_tag_masks: ['fm-'] };
+            let args = { truncate_body: 128, select_categories: [category], filter_tag_masks: ['fm-'],
+                filter_tags: getFilterTags() };
             let prev_posts = yield call([api, api[PUBLIC_API.created]], {limit: 4, start_author: account, start_permlink: permlink, select_authors: [account], ...args});
             prev_posts = prev_posts.slice(1);
             let p_ids = [];
@@ -452,10 +460,7 @@ export function* fetchData(action) {
         from,
     } = action.payload;
 
-    let ignore_tags = [...IGNORE_TAGS]
-    if (!process.env.IS_APP) {
-        ignore_tags.push(ONLYAPP_TAG)
-    }
+    let ignore_tags = getFilterTags()
 
     let { category } = action.payload;
 
@@ -479,11 +484,13 @@ export function* fetchData(action) {
             reversed
                 ? args[0].select_tags = [tag_raw, reversed]
                 : args[0].select_tags = [tag_raw]
+            args[0].filter_tags = ignore_tags
         } else {
             const reversed = reveseTag(category)
             reversed
                 ? args[0].select_categories = [category, reversed]
                 : args[0].select_categories = [category]
+            args[0].filter_tags = ignore_tags
         }
     } else {
         let select_tags = cookie.load(SELECT_TAGS_KEY);
@@ -499,6 +506,7 @@ export function* fetchData(action) {
             })
             args[0].select_categories = selectTags;
             category = select_tags.sort().join('/')
+            args[0].filter_tags = ignore_tags
         } else {
             let selectTags = []
             

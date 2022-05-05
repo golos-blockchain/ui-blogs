@@ -129,6 +129,9 @@ class PostsIndex extends React.Component {
         let posts = [];
         let emptyText = '';
         let markNotificationRead = null;
+        if (!this.props.username && (order === 'allposts' || order === 'allcomments')) {
+            return <div>{tt('poststub.login')}.</div>
+        }
         if (category === 'feed') {
             const account_name = order.slice(1);
             order = 'by_feed';

@@ -1,12 +1,12 @@
-import { PUBLIC_API, CATEGORIES, IGNORE_TAGS } from 'app/client_config';
+import { PUBLIC_API, CATEGORIES } from 'app/client_config';
 import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile';
-import { reveseTag, prepareTrendingTags, ONLYAPP_TAG } from 'app/utils/tags';
+import { reveseTag, prepareTrendingTags, getFilterTags } from 'app/utils/tags';
 
 const DEFAULT_VOTE_LIMIT = 10000
 
 const isHardfork = (v) => v.split('.')[1] === '18'
 
-export default async function getState(api, url, options, offchain = {}) {
+export default async function getState(api, url, offchain = {}) {
     if (!url || typeof url !== 'string' || !url.length || url === '/') url = 'trending'
     url = url.split('?')[0]
     if (url[0] === '/') url = url.substr(1)
@@ -266,7 +266,8 @@ export default async function getState(api, url, options, offchain = {}) {
         }
         state.content[curl].confetti_active = false;
 
-        let args = { truncate_body: 1024, select_categories: [category], filter_tag_masks: ['fm-'] };
+        let args = { truncate_body: 1024, select_categories: [category], filter_tag_masks: ['fm-'],
+            filter_tags: getFilterTags() };
         let prev_posts = await api.gedDiscussionsBy('created', {limit: 4, start_author: account, start_permlink: permlink, select_authors: [account], ...args});
         prev_posts = prev_posts.slice(1);
         let p_ids = [];
@@ -293,7 +294,16 @@ export default async function getState(api, url, options, offchain = {}) {
         }
         state.prev_posts = prev_posts.slice(0, 3);
 
-        state.assets = (await api.getAccountsBalances([offchain.account]))[0]
+        if (offchain.account) {
+            let is_follower = offchain.account === account
+            if (!is_follower) {
+                const follows = await api.getFollowing(offchain.account, account, 'blog', 1)
+                is_follower = follows[0] && follows[0].following === account
+            }
+            state.content[curl].is_follower = is_follower
+
+            state.assets = (await api.getAccountsBalances([offchain.account]))[0]
+        }
     } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
         let witnessIds = [];
         const witnesses = await api.getWitnessesByVote('', 100)
@@ -387,13 +397,13 @@ export default async function getState(api, url, options, offchain = {}) {
 
                 })
                 args.select_categories = selectTags;
-                args.filter_tags = IGNORE_TAGS
-                if (!process.env.IS_APP) {
-                    args.filter_tags = [...args.filter_tags, ONLYAPP_TAG]
-                }
             }
         }
-        
+        args.filter_tags = getFilterTags()
+        if (args.select_tags) {
+            args.select_tags = args.select_tags.filter(tag => !args.filter_tags.includes(tag))
+        }
+
         const requests = []
         const discussion_idxes = {}
         discussion_idxes[discussionsType] = []

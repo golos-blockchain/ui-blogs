@@ -913,6 +913,13 @@
     "show_N_more_replies": "Show %(N)s more replies",
     "show_N_more_replies_2": "Show %(N)s more replies"
   },
+  "poststub": {
+    "onlyblog": "This post is only for author's followers.",
+    "login": "Sign in",
+    "sign_up": "sign up",
+    "onlyapp": "This post is available only in GOLOS Blogs desktop application.",
+    "install": "Install application"
+  },
   "postsummary_jsx": {
     "resteemed": "Reposted",
     "resteemed_by": "Reposted by",
