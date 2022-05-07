@@ -9,7 +9,7 @@ import GlobalReducer from './GlobalReducer';
 import constants from './constants';
 import { reveseTag, getFilterTags } from 'app/utils/tags';
 import { PUBLIC_API, CATEGORIES, SELECT_TAGS_KEY, DEBT_TOKEN_SHORT, LIQUID_TICKER } from 'app/client_config';
-import { SearchRequest, searchData } from 'app/utils/SearchClient'
+import { SearchRequest, searchData, stateSetVersion } from 'app/utils/SearchClient'
 
 export function* fetchDataWatches () {
     yield fork(watchLocationChange);
@@ -278,6 +278,10 @@ export function* fetchState(location_change_action) {
 
             const curl = `${account}/${permlink}`
             state.content[curl] = yield call([api, api.getContentAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT)
+            const search = window.location.search
+            if (search) {
+                yield stateSetVersion(state.content[curl], search)
+            }
             accounts.add(account)
 
             state.content[curl].donate_list = [];
@@ -290,15 +294,6 @@ export function* fetchState(location_change_action) {
                 state.content[curl].donate_uia_list = yield call([api, api.getDonatesAsync], true, {author: account, permlink: permlink}, '', '', 20, 0, true)
             }
             state.content[curl].confetti_active = false
-
-            if (localStorage.getItem('invite')) {
-                let is_follower = localStorage.getItem('invite') === account
-                if (!is_follower) {
-                    const follows = yield call([api, api.getFollowingAsync], localStorage.getItem('invite'), account, 'blog', 1)
-                    is_follower = follows[0] && follows[0].following === account
-                }
-                state.content[curl].is_follower = is_follower
-            }
 
             yield put(GlobalReducer.actions.receiveState(state))
 

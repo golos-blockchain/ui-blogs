@@ -1,7 +1,10 @@
 import { Headers } from 'cross-fetch'
+import diff_match_patch from 'diff-match-patch'
 
 import { detransliterate } from 'app/utils/ParsersAndFormatters'
 import fetchWithTimeout from 'shared/fetchWithTimeout'
+
+const dmp = new diff_match_patch()
 
 const makeTag = (text) => {
     return /^[а-яё]/.test(text)
@@ -151,10 +154,10 @@ export class SearchRequest {
     }
 }
 
-export async function sendSearchRequest(sr, timeoutMsec = 10000) {
-    let body = sr.build()
+export async function sendSearchRequest(_index, _type, sr, timeoutMsec = 10000) {
+    let body = sr.build ? sr.build() : sr
     let url = new URL($STM_Config.elastic_search.url);
-    url += 'blog/post/_search?pretty'
+    url += _index + '/' + _type + '/_search?pretty'
     const response = await fetchWithTimeout(url, timeoutMsec, {
         method: 'post',
         headers: new Headers({
@@ -181,7 +184,7 @@ export async function searchData(sr, retries = 3, retryIntervalSec = 2, timeoutM
     let preResults = null
     for (let i = 0; i < (retries + 1); ++i) {
         try {
-            preResults = await sendSearchRequest(sr, timeoutMsec)
+            preResults = await sendSearchRequest('blog', 'post', sr, timeoutMsec)
             break
         } catch (err) {
             if (i + 1 < retries + 1) {
@@ -223,5 +226,118 @@ export async function searchData(sr, retries = 3, retryIntervalSec = 2, timeoutM
     return {
         results,
         total: (preResults.hits.total && preResults.hits.total.value) || 100
+    }
+}
+
+const makeId = (author, permlink) => author + '.' + permlink
+
+const maxVersion = 10
+
+export async function listVersions(author, permlink) {
+    const id = makeId(author, permlink)
+    let should = []
+    for (let i = 1; i <= maxVersion; ++i) {
+        should.push({"term": { "_id": id + ',' + i }})
+    }
+    let sr = {
+        "_source": false,
+        "from": 0, "size": maxVersion,
+        "query": { "bool": { should } },
+        "sort": { "v": { "order": "asc" } },
+        "fields": [ "post", "body", "is_patch", "time", "v" ]
+    }
+    try {
+        let preResults = await sendSearchRequest('blog_versions', 'version', sr)
+        let results = preResults.hits.hits.map((hit) => {
+            let obj = {}
+
+            copyField(obj, hit, 'body')
+            copyField(obj, hit, 'time')
+            copyField(obj, hit, 'post')
+            copyField(obj, hit, 'is_patch')
+            copyField(obj, hit, 'v')
+
+            obj._id = hit._id
+
+            return obj
+        })
+        return { results }
+    } catch (err) {
+        console.error('ElasticSearch failure', err)
+        return { results: [] }
+    }
+}
+
+export async function getVersion(author, permlink, version) {
+    version = parseInt(version)
+    if (version < 1 || version > maxVersion) {
+        return null
+    }
+    const id = makeId(author, permlink)
+    let should = []
+    for (let i = 1; i <= version; ++i) {
+        should.push({"term": { "_id": id + ',' + i }})
+    }
+    let sr = {
+        "_source": false,
+        "from": 0, "size": version,
+        "query": { "bool": { should } },
+        "sort": { "v": { "order": "asc" } },
+        "fields": [ "post", "body", "is_patch", "time", "v" ]
+    }
+    try {
+        let preResults = await sendSearchRequest('blog_versions', 'version', sr)
+        let results = preResults.hits.hits.map((hit) => {
+            let obj = {}
+
+            copyField(obj, hit, 'body')
+            copyField(obj, hit, 'time')
+            copyField(obj, hit, 'is_patch')
+            copyField(obj, hit, 'v')
+
+            obj._id = hit._id
+
+            return obj
+        })
+        if (results.length) {
+            let lastUpdate, lastV
+            let body = ''
+            for (let i = 0; i < results.length; ++i) {
+                try {
+                    const patches = dmp.patch_fromText(results[i].body)
+                    body = dmp.patch_apply(patches, body)[0]
+                } catch (err) {
+                    if (i > 0) {
+                        console.error('Cannot apply patch', err, i)
+                    }
+                    body = results[i].body
+                }
+                lastUpdate = results[i].time
+                lastV = results[i].v
+            }
+            if (lastV < version) {
+                return null
+            }
+            return { body, lastUpdate }
+        }
+    } catch (err) {
+        console.error('ElasticSearch failure', err)
+    }
+    return null
+}
+
+export async function stateSetVersion(content, urlSearch) {
+    try {
+        const sp = new URLSearchParams(urlSearch)
+        const version = sp.get('version')
+        if (version) {
+            const vers = await getVersion(content.author, content.permlink, version)
+            if (vers) {
+                content.body = vers.body
+                content.versions = { current: version }
+            }
+        }
+    } catch (err) {
+        console.error('Cannot set version', permlink, err)
     }
 }

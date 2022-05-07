@@ -1,14 +1,17 @@
 import { PUBLIC_API, CATEGORIES } from 'app/client_config';
 import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile';
 import { reveseTag, prepareTrendingTags, getFilterTags } from 'app/utils/tags';
+import { stateSetVersion } from 'app/utils/SearchClient'
 
 const DEFAULT_VOTE_LIMIT = 10000
 
 const isHardfork = (v) => v.split('.')[1] === '18'
 
 export default async function getState(api, url, offchain = {}) {
+    console.log('urllll', url)
     if (!url || typeof url !== 'string' || !url.length || url === '/') url = 'trending'
-    url = url.split('?')[0]
+    const urlParts = url.split('?')
+    url = urlParts[0]
     if (url[0] === '/') url = url.substr(1)
     
     const parts = url.split('/')
@@ -230,6 +233,9 @@ export default async function getState(api, url, offchain = {}) {
 
         const curl = `${account}/${permlink}`
         state.content[curl] = await api.getContent(account, permlink, DEFAULT_VOTE_LIMIT)
+        if (urlParts[1]) {
+            await stateSetVersion(state.content[curl], urlParts[1])
+        }
         accounts.add(account)
 
         const replies = await api.getAllContentReplies(account, permlink, DEFAULT_VOTE_LIMIT)
@@ -295,13 +301,6 @@ export default async function getState(api, url, offchain = {}) {
         state.prev_posts = prev_posts.slice(0, 3);
 
         if (offchain.account) {
-            let is_follower = offchain.account === account
-            if (!is_follower) {
-                const follows = await api.getFollowing(offchain.account, account, 'blog', 1)
-                is_follower = follows[0] && follows[0].following === account
-            }
-            state.content[curl].is_follower = is_follower
-
             state.assets = (await api.getAccountsBalances([offchain.account]))[0]
         }
     } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {

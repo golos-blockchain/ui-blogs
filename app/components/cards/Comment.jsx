@@ -15,7 +15,7 @@ import CommentFormLoader from 'app/components/modules/CommentForm/loader';
 import MarkdownViewer from 'app/components/cards/MarkdownViewer';
 import Author from 'app/components/elements/Author';
 import Voting from 'app/components/elements/Voting';
-import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
+import TimeVersions from 'app/components/elements/TimeVersions';
 import Userpic from 'app/components/elements/Userpic';
 
 import { LIQUID_TICKER, CONFETTI_CONFIG } from 'app/client_config';
@@ -285,9 +285,8 @@ class CommentImpl extends PureComponent {
                             to={this._getCommentLink(comment)}
                             className="PlainLink"
                         >
-                            <TimeAgoWrapper
-                                date={comment.created}
-                                className="updated"
+                            <TimeVersions
+                                content={comment}
                             />
                         </Link>
                         {this.state.collapsed || hideBody ? (

@@ -11,7 +11,7 @@ import { immutableAccessor, objAccessor } from 'app/utils/Accessors';
 import { isPostVisited, visitPost } from 'app/utils/helpers';
 import { serverApiRecordEvent } from 'app/utils/ServerApiClient';
 import Icon from 'app/components/elements/Icon';
-import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
+import TimeVersions from 'app/components/elements/TimeVersions';
 import Voting from 'app/components/elements/Voting';
 import Reblog from 'app/components/elements/Reblog';
 import MarkdownViewer from 'app/components/cards/MarkdownViewer';
@@ -27,11 +27,12 @@ import Confetti from 'react-dom-confetti';
 import PostSummaryThumb from 'app/components/elements/PostSummaryThumb';
 import { SEO_TITLE, LIQUID_TICKER, CONFETTI_CONFIG, CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config';
 
+
 function TimeAuthorCategory({ content, authorRepLog10, showTags }) {
     return (
         <span className="PostFull__time_author_category vcard">
             <Icon name="clock" className="space-right" />
-            <TimeAgoWrapper date={content.created} className="updated" />
+            <TimeVersions content={content} />
             {' '}
             <Author author={content.author} authorRepLog10={authorRepLog10} donateUrl={content.url} />
             {showTags && (
@@ -47,10 +48,7 @@ function TimeAuthorCategory({ content, authorRepLog10, showTags }) {
 function TimeAuthorCategoryLarge({ content, authorRepLog10 }) {
     return (
         <span className="PostFull__time_author_category_large vcard">
-            <TimeAgoWrapper
-                date={content.created}
-                className="updated float-right"
-            />
+            <TimeVersions content={content} className='float-right' />
             <Userpic account={content.author} reputation={authorRepLog10} />
             <div className="right-side">
                 <Author

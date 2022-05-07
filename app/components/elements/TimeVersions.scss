@@ -1,0 +1,13 @@
+.TimeVersions {
+    a {
+        font-weight: normal;
+        color: inherit;
+    }
+    li > a > span:not(.val) {
+        position: absolute;
+        right: 15px;
+    }
+    .VerticalMenu {
+        min-width: 250px;
+    }
+}
