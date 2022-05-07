@@ -55,7 +55,16 @@ export default createModule({
                         );
                     }
                 }
-                return state.mergeDeep(payload);
+                let res = state.mergeDeep(payload);
+                let con = res.get('content').withMutations(con => {
+                    con.forEach((cc, key) => {
+                        if (!payload.hasIn(['content', key, 'versions'])) {
+                            con.deleteIn([key, 'versions'])
+                        }
+                    })
+                })
+                res = res.set('content', con)
+                return res
             },
         },
         {
@@ -444,9 +453,10 @@ export default createModule({
         },
         {
             action: 'UPDATE',
-            reducer: (state, { payload: { key, notSet = Map(), updater } }) =>
+            reducer: (state, { payload: { key, notSet = Map(), updater } }) => {
                 // key = Array.isArray(key) ? key : [key] // TODO enable and test
-                state.updateIn(key, notSet, updater),
+                return state.updateIn(key, notSet, updater)
+            }
         },
         {
             action: 'SET_META_DATA',
@@ -500,6 +510,14 @@ export default createModule({
                     ['accounts', account, `${type}_vesting`],
                     fromJS(vesting_delegations)
                 ),
+        },
+        {
+            action: 'FETCH_VERSIONS',
+            reducer: state => state, // saga
+        },
+        {
+            action: 'SHOW_VERSION',
+            reducer: state => state, // saga
         },
     ],
 });

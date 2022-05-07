@@ -865,6 +865,10 @@
     "too_low_amount": "Too low amount.",
     "you_will_receive": "You will receive "
   },
+  "time_versions_jsx": {
+    "rev": "rev.",
+    "version_NUM": "(rev. %(NUM)s)"
+  },
   "tips_js": {
     "tip_balance_hint": "Balance that you use to reward users and that you use to earn rewards for yourself. Tokens from it can also be sent to increase the Golos Power.",
     "claim_balance_hint": "Balance of your share of the emission of Golos blockchain tokens, which you can use to top up your TIP balance or increase the Golos Power.",

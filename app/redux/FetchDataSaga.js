@@ -9,7 +9,7 @@ import GlobalReducer from './GlobalReducer';
 import constants from './constants';
 import { reveseTag, ONLYAPP_TAG } from 'app/utils/tags';
 import { PUBLIC_API, CATEGORIES, IGNORE_TAGS, SELECT_TAGS_KEY, DEBT_TOKEN_SHORT, LIQUID_TICKER } from 'app/client_config';
-import { SearchRequest, searchData } from 'app/utils/SearchClient'
+import { SearchRequest, searchData, stateSetVersion } from 'app/utils/SearchClient'
 
 export function* fetchDataWatches () {
     yield fork(watchLocationChange);
@@ -279,6 +279,10 @@ export function* fetchState(location_change_action) {
             console.time('getContent');
             const curl = `${account}/${permlink}`
             state.content[curl] = yield call([api, api.getContentAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT)
+            const search = window.location.search
+            if (search) {
+                yield stateSetVersion(state.content[curl], search)
+            }
             accounts.add(account)
             console.timeEnd('getContent');
 

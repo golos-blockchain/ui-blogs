@@ -1,14 +1,16 @@
 import { PUBLIC_API, CATEGORIES, IGNORE_TAGS } from 'app/client_config';
 import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile';
 import { reveseTag, prepareTrendingTags, ONLYAPP_TAG } from 'app/utils/tags';
+import { stateSetVersion } from 'app/utils/SearchClient'
 
 const DEFAULT_VOTE_LIMIT = 10000
 
 const isHardfork = (v) => v.split('.')[1] === '18'
 
-export default async function getState(api, url, options, offchain = {}) {
+export default async function getState(api, url, offchain = {}) {
     if (!url || typeof url !== 'string' || !url.length || url === '/') url = 'trending'
-    url = url.split('?')[0]
+    const urlParts = url.split('?')
+    url = urlParts[0]
     if (url[0] === '/') url = url.substr(1)
     
     const parts = url.split('/')
@@ -230,6 +232,9 @@ export default async function getState(api, url, options, offchain = {}) {
 
         const curl = `${account}/${permlink}`
         state.content[curl] = await api.getContent(account, permlink, DEFAULT_VOTE_LIMIT)
+        if (urlParts[1]) {
+            await stateSetVersion(state.content[curl], urlParts[1])
+        }
         accounts.add(account)
 
         const replies = await api.getAllContentReplies(account, permlink, DEFAULT_VOTE_LIMIT)
@@ -293,7 +298,10 @@ export default async function getState(api, url, options, offchain = {}) {
         }
         state.prev_posts = prev_posts.slice(0, 3);
 
-        state.assets = (await api.getAccountsBalances([offchain.account]))[0]
+        if (offchain.account) {
+            state.assets = (await api.getAccountsBalances([offchain.account]))[0]
+        }
+
     } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
         let witnessIds = [];
         const witnesses = await api.getWitnessesByVote('', 100)
