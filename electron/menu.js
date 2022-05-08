@@ -66,8 +66,12 @@ function initMenu(appUrl, httpsUrl, appSet, full = true) {
                         }
                     })
                     ipcMain.removeAllListeners('load-url')
-                    ipcMain.once('load-url', async (e, url) => {
-                        win.webContents.send('router-push', url)
+                    ipcMain.once('load-url', async (e, url, isExternal) => {
+                        if (isExternal) {
+                            shell.openExternal(url)
+                        } else {
+                            win.webContents.send('router-push', url)
+                        }
                     })
                     createContextMenu(gotoURL)
                     gotoURL.loadURL(appUrl + '/__app_goto_url?' + url)

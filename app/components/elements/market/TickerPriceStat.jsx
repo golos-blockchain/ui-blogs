@@ -31,7 +31,7 @@ export default class TickerPriceStat extends React.Component {
             <div className="TickerPriceStat">
                 <div>
                     <b>{tt('market_jsx.last_price')} </b>
-                    <span>{symbol} {latest.toFixed(precision)} ({pct_change})</span>
+                    <span>{symbol} {latest.toFixed(8)} ({pct_change})</span>
                 </div>
                 <div>
                     <b>{tt('market_jsx.24h_volume')} </b>
@@ -39,11 +39,11 @@ export default class TickerPriceStat extends React.Component {
                 </div>
                 <div>
                     <b>{tt('g.bid')} </b>
-                    <span>{symbol} {ticker.highest_bid.toFixed(precision)}</span>
+                    <span>{symbol} {ticker.highest_bid.toFixed(8)}</span>
                 </div>
                 <div>
                     <b>{tt('g.ask')} </b>
-                    <span>{symbol} {ticker.lowest_ask.toFixed(precision)}</span>
+                    <span>{symbol} {ticker.lowest_ask.toFixed(8)}</span>
                 </div>
                 {ticker.highest_bid > 0 && <div>
                     <b>{tt('market_jsx.spread')} </b>

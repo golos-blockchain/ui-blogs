@@ -210,7 +210,7 @@ export default connect(
         const balance = account.get('balance');
         const sbd_balance = account.get('sbd_balance');
         const cprops = state.global.get('cprops');
-        const max = Asset(from === DEBT_TICKER ? sbd_balance : balance).amountFloat;
+        const max = parseFloat(Asset(from === DEBT_TICKER ? sbd_balance : balance).amountFloat);
         return {
             ...ownProps,
             owner: username,

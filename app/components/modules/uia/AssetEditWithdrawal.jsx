@@ -214,7 +214,7 @@ class AssetEditWithdrawal extends React.Component {
                         <ErrorMessage name={`${name}.min_amount`} component='div' className='error' />
                     </div>
                     <div>
-                        {tt('asset_edit_withdrawal_jsx.fee')}
+                        {tt('g.fee') + ': '}
                         <div className='input-group'>
                             <Field
                                 name={`${name}.fee`}

@@ -2,6 +2,10 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 import g from 'app/redux/GlobalReducer';
+import tt from 'counterpart';
+import {List} from 'immutable';
+
+import ConvertAssetsBtn from 'app/components/elements/market/ConvertAssetsBtn'
 import SavingsWithdrawHistory from 'app/components/elements/SavingsWithdrawHistory';
 import TransferHistoryRow from 'app/components/cards/TransferHistoryRow';
 import TransactionError from 'app/components/elements/TransactionError';
@@ -14,8 +18,6 @@ import WalletSubMenu from 'app/components/elements/WalletSubMenu';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import Tooltip from 'app/components/elements/Tooltip';
 import Icon from 'app/components/elements/Icon';
-import tt from 'counterpart';
-import {List} from 'immutable';
 import Callout from 'app/components/elements/Callout';
 import { LIQUID_TICKER, VEST_TICKER, DEBT_TICKER} from 'app/client_config';
 import transaction from 'app/redux/Transaction';
@@ -221,7 +223,6 @@ class UserWallet extends React.Component {
             { value: tt('userwallet_jsx.power_up'), link: '#', onClick: showTransfer.bind( this, VEST_TICKER, 'Transfer to Account' ) },
             { value: tt('userwallet_jsx.transfer_to_savings'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'Transfer to Savings' ) },
             { value: tt('userwallet_jsx.convert_to_DEBT_TOKEN', {DEBT_TOKEN}), link: '#', onClick: showConvertDialog.bind(this, LIQUID_TICKER, DEBT_TICKER) },
-            { value: tt('g.buy_or_sell'), link: '/market/GOLOS/GBG' },
         ]
         let power_menu = [
             { value: tt('userwallet_jsx.power_down'), link: '#', onClick: powerDown.bind(this, false) },
@@ -237,7 +238,6 @@ class UserWallet extends React.Component {
             { value: tt('g.transfer'), link: '#', onClick: showTransfer.bind( this, DEBT_TICKER, 'Transfer to Account' ) },
             { value: tt('userwallet_jsx.transfer_to_savings'), link: '#', onClick: showTransfer.bind( this, DEBT_TICKER, 'Transfer to Savings' ) },
             { value: tt('userwallet_jsx.convert_to_LIQUID_TOKEN', {LIQUID_TOKEN}), link: '#', onClick: showConvertDialog.bind(this, DEBT_TICKER, LIQUID_TICKER) },
-            { value: tt('g.buy_or_sell'), link: '/market/GBG/GOLOS' },
         ]
         const isWithdrawScheduled = new Date(account.get('next_vesting_withdrawal') + 'Z').getTime() > Date.now()
 
@@ -382,6 +382,10 @@ class UserWallet extends React.Component {
                 </div>
                 <div className="column small-12 medium-4">
                     {isMyAccount
+                        ? <ConvertAssetsBtn sym='GOLOS' direction={balance_steem > 0 ? 'sell' : 'buy'} />
+                        : undefined
+                    }
+                    {isMyAccount
                         ? <FoundationDropdownMenu
                             className="Wallet_dropdown"
                             dropdownPosition="bottom"
@@ -411,6 +415,10 @@ class UserWallet extends React.Component {
                     <span className="secondary">{sbdMessage}</span>
                 </div>
                 <div className="column small-12 medium-4">
+                    {isMyAccount
+                        ? <ConvertAssetsBtn sym='GBG' direction={sbd_balance > 0 ? 'sell' : 'buy'} />
+                        : undefined
+                    }
                     {isMyAccount
                         ? <FoundationDropdownMenu
                             className="Wallet_dropdown"

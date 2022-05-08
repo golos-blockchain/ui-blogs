@@ -86,9 +86,6 @@ const iframeWhitelist = [
         width: '100%',
     },
     {
-        re: /^(?:https?:)?\/\/app\.powerbi\.com\/view\//,
-    },
-    {
         re: /^(?:https?:)?\/\/music\.yandex\.ru\//,
     },
     {

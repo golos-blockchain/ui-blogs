@@ -64,7 +64,7 @@ class ReputationHistory extends Component {
 
         return (
             <div>
-                <span style={{float: 'right', fontSize: '85%', marginLeft: '10px'}}>
+                <span style={{float: 'right', fontSize: '85%', marginLeft: '20px'}}>
                     <Link to='/minused_accounts'><Icon name="new/downvote" size="2x" /> {tt('minused_accounts_jsx.link_title')}</Link>
                 </span>
                 <span style={{float: 'right', fontSize: '85%'}}>

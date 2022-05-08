@@ -16,8 +16,8 @@ contextBridge.exposeInMainWorld('appSplash', {
 })
 
 contextBridge.exposeInMainWorld('appNavigation', {
-    loadURL: (url) => {
-        ipcRenderer.send('load-url', url)
+    loadURL: (url, isExternal = false) => {
+        ipcRenderer.send('load-url', url, isExternal)
     },
     onRouter: (cb) => {
         ipcRenderer.removeAllListeners('router-push')

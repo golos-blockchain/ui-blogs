@@ -1,6 +1,7 @@
 import React from "react";
-import OrderBookRow from "./OrderbookRow";
 import tt from 'counterpart';
+
+import OrderBookRow from 'app/components/elements/market/OrderBookRow'
 import { DEBT_TOKEN_SHORT } from 'app/client_config';
 
 export default class Orderbook extends React.Component {

@@ -7,7 +7,7 @@ import { api, } from 'golos-lib-js';
 import { Asset, } from 'golos-lib-js/lib/utils';
 import transaction from 'app/redux/Transaction';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
-import { roundDown, roundUp, } from 'app/utils/MarketUtils';
+import { roundDown, roundUp, } from 'app/utils/market/utils'
 
 class OpenOrders extends Component {
     state = {

@@ -47,4 +47,9 @@
     bottom: 100%;
     top: auto;
   }
+
+  &.top-most > .VerticalMenu {
+    position: fixed;
+    top: auto;
+  }
 }

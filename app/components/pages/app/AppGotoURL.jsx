@@ -40,7 +40,7 @@ class AppGotoURL extends React.Component {
             console.error(err)
         }
         if (confirm(tt('app_goto_url.wrong_domain_DOMAINS', { DOMAINS: $STM_Config.url_domains }))) {
-            window.appNavigation.loadURL(url.toString())
+            window.appNavigation.loadURL(url.toString(), true)
             this.close()
         }
     }

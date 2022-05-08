@@ -612,23 +612,31 @@ export function* fetchData(action) {
             } else if (args[0].select_tags) {
                 req = req.byOneOfTags(args[0].select_tags)
             }
-            let { results, total }= yield searchData(req)
-            let sepAdded = !!from
-            results.forEach(post => {
-                post.from_search = true
-                if (!post.net_rshares && !post.net_votes && !post.children) {
-                    post.force_hide = true
-                }
-                if (!sepAdded) {
-                    post.total_search = total
-                    sepAdded = true
-                }
-                data.push(post)
-            })
-            if (!author && !permlink) {
-                has_from_search = true
+            const firstPage = !author && !permlink
+            let searchRes = null
+            try {
+                searchRes = yield searchData(req, firstPage ? 0 : 3)
+            } catch (searchErr) {
             }
-            next_from = (from || 0) + results.length
+            if (searchRes) {
+                let { results, total } = searchRes
+                let sepAdded = !!from
+                results.forEach(post => {
+                    post.from_search = true
+                    if (!post.net_rshares && !post.net_votes && !post.children) {
+                        post.force_hide = true
+                    }
+                    if (!sepAdded) {
+                        post.total_search = total
+                        sepAdded = true
+                    }
+                    data.push(post)
+                })
+                if (firstPage) {
+                    has_from_search = true
+                }
+                next_from = (from || 0) + results.length
+            }
         }
 
         data.forEach(post => {

@@ -1,0 +1,19 @@
+.ConvertAssetsBtn {
+    cursor: pointer;
+
+    .Icon {
+        vertical-align: top;
+        padding-top: 2px;
+        margin-right: 2px;
+    }
+
+    svg {
+        transform: rotate(90deg);
+    }
+
+    &:not(.disabled) {
+        path {
+            fill: #0078C4;
+        }
+    }
+}

@@ -1,15 +1,7 @@
-import fetch from 'cross-fetch'
 import { api } from 'golos-lib-js'
-import { rateLimitReq } from 'server/utils/misc'
 
-async function fetchWithTimeout(url, timeoutMsec, opts) {
-    const controller = new AbortController()
-    setTimeout(() => controller.abort(), timeoutMsec)
-    return await fetch(url, {
-        signal: controller.signal,
-        ...opts
-    })
-}
+import { rateLimitReq } from 'server/utils/misc'
+import fetchWithTimeout from 'shared/fetchWithTimeout'
 
 export default function useGetAddressHandler(app) {
     app.get('/uia_address/:symbol/:account', function *() {
