@@ -17,6 +17,11 @@ if (!fs.existsSync('dist/electron')) {
     fs.mkdirSync('dist/electron')
 }
 fs.writeFileSync('dist/electron/index.html', html)
+if (!fs.existsSync('msgs-build')) {
+    console.error('No msgs-build - please build ui-messenger first')
+    process.exit(-1)
+}
+fse.copySync('msgs-build', 'dist/electron/msgs', { overwrite: true })
 fs.copyFileSync('electron/app_settings.js', 'dist/electron/app_settings.js')
 fs.copyFileSync('electron/context_menu.js', 'dist/electron/context_menu.js')
 fs.copyFileSync('electron/electron.js', 'dist/electron/electron.js')
