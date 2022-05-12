@@ -19,8 +19,18 @@ npx yarn global add electron@17.1.2 electron-builder@22.14.13
 
 3. Скачайте репозиторий с помощью git clone (команда есть выше).
 
+4. В любую папку скачайте репозиторий `ui-messenger` и выполните в нем:
 
-4. Внесите все **настройки** в файле `config/desktop.json`:
+```sh
+npx yarn install
+npx yarn run build:desktop
+```
+
+(настройка файлов конфигурации в ui-messenger не требуется)
+
+5. Скопируйте папку `build` в папку `ui-blogs` и переименуйте в `msgs-build`.
+
+6. Внесите все **настройки** в файле `config/desktop.json`:
 
 - hide_comment_neg_rep
 - site_domain (пример: golos.id то есть основной домен блогов)
@@ -29,7 +39,7 @@ npx yarn global add electron@17.1.2 electron-builder@22.14.13
 - images
 - auth_service
 - notify_service
-- messenger_service
+- messenger_service (app://chat.golos.app - чтобы использовался встроенный мессенджер)
 - elastic_search
 - apidex_service
 - hidden_assets
@@ -37,25 +47,25 @@ npx yarn global add electron@17.1.2 electron-builder@22.14.13
 - forums
 - gamefication
 
-5. Установите все зависимости (для сборки).
+7. Установите все зависимости (для сборки).
 
 ```sh
 npx yarn install
 ```
 
-6. Соберите интерфейс клиента.
+8. Соберите интерфейс клиента.
 
 ```sh
 npx yarn run build:app
 ```
 
-7. После сборки интерфейса можно запустить его в тестовом режиме, используя команду:
+9. После сборки интерфейса можно запустить его в тестовом режиме, используя команду:
 
 ```sh
 npx yarn run start:app
 ```
 
-8. Или собрать дистрибутивы приложения:
+10. Или собрать дистрибутивы приложения:
 
 ```sh
 npx yarn run pack:app

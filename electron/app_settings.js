@@ -20,6 +20,8 @@ function init() {
         } catch (error) {}
     }
 
+    cfg.messenger_service = defaultCfg.messenger_service // Migrating from <=1.1.0 - strip user set value
+
     if (cfg.images.use_img_proxy === undefined) {
         cfg.images.use_img_proxy = true
     }

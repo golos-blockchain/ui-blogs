@@ -22,7 +22,21 @@ const isHttpsURL = (url) => {
     return url.startsWith(httpsUrl)
 }
 const isOwnUrl = (url) => {
-    return isHttpsURL(url) || url.startsWith(appUrl)
+    return isHttpsURL(url) || url.startsWith(appUrl) || isMsgsUrl(url)
+}
+
+let msgsHost
+try {
+    let url = new URL(appSet.messenger_service.host)
+    if (url.protocol === 'app:') {
+        msgsHost = url.host
+    }
+} catch (err) {
+    console.error(err)
+}
+
+const isMsgsUrl = (url) => {
+    return msgsHost && (url.startsWith('https:// ' + msgsHost) || url.startsWith('app://' + msgsHost))
 }
 
 // events which need to be set for main window and for child windows
@@ -43,9 +57,9 @@ const setCommonWindowEvents = (win) => {
         if (!isOwnUrl(url)) {
             e.preventDefault()
             shell.openExternal(url)
-        } else if (isHttpsURL(url)) {
+        } else if (url.startsWith('https://')) {
             e.preventDefault()
-            win.loadURL(url.replace(httpsUrl, appUrl))
+            win.loadURL(url.replace('https://', 'app://'))
         }
     })
 
@@ -53,17 +67,23 @@ const setCommonWindowEvents = (win) => {
         if (!isOwnUrl(url)) {
             shell.openExternal(url)
         } else if (url.startsWith(appUrl + '/leave_page')
-                || url.startsWith(appUrl + '/__app_update')) {
+                || url.startsWith(appUrl + '/__app_update')
+                || isMsgsUrl(url)) {
+            let [width, height] = win.getSize()
+            width = Math.max(width, 1000)
+            height = Math.max(height, 500)
             return {
                 action: 'allow',
                 overrideBrowserWindowOptions: {
+                    width,
+                    height,
                     webPreferences: {
                         preload: __dirname + '/settings_preload.js'
                     }
                 }
             }
         } else {
-            win.loadURL(url.replace(httpsUrl, appUrl))
+            win.loadURL(url.replace('https://', 'app://'))
         }
         return { action: 'deny' }
     })
@@ -150,34 +170,52 @@ app.whenReady().then(() => {
                 return false
             }
         }
-        const isTrustedPage = (wc) => {
-            if (!wc) {
-                return false
-            }
+        const getPageURL = (wc) => {
+            let url
             try {
-                let url = wc.getURL()
+                url = wc.getURL()
                 if (!url) {
-                    return false
+                    return null
                 }
                 url = new URL(url)
-                return url.pathname.endsWith('/assets')
+                return url
             } catch (err) {
-                console.log(wc.getURL())
-                console.error('CORS bypassing - cannot get page url', err)
-                return false
+                console.error('Cannot get page url', err, url)
+                return null
             }
+        }
+        const isTrustedPage = (url) => {
+            return url.pathname.endsWith('/assets')
         }
         session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
             const { url, webContents, requestHeaders} = details
-            if (isSecureURL(url) || isTrustedPage(webContents)) {
-                upsertHeader(requestHeaders, 'Origin', httpsUrl)
+            const allow = (origin) => upsertHeader(requestHeaders, 'Origin', origin)
+            const pageUrl = getPageURL(webContents)
+            if (!pageUrl) {
+                console.error('onBeforeSendHeaders - cannot get page url')
+            } else {
+                const isMsgs = pageUrl.host === msgsHost
+                if (isSecureURL(url)) {
+                    allow(isMsgs ? ('https://' + msgsHost) : httpsUrl)
+                } else if (!isMsgs && isTrustedPage(pageUrl)) {
+                    allow(httpsUrl)
+                }
             }
             callback({ requestHeaders })
         })
         session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
             const { url, webContents, responseHeaders} = details
-            if (isSecureURL(url)|| isTrustedPage(webContents)) {
-                 upsertHeader(responseHeaders, 'Access-Control-Allow-Origin', appUrl)
+            const allow = (origin) => upsertHeader(responseHeaders, 'Access-Control-Allow-Origin', origin)
+            const pageUrl = getPageURL(webContents)
+            if (!pageUrl) {
+                console.error('onHeadersReceived - cannot get page url')
+            } else {
+                const isMsgs = pageUrl.host === msgsHost
+                if (isSecureURL(url)) {
+                    allow(isMsgs ? ('app://' + msgsHost) : appUrl)
+                } else if (!isMsgs && isTrustedPage(pageUrl)) {
+                    allow(appUrl)
+                }
             }
             callback({ responseHeaders })
         })
@@ -186,13 +224,16 @@ app.whenReady().then(() => {
     }
 
     protocol.registerFileProtocol('app', (request, callback) => {
+        const msgs = isMsgsUrl(request.url)
         let pn = new URL(request.url).pathname
         if (!pn || pn === '/') {
             pn = '/index.html'
         }
+        if (msgs) pn = '/msgs' + pn
         const p = path.normalize(`${__dirname}${pn}`)
         if (!fs.existsSync(p)) {
             pn = '/index.html'
+            if (msgs) pn = '/msgs' + pn
             callback({ path: path.normalize(`${__dirname}${pn}`) })
             return
         }
