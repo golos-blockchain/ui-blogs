@@ -108,7 +108,7 @@ const createWindow = () => {
         width: winState.width,
         height: winState.height,
         show: false,
-        icon: __dirname + '/images/favicon.ico',
+        icon: __dirname + '/256x256.png',
         webPreferences: {
             preload: __dirname + '/settings_preload.js'
         }

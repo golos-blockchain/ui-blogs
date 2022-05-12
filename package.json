@@ -195,7 +195,7 @@
     "win": {
       "executableName": "glsblogs",
       "artifactName": "glsblogs-${version}.${ext}",
-      "icon": "electron/icon256x256.png",
+      "icon": "electron/icons/256x256.png",
       "target": [
         {
           "target": "nsis",
@@ -210,7 +210,7 @@
       "executableName": "glsblogs",
       "artifactName": "glsblogs-${version}.${ext}",
       "category": "Finance",
-      "icon": "electron/icon256x256.png",
+      "icon": "electron/icons",
       "target": [
         "deb"
       ]
