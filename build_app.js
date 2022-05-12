@@ -31,6 +31,7 @@ fs.copyFileSync('electron/state_keeper.js', 'dist/electron/state_keeper.js')
 fs.copyFileSync('electron/splash.js', 'dist/electron/splash.js')
 fse.copySync('app/locales', 'dist/electron/locales', { overwrite: true })
 fse.copySync('app/assets/images', 'dist/electron/images', { overwrite: true }) // for some direct links
+fs.copyFileSync('electron/icons/256x256.png', 'dist/electron/256x256.png')
 
 let cfg = {}
 const copyKey = (key) => {
