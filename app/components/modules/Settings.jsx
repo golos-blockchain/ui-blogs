@@ -11,6 +11,7 @@ import Userpic from 'app/components/elements/Userpic';
 import reactForm from 'app/utils/ReactForm'
 import {fromJS, Set, Map} from 'immutable'
 import UserList from 'app/components/elements/UserList';
+import ContentSettings from 'app/components/elements/settings/ContentSettings'
 import cookie from "react-cookie";
 import Dropzone from 'react-dropzone'
 import { LANGUAGES, DEFAULT_LANGUAGE, LOCALE_COOKIE_KEY, USER_GENDER } from 'app/client_config'
@@ -20,8 +21,6 @@ class Settings extends React.Component {
     constructor(props) {
         super()
         this.initForm(props)
-        this.onNsfwPrefChange = this.onNsfwPrefChange.bind(this)
-        this.onNsfwPrefSubmit = this.onNsfwPrefSubmit.bind(this)
         this.onDonatePresetChange = this.onDonatePresetChange.bind(this)
     }
 
@@ -56,10 +55,7 @@ class Settings extends React.Component {
         const {accountname} = this.props
         const {vesting_shares} = this.props.account
         
-        let nsfwPref, donatePresets, notifyPresets;
-
-        nsfwPref = (process.env.BROWSER ? localStorage.getItem('nsfwPref-' + accountname) : null) || 'warn'
-        this.setState({nsfwPref, oldNsfwPref: nsfwPref})
+        let donatePresets, notifyPresets;
 
         if(process.env.BROWSER){
             donatePresets = localStorage.getItem('donate.presets-' + accountname)
@@ -153,18 +149,6 @@ class Settings extends React.Component {
         }
       this.setState({cImageUploading: false})
       })
-    }
-
-    onNsfwPrefChange(e) {
-        const nsfwPref = e.currentTarget.value;
-        this.setState({nsfwPref: nsfwPref})
-    }
-
-    onNsfwPrefSubmit(e) {
-        const {accountname} = this.props;
-        const {nsfwPref} = this.state;
-        localStorage.setItem('nsfwPref-'+accountname, nsfwPref)
-        this.setState({oldNsfwPref: nsfwPref})
     }
 
     onDonatePresetChange(e) {
@@ -476,29 +460,7 @@ class Settings extends React.Component {
                 </form>
             </div>
 
-            {isOwnAccount &&
-                <div className="row">
-                    <div className="small-12 medium-8 large-6 columns">
-                        <br /><br />
-                        <h3>{tt('settings_jsx.private_post_display_settings')}</h3>
-                        <div>
-                            {tt('settings_jsx.not_safe_for_work_nsfw_content')}
-                        </div>
-                        <select value={this.state.nsfwPref} onChange={this.onNsfwPrefChange}>
-                            <option value="hide">{tt('settings_jsx.always_hide')}</option>
-                            <option value="warn">{tt('settings_jsx.always_warn')}</option>
-                            <option value="show">{tt('settings_jsx.always_show')}</option>
-                        </select>
-                        <br /><br />
-                        <input
-                            type="submit"
-                            onClick={this.onNsfwPrefSubmit}
-                            className="button"
-                            value={tt('settings_jsx.update')}
-                            disabled={this.state.nsfwPref == this.state.oldNsfwPref}
-                        />
-                    </div>
-                </div>}
+            {isOwnAccount && <ContentSettings account={props.accountname} />}
 
             {isOwnAccount &&
                 <div className="row">
