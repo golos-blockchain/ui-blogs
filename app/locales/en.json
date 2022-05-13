@@ -64,7 +64,7 @@
     "empty_NAME": "%(NAME)s have no filled orders yet. You can buy or sell tokens in the ",
     "empty2": "market",
     "exchanged": "Exchange %(AMOUNT)s for %(AMOUNT2)s",
-    "quick_convert": "Quick_convert",
+    "quick_convert": "Quick Convert",
     "open_market": "Go To Market (DEX)"
   },
   "g": {
