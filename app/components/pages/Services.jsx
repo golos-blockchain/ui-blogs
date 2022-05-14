@@ -28,12 +28,12 @@ class Services extends React.Component {
                             <div className='column large-3 medium-3 small-6'>
                                 <a target="_blank" href="https://golostalk.com"><Icon name='team' size='10x'/>
                                 <h5>Golos Forums</h5></a>
-                                <p className='landing-services-block-icon-text'>Формат общения по категориям/темам: <a target="_blank" href="https://golostalk.com">golostalk.com</a>, <a target="_blank" href="https://prizmtalk.com">prizmtalk.com</a>, <a target="_blank" href="https://forum.gph.ai">forum.gph.ai</a></p>
+                                <p className='landing-services-block-icon-text'>Формат дискуссий по категориям/темам: <a target="_blank" href="https://golostalk.com">golostalk.com</a>, <a target="_blank" href="https://prizmtalk.com">prizmtalk.com</a>, <a target="_blank" href="https://forum.gph.ai">forum.gph.ai</a></p>
                             </div> 
                             <div className='column large-3 medium-3 small-6'>
                                 <a target="_blank" href="https://chat.golos.app"><Icon name='rocket' size='10x'/>
                                 <h5>Golos Messenger</h5></a>
-                                <p className='landing-services-block-icon-text'>Чаты для обмена приватными/зашифрованными сообщениями <a target="_blank" href="https://chat.golos.app">chat.golos.app</a></p>
+                                <p className='landing-services-block-icon-text'>Приватное общение на <a target="_blank" href="https://chat.golos.app">chat.golos.app</a> или устройствах с <a target="_blank" href="https://files.golos.app/msg-android/">Android</a></p>
                             </div>                                                       
                         </div>
                     </div>
@@ -117,7 +117,7 @@ class Services extends React.Component {
                     <div className='row'>
                         <div className='column large-12 medium-12 small-12'>
                             <p className='landing-services-block-text landing-services-block-center'>
-                                {tt('services.footer_1')} <a target="_blank" href='https://t.me/golos_id_issue'>golos_id_issue</a> {tt('services.footer_2')}.
+                                {tt('services.footer_1')} <a target="_blank" href='https://t.me/golos_id'>golos_id</a> {tt('services.footer_2')}.
                             </p>
                         </div>
                     </div>
