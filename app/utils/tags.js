@@ -1,5 +1,6 @@
 import tt from 'counterpart';
 import { detransliterate } from './ParsersAndFormatters';
+import { IGNORE_TAGS } from 'app/client_config';
 
 export const TAGS_MAX_LENGTH = 24;
 export const NSFW_TAG = 'nsfw';
@@ -11,6 +12,14 @@ const FAVORITE_KEY = 'golos.favorite-tags';
 
 function filterRealTags(tags) {
     return tags.filter(tag => tag !== NSFW_TAG_NUMERIC && tag !== NSFW_TAG);
+}
+
+export function getFilterTags() {
+    let ignore_tags = [...IGNORE_TAGS]
+    if (!process.env.IS_APP) {
+        ignore_tags.push(ONLYAPP_TAG)
+    }
+    return ignore_tags
 }
 
 export function validateTags(tags, finalCheck) {

@@ -20,7 +20,7 @@ import ScrollButton from '@elements/ScrollButton';
 import { key_utils } from 'golos-lib-js/lib/auth/ecc';
 import MiniHeader from '@modules/MiniHeader';
 import golos from 'golos-lib-js';
-import {pageSession} from 'golos-lib-js/lib/auth';
+import { session, pageSession } from 'golos-lib-js/lib/auth';
 import tt from 'counterpart';
 import PageViewsCounter from '@elements/PageViewsCounter';
 import DialogManager from 'app/components/elements/common/DialogManager';
@@ -78,6 +78,30 @@ class App extends React.Component {
             this.state !== nextState ||
             p.nightmodeEnabled !== n.nightmodeEnabled
         );
+    }
+
+    loadDownvotedPrefs = () => {
+        try {
+            const acc = session.load()
+            if (acc && acc[0]) {
+                const pref = localStorage.getItem('downvotedPref-' + acc[0])
+                if (pref === 'gray_only') {
+                    window.NO_HIDE = true
+                } else if (pref === 'no_gray') {
+                    window.NO_HIDE = true
+                    window.NO_GRAY = true
+                }
+            }
+        } catch (err) {
+            console.error('loadDownvotedPrefs', err)
+        }
+    }
+
+    constructor(props) {
+        super(props)
+        if (process.env.BROWSER) {
+            this.loadDownvotedPrefs()
+        }
     }
 
     componentDidMount() {

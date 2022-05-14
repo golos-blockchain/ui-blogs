@@ -113,8 +113,14 @@ export function contentStats0(content) {
     const allowDelete = !hasPositiveRshares && content.get('children') === 0
     const authorRepLog10 = repLog10(content.get('author_reputation'))
 
-    const gray = authorRepLog10 < 0 || (authorRepLog10 < 70 && meetsGrayThreshold) || meetsGrayThreshold2
-    const hide = authorRepLog10 < -25 || meetsHideThreshold
+    let noGray, noHide
+    if (process.env.BROWSER) {
+        noGray = window.NO_GRAY
+        noHide = window.NO_HIDE
+    }
+
+    const gray = !noGray && (authorRepLog10 < 0 || (authorRepLog10 < 70 && meetsGrayThreshold) || meetsGrayThreshold2)
+    const hide = !noHide && (authorRepLog10 < -25 || meetsHideThreshold)
     const pictures = !gray
 
     // Combine tags+category to check nsfw status

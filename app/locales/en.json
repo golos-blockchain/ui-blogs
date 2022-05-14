@@ -918,6 +918,13 @@
     "show_N_more_replies": "Show %(N)s more replies",
     "show_N_more_replies_2": "Show %(N)s more replies"
   },
+  "poststub": {
+    "onlyblog": "This post is only for author's followers.",
+    "login": "Sign in",
+    "sign_up": "sign up",
+    "onlyapp": "This post is available only in GOLOS Blogs desktop application.",
+    "install": "Install application"
+  },
   "postsummary_jsx": {
     "resteemed": "Reposted",
     "resteemed_by": "Reposted by",
@@ -1079,6 +1086,11 @@
     "always_hide": "Always hide",
     "always_warn": "Always warn",
     "always_show": "Always show",
+    "downvoted_content": "Downvoted content",
+    "downvoted_desc": "Downvoted by users, or content with negative-reputation authors",
+    "gray_and_hide": "Gray. If spam, violence or flood - hide",
+    "gray_only": "Gray only",
+    "no_gray": "Show all",
     "muted_users": "Muted Users",
     "muted_in_new_users": "Users Whose Posts Hidden In New",
     "muted_uia": "Tokens hidden on the UIA Assets page",
