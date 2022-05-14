@@ -2,7 +2,7 @@ import React from 'react'
 
 import Icon from 'app/components/elements/Icon'
 import LoadingIndicator from 'app/components/elements/LoadingIndicator'
-
+import tt from 'counterpart'
 
 import { apidexGetPrices } from 'app/utils/ApidexApiClient'
 
@@ -68,13 +68,14 @@ class CMCWidget extends React.Component {
                             </span><br/>
                             <span style={{ fontSize: '16px' }}>
                                 <span className="CMCWidget__main-val">{price_rub ? price_rub.toFixed(6) : null}</span>                
-                                <span className="CMCWidget__main-cur">&nbsp;RUB</span>
+                                <span className="CMCWidget__main-cur">&nbsp;RUB&nbsp;
+                                {(price_change && price_change.toFixed) ? <span style={{ color: price_change < 0 ? '#d94040' : '#009600' }}>({price_change.toFixed(2)}%)</span> : null}
+                                </span><br />
                                 <span className="CMCWidget__sub-parent">
-                                    {(price_change && price_change.toFixed) ? <span style={{ color: price_change < 0 ? '#d94040' : '#009600' }}>
-                                            <br />({price_change.toFixed(2)}%)
-                                        </span> : null}
-                                    <br />
                                     <span className="CMCWidget__sub">{price_usd ? price_usd.toFixed(6) + ' USD' : null}</span>
+                                </span><br/>
+                                <span style={{ fontSize: '12px' }}>
+                                    <a href="/exchanges" className="CMCWidget__link">{tt('g.buy_or_sell')}</a>
                                 </span>
                             </span>
                         </div>

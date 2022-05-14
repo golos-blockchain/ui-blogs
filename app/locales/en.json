@@ -64,6 +64,7 @@
     "empty_NAME": "%(NAME)s have no filled orders yet. You can buy or sell tokens in the ",
     "empty2": "market",
     "exchanged": "Exchange %(AMOUNT)s for %(AMOUNT2)s",
+    "quick_convert": "Quick Convert",
     "open_market": "Go To Market (DEX)"
   },
   "g": {
@@ -851,7 +852,7 @@
     "partly_desc3": "Received amount is on ",
     "not": "Exchange not yet proceed...",
     "not_desc": "Exchange takes more time than usually. Maybe older will proceed in few days. If no, or if you cannot wait, you can ",
-    "price_warning": "This price is 30%% above than recommended one. Continue?"
+    "price_warning": "This price is above than recommended one. Continue?"
  },
   "converttosteem_jsx": {
     "title_FROM_TO": "Convert %(FROM)s to %(TO)s",

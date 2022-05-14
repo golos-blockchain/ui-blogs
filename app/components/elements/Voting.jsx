@@ -240,8 +240,9 @@ class Voting extends React.Component {
                 }
                 const {percent, voter} = avotes[v]
                 const sign = Math.sign(percent)
+                const voterPercent= percent / 100 + '%';
                 if(sign === 0) continue
-                voters.push({value: (sign > 0 ? '+ ' : '- ') + voter, link: '/@' + voter})
+                voters.push({value: (sign > 0 ? '+ ' : '- ') + voter, link: '/@' + voter, data: voterPercent})
             }
             if (voteListPage > 0 || has_more_votes)
             voters.push({value: <span>

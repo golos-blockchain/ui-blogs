@@ -8,7 +8,6 @@ const DEFAULT_VOTE_LIMIT = 10000
 const isHardfork = (v) => v.split('.')[1] === '18'
 
 export default async function getState(api, url, offchain = {}) {
-    console.log('urllll', url)
     if (!url || typeof url !== 'string' || !url.length || url === '/') url = 'trending'
     const urlParts = url.split('?')
     url = urlParts[0]
