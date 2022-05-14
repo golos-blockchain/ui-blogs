@@ -133,10 +133,6 @@ class PostSummary extends React.Component {
             return null
         }
 
-        if (isOnlyblog && !myAccount && (typeof(window) === 'undefined' || !window.location.pathname.endsWith('/feed'))) {
-            return null
-        }
-
         const p = extractContent(immutableAccessor, content);
         const nsfwTags = ['nsfw', 'ru--mat', '18+']
         let nsfwTitle = nsfwTags[0]
