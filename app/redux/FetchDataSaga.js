@@ -19,6 +19,7 @@ export function* fetchDataWatches () {
     yield fork(watchGetContent);
     yield fork(watchFetchExchangeRates);
     yield fork(watchFetchVestingDelegations);
+    yield fork(watchFetchUiaBalances);
 }
 
 export function* watchGetContent() {
@@ -784,4 +785,20 @@ export function* fetchVestingDelegations({ payload: { account, type } }) {
     }
 
     yield put(GlobalReducer.actions.receiveAccountVestingDelegations({ account, type, vesting_delegations }))
+}
+
+export function* watchFetchUiaBalances() {
+    yield takeLatest('global/FETCH_UIA_BALANCES', fetchUiaBalances)
+}
+
+export function* fetchUiaBalances({ payload: { account } }) {
+    try {
+        let assets = yield call([api, api.getAccountsBalancesAsync], [account])
+        assets = assets && assets[0]
+        if (assets) {
+            yield put(GlobalReducer.actions.receiveUiaBalances({assets}))
+        }
+    } catch (err) {
+        console.error('fetchUiaBalances', err)
+    }
 }

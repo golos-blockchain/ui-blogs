@@ -166,6 +166,16 @@ export default createModule({
             },
         },
         {
+            action: 'FETCH_UIA_BALANCES',
+            reducer: state => state,
+        },
+        {
+            action: 'RECEIVE_UIA_BALANCES',
+            reducer: (state, { payload: { assets } }) => {
+                return state.set('assets', fromJS(assets))
+            },
+        },
+        {
             action: 'LINK_REPLY',
             reducer: (state, { payload: op }) => {
                 const {
