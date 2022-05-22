@@ -129,7 +129,7 @@ class PostSummary extends React.Component {
 
         const {gray, pictures, authorRepLog10, flagWeight, isNsfw, isOnlyblog, isOnlyapp} = content.get('stats', Map()).toJS()
 
-        if (isOnlyapp && !process.env.IS_APP && !myAccount) {
+        if ((isOnlyblog || isOnlyapp) && !username) {
             return null
         }
 

@@ -5,7 +5,7 @@ COPY . /var/app
 RUN yarn install
 RUN yarn build-version && yarn build
 
-FROM node:16.1 as production
+FROM node:16.1-alpine
 
 WORKDIR /var/app
 COPY --from=build /var/app /var/app

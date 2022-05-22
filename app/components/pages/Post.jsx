@@ -75,7 +75,7 @@ class Post extends React.Component {
     _renderOnlyApp = () => {
         const openInstall = (e) => {
             e.preventDefault()
-            window.open('https://files.golos.app', '_blank')
+            window.open('/@lex/alternativnyi-klient-blogov-golos-desktop-izmeneniya-v-tredakh-kommentariev', '_blank')
         }
         return this._renderStub(
             <p>
