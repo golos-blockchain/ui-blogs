@@ -18,7 +18,6 @@ import FoundationDropdown from 'app/components/elements/FoundationDropdown';
 import { CONFETTI_CONFIG, LIQUID_TICKER } from 'app/client_config';
 
 const MAX_VOTES_DISPLAY = 20;
-const VOTE_WEIGHT_DROPDOWN_THRESHOLD = 1.0 * 1000.0 * 1000.0;
 
 class Voting extends React.Component {
     static propTypes = {
@@ -64,7 +63,7 @@ class Voting extends React.Component {
                     return
                 }
                 const { author, permlink } = this.props
-                this.props.showDonate(author, permlink)
+                this.props.showDonate(author, permlink, this.props.is_comment)
             } else {
                 this.voteUpOrDown(true)
             }
@@ -79,9 +78,10 @@ class Voting extends React.Component {
             this.setState({votingUp: up, votingDown: !up});
             const {myVote} = this.state;
             const {author, permlink, username, is_comment} = this.props;
-            if (this.props.net_vesting_shares > VOTE_WEIGHT_DROPDOWN_THRESHOLD) {
-                localStorage.setItem('voteWeight' + (up ? '' : 'Down') + '-'+username+(is_comment ? '-comment' : ''),
-                    this.state.weight);
+            if (myVote <= 0 && !up) {
+                localStorage.removeItem('vote_weight'); // deprecated
+                localStorage.setItem('voteWeightDown-'+username+(is_comment ? '-comment' : ''),
+                    this.state.weight)
             }
             // already voted Up, remove the vote
             const weight = up ? (myVote > 0 ? 0 : this.state.weight) : (myVote < 0 ? 0 : -1 * this.state.weight);
@@ -94,6 +94,12 @@ class Voting extends React.Component {
 
         this.toggleWeightDown = e => {
             e.preventDefault();
+            // Upon opening dialog, read last used weight
+            if (!this.state.showWeight) {
+                const {username, is_comment} = this.props
+                const savedWeight = localStorage.getItem('voteWeightDown' + '-'+username+(is_comment ? '-comment' : ''))
+                this.setState({weight: savedWeight ? parseInt(savedWeight, 10) : 10000})
+            }
             this.setState({showWeightDown: !this.state.showWeightDown})
         };
         this.shouldComponentUpdate = shouldComponentUpdate(this, 'Voting')
@@ -329,7 +335,7 @@ export default connect(
                 successCallback: () => dispatch(user.actions.getAccount())                   
             }))
         },
-        showDonate(author, permlink) {
+        showDonate(author, permlink, is_comment) {
             const asset = LIQUID_TICKER
             const transferType = 'TIP to Account'
             // const memo = url;
@@ -341,7 +347,8 @@ export default connect(
             // todo redesign transfer types globally
             const flag = {
                 type: `donate`,
-                permlink
+                permlink,
+                is_comment
             }
             dispatch(user.actions.setTransferDefaults({
                 flag,

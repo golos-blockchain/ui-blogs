@@ -20,6 +20,10 @@ import DropdownMenu from 'app/components/elements/DropdownMenu';
 import Icon from 'app/components/elements/Icon';
 import { accuEmissionPerDay } from 'app/utils/StateFunctions'
 
+const getIntPercent = (fixedPct) => {
+    return Math.min(Math.ceil(parseInt(fixedPct) / 100), 100)
+}
+
 /** Warning .. This is used for Power UP too. */
 class TransferForm extends Component {
 
@@ -46,6 +50,20 @@ class TransferForm extends Component {
         this.initForm(props)
     }
 
+    getPermlinkSliderPercent = () => {
+        const { currentUser } = this.props
+        let username = currentUser && currentUser.get('username')
+        if (username) {
+            const is_comment = this.flag && this.flag.is_comment
+            let voteWeight = localStorage.getItem('voteWeight-'+username+(is_comment ? '-comment' : ''))
+            if (voteWeight) {
+                voteWeight = getIntPercent(voteWeight)
+                return voteWeight
+            }
+        }
+        return 100
+    }
+
     componentDidMount() {
         const { props: {onChange}, value} = this.state.amount;
         //force validation programmatically
@@ -64,7 +82,7 @@ class TransferForm extends Component {
                     this.props.fetchUIABalances(this.props.currentUser)
                 }
                 this.setState({ 
-                    sliderPercent: 100,
+                    sliderPercent: this.getPermlinkSliderPercent(),
                 })
                 this.state.amount.props.onChange(Math.floor(sliderMax).toFixed(3))
             }
@@ -86,7 +104,7 @@ class TransferForm extends Component {
         if (sliderMax !== prevProps.sliderMax) {
             const { precision } = this.props.initialValues
             this.setState({
-                sliderPercent: 100,
+                sliderPercent: this.getPermlinkSliderPercent(),
             })
             setTimeout(() => {
                 this.state.amount.props.onChange(Math.floor(sliderMax).toFixed(precision === undefined ? 3 : precision))
@@ -158,14 +176,14 @@ class TransferForm extends Component {
             name: 'transfer',
             instance: this, fields,
             initialValues: props.initialValues,
-            validation: values => { console.log('V'); return {
+            validation: values => { return {
                 to:
                     ! values.to ? tt('g.required') :
                     (VerifiedExchangeList.includes(values.to) && !permlink && (isTIP || isClaim)) ? tt('transfer_jsx.verified_exchange_liquid_only') :
                     (VerifiedExchangeList.includes(values.to) && !permlink && values.memo === '') ? tt('transfer_jsx.verified_exchange_no_memo') :
                     validate_account_name(values.to),
                 amount:
-                    !permlink && (!parseFloat(values.amount) || /^0$/.test(values.amount)) ? tt('g.required') :
+                    !parseFloat(values.amount) || /^0$/.test(values.amount) ? (permlink ? null : tt('g.required')) :
                     insufficientFunds(values.asset, values.amount) ? tt('transfer_jsx.insufficient_funds') :
                     (countDecimals(values.amount) > 3 && !this.props.uia) ? tt('transfer_jsx.use_only_3_digits_of_precison') :
                     this._amountWithdrawal(values.amount) || null,
@@ -542,7 +560,7 @@ class TransferForm extends Component {
                                 value={this.state.sliderPercent}
                                 onChange={this.onDonateSliderChange}
                             />
-                            <div style={{ float: 'right' }}>{'100%'}</div>
+                            <div style={{ float: 'right' }}>{this.state.sliderPercent + '%'}</div>
                         </div>
                 </div>)}
 
@@ -863,7 +881,11 @@ export default connect(
                 if (vote._only) trx = []
                 trx.push(['vote', voteOp])
             }
-            alert(JSON.stringify(trx))
+
+            localStorage.removeItem('vote_weight'); // deprecated
+            const is_comment = flag && flag.is_comment
+            localStorage.setItem('voteWeight-' + username + (is_comment ? '-comment' : ''),
+                vote.percent)
 
             dispatch(transaction.actions.broadcastOperation({
                 type: opType,
