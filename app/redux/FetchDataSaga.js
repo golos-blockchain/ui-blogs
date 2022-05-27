@@ -188,7 +188,8 @@ export function* fetchState(location_change_action) {
 
                     case 'posts':
                     case 'comments':
-                        const comments = yield call([api, api.getDiscussionsByCommentsAsync], { start_author: uname, limit: 20, filter_tag_masks: ['fm-'] })
+                        const filter_tags = localStorage.getItem('invite') ? ['test'] : getFilterTags()
+                        const comments = yield call([api, api.getDiscussionsByCommentsAsync], { start_author: uname, limit: 20, filter_tag_masks: ['fm-'], filter_tags })
                         state.accounts[uname].comments = []
 
                         comments.forEach(comment => {
@@ -567,6 +568,9 @@ export function* fetchData(action) {
     } else if (order === 'by_comments') {
         delete args[0].select_tags;
         delete args[0].select_categories;
+        if (localStorage.getItem('invite')) {
+            args[0].filter_tags = ['test'] // remove onlyapp and onlyblog, because it is only inside profile
+        }
         call_name = 'getDiscussionsByCommentsAsync';
     } else if( order === 'by_replies' ) {
         call_name = 'getRepliesByLastUpdateAsync';

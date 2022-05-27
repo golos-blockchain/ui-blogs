@@ -26,6 +26,7 @@ export function serverApiLogout() {
         body: JSON.stringify({csrf: $STM_csrf}),
     });
     fetch('/api/v1/logout_account', request);
+    localStorage.removeItem('invite')
 }
 
 let last_call;
