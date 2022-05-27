@@ -69,7 +69,9 @@ class PostSummary extends React.Component {
                props.username !== this.props.username ||
                props.nsfwPref !== this.props.nsfwPref ||
                state.revealNsfw !== this.state.revealNsfw ||
-               props.visited !== this.props.visited;
+               props.visited !== this.props.visited ||
+               props.gray !== this.props.gray ||
+               props.hide !== this.props.hide
     }
 
     onRevealNsfw(e) {
@@ -309,12 +311,16 @@ export default connect(
         const content = state.global.get('content').get(post);
         let pending_payout = 0;
         let total_payout = 0;
+        let gray, ignore
         if (content) {
             pending_payout = content.get('pending_payout_value');
             total_payout = content.get('total_payout_value');
+            const stats = content.get('stats', Map()).toJS()
+            gray = stats.gray
+            ignore = stats.ignore
         }
         return {
-            post, content, pending_payout, total_payout,
+            post, content, gray, ignore, pending_payout, total_payout,
             username: state.user.getIn(['current', 'username']) || state.offchain.get('account')
         };
     },
