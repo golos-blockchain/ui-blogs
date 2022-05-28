@@ -22,7 +22,6 @@ class AppSettings extends React.Component {
         cfg.images.use_img_proxy = data.use_img_proxy
         cfg.auth_service.host = data.auth_service
         cfg.notify_service.host = data.notify_service
-        cfg.messenger_service.host = data.messenger_service
         cfg.elastic_search.url = data.elastic_search
         window.appSettings.save(cfg)
     }
@@ -38,7 +37,6 @@ class AppSettings extends React.Component {
             use_img_proxy: $STM_Config.images.use_img_proxy,
             auth_service: $STM_Config.auth_service.host,
             notify_service: $STM_Config.notify_service.host,
-            messenger_service: $STM_Config.messenger_service.host,
             elastic_search: $STM_Config.elastic_search.url,
         }
         this.initialValues = initialValues
@@ -144,17 +142,6 @@ class AppSettings extends React.Component {
                             {tt('app_settings.notify_service')}
                             <div className='input-group' style={{marginBottom: '1.25rem'}}>
                                 <Field name='notify_service'
-                                    type='text'
-                                    autoComplete='off'
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className='row'>
-                        <div className='column small-12' style={{paddingTop: 5}}>
-                            {tt('app_settings.messenger_service')}
-                            <div className='input-group' style={{marginBottom: '1.25rem'}}>
-                                <Field name='messenger_service'
                                     type='text'
                                     autoComplete='off'
                                 />

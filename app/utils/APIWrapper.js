@@ -114,3 +114,7 @@ export function getWorkerRequests(query, sort, fillPosts) {
 export function getWorkerRequestVotes(author, permlink, voter, limit) {
     return api.getWorkerRequestVotesAsync(author, permlink, voter, limit)
 }
+
+export function getFollowing(follower, startFollowing, followType, limit) {
+    return api.getFollowingAsync(follower, startFollowing, followType, limit)
+}

@@ -26,7 +26,7 @@
       "host": "https://notify.golos.app"
     },
     "messenger_service": {
-      "host": "https://chat.golos.app"
+      "host": "app://chat.golos.app"
     },
     "elastic_search": {
       "url": "https://search.golos.today",

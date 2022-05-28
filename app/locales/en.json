@@ -64,7 +64,7 @@
     "empty_NAME": "%(NAME)s have no filled orders yet. You can buy or sell tokens in the ",
     "empty2": "market",
     "exchanged": "Exchange %(AMOUNT)s for %(AMOUNT2)s",
-    "quick_convert": "Quick_convert",
+    "quick_convert": "Quick Convert",
     "open_market": "Go To Market (DEX)"
   },
   "g": {
@@ -865,6 +865,10 @@
     "too_low_amount": "Too low amount.",
     "you_will_receive": "You will receive "
   },
+  "time_versions_jsx": {
+    "rev": "rev.",
+    "version_NUM": "(rev. %(NUM)s)"
+  },
   "tips_js": {
     "tip_balance_hint": "Balance that you use to reward users and that you use to earn rewards for yourself. Tokens from it can also be sent to increase the Golos Power.",
     "claim_balance_hint": "Balance of your share of the emission of Golos blockchain tokens, which you can use to top up your TIP balance or increase the Golos Power.",
@@ -913,6 +917,13 @@
     "show_1_more_reply": "Show 1 more reply",
     "show_N_more_replies": "Show %(N)s more replies",
     "show_N_more_replies_2": "Show %(N)s more replies"
+  },
+  "poststub": {
+    "onlyblog": "This post is only for author's followers.",
+    "login": "Sign in",
+    "sign_up": "sign up",
+    "onlyapp": "This post is available only in GOLOS Blogs desktop application.",
+    "install": "Install application"
   },
   "postsummary_jsx": {
     "resteemed": "Reposted",
@@ -1075,6 +1086,11 @@
     "always_hide": "Always hide",
     "always_warn": "Always warn",
     "always_show": "Always show",
+    "downvoted_content": "Downvoted content",
+    "downvoted_desc": "Downvoted by users, or content with negative-reputation authors",
+    "gray_and_hide": "Gray. If spam, violence or flood - hide",
+    "gray_only": "Gray only",
+    "no_gray": "Show all",
     "muted_users": "Muted Users",
     "muted_in_new_users": "Users Whose Posts Hidden In New",
     "muted_uia": "Tokens hidden on the UIA Assets page",

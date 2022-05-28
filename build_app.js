@@ -17,6 +17,11 @@ if (!fs.existsSync('dist/electron')) {
     fs.mkdirSync('dist/electron')
 }
 fs.writeFileSync('dist/electron/index.html', html)
+if (!fs.existsSync('msgs-build')) {
+    console.error('No msgs-build - please build ui-messenger first')
+    process.exit(-1)
+}
+fse.copySync('msgs-build', 'dist/electron/msgs', { overwrite: true })
 fs.copyFileSync('electron/app_settings.js', 'dist/electron/app_settings.js')
 fs.copyFileSync('electron/context_menu.js', 'dist/electron/context_menu.js')
 fs.copyFileSync('electron/electron.js', 'dist/electron/electron.js')
@@ -26,6 +31,7 @@ fs.copyFileSync('electron/state_keeper.js', 'dist/electron/state_keeper.js')
 fs.copyFileSync('electron/splash.js', 'dist/electron/splash.js')
 fse.copySync('app/locales', 'dist/electron/locales', { overwrite: true })
 fse.copySync('app/assets/images', 'dist/electron/images', { overwrite: true }) // for some direct links
+fs.copyFileSync('electron/icons/256x256.png', 'dist/electron/256x256.png')
 
 let cfg = {}
 const copyKey = (key) => {

@@ -13,13 +13,25 @@ function initMenu(appUrl, httpsUrl, appSet, full = true) {
             label: 'Помощь',
             submenu: [
                 {
-                    label: 'Сообщить о проблеме',
-                    click: () => {
-                        shell.openExternal('https://golos.chatbro.com')
+                    label: 'Все посты в блокчейне',
+                    click: (item, win) => {
+                        win.loadURL('https://golos.id/allposts')
+                    }
+                },
+                {
+                    label: 'Все комментарии в БЧ',
+                    click: (item, win) => {
+                        win.loadURL('https://golos.id/allcomments')
                     }
                 },
                 {
                     type: 'separator'
+                },
+                {
+                    label: 'Сообщить о проблеме',
+                    click: () => {
+                        shell.openExternal('https://golos.chatbro.com')
+                    }
                 },
                 {
                     label: 'Открыть логи',
@@ -59,7 +71,7 @@ function initMenu(appUrl, httpsUrl, appSet, full = true) {
                         modal: true,
                         resizable: false,
                         width: 900,
-                        height: 120,
+                        height: 140,
                         useContentSize: true,
                         webPreferences: {
                             preload: __dirname + '/settings_preload.js'

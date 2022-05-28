@@ -257,8 +257,8 @@ class Assets extends Component {
             <div className="row">
                 <div className="column small-12">
                     <h4 className="Assets__header">{this.state.show_full_list ? tt('assets_jsx.all_assets') : tt('assets_jsx.my_assets')}</h4>
-                    <Link style={{marginLeft: "5px"}} to={`/market/YMRUB/GOLOS`} className="button float-right">
-                        {tt('navigation.market2')}
+                    <Link style={{marginLeft: "5px"}} to={`/convert`} className="button float-right">
+                        {tt('filled_orders_jsx.quick_convert')}
                     </Link>
                     {isMyAccount && <Link to={`/@${account_name}/create-asset`} className="button hollow float-right">
                         {tt('assets_jsx.create_btn')}

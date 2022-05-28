@@ -8,7 +8,7 @@ function createSplash(appUrl) {
         resizable: false,
         center: true,
         show: false,
-        icon: __dirname + '/images/favicon.ico',
+        icon: __dirname + '/256x256.png',
         webPreferences: {
             preload: __dirname + '/settings_preload.js'
         }
