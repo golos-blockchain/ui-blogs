@@ -256,10 +256,10 @@ class Voting extends React.Component {
 
         return (
             <span className="Voting">
+                <Confetti config={CONFETTI_CONFIG} active={post_obj.get('confetti_active')}/>
                 <span className="Voting__inner">
                     <span className={classUp}>
                         {votingUpActive ? up : <a href="#" onClick={this.voteUp} title={tt(myVote > 0 ? 'g.remove_vote' : 'g.upvote')}>{up}</a>}
-                        <Confetti config={CONFETTI_CONFIG} active={post_obj.get('confetti_active')}/>
                     </span>
                     {voters_list}
                     {downVote}

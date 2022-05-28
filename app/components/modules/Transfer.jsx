@@ -612,7 +612,7 @@ class TransferForm extends Component {
                 {withdrawal ? this._renderWithdrawalDetails() : null}
 
                 {<div className="row">
-                    <div className={'column ' + columns[0]} style={{paddingTop: 5}}>{amountLabel}</div>
+                    <div className={'column ' + columns[0]} style={{paddingTop: 5}} title={tt('transfer_jsx.donate_hint')}>{amountLabel} (?)</div>
                     <div className={'column ' + columns[1]}>
                         <div className="input-group" style={{marginBottom: 5}}>
                             <input type="text" placeholder={amountLabel} {...amount.props} ref="amount" autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck="false" disabled={disableAmount || loading} onChange={(e) => this.onChangeAmount(e)}/>
