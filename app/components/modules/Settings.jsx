@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import user from 'app/redux/User';
 import g from 'app/redux/GlobalReducer';
 import tt from 'counterpart';
+import throttle from 'lodash/throttle'
 import transaction from 'app/redux/Transaction'
 import { getMetadataReliably } from 'app/utils/NormalizeProfile';
 import Icon from 'app/components/elements/Icon';
@@ -55,14 +56,19 @@ class Settings extends React.Component {
         const {accountname} = this.props
         const {vesting_shares} = this.props.account
         
-        let donatePresets, notifyPresets;
+        let donatePresets, emissionDonatePct, notifyPresets;
 
         if(process.env.BROWSER){
             donatePresets = localStorage.getItem('donate.presets-' + accountname)
             if (donatePresets) donatePresets = JSON.parse(donatePresets)
         }
         if (!donatePresets) donatePresets = ['5','10','25','50','100'];
-        this.setState({donatePresets : donatePresets})
+
+        if(process.env.BROWSER) {
+            emissionDonatePct = localStorage.getItem('donate.emissionpct-' + accountname)
+        }
+        if(!emissionDonatePct) emissionDonatePct = '10'
+        this.setState({donatePresets : donatePresets, emissionDonatePct})
 
         if (process.env.BROWSER){
             notifyPresets = localStorage.getItem('notify.presets-' + accountname)
@@ -164,12 +170,22 @@ class Settings extends React.Component {
         this.setState({donatePresets});
         const {accountname} = this.props;
         localStorage.setItem('donate.presets-'+accountname, JSON.stringify(donatePresets));
-        this.notify()
+        this.notifyThrottled()
+    }
+
+    onEmissionDonatePctChange = (e) => {
+        const { accountname } = this.props
+        const emissionDonatePct = e.target.value
+        this.setState({ emissionDonatePct })
+        localStorage.setItem('donate.emissionpct-' + accountname, emissionDonatePct)
+        this.notifyThrottled()
     }
 
     notify = () => {
         this.props.notify(tt('g.saved'))
     }
+
+    notifyThrottled = throttle(this.notify, 2000)
 
     onLanguageChange = (event) => {
         const language = event.target.value
@@ -282,7 +298,7 @@ class Settings extends React.Component {
         const {submitting, valid, touched} = this.state.accountSettings
         const disabled = !props.isOwnAccount || state.loading || submitting || !valid || !touched
 
-        const {profile_image, cover_image, name, about, gender, location, website, donatePresets, notifyPresets, notifyPresetsTouched} = this.state
+        const {profile_image, cover_image, name, about, gender, location, website, donatePresets, emissionDonatePct, notifyPresets, notifyPresetsTouched} = this.state
 
         const {follow, account, isOwnAccount} = this.props
         const following = follow && follow.getIn(['getFollowingAsync', account.name]);
@@ -358,6 +374,14 @@ class Settings extends React.Component {
                           <input type="number" className="Donate_presets" min="1" step="1" max="99999" data-id="2" value={this.state.donatePresets[2]} onChange={this.onDonatePresetChange} />
                           <input type="number" className="Donate_presets" min="1" step="1" max="99999" data-id="3" value={this.state.donatePresets[3]} onChange={this.onDonatePresetChange} />
                           <input type="number" className="Donate_presets" min="1" step="1" max="99999" data-id="4" value={this.state.donatePresets[4]} onChange={this.onDonatePresetChange} />
+                        </div>
+                    </label>
+                    <div className="error"></div>
+
+                    <label>
+                        {tt('settings_jsx.emission_donate_pct')}
+                        <div>
+                          <input type="number" min="1" step="1" max="100" value={emissionDonatePct} onChange={this.onEmissionDonatePctChange} />
                         </div>
                     </label>
                     <div className="error"></div>

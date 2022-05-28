@@ -4,18 +4,20 @@ import { connect } from 'react-redux';
 import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
 import Slider from '@appigram/react-rangeslider';
+import Confetti from 'react-dom-confetti'
+import CloseButton from 'react-foundation-components/lib/global/close-button'
+import tt from 'counterpart'
+import { Asset } from 'golos-lib-js/lib/utils'
+
 import Icon from 'app/components/elements/Icon';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
 import OldPagedDropdownMenu from 'app/components/elements/OldPagedDropdownMenu';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import FoundationDropdown from 'app/components/elements/FoundationDropdown';
-import CloseButton from 'react-foundation-components/lib/global/close-button';
-import tt from 'counterpart';
-import { Asset } from 'golos-lib-js/lib/utils';
+import { CONFETTI_CONFIG, LIQUID_TICKER } from 'app/client_config';
 
 const MAX_VOTES_DISPLAY = 20;
-const VOTE_WEIGHT_DROPDOWN_THRESHOLD = 1.0 * 1000.0 * 1000.0;
 
 class Voting extends React.Component {
     static propTypes = {
@@ -46,7 +48,6 @@ class Voting extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          showWeight: false,
           showWeightDown: false,
           myVote: null,
           weight: 10000,
@@ -54,10 +55,19 @@ class Voting extends React.Component {
         };
 
         this.voteUp = e => {
-            e.preventDefault();
-            this.voteUpOrDown(true)
-            if (this.state.showWeight) this.setState({showWeight: false});
-        };
+            e.preventDefault()
+            const { myVote } = this.state
+            if (!myVote) {
+                if (!this.props.loggedin) {
+                    this.props.showLogin()
+                    return
+                }
+                const { author, permlink } = this.props
+                this.props.showDonate(author, permlink, this.props.is_comment)
+            } else {
+                this.voteUpOrDown(true)
+            }
+        }
         this.voteDown = e => {
             e.preventDefault();
             this.voteUpOrDown(false)
@@ -68,9 +78,10 @@ class Voting extends React.Component {
             this.setState({votingUp: up, votingDown: !up});
             const {myVote} = this.state;
             const {author, permlink, username, is_comment} = this.props;
-            if (this.props.net_vesting_shares > VOTE_WEIGHT_DROPDOWN_THRESHOLD) {
-                localStorage.setItem('voteWeight' + (up ? '' : 'Down') + '-'+username+(is_comment ? '-comment' : ''),
-                    this.state.weight);
+            if (myVote <= 0 && !up) {
+                localStorage.removeItem('vote_weight'); // deprecated
+                localStorage.setItem('voteWeightDown-'+username+(is_comment ? '-comment' : ''),
+                    this.state.weight)
             }
             // already voted Up, remove the vote
             const weight = up ? (myVote > 0 ? 0 : this.state.weight) : (myVote < 0 ? 0 : -1 * this.state.weight);
@@ -81,24 +92,15 @@ class Voting extends React.Component {
             this.setState({weight})
         };
 
-        this.toggleWeightUp = e => {
-            e.preventDefault();
-            this.toggleWeightUpOrDown(true)
-            this.setState({showWeight: !this.state.showWeight})
-        };
         this.toggleWeightDown = e => {
             e.preventDefault();
-            this.toggleWeightUpOrDown(false)
-            this.setState({showWeightDown: !this.state.showWeightDown})
-        };
-        this.toggleWeightUpOrDown = up => {
-            const {username, is_comment} = this.props;
-            // Upon opening dialog, read last used weight (this works accross tabs)
-            if(! this.state.showWeight) {
-                localStorage.removeItem('vote_weight'); // deprecated. remove this line after 8/31
-                const saved_weight = localStorage.getItem('voteWeight' + (up ? '' : 'Down') + '-'+username+(is_comment ? '-comment' : ''));
-                this.setState({weight: saved_weight ? parseInt(saved_weight, 10) : 10000});
+            // Upon opening dialog, read last used weight
+            if (!this.state.showWeight) {
+                const {username, is_comment} = this.props
+                const savedWeight = localStorage.getItem('voteWeightDown' + '-'+username+(is_comment ? '-comment' : ''))
+                this.setState({weight: savedWeight ? parseInt(savedWeight, 10) : 10000})
             }
+            this.setState({showWeightDown: !this.state.showWeightDown})
         };
         this.shouldComponentUpdate = shouldComponentUpdate(this, 'Voting')
     }
@@ -137,7 +139,7 @@ class Voting extends React.Component {
     render() {
         const {active_votes, showList, voting, flag, net_vesting_shares, is_comment, post_obj} = this.props;
         const {username} = this.props;
-        const {votingUp, votingDown, showWeight, showWeightDown, weight, myVote, voteListPage} = this.state;
+        const {votingUp, votingDown, showWeightDown, weight, myVote, voteListPage} = this.state;
         if(flag && !username) return null
 
         const votingUpActive = voting && votingUp;
@@ -252,25 +254,12 @@ class Voting extends React.Component {
 
         voters_list = <OldPagedDropdownMenu selected={total_votes.toString()} className="Voting__voters_list" items={voters} el="div" noArrow={true} />;
 
-        let voteUpClick = this.voteUp;
-        let dropdown = null;
-        if (myVote <= 0 && net_vesting_shares > VOTE_WEIGHT_DROPDOWN_THRESHOLD) {
-            voteUpClick = this.toggleWeightUp;
-            dropdown = <FoundationDropdown show={showWeight} onHide={() => this.setState({showWeight: false})}>
-                <div className="Voting__adjust_weight row align-middle collapse">
-                    <a href="#" onClick={this.voteUp} className="columns small-2 confirm_weight" title={tt('g.upvote')}><Icon size="2x" name="chevron-up-circle" /></a>
-                    <div className="columns small-2 weight-display">{weight / 100}%</div>
-                    <Slider min={100} max={10000} step={100} value={weight} className="columns small-6" onChange={this.handleWeightChange} />
-                    <CloseButton className="columns small-2 Voting__adjust_weight_close" onClick={() => this.setState({showWeight: false})} />
-                </div>
-            </FoundationDropdown>;
-        }
         return (
             <span className="Voting">
                 <span className="Voting__inner">
                     <span className={classUp}>
-                        {votingUpActive ? up : <a href="#" onClick={voteUpClick} title={tt(myVote > 0 ? 'g.remove_vote' : 'g.upvote')}>{up}</a>}
-                        {dropdown}
+                        {votingUpActive ? up : <a href="#" onClick={this.voteUp} title={tt(myVote > 0 ? 'g.remove_vote' : 'g.upvote')}>{up}</a>}
+                        <Confetti config={CONFETTI_CONFIG} active={post_obj.get('confetti_active')}/>
                     </span>
                     {voters_list}
                     {downVote}
@@ -325,6 +314,9 @@ export default connect(
     },
 
     (dispatch) => ({
+        showLogin: () => {
+            dispatch(user.actions.showLogin())
+        },
         vote: (weight, {author, permlink, username, myVote}) => {
             const confirm = () => {
                 if(myVote == null) return
@@ -342,6 +334,33 @@ export default connect(
                 confirm,
                 successCallback: () => dispatch(user.actions.getAccount())                   
             }))
+        },
+        showDonate(author, permlink, is_comment) {
+            const asset = LIQUID_TICKER
+            const transferType = 'TIP to Account'
+            // const memo = url;
+            // const memo = window.JSON.stringify({donate: {post: url}});
+            // store/user/transfer_defaults structure initialized correctly for each transfer type
+            // (click in wallet, external link, donate from PostFull)
+            // so, mark this kind of transfer with a flag for now to analyze in transfer.jsx
+            // the rest of transfer types don't have the flag for now
+            // todo redesign transfer types globally
+            const flag = {
+                type: `donate`,
+                permlink,
+                is_comment
+            }
+            dispatch(user.actions.setTransferDefaults({
+                flag,
+                to: author,
+                amount: '0.000',
+                asset,
+                transferType,
+                // memo,
+                disableMemo: false,
+                disableTo: true,
+            }))
+            dispatch(user.actions.showTransfer())
         },
     })
 )(Voting)

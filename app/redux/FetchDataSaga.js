@@ -19,6 +19,7 @@ export function* fetchDataWatches () {
     yield fork(watchGetContent);
     yield fork(watchFetchExchangeRates);
     yield fork(watchFetchVestingDelegations);
+    yield fork(watchFetchUiaBalances);
 }
 
 export function* watchGetContent() {
@@ -187,7 +188,8 @@ export function* fetchState(location_change_action) {
 
                     case 'posts':
                     case 'comments':
-                        const comments = yield call([api, api.getDiscussionsByCommentsAsync], { start_author: uname, limit: 20, filter_tag_masks: ['fm-'] })
+                        const filter_tags = localStorage.getItem('invite') ? ['test'] : getFilterTags()
+                        const comments = yield call([api, api.getDiscussionsByCommentsAsync], { start_author: uname, limit: 20, filter_tag_masks: ['fm-'], filter_tags })
                         state.accounts[uname].comments = []
 
                         comments.forEach(comment => {
@@ -537,14 +539,14 @@ export function* fetchData(action) {
         delete args[0].select_tags;
         delete args[0].select_categories;
         delete args[0].filter_tag_masks; // do not exclude forum posts
-        delete args[0].filter_tags; // test tag posts
+        delete args[0].filter_tags;
     } else if( order === 'allcomments' ) {
         call_name = PUBLIC_API.allcomments;
         args[0].comments_only = true;
         delete args[0].select_tags;
         delete args[0].select_categories;
         delete args[0].filter_tag_masks; // do not exclude forum comments
-        delete args[0].filter_tags; // test tag comments
+        delete args[0].filter_tags;
     } else if( order === 'created' ) {
         call_name = PUBLIC_API.created;
     } else if( order === 'responses' ) {
@@ -566,6 +568,9 @@ export function* fetchData(action) {
     } else if (order === 'by_comments') {
         delete args[0].select_tags;
         delete args[0].select_categories;
+        if (localStorage.getItem('invite')) {
+            args[0].filter_tags = ['test'] // remove onlyapp and onlyblog, because it is only inside profile
+        }
         call_name = 'getDiscussionsByCommentsAsync';
     } else if( order === 'by_replies' ) {
         call_name = 'getRepliesByLastUpdateAsync';
@@ -784,4 +789,20 @@ export function* fetchVestingDelegations({ payload: { account, type } }) {
     }
 
     yield put(GlobalReducer.actions.receiveAccountVestingDelegations({ account, type, vesting_delegations }))
+}
+
+export function* watchFetchUiaBalances() {
+    yield takeLatest('global/FETCH_UIA_BALANCES', fetchUiaBalances)
+}
+
+export function* fetchUiaBalances({ payload: { account } }) {
+    try {
+        let assets = yield call([api, api.getAccountsBalancesAsync], [account])
+        assets = assets && assets[0]
+        if (assets) {
+            yield put(GlobalReducer.actions.receiveUiaBalances({assets}))
+        }
+    } catch (err) {
+        console.error('fetchUiaBalances', err)
+    }
 }

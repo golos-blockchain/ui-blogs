@@ -35,7 +35,7 @@ class PostOptions extends React.PureComponent {
     static propTypes = {
         nsfw: PropTypes.bool.isRequired,
         visibleType: PropTypes.number.isRequired,
-        publishedOnlyApp: PropTypes.bool.isRequired,
+        publishedLimited: PropTypes.bool.isRequired,
         payoutType: PropTypes.number.isRequired,
         curationPercent: PropTypes.number.isRequired,
 
@@ -120,9 +120,9 @@ class PostOptions extends React.PureComponent {
     }
 
     _renderEyeMenu() {
-        const { editMode, publishedOnlyApp, visibleType } = this.props;
+        const { editMode, publishedLimited, visibleType } = this.props;
 
-        const disableChoice = editMode && publishedOnlyApp
+        const disableChoice = editMode && publishedLimited
 
         return (
             <Hint align="center" innerRef={this._popupEyeRef}>

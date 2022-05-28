@@ -3,8 +3,10 @@ import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom';
 import reactForm from 'app/utils/ReactForm';
 import {Map} from 'immutable';
+import { getUIABalances } from 'app/redux/SagaShared';
 import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
+import g from 'app/redux/GlobalReducer';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import runTests, {browserTests} from 'app/utils/BrowserTests';
 import {validate_account_name} from 'app/utils/ChainValidation';
@@ -16,6 +18,11 @@ import Slider from 'golos-ui/Slider';
 import VerifiedExchangeList from 'app/utils/VerifiedExchangeList';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
 import Icon from 'app/components/elements/Icon';
+import { accuEmissionPerDay } from 'app/utils/StateFunctions'
+
+const getIntPercent = (fixedPct) => {
+    return Math.min(Math.ceil(parseInt(fixedPct) / 100), 100)
+}
 
 /** Warning .. This is used for Power UP too. */
 class TransferForm extends Component {
@@ -37,16 +44,31 @@ class TransferForm extends Component {
         const {transferToSelf} = props
         this.state = {
             advanced: !transferToSelf,
+            sliderPercent: 0,
             isMemoPrivate: false,
         };
         this.initForm(props)
+    }
+
+    getPermlinkSliderPercent = () => {
+        const { currentUser } = this.props
+        let username = currentUser && currentUser.get('username')
+        if (username) {
+            const is_comment = this.flag && this.flag.is_comment
+            let voteWeight = localStorage.getItem('voteWeight-'+username+(is_comment ? '-comment' : ''))
+            if (voteWeight) {
+                voteWeight = getIntPercent(voteWeight)
+                return voteWeight
+            }
+        }
+        return 100
     }
 
     componentDidMount() {
         const { props: {onChange}, value} = this.state.amount;
         //force validation programmatically
         //done by the second argument - not working otherwise for now
-        const {initialValues: {disableTo}} = this.props
+        const { initialValues: {disableTo}, sliderMax } = this.props
         onChange(value, true)
         setTimeout(() => {
             let permlink = (this.flag && typeof this.flag.permlink === `string`) ? this.flag.permlink : null;
@@ -55,12 +77,43 @@ class TransferForm extends Component {
                 ReactDOM.findDOMNode(this.refs.to).focus()
             else
                 ReactDOM.findDOMNode(this.refs.amount).focus()
+            if (permlink && sliderMax) {
+                if (!this.props.uias.size) {
+                    this.props.fetchUIABalances(this.props.currentUser)
+                }
+                this.setState({ 
+                    sliderPercent: this.getPermlinkSliderPercent(),
+                })
+                this.state.amount.props.onChange(Math.floor(sliderMax).toFixed(3))
+            }
         }, 300)
         const { withdrawal, } = this.props.initialValues;
         if (withdrawal && withdrawal.ways && withdrawal.ways[0]) {
             this._setWithdrawalWay(withdrawal.ways[0].name);
         }
         runTests()
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.autoToggleMemoEncrypt) {
+            if (this.toggleMemoEncryption(true)) {
+               this.autoToggleMemoEncrypt = false;
+            }
+        }
+        const { sliderMax } = this.props
+        if (sliderMax !== prevProps.sliderMax) {
+            const { precision } = this.props.initialValues
+            this.setState({
+                sliderPercent: this.getPermlinkSliderPercent(),
+            })
+            setTimeout(() => {
+                this.state.amount.props.onChange(Math.floor(sliderMax).toFixed(precision === undefined ? 3 : precision))
+            }, 300)
+        }
+    }
+
+    componentWillUnmount() {
+        this.autoToggleMemoEncrypt = false;
     }
 
     onAdvanced = (e) => {
@@ -99,6 +152,7 @@ class TransferForm extends Component {
         const isTIP = transferType && transferType.startsWith('TIP to')
         const isClaim = transferType && transferType === 'Claim'
         const isIssueUIA = (transferType === 'Issue UIA')
+        let permlink = (this.flag && typeof this.flag.permlink === `string`) ? this.flag.permlink : null;
         const insufficientFunds = (asset, amount) => {
             const {currentAccount, uia} = this.props
             const balanceValue =
@@ -118,19 +172,18 @@ class TransferForm extends Component {
         if(!toVesting && transferType !== 'Transfer to Savings' && transferType !== 'Savings Withdraw' && transferType !== 'Claim')
             fields.push('memo')
 
-        let permlink = (this.flag && typeof this.flag.permlink === `string`) ? this.flag.permlink : null;
         reactForm({
             name: 'transfer',
             instance: this, fields,
             initialValues: props.initialValues,
-            validation: values => ({
+            validation: values => { return {
                 to:
                     ! values.to ? tt('g.required') :
                     (VerifiedExchangeList.includes(values.to) && !permlink && (isTIP || isClaim)) ? tt('transfer_jsx.verified_exchange_liquid_only') :
                     (VerifiedExchangeList.includes(values.to) && !permlink && values.memo === '') ? tt('transfer_jsx.verified_exchange_no_memo') :
                     validate_account_name(values.to),
                 amount:
-                    ! parseFloat(values.amount) || /^0$/.test(values.amount) ? tt('g.required') :
+                    !parseFloat(values.amount) || /^0$/.test(values.amount) ? (permlink ? null : tt('g.required')) :
                     insufficientFunds(values.asset, values.amount) ? tt('transfer_jsx.insufficient_funds') :
                     (countDecimals(values.amount) > 3 && !this.props.uia) ? tt('transfer_jsx.use_only_3_digits_of_precison') :
                     this._amountWithdrawal(values.amount) || null,
@@ -140,7 +193,7 @@ class TransferForm extends Component {
                 memo:
                     checkMemo(values.memo) ? tt('transfer_jsx.private_key_in_memo') :
                     this._memoWithdrawal(values.memo) || null,
-            })
+            }}
         })
     }
 
@@ -193,8 +246,19 @@ class TransferForm extends Component {
         this.state.amount.props.onChange(formatAmount(value))
     }
 
-    onDonateSliderChange = int_value => {
-        this.state.amount.props.onChange(formatAmount(int_value.toString() + '.000'));
+    onDonateSliderChange = sliderPercent => {
+        if (sliderPercent > 40 && sliderPercent < 60) {
+            sliderPercent = 50
+        }
+        const { sliderMax } = this.props
+        let amount = sliderMax * sliderPercent / 100
+        amount = Math.floor(amount)
+        this.setState({
+            sliderPercent
+        })
+        const { precision, } = this.props.initialValues
+        amount = amount.toFixed(precision === undefined ? 3 : precision)
+        this.state.amount.props.onChange(amount)
     };
 
     onPresetClicked = (e) => {
@@ -324,16 +388,12 @@ class TransferForm extends Component {
         return true;
     }
 
-    componentDidUpdate() {
-        if (this.autoToggleMemoEncrypt) {
-            if (this.toggleMemoEncryption(true)) {
-               this.autoToggleMemoEncrypt = false;
-            }
-        }
-    }
-
-    componentWillUnmount() {
-        this.autoToggleMemoEncrypt = false;
+    _getColumnSizes() {
+        let permlink = (this.flag && typeof this.flag.permlink === `string`) ? this.flag.permlink : null
+        const leftColumnSize = permlink ? 3 : 2
+        const leftColumn = 'small-' + leftColumnSize
+        const rightColumn = 'small-' + (12-leftColumnSize)
+        return [leftColumn, rightColumn]
     }
 
     _renderMemo(memo, memoInitial, memoPrefix, disableMemo, isMemoPrivate, loading) {
@@ -369,9 +429,10 @@ class TransferForm extends Component {
                     {input}{lock}
                 </div>);
         }
+        const columns = this._getColumnSizes()
         return (<div className="row">
-            <div className="column small-2" style={{paddingTop: 33}}>{tt('transfer_jsx.memo')}</div>
-            <div className="column small-10">
+            <div className={'column ' + columns[0]} style={{paddingTop: 33}}>{tt('transfer_jsx.memo')}</div>
+            <div className={'column ' + columns[1]}>
                 <small>
                     {isObsoletePrivate ?
                         tt('transfer_jsx.public_obsolete') :
@@ -453,11 +514,20 @@ class TransferForm extends Component {
                 tipBalanceValue = (<DropdownMenu className="TipAssetMenu" selected={tipBalanceValue.split(' ')[1]} el="span" items={myAssets} />)
             }
         }
+        const amountLabel = permlink ? tt('transfer_jsx.donate_amount') : tt('g.amount')
+        const columns = this._getColumnSizes()
         const form = (
             <form onSubmit={handleSubmit(({data}) => {
                 this.setState({loading: true})
+                let vote = null
+                if (permlink) {
+                    vote = {
+                        percent: this.state.sliderPercent * 100,
+                        _only: !parseFloat(data.amount)
+                    }
+                }
                 dispatchSubmit({...data, isUIA, precision, flag: this.flag, errorCallback: this.errorCallback, currentUser, toVesting, transferType,
-                    withdrawalWay, isMemoPrivate, })
+                    withdrawalWay, isMemoPrivate, vote, })
             })}
                 onChange={this.clearError}
             >
@@ -468,7 +538,7 @@ class TransferForm extends Component {
                     </div>
                 </div>}
 
-                {(!toVesting && !withdrawal) ? <div>
+                {(!permlink && !toVesting && !withdrawal) ? <div>
                     <div className="row">
                         <div className="column small-12">
                             {withdrawal ?
@@ -479,27 +549,19 @@ class TransferForm extends Component {
                     <br />
                 </div> : null}
 
-                {permlink && (<div className="DonatePresets column">
-                <div>
-                <div className="PresetSelector__container">
-                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[0] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[0]}</button>
-                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[1] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[1]}</button>
-                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[2] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[2]}</button>
-                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[3] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[3]}</button>
-                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[4] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[4]}</button>
-                </div>
-                <div className="TipBalance">
-                <b>{tt('token_names.TIP_TOKEN')}:</b><br/>
-                {tipBalanceValue}
-                </div>
-                </div>
-                <Slider
-                        {...amount.props}
-                        min={0}
-                        max={parseInt(this.balanceValue().split(".")[0])}
-                        hideHandleValue={true}
-                        onChange={this.onDonateSliderChange}
-                    />
+                {permlink && (
+                    <div className="row" style={{ marginTop: '1.0rem', marginBottom: '1.25rem' }}>
+                        <div className="column small-12">
+                            <Icon name={'chevron-up-circle'} className='float-left'size='1_5x'/>
+                            <Slider
+                                style={{ marginLeft: '1rem', width: 'calc(100% - 100px)', float: 'left' }}
+                                min={0}
+                                max={100}
+                                value={this.state.sliderPercent}
+                                onChange={this.onDonateSliderChange}
+                            />
+                            <div style={{ float: 'right' }}>{this.state.sliderPercent + '%'}</div>
+                        </div>
                 </div>)}
 
                 {!permlink && !withdrawal && <div className="row">
@@ -550,10 +612,10 @@ class TransferForm extends Component {
                 {withdrawal ? this._renderWithdrawalDetails() : null}
 
                 {<div className="row">
-                    <div className="column small-2" style={{paddingTop: 5}}>{tt('g.amount')}</div>
-                    <div className="column small-10">
+                    <div className={'column ' + columns[0]} style={{paddingTop: 5}}>{amountLabel}</div>
+                    <div className={'column ' + columns[1]}>
                         <div className="input-group" style={{marginBottom: 5}}>
-                            <input type="text" placeholder={tt('g.amount')} {...amount.props} ref="amount" autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck="false" disabled={disableAmount || loading} onChange={(e) => this.onChangeAmount(e)}/>
+                            <input type="text" placeholder={amountLabel} {...amount.props} ref="amount" autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck="false" disabled={disableAmount || loading} onChange={(e) => this.onChangeAmount(e)}/>
                             {asset && !isUIA && transferType !== 'Claim' && !transferType.startsWith('TIP to') && !transferType.endsWith('to TIP') && <span className="input-group-label" style={{paddingLeft: 0, paddingRight: 0}}>
                                 <select {...asset.props} placeholder={tt('transfer_jsx.asset')} disabled={disableAmount || loading} style={{minWidth: "5rem", height: "inherit", backgroundColor: "transparent", border: "none"}}>
                                     <option value={LIQUID_TICKER}>{LIQUID_TOKEN}</option>
@@ -576,6 +638,22 @@ class TransferForm extends Component {
                     </div>
                 </div>}
 
+                {permlink && (<div className="DonatePresets column" style={{ marginTop: '1.25rem' }}>
+                <div>
+                <div className="PresetSelector__container">
+                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[0] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[0]}</button>
+                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[1] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[1]}</button>
+                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[2] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[2]}</button>
+                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[3] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[3]}</button>
+                <button className={"PresetSelector button hollow" + (amount.value.split(".")[0] === donatePresets[4] ? " PresetSelector__active" : "")} onClick={this.onPresetClicked}>{donatePresets[4]}</button>
+                </div>
+                <div className="TipBalance">
+                <b>{tt('token_names.TIP_TOKEN')}:</b><br/>
+                {tipBalanceValue}
+                </div>
+                </div>
+                </div>)}
+
                 {(memo && !disableMemo) && !isIssueUIA &&
                     this._renderMemo(memo, memoInitial, memoPrefix, disableMemo, isMemoPrivate, loading)}
 
@@ -583,7 +661,9 @@ class TransferForm extends Component {
                 {!loading && <span>
                     {trxError && <div className="error">{trxError}</div>}
                     <button type="submit" disabled={submitting || !valid} className="button">
-                        {tt(toVesting ? 'transfer_jsx.power_up' : (isIssueUIA ? 'transfer_jsx.issue' : 'transfer_jsx.submit'))}
+                        {tt(permlink ? 'g.donate_support' :
+                            (toVesting ? 'transfer_jsx.power_up' :
+                            (isIssueUIA ? 'transfer_jsx.issue' : 'transfer_jsx.submit')))}
                     </button>
                     {transferToSelf && <button className="button hollow no-border" disabled={submitting} onClick={this.onAdvanced}>{tt(advanced ? 'g.basic' : 'g.advanced')}</button>}
                 </span>}
@@ -592,7 +672,9 @@ class TransferForm extends Component {
         return (
            <div id="transferFormParent">
                <div className="row">
-                   <h3>{withdrawal ?
+                   <h3>{permlink ?
+                    tt('transfer_jsx.donate_support') :
+                    withdrawal ?
                     tt('asset_edit_withdrawal_jsx.transfer_title_SYM', { SYM: sym, }) :
                     toVesting ?
                     tt('transfer_jsx.convert_to_VESTING_TOKEN', {VESTING_TOKEN2}) : 
@@ -618,6 +700,7 @@ export default connect(
         const currentUserNameFromRoute = pathname.split(`/`)[1].substring(1);
         const currentUserFromRoute = Map({username: currentUserNameFromRoute});
         const currentUser = state.user.getIn(['current']) || currentUserFromRoute;
+        const username = currentUser.get('username')
         const currentAccount = currentUser && state.global.getIn(['accounts', currentUser.get('username')])
 
         if(!toVesting && !initialValues.transferType)
@@ -625,9 +708,9 @@ export default connect(
 
         let transferToSelf = toVesting || /Transfer to Savings|Savings Withdraw|Claim|Transfer to TIP/.test(initialValues.transferType)
         if (currentUser && transferToSelf && !initialValues.to)
-            initialValues.to = currentUser.get('username')
+            initialValues.to = username
 
-        if(currentUser && initialValues.to !== currentUser.get('username'))
+        if(currentUser && initialValues.to !== username)
             transferToSelf = false // don't hide the to field
 
         let uias = state.global.get('assets')
@@ -636,10 +719,25 @@ export default connect(
             uia = uias.get(initialValues.asset)
         }
 
+        let sliderMax = null
+        if (initialValues.flag && initialValues.flag.permlink && currentAccount && process.env.BROWSER) {
+            if (!uia) {
+                const gprops = state.global.get('props')
+                sliderMax = accuEmissionPerDay(currentAccount, gprops)
+
+                let emissionDonatePct = localStorage.getItem('donate.emissionpct-' + username)
+                emissionDonatePct = emissionDonatePct ? parseFloat(emissionDonatePct) : 10
+
+                sliderMax = sliderMax * emissionDonatePct / 100
+            } else {
+                sliderMax = parseFloat(uia.get('tip_balance'))
+            }
+        }
+
         return {...ownProps,
             currentUser, currentAccount,
             uias, uia, toVesting, sym: initialValues.asset,
-            transferToSelf, initialValues}
+            transferToSelf, initialValues, sliderMax}
     },
 
     // mapDispatchToProps
@@ -650,6 +748,11 @@ export default connect(
                 loginDefault: { username: currentUser.get('username'), authType: 'memo', unclosable: false }
             }));
         },
+        fetchUIABalances: (currentUser) => {
+            if (!currentUser) return
+            const account = currentUser.get('username')
+            dispatch(g.actions.fetchUiaBalances({ account }))
+        },
         setTransferDefaults: ({
             transferDefaults
         }) => {
@@ -657,7 +760,7 @@ export default connect(
         },
         dispatchSubmit: ({
             flag,
-            to, amount, isUIA, asset, precision, memo, transferType,
+            to, amount, vote, isUIA, asset, precision, memo, transferType,
             withdrawalWay, isMemoPrivate,
             toVesting, currentUser, errorCallback
         }) => {
@@ -749,24 +852,45 @@ export default connect(
             if (isMemoPrivate)
                 operation._memo_private = true;
 
+            const opType = toVesting ? (
+                transferType === 'TIP to Vesting' ? 'transfer_from_tip' :
+                transferType === 'Claim' ? 'claim' :
+                'transfer_to_vesting'
+            ) : (
+                isUIA && transferType === 'TIP to Vesting' ? 'transfer_from_tip' :
+                transferType === 'Transfer to Account' ? 'transfer' :
+                transferType === 'Transfer to Savings' ? 'transfer_to_savings' :
+                transferType === 'Savings Withdraw' ? 'transfer_from_savings' :
+                transferType === 'Transfer to TIP' ? 'transfer_to_tip' :
+                transferType === 'TIP to Account' ? 'donate' :
+                transferType === 'Claim' ? 'claim' :
+                transferType === 'Issue UIA' ? 'asset_issue' :
+                null
+            )
+
+            let trx = [
+                [opType, operation]
+            ]
+            if (vote) {
+                const voteOp = {
+                    voter: username,
+                    author: to,
+                    permlink: flag.permlink,
+                    weight: vote.percent
+                }
+                if (vote._only) trx = []
+                trx.push(['vote', voteOp])
+            }
+
+            localStorage.removeItem('vote_weight'); // deprecated
+            const is_comment = flag && flag.is_comment
+            localStorage.setItem('voteWeight-' + username + (is_comment ? '-comment' : ''),
+                vote.percent)
+
             dispatch(transaction.actions.broadcastOperation({
-                type: toVesting ? (
-                    transferType === 'TIP to Vesting' ? 'transfer_from_tip' :
-                    transferType === 'Claim' ? 'claim' :
-                    'transfer_to_vesting'
-                ) : (
-                    isUIA && transferType === 'TIP to Vesting' ? 'transfer_from_tip' :
-                    transferType === 'Transfer to Account' ? 'transfer' :
-                    transferType === 'Transfer to Savings' ? 'transfer_to_savings' :
-                    transferType === 'Savings Withdraw' ? 'transfer_from_savings' :
-                    transferType === 'Transfer to TIP' ? 'transfer_to_tip' :
-                    transferType === 'TIP to Account' ? 'donate' :
-                    transferType === 'Claim' ? 'claim' :
-                    transferType === 'Issue UIA' ? 'asset_issue' :
-                    null
-                ),
+                type: opType,
                 username,
-                operation,
+                trx,
                 successCallback,
                 errorCallback
             }))

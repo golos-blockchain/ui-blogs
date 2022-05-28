@@ -179,3 +179,10 @@ export function fromJSGreedy(js) {
       Seq(js).map(fromJSGreedy).toList() :
       Seq(js).map(fromJSGreedy).toMap();
 }
+
+export function accuEmissionPerDay(accountObj, gpropsObj) {
+    const acc = accountObj.toJS ? accountObj.toJS() : accountObj
+    const gprops = gpropsObj.toJS ? gpropsObj.toJS() : gpropsObj
+    let emission = toAsset(gprops.accumulative_emission_per_day).amount * toAsset(acc.vesting_shares).amount / toAsset(gprops.total_vesting_shares).amount
+    return emission
+}

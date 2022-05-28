@@ -1,4 +1,5 @@
 import { jsPDF } from 'jspdf';
+import { saveAs } from 'file-saver'
 import tt from 'counterpart';
 
 export default class KeyFile {
@@ -39,6 +40,14 @@ export default class KeyFile {
     }
 
     save = () => {
+        // Fix Firefox 98 bug
+        if (navigator.userAgent.toLowerCase().includes('firefox')) {
+            console.warn('KeyFile: Firefox detected - using alternative PDF save way...')
+            let blob = this.pdf.output('blob')
+            blob = blob.slice(0, blob.size, 'application/octet-stream')
+            saveAs(blob, this.fileName)
+            return
+        }
         this.pdf.save(this.fileName);
     };
 }
