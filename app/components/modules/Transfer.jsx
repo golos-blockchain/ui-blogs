@@ -729,6 +729,11 @@ export default connect(
                 emissionDonatePct = emissionDonatePct ? parseFloat(emissionDonatePct) : 10
 
                 sliderMax = sliderMax * emissionDonatePct / 100
+
+                const balance = parseFloat(currentAccount.get('tip_balance'))
+                if (sliderMax > balance || sliderMax < 1) {
+                    sliderMax = balance
+                }
             } else {
                 sliderMax = parseFloat(uia.get('tip_balance'))
             }
@@ -871,7 +876,7 @@ export default connect(
             let trx = [
                 [opType, operation]
             ]
-            if (vote) {
+            if (vote && vote.percent) {
                 const voteOp = {
                     voter: username,
                     author: to,
@@ -880,12 +885,12 @@ export default connect(
                 }
                 if (vote._only) trx = []
                 trx.push(['vote', voteOp])
-            }
 
-            localStorage.removeItem('vote_weight'); // deprecated
-            const is_comment = flag && flag.is_comment
-            localStorage.setItem('voteWeight-' + username + (is_comment ? '-comment' : ''),
-                vote.percent)
+                localStorage.removeItem('vote_weight'); // deprecated
+                const is_comment = flag && flag.is_comment
+                localStorage.setItem('voteWeight-' + username + (is_comment ? '-comment' : ''),
+                    vote.percent)
+            }
 
             dispatch(transaction.actions.broadcastOperation({
                 type: opType,
