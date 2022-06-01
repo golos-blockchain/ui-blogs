@@ -336,31 +336,15 @@ export default connect(
             }))
         },
         showDonate(author, permlink, is_comment) {
-            const asset = LIQUID_TICKER
-            const transferType = 'TIP to Account'
-            // const memo = url;
-            // const memo = window.JSON.stringify({donate: {post: url}});
-            // store/user/transfer_defaults structure initialized correctly for each transfer type
-            // (click in wallet, external link, donate from PostFull)
-            // so, mark this kind of transfer with a flag for now to analyze in transfer.jsx
-            // the rest of transfer types don't have the flag for now
-            // todo redesign transfer types globally
-            const flag = {
-                type: `donate`,
+            const sym = LIQUID_TICKER
+            dispatch(user.actions.setDonateDefaults({
                 permlink,
-                is_comment
-            }
-            dispatch(user.actions.setTransferDefaults({
-                flag,
+                is_comment,
                 to: author,
-                amount: '0.000',
-                asset,
-                transferType,
-                // memo,
-                disableMemo: false,
-                disableTo: true,
+                sym,
+                precision: 3,
             }))
-            dispatch(user.actions.showTransfer())
+            dispatch(user.actions.showDonate())
         },
     })
 )(Voting)
