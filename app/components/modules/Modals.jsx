@@ -3,16 +3,18 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
 import Reveal from 'react-foundation-components/lib/global/reveal';
+import {NotificationStack} from 'react-notification'
+
 import ConvertAssets from 'app/components/modules/ConvertAssets'
 import LoginForm from 'app/components/modules/LoginForm';
 import ConfirmTransactionForm from 'app/components/modules/ConfirmTransactionForm';
 import Transfer from 'app/components/modules/Transfer';
+import Donate from 'app/components/modules/Donate'
 import SignUp from 'app/components/modules/SignUp';
 import user from 'app/redux/User';
 import tr from 'app/redux/Transaction';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import Powerdown from 'app/components/modules/Powerdown';
-import {NotificationStack} from 'react-notification';
 import OpenOrders from 'app/components/modules/OpenOrders';
 
 let keyIndex = 0;
@@ -22,6 +24,7 @@ class Modals extends React.Component {
         show_login_modal: PropTypes.bool,
         show_confirm_modal: PropTypes.bool,
         show_transfer_modal: PropTypes.bool,
+        show_donate_modal: PropTypes.bool,
         show_convert_assets_modal: PropTypes.bool,
         show_powerdown_modal: PropTypes.bool,
         show_signup_modal: PropTypes.bool,
@@ -30,6 +33,7 @@ class Modals extends React.Component {
         hideConfirm: PropTypes.func.isRequired,
         hideSignUp: PropTypes.func.isRequired,
         hideTransfer: PropTypes.func.isRequired,
+        hideDonate: PropTypes.func.isRequired,
         hidePowerdown: PropTypes.func.isRequired,
         hidePromotePost: PropTypes.func.isRequired,
         notifications: PropTypes.object,
@@ -54,11 +58,13 @@ class Modals extends React.Component {
             show_login_modal,
             show_confirm_modal,
             show_transfer_modal,
+            show_donate_modal,
             show_convert_assets_modal,
             show_powerdown_modal,
             show_signup_modal,
             hideLogin,
             hideTransfer,
+            hideDonate,
             hideConvertAssets,
             hidePowerdown,
             hideConfirm,
@@ -89,6 +95,10 @@ class Modals extends React.Component {
                 {show_transfer_modal && <Reveal onHide={hideTransfer} show={show_transfer_modal}>
                     <CloseButton onClick={hideTransfer} />
                     <Transfer />
+                </Reveal>}
+                {show_donate_modal && <Reveal onHide={hideDonate} show={show_donate_modal}>
+                    <CloseButton onClick={hideDonate} />
+                    <Donate />
                 </Reveal>}
                 {show_convert_assets_modal && <Reveal onHide={hideConvertAssets} show={show_convert_assets_modal}>
                     <CloseButton onClick={hideConvertAssets} />
@@ -127,6 +137,7 @@ export default connect(
             loginUnclosable,
             show_confirm_modal: state.transaction.get('show_confirm_modal'),
             show_transfer_modal: state.user.get('show_transfer_modal'),
+            show_donate_modal: state.user.get('show_donate_modal'),
             show_convert_assets_modal: state.user.get('show_convert_assets_modal'),
             show_promote_post_modal: state.user.get('show_promote_post_modal'),
             show_signup_modal: state.user.get('show_signup_modal'),
@@ -147,6 +158,10 @@ export default connect(
         hideTransfer: e => {
             if (e) e.preventDefault();
             dispatch(user.actions.hideTransfer())
+        },
+        hideDonate: e => {
+            if (e) e.preventDefault()
+            dispatch(user.actions.hideDonate())
         },
         hideConvertAssets: e => {
             if (e) e.preventDefault();
