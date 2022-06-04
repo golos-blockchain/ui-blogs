@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 import Icon from 'app/components/elements/Icon';
-import { getFavoriteTags } from 'app/utils/tags';
+import { getFavoriteTags, ONLYAPP_TAG, ONLYBLOG_TAG } from 'app/utils/tags';
 
 export default class TagsEditLine extends React.PureComponent {
     static propTypes = {
@@ -68,7 +68,7 @@ export default class TagsEditLine extends React.PureComponent {
 
     _renderTag(tag, i) {
         const { editMode } = this.props;
-        const allowMove = i !== 0 || !editMode;
+        const allowMove = (i !== 0 || !editMode) && (tag !== ONLYBLOG_TAG && tag !== ONLYAPP_TAG)
 
         return (
             <span
