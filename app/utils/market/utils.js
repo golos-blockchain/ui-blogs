@@ -18,6 +18,26 @@ function roundDown(num, precision) {
     return Math.floor(satoshis) / Math.pow(10, precision);
 }
 
+// without exponential notation (try (0.0000001).toString())
+function float2str(f) {
+    let str = f.toFixed(8)
+    if (isNaN(f) || !str.includes('.')) {
+        return str
+    }
+    let str2 = ''
+    let i = str.length - 1
+    for (; i >= 0; --i) {
+        if (str[i] !== '0' && str[i] !== '.') {
+            break;
+        }
+    }
+    for (; i >= 0; --i) {
+        str2 = str[i] + str2
+    }
+    if (!str2) str2 = '0'
+    return str2
+}
+
 function normalizeAssets(assets) {
     let assetsNorm = {}
     assetsNorm['GOLOS'] = {
@@ -114,6 +134,7 @@ const DEFAULT_EXPIRE = 0xffffffff
 module.exports = {
     roundUp,
     roundDown,
+    float2str,
     normalizeAssets,
     getAssetMeta,
     getTradablesFor,
