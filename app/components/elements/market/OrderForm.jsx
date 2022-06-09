@@ -7,7 +7,8 @@ import { Asset, AssetEditor } from 'golos-lib-js/lib/utils'
 import transaction from 'app/redux/Transaction';
 import CMCValue from 'app/components/elements/market/CMCValue'
 import MarketInput from 'app/components/elements/market/MarketInput'
-import { DEFAULT_EXPIRE, generateOrderID, roundUp, roundDown } from 'app/utils/market/utils'
+import { DEFAULT_EXPIRE, generateOrderID, roundUp, roundDown, float2str } from 'app/utils/market/utils'
+import FloatEditor from 'app/utils/market/FloatEditor'
 
 class OrderForm extends React.Component {
     static propTypes = {
@@ -16,7 +17,7 @@ class OrderForm extends React.Component {
     };
 
     state = {
-        price: AssetEditor(0, 8, 'PRICE'),
+        price: new FloatEditor(0, 8),
         amount: AssetEditor(0, 3, 'GOLOS'),
         total: AssetEditor(0, 3, 'GBG'),
         fee: Asset(0, 3, 'GBG'),
@@ -47,39 +48,24 @@ class OrderForm extends React.Component {
     }
 
     updateTotal = (amount, price) => {
-        const priceFloat = parseFloat(price.amountFloat)
-        const totalFloat = parseFloat(amount.amountFloat) * priceFloat
+        const totalFloat = parseFloat(amount.amountFloat) * price
 
         let total = this.state.total.asset.clone()
-        total.amountFloat = totalFloat.toString()
+        const { precision } = this.state.total.asset
+        let amountFloat
         if (this.props.isSell) {
-            if (parseFloat(total.amountFloat) / parseFloat(amount.amountFloat)
-                > priceFloat) {
-                total = total.minus(1)
-            }
-            const integral = parseFloat(amount.amountFloat).toFixed(total.precision).length - 1
-            if (integral > 8) {
-                const nums = 10 ** (integral - 8)
-                total.amount = Math.floor(total.amount / nums) * nums
-            }
+            amountFloat = roundDown(totalFloat, precision)
         } else {
-            if (parseFloat(total.amountFloat) / parseFloat(amount.amountFloat)
-                < priceFloat) {
-                total = total.plus(1)
-            }
-            const integral = parseFloat(amount.amountFloat).toFixed(total.precision).length - 1
-            if (integral > 8) {
-                const nums = 10 ** (integral - 8)
-                total.amount = Math.ceil(total.amount / nums) * nums
-            }
+            amountFloat = roundUp(totalFloat, precision)
         }
+        total.amountFloat = amountFloat.toString()// float2str(amountFloat)
         return total
     }
 
     onPriceChange = e => {
         const price = this.state.price.withChange(e.target.value)
-        if (price.hasChange && price.asset.amount >= 0) {
-            let total = this.updateTotal(this.state.amount.asset, price.asset)
+        if (price.hasChange && price.float >= 0) {
+            let total = this.updateTotal(this.state.amount.asset, price.float)
             this.setState({
                 price,
                 total: AssetEditor(total)
@@ -94,7 +80,7 @@ class OrderForm extends React.Component {
         if (amount.hasChange && amount.asset.amount >= 0) {
             const { price } = this.state
 
-            let total = this.updateTotal(amount.asset, price.asset)
+            let total = this.updateTotal(amount.asset, price.float)
             this.setState({
                 amount,
                 total: AssetEditor(total)
@@ -105,35 +91,30 @@ class OrderForm extends React.Component {
     }
 
     updateAmount = (total, price ) => {
-        const priceFloat = parseFloat(price.amountFloat)
         const amountFloat = parseFloat(total.amountFloat)
-            / priceFloat
+            / price
 
         let amount = this.state.amount.asset.clone()
-        amount.amountFloat = amountFloat.toString()
-
+        const { precision } = this.state.amount.asset
+        let priceFix
         if (this.props.isSell) {
-            if (parseFloat(total.amountFloat) / parseFloat(amount.amountFloat)
-                > priceFloat) {
-                amount = amount.plus(1)
-            }
+            amount.amountFloat = roundUp(amountFloat, precision).toFixed(precision)
         } else {
-            if (parseFloat(total.amountFloat) / parseFloat(amount.amountFloat)
-                < priceFloat) {
-                amount = amount.minus(1)
-            }
+            amount.amountFloat = roundDown(amountFloat, precision).toFixed(precision)
         }
-        return amount
+        priceFix = parseFloat(total.amountFloat) / parseFloat(amount.amountFloat)
+        return {amount, price: priceFix}
     }
 
     onTotalChange = e => {
         const total = this.state.total.withChange(e.target.value)
         if (total.hasChange && total.asset.amount >= 0) {
             const { price } = this.state
-            const amount = this.updateAmount(total.asset, price.asset)
+            const res = this.updateAmount(total.asset, price.float)
             this.setState({
                 total,
-                amount: AssetEditor(amount)
+                amount: AssetEditor(res.amount),
+                price: this.state.price.withVirtChange(res.price)
             }, () => {
                 this.validate()
             })
@@ -141,11 +122,10 @@ class OrderForm extends React.Component {
     }
 
     setPrice = priceFloat => {
-        let price = this.state.price.asset.clone()
-        price.amountFloat = priceFloat.toString()
-        let total = this.updateTotal(this.state.amount.asset, price)
+        const price = new FloatEditor(priceFloat, 8)
+        let total = this.updateTotal(this.state.amount.asset, price.float)
         this.setState({
-            price: AssetEditor(price),
+            price,
             total: AssetEditor(total)
         }, () => {
             this.validate()
@@ -179,17 +159,20 @@ class OrderForm extends React.Component {
         const { isSell } = this.props
         let balance = this._getBalance()
         balance = Asset(balance)
-        let amount, total
+        let amount, total, price
         if (isSell) {
             amount = balance.clone()
-            total = this.updateTotal(amount, this.state.price.asset)
+            total = this.updateTotal(amount, this.state.price.float)
         } else {
             total = balance.clone()
-            amount = this.updateAmount(total, this.state.price.asset)
+            let res = this.updateAmount(total, this.state.price.float)
+            amount = res.amount
+            price = res.price
         }
         this.setState({
             amount: AssetEditor(amount),
-            total: AssetEditor(total)
+            total: AssetEditor(total),
+            price: price ? this.state.price.withVirtChange(price) : this.state.price
         }, () => {
             this.validate()
         })
@@ -198,7 +181,7 @@ class OrderForm extends React.Component {
     validate = () => {
         const { isSell } = this.props
         const { price, amount, total } = this.state
-        let valid = price.asset.amount > 0 && amount.asset.amount > 0 && total.asset.amount > 0
+        let valid = price.float > 0 && amount.asset.amount > 0 && total.asset.amount > 0
         const balance = this._getBalance()
         if (balance) {
             const suff = (isSell ? amount.asset : total.asset).lte(Asset(balance))
@@ -218,15 +201,15 @@ class OrderForm extends React.Component {
             submitDisabled: !valid,
             insufficient: false,
             priceWarning: valid && (isSell ?
-                this.percentDiff(price.asset) < -15 :
-                this.percentDiff(price.asset) > 15),
+                this.percentDiff(price.float) < -15 :
+                this.percentDiff(price.float) > 15),
             fee
         })
     }
 
     percentDiff = (userPrice) => {
         let bestPrice = parseFloat(this.props.bestPrice)
-        let up = parseFloat(userPrice.amountFloat)
+        let up = userPrice
         return (100 * (up - bestPrice)) / bestPrice
     }
 
@@ -243,7 +226,7 @@ class OrderForm extends React.Component {
             isSell,
             amountToSell,
             minToReceive,
-            price.asset,
+            price.float,
             !!priceWarning,
             bestPrice,
             msg => {
@@ -264,7 +247,7 @@ class OrderForm extends React.Component {
                 label={tt('g.price')}
                 className={'input-group-field' + (priceWarning ? ' price_warning' : '')}
                 placeholder="0.0"
-                value={price.amountStr}
+                value={price.str}
                 onChange={this.onPriceChange}
                 symbol={`${sym2}/${sym1}`} />
 
@@ -351,7 +334,7 @@ export default connect(
             fill_or_kill = false,
             expiration = DEFAULT_EXPIRE
         ) => {
-            let effectivePrice = effective_price.amountFloat + ' ' 
+            let effectivePrice = float2str(effective_price) + ' ' 
 
             let confirmStr
             if (isSell) {
