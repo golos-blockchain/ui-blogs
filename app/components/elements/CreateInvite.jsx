@@ -48,7 +48,8 @@ class CreateInvite extends Component {
         const { min_invite_balance } = this.props;
         const { amount } = this.state;
         if (min_invite_balance && !amount.value) {
-            amount.props.onChange(min_invite_balance.split('.')[0]);
+            const val = (parseInt(min_invite_balance) + 1).toString()
+            amount.props.onChange(val)
         }
     }
 
@@ -259,7 +260,7 @@ class CreateInvite extends Component {
 
                 <div className="row">
                     <div className="column small-10">
-                        {tt('g.amount')} ({tt('g.at_least')} <b>{min_invite_balance ? formatAsset(min_invite_balance, true, false, '') : '0 GOLOS'}</b>)
+                        {tt('g.amount')} (<b>{min_invite_balance ? formatAsset(min_invite_balance, true, false, '') : '0 GOLOS'}{' ' + tt('g.or_more')}</b>)
                         <div className="input-group" style={{marginBottom: 5}}>
                             <input type="text" placeholder={tt('g.amount')} {...amount.props} ref="amount" autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck="false" onChange={(e) => this.onChangeAmount(e)}/>
                         </div>

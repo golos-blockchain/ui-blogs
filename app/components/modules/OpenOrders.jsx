@@ -7,7 +7,6 @@ import { api, } from 'golos-lib-js';
 import { Asset, } from 'golos-lib-js/lib/utils';
 import transaction from 'app/redux/Transaction';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
-import { roundDown, roundUp, } from 'app/utils/MarketUtils';
 
 class OpenOrders extends Component {
     state = {
@@ -73,9 +72,6 @@ class OpenOrders extends Component {
         }
         let orderData = [];
         for (let order of orders) {
-            let price = parseFloat(order.real_price);
-            price = roundUp(price, 8).toFixed(3);
-
             const asset1 = Asset(order.asset1);
             const sym2 = asset1.symbol;
 

@@ -153,7 +153,7 @@ function link(state, child) {
     let url = child.getAttribute('href');
     const newurl = 'https://' + $STM_Config.site_domain;
 
-    url = url.replace(/(?:https?:)\/\/(golos.io|golos.blog|golos.id|golos.in)/, newurl)    
+    url = url.replace(/(?:https?:)\/\/(golos.io|golos.blog)/, newurl)    
     child.setAttribute('href', url);
 
     if (url) {
@@ -292,6 +292,10 @@ function linkifyNode(state, child) {
             return;
         }
 
+        if (safeCall(embedTelegramNode, state, child)) {
+            return;
+        }
+
         const data = XMLSerializer.serializeToString(child);
         const content = linkify(state, data);
 
@@ -310,7 +314,7 @@ function linkifyNode(state, child) {
 function linkify(state, content) {
     // hashtag
     const newurl = 'https://' + $STM_Config.site_domain;
-    content = content.replace(/(?:https?:)\/\/(golos.io|golos.blog|golos.id|golos.in)/, newurl);
+    content = content.replace(/(?:https?:)\/\/(golos.io|golos.blog)/, newurl);
     content = content.replace(/(^|\s)(#[-a-zа-яёґєії\d]+)/gi, tag => {
         // Don't allow numbers to be tags
         if (/#[\d]+$/.test(tag)) {
@@ -374,11 +378,6 @@ function linkify(state, content) {
             }
 
             return `<img src="${ln}" />`;
-        }
-
-        // do not linkify .exe or .zip urls
-        if (/\.(zip|exe)$/i.test(ln)) {
-            return ln;
         }
 
         if (state.links) {
@@ -512,6 +511,28 @@ function embedOkruNode(state, node) {
     }
 
     return true;
+}
+
+function embedTelegramNode(state, node) {
+    const match = node.data.match(linksRe.telegramId)
+
+    if (!match) {
+        return
+    }
+
+    const author = match[1]
+    const id = match[2]
+
+    node.parentNode.replaceChild(
+        DOMParser.parseFromString(`~~~ embed:${author}_${id} telegram ~~~`),
+        node
+    );
+
+    if (state.links) {
+        state.links.add(`https://t.me/${author}/${id}`)
+    }
+
+    return true
 }
 
 function header(state, node) {

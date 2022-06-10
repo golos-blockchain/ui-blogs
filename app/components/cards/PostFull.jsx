@@ -8,11 +8,10 @@ import transaction from 'app/redux/Transaction';
 import { repLog10, parsePayoutAmount } from 'app/utils/ParsersAndFormatters';
 import extractContent from 'app/utils/ExtractContent';
 import { immutableAccessor, objAccessor } from 'app/utils/Accessors';
-import LEGALList from 'app/utils/LEGALList';
 import { isPostVisited, visitPost } from 'app/utils/helpers';
 import { serverApiRecordEvent } from 'app/utils/ServerApiClient';
 import Icon from 'app/components/elements/Icon';
-import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
+import TimeVersions from 'app/components/elements/TimeVersions';
 import Voting from 'app/components/elements/Voting';
 import Reblog from 'app/components/elements/Reblog';
 import MarkdownViewer from 'app/components/cards/MarkdownViewer';
@@ -24,15 +23,15 @@ import PostFormLoader from 'app/components/modules/PostForm/loader';
 import CommentFormLoader from 'app/components/modules/CommentForm/loader';
 import { getEditDraftPermLink } from 'app/utils/postForm';
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
-import Confetti from 'react-dom-confetti';
 import PostSummaryThumb from 'app/components/elements/PostSummaryThumb';
-import { SEO_TITLE, LIQUID_TICKER, CONFETTI_CONFIG, CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config';
+import { SEO_TITLE, CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config';
+
 
 function TimeAuthorCategory({ content, authorRepLog10, showTags }) {
     return (
         <span className="PostFull__time_author_category vcard">
             <Icon name="clock" className="space-right" />
-            <TimeAgoWrapper date={content.created} className="updated" />
+            <TimeVersions content={content} />
             {' '}
             <Author author={content.author} authorRepLog10={authorRepLog10} donateUrl={content.url} />
             {showTags && (
@@ -48,10 +47,7 @@ function TimeAuthorCategory({ content, authorRepLog10, showTags }) {
 function TimeAuthorCategoryLarge({ content, authorRepLog10 }) {
     return (
         <span className="PostFull__time_author_category_large vcard">
-            <TimeAgoWrapper
-                date={content.created}
-                className="updated float-right"
-            />
+            <TimeVersions content={content} className='float-right' />
             <Userpic account={content.author} reputation={authorRepLog10} />
             <div className="right-side">
                 <Author
@@ -185,36 +181,6 @@ class PostFull extends React.Component {
         this.props.showExplorePost(this.share_params.link);
     };
 
-    showTransfer = () => {
-        const postContent = this.props.cont.get(this.props.post);
-        const content = postContent.toJS();
-        const { author, permlink, url } = content;
-        const asset = LIQUID_TICKER;
-        const transferType = 'TIP to Account';
-        // const memo = url;
-        // const memo = window.JSON.stringify({donate: {post: url}});
-        // store/user/transfer_defaults structure initialized correctly for each transfer type
-        // (click in wallet, external link, donate from PostFull)
-        // so, mark this kind of transfer with a flag for now to analyze in transfer.jsx
-        // the rest of transfer types don't have the flag for now
-        // todo redesign transfer types globally
-        const flag = {
-            type: `donate`,
-            permlink: permlink
-        };
-
-        this.props.showTransfer({
-            flag,
-            to: author,
-            amount: '0.000',
-            asset,
-            transferType,
-            // memo,
-            disableMemo: false,
-            disableTo: true,
-        });
-    };
-
     render() {
         const { username, post, cont } = this.props;
         const { showReply, showEdit } = this.state;
@@ -307,17 +273,6 @@ class PostFull extends React.Component {
                           authorRepLog10
                       )}
                 {this._renderFooter(postContent, content, link, authorRepLog10)}
-                {(username && username !== author)
-                    ? (<button
-                        key="b2"
-                        className="Donate__button button"
-                        onClick={this.showTransfer}
-                    >
-                        {tt('g.donate')}
-                        <Confetti config={CONFETTI_CONFIG} active={content.confetti_active}/>
-                    </button>)
-                    : null
-                }
                 {showReply ? (
                     <div className="row">
                         <div className="column large-8 medium-10 small-12">
@@ -396,7 +351,7 @@ class PostFull extends React.Component {
         const url = `/${category}/@${author}/${permlink}`;
         let contentBody;
 
-        if (LEGALList.includes(url) && !username) {
+        if ($STM_Config.blocked_posts.includes(url) && !username) {
             contentBody = tt(
                 'postfull_jsx.this_post_is_not_available_due_to_breach_of_legislation'
             );
@@ -636,10 +591,6 @@ export default connect(
                 type: 'global/SHOW_DIALOG',
                 payload: { name: 'explorePost', params: { permlink } },
             });
-        },
-        showTransfer(transferDefaults) {
-            dispatch(user.actions.setTransferDefaults(transferDefaults));
-            dispatch(user.actions.showTransfer());
         },
     })
 )(PostFull);

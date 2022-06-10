@@ -2,12 +2,11 @@ import React from 'react';
 import golos from 'golos-lib-js';
 import tt from 'counterpart';
 import { connect } from 'react-redux';
+
 import transaction from 'app/redux/Transaction';
-import Button from 'app/components/elements/Button';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Author from 'app/components/elements/Author';
-import PercentSelect from 'app/components/elements/PercentSelect';
-import OldPagedDropdownMenu from 'app/components/elements/OldPagedDropdownMenu';
+import WorkerRequestVoting from 'app/components/elements/workers/WorkerRequestVoting'
 import Icon from 'app/components/elements/Icon';
 import { formatDecimal, formatAsset, ERR, assetToLong } from 'app/utils/ParsersAndFormatters';
 
@@ -15,10 +14,8 @@ class ViewWorkerRequest extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      myPlanningVote: 10000,
-      votes: [],
       vote_list_page: 0,
-      preloading: true
+      preloading: true,
     };
   }
 
@@ -31,7 +28,6 @@ class ViewWorkerRequest extends React.Component {
     };
     this.setState({
       preloading: false,
-      myPlanningVote: (request && request.myVote) ? Math.abs(request.myVote.vote_percent) : 10000
     });
   }
 
@@ -62,57 +58,9 @@ class ViewWorkerRequest extends React.Component {
     this.props.hider('edit');
   }
 
-  onPlanningVote = (event) => {
-    this.setState({
-      myPlanningVote: event.target.value
-    });
-  }
-
-  setVote = (vote_percent) => {
-    const { auth, request } = this.props;
-    const { author, permlink } = request.post;
-    this.props.voteWorkerRequest({author, permlink, vote_percent, accountName: auth.account});
-    this.setState({
-      vote_list_page: 0
-    });
-  }
-
-  upVote = () => {
-    const { request } = this.props;
-    const { myPlanningVote } = this.state;
-    if (request.myVote && request.myVote.vote_percent > 0) {
-      this.setVote(0);
-      return;
-    }
-    this.setVote(parseInt(myPlanningVote));
-  }
-
-  downVote = () => {
-    const { request } = this.props;
-    const { myPlanningVote } = this.state;
-    if (request.myVote && request.myVote.vote_percent < 0) {
-      this.setVote(0);
-      return;
-    }
-    this.setVote(-myPlanningVote);
-  }
-
-  nextVoteListPage = () => {
-    this.setState({
-      vote_list_page: ++this.state.vote_list_page
-    });
-  }
-
-  prevVoteListPage = () => {
-    if (this.state.vote_list_page == 0) return;
-    this.setState({
-      vote_list_page: --this.state.vote_list_page
-    });
-  }
-
   render() {
     const { auth, request, approve_min_percent } = this.props;
-    const { vote_list_page, myPlanningVote, preloading } = this.state;
+    const { preloading } = this.state;
 
     if (preloading || !request) {
         return (<div>Загрузка...</div>);
@@ -160,18 +108,6 @@ class ViewWorkerRequest extends React.Component {
         </div>
       );
     }
-    let vote_list = request.votes.map(vote => {
-      const { voter, vote_percent } = vote;
-      const sign = Math.sign(vote_percent);
-      const voterPercent = vote_percent / 100 + '%';
-      return {value: (sign > 0 ? '+ ' : '- ') + voter, link: '/@' + voter, data: voterPercent};
-    });
-    let next_vote_list = vote_list.slice(20*(vote_list_page+1), 20*(vote_list_page+1)+20);
-    vote_list = vote_list.slice(20*vote_list_page, 20*vote_list_page+20);
-
-    vote_list.push({value: <span>
-      <a className="Workers__votes_pagination" onClick={this.prevVoteListPage}>{vote_list_page > 0 ? '< ' + tt('g.back') : ''}</a>
-      <a className="Workers__votes_pagination" onClick={next_vote_list.length > 0 ? this.nextVoteListPage : null}>{next_vote_list.length > 0 ? tt('g.more_list') + ' >' : ''}</a></span>});
 
     return(
       <div>
@@ -203,15 +139,7 @@ class ViewWorkerRequest extends React.Component {
         <div>
           <div className="Request__Footer_left">
             <TimeAgoWrapper date={request.created} />&nbsp;<Author author={request.post.author} />{modified_info}
-            <div>
-              <PercentSelect className="inline" value={myPlanningVote} disabled={request.myVote} onChange={this.onPlanningVote} />&nbsp;
-              &nbsp;
-              <Button round="true" type={(request.myVote && request.myVote.vote_percent > 0) ? "primary" : "secondary"} onClick={this.upVote}><Icon name="new/upvote" /> ({upvotes})</Button>
-              &nbsp;
-              <Button round="true" type={(request.myVote && request.myVote.vote_percent < 0) ? "primary" : "secondary"} onClick={this.downVote}><Icon name="new/downvote" /> ({downvotes})</Button>
-              &nbsp;
-              <OldPagedDropdownMenu className="VoteList above" items={vote_list} selected={(upvotes+downvotes) + ' ' + tt('workers.votes')} el="span" />
-            </div>
+            <WorkerRequestVoting auth={auth} request={request} />
           </div>
           {author_menu}
         </div>
@@ -235,13 +163,5 @@ export default connect(
           total_vesting_shares,
           request
         };
-    },
-    dispatch => ({
-        voteWorkerRequest: ({author, permlink, vote_percent, accountName}) => {
-            dispatch(transaction.actions.broadcastOperation({
-                type: 'worker_request_vote',
-                operation: {voter: accountName, author, permlink, vote_percent}                 
-            }))
-        },
-    })
+    }
 )(ViewWorkerRequest);

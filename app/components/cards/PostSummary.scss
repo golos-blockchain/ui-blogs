@@ -26,14 +26,25 @@ ul.PostsList__summaries {
     }
   }
 
-  .nsfw-flag {
+  .nsfw_post {
      color: #C00;
      border: 1px solid #C00;
      font-size: 75%;
      border-radius: 3px;
      font-weight: normal;
      font-family: Arial;
-     margin: 0 0.1rem;
+     margin: 0 0 0 0.5rem;
+     padding: 0 0.2rem;
+  }
+
+  .worker_post {
+     color: #3f46ad;
+     border: 1px solid #3f46ad;
+     font-size: 75%;
+     border-radius: 3px;
+     font-weight: normal;
+     font-family: Arial;
+     margin: 0 0 0 0.5rem;
      padding: 0 0.2rem;
   }
 
@@ -44,7 +55,7 @@ ul.PostsList__summaries {
      border-radius: 3px;
      font-weight: normal;
      font-family: Arial;
-     margin: 0 0.5rem;
+     margin: 0 0 0 0.5rem;
      padding: 0 0.2rem;
   }
 }
@@ -119,6 +130,15 @@ ul.PostsList__summaries {
   margin-left: 8.5rem;
 }
 
+.PostSummary.blue-bg {
+  background-color: #ebeeff; 
+}
+.theme-dark {
+  .PostSummary.blue-bg {
+    background-color: #0f2c46; 
+  }
+}
+
 .PostSummary__header {
   > h3 {
     font: 600 100% "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Arial, 'Roboto', sans-serif;
@@ -150,12 +170,6 @@ ul.PostsList__summaries {
         vertical-align: 5%;
       }
     }
-  }
-  .nsfw-flag {
-    margin-right: 0.25rem;
-  }
-  .nsfw-flag {
-    margin-right: 0.25rem;
   }
 }
 .PostSummary__collapse {

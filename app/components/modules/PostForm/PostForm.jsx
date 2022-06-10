@@ -21,6 +21,7 @@ import MarkdownViewer, {
 import { checkPostHtml } from 'app/utils/validator';
 import { DEBT_TICKER } from 'app/client_config';
 import {
+    ONLYAPP_TAG, ONLYBLOG_TAG,
     processTagsFromData,
     processTagsToSend,
     validateTags,
@@ -40,6 +41,12 @@ export const PAYOUT_TYPES = {
     PAY_100: 3,
 };
 
+export const VISIBLE_TYPES = {
+    ALL: 1,
+    ONLY_BLOG: 2,
+    ONLY_APP: 3,
+};
+
 const DEFAULT_CURATION_PERCENT = 5000; // 50%
 
 export const PAYOUT_OPTIONS = [
@@ -57,6 +64,22 @@ export const PAYOUT_OPTIONS = [
         id: PAYOUT_TYPES.PAY_0,
         title: 'post_editor.payout_option_0',
         hint: 'post_editor.payout_option_0_hint',
+    },
+];
+
+export const VISIBLE_OPTIONS = [
+    {
+        id: VISIBLE_TYPES.ALL,
+        title: 'post_editor.visible_option_all',
+    },
+    {
+        id: VISIBLE_TYPES.ONLY_BLOG,
+        title: 'post_editor.visible_option_onlyblog',
+    },
+    {
+        id: VISIBLE_TYPES.ONLY_APP,
+        title: 'post_editor.visible_option_onlyapp',
+        hint: 'post_editor.visible_option_onlyapp_hint',
     },
 ];
 
@@ -82,6 +105,7 @@ class PostForm extends React.Component {
             emptyBody: true,
             rteState: null,
             tags: [],
+            publishedLimited: false,
             postError: null,
             payoutType: PAYOUT_TYPES.PAY_100,
             curationPercent: DEFAULT_CURATION_PERCENT,
@@ -103,8 +127,12 @@ class PostForm extends React.Component {
             console.warn('[Golos.id] Draft recovering failed:', err);
         }
 
-        if (!isLoaded && editMode) {
-            this._fillFromMetadata();
+        if (editMode) {
+            const tags = this._getTagsFromMetadata();
+            this.state.publishedLimited = tags.includes(ONLYAPP_TAG) || tags.includes(ONLYBLOG_TAG)
+            if (!isLoaded) {
+                this._fillFromMetadata(tags);
+            }
         }
     }
 
@@ -149,7 +177,19 @@ class PostForm extends React.Component {
         }
     }
 
-    _fillFromMetadata() {
+    _getTagsFromMetadata() {
+        const { editParams, jsonMetadata } = this.props;
+
+        const tagsFromData = [...(jsonMetadata.tags || [])];
+
+        if (tagsFromData[0] !== editParams.category) {
+            tagsFromData.unshift(editParams.category);
+        }
+
+        return processTagsFromData(tagsFromData);
+    }
+
+    _fillFromMetadata(tags) {
         const { editParams, curationPercent, jsonMetadata } = this.props;
 
         if (jsonMetadata.format === 'markdown') {
@@ -170,13 +210,7 @@ class PostForm extends React.Component {
         this.state.emptyBody = false;
         this.state.curationPercent = curationPercent;
 
-        const tagsFromData = [...(jsonMetadata.tags || [])];
-
-        if (tagsFromData[0] !== editParams.category) {
-            tagsFromData.unshift(editParams.category);
-        }
-
-        this.state.tags = processTagsFromData(tagsFromData);
+        this.state.tags = tags;
     }
 
     componentWillUnmount() {
@@ -191,6 +225,7 @@ class PostForm extends React.Component {
             title,
             text,
             tags,
+            publishedLimited,
             payoutType,
             curationPercent,
             isPreview,
@@ -198,6 +233,8 @@ class PostForm extends React.Component {
             uploadingCount,
             isPosting,
         } = this.state;
+
+
 
         const disallowPostCode = this._checkDisallowPost();
 
@@ -260,6 +297,7 @@ class PostForm extends React.Component {
                             editMode={editMode}
                             errorText={postError}
                             tags={tags}
+                            publishedLimited={publishedLimited}
                             categories={categories.get('categories').toJS()}
                             onTagsChange={this._onTagsChange}
                             payoutType={payoutType}

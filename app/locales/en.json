@@ -26,20 +26,6 @@
     "or": " or ",
     "google": "Google"
   },
-  "messages": {
-    "last_seen": "last seen ",
-    "search": "Search people",
-    "search_not_found": "Nobody found",
-    "type_a_message": "Type a message",
-    "cannot_load_image_try_again": "Cannot upload image. Try again or another one.",
-    "cannot_select_too_much_messages": "Cannot select more than 10 messages at once.",
-    "new_message1": " notification",
-    "new_message234": " notifications",
-    "new_message5": " notifications",
-    "invalid_message": "(This message could not be displayed in Golos Messenger)",
-    "sync_error": "Sync error. To receive new messages please refresh the page.",
-    "sync_error_short": "Sync error."
-  },
   "reputation_panel_jsx": {
     "cannot_vote_neg_rep": "You cannot upvote/downvote account reputations, because your reputation is negative",
     "cannot_downvote_lower_rep_ACCOUNT_NAME": "You cannot downvote @%(ACCOUNT_NAME)s, because your reputation is lesser than their",
@@ -78,6 +64,7 @@
     "empty_NAME": "%(NAME)s have no filled orders yet. You can buy or sell tokens in the ",
     "empty2": "market",
     "exchanged": "Exchange %(AMOUNT)s for %(AMOUNT2)s",
+    "quick_convert": "Quick Convert",
     "open_market": "Go To Market (DEX)"
   },
   "g": {
@@ -95,6 +82,7 @@
     "amount": "Amount",
     "and": "and",
     "at_least": "at least",
+    "or_more": "or more",
     "no_more_than": "no more than",
     "please": "Please",    
     "active": "Active key",    
@@ -124,6 +112,7 @@
     "confirm_unfollow": "Are you sure you want to unfollow this user?",
     "continue": "continue",
     "convert": "Convert",
+    "convert_assets": "Exchange",
     "date": "Date",
     "decrypt": "Decrypt",
     "delete": "Delete",
@@ -132,6 +121,7 @@
     "edit": "Edit",
     "email": "Email",
     "expand": "Expand",
+    "fee": "Fee",
     "feed": "Feed",
     "feeds": "Feeds",
     "flag": "Downvote",
@@ -184,12 +174,15 @@
     "voting_capacity": "Golos Power",
     "promoted_title": "promoted",
     "promoted_post": "This post was promoted for ",
+    "for_followers": "for followers",
+    "only_app": "in application",
     "preview": "Preview",
     "previous": "Previous",
     "price": "Price",
     "print": "Print",
     "promote": "Promote",
     "promote_block": "Promoted content",
+    "and_more_search_posts_COUNT": "Found %(COUNT)s posts older than 7 days:",
     "more_post": "Go to advanced post search",
     "promoted": "promoted",
     "re": "RE",
@@ -343,6 +336,7 @@
     "requires_auth_key": "This operation requires your %(authType)s key (or use your master password)",
     "keep_me_logged_in": "Keep me logged in",
     "donate": "Donate",
+    "donate_support": "Support",
     "claim": "Claim",
     "received_vesting": "%(VESTING_TOKEN)s delegated to this account",
     "delegated_vesting": "%(VESTING_TOKEN)s delegated from this account",    
@@ -763,7 +757,6 @@
     "title": "Withdrawal Rules",
     "to": "Where to send tokens: ",
     "min_amount": "Min amount: ",
-    "fee": "Fee: ",
     "details": "Additional info: ",
     "unavailable": "Service maintenance",
     "way_name": "Service name: ",
@@ -828,6 +821,41 @@
     "APP_NAME_password_backup_required": "%(APP_NAME)s Password Backup (required)",
     "after_printing_write_down_your_user_name": "After printing, write down your user name"
   },
+  "convert_assets_jsx": {
+    "description": [
+        "Here you can sell or buy tokens.",
+        "Instantly and just in two clicks."
+    ],
+    "sell": "sell",
+    "buy": "buy",
+    "sell_amount": "Sell amount:",
+    "buy_amount": "Buy amount:",
+    "amount_with_fee": "Amount with fee:",
+    "price": "Price per ",
+    "no_tradables": "Cannot exchange this asset",
+    "please_authorize": "Please authorize.",
+    "too_low_amount": "Amount is too low, so order will be added into market queue.",
+    "too_much_amount1": "Instantly we can exchange ",
+    "too_much_amount2": " only (you will receive ",
+    "too_much_amount2a": " only (you will pay ",
+    "too_much_amount3": "). The rest of the funds ",
+    "too_much_amount4": " will be added into market queue.",
+    "no_orders_DIRECTION": "No tokens in %(DIRECTION)s at current moment. Order will be placed into market queue.",
+    "too_big_price": "No orders for that price, so exchange can take up to few days.",
+    "order_can_be_canceled": "If exchange will not occur even in the future, you can cancel the order, and funds will be refunded instantly.",
+    "coinmarketcap_value": "Value: ",
+    "finished": "Exchange is successful!",
+    "finished_desc": "Funds are on ",
+    "finished_balance": "your balance",
+    "partly": "Exchange proceed partly...",
+    "partly_desc": "There is remain to receive ",
+    "partly_desc2": ". Maybe older will proceed in few days. You can ",
+    "partly_link": "cancel the order.",
+    "partly_desc3": "Received amount is on ",
+    "not": "Exchange not yet proceed...",
+    "not_desc": "Exchange takes more time than usually. Maybe older will proceed in few days. If no, or if you cannot wait, you can ",
+    "price_warning": "This price is above than recommended one. Continue?"
+ },
   "converttosteem_jsx": {
     "title_FROM_TO": "Convert %(FROM)s to %(TO)s",
     "confirm_title": "Confirm Convert",
@@ -838,6 +866,10 @@
     "no_fee": "No fee.",
     "too_low_amount": "Too low amount.",
     "you_will_receive": "You will receive "
+  },
+  "time_versions_jsx": {
+    "rev": "rev.",
+    "version_NUM": "(rev. %(NUM)s)"
   },
   "tips_js": {
     "tip_balance_hint": "Balance that you use to reward users and that you use to earn rewards for yourself. Tokens from it can also be sent to increase the Golos Power.",
@@ -883,7 +915,17 @@
   },
   "comment_jsx": {
     "collapse_or_expand": "Collapse/Expand",
-    "reveal_comment": "Reveal comment"
+    "reveal_comment": "Reveal comment",
+    "show_1_more_reply": "Show 1 more reply",
+    "show_N_more_replies": "Show %(N)s more replies",
+    "show_N_more_replies_2": "Show %(N)s more replies"
+  },
+  "poststub": {
+    "onlyblog": "This post is only for author's followers.",
+    "login": "Sign in",
+    "sign_up": "sign up",
+    "onlyapp": "This post is available only in GOLOS Blogs desktop application.",
+    "install": "Install application"
   },
   "postsummary_jsx": {
     "resteemed": "Reposted",
@@ -1027,6 +1069,7 @@
     "choose_language": "Choose language",
     "choose_currency": "Choose currency",
     "choose_preset_tips": "Choose the amounts for the reward buttons",
+    "emission_donate_pct": "Donation percent of your daily token emission",
     "notifications_settings": "Notification settings",
     "notifications_transfer": "Transfer notifications",
     "notifications_donate": "Donate notifications",
@@ -1046,6 +1089,11 @@
     "always_hide": "Always hide",
     "always_warn": "Always warn",
     "always_show": "Always show",
+    "downvoted_content": "Downvoted content",
+    "downvoted_desc": "Downvoted by users, or content with negative-reputation authors",
+    "gray_and_hide": "Gray. If spam, violence or flood - hide",
+    "gray_only": "Gray only",
+    "no_gray": "Show all",
     "muted_users": "Muted Users",
     "muted_in_new_users": "Users Whose Posts Hidden In New",
     "muted_uia": "Tokens hidden on the UIA Assets page",
@@ -1070,6 +1118,7 @@
     "insufficient_funds": "Insufficient funds",
     "use_only_3_digits_of_precison": "Use only 3 digits of precison",
     "send_to_account": "Send to account",
+    "donate_support": "Support user",
     "asset": "Asset",
     "private": "Private",
     "public": "Public",
@@ -1077,6 +1126,7 @@
     "power_up": "Power Up",
     "submit": "Submit",
     "basic": "Basic",
+    "donate_amount": "Donate",
     "mentions": "Mentions",
     "memo": "Memo",
     "memo_placeholder": "You may comment your transfer here",
@@ -1180,6 +1230,11 @@
     "payout_option_50_hint": "50%% for yourself, 50%% for the development",
     "payout_option_0": "Refuse payout",
     "payout_option_0_hint": "Without payout from the publication pool",
+    "visible_option_all": "Everyone",
+    "visible_option_onlyblog": "Followers only",
+    "visible_option_onlyapp": "Application only",
+    "visible_option_onlyapp_hint": "Golos Blogs desktop application only",
+    "onlyapp_cannot_be_removed": "You are yet published post. Cannot make it available on web UI",
     "tags_input_placeholder": "Add tags",
     "convert_to_md_warning": "Converting to Markdown may cause some changes and markup loses. Are you sure?",
     "convert_to_html_warning": "Converting to HTML may cause some changes and markup loses. Are you sure?",
@@ -1188,6 +1243,7 @@
     "text_placeholder": "Start your story...",
     "add_image": "Add image",
     "set_payout_type": "Select type of payment for post",
+    "set_visible_type": "Who will be able to see post",
     "image_preview_error": "Image loading error",
     "update": "Update",
     "wait_uploading": "Images uploading...",
@@ -1212,7 +1268,7 @@
     "add_video": "Add media (youtube/vimeo/coub...)",
     "add_image_from_computer": "Add image from computer",
     "add_image_via_link": "Add image via link",
-    "enter_video_link": "Enter YouTube/Vimeo link",
+    "enter_video_link": "Enter YouTube/Vimeo/Coub link",
     "enter_link": "Enter the link",
     "link_text": "Link title",
     "link_value": "Link url"
@@ -1299,7 +1355,8 @@
     "proposal": "proposal",
     "payment_in_GP": "Payment in GP",
     "voting_time": "Voting time (days)",
-    "proposal_fee": "Will be debited"
+    "proposal_fee": "Will be debited",
+    "worker_post": "worker request"
   },
   "emoji_i18n": {
     "categoriesLabel": "Categories",
@@ -1345,5 +1402,25 @@
     "mention_post": " mentioned you in their post",
     "mention_comment": " mentioned you in their comment",
     "message": " sent you a private message"
+  },
+  "app_goto_url": {
+    "goto": "Goto",
+    "wrong_domain_DOMAINS": "This address is not belong to GOLOS Blogs.\nGOLOS Blogs domains are: %(DOMAINS)s\nThis address will be opened in external browser."
+  },
+  "app_settings": {
+    "ws_connection_client": "GOLOS node URL",
+    "img_proxy_prefix": "Use Proxy For Images",
+    "auth_service": "Golos Auth & Registration Service (for notifications)",
+    "notify_service": "Golos Notify Service (for notifications)",
+    "messenger_service": "Messenger",
+    "elastic_search": "Search",
+    "save_and_restart": "Save and restart",
+    "cancel": "Cancel",
+    "node_error_NODE": "Не удалось подключиться к ноде %(NODE)s. Возможно, это проблемы с интернетом. Или попробуйте задать другую ноду GOLOS в меню Настройки.",
+    "to_save_click_button": "To save settings, click \"Save and restart\" button at bottom of the window."
+  },
+  "app_update": {
+    "notify_VERSION": "Доступна новая версия GOLOS Блогов - %(VERSION)s",
+    "download": "Download"
   }
 }

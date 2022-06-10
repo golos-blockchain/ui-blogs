@@ -6,6 +6,7 @@ import { createGlobalStyle } from 'styled-components';
 import AppPropTypes from 'app/utils/AppPropTypes';
 import Header from 'app/components/modules/Header';
 import Footer from 'app/components/modules/Footer';
+import URLLoader from 'app/components/elements/app/URLLoader';
 import TooltipManager from 'app/components/elements/common/TooltipManager';
 import user from 'app/redux/User';
 import g from 'app/redux/GlobalReducer';
@@ -19,7 +20,7 @@ import ScrollButton from '@elements/ScrollButton';
 import { key_utils } from 'golos-lib-js/lib/auth/ecc';
 import MiniHeader from '@modules/MiniHeader';
 import golos from 'golos-lib-js';
-import {pageSession} from 'golos-lib-js/lib/auth';
+import { session, pageSession } from 'golos-lib-js/lib/auth';
 import tt from 'counterpart';
 import PageViewsCounter from '@elements/PageViewsCounter';
 import DialogManager from 'app/components/elements/common/DialogManager';
@@ -38,7 +39,6 @@ const availableDomains = [
     'golos.in',
     'golos.today',
     'golos.app',
-    'golosdex.com',
     'gls.exchange',
     'golostalk.com',
     'prizmtalk.com',
@@ -78,6 +78,30 @@ class App extends React.Component {
             this.state !== nextState ||
             p.nightmodeEnabled !== n.nightmodeEnabled
         );
+    }
+
+    loadDownvotedPrefs = () => {
+        try {
+            const acc = session.load()
+            if (acc && acc[0]) {
+                const pref = localStorage.getItem('downvotedPref-' + acc[0])
+                if (pref === 'gray_only') {
+                    window.NO_HIDE = true
+                } else if (pref === 'no_gray') {
+                    window.NO_HIDE = true
+                    window.NO_GRAY = true
+                }
+            }
+        } catch (err) {
+            console.error('loadDownvotedPrefs', err)
+        }
+    }
+
+    constructor(props) {
+        super(props)
+        if (process.env.BROWSER) {
+            this.loadDownvotedPrefs()
+        }
     }
 
     componentDidMount() {
@@ -211,26 +235,31 @@ class App extends React.Component {
         else console.log('onEntropyEvent Unknown', e.type, e);
     }
 
-    isShowInfoBox() {
+    isShowInfoBox(notifySite) {
         if (process.env.BROWSER) {
             if (!localStorage.getItem('infobox')) {
-                const init = {
-                    id: 1512732747890, // initial value
+                localStorage.setItem('infobox', JSON.stringify({
+                    id: notifySite.id,
                     show: true,
-                };
-                localStorage.setItem('infobox', JSON.stringify(init));
+                }));
                 return true;
             } else {
                 const value = JSON.parse(localStorage.getItem('infobox'));
-                return value.show;
+                if (value.id === notifySite.id) {
+                    return value.show;
+                } else {
+                    return true
+                }
             }
         }
         return false;
     }
 
-    closeBox() {
-        const infoBox = JSON.parse(localStorage.getItem('infobox'));
-        infoBox.show = false;
+    closeBox(notifySite) {
+        const infoBox = {
+            id: notifySite.id,
+            show: false,
+        }
         localStorage.setItem('infobox', JSON.stringify(infoBox));
     }
 
@@ -259,7 +288,7 @@ class App extends React.Component {
         let callout = null;
         const notifyLink = $STM_Config.add_notify_site.link;
         const notifyTitle = $STM_Config.add_notify_site.title;
-        const showInfoBox = $STM_Config.add_notify_site.show && this.isShowInfoBox();
+        const showInfoBox = $STM_Config.add_notify_site.show && this.isShowInfoBox($STM_Config.add_notify_site);
 
         if (this.state.showCallout && (alert || warning || success)) {
             callout = (
@@ -284,12 +313,17 @@ class App extends React.Component {
                             <CloseButton
                                 onClick={() => {
                                     this.setState({ showCallout: false });
-                                    this.closeBox();
+                                    this.closeBox($STM_Config.add_notify_site);
                                 }}
                             />
-                            <Link className="link" to={notifyLink}>
-                                <Icon className="logo-icon" name={APP_ICON} /> {notifyTitle}
-                            </Link>
+                            {$STM_Config.add_notify_site.new_tab ? 
+                                <a className="link" href={notifyLink} target='_blank'>
+                                    <Icon className="logo-icon" name={APP_ICON} /> {notifyTitle}
+                                </a>
+                                :
+                                <Link className="link" to={notifyLink}>
+                                    <Icon className="logo-icon" name={APP_ICON} /> {notifyTitle}
+                                </Link>}
                         </div>
                     </div>
                 </div>
@@ -346,9 +380,11 @@ class App extends React.Component {
 
         const themeClass = nightmodeEnabled ? ' theme-dark' : ' theme-light';
 
-        const noHeader = location.pathname.startsWith('/msgs');
-        const noFooter = location.pathname.startsWith('/submit')
-            || location.pathname.startsWith('/msgs');
+        const isApp = process.env.IS_APP && location.pathname.startsWith('/__app_')
+
+        const noHeader = isApp
+        const noFooter = isApp || location.pathname.startsWith('/submit')
+
         return (
             <div
                 className={
@@ -377,6 +413,7 @@ class App extends React.Component {
                 {process.env.BROWSER ? <TooltipManager /> : null}
                 <PageViewsCounter hidden/>
                 <GlobalStyle />
+                {process.env.IS_APP ? <URLLoader /> : null}
             </div>
 
         );

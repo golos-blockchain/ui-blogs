@@ -11,7 +11,8 @@ import {Link} from 'react-router';
 import MarkNotificationRead from 'app/components/elements/MarkNotificationRead';
 import tt from 'counterpart';
 import Immutable from "immutable";
-import Callout from 'app/components/elements/Callout';
+import Callout from 'app/components/elements/Callout'
+import CMCWidget from 'app/components/elements/market/CMCWidget'
 import { APP_NAME, SELECT_TAGS_KEY } from 'app/client_config';
 import cookie from "react-cookie";
 import transaction from 'app/redux/Transaction'
@@ -46,15 +47,6 @@ class PostsIndex extends React.Component {
         if (window.innerHeight && window.innerHeight > 3000 && prevProps.discussions !== this.props.discussions) {
             this.listRef.fetchIfNeeded();
         }
-    }
-
-    componentDidMount () {        
-        const script = document.createElement("script");
-
-        script.src = "https://files.coinmarketcap.com/static/widget/currency.js";
-        script.async = true;
-
-        document.body.appendChild(script);
     }
 
     getPosts(order, category) {
@@ -97,7 +89,7 @@ class PostsIndex extends React.Component {
         });
     }
 
-    loadMore = (last_post) => {
+    loadMore = (last_post, _category, from) => {
         if (!last_post) return;
         let { accountname, } = this.props.routeParams;
         let {
@@ -110,7 +102,7 @@ class PostsIndex extends React.Component {
         }
         if (isFetchingOrRecentlyUpdated(this.props.status, order, category)) return;
         const [ author, permlink, ] = last_post.split('/');
-        this.props.requestData({ author, permlink, order, category, accountname, });
+        this.props.requestData({ author, permlink, order, category, accountname, from, });
     };
 
     loadSelected = (keys) => {
@@ -131,12 +123,15 @@ class PostsIndex extends React.Component {
     }
 
     render() {
-        let { loggedIn, categories } = this.props;
+        let { loggedIn, categories, has_from_search } = this.props;
         let {category, order = constants.DEFAULT_SORT_ORDER} = this.props.routeParams;
         let topics_order = order;
         let posts = [];
         let emptyText = '';
         let markNotificationRead = null;
+        if (!this.props.username && (order === 'allposts' || order === 'allcomments')) {
+            return <div>{tt('poststub.login')}.</div>
+        }
         if (category === 'feed') {
             const account_name = order.slice(1);
             order = 'by_feed';
@@ -171,7 +166,7 @@ class PostsIndex extends React.Component {
         const active_user = this.props.username || ''
 
         let promo_posts = []
-        if (['created', 'responses', 'donates', 'trending'].includes(order) && posts && posts.size) {
+        if (!has_from_search && ['created', 'responses', 'donates', 'trending'].includes(order) && posts && posts.size) {
           const slice_step = order == 'trending' ? 3 : 1
           promo_posts = posts.slice(0, slice_step)
           posts = posts.slice(slice_step)
@@ -208,21 +203,10 @@ class PostsIndex extends React.Component {
                             loadMore={this.loadMore}
                             showSpam={showSpam || (order === 'allposts' || order === 'allcomments')}
                         /> }
-                <span className="strike"><a href="/search">{tt('g.more_post')}</a></span>
                 </div>
                 <div className="PostsIndex__topics column shrink show-for-large">
 
-                <div className="coinmarketcap-currency-widget"
-                    data-currencyid="4834" // GOLOS
-                    data-base="RUB"
-                    data-secondary="USD"
-                    data-ticker="false"
-                    data-rank="false"
-                    data-marketcap="false"
-                    data-volume="false"
-                    data-statsticker="false"
-                    data-stats="USD">
-                </div>
+                    <CMCWidget />
 
                     <Topics
                         categories={categories}
@@ -244,7 +228,7 @@ class PostsIndex extends React.Component {
                     </p>
 
                     <p align="center">
-                        <a target="_blank" href="https://golosdex.com"><img src={require("app/assets/images/banners/golosdex2.png")} width="220" height="160" /></a>
+                        <a target="_blank" href="https://dex.golos.app"><img src={require("app/assets/images/banners/golosdex2.png")} width="220" height="160" /></a>
                         <span className="strike"><a target="_blank" href="/@graphenelab/reliz-novoi-birzhi-golos">{tt('g.more_hint')}</a></span>
                     </p>
 
@@ -267,6 +251,7 @@ module.exports = {
             return {
                 discussions: state.global.get('discussion_idx'),
                 status: state.global.get('status'),
+                has_from_search: state.global.get('has_from_search'),
                 loading: state.app.get('loading'),
                 accounts: state.global.get('accounts'),
                 loggedIn: !!state.user.get('current'),

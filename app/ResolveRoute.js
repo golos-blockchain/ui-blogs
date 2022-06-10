@@ -68,6 +68,20 @@ export default function resolveRoute(path)
     if (path === '/minused_accounts') {
         return {page: 'MinusedAccounts'};
     }
+    if (process.env.IS_APP) {
+        if (path === '/__app_goto_url') {
+            return {page: 'AppGotoURL'};
+        }
+        if (path === '/__app_splash') {
+            return {page: 'AppSplash'};
+        }
+        if (path === '/__app_settings') {
+            return {page: 'AppSettings'};
+        }
+        if (path === '/__app_update') {
+            return {page: 'AppUpdate'};
+        }
+    }
     if (path === '/nodes') {
         return {page: 'Nodes'};
     }
@@ -79,9 +93,6 @@ export default function resolveRoute(path)
     }
     if (path === '/search' || path.startsWith('/search/')) {
         return {page: 'Search'};
-    }
-    if (path === '/msgs' || path.startsWith('/msgs/')) {
-        return {page: 'Messages'};
     }
     match = path.match(routeRegex.WorkerRequest)
         || path.match(routeRegex.WorkerSearchByAuthor)
@@ -102,6 +113,9 @@ export default function resolveRoute(path)
         path.match(routeRegex.UserProfile2);
     if (match) {
         return {page: 'UserProfile', params: match.slice(1)};
+    }
+    if (path === '/convert') { 
+        return {page: 'ConvertAssetsLoader', params: []}
     }
     match = path.match(routeRegex.PostNoCategory);
     if (match) {

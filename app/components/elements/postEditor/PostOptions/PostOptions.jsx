@@ -10,7 +10,7 @@ import Slider from 'golos-ui/Slider';
 import Icon from 'app/components/elements/Icon';
 import Hint from 'app/components/elements/common/Hint';
 import RadioGroup from 'app/components/elements/common/RadioGroup';
-import { PAYOUT_OPTIONS } from 'app/components/modules/PostForm/PostForm';
+import { PAYOUT_OPTIONS, VISIBLE_OPTIONS, VISIBLE_TYPES } from 'app/components/modules/PostForm/PostForm';
 import './PostOptions.scss';
 
 const SliderStyled = styled(Slider)`
@@ -34,13 +34,14 @@ const CuratorValue = styled.b`
 class PostOptions extends React.PureComponent {
     static propTypes = {
         nsfw: PropTypes.bool.isRequired,
-        onlyblog: PropTypes.bool.isRequired,
+        visibleType: PropTypes.number.isRequired,
+        publishedLimited: PropTypes.bool.isRequired,
         payoutType: PropTypes.number.isRequired,
         curationPercent: PropTypes.number.isRequired,
 
         editMode: PropTypes.bool,
         onNsfwClick: PropTypes.func.isRequired,
-        onOnlyblogClick: PropTypes.func.isRequired,
+        onVisibleTypeChange: PropTypes.func.isRequired,
         onPayoutChange: PropTypes.func.isRequired,
         onCurationPercentChange: PropTypes.func.isRequired,
     };
@@ -51,8 +52,8 @@ class PostOptions extends React.PureComponent {
         this._onAwayClickListen = false;
 
         this.state = {
+            showEyeMenu: false,
             showCoinMenu: false,
-            showCuratorMenu: false,
 
             minCurationPercent: 0,
             maxCurationPercent: 0,
@@ -68,7 +69,7 @@ class PostOptions extends React.PureComponent {
     }
 
     render() {
-      const { showCoinMenu, showCuratorMenu, curatorPercent, minCurationPercent, maxCurationPercent } = this.state;
+      const { showEyeMenu, showCoinMenu, curatorPercent, minCurationPercent, maxCurationPercent } = this.state;
         return (
             <div className="PostOptions">
                 <span
@@ -83,17 +84,21 @@ class PostOptions extends React.PureComponent {
                         data-tooltip={tt('post_editor.nsfw_hint')}
                     />
                 </span>
-                <span
-                    className={cn('PostOptions__item', {
-                        PostOptions__item_warning: this.props.onlyblog,
-                    })}
-                    onClick={this.props.onOnlyblogClick}
-                >
-                    <Icon
-                        name="editor/onlyblog"
-                        size="1_5x"
-                        data-tooltip={tt('post_editor.onlyblog_hint')}
-                    />
+                <span className="PostOptions__item-wrapper">
+                    <span
+                        className={cn('PostOptions__item', {
+                            PostOptions__item_warning: !showEyeMenu && this.props.visibleType !== VISIBLE_TYPES.ALL,
+                            PostOptions__item_active: showEyeMenu
+                        })}
+                        onClick={this._onEyeClick}
+                    >
+                        <Icon
+                            name="editor/visible"
+                            size="1_5x"
+                            data-tooltip={tt('post_editor.set_visible_type')}
+                        />
+                    </span>
+                    {showEyeMenu ? this._renderEyeMenu() : null}
                 </span>
                 <span className="PostOptions__item-wrapper">
                     <span
@@ -114,11 +119,52 @@ class PostOptions extends React.PureComponent {
         );
     }
 
+    _renderEyeMenu() {
+        const { editMode, publishedLimited, visibleType } = this.props;
+
+        const disableChoice = editMode && publishedLimited
+
+        return (
+            <Hint align="center" innerRef={this._popupEyeRef}>
+                <div className="PostOptions__bubble-text">
+                    {tt('post_editor.set_visible_type')}:
+                </div>
+                <RadioGroup
+                    disabled={disableChoice}
+                    title={disableChoice ? tt('post_editor.onlyapp_cannot_be_removed') : ''}
+                    options={VISIBLE_OPTIONS.map(({ id, title, hint }) => ({
+                        id,
+                        title: tt(title) + ' ',
+                        hint: hint ? tt(hint) : null,
+                    }))}
+                    value={visibleType}
+                    onChange={this.props.onVisibleTypeChange}
+                />
+            </Hint>
+        );
+    }
+
+    _onEyeClick = () => {
+        this.setState(
+            {
+                showEyeMenu: !this.state.showEyeMenu,
+            },
+            () => {
+                const { showEyeMenu } = this.state;
+
+                if (showEyeMenu && !this._onAwayClickListen) {
+                    window.addEventListener('mousedown', this._onAwayClick);
+                    this._onAwayClickListen = true;
+                }
+            }
+        );
+    };
+
     _renderCoinMenu() {
         const { editMode, payoutType } = this.props;
 
         return (
-            <Hint align="center" innerRef={this._onBubbleRef}>
+            <Hint align="center" innerRef={this._popupPayoutRef}>
                 <div className="PostOptions__bubble-text">
                     {tt('post_editor.set_payout_type')}:
                 </div>
@@ -161,21 +207,26 @@ class PostOptions extends React.PureComponent {
     };
 
     _onAwayClick = e => {
-        if (this._bubble && !this._bubble.contains(e.target)) {
+        if ((!this._popupEye || !this._popupEye.contains(e.target)) &&
+            (!this._popupPayout || !this._popupPayout.contains(e.target))) {
             setTimeout(() => {
                 if (!this._unmount) {
                     this.setState({
+                        showEyeMenu: false,
                         showCoinMenu: false,
-                        showCuratorMenu: false,
                     });
                 }
             }, 50);
         }
     };
 
-    _onBubbleRef = el => {
-        this._bubble = el;
-    };
+    _popupEyeRef = el => {
+        this._popupEye = el
+    }
+
+    _popupPayoutRef = el => {
+        this._popupPayout = el
+    }
 
     componentDidMount() {
       // FIXME Dirty hack

@@ -1,14 +1,16 @@
-import { PUBLIC_API, CATEGORIES, IGNORE_TAGS } from 'app/client_config';
+import { PUBLIC_API, CATEGORIES } from 'app/client_config';
 import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile';
-import { reveseTag, prepareTrendingTags } from 'app/utils/tags';
+import { reveseTag, prepareTrendingTags, getFilterTags } from 'app/utils/tags';
+import { stateSetVersion } from 'app/utils/SearchClient'
 
 const DEFAULT_VOTE_LIMIT = 10000
 
 const isHardfork = (v) => v.split('.')[1] === '18'
 
-export default async function getState(api, url, options, offchain = {}) {
+export default async function getState(api, url, offchain = {}) {
     if (!url || typeof url !== 'string' || !url.length || url === '/') url = 'trending'
-    url = url.split('?')[0]
+    const urlParts = url.split('?')
+    url = urlParts[0]
     if (url[0] === '/') url = url.substr(1)
     
     const parts = url.split('/')
@@ -30,8 +32,6 @@ export default async function getState(api, url, options, offchain = {}) {
     state.discussion_idx = {}
     state.feed_price = await api.getCurrentMedianHistoryPrice()
     state.select_tags = []
-    state.messages = []
-    state.contacts = []
 
     // const hardfork_version = await api.getHardforkVersion()
     // state.is_hardfork = isHardfork(hardfork_version)
@@ -139,7 +139,9 @@ export default async function getState(api, url, options, offchain = {}) {
 
                 case 'posts':
                 case 'comments':
-                    const comments = await api.getDiscussionsByComments({ start_author: uname, limit: 20, filter_tag_masks: ['fm-'] })
+                    const filter_tags = offchain.account ? [] : getFilterTags()
+                    const comments = await api.getDiscussionsByComments({ start_author: uname, limit: 20, filter_tag_masks: ['fm-'],
+                         filter_tags })
                     state.accounts[uname].comments = []
 
                     comments.forEach(comment => {
@@ -232,6 +234,9 @@ export default async function getState(api, url, options, offchain = {}) {
 
         const curl = `${account}/${permlink}`
         state.content[curl] = await api.getContent(account, permlink, DEFAULT_VOTE_LIMIT)
+        if (urlParts[1]) {
+            await stateSetVersion(state.content[curl], urlParts[1])
+        }
         accounts.add(account)
 
         const replies = await api.getAllContentReplies(account, permlink, DEFAULT_VOTE_LIMIT)
@@ -268,7 +273,8 @@ export default async function getState(api, url, options, offchain = {}) {
         }
         state.content[curl].confetti_active = false;
 
-        let args = { truncate_body: 1024, select_categories: [category], filter_tag_masks: ['fm-'] };
+        let args = { truncate_body: 1024, select_categories: [category], filter_tag_masks: ['fm-'],
+            filter_tags: getFilterTags() };
         let prev_posts = await api.gedDiscussionsBy('created', {limit: 4, start_author: account, start_permlink: permlink, select_authors: [account], ...args});
         prev_posts = prev_posts.slice(1);
         let p_ids = [];
@@ -295,7 +301,9 @@ export default async function getState(api, url, options, offchain = {}) {
         }
         state.prev_posts = prev_posts.slice(0, 3);
 
-        state.assets = (await api.getAccountsBalances([offchain.account]))[0]
+        if (offchain.account) {
+            state.assets = (await api.getAccountsBalances([offchain.account]))[0]
+        }
     } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
         let witnessIds = [];
         const witnesses = await api.getWitnessesByVote('', 100)
@@ -389,10 +397,13 @@ export default async function getState(api, url, options, offchain = {}) {
 
                 })
                 args.select_categories = selectTags;
-                args.filter_tags = IGNORE_TAGS
             }
         }
-        
+        args.filter_tags = getFilterTags()
+        if (args.select_tags) {
+            args.select_tags = args.select_tags.filter(tag => !args.filter_tags.includes(tag))
+        }
+
         const requests = []
         const discussion_idxes = {}
         discussion_idxes[discussionsType] = []
@@ -414,14 +425,14 @@ export default async function getState(api, url, options, offchain = {}) {
             delete args.select_tags;
             delete args.select_categories;
             delete args.filter_tag_masks; // do not exclude forum posts
-            delete args.filter_tags; // test tag posts
+            delete args.filter_tags;
         }
         if (discussionsType == 'allcomments') {
             args.comments_only = true;
             delete args.select_tags;
             delete args.select_categories;
             delete args.filter_tag_masks; // do not exclude forum comments
-            delete args.filter_tags; // test tag posts
+            delete args.filter_tags;
         }
         if (discussionsType == 'forums') {
             args = ['', '', 0, args.limit, $STM_Config.forums.white_list, 0, 0, [], [], 'fm-'];

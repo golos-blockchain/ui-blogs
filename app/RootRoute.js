@@ -48,19 +48,27 @@ export default {
             cb(null, [require('@pages/WorkersLoader')]);
         } else if (route.page === 'MinusedAccounts') {
             cb(null, [require('@pages/MinusedAccounts')]);
+        } else if (route.page === 'AppGotoURL') {
+            cb(null, [require('@pages/app/AppGotoURL')]);
+        } else if (route.page === 'AppSplash') {
+            cb(null, [require('@pages/app/AppSplash')]);
+        } else if (route.page === 'AppSettings') {
+            cb(null, [require('@pages/app/AppSettings')]);
+        } else if (route.page === 'AppUpdate') {
+            cb(null, [require('@pages/app/AppUpdate')]);
         } else if (route.page === 'Nodes') {
             cb(null, [require('@pages/NodesLoader')]);
         } else if (route.page === 'LeavePage') {
             cb(null, [require('@pages/LeavePage')]);
         } else if (route.page === 'Search') {
             cb(null, [require('@pages/Search')]);
-        } else if (route.page === 'Messages') {
-            cb(null, [require('@pages/Messages')]);
         } else if (route.page === 'SubmitPost') {
             if (process.env.BROWSER) cb(null, [require('@pages/SubmitPost')]);
             else cb(null, [require('@pages/SubmitPostServerRender')]);
         } else if (route.page === 'UserProfile') {
             cb(null, [require('@pages/UserProfile')]);
+        } else if (route.page === 'ConvertAssetsLoader') {
+            cb(null, [require('@pages/ConvertAssetsLoader')]);
         } else if (route.page === 'Market') {
             cb(null, [require('@pages/MarketLoader')]);
         } else if (route.page === 'Post') {

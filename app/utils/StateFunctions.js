@@ -61,7 +61,7 @@ export function isFetchingOrRecentlyUpdated(global_status, order, category) {
     return false;
 }
 
-export function contentStats(content) {
+export function contentStats0(content) {
     if(!content) return {}
     if(!(content instanceof Map)) content = fromJS(content);
 
@@ -96,11 +96,15 @@ export function contentStats(content) {
     // creates a cheap log10, stake-based flag weight
     const flagWeight = Math.max(String(neg_rshares.div(2)).length - 11, 0)
 
+    if (content.get('from_search')) {
+        net_rshares_adj = Long.fromString(String(content.get('net_rshares')))
+    }
+
     // post must have non-trivial negative rshares to be grayed out
 
     const grayThreshold = -5000000000000 // dislikes ~100k Golos Power
     const meetsGrayThreshold = net_rshares_adj.compare(grayThreshold) < 0
-    const grayThreshold2 = -50000000000000 // dislikes ~1kk Golos Power
+    const grayThreshold2 = -25000000000000 // dislikes ~500k Golos Power
     const meetsGrayThreshold2 = net_rshares_adj.compare(grayThreshold2) < 0
     const hideThreshold = -500000000000000 // dislikes ~10kk Golos Power
     const meetsHideThreshold = net_rshares_adj.compare(hideThreshold) < 0
@@ -109,8 +113,14 @@ export function contentStats(content) {
     const allowDelete = !hasPositiveRshares && content.get('children') === 0
     const authorRepLog10 = repLog10(content.get('author_reputation'))
 
-    const gray = authorRepLog10 < 0 || (authorRepLog10 < 70 && meetsGrayThreshold) || meetsGrayThreshold2
-    const hide = authorRepLog10 < -25 || meetsHideThreshold
+    let noGray, noHide
+    if (process.env.BROWSER) {
+        noGray = window.NO_GRAY
+        noHide = window.NO_HIDE
+    }
+
+    const gray = !noGray && (authorRepLog10 < 0 || (authorRepLog10 < 70 && meetsGrayThreshold) || meetsGrayThreshold2)
+    const hide = !noHide && (authorRepLog10 < -25 || meetsHideThreshold)
     const pictures = !gray
 
     // Combine tags+category to check nsfw status
@@ -131,6 +141,9 @@ export function contentStats(content) {
     tags = filterTags(tags)
 
     const isNsfw = tags.filter(tag => tag && tag.match(/^nsfw$|^ru--mat$|^18\+$/i)).length > 0;
+    const isOnlyblog = tags.filter(tag => tag && tag.match(/^onlyblog$/i)).length > 0;
+
+    const isOnlyapp = tags.filter(tag => tag && tag.match(/^onlyapp/i)).length > 0;
 
     return {
         hide,
@@ -139,9 +152,20 @@ export function contentStats(content) {
         authorRepLog10,
         allowDelete,
         isNsfw,
+        isOnlyblog,
+        isOnlyapp,
         flagWeight,
         total_votes,
         up_votes
+    }
+}
+
+export function contentStats(content) {
+    try {
+        return contentStats0(content)
+    } catch (err) {
+        console.error(err)
+        throw err
     }
 }
 
@@ -156,30 +180,9 @@ export function fromJSGreedy(js) {
       Seq(js).map(fromJSGreedy).toMap();
 }
 
-export function processDatedGroup(group, messages, for_each) {
-    if (group.nonce) {
-        const idx = messages.findIndex(i => i.get('nonce') === group.nonce);
-        if (idx !== -1) {
-            messages = messages.update(idx, (msg) => {
-                return for_each(msg, idx);
-            });
-        }
-    } else {
-        let inRange = false;
-        for (let idx = 0; idx < messages.size; ++idx) {
-            let msg = messages.get(idx);
-            const date = msg.get('create_date');
-            const rec_date = msg.get('receive_date');
-            if (!inRange && date <= group.stop_date) {
-                inRange = true;
-            }
-            if (date <= group.start_date && rec_date.startsWith('20')) {
-                break;
-            }
-            if (inRange) {
-                messages = messages.set(idx, for_each(msg, idx));
-            }
-        }
-    }
-    return messages;
+export function accuEmissionPerDay(accountObj, gpropsObj) {
+    const acc = accountObj.toJS ? accountObj.toJS() : accountObj
+    const gprops = gpropsObj.toJS ? gpropsObj.toJS() : gpropsObj
+    let emission = toAsset(gprops.accumulative_emission_per_day).amount * toAsset(acc.vesting_shares).amount / toAsset(gprops.total_vesting_shares).amount
+    return emission
 }

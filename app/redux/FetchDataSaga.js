@@ -1,13 +1,15 @@
 import { call, put, select, fork, cancelled, takeLatest, takeEvery } from 'redux-saga/effects';
+import cookie from "react-cookie";
+import {config, api} from 'golos-lib-js';
+
 import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile';
 import {loadFollows, fetchFollowCount} from 'app/redux/FollowSaga';
 import {getContent} from 'app/redux/SagaShared';
 import GlobalReducer from './GlobalReducer';
 import constants from './constants';
-import { reveseTag } from 'app/utils/tags';
-import { PUBLIC_API, CATEGORIES, IGNORE_TAGS, SELECT_TAGS_KEY, DEBT_TOKEN_SHORT, LIQUID_TICKER } from 'app/client_config';
-import cookie from "react-cookie";
-import {config, api} from 'golos-lib-js';
+import { reveseTag, getFilterTags } from 'app/utils/tags';
+import { PUBLIC_API, CATEGORIES, SELECT_TAGS_KEY, DEBT_TOKEN_SHORT, LIQUID_TICKER } from 'app/client_config';
+import { SearchRequest, searchData, stateSetVersion } from 'app/utils/SearchClient'
 
 export function* fetchDataWatches () {
     yield fork(watchLocationChange);
@@ -17,6 +19,7 @@ export function* fetchDataWatches () {
     yield fork(watchGetContent);
     yield fork(watchFetchExchangeRates);
     yield fork(watchFetchVestingDelegations);
+    yield fork(watchFetchUiaBalances);
 }
 
 export function* watchGetContent() {
@@ -185,7 +188,8 @@ export function* fetchState(location_change_action) {
 
                     case 'posts':
                     case 'comments':
-                        const comments = yield call([api, api.getDiscussionsByCommentsAsync], { start_author: uname, limit: 20, filter_tag_masks: ['fm-'] })
+                        const filter_tags = localStorage.getItem('invite') ? ['test'] : getFilterTags()
+                        const comments = yield call([api, api.getDiscussionsByCommentsAsync], { start_author: uname, limit: 20, filter_tag_masks: ['fm-'], filter_tags })
                         state.accounts[uname].comments = []
 
                         comments.forEach(comment => {
@@ -274,11 +278,13 @@ export function* fetchState(location_change_action) {
             // Fetch for ignored follow for hide comments
             yield fork(loadFollows, "getFollowingAsync", account, 'ignore')
 
-            console.time('getContent');
             const curl = `${account}/${permlink}`
             state.content[curl] = yield call([api, api.getContentAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT)
+            const search = window.location.search
+            if (search) {
+                yield stateSetVersion(state.content[curl], search)
+            }
             accounts.add(account)
-            console.timeEnd('getContent');
 
             state.content[curl].donate_list = [];
             if (state.content[curl].donates != '0.000 GOLOS') {
@@ -322,7 +328,8 @@ export function* fetchState(location_change_action) {
                 state.content[link].confetti_active = false
             }
 
-            let args = { truncate_body: 128, select_categories: [category], filter_tag_masks: ['fm-'] };
+            let args = { truncate_body: 128, select_categories: [category], filter_tag_masks: ['fm-'],
+                filter_tags: getFilterTags() };
             let prev_posts = yield call([api, api[PUBLIC_API.created]], {limit: 4, start_author: account, start_permlink: permlink, select_authors: [account], ...args});
             prev_posts = prev_posts.slice(1);
             let p_ids = [];
@@ -412,38 +419,6 @@ export function* fetchState(location_change_action) {
             const trending_tags = yield call([api, api.getTrendingTagsAsync], '', 250)
             trending_tags.forEach (tag => tags[tag.name] = tag)
             state.tags = tags
-        } else if (parts[0] == 'msgs') {
-            const { ws_connection_msgs } = $STM_Config;
-            if (ws_connection_msgs)
-                config.set('websocket', ws_connection_msgs);
-            state.contacts = [];
-            state.messages = [];
-            state.messages_update = '0';
-
-            const offchainAccount = yield select(state => state.user.getIn(['current', 'username']));
-            if (offchainAccount) {
-                accounts.add(offchainAccount);
-
-                console.time('fcon');
-                state.contacts = yield call([api, api.getContactsAsync], offchainAccount, 'unknown', 100, 0);
-                console.timeEnd('fcon');
-
-                if (parts[1]) {
-                    const to = parts[1].replace('@', '');
-                    accounts.add(to);
-
-                    console.time('fmsg');
-                    state.messages = yield call([api, api.getThreadAsync], offchainAccount, to, {});
-                    if (state.messages.length) {
-                        state.messages_update = state.messages[state.messages.length - 1].nonce;
-                    }
-                    console.timeEnd('fmsg');
-
-                }
-            }
-            for (let contact of state.contacts) {
-                accounts.add(contact.contact);
-            }
         }
 
         if (accounts.size > 0) {
@@ -478,8 +453,12 @@ export function* fetchData(action) {
         author,
         permlink,
         accountname,
-        keys
+        keys,
+        from,
     } = action.payload;
+
+    let ignore_tags = getFilterTags()
+
     let { category } = action.payload;
 
     if( !category ) category = "";
@@ -502,11 +481,13 @@ export function* fetchData(action) {
             reversed
                 ? args[0].select_tags = [tag_raw, reversed]
                 : args[0].select_tags = [tag_raw]
+            args[0].filter_tags = ignore_tags
         } else {
             const reversed = reveseTag(category)
             reversed
                 ? args[0].select_categories = [category, reversed]
                 : args[0].select_categories = [category]
+            args[0].filter_tags = ignore_tags
         }
     } else {
         let select_tags = cookie.load(SELECT_TAGS_KEY);
@@ -522,6 +503,7 @@ export function* fetchData(action) {
             })
             args[0].select_categories = selectTags;
             category = select_tags.sort().join('/')
+            args[0].filter_tags = ignore_tags
         } else {
             let selectTags = []
             
@@ -533,7 +515,7 @@ export function* fetchData(action) {
                 
             })
             args[0].select_categories = selectTags;
-            args[0].filter_tags = IGNORE_TAGS
+            args[0].filter_tags = ignore_tags
         }
     }
 
@@ -557,14 +539,14 @@ export function* fetchData(action) {
         delete args[0].select_tags;
         delete args[0].select_categories;
         delete args[0].filter_tag_masks; // do not exclude forum posts
-        delete args[0].filter_tags; // test tag posts
+        delete args[0].filter_tags;
     } else if( order === 'allcomments' ) {
         call_name = PUBLIC_API.allcomments;
         args[0].comments_only = true;
         delete args[0].select_tags;
         delete args[0].select_categories;
         delete args[0].filter_tag_masks; // do not exclude forum comments
-        delete args[0].filter_tags; // test tag comments
+        delete args[0].filter_tags;
     } else if( order === 'created' ) {
         call_name = PUBLIC_API.created;
     } else if( order === 'responses' ) {
@@ -586,6 +568,9 @@ export function* fetchData(action) {
     } else if (order === 'by_comments') {
         delete args[0].select_tags;
         delete args[0].select_categories;
+        if (localStorage.getItem('invite')) {
+            args[0].filter_tags = ['test'] // remove onlyapp and onlyblog, because it is only inside profile
+        }
         call_name = 'getDiscussionsByCommentsAsync';
     } else if( order === 'by_replies' ) {
         call_name = 'getRepliesByLastUpdateAsync';
@@ -601,17 +586,65 @@ export function* fetchData(action) {
     try {
         let posts = []
 
-        let data = yield call([api, api[call_name]], ...args);
+        let data = []
 
-        if (order === 'forums') {
-            data = data['fm-'];
+        if (!from) {
+            data =yield call([api, api[call_name]], ...args);
+
+            if (order === 'forums') {
+                data = data['fm-'];
+            }
+
+            if (['created', 'responses', 'donates', 'trending'].includes(order) && !args[0].start_author) {
+              // Add top 3 from promo to tranding and 1 to hot, created
+              args[0].limit = order == 'trending' ? 3 : 1
+              const promo_posts = yield call([api, api[PUBLIC_API.promoted]], ...args);
+              posts = posts.concat(promo_posts)
+            }
         }
 
-        if (['created', 'responses', 'donates', 'trending'].includes(order) && !args[0].start_author) {
-          // Add top 3 from promo to tranding and 1 to hot, created
-          args[0].limit = order == 'trending' ? 3 : 1
-          const promo_posts = yield call([api, api[PUBLIC_API.promoted]], ...args);
-          posts = posts.concat(promo_posts)
+        let has_from_search = false
+        let next_from = 0
+
+        if (['created', 'responses', 'donates', 'trending'].includes(order) && data.length < constants.FETCH_DATA_BATCH_SIZE) {
+            let odt = new Date()
+            odt.setDate(odt.getDate() - 7)
+            let req = new SearchRequest()
+                .setLimit(50)
+                .setFrom(from)
+                .onlyPosts()
+                .olderThan(odt)
+                .filterTags(ignore_tags)
+            if (args[0].select_categories) {
+                req = req.byOneOfCategories(args[0].select_categories)
+            } else if (args[0].select_tags) {
+                req = req.byOneOfTags(args[0].select_tags)
+            }
+            const firstPage = !author && !permlink
+            let searchRes = null
+            try {
+                searchRes = yield searchData(req, firstPage ? 0 : 3)
+            } catch (searchErr) {
+            }
+            if (searchRes) {
+                let { results, total } = searchRes
+                let sepAdded = !!from
+                results.forEach(post => {
+                    post.from_search = true
+                    if (!post.net_rshares && !post.net_votes && !post.children) {
+                        post.force_hide = true
+                    }
+                    if (!sepAdded) {
+                        post.total_search = total
+                        sepAdded = true
+                    }
+                    data.push(post)
+                })
+                if (firstPage) {
+                    has_from_search = true
+                }
+                next_from = (from || 0) + results.length
+            }
         }
 
         data.forEach(post => {
@@ -627,6 +660,8 @@ export function* fetchData(action) {
                 permlink,
                 accountname,
                 keys,
+                has_from_search,
+                next_from,
             })
         );
 
@@ -754,4 +789,20 @@ export function* fetchVestingDelegations({ payload: { account, type } }) {
     }
 
     yield put(GlobalReducer.actions.receiveAccountVestingDelegations({ account, type, vesting_delegations }))
+}
+
+export function* watchFetchUiaBalances() {
+    yield takeLatest('global/FETCH_UIA_BALANCES', fetchUiaBalances)
+}
+
+export function* fetchUiaBalances({ payload: { account } }) {
+    try {
+        let assets = yield call([api, api.getAccountsBalancesAsync], [account])
+        assets = assets && assets[0]
+        if (assets) {
+            yield put(GlobalReducer.actions.receiveUiaBalances({assets}))
+        }
+    } catch (err) {
+        console.error('fetchUiaBalances', err)
+    }
 }

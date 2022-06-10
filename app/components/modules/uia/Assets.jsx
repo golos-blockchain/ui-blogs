@@ -1,20 +1,24 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
+import {connect} from 'react-redux';
+import { Link } from 'react-router';
+import tt from 'counterpart';
+import { Asset } from 'golos-lib-js/lib/utils';
+
+import ConvertAssetsBtn from 'app/components/elements/market/ConvertAssetsBtn'
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
 import {longToAsset} from 'app/utils/ParsersAndFormatters';
 import g from 'app/redux/GlobalReducer'
 import user from 'app/redux/User';
-import {connect} from 'react-redux';
-import { Link } from 'react-router';
 import DialogManager from 'app/components/elements/common/DialogManager';
 import Icon from 'app/components/elements/Icon';
 import Author from 'app/components/elements/Author';
 import Button from 'app/components/elements/Button';
 import FoundationDropdownMenu from 'app/components/elements/FoundationDropdownMenu';
-import tt from 'counterpart';
 import AssetRules from 'app/components/modules/uia/AssetRules';
 import Reveal from 'react-foundation-components/lib/global/reveal';
 import Tooltip from 'app/components/elements/Tooltip';
+import { normalizeAssets, getTradablesFor } from 'app/utils/market/utils'
 
 class Assets extends Component {
     static propTypes = {
@@ -110,9 +114,13 @@ class Assets extends Component {
             if (!mutedUIA) mutedUIA = [];
         }
 
+        const assets = this.props.assets.toJS()
+
+        const assetsNorm = normalizeAssets(assets)
+
         let show_load_more = false;
         let my_assets = [];
-        for (const [sym, item] of Object.entries(this.props.assets.toJS())) {
+        for (const [sym, item] of Object.entries(assets)) {
             if (!item.my) {
                 show_load_more = true;
                 if (!this.state.show_full_list) continue;
@@ -168,6 +176,11 @@ class Assets extends Component {
 
             const ordersStr = item.market_balance;
 
+            const tradables = getTradablesFor(assetsNorm, [sym], true)
+
+            const parsed = Asset(item.balance)
+            const convertDirection = parsed.amount ? 'sell' : 'buy'
+
             my_assets.push(<tr key={sym}>
                 <td>
                 {description.length ? (<a target="_blank" href={description} rel="noopener noreferrer">
@@ -187,6 +200,10 @@ class Assets extends Component {
                     </button> : null}</div>
                 </td>
                 <td>
+                    {isMyAccount
+                        ? <ConvertAssetsBtn sym={sym} disabled={!tradables[0].length} direction={convertDirection} />
+                        : undefined
+                    }
                     {isMyAccount ? <FoundationDropdownMenu
                             dropdownPosition="bottom"
                             dropdownAlignment="right"
@@ -240,8 +257,8 @@ class Assets extends Component {
             <div className="row">
                 <div className="column small-12">
                     <h4 className="Assets__header">{this.state.show_full_list ? tt('assets_jsx.all_assets') : tt('assets_jsx.my_assets')}</h4>
-                    <Link style={{marginLeft: "5px"}} to={`/market/YMRUB/GOLOS`} className="button float-right">
-                        {tt('navigation.market2')}
+                    <Link style={{marginLeft: "5px"}} to={`/convert`} className="button float-right">
+                        {tt('filled_orders_jsx.quick_convert')}
                     </Link>
                     {isMyAccount && <Link to={`/@${account_name}/create-asset`} className="button hollow float-right">
                         {tt('assets_jsx.create_btn')}

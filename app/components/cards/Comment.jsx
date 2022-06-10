@@ -5,7 +5,8 @@ import { Link } from 'react-router';
 import { Long } from 'bytebuffer';
 import cn from 'classnames';
 import tt from 'counterpart';
-import { blockedUsers } from 'app/utils/IllegalContent';
+import { FormattedPlural } from 'react-intl';
+
 import { sortComments } from 'app/utils/comments';
 import user from 'app/redux/User';
 import transaction from 'app/redux/Transaction';
@@ -13,11 +14,8 @@ import CommentFormLoader from 'app/components/modules/CommentForm/loader';
 import MarkdownViewer from 'app/components/cards/MarkdownViewer';
 import Author from 'app/components/elements/Author';
 import Voting from 'app/components/elements/Voting';
-import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
+import TimeVersions from 'app/components/elements/TimeVersions';
 import Userpic from 'app/components/elements/Userpic';
-import Confetti from 'react-dom-confetti';
-
-import { LIQUID_TICKER, CONFETTI_CONFIG } from 'app/client_config';
 
 class CommentImpl extends PureComponent {
     static propTypes = {
@@ -37,7 +35,6 @@ class CommentImpl extends PureComponent {
         rootComment: PropTypes.string,
         anchorLink: PropTypes.string.isRequired,
         deletePost: PropTypes.func.isRequired,
-        showTransfer: PropTypes.func.isRequired,
         ignoreList: PropTypes.any,
         negativeCommenters: PropTypes.any
     };
@@ -51,6 +48,7 @@ class CommentImpl extends PureComponent {
 
         this.state = {
             collapsed: false,
+            depthCollapsed: true,
             hideBody: false,
             highlight: false,
         };
@@ -164,7 +162,7 @@ class CommentImpl extends PureComponent {
         let body = null;
         let controls = null;
 
-        if (blockedUsers.includes(comment.author)) {
+        if ($STM_Config.blocked_users.includes(comment.author)) {
             return null;
         } else if (!this.state.collapsed && !hideBody) {
             body = (
@@ -180,15 +178,22 @@ class CommentImpl extends PureComponent {
         }
 
         if (!this.state.collapsed && comment.children > 0) {
-            if (depth > 7) {
+            if ((depth > 0 && depth % 8 === 0) && this.state.depthCollapsed) {
                 const comment_permlink = `/${comment.category}/@${
                     comment.author
                 }/${comment.permlink}`;
 
+                const repliesFew = tt('comment_jsx.show_N_more_replies_2', { N: comment.children })
+                const repliesMany = tt('comment_jsx.show_N_more_replies', { N: comment.children })
+
                 replies = (
-                    <Link to={comment_permlink}>
-                        Show {comment.children} more{' '}
-                        {comment.children === 1 ? 'reply' : 'replies'}
+                    <Link to={comment_permlink} onClick={this.showMoreReplies}>
+                        <FormattedPlural value={comment.children}
+                            one={tt('comment_jsx.show_1_more_reply')}
+                            few={repliesFew}
+                            many={repliesMany}
+                            other={repliesMany}
+                        />
                     </Link>
                 );
             } else {
@@ -276,9 +281,8 @@ class CommentImpl extends PureComponent {
                             to={this._getCommentLink(comment)}
                             className="PlainLink"
                         >
-                            <TimeAgoWrapper
-                                date={comment.created}
-                                className="updated"
+                            <TimeVersions
+                                content={comment}
                             />
                         </Link>
                         {this.state.collapsed || hideBody ? (
@@ -329,9 +333,6 @@ class CommentImpl extends PureComponent {
 
             controls = (
                 <span className="Comment__footer__controls">
-                    {showDonate && (
-                        <a onClick={this.onShowDonate}>{tt('g.donate')}</a>
-                    )}{' '}
                     {showReply && (
                         <a onClick={this.onShowReply}>{tt('g.reply')}</a>
                     )}{' '}
@@ -341,7 +342,6 @@ class CommentImpl extends PureComponent {
                     {showDelete && (
                         <a onClick={this.onDeletePost}>{tt('g.delete')}</a>
                     )}
-                    <Confetti config={CONFETTI_CONFIG} active={comment.confetti_active}/>
                 </span>
             );
 
@@ -371,30 +371,6 @@ class CommentImpl extends PureComponent {
         }
     }
 
-    onShowDonate = () => {
-        const postContent = this.props.cont.get(this.props.content);
-        const content = postContent.toJS();
-        const { author, permlink, url } = content;
-        const asset = LIQUID_TICKER;
-        const transferType = 'TIP to Account';
-
-        const flag = {
-            type: `donate`,
-            permlink: permlink,
-        };
-
-        this.props.showTransfer({
-            flag,
-            to: author,
-            amount: '0.000',
-            asset,
-            transferType,
-            // memo,
-            disableMemo: false,
-            disableTo: true,
-        });
-    };
-
     onShowReply = () => {
         this.setState({ showReply: !this.state.showReply, showEdit: false });
     };
@@ -412,6 +388,11 @@ class CommentImpl extends PureComponent {
     toggleCollapsed = () => {
         this.setState({ collapsed: !this.state.collapsed });
     };
+
+    showMoreReplies = (e) => {
+        e.preventDefault()
+        this.setState({ depthCollapsed: false })
+    }
 
     revealBody = () => {
         this.setState({ hideBody: false });
@@ -475,10 +456,6 @@ const Comment = connect(
                     confirm: tt('g.are_you_sure'),
                 })
             ),
-        showTransfer(transferDefaults) {
-            dispatch(user.actions.setTransferDefaults(transferDefaults));
-            dispatch(user.actions.showTransfer());
-        },
     })
 )(CommentImpl);
 

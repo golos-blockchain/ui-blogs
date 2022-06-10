@@ -3,14 +3,17 @@ import PropTypes from 'prop-types'
 import Comment from 'app/components/cards/Comment';
 import PostFull from 'app/components/cards/PostFull';
 import {connect} from 'react-redux';
+import { session } from 'golos-lib-js/lib/auth'
 import {sortComments} from 'app/utils/comments';
+import Follow from 'app/components/elements/Follow'
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import FoundationDropdownMenu from 'app/components/elements/FoundationDropdownMenu';
 import IllegalContentMessage from 'app/components/elements/IllegalContentMessage';
 import {Set} from 'immutable'
 import tt from 'counterpart';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
-import { blockedUsers } from 'app/utils/IllegalContent';
+import { authRegisterUrl, } from 'app/utils/AuthApiClient'
+import user from 'app/redux/User'
 
 class Post extends React.Component {
     static propTypes = {
@@ -53,8 +56,57 @@ class Post extends React.Component {
         this.setState({showAnyway: true})
     }
 
+    _renderStub = (children) => {
+        return (<div className="Post">
+            <div className="row">
+                <div className="column">
+                    <div className="PostFull">
+                        {children}
+                    </div>
+                </div>
+            </div>
+        </div>)
+    }
+
+    _renderLoadingStub = () => {
+        return this._renderStub(<LoadingIndicator type='circle' />)
+    }
+
+    _renderOnlyApp = () => {
+        const openInstall = (e) => {
+            e.preventDefault()
+            window.open('/@lex/alternativnyi-klient-blogov-golos-desktop-izmeneniya-v-tredakh-kommentariev', '_blank')
+        }
+        return this._renderStub(
+            <p>
+                {tt('poststub.onlyapp')}
+                <button className='button hollow tiny float-right'
+                    onClick={openInstall}>
+                    {tt('poststub.install')}</button>
+            </p>
+        )
+    }
+
+    _renderOnlyBlog = (dis) => {
+        const { current_user, showLogin } = this.props
+        let children
+        if (!current_user) {
+            children = <p>{tt('poststub.onlyblog')}&nbsp;
+                <a href='#' onClick={showLogin}>{tt('poststub.login')}</a>
+                &nbsp;{tt('g.or')}&nbsp;
+                <a href={authRegisterUrl()} target='_blank' rel='noreferrer noopener'>{tt('poststub.sign_up')}</a>.
+            </p> 
+        } else {
+            children = <p>
+                {tt('poststub.onlyblog')}
+                <Follow following={dis.get('author')} showMute={false} />
+            </p>
+        }
+        return this._renderStub(children)
+    }
+
     render() {
-        const {ignoring, content, negativeCommenters} = this.props
+        const {following, ignoring, content, negativeCommenters, current_user} = this.props
         const {showNegativeComments, commentHidden, showAnyway} = this.state
         let { post } = this.props;
         const { aiPosts } = this.props;
@@ -66,21 +118,17 @@ class Post extends React.Component {
 
         if (!dis) return null;
 
+        const stats = dis.get('stats').toJS()
+
         if(!showAnyway) {
-            const {gray} = dis.get('stats').toJS()
+            const {gray} = stats
             if(gray) {
-                return (
-                    <div className="Post">
-                        <div className="row">
-                            <div className="column">
-                                <div className="PostFull">
-                                    <p onClick={this.showAnywayClick}>{tt('promote_post_jsx.this_post_was_hidden_due_to_low_ratings')}.{' '}
-                                    <button style={{marginBottom: 0}} className="button hollow tiny float-right" onClick={this.showAnywayClick}>{tt('g.show')}</button></p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                    </div>
+                return this._renderStub(
+                    <p onClick={current_user ? this.showAnywayClick : undefined}>{tt('promote_post_jsx.this_post_was_hidden_due_to_low_ratings')}.{' '}
+                        {current_user ? 
+                            <button style={{marginBottom: 0}} className="button hollow tiny float-right" onClick={this.showAnywayClick}>{tt('g.show')}</button>
+                        : null}
+                    </p>
                 )
             }
         }
@@ -127,9 +175,9 @@ class Post extends React.Component {
             (<div className="hentry Comment root Comment__negative_group">
                 <br /><p>
                     {tt(showNegativeComments ? 'post_jsx.now_showing_comments_with_low_ratings' : 'post_jsx.comments_were_hidden_due_to_low_ratings')}.{' '}
-                    <button className="button hollow tiny float-right" onClick={e => this.toggleNegativeReplies(e)}>
+                    {(current_user || showNegativeComments) ? <button className="button hollow tiny float-right" onClick={e => this.toggleNegativeReplies(e)}>
                         {tt(showNegativeComments ? 'g.hide' :'g.show')}
-                    </button>
+                    </button> : null}
                 </p>
             </div>);
 
@@ -148,7 +196,19 @@ class Post extends React.Component {
                 link: selflink + '?sort=' + sort_orders[o] + '#comments'
             });
         }
-        const emptyPost = dis.get('created') === '1970-01-01T00:00:00' && dis.get('body') === ''
+        let emptyPost = dis.get('created') === '1970-01-01T00:00:00' && dis.get('body') === ''
+        if (!current_user || current_user.get('username') !== dis.get('author')) {
+            if (stats.isOnlyapp && !process.env.IS_APP) {
+                return this._renderOnlyApp()
+            }
+            if (stats.isOnlyblog) {
+                if (!following && (typeof(localStorage) === 'undefined' || session.load())) {
+                    return this._renderLoadingStub()
+                } else if (!following || !following.includes(dis.get('author'))) {
+                    return this._renderOnlyBlog(dis)
+                }
+            }
+        }
         if(emptyPost)
             return <center>
                 <div className="NotFound float-center">
@@ -167,7 +227,7 @@ class Post extends React.Component {
                 </div>
             </center>
 
-          if(blockedUsers.includes(post.split("/")[0])) {
+          if($STM_Config.blocked_users.includes(post.split("/")[0])) {
             return (<IllegalContentMessage />)
           }
           
@@ -206,8 +266,11 @@ class Post extends React.Component {
                 </div>
 
                 <p align="center">
-                    <a target="_blank" href="https://golosdex.com"><img src={require("app/assets/images/banners/golosdex.png")} width="800" height="100" /></a>
-                    <span className="strike"><a target="_blank" href="/@graphenelab/reliz-novoi-birzhi-golos">{tt('g.more_hint')}</a></span>
+                	{/*<a target="_blank" href="https://dex.golos.app"><img src={require("app/assets/images/banners/golosdex.png")} width="800" height="100" /></a>
+                    <span className="strike"><a target="_blank" href="/@graphenelab/reliz-novoi-birzhi-golos">{tt('g.more_hint')}</a></span>*/}
+
+                    <a target="_blank" href="/@lex/alternativnyi-klient-blogov-golos-desktop-izmeneniya-v-tredakh-kommentariev"><img src={require("app/assets/images/banners/desktop.png")} width="800" height="100" /></a>
+                    <span className="strike"><a target="_blank" href="/@lex/alternativnyi-klient-blogov-golos-desktop-izmeneniya-v-tredakh-kommentariev">{tt('g.more_hint')}</a></span>
                 </p>
 
             </div>
@@ -240,11 +303,23 @@ export default connect((state, props) => {
         ignoring = state.global.getIn(key, emptySet)
     }
 
+    let following = null
+    if (current_user) {
+        const key = ['follow', 'getFollowingAsync', current_user.get('username'), 'blog_result']
+        following = state.global.getIn(key, null)
+    }
+
     return {
         content: state.global.get('content'),
         current_user,
         ignoring,
+        following,
         negativeCommenters
     }
-}
+}, dispatch => ({
+    showLogin: e => {
+        if (e) e.preventDefault();
+        dispatch(user.actions.showLogin())
+    },
+})
 )(Post);

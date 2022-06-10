@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import user from 'app/redux/User';
 import g from 'app/redux/GlobalReducer';
 import tt from 'counterpart';
+import throttle from 'lodash/throttle'
 import transaction from 'app/redux/Transaction'
 import { getMetadataReliably } from 'app/utils/NormalizeProfile';
 import Icon from 'app/components/elements/Icon';
@@ -11,6 +12,7 @@ import Userpic from 'app/components/elements/Userpic';
 import reactForm from 'app/utils/ReactForm'
 import {fromJS, Set, Map} from 'immutable'
 import UserList from 'app/components/elements/UserList';
+import ContentSettings from 'app/components/elements/settings/ContentSettings'
 import cookie from "react-cookie";
 import Dropzone from 'react-dropzone'
 import { LANGUAGES, DEFAULT_LANGUAGE, LOCALE_COOKIE_KEY, USER_GENDER } from 'app/client_config'
@@ -20,8 +22,6 @@ class Settings extends React.Component {
     constructor(props) {
         super()
         this.initForm(props)
-        this.onNsfwPrefChange = this.onNsfwPrefChange.bind(this)
-        this.onNsfwPrefSubmit = this.onNsfwPrefSubmit.bind(this)
         this.onDonatePresetChange = this.onDonatePresetChange.bind(this)
     }
 
@@ -56,17 +56,19 @@ class Settings extends React.Component {
         const {accountname} = this.props
         const {vesting_shares} = this.props.account
         
-        let nsfwPref, donatePresets, notifyPresets;
-
-        nsfwPref = (process.env.BROWSER ? localStorage.getItem('nsfwPref-' + accountname) : null) || 'warn'
-        this.setState({nsfwPref, oldNsfwPref: nsfwPref})
+        let donatePresets, emissionDonatePct, notifyPresets;
 
         if(process.env.BROWSER){
             donatePresets = localStorage.getItem('donate.presets-' + accountname)
             if (donatePresets) donatePresets = JSON.parse(donatePresets)
         }
         if (!donatePresets) donatePresets = ['5','10','25','50','100'];
-        this.setState({donatePresets : donatePresets})
+
+        if(process.env.BROWSER) {
+            emissionDonatePct = localStorage.getItem('donate.emissionpct-' + accountname)
+        }
+        if(!emissionDonatePct) emissionDonatePct = '10'
+        this.setState({donatePresets : donatePresets, emissionDonatePct})
 
         if (process.env.BROWSER){
             notifyPresets = localStorage.getItem('notify.presets-' + accountname)
@@ -155,18 +157,6 @@ class Settings extends React.Component {
       })
     }
 
-    onNsfwPrefChange(e) {
-        const nsfwPref = e.currentTarget.value;
-        this.setState({nsfwPref: nsfwPref})
-    }
-
-    onNsfwPrefSubmit(e) {
-        const {accountname} = this.props;
-        const {nsfwPref} = this.state;
-        localStorage.setItem('nsfwPref-'+accountname, nsfwPref)
-        this.setState({oldNsfwPref: nsfwPref})
-    }
-
     onDonatePresetChange(e) {
         if (!e.currentTarget.validity.valid || e.currentTarget.value == '') {
           return;
@@ -180,12 +170,22 @@ class Settings extends React.Component {
         this.setState({donatePresets});
         const {accountname} = this.props;
         localStorage.setItem('donate.presets-'+accountname, JSON.stringify(donatePresets));
-        this.notify()
+        this.notifyThrottled()
+    }
+
+    onEmissionDonatePctChange = (e) => {
+        const { accountname } = this.props
+        const emissionDonatePct = e.target.value
+        this.setState({ emissionDonatePct })
+        localStorage.setItem('donate.emissionpct-' + accountname, emissionDonatePct)
+        this.notifyThrottled()
     }
 
     notify = () => {
         this.props.notify(tt('g.saved'))
     }
+
+    notifyThrottled = throttle(this.notify, 2000)
 
     onLanguageChange = (event) => {
         const language = event.target.value
@@ -298,7 +298,7 @@ class Settings extends React.Component {
         const {submitting, valid, touched} = this.state.accountSettings
         const disabled = !props.isOwnAccount || state.loading || submitting || !valid || !touched
 
-        const {profile_image, cover_image, name, about, gender, location, website, donatePresets, notifyPresets, notifyPresetsTouched} = this.state
+        const {profile_image, cover_image, name, about, gender, location, website, donatePresets, emissionDonatePct, notifyPresets, notifyPresetsTouched} = this.state
 
         const {follow, account, isOwnAccount} = this.props
         const following = follow && follow.getIn(['getFollowingAsync', account.name]);
@@ -374,6 +374,14 @@ class Settings extends React.Component {
                           <input type="number" className="Donate_presets" min="1" step="1" max="99999" data-id="2" value={this.state.donatePresets[2]} onChange={this.onDonatePresetChange} />
                           <input type="number" className="Donate_presets" min="1" step="1" max="99999" data-id="3" value={this.state.donatePresets[3]} onChange={this.onDonatePresetChange} />
                           <input type="number" className="Donate_presets" min="1" step="1" max="99999" data-id="4" value={this.state.donatePresets[4]} onChange={this.onDonatePresetChange} />
+                        </div>
+                    </label>
+                    <div className="error"></div>
+
+                    <label>
+                        {tt('settings_jsx.emission_donate_pct')}
+                        <div>
+                          <input type="number" min="1" step="1" max="100" value={emissionDonatePct} onChange={this.onEmissionDonatePctChange} />
                         </div>
                     </label>
                     <div className="error"></div>
@@ -476,29 +484,7 @@ class Settings extends React.Component {
                 </form>
             </div>
 
-            {isOwnAccount &&
-                <div className="row">
-                    <div className="small-12 medium-8 large-6 columns">
-                        <br /><br />
-                        <h3>{tt('settings_jsx.private_post_display_settings')}</h3>
-                        <div>
-                            {tt('settings_jsx.not_safe_for_work_nsfw_content')}
-                        </div>
-                        <select value={this.state.nsfwPref} onChange={this.onNsfwPrefChange}>
-                            <option value="hide">{tt('settings_jsx.always_hide')}</option>
-                            <option value="warn">{tt('settings_jsx.always_warn')}</option>
-                            <option value="show">{tt('settings_jsx.always_show')}</option>
-                        </select>
-                        <br /><br />
-                        <input
-                            type="submit"
-                            onClick={this.onNsfwPrefSubmit}
-                            className="button"
-                            value={tt('settings_jsx.update')}
-                            disabled={this.state.nsfwPref == this.state.oldNsfwPref}
-                        />
-                    </div>
-                </div>}
+            {isOwnAccount && <ContentSettings account={props.accountname} />}
 
             {isOwnAccount &&
                 <div className="row">

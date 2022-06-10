@@ -25,7 +25,7 @@ export const proxifyImageUrl = (url, dimensions = '0x0') => {
     if (dimensions[dimensions.length - 1] !== '/')
       dimensions += '/';
     let prefix = '';
-    if ($STM_Config.images.img_proxy_prefix) prefix += fixHost($STM_Config.images.img_proxy_prefix) + '/' + dimensions;
+    if ($STM_Config.images.img_proxy_prefix && $STM_Config.images.use_img_proxy !== false) prefix += fixHost($STM_Config.images.img_proxy_prefix) + '/' + dimensions;
     if ($STM_Config.images.img_proxy_backup_prefix) prefix += fixHost($STM_Config.images.img_proxy_backup_prefix) + '/' + dimensions;
     return prefix + url;
 };

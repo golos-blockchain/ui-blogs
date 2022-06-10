@@ -8,8 +8,12 @@ const request_base = {
     }
 };
 
+function isAvailable() {
+    return !!process.env.BROWSER && !process.env.IS_APP && !window.$STM_ServerBusy
+}
+
 export function serverApiLogin(account) {
-    if (!process.env.BROWSER || window.$STM_ServerBusy) return;
+    if (!isAvailable()) return
     const request = Object.assign({}, request_base, {
         body: JSON.stringify({account, csrf: $STM_csrf}),
     });
@@ -17,16 +21,17 @@ export function serverApiLogin(account) {
 }
 
 export function serverApiLogout() {
-    if (!process.env.BROWSER || window.$STM_ServerBusy) return;
+    if (!isAvailable()) return
     const request = Object.assign({}, request_base, {
         body: JSON.stringify({csrf: $STM_csrf}),
     });
     fetch('/api/v1/logout_account', request);
+    localStorage.removeItem('invite')
 }
 
 let last_call;
 export function serverApiRecordEvent(type, val) {
-    if (!process.env.BROWSER || window.$STM_ServerBusy) return;
+    if (!isAvailable()) return
     if (last_call && (new Date() - last_call < 5000)) return;
     last_call = new Date();
     const value = val && val.stack ? `${val.toString()} | ${val.stack}` : val;
@@ -47,7 +52,7 @@ export function recordPageView(page, ref, posts) {
         window.ga('set', 'page', page);
         window.ga('send', 'pageview');
     }
-    if (!process.env.BROWSER || window.$STM_ServerBusy) return Promise.resolve(0);
+    if (!isAvailable()) return Promise.resolve(0)
     const request = Object.assign({}, request_base, {
         body: JSON.stringify({csrf: $STM_csrf, page, ref, posts}),
     });

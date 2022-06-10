@@ -13,7 +13,12 @@ const authAvailable = () => {
 };
 
 export const authUrl = (pathname) => {
-    return new URL(pathname, $STM_Config.auth_service.host).toString();
+    try {
+        return new URL(pathname, $STM_Config.auth_service.host).toString();
+    } catch (err) {
+        console.error(authUrl, err)
+        return ''
+    }
 };
 
 export const authRegisterUrl = () => {

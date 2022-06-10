@@ -1,0 +1,13 @@
+.TelegramPlayer {
+    height: 400px;
+    width: 80%;
+    overflow: auto;
+
+    @media screen and (max-width: 39.9375em) {
+        width: 100%;
+    }
+
+    iframe {
+        position: relative !important;
+    }
+}

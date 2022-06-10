@@ -2,20 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types'
 import { Link } from 'react-router';
 import {connect} from 'react-redux';
+import { browserHistory } from 'react-router';
+import tt from 'counterpart';
+import { LinkWithDropdown } from 'react-foundation-components/lib/global/dropdown';
+
 import Icon from 'app/components/elements/Icon';
 import user from 'app/redux/User';
 import Userpic from 'app/components/elements/Userpic';
-import { browserHistory } from 'react-router';
-import { LinkWithDropdown } from 'react-foundation-components/lib/global/dropdown';
 import VerticalMenu from 'app/components/elements/VerticalMenu';
 import LocaleSelect from 'app/components/elements/LocaleSelect';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import NotifiCounter from 'app/components/elements/NotifiCounter';
-import tt from 'counterpart';
 import { LIQUID_TICKER, DEBT_TICKER } from 'app/client_config';
 import LocalizedCurrency from 'app/components/elements/LocalizedCurrency';
 import { vestsToSteem, toAsset } from 'app/utils/StateFunctions';
 import { authRegisterUrl, } from 'app/utils/AuthApiClient';
+import { msgsHost, msgsLink, } from 'app/utils/ExtLinkUtils';
 
 const defaultNavigate = (e) => {
     if (e.metaKey || e.ctrlKey) {
@@ -52,7 +54,7 @@ const calculateEstimateOutput = ({ account, price_per_golos, savings_withdraws, 
   return Number(((total_steem * price_per_golos) + total_sbd).toFixed(2) );
 }
 
-function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops, username, showLogin, logout, loggedIn, vertical, navigate, probablyLoggedIn, location, locationQueryParams, showMessages, toggleNightmode}) {
+function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops, username, showLogin, logout, loggedIn, vertical, navigate, probablyLoggedIn, location, locationQueryParams, toggleNightmode}) {
     const APP_NAME = tt('g.APP_NAME');
     const mcn = 'menu' + (vertical ? ' vertical show-for-small-only' : '');
     const mcl = vertical ? '' : ' sub-menu';
@@ -81,7 +83,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     const accountLink = `/@${username}`;
     const mentionsLink = `/@${username}/mentions`;
     const donatesLink = `/@${username}/donates-to`;
-    const messagesLink = `/msgs`;
+    const messagesLink = msgsHost() ? msgsLink() : '';
     const ordersLink = `/@${username}/filled-orders`;
 
     const faqItem = <li className={scn}>
@@ -151,7 +153,9 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
             {link: feedLink, icon: 'new/home', value: tt('g.feed'), addon: <NotifiCounter fields="feed" />},
             {link: accountLink, icon: 'new/blogging', value: tt('g.blog')},
             {link: repliesLink, icon: 'new/answer', value: tt('g.replies'), addon: <NotifiCounter fields="comment_reply" />},
-            {link: messagesLink, icon: 'new/envelope', value: tt('g.messages'), target: '_blank', addon: <NotifiCounter fields="message" />},
+            (messagesLink ?
+                {link: messagesLink, icon: 'new/envelope', value: tt('g.messages'), target: '_blank', addon: <NotifiCounter fields="message" />} :
+                null),
             {link: mentionsLink, icon: 'new/mention', value: tt('g.mentions'), addon: <NotifiCounter fields="mention" />},
             {link: donatesLink, icon: 'editor/coin', value: tt('g.rewards'), addon: <NotifiCounter fields="donate" />},
             {link: walletLink, icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields="send,receive" />},
@@ -286,10 +290,6 @@ export default connect(
         logout: e => {
             if (e) e.preventDefault();
             dispatch(user.actions.logout())
-        },
-        showMessages: (e) => {
-            if (e) e.preventDefault();
-            dispatch(user.actions.showMessages())
         },
         toggleNightmode: (e) => {
             if (e) e.preventDefault();
