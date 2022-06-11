@@ -45,7 +45,6 @@ npx yarn run build:desktop
 - hidden_assets
 - app_updater
 - forums
-- gamefication
 
 7. Установите все зависимости (для сборки).
 
