@@ -288,7 +288,6 @@ export default connect(
                 dispatch({type: 'FETCH_STATE', payload: {pathname}})
                 dispatch(user.actions.hideDonate())
             }
-alert(JSON.stringify(trx))
             dispatch(transaction.actions.broadcastOperation({
                 type: 'donate', username, trx, successCallback, errorCallback
             }))
