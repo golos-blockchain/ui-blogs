@@ -48,30 +48,6 @@
       "fm-golostalk": {"domain": "golostalk.com"},
       "fm-prizmtalk": {"domain": "prizmtalk.com"},
       "fm-graphenetalks": {"domain": "forum.gph.ai"}
-    },
-    "gamefication": {
-      "levels": [
-        {"power_from": 0.000, "imgs": ["1.png", "1big.png"],
-          "title": ["Креветки", "Shrimp"]},
-        {"power_from": 0.005, "imgs": ["2.png", "2big.png"],
-          "title": ["Крабы", "Crabs"]},
-        {"power_from": 0.010, "imgs": ["3.png", "3big.png"],
-          "title": ["Осьминоги", "Octopuses"]},
-        {"power_from": 0.025, "imgs": ["4.png", "4big.png"],
-          "title": ["Рыбы", "Fish"]},
-        {"power_from": 0.050, "imgs": ["5.png", "5big.png"],
-          "title": ["Черепахи", "Turtles"]},
-        {"power_from": 0.100, "imgs": ["6.png", "6big.png"],
-          "title": ["Дельфины", "Dolphins"]},
-        {"power_from": 0.250, "imgs": ["7.png", "7big.png"],
-          "title": ["Акулы", "Sharks"]},
-        {"power_from": 0.500, "imgs": ["8.png", "8big.png"],
-          "title": ["Косатки", "Orca"]},
-        {"power_from": 1.000, "imgs": ["9.png", "9big.png"],
-          "title": ["Киты", "Whales"]},
-        {"power_from": 5.000, "imgs": ["10.png", "10big.png"],
-          "title": ["Повелители морей", "Lords of the Seas"]}
-      ]
     }
   }
 }
