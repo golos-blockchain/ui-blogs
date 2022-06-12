@@ -218,8 +218,11 @@ export default connect(
             sliderMax = sliderMax.mul(emissionDonatePct).div(100)
 
             const balance = Asset(currentAccount.get('tip_balance'))
-            if (sliderMax.gt(balance) || sliderMax.amount < 2000) {
+            if (sliderMax.gt(balance)) {
                 sliderMax = balance
+            }
+            if (sliderMax.amount < 1000) {
+                sliderMax.amount = 1000
             }
         } else {
             sliderMax = Asset(uia.get('tip_balance'))
