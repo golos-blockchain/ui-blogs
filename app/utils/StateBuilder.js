@@ -139,7 +139,9 @@ export default async function getState(api, url, offchain = {}) {
 
                 case 'posts':
                 case 'comments':
-                    const comments = await api.getDiscussionsByComments({ start_author: uname, limit: 20, filter_tag_masks: ['fm-'] })
+                    const filter_tags = offchain.account ? [] : getFilterTags()
+                    const comments = await api.getDiscussionsByComments({ start_author: uname, limit: 20, filter_tag_masks: ['fm-'],
+                         filter_tags })
                     state.accounts[uname].comments = []
 
                     comments.forEach(comment => {
@@ -423,14 +425,14 @@ export default async function getState(api, url, offchain = {}) {
             delete args.select_tags;
             delete args.select_categories;
             delete args.filter_tag_masks; // do not exclude forum posts
-            delete args.filter_tags; // test tag posts
+            delete args.filter_tags;
         }
         if (discussionsType == 'allcomments') {
             args.comments_only = true;
             delete args.select_tags;
             delete args.select_categories;
             delete args.filter_tag_masks; // do not exclude forum comments
-            delete args.filter_tags; // test tag posts
+            delete args.filter_tags;
         }
         if (discussionsType == 'forums') {
             args = ['', '', 0, args.limit, $STM_Config.forums.white_list, 0, 0, [], [], 'fm-'];

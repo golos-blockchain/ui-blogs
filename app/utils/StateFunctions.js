@@ -104,9 +104,9 @@ export function contentStats0(content) {
 
     const grayThreshold = -5000000000000 // dislikes ~100k Golos Power
     const meetsGrayThreshold = net_rshares_adj.compare(grayThreshold) < 0
-    const grayThreshold2 = -25000000000000 // dislikes ~500k Golos Power
+    const grayThreshold2 = -50000000000000 // dislikes ~1m Golos Power
     const meetsGrayThreshold2 = net_rshares_adj.compare(grayThreshold2) < 0
-    const hideThreshold = -500000000000000 // dislikes ~10kk Golos Power
+    const hideThreshold = -500000000000000 // dislikes ~10m Golos Power
     const meetsHideThreshold = net_rshares_adj.compare(hideThreshold) < 0
 
     const hasPositiveRshares = Long.fromString(String(content.get('net_rshares'))).gt(Long.ZERO)
@@ -178,4 +178,11 @@ export function fromJSGreedy(js) {
     Array.isArray(js) ?
       Seq(js).map(fromJSGreedy).toList() :
       Seq(js).map(fromJSGreedy).toMap();
+}
+
+export function accuEmissionPerDay(accountObj, gpropsObj) {
+    const acc = accountObj.toJS ? accountObj.toJS() : accountObj
+    const gprops = gpropsObj.toJS ? gpropsObj.toJS() : gpropsObj
+    let emission = toAsset(gprops.accumulative_emission_per_day).amount * toAsset(acc.vesting_shares).amount / toAsset(gprops.total_vesting_shares).amount
+    return emission
 }

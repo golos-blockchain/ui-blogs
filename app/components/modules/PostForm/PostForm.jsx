@@ -21,7 +21,7 @@ import MarkdownViewer, {
 import { checkPostHtml } from 'app/utils/validator';
 import { DEBT_TICKER } from 'app/client_config';
 import {
-    ONLYAPP_TAG,
+    ONLYAPP_TAG, ONLYBLOG_TAG,
     processTagsFromData,
     processTagsToSend,
     validateTags,
@@ -105,7 +105,7 @@ class PostForm extends React.Component {
             emptyBody: true,
             rteState: null,
             tags: [],
-            publishedOnlyApp: false,
+            publishedLimited: false,
             postError: null,
             payoutType: PAYOUT_TYPES.PAY_100,
             curationPercent: DEFAULT_CURATION_PERCENT,
@@ -129,7 +129,7 @@ class PostForm extends React.Component {
 
         if (editMode) {
             const tags = this._getTagsFromMetadata();
-            this.state.publishedOnlyApp = tags.includes(ONLYAPP_TAG);
+            this.state.publishedLimited = tags.includes(ONLYAPP_TAG) || tags.includes(ONLYBLOG_TAG)
             if (!isLoaded) {
                 this._fillFromMetadata(tags);
             }
@@ -225,7 +225,7 @@ class PostForm extends React.Component {
             title,
             text,
             tags,
-            publishedOnlyApp,
+            publishedLimited,
             payoutType,
             curationPercent,
             isPreview,
@@ -297,7 +297,7 @@ class PostForm extends React.Component {
                             editMode={editMode}
                             errorText={postError}
                             tags={tags}
-                            publishedOnlyApp={publishedOnlyApp}
+                            publishedLimited={publishedLimited}
                             categories={categories.get('categories').toJS()}
                             onTagsChange={this._onTagsChange}
                             payoutType={payoutType}

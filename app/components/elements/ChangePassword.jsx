@@ -174,7 +174,9 @@ class ChangePassword extends React.Component {
                     }
 
                     <div>
-                        <label>{tt('g.account_name')}
+                        <label>
+                            <div className="float-right"><a target="_blank" href="https://golos.app/recover/change">{tt('g.recover_change')}</a></div>
+                            {tt('g.account_name')}
                             <Field name='accountName'
                                 type='text'
                                 disabled={readOnlyAccountName}
@@ -186,8 +188,8 @@ class ChangePassword extends React.Component {
                     </div>
                     <br />
                     <label>
+                        <div className="float-right"><a target="_blank" href="https://golos.app/recover/request">{tt('g.recover_password')}</a></div>
                         {tt('g.current_password')}
-                        <br />
                         <Field name='password'
                             type='password'
                             disabled={isSubmitting}

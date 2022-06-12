@@ -28,7 +28,6 @@ global.$STM_Config = {
     apidex_service: config.get('apidex_service'),
     hidden_assets: config.get('hidden_assets'),
     forums: config.get('forums'),
-    gamefication: config.get('gamefication'),
     blocked_users: config.get('blocked_users'),
     blocked_posts: config.get('blocked_posts'),
     ui_version: version || '1.0-unknown',
