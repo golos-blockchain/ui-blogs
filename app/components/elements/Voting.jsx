@@ -57,16 +57,12 @@ class Voting extends React.Component {
         this.voteUp = e => {
             e.preventDefault()
             const { myVote } = this.state
-            if (!myVote) {
-                if (!this.props.loggedin) {
-                    this.props.showLogin()
-                    return
-                }
-                const { author, permlink } = this.props
-                this.props.showDonate(author, permlink, this.props.is_comment)
-            } else {
-                this.voteUpOrDown(true)
+            if (!this.props.loggedin) {
+                this.props.showLogin()
+                return
             }
+            const { author, permlink } = this.props
+            this.props.showDonate(author, permlink, this.props.is_comment, myVote)
         }
         this.voteDown = e => {
             e.preventDefault();
@@ -335,7 +331,7 @@ export default connect(
                 successCallback: () => dispatch(user.actions.getAccount())                   
             }))
         },
-        showDonate(author, permlink, is_comment) {
+        showDonate(author, permlink, is_comment, myVote) {
             const sym = LIQUID_TICKER
             dispatch(user.actions.setDonateDefaults({
                 permlink,
@@ -343,6 +339,7 @@ export default connect(
                 to: author,
                 sym,
                 precision: 3,
+                myVote: myVote ? Math.round(myVote / 100) : myVote,
             }))
             dispatch(user.actions.showDonate())
         },

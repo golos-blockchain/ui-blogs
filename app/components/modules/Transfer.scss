@@ -38,27 +38,27 @@
   z-index: 10;
 }
 
-.DonatePresets {
-  margin-bottom: 10px;
-}
-
 .TipBalance {
   display: inline-block;
-  border-radius: 10px;
   margin-left: 20px;
-  border: 1px solid black;
   vertical-align: middle;
   padding-left: 1em;
   padding-right: 1em;
-  padding-top: 0.25em;
-  padding-bottom: 0.25em;
-  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
   text-align: center;
-  width: 220px;
+  width: 160px;
 
   .VerticalMenu {
     width: 180px;
     min-width: 180px;
+  }
+
+  &.mini {
+    font-size: 82%;
+  }
+
+  &.micro {
+    font-size: 70%;
   }
 }
 

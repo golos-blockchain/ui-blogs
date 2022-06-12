@@ -61,8 +61,12 @@ class TipAssetList extends React.Component {
                     selected={value} el='span' items={myAssets} />)
         }
 
+        const size = tipBalanceValue.length > 16 ?
+            ' micro' : tipBalanceValue.length > 13 ?
+            ' mini' : ''
+
         return (
-            <div className='TipBalance'>
+            <div className={'TipBalance' + size}>
             <b>{tt('token_names.TIP_TOKEN')}:</b><br/>
             {tipBalanceValue}
             </div>

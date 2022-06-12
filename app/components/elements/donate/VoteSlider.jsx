@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Slider from 'golos-ui/Slider'
 
-import Icon from 'app/components/elements/Icon'
+import tt from 'counterpart'
 
 class VoteSlider extends React.Component {
     static propTypes = {
@@ -24,10 +24,12 @@ class VoteSlider extends React.Component {
     render() {
         const { value } = this.props
         return (<div className="row" style={{ marginTop: '1.0rem', marginBottom: '1.25rem' }}>
-            <div className="column small-12">
-                <Icon name='chevron-up-circle' className='float-left'size='1_5x'/>
+            <div className='column small-2'>
+                {tt('g.like')}
+            </div>
+            <div className="column small-10">
                 <Slider
-                    style={{ marginLeft: '1rem', width: 'calc(100% - 100px)', float: 'left' }}
+                    style={{ width: 'calc(100% - 70px)', float: 'left' }}
                     min={0}
                     max={100}
                     value={value}
