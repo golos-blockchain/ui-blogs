@@ -95,7 +95,7 @@ class Donate extends React.Component {
         }
         dispatchSubmit({
             to, amount: values.amount.asset, memo: values.memo, isMemoEncrypted,
-            permlink, is_comment, vote, currentUser,
+            permlink, is_comment, vote, myVote: opts.myVote * 100, currentUser,
             errorCallback: (err) => {
                 actions.setErrors({ memo: err.message || err })
                 actions.setSubmitting(false)
@@ -117,48 +117,56 @@ class Donate extends React.Component {
         {({
             handleSubmit, isSubmitting, isValid, values, setFieldValue, handleChange,
         }) => {
-            const disabled = !isValid || (!values.sliderPercent && !values.amount.asset.amount)
+            let disabled = null
+            if (opts.myVote) {
+                disabled = !isValid ||
+                    (values.sliderPercent === opts.myVote && !values.amount.asset.amount)
+            } else {
+                disabled = !isValid ||
+                    (!values.sliderPercent && !values.amount.asset.amount)
+            }
             return (
         <Form>
             <Field name='sliderPercent' as={VoteSlider}
                 onChange={val => this.onSliderChange(val, values, setFieldValue)} />
 
             <div className='row'>
-                <div className='column small-3' style={{paddingTop: 5}}>
+                <div className='column small-2' style={{paddingTop: '1rem'}}>
                     {tt('transfer_jsx.donate_amount')}
                 </div>
-                <div className='column small-9'>
+                <div className='column small-2' style={{paddingTop: '0.55rem'}}>
                     <div className='input-group' style={{marginBottom: 5}}>
                         <AmountField
                             placeholder={tt('transfer_jsx.donate_amount')}
                         />
-                        <span style={{paddingLeft: '10px', paddingTop: '7px', backgroundColor: 'transparent', border: 'none'}}>
-                            {sym}
-                        </span>
                     </div>
+                </div>
+                <div className='column small-8' style={{paddingTop: '0.4rem'}}>
+                    <PresetSelector
+                    username={currentUser.get('username')}
+                    amountStr={values.amount.amountStr}
+                    onChange={amountStr => this.onPresetChange(amountStr, values, setFieldValue)}
+                    />
+                    <TipAssetList
+                        value={sym} uias={uias} currentAccount={currentAccount}
+                        currentBalance={this.balanceValue()}
+                        onChange={this.onTipAssetChanged}
+                    />
+                </div>
+            </div>
+            <div className='row'>
+                <div className='column small-12'>
                     <ErrorMessage name='amount' component='div' className='error' />
                 </div>
             </div>
 
-            <div className="DonatePresets column" style={{ marginTop: '1.25rem' }}>
-                <PresetSelector
-                    username={currentUser.get('username')}
-                    amountStr={values.amount.amountStr}
-                    onChange={amountStr => this.onPresetChange(amountStr, values, setFieldValue)}
-                />
-                <TipAssetList
-                    value={sym} uias={uias} currentAccount={currentAccount}
-                    currentBalance={this.balanceValue()}
-                    onChange={this.onTipAssetChanged}
-                />
-            </div>
-
-            <div className='row'>
-                <div className='column small-3' style={{paddingTop: '33px'}}>
+            <div className='row' style={{ marginTop: '0.5rem', marginBottom: '0.5rem' }}>
+                <div className='column small-2' style={{paddingTop: '7px'}}>
                     {tt('transfer_jsx.memo')}
                 </div>
-                <div className='column small-9'>
+                <div className='column small-10'>
                     <Field name='memo' as={MemoInput} currentUser={currentUser}
+                        compact={true}
                         isEncrypted={isMemoEncrypted}
                         onToggleEncrypted={(isMemoEncrypted, memo) => {
                             this.setState({ isMemoEncrypted })
@@ -177,7 +185,7 @@ class Donate extends React.Component {
             </span>}
 
             <FormikAgent opts={opts} setFieldValue={setFieldValue}
-                sliderMax={sliderMax} currentUser={currentUser} />
+                sliderMax={sliderMax} currentUser={currentUser} myVote={opts.myVote} />
         </Form>
         )}}</Formik>)
 
@@ -247,7 +255,7 @@ export default connect(
         },
         dispatchSubmit: ({
             to, amount, memo, isMemoEncrypted,
-            permlink, is_comment, vote, currentUser, errorCallback
+            permlink, is_comment, vote, myVote, currentUser, errorCallback
         }) => {
             const username = currentUser.get('username')
 
@@ -268,7 +276,7 @@ export default connect(
             let trx = [
                 ['donate', operation]
             ]
-            if (vote && vote.percent) {
+            if (vote && vote.percent !== myVote) {
                 const voteOp = {
                     voter: username, author: to, permlink,
                     weight: vote.percent
@@ -276,9 +284,11 @@ export default connect(
                 if (amount.amount <= 0) trx = []
                 trx.push(['vote', voteOp])
 
-                localStorage.removeItem('vote_weight'); // deprecated
-                localStorage.setItem('voteWeight-' + username + (is_comment ? '-comment' : ''),
-                    vote.percent)
+                if (!myVote) {
+                    localStorage.removeItem('vote_weight'); // deprecated
+                    localStorage.setItem('voteWeight-' + username + (is_comment ? '-comment' : ''),
+                        vote.percent)
+                }
             }
 
             const successCallback = () => {
@@ -291,6 +301,7 @@ export default connect(
                 dispatch({type: 'FETCH_STATE', payload: {pathname}})
                 dispatch(user.actions.hideDonate())
             }
+            alert(JSON.stringify(trx))
             dispatch(transaction.actions.broadcastOperation({
                 type: 'donate', username, trx, successCallback, errorCallback
             }))

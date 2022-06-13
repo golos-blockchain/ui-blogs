@@ -62,7 +62,10 @@ class Settings extends React.Component {
             donatePresets = localStorage.getItem('donate.presets-' + accountname)
             if (donatePresets) donatePresets = JSON.parse(donatePresets)
         }
-        if (!donatePresets) donatePresets = ['5','10','25','50','100'];
+        if (!donatePresets) donatePresets = ['5','25','50']
+        if (donatePresets.length > 3) {
+            donatePresets = [donatePresets[0], donatePresets[2], donatePresets[3]]
+        }
 
         if(process.env.BROWSER) {
             emissionDonatePct = localStorage.getItem('donate.emissionpct-' + accountname)
@@ -372,8 +375,6 @@ class Settings extends React.Component {
                           <input type="number" className="Donate_presets" min="1" step="1" max="99999" data-id="0" value={this.state.donatePresets[0]} onChange={this.onDonatePresetChange} />
                           <input type="number" className="Donate_presets" min="1" step="1" max="99999" data-id="1" value={this.state.donatePresets[1]} onChange={this.onDonatePresetChange} />
                           <input type="number" className="Donate_presets" min="1" step="1" max="99999" data-id="2" value={this.state.donatePresets[2]} onChange={this.onDonatePresetChange} />
-                          <input type="number" className="Donate_presets" min="1" step="1" max="99999" data-id="3" value={this.state.donatePresets[3]} onChange={this.onDonatePresetChange} />
-                          <input type="number" className="Donate_presets" min="1" step="1" max="99999" data-id="4" value={this.state.donatePresets[4]} onChange={this.onDonatePresetChange} />
                         </div>
                     </label>
                     <div className="error"></div>
