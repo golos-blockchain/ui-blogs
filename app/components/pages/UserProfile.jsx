@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import { browserHistory } from 'react-router';
 import golos from 'golos-lib-js';
 import tt from 'counterpart';
+
 import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
 import Icon from 'app/components/elements/Icon'
@@ -29,6 +30,7 @@ import UserList from 'app/components/elements/UserList';
 import Follow from 'app/components/elements/Follow';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import PostsList from 'app/components/cards/PostsList';
+import { authUrl, } from 'app/utils/AuthApiClient'
 import { getGameLevel } from 'app/utils/GameUtils'
 import { msgsHost, msgsLink } from 'app/utils/ExtLinkUtils'
 import {isFetchingOrRecentlyUpdated} from 'app/utils/StateFunctions';
@@ -595,6 +597,8 @@ export default class UserProfile extends React.Component {
 
         const lastSeen = getLastSeen(account);
 
+        const frozen = account.frozen
+
         return (
             <div className='UserProfile'>
 
@@ -631,6 +635,13 @@ export default class UserProfile extends React.Component {
                                 {website && <span><Icon name='link' /> <a href={website}>{website_label}</a></span>}
                                 <Icon name='calendar' /> <DateJoinWrapper date={accountjoin} />
                                 {lastSeen && <span><Icon name='eye' /> {tt('g.last_seen')} <TimeAgoWrapper date={`${lastSeen}`} /> </span>}
+                                {frozen ? <div className='UserProfile__frozen'>
+                                    {tt('user_profile.account_frozen')}
+                                    &nbsp;
+                                    <a href={authUrl('/sign/unfreeze/' + accountname)} target='_blank' rel='noreferrer noopener'>
+                                        {tt('g.more_hint')}
+                                    </a>
+                                </div> : null}
                             </p>
                         </div>
                         <div className='UserProfile__buttons-mobile'>

@@ -190,6 +190,10 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
         yield put(user.actions.loginError({ error: 'Username does not exist' }))
         return
     }
+    if (account.get('frozen')) {
+        yield put(user.actions.loginError({ error: 'account_frozen' }))
+        return
+    }
 
     let private_keys
     try {

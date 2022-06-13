@@ -7,7 +7,7 @@ import {api} from 'golos-lib-js';
 import {pageSession} from 'golos-lib-js/lib/auth';
 
 // operations that require only posting authority
-const postingOps = Set(`vote, comment, delete_comment, custom_json, account_metadata, claim, donate, worker_request_vote`.trim().split(/,\s*/))
+const postingOps = Set(`vote, comment, delete_comment, custom_json, account_metadata, donate, worker_request_vote`.trim().split(/,\s*/))
 
 export function* authWatches() {
     yield fork(watchForAuth) 

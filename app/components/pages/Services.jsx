@@ -96,7 +96,7 @@ class Services extends React.Component {
                                 <p>Легко настраиваемый бот, который позволяет получать уведомления о разных событиях, связанных с выбранным пользователем (упоминания, комментарии, переводы, подписка)... <a href="/@vict0r/samyi-priyatnyi-bot-na-golose">{tt('g.more_hint')}</a> <Icon name="extlink" /></p>
                                 <h4><a target="_blank" href="https://t.me/tip23bot"><Icon name="new/telegram" /> tip23bot</a></h4>
                                 {tt('services.developer')} <a href="/@ksantoprotein">@ksantoprotein</a>
-                                <p>Бот позволяет вознаграждать пользователей токенами в телеграм-группах, а также автоматически получать токены с вашего CLAIM-баланса... <a href="/@ksantoprotein/tip23bot-telegramm-bot-dlya-laikov-avtokleminga-i-igr">{tt('g.more_hint')}</a> <Icon name="extlink" /></p>
+                                <p>Бот позволяет вознаграждать пользователей токенами в телеграм-группах, и не только... <a href="/@ksantoprotein/tip23bot-telegramm-bot-dlya-laikov-avtokleminga-i-igr">{tt('g.more_hint')}</a> <Icon name="extlink" /></p>
                                 {/* <h4><a target="_blank" href="https://t.me/upit_bot"><Icon name="new/telegram" /> upit_bot</a></h4>
                                 {tt('services.developer')} <a href="/@vvk">@vvk</a>
                                 <p>Бот, позволяющий подписываться на новые комментарии к постам с возможностью ответа на них, а также лайков/дизлайков, вознаграждений... <a href="/@upit/upit-comments-subscriptions">{tt('g.more_hint')}</a> <Icon name="extlink" /></p> */}

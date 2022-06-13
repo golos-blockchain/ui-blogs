@@ -38,7 +38,9 @@ class CurationRewards extends React.Component {
     effectiveVestingShares(account, gprops) {
         const vesting_steem = this.vestsToSteem(account.vesting_shares, gprops);
         const received_vesting_shares = this.vestsToSteem(account.received_vesting_shares, gprops);
+            + this.vestsToSteem(account.emission_received_vesting_shares, gprops)
         const delegated_vesting_shares = this.vestsToSteem(account.delegated_vesting_shares, gprops);
+            + this.vestsToSteem(account.emission_delegated_vesting_shares, gprops);
         return Asset(vesting_steem
             + received_vesting_shares
             - delegated_vesting_shares, 3, 'GOLOS');
