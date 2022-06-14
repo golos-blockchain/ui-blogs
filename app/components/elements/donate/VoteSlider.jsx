@@ -29,7 +29,7 @@ class VoteSlider extends React.Component {
             </div>
             <div className="column small-10">
                 <Slider
-                    style={{ width: 'calc(100% - 70px)', float: 'left' }}
+                    style={{ width: 'calc(100% - 50px)', float: 'left' }}
                     min={0}
                     max={100}
                     value={value}

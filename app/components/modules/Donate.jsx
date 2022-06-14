@@ -229,9 +229,9 @@ export default connect(
             if (sliderMax.gt(balance)) {
                 sliderMax = balance
             }
-            if (sliderMax.amount < 1000) {
-                sliderMax.amount = 1000
-            }
+            // if (sliderMax.amount < 1000) {
+            //     sliderMax.amount = 1000
+            // }
         } else {
             sliderMax = Asset(uia.get('tip_balance'))
         }
