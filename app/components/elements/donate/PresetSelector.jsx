@@ -26,7 +26,10 @@ class PresetSelector extends React.Component {
                 presets = JSON.parse(presets)
         }
         if (!presets) {
-            presets = ['5','10','25','50','100']
+            presets = ['5','25','50']
+        }
+        if (presets.length > 3) {
+            presets = [presets[0], presets[2], presets[3]]
         }
 
         let btnIdx = 0

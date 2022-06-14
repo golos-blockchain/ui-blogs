@@ -22,10 +22,11 @@ export function getPostDonatePercent(username, is_comment) {
 }
 
 class FormikAgent extends React.Component {
-    setVals = (username) => {
-        const { setFieldValue, opts, sliderMax } = this.props
+    setVals = (username, ignoreMyVote = false) => {
+        const { setFieldValue, opts, sliderMax, myVote } = this.props
         const { is_comment } = opts
-        const sliderPercent = getPostDonatePercent(username, is_comment)
+        let sliderPercent = !ignoreMyVote && myVote
+        if (!sliderPercent) sliderPercent = getPostDonatePercent(username, is_comment)
         setFieldValue('sliderPercent', sliderPercent)
 
         let amount = sliderMax.mul(sliderPercent).div(100)
