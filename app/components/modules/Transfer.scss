@@ -40,21 +40,22 @@
 
 .TipBalance {
   display: inline-block;
-  margin-left: 20px;
+  margin-left: 5px;
   vertical-align: middle;
   padding-left: 1em;
   padding-right: 1em;
   padding-bottom: 0.75rem;
   text-align: center;
-  width: 160px;
+  width: 155px;
+  font-size: 95%;
 
   .VerticalMenu {
-    width: 180px;
-    min-width: 180px;
+    width: 155px;
+    min-width: 155px;
   }
 
   &.mini {
-    font-size: 82%;
+    font-size: 80%;
   }
 
   &.micro {
