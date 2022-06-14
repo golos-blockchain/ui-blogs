@@ -69,6 +69,11 @@ class Settings extends React.Component {
 
         if(process.env.BROWSER) {
             emissionDonatePct = localStorage.getItem('donate.emissionpct-' + accountname)
+            // Temporary fix. TODO: remove in Aug 2022
+            if (emissionDonatePct === '0') {
+                emissionDonatePct = '1'
+                localStorage.setItem('donate.emissionpct-' + accountname, emissionDonatePct)
+            }
         }
         if(!emissionDonatePct) emissionDonatePct = '10'
         this.setState({donatePresets : donatePresets, emissionDonatePct})
@@ -179,9 +184,12 @@ class Settings extends React.Component {
     onEmissionDonatePctChange = (e) => {
         const { accountname } = this.props
         const emissionDonatePct = e.target.value
-        this.setState({ emissionDonatePct })
-        localStorage.setItem('donate.emissionpct-' + accountname, emissionDonatePct)
-        this.notifyThrottled()
+        const num = parseInt(emissionDonatePct)
+        if (num >= 1 && num <= 100) {
+            this.setState({ emissionDonatePct })
+            localStorage.setItem('donate.emissionpct-' + accountname, emissionDonatePct)
+            this.notifyThrottled()
+        }
     }
 
     notify = () => {

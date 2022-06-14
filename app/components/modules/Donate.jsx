@@ -225,13 +225,14 @@ export default connect(
 
             sliderMax = sliderMax.mul(emissionDonatePct).div(100)
 
+            if (sliderMax.amount < 1000) {
+                sliderMax.amount = 1000
+            }
+
             const balance = Asset(currentAccount.get('tip_balance'))
             if (sliderMax.gt(balance)) {
                 sliderMax = balance
             }
-            // if (sliderMax.amount < 1000) {
-            //     sliderMax.amount = 1000
-            // }
         } else {
             sliderMax = Asset(uia.get('tip_balance'))
         }
@@ -301,6 +302,7 @@ export default connect(
                 dispatch({type: 'FETCH_STATE', payload: {pathname}})
                 dispatch(user.actions.hideDonate())
             }
+
             dispatch(transaction.actions.broadcastOperation({
                 type: 'donate', username, trx, successCallback, errorCallback
             }))
