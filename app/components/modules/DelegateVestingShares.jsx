@@ -120,12 +120,16 @@ class DelegateVestingShares extends React.Component {
                 console.error('getVestingDelegationsAsync', error);
             }
             if (delegations && delegations[0] && delegations[0].delegatee === value) {
-                let amount = delegations[0].vesting_shares;
+                const vdo = delegations[0]
+
+                let amount = vdo.vesting_shares
                 amount = vestsToSteem(amount, gprops);
                 this.state.amount.props.onChange(amount);
 
-                let interestRate = delegations[0].interest_rate / 100;
-                this.state.interestRate.props.onChange(interestRate.toString());
+                let interestRate = vdo.interest_rate / 100;
+                this.state.interestRate.props.onChange(vdo.is_emission ? '0' : interestRate.toString());
+
+                this.state.emissionInterest.props.onChange(vdo.is_emission)
 
                 this.setState({
                     vdoLoading: false,
