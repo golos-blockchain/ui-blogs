@@ -227,6 +227,10 @@ class TransferHistoryRow extends React.Component {
             other_account = data.worker_request_author + "/" + data.worker_request_permlink;
         }
 
+        else if (type === 'account_freeze' && !data.frozen) {
+            description_start += tt('transferhistoryrow_jsx.claimed') + data.unfreeze_fee + tt('transferhistoryrow_jsx.account_unfreeze');
+        }
+
         else {
             code_key = JSON.stringify({type, ...data}, null, 2);
         }

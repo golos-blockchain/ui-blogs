@@ -964,7 +964,9 @@
     "conversion_started": "Запущена 3.5 дневная конвертация ",
     "were_converted": " были сконвертированы в ",
     "including_conversion_fee": "в т.ч. комиссия",
-    "to_account": " на аккаунт "
+    "to_account": " на аккаунт ",
+    "claimed": "Списано ",
+    "account_unfreeze": " за активацию аккаунта"
   },
   "user_profile": {
     "unknown_account": "Неизвестный аккаунт",

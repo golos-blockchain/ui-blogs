@@ -962,7 +962,9 @@
     "conversion_started": "Started 3.5 day conversion of ",
     "were_converted": " were converted to ",
     "including_conversion_fee": "incl. fee",
-    "to_account": " to account "
+    "to_account": " to account ",
+    "claimed": "Claimed ",
+    "account_unfreeze": " for account unfreezing"
   },
   "savingswithdrawhistory_jsx": {
     "cancel_this_withdraw_request": "Cancel this withdraw request?",

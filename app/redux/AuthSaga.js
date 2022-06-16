@@ -128,6 +128,10 @@ export function* findSigningKey({opType, username, password}) {
     const account = yield call(getAccount, username);
     if (!account) throw new Error('Account not found')
 
+    if (account.get('frozen')) {
+        throw new Error('Account is frozen: ' + username)
+    }
+
     for (const authType of authTypes) {
         let private_key
         if (password) {

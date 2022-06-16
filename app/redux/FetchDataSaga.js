@@ -110,7 +110,7 @@ export function* fetchState(location_change_action) {
 
                 switch (parts[1]) {
                     case 'transfers':
-                        const history = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {select_ops: ['claim', 'donate', 'transfer', 'author_reward', 'curation_reward', 'transfer_to_tip', 'transfer_from_tip', 'transfer_to_vesting', 'withdraw_vesting', 'asset_issue', 'invite', 'transfer_to_savings', 'transfer_from_savings', 'convert_sbd_debt', 'convert', 'fill_convert_request', 'interest', 'worker_reward']})
+                        const history = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {select_ops: ['claim', 'donate', 'transfer', 'author_reward', 'curation_reward', 'transfer_to_tip', 'transfer_from_tip', 'transfer_to_vesting', 'withdraw_vesting', 'asset_issue', 'invite', 'transfer_to_savings', 'transfer_from_savings', 'convert_sbd_debt', 'convert', 'fill_convert_request', 'interest', 'worker_reward', 'account_freeze']})
                         account.transfer_history = []
                         account.other_history = []
 
@@ -135,6 +135,7 @@ export function* fetchState(location_change_action) {
                                 case 'fill_convert_request':
                                 case 'interest':
                                 case 'worker_reward':
+                                case 'account_freeze':
                                     state.accounts[uname].transfer_history.push(operation)
                                 break
 
