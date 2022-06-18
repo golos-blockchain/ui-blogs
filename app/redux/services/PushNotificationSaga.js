@@ -22,6 +22,9 @@ function getScopePresets(username) {
             presets.fill_order = true;
         }
     }
+    if (presets.donate) {
+        presets.donate_msgs = true
+    }
     return Object.keys(presets).filter(k => presets[k]);
 }
 
