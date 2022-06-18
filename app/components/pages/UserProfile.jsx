@@ -332,7 +332,7 @@ export default class UserProfile extends React.Component {
                     current_user={current_user}
                     incoming={false}
                     />
-                    { isMyAccount && <div><MarkNotificationRead fields='donate' account={account.name} /></div> }
+                    { isMyAccount && <div><MarkNotificationRead fields='donate,donate_msgs' account={account.name} /></div> }
                 </div>
         }
         else if( section === 'followers' ) {
@@ -525,7 +525,7 @@ export default class UserProfile extends React.Component {
         // const wallet_tab_active = section === 'transfers' || section === 'password' || section === 'permissions' ? 'active' : ''; // className={wallet_tab_active}
 
         let donates_to_addon = undefined;
-        if (isMyAccount) donates_to_addon = <NotifiCounter fields='donate' />;
+        if (isMyAccount) donates_to_addon = <NotifiCounter fields='donate,donate_msgs' />;
         let rewardsMenu = [
             {link: `/@${accountname}/donates-to`, label: tt('g.donates_to'), value: tt('g.donates_to'), addon: donates_to_addon},
             {link: `/@${accountname}/donates-from`, label: tt('g.donates_from'), value: tt('g.donates_from')},
@@ -564,7 +564,7 @@ export default class UserProfile extends React.Component {
                             ref={this._onLinkRef}
                         >
                             {tt('g.rewards')}
-                            {isMyAccount && <NotifiCounter fields='donate' />}
+                            {isMyAccount && <NotifiCounter fields='donate,donate_msgs' />}
                             <Icon name='dropdown-arrow' />
                         </a>
                     </LinkWithDropdown>

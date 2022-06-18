@@ -957,6 +957,8 @@
     "to": " to ",
     "from": " from ",
     "for": " for ",
+    "for_msg_in": " for message in ",
+    "chat": "chat",
     "issue": "Issue of tokens ",
     "orders_canceled": "Exchange orders canceled, autoconversion ",
     "conversion_started": "Started 3.5 day conversion of ",
