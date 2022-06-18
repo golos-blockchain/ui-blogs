@@ -22,13 +22,14 @@ class MemoInput extends React.Component {
         prefix: PropTypes.string,
         disabled: PropTypes.bool,
         onToggleEncrypted: PropTypes.func.isRequired,
+        compact: PropTypes.bool,
     }
 
     _getProps() {
-        const { initial, prefix, disabled, currentUser, loginMemo, isEncrypted, onToggleEncrypted,
+        const { initial, prefix, disabled, currentUser, loginMemo, isEncrypted, onToggleEncrypted, compact,
             ...rest } = this.props
         return {
-            initial, prefix, disabled, currentUser, loginMemo, isEncrypted, onToggleEncrypted,
+            initial, prefix, disabled, currentUser, loginMemo, isEncrypted, onToggleEncrypted, compact,
             inputProps: {...rest} 
         }
     }
@@ -79,12 +80,18 @@ class MemoInput extends React.Component {
     }
 
     render() {
-        const { initial, prefix, disabled, inputProps, isEncrypted } = this._getProps()
+        const { initial, prefix, disabled, inputProps, isEncrypted, compact } = this._getProps()
         const isObsolete = /^#/.test(inputProps.value)
+
+        const hint = isObsolete ?
+            tt('transfer_jsx.public_obsolete') :
+            (isEncrypted ?
+            tt('transfer_jsx.memo_locked') :
+            tt('transfer_jsx.public'))
 
         let input = (<input type="text"
             {...inputProps}
-            placeholder={initial || tt('transfer_jsx.memo_placeholder')}
+            placeholder={compact ? hint : (initial || tt('transfer_jsx.memo_placeholder'))}
             autoComplete="on" autoCorrect="off" autoCapitalize="off"
             spellCheck="false" disabled={disabled}
             className={(prefix ? 'input-group-field' : '') +
@@ -104,13 +111,9 @@ class MemoInput extends React.Component {
             </div>)
 
         return (<div>
-            <small>
-                {isObsolete ?
-                    tt('transfer_jsx.public_obsolete') :
-                    (isEncrypted ?
-                    tt('transfer_jsx.memo_locked') :
-                    tt('transfer_jsx.public'))}
-            </small>
+            {compact ? null : <small>
+                {hint}
+            </small>}
             {input}
         </div>)
     }

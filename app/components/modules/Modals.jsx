@@ -96,7 +96,7 @@ class Modals extends React.Component {
                     <CloseButton onClick={hideTransfer} />
                     <Transfer />
                 </Reveal>}
-                {show_donate_modal && <Reveal onHide={hideDonate} show={show_donate_modal}>
+                {show_donate_modal && <Reveal onHide={hideDonate} show={show_donate_modal} revealStyle={{ width: '600px' }}>
                     <CloseButton onClick={hideDonate} />
                     <Donate />
                 </Reveal>}
