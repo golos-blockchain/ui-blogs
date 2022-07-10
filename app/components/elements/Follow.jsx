@@ -189,6 +189,23 @@ module.exports = connect(
         };
     },
     dispatch => ({
+        updateBlock: (blocker, blocking, block, done) => {
+            dispatch(transaction.actions.broadcastOperation({
+                type: 'account_setup',
+                operation: {
+                    account: blocker,
+                    settings: [
+                        [0, {
+                            account: blocking,
+                            block
+                        }]
+                    ],
+                    extensions: []
+                },
+                successCallback: done,
+                errorCallback: done,
+            }))
+        },
         updateFollow: (follower, following, action, done) => {
             const what = action ? [action] : [];
             const json = ['follow', {follower, following, what}];

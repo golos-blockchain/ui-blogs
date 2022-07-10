@@ -6,6 +6,7 @@ import tt from 'counterpart';
 import throttle from 'lodash/throttle'
 import transaction from 'app/redux/Transaction'
 import { getMetadataReliably } from 'app/utils/NormalizeProfile';
+import DoNotBother from 'app/components/elements/DoNotBother';
 import Icon from 'app/components/elements/Icon';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator'
 import Userpic from 'app/components/elements/Userpic';
@@ -541,6 +542,8 @@ class Settings extends React.Component {
                         {mutedUIAlist}
                     </div>
                 </div>}
+
+            <DoNotBother account={account} />
 
             {ignores && ignores.size > 0 &&
                 <div className="row">

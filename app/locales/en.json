@@ -599,6 +599,10 @@
     "sort_order": "Sort Order",
     "comments_were_hidden_due_to_low_ratings": "Comments were hidden due to low ratings"
   },
+  "do_not_bother": {
+    "title": "Do not bother",
+    "desc": "Users with reputation lower than 60 will not write messages, comments, send donates and transfers to you"
+  },
   "key_file": {
     "file_title": "Keys Of @",
     "file_desc": "There are private keys, which are authorizing your account. Store this file in secure place.",

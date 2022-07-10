@@ -71,6 +71,10 @@
     "too_low_amount": "Слишком маленькая сумма.",
     "you_will_receive": "Вы получите "
   },
+  "do_not_bother": {
+    "title": "Не беспокоить",
+    "desc": "Пользователи с репутацией менее 60 не смогут писать сообщения, комментарии, отправлять переводы и донаты"
+  },
   "key_file": {
     "file_title": "Keys Of @",
     "file_desc": "There are private keys, which are authorizing your account. Store this file in secure place.",

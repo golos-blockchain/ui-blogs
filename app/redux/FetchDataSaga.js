@@ -4,6 +4,7 @@ import {config, api} from 'golos-lib-js';
 
 import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile';
 import {loadFollows, fetchFollowCount} from 'app/redux/FollowSaga';
+import {getBlockings} from 'app/redux/Blocking'
 import {getContent} from 'app/redux/SagaShared';
 import GlobalReducer from './GlobalReducer';
 import constants from './constants';
@@ -48,6 +49,10 @@ export function* fetchState(location_change_action) {
         yield fork(loadFollows, "getFollowersAsync", username, 'blog')
         yield fork(loadFollows, "getFollowingAsync", username, 'blog')
         yield fork(loadFollows, "getFollowingAsync", username, 'ignore')
+        const current = localStorage.getItem('invite')
+        if (current) {
+            //yield getBlockings(current, [username])
+        }
     }
 
     // `ignore_fetch` case should only trigger on initial page load. No need to call
