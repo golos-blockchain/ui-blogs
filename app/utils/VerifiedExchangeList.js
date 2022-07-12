@@ -1,14 +1,20 @@
 const VerifiedExchangeList = `
 rudex
 steem-engine
-ecurrex-ymrub
-ecurrex-prizm
-golos.doge
-ecurrex-dash
 glsmp
-ecurrex-hive
+xchng
+golos.doge
+ecurrex-bitcoin
 ecurrex-steem
+ecurrex-wm
+ecurrex-prizm
+ecurrex-ymrub
+ecurrex-monero
+ecurrex-litecoin
 ecurrex-tron
+ecurrex-dash
+ecurrex-zcash
+ecurrex-hive
 ecurrex-tether
 `
 .trim()
