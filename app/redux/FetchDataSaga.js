@@ -4,7 +4,7 @@ import {config, api} from 'golos-lib-js';
 
 import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile';
 import {loadFollows, fetchFollowCount} from 'app/redux/FollowSaga';
-import {getBlockings} from 'app/redux/Blocking'
+import { getBlockings, listBlockings } from 'app/redux/BlockingSaga'
 import {getContent} from 'app/redux/SagaShared';
 import GlobalReducer from './GlobalReducer';
 import constants from './constants';
@@ -48,10 +48,9 @@ export function* fetchState(location_change_action) {
         yield fork(fetchFollowCount, username)
         yield fork(loadFollows, "getFollowersAsync", username, 'blog')
         yield fork(loadFollows, "getFollowingAsync", username, 'blog')
-        yield fork(loadFollows, "getFollowingAsync", username, 'ignore')
         const current = localStorage.getItem('invite')
         if (current) {
-            //yield getBlockings(current, [username])
+            yield fork(getBlockings, current, [username])
         }
     }
 
@@ -87,6 +86,9 @@ export function* fetchState(location_change_action) {
         state.minused_accounts = {}
         state.accounts = {}
 
+        const authorsForCheck = new Set() // if not blocked by current user
+        const checkAuthor = (author) => authorsForCheck.add(author)
+
         let accounts = new Set()
 
         const getPost = () => {
@@ -115,7 +117,7 @@ export function* fetchState(location_change_action) {
 
                 switch (parts[1]) {
                     case 'transfers':
-                        const history = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {select_ops: ['claim', 'donate', 'transfer', 'author_reward', 'curation_reward', 'transfer_to_tip', 'transfer_from_tip', 'transfer_to_vesting', 'withdraw_vesting', 'asset_issue', 'invite', 'transfer_to_savings', 'transfer_from_savings', 'convert_sbd_debt', 'convert', 'fill_convert_request', 'interest', 'worker_reward', 'account_freeze']})
+                        const history = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {select_ops: ['claim', 'donate', 'transfer', 'author_reward', 'curation_reward', 'transfer_to_tip', 'transfer_from_tip', 'transfer_to_vesting', 'withdraw_vesting', 'asset_issue', 'invite', 'transfer_to_savings', 'transfer_from_savings', 'convert_sbd_debt', 'convert', 'fill_convert_request', 'interest', 'worker_reward', 'account_freeze', 'unwanted_cost']})
                         account.transfer_history = []
                         account.other_history = []
 
@@ -141,6 +143,7 @@ export function* fetchState(location_change_action) {
                                 case 'interest':
                                 case 'worker_reward':
                                 case 'account_freeze':
+                                case 'unwanted_cost':
                                     state.accounts[uname].transfer_history.push(operation)
                                 break
 
@@ -188,6 +191,7 @@ export function* fetchState(location_change_action) {
                         replies.forEach(reply => {
                             const link = `${reply.author}/${reply.permlink}`
                             state.content[link] = reply
+                            checkAuthor(reply.author)
                             state.accounts[uname].recent_replies.push(link)
                         })
                     break
@@ -214,7 +218,9 @@ export function* fetchState(location_change_action) {
                             const link = `${author}/${permlink}`
                             state.accounts[uname].feed.push(link)
                             state.content[link] = yield call([api, api.getContentAsync], author, permlink, constants.DEFAULT_VOTE_LIMIT)
-                            
+
+                            checkAuthor(author)
+
                             if (feedEntries[key].reblog_by.length > 0) {
                                 state.content[link].first_reblogged_by = feedEntries[key].reblog_by[0]
                                 state.content[link].reblogged_by = feedEntries[key].reblog_by
@@ -255,6 +261,11 @@ export function* fetchState(location_change_action) {
                             }
                         });
                     break
+
+                    case 'settings':
+                        yield fork(listBlockings, uname)
+                    break
+
                     case 'blog':
                     default:
                         const blogEntries = yield call([api, api.getBlogEntriesAsync], uname, 0, 20, ['fm-'])
@@ -281,9 +292,6 @@ export function* fetchState(location_change_action) {
         } else if (getPost() || getComment()) {
             const {account, category, permlink} = getPost() || getComment();
 
-            // Fetch for ignored follow for hide comments
-            yield fork(loadFollows, "getFollowingAsync", account, 'ignore')
-
             const curl = `${account}/${permlink}`
             state.content[curl] = yield call([api, api.getContentAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT)
             const search = window.location.search
@@ -291,6 +299,7 @@ export function* fetchState(location_change_action) {
                 yield stateSetVersion(state.content[curl], search)
             }
             accounts.add(account)
+            checkAuthor(account)
 
             state.content[curl].donate_list = [];
             if (state.content[curl].donates != '0.000 GOLOS') {
@@ -317,6 +326,7 @@ export function* fetchState(location_change_action) {
                 const link = `${reply.author}/${reply.permlink}`
 
                 accounts.add(reply.author)
+                checkAuthor(reply.author)
  
                 state.content[link] = reply
                 if (reply.parent_permlink === permlink) {
@@ -653,9 +663,22 @@ export function* fetchData(action) {
             }
         }
 
+        const authorsForCheck = new Set() // if not blocked by current user
+        const checkAuthor = (author) => authorsForCheck.add(author)
+
         data.forEach(post => {
           posts.push(post)
+          checkAuthor(post.author)
         })
+
+        console.log('AFC', authorsForCheck, localStorage.getItem('invite'))
+
+        const current = localStorage.getItem('invite')
+        if (current) {
+            console.time('gbb')
+            yield call(getBlockings, current, [...authorsForCheck])
+            console.timeEnd('gbb')
+        }
 
         yield put(
             GlobalReducer.actions.receiveData({

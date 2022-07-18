@@ -193,7 +193,7 @@ class PostFull extends React.Component {
 
         const p = extractContent(immutableAccessor, postContent);
         const content = postContent.toJS();
-        const { author, permlink, parent_author, parent_permlink } = content;
+        const { author, permlink, parent_author, parent_permlink, root_author } = content;
         const jsonMetadata = showReply ? null : p.json_metadata;
         let link = `/@${content.author}/${content.permlink}`;
 
@@ -212,6 +212,7 @@ class PostFull extends React.Component {
             permlink,
             parent_author,
             parent_permlink,
+            root_author,
             category,
             title,
             body,

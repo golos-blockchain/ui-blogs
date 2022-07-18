@@ -251,6 +251,12 @@ class TransferHistoryRow extends React.Component {
             description_start += tt('transferhistoryrow_jsx.claimed') + data.unfreeze_fee + tt('transferhistoryrow_jsx.account_unfreeze');
         }
 
+        else if (type === 'unwanted_cost') {
+            description_start += tt('transferhistoryrow_jsx.received') + data.amount + tt('transferhistoryrow_jsx.from');
+            link = data.blocking
+            description_end += tt('transferhistoryrow_jsx.for_unwanted')
+        }
+
         else {
             code_key = JSON.stringify({type, ...data}, null, 2);
         }

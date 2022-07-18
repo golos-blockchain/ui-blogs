@@ -56,8 +56,8 @@ class DoNotBother extends React.Component {
 export default DoNotBother
 
 module.exports = connect(
-    (state, ownProps) => {
-    },
+    (state, ownProps) => ({
+    }),
     dispatch => ({
         updateBlock: (blocker, do_not_bother, done, errorCallback) => {
             dispatch(transaction.actions.broadcastOperation({

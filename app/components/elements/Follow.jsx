@@ -40,7 +40,7 @@ export default class Follow extends React.Component {
     }
 
     initEvents(props) {
-        const {updateFollow, follower, following} = props;
+        const {updateFollow, updateBlock, follower, following} = props;
 
         /** @param {string} [msg] Confirmation message. */
         const upd = (type, msg) => {
@@ -51,11 +51,32 @@ export default class Follow extends React.Component {
 
             this.setState({busy: true});
             const done = () => {this.setState({busy: false})};
-            updateFollow(follower, following, type, done)
+
+            const { isFollowing, isBlocking } = this.props
+
+            if (type === 'blog') {
+                const follow = () => {
+                    updateFollow(follower, following, type, done)
+                }
+                if (isBlocking) {
+                    updateBlock(follower, following, false, follow)
+                } else {
+                    follow()
+                }
+            } else if (type === 'block') {
+                updateBlock(follower, following, true, done)
+            } else {
+                if (isFollowing) {
+                    updateFollow(follower, following, null, done)
+                }
+                if (isBlocking) {
+                    updateBlock(follower, following, false, done)
+                }
+            }
         };
         this.follow = upd.bind(null, 'blog', '' /*tt('g.confirm_follow')*/)
         this.unfollow = upd.bind(null, null, tt('g.confirm_unfollow'))
-        this.ignore = upd.bind(null, 'ignore', tt('g.confirm_ignore'))
+        this.ignore = upd.bind(null, 'block', tt('g.confirm_ignore'))
         this.unignore = upd.bind(null, null, '' /*tt('g.confirm_unignore')*/)
     }
 
@@ -125,7 +146,7 @@ export default class Follow extends React.Component {
         // Can't follow or ignore self
         if(follower === following) return <span></span>
 
-        const {followingWhat} = this.props; // redux
+        const {isFollowing, isBlocking} = this.props; // redux
         const {showFollow, showMute, showMuteInNew, donateUrl, children} = this.props; // html
         const {busy} = this.state;
 
@@ -134,16 +155,16 @@ export default class Follow extends React.Component {
         const cnDonate = 'button slim alert ' + cnBusy;
         const cnMessage = 'button slim ' + cnBusy;
         return <span>
-            {showFollow && followingWhat !== 'blog' &&
+            {showFollow && !isFollowing &&
                 <label className={cnInactive} onClick={this.follow}>{tt('g.follow')}</label>}
 
-            {showFollow && followingWhat === 'blog' &&
+            {showFollow && isFollowing &&
                 <label className={cnInactive} onClick={this.unfollow}>{tt('g.unfollow')}</label>}
 
-            {showMute && followingWhat !== 'ignore' &&
+            {showMute && !isBlocking &&
                 <label className={cnInactive} onClick={this.ignore}>{tt('g.mute')}</label>}
 
-            {showMute && followingWhat === 'ignore' &&
+            {showMute && isBlocking &&
                 <label className={cnInactive} onClick={this.unignore}>{tt('g.unmute')}</label>}
 
             {showMuteInNew &&
@@ -174,16 +195,18 @@ module.exports = connect(
 
         const {following} = ownProps;
         const f = state.global.getIn(['follow', 'getFollowingAsync', follower], emptyMap);
-        const loading = f.get('blog_loading', false) || f.get('ignore_loading', false);
-        const followingWhat =
-            f.get('blog_result', emptySet).contains(following) ? 'blog' :
-            f.get('ignore_result', emptySet).contains(following) ? 'ignore' :
-            null;
+        const loading = f.get('blog_loading', false)
+        const isFollowing =
+            f.get('blog_result', emptySet).contains(following)
+
+        const b = state.global.getIn(['block', 'blocking', follower], emptyMap);
+        const isBlocking = b.get('result', emptySet).contains(following)
 
         return {
             follower,
             following,
-            followingWhat,
+            isFollowing,
+            isBlocking,
             loading,
             metaData,
         };

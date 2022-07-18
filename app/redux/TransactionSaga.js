@@ -38,6 +38,7 @@ const hook = {
     preBroadcast_vote,
     preBroadcast_account_witness_vote,
     preBroadcast_custom_json,
+    preBroadcast_account_setup,
     error_vote,
     error_custom_json,
     // error_account_update,
@@ -113,22 +114,57 @@ function* preBroadcast_custom_json({operation}) {
                         //m = m.asMutable()
                         if(action == null) {
                             m = m.update('blog_result', Set(), r => r.delete(following))
-                            m = m.update('ignore_result', Set(), r => r.delete(following))
                         } else if(action === 'blog') {
                             m = m.update('blog_result', Set(), r => r.add(following))
-                            m = m.update('ignore_result', Set(), r => r.delete(following))
-                        } else if(action === 'ignore') {
-                            m = m.update('ignore_result', Set(), r => r.add(following))
-                            m = m.update('blog_result', Set(), r => r.delete(following))
                         }
                         m = m.set('blog_count', m.get('blog_result', Set()).size)
-                        m = m.set('ignore_count', m.get('ignore_result', Set()).size)
                         return m//.asImmutable()
                     }
                 }))
             }
         } catch(e) {
             console.error('TransactionSaga unrecognized follow custom_json format', operation.json);
+        }
+    }
+    return operation
+}
+
+function* preBroadcast_account_setup({operation}) {
+    for (let setting of operation.settings) {
+        if (setting[0] === 0) { // block
+            const block_setting = setting[1]
+
+            if (block_setting.block) {
+                const key = ['follow', 'getFollowingAsync',
+                        operation.account, 'blog_result']
+                yield put(g.actions.update({
+                    key,
+                    notSet: Map(),
+                    updater: m => {
+                        m = m.delete(block_setting.account)
+                        return m
+                    }
+                }))
+            }
+
+            yield put({
+                type: 'global/UPDATE',
+                payload: {
+                    key: ['block', 'blocking', operation.account],
+                    notSet: Map(),
+                    updater: m => {
+                        m = m.update('result', Set(), res => {
+                            if (block_setting.block) {
+                                res = res.add(block_setting.account)
+                            } else {
+                                res = res.delete(block_setting.account)
+                            }
+                            return res
+                        })
+                        return m
+                    }
+                }
+            })
         }
     }
     return operation

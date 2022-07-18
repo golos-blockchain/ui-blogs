@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom';
-import reactForm from 'app/utils/ReactForm';
 import {Map} from 'immutable';
+import tt from 'counterpart';
+import { Asset } from 'golos-lib-js/lib/utils'
+
+import reactForm from 'app/utils/ReactForm';
 import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
 import g from 'app/redux/GlobalReducer';
@@ -11,9 +14,9 @@ import runTests, {browserTests} from 'app/utils/BrowserTests';
 import {validate_account_name} from 'app/utils/ChainValidation';
 import { saveMemo, loadMemo, clearOldMemos, } from 'app/utils/UIA';
 import {countDecimals, formatAmount, checkMemo} from 'app/utils/ParsersAndFormatters';
-import tt from 'counterpart';
 import { LIQUID_TICKER, DEBT_TICKER , VESTING_TOKEN2 } from 'app/client_config';
 import VerifiedExchangeList from 'app/utils/VerifiedExchangeList';
+import { checkBlocking } from 'app/utils/Blocking';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
 import Icon from 'app/components/elements/Icon';
 
@@ -405,8 +408,8 @@ class TransferForm extends Component {
         const amountLabel = tt('g.amount')
         const columns = this._getColumnSizes()
         const form = (
-            <form onSubmit={handleSubmit(({data}) => {
-                dispatchSubmit({...data, isUIA, precision, errorCallback: this.errorCallback, currentUser, toVesting, transferType,
+            <form onSubmit={handleSubmit(async ({data}) => {
+                await dispatchSubmit({...data, isUIA, precision, errorCallback: this.errorCallback, currentUser, toVesting, transferType,
                     withdrawalWay, isMemoPrivate, })
             })}
                 onChange={this.clearError}
@@ -583,7 +586,7 @@ export default connect(
         }) => {
             dispatch(user.actions.setTransferDefaults(transferDefaults))
         },
-        dispatchSubmit: ({
+        dispatchSubmit: async ({
             to, amount, isUIA, asset, precision, memo, transferType,
             withdrawalWay, isMemoPrivate,
             toVesting, currentUser, errorCallback
@@ -669,10 +672,22 @@ export default connect(
                 [opType, operation]
             ]
 
+            let confirm
+            if (opType === 'transfer' || opType === 'donate') {
+                const tipAmount = opType === 'donate' && Asset(operation.amount)
+                const blocking = await checkBlocking(operation.to, operation.from, tipAmount)
+                if (blocking.error) {
+                    errorCallback(blocking.error)
+                    return
+                }
+                confirm = blocking.confirm
+            }
+
             dispatch(transaction.actions.broadcastOperation({
                 type: opType,
                 username,
                 trx,
+                confirm,
                 successCallback,
                 errorCallback
             }))

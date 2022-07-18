@@ -304,9 +304,9 @@ class Settings extends React.Component {
 
         const {profile_image, cover_image, name, about, gender, location, website, donatePresets, emissionDonatePct, notifyPresets, notifyPresetsTouched} = this.state
 
-        const {follow, account, isOwnAccount} = this.props
+        const {follow, block, account, isOwnAccount} = this.props
         const following = follow && follow.getIn(['getFollowingAsync', account.name]);
-        const ignores = isOwnAccount && following && following.get('ignore_result');
+        const ignores = isOwnAccount && block && block.getIn(['blocking', account.name, 'result'])
         const mutedInNew = isOwnAccount && props.mutedInNew;
         let mutedUIA = [];
         if (process.env.BROWSER) {
@@ -583,6 +583,7 @@ export default connect(
             isOwnAccount: username == accountname,
             profile,
             mutedInNew,
+            block: state.global.get('block'),
             follow: state.global.get('follow'),
             ...ownProps
         }

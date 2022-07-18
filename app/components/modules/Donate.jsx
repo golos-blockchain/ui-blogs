@@ -17,6 +17,7 @@ import TipAssetList from 'app/components/elements/donate/TipAssetList'
 import VoteSlider from 'app/components/elements/donate/VoteSlider'
 import { checkMemo } from 'app/utils/ParsersAndFormatters';
 import { accuEmissionPerDay } from 'app/utils/StateFunctions'
+import { checkBlocking } from 'app/utils/Blocking'
 
 class Donate extends React.Component {
     constructor(props) {
@@ -86,14 +87,14 @@ class Donate extends React.Component {
         this.props.setDonateDefaults(donateDefs)
     }
 
-    _onSubmit = (values, actions) => {
+    _onSubmit = async (values, actions) => {
         const { currentUser, opts, dispatchSubmit } = this.props
         const { to, permlink, is_comment } = opts
         const { isMemoEncrypted } = this.state
         const vote = {
             percent: values.sliderPercent * 100
         }
-        dispatchSubmit({
+        await dispatchSubmit({
             to, amount: values.amount.asset, memo: values.memo, isMemoEncrypted,
             permlink, is_comment, vote, myVote: opts.myVote * 100, currentUser,
             errorCallback: (err) => {
@@ -254,7 +255,7 @@ export default connect(
         setDonateDefaults: (donateDefaults) => {
             dispatch(user.actions.setDonateDefaults(donateDefaults))
         },
-        dispatchSubmit: ({
+        dispatchSubmit: async ({
             to, amount, memo, isMemoEncrypted,
             permlink, is_comment, vote, myVote, currentUser, errorCallback
         }) => {
@@ -303,8 +304,17 @@ export default connect(
                 dispatch(user.actions.hideDonate())
             }
 
+            let confirm
+            const tipAmount = Asset(operation.amount)
+            const blocking = await checkBlocking(operation.to, operation.from, tipAmount)
+            if (blocking.error) {
+                errorCallback(blocking.error)
+                return
+            }
+            confirm = blocking.confirm
+
             dispatch(transaction.actions.broadcastOperation({
-                type: 'donate', username, trx, successCallback, errorCallback
+                type: 'donate', username, trx, confirm, successCallback, errorCallback
             }))
         }
     })
