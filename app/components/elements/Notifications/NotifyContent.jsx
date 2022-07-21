@@ -30,7 +30,7 @@ const transfer = (scope, type, op) => {
     let icon = null;
     let message = null;
     let url = null;
-    if (scope === 'donate') {
+    if (scope === 'donate' || scope === 'donate_msgs') {
         icon = 'notification/donate';
         message = tt('notify_content.donate_AMOUNT', { AMOUNT: amount, });
         url = `/@${to}/donates-to`;
@@ -179,7 +179,7 @@ function render(action) {
     try {
         return (
             type === 'transfer' ? transfer(scope, type, op) :
-            type === 'donate' ? transfer(scope, type, op) :
+            (type === 'donate' || type === 'donate_msgs') ? transfer(scope, type, op) :
             (type === 'comment' || type === 'comment_reply' || type === 'comment_mention') ? comment(scope, type, op) :
             type === 'private_message' ? message(scope, type, op) :
             type === 'fill_order' ? fillOrder(scope, type, op) :
