@@ -601,7 +601,11 @@
   },
   "do_not_bother": {
     "title": "Do not bother",
-    "desc": "Users with reputation lower than 60 will not write messages, comments, send donates and transfers to you"
+    "desc": "Users with reputation lower than 60 will not write messages, comments, send donates and transfers to you",
+    "blocking_confirm": "User blocked you, now sending of operations requires cost. Do you want to send them %(AMOUNT)s from TIP-balance?",
+    "blocking_error": "User blocked you, now sending of operations requires cost. %(AMOUNT)s required on your TIP-balance.",
+    "bother_confirm": "User wants to not be bothered by accounts with low-reputation, now sending of operations requires cost. Do you want to send them %(AMOUNT)s from TIP-balance?",
+    "bother_error": "User wants to not be bothered by accounts with low-reputation, now sending of operations requires cost. %(AMOUNT)s required on your TIP-balance."
   },
   "key_file": {
     "file_title": "Keys Of @",
