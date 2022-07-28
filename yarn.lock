@@ -4619,9 +4619,9 @@ core-js@^3.0.4, core-js@^3.19.0, core-js@^3.19.1, core-js@^3.6.5, core-js@^3.8.2
   integrity sha512-Tnc7E9iKd/b/ff7GFbhwPVzJzPztGrChB8X8GLqoYGdEOG8IpLnK1xPyo3ZoO3HsK6TodJS58VGPOxA+hLHQMg==
 
 core-js@^3.17.3:
-  version "3.23.5"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.23.5.tgz#1f82b0de5eece800827a2f59d597509c67650475"
-  integrity sha512-7Vh11tujtAZy82da4duVreQysIoO2EvVrur7y6IzZkH1IHPSekuDi8Vuw1+YKjkbfWLRD7Nc9ICQ/sIUDutcyg==
+  version "3.24.0"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.24.0.tgz#4928d4e99c593a234eb1a1f9abd3122b04d3ac57"
+  integrity sha512-IeOyT8A6iK37Ep4kZDD423mpi6JfPRoPUdQwEWYiGolvn4o6j2diaRzNfDfpTdu3a5qMbrGUzKUpYpRY8jXCkQ==
 
 core-js@^3.6.0:
   version "3.12.1"
@@ -7253,10 +7253,10 @@ globule@^1.0.0:
     lodash "~4.17.10"
     minimatch "~3.0.2"
 
-golos-lib-js@^0.9.37:
-  version "0.9.37"
-  resolved "https://registry.yarnpkg.com/golos-lib-js/-/golos-lib-js-0.9.37.tgz#0d88cec3c07db951bf194179c232d8ee0d57c86e"
-  integrity sha512-kYqCmLqnfaZQK9Nhh+wtfwlDbr3JFqF/W3Zk9NlwNweLozkq5G2b6WWPNF9y3E9WFhcNoOxfg6vlgxihyWo59Q==
+golos-lib-js@^0.9.39:
+  version "0.9.39"
+  resolved "https://registry.yarnpkg.com/golos-lib-js/-/golos-lib-js-0.9.39.tgz#3257e99769d259642f266a64c8fc7bc870b84e46"
+  integrity sha512-sRd88mnyzLOX/3ykXWkusQoM/A+fIVzP3zOf7Du3tutjvTlfPWdVrGJ/5U7Oo4kwKqxNlUM9jXkNc45/J4cpug==
   dependencies:
     abort-controller "^3.0.0"
     assert "^2.0.0"
