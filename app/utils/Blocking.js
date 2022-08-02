@@ -41,3 +41,22 @@ export async function checkBlocking(blockerName, blockingName, tipAmount = false
     }
     return {}
 }
+
+export function contentPrefs(removers = [], hiders = []) {
+    const blockers = []
+    const arrange = (obj) => Array.isArray(obj) ? obj : [obj] 
+    for (const remover of arrange(removers)) {
+        if (!remover) continue
+        blockers.push([remover, { remove: true }])
+    }
+    for (const hider of arrange(hiders)) {
+        if (!hider) continue
+        blockers.push([hider, { }])
+    }
+    if (!blockers.length) {
+        return undefined
+    }
+    return {
+        blockers
+    }
+}

@@ -37,8 +37,8 @@ export function getAccountHistory(account, from, limit, filter_ops, select_ops =
     return api.getAccountHistoryAsync(account, from, limit, {filter_ops, select_ops})
 }
 
-export function getRepliesByLastUpdate(startAuthor, startPermlink, limit, voteLimit) {
-    return api.getRepliesByLastUpdateAsync(startAuthor, startPermlink, limit, voteLimit, 0, ['fm-'])
+export function getRepliesByLastUpdate(startAuthor, startPermlink, limit, voteLimit, prefs) {
+    return api.getRepliesByLastUpdateAsync(startAuthor, startPermlink, limit, voteLimit, 0, ['fm-'], prefs)
 }
 
 export function getDiscussionsByComments(query) {
@@ -81,11 +81,11 @@ export function getContentReplies(author, permlink, voteLimit) {
     return api.getContentRepliesAsync(author, permlink, voteLimit)
 }
 
-export function getAllContentReplies(author, permlink, voteLimit) {
+export function getAllContentReplies(author, permlink, voteLimit, prefs) {
     if ($STM_Config.hide_comment_neg_rep) {
-        return api.getAllContentRepliesAsync(author, permlink, voteLimit, 0, [], [], true)
+        return api.getAllContentRepliesAsync(author, permlink, voteLimit, 0, [], [], true, null, prefs)
     } else {
-        return api.getAllContentRepliesAsync(author, permlink, voteLimit)
+        return api.getAllContentRepliesAsync(author, permlink, voteLimit, 0, [], [], false, null, prefs)
     }
 }
 

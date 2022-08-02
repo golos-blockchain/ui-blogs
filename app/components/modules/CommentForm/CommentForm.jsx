@@ -295,7 +295,7 @@ class CommentForm extends React.Component {
                 this.setState({ disabled: false });
             },
             err => {
-                this.refs.footer.showPostError(err.toString().trim());
+                if (err) this.refs.footer.showPostError(err.toString().trim());
                 this.setState({ disabled: false });
             }
         );
@@ -378,6 +378,7 @@ export default connect(
                 transaction.actions.broadcastOperation({
                     type: 'comment',
                     operation: payload,
+                    confirm,
                     hideErrors: true,
                     errorCallback: onError,
                     successCallback: onSuccess,

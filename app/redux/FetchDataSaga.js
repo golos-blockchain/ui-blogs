@@ -5,6 +5,7 @@ import {config, api} from 'golos-lib-js';
 import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile';
 import {loadFollows, fetchFollowCount} from 'app/redux/FollowSaga';
 import { getBlockings, listBlockings } from 'app/redux/BlockingSaga'
+import { contentPrefs as prefs } from 'app/utils/Blocking'
 import {getContent} from 'app/redux/SagaShared';
 import GlobalReducer from './GlobalReducer';
 import constants from './constants';
@@ -41,6 +42,7 @@ export function* watchFetchState() {
 
 let is_initial_state = true;
 export function* fetchState(location_change_action) {
+    const curUser = localStorage.getItem('invite')
     const {pathname} = location_change_action.payload;
     const m = pathname.match(/^\/@([a-z0-9\.-]+)/)
     if(m && m.length === 2) {
@@ -48,9 +50,8 @@ export function* fetchState(location_change_action) {
         yield fork(fetchFollowCount, username)
         yield fork(loadFollows, "getFollowersAsync", username, 'blog')
         yield fork(loadFollows, "getFollowingAsync", username, 'blog')
-        const current = localStorage.getItem('invite')
-        if (current) {
-            yield fork(getBlockings, current, [username])
+        if (curUser) {
+            yield fork(getBlockings, curUser, [username])
         }
     }
 
@@ -185,7 +186,8 @@ export function* fetchState(location_change_action) {
                     break
 
                     case 'recent-replies':
-                        const replies = yield call([api, api.getRepliesByLastUpdateAsync], uname, '', 50, constants.DEFAULT_VOTE_LIMIT, 0, ['fm-'])
+                        const replies = yield call([api, api.getRepliesByLastUpdateAsync], uname, '', 50, constants.DEFAULT_VOTE_LIMIT, 0, ['fm-'],
+                            prefs(uname, curUser))
                         state.accounts[uname].recent_replies = []
 
                         replies.forEach(reply => {
@@ -198,7 +200,7 @@ export function* fetchState(location_change_action) {
 
                     case 'posts':
                     case 'comments':
-                        const filter_tags = localStorage.getItem('invite') ? ['test'] : getFilterTags()
+                        const filter_tags = curUser ? ['test'] : getFilterTags()
                         const comments = yield call([api, api.getDiscussionsByCommentsAsync], { start_author: uname, limit: 20, filter_tag_masks: ['fm-'], filter_tags })
                         state.accounts[uname].comments = []
 
@@ -316,9 +318,9 @@ export function* fetchState(location_change_action) {
 
             let replies = [];
             if ($STM_Config.hide_comment_neg_rep) {
-                replies =  yield call([api, api.getAllContentRepliesAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT, 0, [], [], true)
+                replies =  yield call([api, api.getAllContentRepliesAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT, 0, [], [], true, null, prefs([], [account, curUser]))
             } else {
-                replies =  yield call([api, api.getAllContentRepliesAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT)
+                replies =  yield call([api, api.getAllContentRepliesAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT, 0, [], [], false, null, prefs([], [account, curUser]))
             }
 
             for (let key in replies) {
@@ -345,7 +347,8 @@ export function* fetchState(location_change_action) {
             }
 
             let args = { truncate_body: 128, select_categories: [category], filter_tag_masks: ['fm-'],
-                filter_tags: getFilterTags() };
+                filter_tags: getFilterTags(),
+                prefs: prefs(curUser) };
             let prev_posts = yield call([api, api[PUBLIC_API.created]], {limit: 4, start_author: account, start_permlink: permlink, select_authors: [account], ...args});
             prev_posts = prev_posts.slice(1);
             let p_ids = [];
@@ -372,8 +375,8 @@ export function* fetchState(location_change_action) {
             }
             state.prev_posts = prev_posts.slice(0, 3);
 
-            if (localStorage.getItem('invite')) {
-                state.assets = (yield call([api, api.getAccountsBalancesAsync], [localStorage.getItem('invite')]))[0]
+            if (curUser) {
+                state.assets = (yield call([api, api.getAccountsBalancesAsync], [curUser]))[0]
             }
 
             console.log('Full post load');
@@ -411,10 +414,9 @@ export function* fetchState(location_change_action) {
                 const votes = yield call([api, api.getWorkerRequestVotesAsync], author, permlink, '', 50);
                 state.worker_requests[url].votes = votes;
 
-                const voter = localStorage.getItem('invite');
-                if (voter) {
-                    const [ myVote ] = yield call([api, api.getWorkerRequestVotesAsync], author, permlink, voter, 1);
-                    state.worker_requests[url].myVote = (myVote && myVote.voter == voter) ? myVote : null
+                if (curUser) {
+                    const [ myVote ] = yield call([api, api.getWorkerRequestVotesAsync], author, permlink, curUser, 1);
+                    state.worker_requests[url].myVote = (myVote && myVote.voter == curUser) ? myVote : null
                 }
             }
         } else if (parts[0] === 'minused_accounts') {
@@ -445,6 +447,10 @@ export function* fetchState(location_change_action) {
                 state.accounts[ acc[i].name ] = acc[i]
             }
         }
+    
+        if (curUser && authorsForCheck.size) {
+            yield fork(getBlockings, curUser, [...authorsForCheck])
+        }
 
         yield put(GlobalReducer.actions.receiveState(state))
         yield put({type: 'FETCH_DATA_END'})
@@ -473,6 +479,8 @@ export function* fetchData(action) {
         from,
     } = action.payload;
 
+    const curUser = localStorage.getItem('invite')
+
     let ignore_tags = getFilterTags()
 
     let { category } = action.payload;
@@ -487,7 +495,8 @@ export function* fetchData(action) {
             truncate_body: constants.FETCH_DATA_TRUNCATE_BODY,
             start_author: author,
             start_permlink: permlink,
-            filter_tag_masks: ['fm-']
+            filter_tag_masks: ['fm-'],
+            prefs: prefs(curUser)
         }
     ];
     if (category.length && (!category.startsWith('tag-') || category.length > 4)) {
@@ -535,8 +544,8 @@ export function* fetchData(action) {
         }
     }
 
-    if (order == 'created' && localStorage.getItem('invite')) {
-        const [ loader ] = yield call([api, api.getAccountsAsync], [localStorage.getItem('invite')])
+    if (order == 'created' && curUser) {
+        const [ loader ] = yield call([api, api.getAccountsAsync], [curUser])
         const mutedInNew = getMutedInNew(loader);
         args[0].filter_authors = mutedInNew;
     }
@@ -556,6 +565,7 @@ export function* fetchData(action) {
         delete args[0].select_categories;
         delete args[0].filter_tag_masks; // do not exclude forum posts
         delete args[0].filter_tags;
+        delete args[0].prefs
     } else if( order === 'allcomments' ) {
         call_name = PUBLIC_API.allcomments;
         args[0].comments_only = true;
@@ -563,6 +573,7 @@ export function* fetchData(action) {
         delete args[0].select_categories;
         delete args[0].filter_tag_masks; // do not exclude forum comments
         delete args[0].filter_tags;
+        delete args[0].prefs
     } else if( order === 'created' ) {
         call_name = PUBLIC_API.created;
     } else if( order === 'responses' ) {
@@ -580,20 +591,24 @@ export function* fetchData(action) {
         call_name = 'getDiscussionsByBlogAsync';
         delete args[0].select_tags;
         delete args[0].select_categories;
+        delete args[0].prefs
         args[0].select_authors = [accountname];
     } else if (order === 'by_comments') {
         delete args[0].select_tags;
         delete args[0].select_categories;
-        if (localStorage.getItem('invite')) {
+        delete args[0].prefs
+        if (curUser) {
             args[0].filter_tags = ['test'] // remove onlyapp and onlyblog, because it is only inside profile
         }
         call_name = 'getDiscussionsByCommentsAsync';
     } else if( order === 'by_replies' ) {
         call_name = 'getRepliesByLastUpdateAsync';
-        args = [author, permlink, constants.FETCH_DATA_BATCH_SIZE, constants.DEFAULT_VOTE_LIMIT];
+        args = [author, permlink, constants.FETCH_DATA_BATCH_SIZE, constants.DEFAULT_VOTE_LIMIT, 0, ['fm-'],
+            prefs(uname, curUser)]
     } else if (order === 'forums') {
         call_name = PUBLIC_API.forums;
-        args = [author, permlink, 0, constants.FETCH_DATA_BATCH_SIZE, $STM_Config.forums.white_list, 0, 0, [], [], 'fm-'];
+        args = [author, permlink, 0, constants.FETCH_DATA_BATCH_SIZE, $STM_Config.forums.white_list, 0, 0, [], [], 'fm-',
+            prefs(curUser)]
     } else {
         call_name = PUBLIC_API.active;
     }
@@ -639,7 +654,7 @@ export function* fetchData(action) {
             const firstPage = !author && !permlink
             let searchRes = null
             try {
-                searchRes = yield searchData(req, firstPage ? 0 : 3)
+                searchRes = yield searchData(req, firstPage ? 0 : 3, 2, 10000, curUser)
             } catch (searchErr) {
             }
             if (searchRes) {
@@ -663,22 +678,9 @@ export function* fetchData(action) {
             }
         }
 
-        const authorsForCheck = new Set() // if not blocked by current user
-        const checkAuthor = (author) => authorsForCheck.add(author)
-
         data.forEach(post => {
           posts.push(post)
-          checkAuthor(post.author)
         })
-
-        console.log('AFC', authorsForCheck, localStorage.getItem('invite'))
-
-        const current = localStorage.getItem('invite')
-        if (current) {
-            console.time('gbb')
-            yield call(getBlockings, current, [...authorsForCheck])
-            console.timeEnd('gbb')
-        }
 
         yield put(
             GlobalReducer.actions.receiveData({

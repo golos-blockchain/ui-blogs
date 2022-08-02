@@ -75,12 +75,10 @@ export function* getBlockings(account, namesToCheck) {
         })
 
         let lst = []
-        console.log(namesToCheck)
         const rels = yield api.getAccountRelationsAsync({
             my_account: account,
             with_accounts: namesToCheck
         })
-        console.log('rels', rels)
         for (let [acc, val] of Object.entries(rels)) {
             if (val.blocking) {
                 lst.push(acc)

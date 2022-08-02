@@ -144,7 +144,7 @@ export default class Follow extends React.Component {
              <label className="button slim hollow secondary" onClick={this.followLoggedOut}>{tt('g.follow')}</label>
         </span>;
         // Can't follow or ignore self
-        if(follower === following) return <span></span>
+        if(follower === following && !this.props.showMuteInNew) return <span></span>
 
         const {isFollowing, isBlocking} = this.props; // redux
         const {showFollow, showMute, showMuteInNew, donateUrl, children} = this.props; // html
