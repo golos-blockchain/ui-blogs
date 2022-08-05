@@ -56,9 +56,10 @@ class WitnessProps extends React.Component {
             ['vote_regeneration_per_day', 'raw'],           
         ],
         [
-            ['negrep_posting_window', 'raw'],
-            ['negrep_posting_per_window', 'raw'],
+            ['negrep_posting_window', 'dropped', 0],
+            ['negrep_posting_per_window', 'dropped', 0],
             ['custom_ops_bandwidth_multiplier', 'raw'],
+            ['unwanted_operation_cost', 'golos'],
         ],
         [
             ['min_golos_power_to_curate', 'golos'],
@@ -76,7 +77,7 @@ class WitnessProps extends React.Component {
             ['witness_skipping_reset_time', 'time'],
             ['witness_idleness_time', 'time'],
             ['account_idleness_time', 'time'],
-            ['claim_idleness_time', 'time'],
+            ['claim_idleness_time', 'dropped', 0],
         ],
         [
             ['worker_reward_percent', 'dropped', 0],
@@ -144,7 +145,7 @@ class WitnessProps extends React.Component {
         props.comments_per_window = parseInt(props.comments_per_window);
         updateChainProperties({
             owner: account.name,
-            props: [6, props],
+            props: [7, props],
             errorCallback: (e) => {
                 if (e === 'Canceled') {
                     this.setState({
@@ -152,7 +153,7 @@ class WitnessProps extends React.Component {
                         errorMessage: ''
                     })
                 } else {
-                    console.log('updateChainProperties ERROR', e)
+                    console.error('updateChainProperties ERROR', e)
                     this.setState({
                         loading: false,
                         changed: false,

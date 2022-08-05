@@ -32,25 +32,7 @@ class TransferHistoryRow extends React.Component {
         let target_hint = "";
         let data_memo = data.memo;
 
-        if (type === 'claim') {
-            if( data.to === context ) {
-                if( data.from === context ) {
-                    description_start += tt('g.receive') + data.amount + tt('transferhistoryrow_jsx.with_claim');
-                }
-                else {
-                    description_start += tt('g.receive') + data.amount + tt('transferhistoryrow_jsx.with_claim') + tt('transferhistoryrow_jsx.from');
-                    link = data.from
-                }
-            } else {
-                description_start += tt('transferhistoryrow_jsx.transfer') + data.amount + tt('transferhistoryrow_jsx.with_claim') + tt('g.to');
-                link = data.to
-            }
-            if (data.to_vesting) {
-                description_end += tt('transferhistoryrow_jsx.to_golos_power');
-            }         
-        }
-
-        else if(/^transfer$|^transfer_to_savings$|^transfer_from_savings$/.test(type)) {
+        if (/^transfer$|^transfer_to_savings$|^transfer_from_savings$/.test(type)) {
             const fromWhere =
                 type === 'transfer_to_savings' ? tt('transferhistoryrow_jsx.to_savings') :
                 type === 'transfer_from_savings' ? tt('transferhistoryrow_jsx.from_savings') :
@@ -245,6 +227,16 @@ class TransferHistoryRow extends React.Component {
         else if (type === 'worker_reward') {
             description_start += tt('transferhistoryrow_jsx.funded_workers') + data.reward + tt('transferhistoryrow_jsx.for');
             link = data.worker_request_author + "/" + data.worker_request_permlink;
+        }
+
+        else if (type === 'account_freeze' && !data.frozen) {
+            description_start += tt('transferhistoryrow_jsx.claimed') + data.unfreeze_fee + tt('transferhistoryrow_jsx.account_unfreeze');
+        }
+
+        else if (type === 'unwanted_cost') {
+            description_start += tt('transferhistoryrow_jsx.received') + data.amount + tt('transferhistoryrow_jsx.from');
+            link = data.blocking
+            description_end += tt('transferhistoryrow_jsx.for_unwanted')
         }
 
         else {

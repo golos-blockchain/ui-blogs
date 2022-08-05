@@ -13,7 +13,7 @@ import reactForm from 'app/utils/ReactForm'
 import tt from 'counterpart';
 import { APP_DOMAIN } from 'app/client_config';
 import { translateError } from 'app/utils/ParsersAndFormatters';
-import { authRegisterUrl, } from 'app/utils/AuthApiClient';
+import { authUrl, authRegisterUrl, } from 'app/utils/AuthApiClient';
 
 class LoginForm extends Component {
 
@@ -158,7 +158,15 @@ class LoginForm extends Component {
         const submitLabel = loginBroadcastOperation ? tt('g.sign_in') : tt('g.login');
         const cancelIsRegister = loginDefault && loginDefault.get('cancelIsRegister');
         let error = password.touched && password.error ? password.error : this.props.login_error;
-        if (error === 'owner_login_blocked') {
+        if (error === 'account_frozen') {
+            error = <span>
+                {tt('loginform_jsx.account_frozen')}
+                &nbsp;
+                <a href={authUrl('/sign/unfreeze/' + username.value)} target='_blank' rel='noreferrer noopener'>
+                    {tt('g.more_hint')}
+                </a>
+            </span>
+        } else if (error === 'owner_login_blocked') {
             error = <span>
                 {tt('loginform_jsx.this_password_is_bound_to_your_account_owner_key')}
                 &nbsp;

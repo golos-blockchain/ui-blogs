@@ -3,7 +3,7 @@ import {call, put, select} from 'redux-saga/effects';
 import {api} from 'golos-lib-js';
 
 /** 
-    This loadFollows both 'blog' and 'ignore'
+    This loadFollows 'blog'
 */
 
 //fetch for follow/following count
@@ -79,7 +79,7 @@ function* loadFollowsLoop(method, account, type, start = '', limit = 100) {
         yield call(loadFollowsLoop, method, account, type, lastAccountName)
     } else {
         // This condition happens only once at the very end of the list.
-        // Every account has a different followers and following list for: blog, ignore
+        // Every account has a different followers and following list for: blog, or some other in future
         yield put({type: 'global/UPDATE', payload: {
             key: [],
             updater: (m) => {

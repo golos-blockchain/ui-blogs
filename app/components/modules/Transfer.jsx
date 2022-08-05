@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom';
-import reactForm from 'app/utils/ReactForm';
 import {Map} from 'immutable';
+import tt from 'counterpart';
+import { Asset } from 'golos-lib-js/lib/utils'
+
+import reactForm from 'app/utils/ReactForm';
 import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
 import g from 'app/redux/GlobalReducer';
@@ -11,9 +14,9 @@ import runTests, {browserTests} from 'app/utils/BrowserTests';
 import {validate_account_name} from 'app/utils/ChainValidation';
 import { saveMemo, loadMemo, clearOldMemos, } from 'app/utils/UIA';
 import {countDecimals, formatAmount, checkMemo} from 'app/utils/ParsersAndFormatters';
-import tt from 'counterpart';
 import { LIQUID_TICKER, DEBT_TICKER , VESTING_TOKEN2 } from 'app/client_config';
 import VerifiedExchangeList from 'app/utils/VerifiedExchangeList';
+import { checkBlocking } from 'app/utils/Blocking';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
 import Icon from 'app/components/elements/Icon';
 
@@ -103,13 +106,12 @@ class TransferForm extends Component {
         const {toVesting, uia} = props
         const isWithdraw = transferType && transferType === 'Savings Withdraw'
         const isTIP = transferType && transferType.startsWith('TIP to')
-        const isClaim = transferType && transferType === 'Claim'
         const isIssueUIA = (transferType === 'Issue UIA')
         const insufficientFunds = (asset, amount) => {
             const {currentAccount, uia} = this.props
             const balanceValue =
                 !asset || asset === 'GOLOS' ?
-                    isWithdraw ? currentAccount.get('savings_balance') : (isTIP ? currentAccount.get('tip_balance') : (isClaim ? currentAccount.get('accumulative_balance') : currentAccount.get('balance'))) :
+                    isWithdraw ? currentAccount.get('savings_balance') : (isTIP ? currentAccount.get('tip_balance') : currentAccount.get('balance')) :
                 asset === 'GBG' ?
                     isWithdraw ? currentAccount.get('savings_sbd_balance') : currentAccount.get('sbd_balance') :
                 isIssueUIA ? uia.get('can_issue') :
@@ -121,7 +123,7 @@ class TransferForm extends Component {
             return parseFloat(amount) > parseFloat(balance)
         }
         const fields = toVesting ? ['to', 'amount'] : ['to', 'amount', 'asset']
-        if(!toVesting && transferType !== 'Transfer to Savings' && transferType !== 'Savings Withdraw' && transferType !== 'Claim')
+        if(!toVesting && transferType !== 'Transfer to Savings' && transferType !== 'Savings Withdraw')
             fields.push('memo')
 
         reactForm({
@@ -131,7 +133,7 @@ class TransferForm extends Component {
             validation: values => { return {
                 to:
                     ! values.to ? tt('g.required') :
-                    (VerifiedExchangeList.includes(values.to) && (isTIP || isClaim)) ? tt('transfer_jsx.verified_exchange_liquid_only') :
+                    (VerifiedExchangeList.includes(values.to) && isTIP) ? tt('transfer_jsx.verified_exchange_liquid_only') :
                     (VerifiedExchangeList.includes(values.to) && values.memo === '') ? tt('transfer_jsx.verified_exchange_no_memo') :
                     validate_account_name(values.to),
                 amount:
@@ -157,9 +159,8 @@ class TransferForm extends Component {
         const {transferType} = this.props.initialValues
         const {currentAccount} = this.props
         const isWithdraw = transferType && transferType === 'Savings Withdraw'
-        const isClaim = transferType && transferType === 'Claim'
         const isTIP = transferType && transferType.startsWith('TIP to')
-        return isWithdraw ? currentAccount.get('savings_balance') : (isTIP ? currentAccount.get('tip_balance') : (isClaim ? currentAccount.get('accumulative_balance') : currentAccount.get('balance')))
+        return isWithdraw ? currentAccount.get('savings_balance') : (isTIP ? currentAccount.get('tip_balance') : currentAccount.get('balance'))
     }
 
     balanceValue() {
@@ -168,11 +169,10 @@ class TransferForm extends Component {
         const {asset} = this.state
         const isWithdraw = transferType && transferType === 'Savings Withdraw'
         const isTIP = transferType && transferType.startsWith('TIP to')
-        const isClaim = transferType && transferType === 'Claim'
         const isIssueUIA = (transferType === 'Issue UIA')
         return !asset ||
             asset.value === 'GOLOS' ?
-                isWithdraw ? currentAccount.get('savings_balance') : (isTIP ? currentAccount.get('tip_balance') : (isClaim ? currentAccount.get('accumulative_balance') : currentAccount.get('balance'))) :
+                isWithdraw ? currentAccount.get('savings_balance') : (isTIP ? currentAccount.get('tip_balance') : currentAccount.get('balance')) :
             asset.value === 'GBG' ?
                 isWithdraw ? currentAccount.get('savings_sbd_balance') : currentAccount.get('sbd_balance') :
             isIssueUIA ?
@@ -408,8 +408,8 @@ class TransferForm extends Component {
         const amountLabel = tt('g.amount')
         const columns = this._getColumnSizes()
         const form = (
-            <form onSubmit={handleSubmit(({data}) => {
-                dispatchSubmit({...data, isUIA, precision, errorCallback: this.errorCallback, currentUser, toVesting, transferType,
+            <form onSubmit={handleSubmit(async ({data}) => {
+                await dispatchSubmit({...data, isUIA, precision, errorCallback: this.errorCallback, currentUser, toVesting, transferType,
                     withdrawalWay, isMemoPrivate, })
             })}
                 onChange={this.clearError}
@@ -484,7 +484,7 @@ class TransferForm extends Component {
                     <div className={'column ' + columns[1]}>
                         <div className="input-group" style={{marginBottom: 5}}>
                             <input type="text" placeholder={amountLabel} {...amount.props} ref="amount" autoComplete="off" autoCorrect="off" autoCapitalize="off" spellCheck="false" disabled={disableAmount || loading} onChange={(e) => this.onChangeAmount(e)}/>
-                            {asset && !isUIA && transferType !== 'Claim' && !transferType.startsWith('TIP to') && !transferType.endsWith('to TIP') && <span className="input-group-label" style={{paddingLeft: 0, paddingRight: 0}}>
+                            {asset && !isUIA && !transferType.startsWith('TIP to') && !transferType.endsWith('to TIP') && <span className="input-group-label" style={{paddingLeft: 0, paddingRight: 0}}>
                                 <select {...asset.props} placeholder={tt('transfer_jsx.asset')} disabled={disableAmount || loading} style={{minWidth: "5rem", height: "inherit", backgroundColor: "transparent", border: "none"}}>
                                     <option value={LIQUID_TICKER}>{LIQUID_TOKEN}</option>
                                     <option value={DEBT_TICKER}>{DEBT_TICKER}</option>
@@ -554,7 +554,7 @@ export default connect(
         if(!toVesting && !initialValues.transferType)
             initialValues.transferType = 'Transfer to Account'
 
-        let transferToSelf = toVesting || /Transfer to Savings|Savings Withdraw|Claim|Transfer to TIP/.test(initialValues.transferType)
+        let transferToSelf = toVesting || /Transfer to Savings|Savings Withdraw|Transfer to TIP/.test(initialValues.transferType)
         if (currentUser && transferToSelf && !initialValues.to)
             initialValues.to = username
 
@@ -586,12 +586,12 @@ export default connect(
         }) => {
             dispatch(user.actions.setTransferDefaults(transferDefaults))
         },
-        dispatchSubmit: ({
+        dispatchSubmit: async ({
             to, amount, isUIA, asset, precision, memo, transferType,
             withdrawalWay, isMemoPrivate,
             toVesting, currentUser, errorCallback
         }) => {
-            if(!toVesting && !isUIA && !/Transfer to Account|Transfer to Savings|Savings Withdraw|Claim|Transfer to TIP|TIP to Account|Issue UIA/.test(transferType))
+            if(!toVesting && !isUIA && !/Transfer to Account|Transfer to Savings|Savings Withdraw|Transfer to TIP|TIP to Account|Issue UIA/.test(transferType))
                 throw new Error(`Invalid transfer params: toVesting ${toVesting}, transferType ${transferType}`)
 
             const username = currentUser.get('username')
@@ -612,7 +612,7 @@ export default connect(
             const asset2 = toVesting ? 'GOLOS' : asset
             const operation = {
                 to, 
-                memo: ((toVesting && transferType !== 'TIP to Vesting') || transferType === 'Claim'|| transferType === 'Issue UIA') ? undefined : (memo ? memo : '')
+                memo: ((toVesting && transferType !== 'TIP to Vesting') || transferType === 'Issue UIA') ? undefined : (memo ? memo : '')
             }
 
             if (transferType !== 'Issue UIA') {
@@ -629,10 +629,6 @@ export default connect(
 
             if(transferType === 'Savings Withdraw')
                 operation.request_id = Math.floor((Date.now() / 1000) % 4294967295)
-
-            if (transferType === 'Claim') {
-                operation.to_vesting = toVesting;
-            }
 
             if (transferType === 'TIP to Account') {
                 let donate_memo = {};
@@ -660,7 +656,6 @@ export default connect(
 
             const opType = toVesting ? (
                 transferType === 'TIP to Vesting' ? 'transfer_from_tip' :
-                transferType === 'Claim' ? 'claim' :
                 'transfer_to_vesting'
             ) : (
                 isUIA && transferType === 'TIP to Vesting' ? 'transfer_from_tip' :
@@ -669,7 +664,6 @@ export default connect(
                 transferType === 'Savings Withdraw' ? 'transfer_from_savings' :
                 transferType === 'Transfer to TIP' ? 'transfer_to_tip' :
                 transferType === 'TIP to Account' ? 'donate' :
-                transferType === 'Claim' ? 'claim' :
                 transferType === 'Issue UIA' ? 'asset_issue' :
                 null
             )
@@ -678,10 +672,22 @@ export default connect(
                 [opType, operation]
             ]
 
+            let confirm
+            if (opType === 'transfer' || opType === 'donate') {
+                const tipAmount = opType === 'donate' && Asset(operation.amount)
+                const blocking = await checkBlocking(operation.to, operation.from, tipAmount)
+                if (blocking.error) {
+                    errorCallback(blocking.error)
+                    return
+                }
+                confirm = blocking.confirm
+            }
+
             dispatch(transaction.actions.broadcastOperation({
                 type: opType,
                 username,
                 trx,
+                confirm,
                 successCallback,
                 errorCallback
             }))

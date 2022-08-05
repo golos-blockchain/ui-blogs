@@ -1,5 +1,6 @@
 import tt from 'counterpart';
 
+import { authUrl, } from 'app/utils/AuthApiClient'
 
 export function capitalizeFirstLetter(s) {
   return s.charAt(0).toUpperCase() + s.substring(1);

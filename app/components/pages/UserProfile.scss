@@ -160,6 +160,13 @@
         font-size: 90%;
     }
 
+    .UserProfile__frozen {
+        margin-top: 0.5rem;
+        a:hover {
+            text-decoration: underline;
+        }
+    }
+
     .UserProfile__stats {
         margin-bottom: 5px;
         padding-bottom: 5px;

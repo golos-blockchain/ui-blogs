@@ -230,7 +230,7 @@ class Search extends React.Component {
     };
 
     handleAuthorLookup = (value) => {
-        golos.api.lookupAccounts(value.toLowerCase(), 6, (err, data) => {
+        golos.api.lookupAccounts(value.toLowerCase(), 6, true, (err, data) => {
             this.setState({
                 authorLookup: data
             });

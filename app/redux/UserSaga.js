@@ -129,7 +129,6 @@ function* usernamePasswordLogin(action) {
     if (current) {
         const username = current.get('username')
         yield fork(loadFollows, "getFollowingAsync", username, 'blog')
-        yield fork(loadFollows, "getFollowingAsync", username, 'ignore')
         if (process.env.BROWSER) {
             //const notification_channel_created = yield select(state => state.user.get('notification_channel_created'))
             //if (!notification_channel_created) {
@@ -185,10 +184,17 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
 
     const isRole = (role, fn) => (!userProvidedRole || role === userProvidedRole ? fn() : undefined)
 
-    const account = yield call(getAccount, username)
+    let account = yield call(getAccount, username)
     if (!account) {
         yield put(user.actions.loginError({ error: 'Username does not exist' }))
         return
+    }
+    if (account.get('frozen')) {
+        account = yield call(getAccount, username, true)
+        if (account.get('frozen')) {
+            yield put(user.actions.loginError({ error: 'account_frozen' }))
+            return
+        }
     }
 
     let private_keys

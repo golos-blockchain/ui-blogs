@@ -63,7 +63,7 @@ class DelegateVestingSharesInfo extends React.Component {
                     {vestingShares_str}
                 </td>
                 <td style={{ textAlign: 'center' }}>
-                    {interestRate}%
+                    {c.is_emission ? tt('delegatevestingshares_jsx.no_interest_emission') : interestRate + '%'}
                 </td>
                 {type === 'delegated' && isMyAccount && (
                     <td style={{textAlign: 'center'}}>

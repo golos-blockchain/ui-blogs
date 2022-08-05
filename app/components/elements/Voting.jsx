@@ -35,8 +35,6 @@ class Voting extends React.Component {
         active_votes: PropTypes.object,
         loggedin: PropTypes.bool,
         post_obj: PropTypes.object,
-        net_vesting_shares: PropTypes.number,
-        vesting_shares: PropTypes.number,
         voting: PropTypes.bool,
     };
 
@@ -133,7 +131,7 @@ class Voting extends React.Component {
     }
 
     render() {
-        const {active_votes, showList, voting, flag, net_vesting_shares, is_comment, post_obj} = this.props;
+        const {active_votes, showList, voting, flag, is_comment, post_obj} = this.props;
         const {username} = this.props;
         const {votingUp, votingDown, showWeightDown, weight, myVote, voteListPage} = this.state;
         if(flag && !username) return null
@@ -280,16 +278,6 @@ export default connect(
         const username = current_account
             ? current_account.get('username')
             : null;
-        const vesting_shares = current_account
-            ? current_account.get('vesting_shares')
-            : 0.0;
-        const delegated_vesting_shares = current_account
-            ? current_account.get('delegated_vesting_shares')
-            : 0.0;
-        const received_vesting_shares = current_account
-            ? current_account.get('received_vesting_shares')
-            : 0.0;
-        const net_vesting_shares = vesting_shares - delegated_vesting_shares + received_vesting_shares;
         const voting = state.global.get(`transaction_vote_active_${author}_${permlink}`)
 
         return {
@@ -300,8 +288,6 @@ export default connect(
             permlink,
             username,
             active_votes,
-            net_vesting_shares,
-            vesting_shares,
             is_comment,
             post_obj: post,
             loggedin: username != null,
