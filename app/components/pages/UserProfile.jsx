@@ -636,7 +636,7 @@ export default class UserProfile extends React.Component {
                                 <Icon name='calendar' /> <DateJoinWrapper date={accountjoin} />
                                 {lastSeen && <span><Icon name='eye' /> {tt('g.last_seen')} <TimeAgoWrapper date={`${lastSeen}`} /> </span>}
                                 {frozen ? <div className='UserProfile__frozen'>
-                                    {tt('user_profile.account_frozen')}
+                                    <Icon name='flag' size='1_5x' /> {tt('user_profile.account_frozen')}
                                     &nbsp;
                                     <a href={authUrl('/sign/unfreeze/' + accountname)} target='_blank' rel='noreferrer noopener'>
                                         {tt('g.more_hint')}

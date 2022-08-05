@@ -60,14 +60,13 @@ export default async function getState(api, url, offchain = {}) {
 
             switch (parts[1]) {
                 case 'transfers':
-                    const history = await api.getAccountHistory(uname, -1, 1000, [], ['claim', 'donate', 'transfer', 'author_reward', 'curation_reward', 'transfer_to_tip', 'transfer_from_tip', 'transfer_to_vesting', 'withdraw_vesting', 'asset_issue', 'invite', 'transfer_to_savings', 'transfer_from_savings', 'convert_sbd_debt', 'convert', 'fill_convert_request', 'interest', 'worker_reward', 'account_freeze', 'unwanted_cost'])
+                    const history = await api.getAccountHistory(uname, -1, 1000, [], ['donate', 'transfer', 'author_reward', 'curation_reward', 'transfer_to_tip', 'transfer_from_tip', 'transfer_to_vesting', 'withdraw_vesting', 'asset_issue', 'invite', 'transfer_to_savings', 'transfer_from_savings', 'convert_sbd_debt', 'convert', 'fill_convert_request', 'interest', 'worker_reward', 'account_freeze', 'unwanted_cost'])
                     account.transfer_history = []
                     account.other_history = []
 
                     state.cprops = await api.getChainProperties();
                     history.forEach(operation => {
                         switch (operation[1].op[0]) {
-                            case 'claim':
                             case 'donate':
                             case 'transfer':
                             case 'author_reward':
