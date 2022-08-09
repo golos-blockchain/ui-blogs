@@ -1,5 +1,5 @@
 import { PUBLIC_API, CATEGORIES } from 'app/client_config';
-import { contentPrefs as prefs } from 'app/utils/Blocking'
+import { contentPrefs as prefs } from 'app/utils/Allowance'
 import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile';
 import { reveseTag, prepareTrendingTags, getFilterTags } from 'app/utils/tags';
 import { stateSetVersion } from 'app/utils/SearchClient'
@@ -60,7 +60,7 @@ export default async function getState(api, url, offchain = {}) {
 
             switch (parts[1]) {
                 case 'transfers':
-                    const history = await api.getAccountHistory(uname, -1, 1000, [], ['donate', 'transfer', 'author_reward', 'curation_reward', 'transfer_to_tip', 'transfer_from_tip', 'transfer_to_vesting', 'withdraw_vesting', 'asset_issue', 'invite', 'transfer_to_savings', 'transfer_from_savings', 'convert_sbd_debt', 'convert', 'fill_convert_request', 'interest', 'worker_reward', 'account_freeze', 'unwanted_cost'])
+                    const history = await api.getAccountHistory(uname, -1, 1000, [], ['donate', 'transfer', 'author_reward', 'curation_reward', 'transfer_to_tip', 'transfer_from_tip', 'transfer_to_vesting', 'withdraw_vesting', 'asset_issue', 'invite', 'transfer_to_savings', 'transfer_from_savings', 'convert_sbd_debt', 'convert', 'fill_convert_request', 'interest', 'worker_reward', 'account_freeze', 'unwanted_cost', 'unlimit_cost'])
                     account.transfer_history = []
                     account.other_history = []
 
@@ -86,6 +86,7 @@ export default async function getState(api, url, offchain = {}) {
                             case 'worker_reward':
                             case 'account_freeze':
                             case 'unwanted_cost':
+                            case 'unlimit_cost':
                                 state.accounts[uname].transfer_history.push(operation)
                             break
 

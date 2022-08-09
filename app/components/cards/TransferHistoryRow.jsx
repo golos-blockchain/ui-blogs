@@ -234,9 +234,33 @@ class TransferHistoryRow extends React.Component {
         }
 
         else if (type === 'unwanted_cost') {
-            description_start += tt('transferhistoryrow_jsx.received') + data.amount + tt('transferhistoryrow_jsx.from');
-            link = data.blocking
-            description_end += tt('transferhistoryrow_jsx.for_unwanted')
+            if (data.blocker === this.props.context) {
+                description_start += tt('transferhistoryrow_jsx.received') + data.amount + tt('transferhistoryrow_jsx.from')
+                link = data.blocking
+                description_end += tt('transferhistoryrow_jsx.for_unwanted')
+            } else {
+                description_start += tt('transferhistoryrow_jsx.transfer') + data.amount + tt('g.to')
+                link = data.blocker
+                description_end += tt('transferhistoryrow_jsx.for_unwanted')
+            }
+        }
+
+        else if (type === 'unlimit_cost') {
+            description_start += tt('transferhistoryrow_jsx.claimed') + data.amount + tt('transferhistoryrow_jsx.from_tip') + tt('transferhistoryrow_jsx.for')
+            if (data.target_type === 'comment') {
+                link = data.id1 + '/' + data.id2
+                linkTitle = tt('transferhistoryrow_jsx.comment')
+            } else if (data.target_type === 'vote') {
+                link = data.id1 + '/' + (data.id2 || '')
+                linkTitle = tt('transferhistoryrow_jsx.vote')
+            } else {
+                description_start += tt('transferhistoryrow_jsx.action')
+            }
+            if (data.limit_type === 'negrep') {
+                description_end += tt('transferhistoryrow_jsx.with_negrep')
+            } else {
+                description_end += tt('transferhistoryrow_jsx.with_unlimit')
+            }
         }
 
         else {

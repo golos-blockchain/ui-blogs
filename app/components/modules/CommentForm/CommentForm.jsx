@@ -14,7 +14,7 @@ import MarkdownViewer, {
     getRemarkable,
 } from 'app/components/cards/MarkdownViewer';
 import { checkPostHtml } from 'app/utils/validator';
-import { checkBlocking } from 'app/utils/Blocking'
+import { checkAllowed, AllowTypes } from 'app/utils/Allowance'
 import './CommentForm.scss';
 
 const DRAFT_KEY = 'golos.comment.draft';
@@ -286,6 +286,7 @@ class CommentForm extends React.Component {
 
         this.props.onPost(
             data,
+            editMode,
             () => {
                 try {
                     localStorage.removeItem(DRAFT_KEY);
@@ -360,18 +361,13 @@ export default connect(
         author: state.user.getIn(['current', 'username']),
     }),
     dispatch => ({
-        async onPost(payload, onSuccess, onError) {
-            let blocking = await checkBlocking(payload.parent_author, payload.author)
+        async onPost(payload, editMode, onSuccess, onError) {
+            let blocking = await checkAllowed(payload.author,
+                [payload.parent_author, payload.root_author],
+                null, editMode ? AllowTypes.commentEdit : AllowTypes.comment)
             if (blocking.error) {
                 onError(blocking.error)
                 return
-            }
-            if (!blocking.confirm) {
-                blocking = await checkBlocking(payload.root_author, payload.author)
-                if (blocking.error) {
-                    onError(blocking.error)
-                    return
-                }
             }
             const confirm = blocking.confirm
             dispatch(

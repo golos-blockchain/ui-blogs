@@ -604,7 +604,11 @@
     "blocking_confirm": "User blocked you, now sending of operations requires cost. Do you want to send them %(AMOUNT)s from TIP-balance?",
     "blocking_error": "User blocked you, now sending of operations requires cost. %(AMOUNT)s required on your TIP-balance.",
     "bother_confirm": "User wants to not be bothered by accounts with low-reputation, now sending of operations requires cost. Do you want to send them %(AMOUNT)s from TIP-balance?",
-    "bother_error": "User wants to not be bothered by accounts with low-reputation, now sending of operations requires cost. %(AMOUNT)s required on your TIP-balance."
+    "bother_error": "User wants to not be bothered by accounts with low-reputation, now sending of operations requires cost. %(AMOUNT)s required on your TIP-balance.",
+    "negrep_confirm": "You have negative reputation, now sending of operations requires cost. Do you want to send them %(AMOUNT)s from TIP-balance?",
+    "negrep_error": "You have negative reputation, now sending of operations requires cost. %(AMOUNT)s required on your TIP-balance.",
+    "window_confirm": "You have reached limit, now sending of operations requires cost. Do you want to send them %(AMOUNT)s from TIP-balance?",
+    "window_error": "You have reached limit now sending of operations requires cost. %(AMOUNT)s required on your TIP-balance."
   },
   "key_file": {
     "file_title": "Keys Of @",
@@ -972,7 +976,14 @@
     "including_conversion_fee": "incl. fee",
     "to_account": " to account ",
     "claimed": "Claimed ",
-    "account_unfreeze": " for account unfreezing"
+    "account_unfreeze": " for account unfreezing",
+    "received": "Received ",
+    "for_unwanted": " for unwanted operation (blacklist)",
+    "comment": "post",
+    "vote": "vote",
+    "some_action": "action",
+    "with_negrep": " with negative reputation",
+    "with_unlimit": " out of daily limit"
   },
   "savingswithdrawhistory_jsx": {
     "cancel_this_withdraw_request": "Cancel this withdraw request?",

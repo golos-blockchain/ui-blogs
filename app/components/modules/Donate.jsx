@@ -17,7 +17,7 @@ import TipAssetList from 'app/components/elements/donate/TipAssetList'
 import VoteSlider from 'app/components/elements/donate/VoteSlider'
 import { checkMemo } from 'app/utils/ParsersAndFormatters';
 import { accuEmissionPerDay } from 'app/utils/StateFunctions'
-import { checkBlocking } from 'app/utils/Blocking'
+import { checkAllowed, AllowTypes } from 'app/utils/Allowance'
 
 class Donate extends React.Component {
     constructor(props) {
@@ -96,9 +96,15 @@ class Donate extends React.Component {
         }
         await dispatchSubmit({
             to, amount: values.amount.asset, memo: values.memo, isMemoEncrypted,
-            permlink, is_comment, vote, myVote: opts.myVote * 100, currentUser,
+            permlink, is_comment,
+            vote,
+            myVote: opts.myVote * 100,
+            voteAllowType: opts.voteAllowType,
+            currentUser,
             errorCallback: (err) => {
-                actions.setErrors({ memo: err.message || err })
+                if (err) {
+                    actions.setErrors({ memo: err.message || err })
+                }
                 actions.setSubmitting(false)
             }
         })
@@ -257,7 +263,7 @@ export default connect(
         },
         dispatchSubmit: async ({
             to, amount, memo, isMemoEncrypted,
-            permlink, is_comment, vote, myVote, currentUser, errorCallback
+            permlink, is_comment, vote, myVote, voteAllowType, currentUser, errorCallback
         }) => {
             const username = currentUser.get('username')
 
@@ -278,13 +284,20 @@ export default connect(
             let trx = [
                 ['donate', operation]
             ]
+            let aTypes = [
+                AllowTypes.transfer
+            ]
             if (vote && vote.percent !== myVote) {
                 const voteOp = {
                     voter: username, author: to, permlink,
                     weight: vote.percent
                 }
-                if (amount.amount <= 0) trx = []
+                if (amount.amount <= 0) {
+                    trx = []
+                    aTypes = []
+                }
                 trx.push(['vote', voteOp])
+                aTypes.push(voteAllowType)
 
                 if (!myVote) {
                     localStorage.removeItem('vote_weight'); // deprecated
@@ -306,7 +319,7 @@ export default connect(
 
             let confirm
             const tipAmount = Asset(operation.amount)
-            const blocking = await checkBlocking(operation.to, operation.from, tipAmount)
+            const blocking = await checkAllowed(operation.from, [operation.to], tipAmount, aTypes)
             if (blocking.error) {
                 errorCallback(blocking.error)
                 return

@@ -16,7 +16,7 @@ import { saveMemo, loadMemo, clearOldMemos, } from 'app/utils/UIA';
 import {countDecimals, formatAmount, checkMemo} from 'app/utils/ParsersAndFormatters';
 import { LIQUID_TICKER, DEBT_TICKER , VESTING_TOKEN2 } from 'app/client_config';
 import VerifiedExchangeList from 'app/utils/VerifiedExchangeList';
-import { checkBlocking } from 'app/utils/Blocking';
+import { checkAllowed } from 'app/utils/Allowance'
 import DropdownMenu from 'app/components/elements/DropdownMenu';
 import Icon from 'app/components/elements/Icon';
 
@@ -675,7 +675,7 @@ export default connect(
             let confirm
             if (opType === 'transfer' || opType === 'donate') {
                 const tipAmount = opType === 'donate' && Asset(operation.amount)
-                const blocking = await checkBlocking(operation.to, operation.from, tipAmount)
+                const blocking = await checkAllowed(operation.from, [operation.to], tipAmount)
                 if (blocking.error) {
                     errorCallback(blocking.error)
                     return
