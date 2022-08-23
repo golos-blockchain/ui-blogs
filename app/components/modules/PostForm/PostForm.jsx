@@ -28,6 +28,7 @@ import {
     updateFavoriteTags,
 } from 'app/utils/tags';
 import { DRAFT_KEY, EDIT_KEY } from 'app/utils/postForm';
+import { checkAllowed, AllowTypes } from 'app/utils/Allowance'
 
 const EDITORS_TYPES = {
     MARKDOWN: 1,
@@ -665,6 +666,7 @@ class PostForm extends React.Component {
 
         this.props.onPost(
             data,
+            editMode,
             () => {
                 try {
                     if (editMode) {
@@ -692,7 +694,7 @@ class PostForm extends React.Component {
                         isPosting: false,
                     });
 
-                    this.refs.footer.showPostError(err.toString().trim());
+                    if (err) this.refs.footer.showPostError(err.toString().trim());
                 }
             }
         );
@@ -801,11 +803,20 @@ export default connect(
         categories: state.global.get('tag_idx'),
     }),
     dispatch => ({
-        onPost(payload, onSuccess, onError) {
+        async onPost(payload, editMode, onSuccess, onError) {
+            let blocking = await checkAllowed(payload.author,
+                [],
+                null, editMode ? AllowTypes.postEdit : AllowTypes.post)
+            if (blocking.error) {
+                onError(blocking.error)
+                return
+            }
+            const confirm = blocking.confirm
             dispatch(
                 transaction.actions.broadcastOperation({
                     type: 'comment',
                     operation: payload,
+                    confirm,
                     hideErrors: true,
                     errorCallback: onError,
                     successCallback: onSuccess,

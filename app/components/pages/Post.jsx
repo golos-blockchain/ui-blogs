@@ -98,7 +98,7 @@ class Post extends React.Component {
         } else {
             children = <p>
                 {tt('poststub.onlyblog')}
-                <Follow following={dis.get('author')} showMute={false} />
+                <Follow following={dis.get('root_author') || dis.get('author')} showMute={false} />
             </p>
         }
         return this._renderStub(children)
@@ -196,7 +196,9 @@ class Post extends React.Component {
             if (stats.isOnlyblog) {
                 if (!following && (typeof(localStorage) === 'undefined' || session.load())) {
                     return this._renderLoadingStub()
-                } else if (!following || !following.includes(dis.get('author'))) {
+                } else if (!following || 
+                    (!following.includes(dis.get('author')) &&
+                        !following.includes(dis.get('root_author')))) {
                     return this._renderOnlyBlog(dis)
                 }
             }

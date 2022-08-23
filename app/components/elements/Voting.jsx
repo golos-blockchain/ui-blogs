@@ -9,6 +9,7 @@ import CloseButton from 'react-foundation-components/lib/global/close-button'
 import tt from 'counterpart'
 import { Asset } from 'golos-lib-js/lib/utils'
 
+import { checkAllowed, AllowTypes } from 'app/utils/Allowance'
 import Icon from 'app/components/elements/Icon';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
@@ -52,6 +53,12 @@ class Voting extends React.Component {
           voteListPage: 0,
         };
 
+        this.getAllowType = () => {
+            const { post_obj } = this.props
+            const cashoutTime = post_obj.get('cashout_time')
+            return (!cashoutTime || cashoutTime.startsWith('19')) ?
+                AllowTypes.voteArchived : AllowTypes.vote
+        }
         this.voteUp = e => {
             e.preventDefault()
             const { myVote } = this.state
@@ -59,8 +66,9 @@ class Voting extends React.Component {
                 this.props.showLogin()
                 return
             }
-            const { author, permlink } = this.props
-            this.props.showDonate(author, permlink, this.props.is_comment, myVote)
+            const { author, permlink, } = this.props
+            this.props.showDonate(author, permlink, this.props.is_comment, myVote,
+                this.getAllowType())
         }
         this.voteDown = e => {
             e.preventDefault();
@@ -71,7 +79,7 @@ class Voting extends React.Component {
             if(this.props.voting) return;
             this.setState({votingUp: up, votingDown: !up});
             const {myVote} = this.state;
-            const {author, permlink, username, is_comment} = this.props;
+            const {author, permlink, username, is_comment } = this.props;
             if (myVote <= 0 && !up) {
                 localStorage.removeItem('vote_weight'); // deprecated
                 localStorage.setItem('voteWeightDown-'+username+(is_comment ? '-comment' : ''),
@@ -79,7 +87,11 @@ class Voting extends React.Component {
             }
             // already voted Up, remove the vote
             const weight = up ? (myVote > 0 ? 0 : this.state.weight) : (myVote < 0 ? 0 : -1 * this.state.weight);
-            this.props.vote(weight, {author, permlink, username, myVote})
+            this.props.vote(weight, {
+                author, permlink,
+                username, myVote,
+                allowType: this.getAllowType()
+            })
         };
 
         this.handleWeightChange = weight => {
@@ -299,8 +311,21 @@ export default connect(
         showLogin: () => {
             dispatch(user.actions.showLogin())
         },
-        vote: (weight, {author, permlink, username, myVote}) => {
+        vote: async (weight, {author, permlink, username, myVote, allowType}) => {
+            const blocking = await checkAllowed(username, [],
+                null, allowType)
+            if (blocking.error) {
+                dispatch({
+                    type: 'ADD_NOTIFICATION',
+                    payload: {
+                        message: blocking.error,
+                        dismissAfter: 5000,
+                    },
+                })
+                return
+            }
             const confirm = () => {
+                if (blocking.confirm) return blocking.confirm
                 if(myVote == null) return
                 const t = tt('voting_jsx.we_will_reset_curation_rewards_for_this_post')
                 if(weight === 0) return tt('voting_jsx.removing_your_vote') + t
@@ -317,7 +342,7 @@ export default connect(
                 successCallback: () => dispatch(user.actions.getAccount())                   
             }))
         },
-        showDonate(author, permlink, is_comment, myVote) {
+        showDonate(author, permlink, is_comment, myVote, voteAllowType) {
             const sym = LIQUID_TICKER
             dispatch(user.actions.setDonateDefaults({
                 permlink,
@@ -325,7 +350,8 @@ export default connect(
                 to: author,
                 sym,
                 precision: 3,
-                myVote: myVote ? Math.round(myVote / 100) : myVote,
+                myVote: myVote ? Math.max(Math.round(myVote / 100), 0) : myVote,
+                voteAllowType
             }))
             dispatch(user.actions.showDonate())
         },

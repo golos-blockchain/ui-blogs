@@ -7253,10 +7253,10 @@ globule@^1.0.0:
     lodash "~4.17.10"
     minimatch "~3.0.2"
 
-golos-lib-js@^0.9.41:
-  version "0.9.41"
-  resolved "https://registry.yarnpkg.com/golos-lib-js/-/golos-lib-js-0.9.41.tgz#879cfea14c22e7a41c7a78eefdeef8515054f0ef"
-  integrity sha512-xZ+ELaorTjuYriyIeAOdRxp1V/z3QbkVYR1YmxATjlc/DSdX4FeAvji3+Zzg/Iyvthdoe/fUNepbdvR5GpZk8Q==
+golos-lib-js@^0.9.43:
+  version "0.9.43"
+  resolved "https://registry.yarnpkg.com/golos-lib-js/-/golos-lib-js-0.9.43.tgz#2a0a67910c1255779a77cf72c4324258cb657a87"
+  integrity sha512-Usryzw8ukVQ3eniCW4bNIgQXe6/96Em7mqdd32ueyorCC0Unej0YLFd36kHiT9VuYvc9NSb3Un+GqjomdRARZg==
   dependencies:
     abort-controller "^3.0.0"
     assert "^2.0.0"

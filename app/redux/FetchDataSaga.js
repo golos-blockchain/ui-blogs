@@ -5,7 +5,7 @@ import {config, api} from 'golos-lib-js';
 import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile';
 import {loadFollows, fetchFollowCount} from 'app/redux/FollowSaga';
 import { getBlockings, listBlockings } from 'app/redux/BlockingSaga'
-import { contentPrefs as prefs } from 'app/utils/Blocking'
+import { contentPrefs as prefs } from 'app/utils/Allowance'
 import {getContent} from 'app/redux/SagaShared';
 import GlobalReducer from './GlobalReducer';
 import constants from './constants';
@@ -118,7 +118,7 @@ export function* fetchState(location_change_action) {
 
                 switch (parts[1]) {
                     case 'transfers':
-                        const history = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {select_ops: ['donate', 'transfer', 'author_reward', 'curation_reward', 'transfer_to_tip', 'transfer_from_tip', 'transfer_to_vesting', 'withdraw_vesting', 'asset_issue', 'invite', 'transfer_to_savings', 'transfer_from_savings', 'convert_sbd_debt', 'convert', 'fill_convert_request', 'interest', 'worker_reward', 'account_freeze', 'unwanted_cost']})
+                        const history = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {select_ops: ['donate', 'transfer', 'author_reward', 'curation_reward', 'transfer_to_tip', 'transfer_from_tip', 'transfer_to_vesting', 'withdraw_vesting', 'asset_issue', 'invite', 'transfer_to_savings', 'transfer_from_savings', 'convert_sbd_debt', 'convert', 'fill_convert_request', 'interest', 'worker_reward', 'account_freeze', 'unwanted_cost', 'unlimit_cost']})
                         account.transfer_history = []
                         account.other_history = []
 
@@ -144,6 +144,7 @@ export function* fetchState(location_change_action) {
                                 case 'worker_reward':
                                 case 'account_freeze':
                                 case 'unwanted_cost':
+                                case 'unlimit_cost':
                                     state.accounts[uname].transfer_history.push(operation)
                                 break
 
@@ -582,6 +583,7 @@ export function* fetchData(action) {
     } else if( order === 'hot' ) {
         call_name = PUBLIC_API.hot;
     } else if( order === 'by_feed' ) {
+        args[0].filter_tags = args[0].filter_tags.filter(tag => tag !== 'onlyblog')
         call_name = 'getDiscussionsByFeedAsync';
         delete args[0].select_tags;
         delete args[0].select_categories;

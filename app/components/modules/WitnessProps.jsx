@@ -60,6 +60,7 @@ class WitnessProps extends React.Component {
             ['negrep_posting_per_window', 'dropped', 0],
             ['custom_ops_bandwidth_multiplier', 'raw'],
             ['unwanted_operation_cost', 'golos'],
+            ['unlimit_operation_cost', 'golos'],
         ],
         [
             ['min_golos_power_to_curate', 'golos'],
