@@ -608,7 +608,9 @@
     "negrep_confirm": "You have negative reputation, now sending of operations requires cost. Do you want to send them %(AMOUNT)s from TIP-balance?",
     "negrep_error": "You have negative reputation, now sending of operations requires cost. %(AMOUNT)s required on your TIP-balance.",
     "window_confirm": "You have reached limit, now sending of operations requires cost. Do you want to send them %(AMOUNT)s from TIP-balance?",
-    "window_error": "You have reached limit now sending of operations requires cost. %(AMOUNT)s required on your TIP-balance."
+    "window_error": "You have reached limit now sending of operations requires cost. %(AMOUNT)s required on your TIP-balance.",
+    "blocking_fatal_error": "User blocked you, now sending of transfers and donates is forbidden.",
+    "bother_fatal_error": "User wants to not be bothered by accounts with low-reputation, now sending of transfers and donates is forbidden."
   },
   "key_file": {
     "file_title": "Keys Of @",
