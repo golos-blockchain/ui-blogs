@@ -2,7 +2,14 @@ import { api } from 'golos-lib-js'
 import { Asset } from 'golos-lib-js/lib/utils'
 import tt from 'counterpart'
 
-async function checkBalance(blocking, cost, type = 'blocking') {
+async function returnError(blocking, cost, type = 'blocking', fatal = false) {
+    if (fatal) {
+        return { error: tt(`do_not_bother.${type}_fatal_error`, {
+                AMOUNT: cost.toString()
+            })
+        }
+    }
+
     const tipBalance = Asset(blocking.tip_balance)
 
     if (cost.gt(tipBalance)) {
@@ -69,7 +76,14 @@ export async function checkAllowed(blockingName, blockerNames, tipAmount = null,
 
     let hasNegRep = false
     let blockType
+    let fatal = false
     for (const aType of aTypes) {
+        const setFatal = () => {
+            if (aType === AllowTypes.transfer) {
+                fatal = true
+            }
+        }
+
         const negRep = aType == AllowTypes.comment ||
             aType == AllowTypes.post || aType == AllowTypes.vote ||
             aType == AllowTypes.voteArchived
@@ -91,9 +105,11 @@ export async function checkAllowed(blockingName, blockerNames, tipAmount = null,
             if (rels[blockerName] && rels[blockerName].blocking) {
                 cost = cost.plus(await unw())
                 blockType = 'blocking'
+                setFatal()
             } else if (blocker.do_not_bother && blocking.reputation < 27800000000000) {
                 cost = cost.plus(await unw())
                 blockType = 'bother'
+                setFatal()
             }
         }
     }
@@ -106,17 +122,17 @@ export async function checkAllowed(blockingName, blockerNames, tipAmount = null,
 
     if (blockType) {
         addAmount()
-        return await checkBalance(blocking, cost, blockType)
+        return await returnError(blocking, cost, blockType, fatal)
     }
 
     if (hasNegRep) {
         addAmount()
-        return await checkBalance(blocking, cost, 'negrep')
+        return await returnError(blocking, cost, 'negrep', fatal)
     }
 
     if (cost.amount) {
         addAmount()
-        return await checkBalance(blocking, cost, 'window')
+        return await returnError(blocking, cost, 'window', fatal)
     }
 
     return {}

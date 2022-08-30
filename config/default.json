@@ -33,6 +33,9 @@
     "upload_image": "https://api.imgur.com/3/image",
     "client_id": "6c09ebf8c548126"
   },
+  "wallet_service": {
+    "host": "https://devwallet.golos.today"
+  },
   "auth_service": {
     "host": "https://dev.golos.app",
     "custom_client": "blogs"
