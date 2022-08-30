@@ -89,7 +89,7 @@ class CommentImpl extends PureComponent {
     _checkHide(content) {
         let hide = hideSubtree(this.props.cont, this.props.content)
 
-        console.log('CON', content.toJS())
+        // console.log('CON', content.toJS())
 
         if (content.get('bad')) {
             hide = true

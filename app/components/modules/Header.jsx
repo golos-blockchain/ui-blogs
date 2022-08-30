@@ -198,7 +198,7 @@ class Header extends React.Component {
                                     </Link>
                                 </li>
                                 <li className="Header__top-steemit show-for-large noPrint">
-                                    <Link to={logo_link}>{APP_NAME_UP}<span className="beta">blockchain</span></Link>
+                                    <Link to={logo_link}>{APP_NAME_UP}<span className="beta">blogs platform</span></Link>
                                 </li>
                                 {selected_sort_order && <DropdownMenu className="Header__sort-order-menu show-for-small-only" items={sort_order_menu} selected={selected_sort_order[1]} el="li" />}
                             </ul>
