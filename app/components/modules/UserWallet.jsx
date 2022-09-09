@@ -4,6 +4,7 @@ import {Link} from 'react-router';
 import g from 'app/redux/GlobalReducer';
 import tt from 'counterpart';
 import {List} from 'immutable';
+import { Asset, } from 'golos-lib-js/lib/utils'
 
 import ConvertAssetsBtn from 'app/components/elements/market/ConvertAssetsBtn'
 import SavingsWithdrawHistory from 'app/components/elements/SavingsWithdrawHistory';
@@ -12,7 +13,7 @@ import TransactionError from 'app/components/elements/TransactionError';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Reveal from 'react-foundation-components/lib/global/reveal';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
-import {numberWithCommas, toAsset, vestsToSteem} from 'app/utils/StateFunctions';
+import {numberWithCommas, toAsset, vestsToSteem, accuEmissionPerDay} from 'app/utils/StateFunctions';
 import FoundationDropdownMenu from 'app/components/elements/FoundationDropdownMenu';
 import WalletSubMenu from 'app/components/elements/WalletSubMenu';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
@@ -62,7 +63,6 @@ class UserWallet extends React.Component {
         const VESTING_TOKENS = tt('token_names.VESTING_TOKENS')
         const TOKEN_WORTH = tt('token_names.TOKEN_WORTH')
         const TIP_TOKEN = tt('token_names.TIP_TOKEN')
-        const CLAIM_TOKEN = tt('token_names.CLAIM_TOKEN')
 
         const {showDeposit, depositType, toggleDivestError} = this.state
         const { showConvertDialog, price_per_golos, savings_withdraws, account, current_user, } = this.props;
@@ -72,6 +72,10 @@ class UserWallet extends React.Component {
         const vesting_steem = vestsToSteem(account.get('vesting_shares'), gprops);
         const received_vesting_shares = vestsToSteem(account.get('received_vesting_shares'), gprops);
         const delegated_vesting_shares = vestsToSteem(account.get('delegated_vesting_shares'), gprops);
+        const emission_received_vesting_shares = vestsToSteem(account.get('emission_received_vesting_shares'), gprops)
+        const emission_delegated_vesting_shares = vestsToSteem(account.get('emission_delegated_vesting_shares'), gprops)
+        const total_received_vesting_shares = (parseFloat(received_vesting_shares) + parseFloat(emission_received_vesting_shares)).toFixed(3)
+        const total_delegated_vesting_shares = (parseFloat(delegated_vesting_shares) + parseFloat(emission_delegated_vesting_shares)).toFixed(3)
 
         let isMyAccount = current_user && current_user.get('username') === account.get('name');
         
@@ -116,9 +120,11 @@ class UserWallet extends React.Component {
                 const to_withdraw = account.get('to_withdraw');
                 const withdrawn = account.get('withdrawn');
                 const vesting_shares = account.get('vesting_shares');
-                const delegated_vesting_shares = account.get(
+                let delegated_vesting_shares = Asset(account.get(
                     'delegated_vesting_shares'
-                );
+                )).plus(Asset(account.get(
+                    'emission_delegated_vesting_shares'
+                ))).toString()
                 this.props.showPowerdown({
                     account: name,
                     to_withdraw,
@@ -139,12 +145,6 @@ class UserWallet extends React.Component {
             e.preventDefault()
             const name = account.get('name')
             this.props.showDelegatedVesting(name, type)
-        }
-
-        const claim = (amount, e) => {
-            e.preventDefault()
-            const name = account.get('name')
-            this.props.claim(name, amount)
         }
 
         // Sum savings withrawals
@@ -184,7 +184,6 @@ class UserWallet extends React.Component {
         }, [])
 
         const tip_balance_steem = parseFloat(account.get('tip_balance').split(' ')[0]);
-        const accumulative_balance_steem = parseFloat(account.get('accumulative_balance').split(' ')[0]);
         const balance_steem = parseFloat(account.get('balance').split(' ')[0]);
         const saving_balance_steem = parseFloat(savings_balance.split(' ')[0]);
         const divesting = parseFloat(account.get('vesting_withdraw_rate').split(' ')[0]) > 0.000000;
@@ -213,10 +212,6 @@ class UserWallet extends React.Component {
             { value: tt('g.transfer'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'TIP to Account' ) },
             { value: tt('userwallet_jsx.power_up'), link: '#', onClick: showTransfer.bind( this, VEST_TICKER, 'TIP to Vesting' ) },
         ]
-        let claim_menu = [
-            { value: tt('userwallet_jsx.claim'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'Claim' ) },
-            { value: tt('userwallet_jsx.power_up'), link: '#', onClick: showTransfer.bind( this, VEST_TICKER, 'Claim' ) },
-        ]
         let steem_menu = [
             { value: tt('g.transfer'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'Transfer to Account' ) },
             { value: tt('userwallet_jsx.transfer_to_tip'), link: '#', onClick: showTransfer.bind( this, LIQUID_TICKER, 'Transfer to TIP' ) },
@@ -243,13 +238,17 @@ class UserWallet extends React.Component {
 
         const steem_balance_str = numberWithCommas(balance_steem.toFixed(3)) + ' ' + LIQUID_TOKEN_UPPERCASE;
         const steem_tip_balance_str = numberWithCommas(tip_balance_steem.toFixed(3)) + ' ' + LIQUID_TOKEN_UPPERCASE;
-        const steem_claim_balance_str = numberWithCommas(accumulative_balance_steem.toFixed(3)) + ' ' + LIQUID_TOKEN_UPPERCASE;
         const power_balance_str = numberWithCommas(vesting_steem) + ' ' + LIQUID_TOKEN_UPPERCASE;
         const savings_balance_str = numberWithCommas(saving_balance_steem.toFixed(3)) + ' ' + LIQUID_TOKEN_UPPERCASE;
         const sbd_balance_str = numberWithCommas(sbd_balance.toFixed(3)) + ' ' + DEBT_TICKER;
         const savings_sbd_balance_str = numberWithCommas(sbd_balance_savings.toFixed(3)) + ' ' + DEBT_TICKER;
+
         const received_vesting_shares_str = `${numberWithCommas(received_vesting_shares)} ${LIQUID_TICKER}`;
         const delegated_vesting_shares_str = `${numberWithCommas(delegated_vesting_shares)} ${LIQUID_TICKER}`;
+        const emission_received_vesting_shares_str = `${numberWithCommas(emission_received_vesting_shares)} ${LIQUID_TICKER}`;
+        const emission_delegated_vesting_shares_str = `${numberWithCommas(emission_delegated_vesting_shares)} ${LIQUID_TICKER}`;
+        const total_received_vesting_shares_str = `${numberWithCommas(total_received_vesting_shares)} ${LIQUID_TICKER}`;
+        const total_delegated_vesting_shares_str = `${numberWithCommas(total_delegated_vesting_shares)} ${LIQUID_TICKER}`;
 
         const steem_orders_balance_str = numberWithCommas(steemOrders.toFixed(3)) + ' ' + LIQUID_TOKEN_UPPERCASE;
         const sbd_orders_balance_str = numberWithCommas(sbdOrders.toFixed(3)) + ' ' + DEBT_TICKER;
@@ -267,7 +266,7 @@ class UserWallet extends React.Component {
         const sbdInterest = this.props.sbd_interest / 100
         const sbdMessage = <span>{tt('userwallet_jsx.tokens_worth_about_1_of_LIQUID_TICKER', {TOKEN_WORTH, LIQUID_TICKER, sbdInterest})}</span>
 
-        let EMISSION_STAKE = toAsset(gprops.accumulative_emission_per_day).amount * toAsset(account.get('vesting_shares')).amount / toAsset(gprops.total_vesting_shares).amount;
+        let EMISSION_STAKE = accuEmissionPerDay(account, gprops)
         EMISSION_STAKE = numberWithCommas(EMISSION_STAKE.toFixed(3)) + ' ' + LIQUID_TICKER;
 
         const vesting_withdraw_rate_str = vestsToSteem(account.get('vesting_withdraw_rate'), gprops);
@@ -306,35 +305,13 @@ class UserWallet extends React.Component {
                         />
                         : steem_tip_balance_str
                     }
+                    <br/>
+                    <Tooltip t={tt('tips_js.vesting_emission_per_day_title')}>
+                    <small>{tt('tips_js.vesting_emission_per_day', {EMISSION_STAKE})}</small>
+                    </Tooltip>
                 </div>
             </div>
             <div className="UserWallet__balance row zebra">
-                <div className="column small-12 medium-8">
-                    {CLAIM_TOKEN.toUpperCase()}<br />
-                    <span className="secondary">{tt('tips_js.claim_balance_hint')} {tt('tips_js.claim_expiration_hint')} 
-                    &nbsp;<Icon name="clock" />&nbsp;<b><TimeAgoWrapper date={(typeof getClaimExpiration !== 'undefined' && getClaimExpiration(account)) || account.get('claim_expiration')} /></b>.</span>
-                </div>
-                <div className="column small-12 medium-4">
-                    {isMyAccount
-                        ? <FoundationDropdownMenu
-                            className="Wallet__claim_dropdown"
-                            dropdownPosition="bottom"
-                            dropdownAlignment="right"
-                            label={steem_claim_balance_str}
-                            menu={claim_menu}
-                        />
-                        : steem_claim_balance_str
-                    }
-                    <div>{isMyAccount ? <button
-                        className="Wallet__claim_button button tiny"
-                        disabled={steem_claim_balance_str < '0.001 GOLOS'}
-                        onClick={claim.bind(this, account.get('accumulative_balance'))}
-                    >
-                        {tt('g.claim')}
-                    </button> : null}</div>
-                </div>
-            </div>
-            <div className="UserWallet__balance row">
                 <div className="column small-12 medium-8">
                     {VESTING_TOKEN.toUpperCase()}<br />
                     <span className="secondary">{powerTip.split(".").map((a, index) => {if (a) {return <div key={index}>{a}.</div>;} return null;})}
@@ -352,30 +329,27 @@ class UserWallet extends React.Component {
                         : power_balance_str
                     }
                     <br />
-                    <Tooltip t={tt('tips_js.vesting_emission_per_day_title')}>
-                    <small>{tt('tips_js.vesting_emission_per_day', {EMISSION_STAKE})}</small>
-                    </Tooltip>
-                    {received_vesting_shares != 0 ? (
+                    {total_received_vesting_shares != 0 ? (
                             <div style={{ paddingRight: isMyAccount ? '0.85rem' : null }} >
                                 <Tooltip t={tt('g.received_vesting', {VESTING_TOKEN})}>
                                     <small><a href="#" onClick={showDelegateVestingInfo.bind(this, 'received')}>
-                                        + {received_vesting_shares_str}
+                                        + {total_received_vesting_shares_str}
                                     </a></small>
                                 </Tooltip>
                             </div>
                         ) : null}
-                    {delegated_vesting_shares != 0 ? (
+                    {total_delegated_vesting_shares != 0 ? (
                             <div style={{ paddingRight: isMyAccount ? '0.85rem' : null }} >
                                 <Tooltip t={tt('g.delegated_vesting', {VESTING_TOKEN})}>
                                     <small><a href="#" onClick={showDelegateVestingInfo.bind(this, 'delegated')}>
-                                        - {delegated_vesting_shares_str}
+                                        - {total_delegated_vesting_shares_str}
                                     </a></small>
                                 </Tooltip>
                             </div>
                         ) : null}
                 </div>
             </div>
-            <div className="UserWallet__balance row zebra">
+            <div className="UserWallet__balance row">
                 <div className="column small-12 medium-8">
                     {LIQUID_TOKEN.toUpperCase()}<br />
                     <span className="secondary">{steemTip.split(".").map((a, index) => {if (a) {return <div key={index}>{a}.</div>;} return null;})}</span>
@@ -409,7 +383,7 @@ class UserWallet extends React.Component {
                     >{tt('g.buy')}</Link> : null}</div>
                 </div>
             </div>
-            <div className="UserWallet__balance row">
+            <div className="UserWallet__balance row zebra">
                 <div className="column small-12 medium-8">
                     {DEBT_TOKEN.toUpperCase()}<br />
                     <span className="secondary">{sbdMessage}</span>
@@ -440,7 +414,7 @@ class UserWallet extends React.Component {
                     {conversions}
                 </div>
             </div>
-            <div className="UserWallet__balance row zebra">
+            <div className="UserWallet__balance row">
                 <div className="column small-12 medium-8">
                     {tt('userwallet_jsx.savings')}<br />
                     <span className="secondary">{tt('transfer_jsx.balance_subject_to_3_day_withdraw_waiting_period')}</span>
@@ -551,25 +525,6 @@ export default connect(
         showOpenOrders: defaults => {
             dispatch(user.actions.setOpenOrdersDefaults(defaults));
             dispatch(user.actions.showOpenOrders());
-        },
-        claim: (username, amount) => {
-            const successCallback = () => {
-                // refresh transfer history
-                dispatch({type: 'FETCH_STATE', payload: {pathname: `@${username}/transfers`}})
-            }
-            const errorCallback = (estr) => {
-                alert(estr);
-            }
-
-            let operation = {from: username, to: username, amount, memo: '', to_vesting: false};
-
-            dispatch(transaction.actions.broadcastOperation({
-                type: 'claim',
-                username,
-                operation,
-                successCallback,
-                errorCallback
-            }))
         }
     })
 )(UserWallet)

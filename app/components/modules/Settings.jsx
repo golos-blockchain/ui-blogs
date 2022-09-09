@@ -6,6 +6,7 @@ import tt from 'counterpart';
 import throttle from 'lodash/throttle'
 import transaction from 'app/redux/Transaction'
 import { getMetadataReliably } from 'app/utils/NormalizeProfile';
+import DoNotBother from 'app/components/elements/DoNotBother';
 import Icon from 'app/components/elements/Icon';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator'
 import Userpic from 'app/components/elements/Userpic';
@@ -303,9 +304,9 @@ class Settings extends React.Component {
 
         const {profile_image, cover_image, name, about, gender, location, website, donatePresets, emissionDonatePct, notifyPresets, notifyPresetsTouched} = this.state
 
-        const {follow, account, isOwnAccount} = this.props
+        const {follow, block, account, isOwnAccount} = this.props
         const following = follow && follow.getIn(['getFollowingAsync', account.name]);
-        const ignores = isOwnAccount && following && following.get('ignore_result');
+        const ignores = isOwnAccount && block && block.getIn(['blocking', account.name, 'result'])
         const mutedInNew = isOwnAccount && props.mutedInNew;
         let mutedUIA = [];
         if (process.env.BROWSER) {
@@ -542,6 +543,8 @@ class Settings extends React.Component {
                     </div>
                 </div>}
 
+            <DoNotBother account={account} />
+
             {ignores && ignores.size > 0 &&
                 <div className="row">
                     <div className="small-12 columns">
@@ -580,6 +583,7 @@ export default connect(
             isOwnAccount: username == accountname,
             profile,
             mutedInNew,
+            block: state.global.get('block'),
             follow: state.global.get('follow'),
             ...ownProps
         }

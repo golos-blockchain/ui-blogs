@@ -9,8 +9,7 @@
     "DEBT_TOKEN": "GOLD BACKED GOLOS",
     "DEBT_TOKENS": "GOLD BACKED GOLOS",
     "TOKEN_WORTH": "~1 mg of gold",
-    "TIP_TOKEN": "TIP balance",
-    "CLAIM_TOKEN": "CLAIM balance"
+    "TIP_TOKEN": "TIP balance"
   },
   "search": {
     "placeholder": "Search for posts and comments",
@@ -245,7 +244,6 @@
     "write_message": "Message",
     "write_message_long": "Private Message",
     "yes": "Yes",
-    "blocked_from_blog": "You are blocked by the author of this blog.",
     "you_are_viewing_a_single_comments_thread_from": "You are viewing a single comment's thread from",
     "about_project": "About",
     "account_not_found": "Account not found",
@@ -340,7 +338,6 @@
     "keep_me_logged_in": "Keep me logged in",
     "donate": "Donate",
     "donate_support": "Support",
-    "claim": "Claim",
     "received_vesting": "%(VESTING_TOKEN)s delegated to this account",
     "delegated_vesting": "%(VESTING_TOKEN)s delegated from this account",    
     "load_more": "Load more",
@@ -350,7 +347,7 @@
     "for_the_post": "for the post",    
     "night_mode": "Night Mode",
     "social_network": "Social network",
-    "about_project": "Golos.id — social platform and blogger community, developed on the GOLOS blockchain"
+    "about_project": "Golos Blogs - social platform and blogger community, developed on the GOLOS blockchain"
   },
   "exchanges_jsx": {
     "title": "Buying and selling tokens",
@@ -601,6 +598,20 @@
     "sort_order": "Sort Order",
     "comments_were_hidden_due_to_low_ratings": "Comments were hidden due to low ratings"
   },
+  "do_not_bother": {
+    "title": "Do not bother",
+    "desc": "Users with reputation lower than 65 will not write messages, comments, send donates and transfers to you",
+    "blocking_confirm": "User blocked you, now sending of operations requires cost. Do you want to send them %(AMOUNT)s from TIP-balance?",
+    "blocking_error": "User blocked you, now sending of operations requires cost. %(AMOUNT)s required on your TIP-balance.",
+    "bother_confirm": "User wants to not be bothered by accounts with low-reputation, now sending of operations requires cost. Do you want to send them %(AMOUNT)s from TIP-balance?",
+    "bother_error": "User wants to not be bothered by accounts with low-reputation, now sending of operations requires cost. %(AMOUNT)s required on your TIP-balance.",
+    "negrep_confirm": "You have negative reputation, now sending of operations requires cost. Do you want to send them %(AMOUNT)s from TIP-balance?",
+    "negrep_error": "You have negative reputation, now sending of operations requires cost. %(AMOUNT)s required on your TIP-balance.",
+    "window_confirm": "You have reached limit, now sending of operations requires cost. Do you want to send them %(AMOUNT)s from TIP-balance?",
+    "window_error": "You have reached limit now sending of operations requires cost. %(AMOUNT)s required on your TIP-balance.",
+    "blocking_fatal_error": "User blocked you, now sending of transfers and donates is forbidden.",
+    "bother_fatal_error": "User wants to not be bothered by accounts with low-reputation, now sending of transfers and donates is forbidden."
+  },
   "key_file": {
     "file_title": "Keys Of @",
     "file_desc": "There are private keys, which are authorizing your account. Store this file in secure place.",
@@ -688,7 +699,8 @@
       "zero": "no votes",
       "one": "1 vote",
       "other": "%(count)s votes"
-    }
+    },
+    "account_frozen": "Deactivated due inactivity."
   },
   "assets_jsx": {
     "assets_info": "User Issued Assets (tokens) that can be exchanged, traded on an internal exchange, and used in various blockchain services.",
@@ -876,15 +888,13 @@
   },
   "tips_js": {
     "tip_balance_hint": "Balance that you use to reward users and that you use to earn rewards for yourself. Tokens from it can also be sent to increase the Golos Power.",
-    "claim_balance_hint": "Balance of your share of the emission of Golos blockchain tokens, which you can use to top up your TIP balance or increase the Golos Power.",
-    "claim_expiration_hint": "The tokens request window will end",
     "tradeable_tokens_that_may_be_transferred_anywhere_at_anytime": "Tradable digital tokens that can be transferred anywhere at any time.",
     "LIQUID_TOKEN_can_be_converted_to_VESTING_TOKEN_in_a_process_called_powering_up": "For example, converted to Golos Power or sent to the TIP balance for rewards.",
     "tokens_worth_about_AMOUNT_of_LIQUID_TOKEN": "Tokens worth about %(TOKEN_WORTH)s in %(LIQUID_TICKER)s.",
-    "influence_tokens_which_give_you_more_control_over": "The more Golos Power you have, the higher the percentage goes to the CLAIM balance and the higher the impact on the project development by selecting delegates and supporting applications for funding from the workers foundation.",
+    "influence_tokens_which_give_you_more_control_over": "The more Golos Power you have, the higher the percentage goes to the TIP balance and the higher the impact on the project development by selecting delegates and supporting applications for funding from the workers foundation.",
     "the_more_you_hold_the_more_you_influence_post_rewards": "The more you hold the more you influence post rewards and earn for accurate voting.",
     "vesting_emission_per_day": "~ %(EMISSION_STAKE)s daily",
-    "vesting_emission_per_day_title": "Amount that, depending on the Golos Power, is transferred daily to the CLAIM balance\n(your share of the blockchain token issue per day)",
+    "vesting_emission_per_day_title": "Amount that, depending on the Golos Power, is transferred daily to the TIP balance\n(your share of the blockchain token issue per day)",
     "the_estimated_value_is_based_on_an_average_value_of_steem_in_US_dollars": "The estimated cost is calculated on an 7-day average cost of %(LIQUID_TOKEN)s.",
     "VESTING_TOKEN_is_non_transferrable_and_requires_convert_back_to_LIQUID_TOKEN": "%(VESTING_TOKEN2)s is non-transferrable and requires 1 month (4 payments) to convert back to %(LIQUID_TOKEN)s.",
     "converted_VESTING_TOKEN_can_be_sent_to_yourself_but_can_not_transfer_again": "Converted %(VESTING_TOKEN)s can be sent to yourself or someone else but can not transfer again without converting back to %(LIQUID_TOKEN)s.",
@@ -952,7 +962,6 @@
     "transfer": "Transfer ",
     "transferred": "Transfer ",
     "percen_referral": " - you get a percentage of the referral fee ",
-    "with_claim": " with CLAIM balance ",
     "funded_workers": "Funded by the community ",
     "to_golos_power": " for Golos Power",
     "to_tip": " to TIP balance ",
@@ -967,7 +976,16 @@
     "conversion_started": "Started 3.5 day conversion of ",
     "were_converted": " were converted to ",
     "including_conversion_fee": "incl. fee",
-    "to_account": " to account "
+    "to_account": " to account ",
+    "claimed": "Claimed ",
+    "account_unfreeze": " for account unfreezing",
+    "received": "Received ",
+    "for_unwanted": " for unwanted operation (blacklist)",
+    "comment": "post",
+    "vote": "vote",
+    "some_action": "action",
+    "with_negrep": " with negative reputation",
+    "with_unlimit": " out of daily limit"
   },
   "savingswithdrawhistory_jsx": {
     "cancel_this_withdraw_request": "Cancel this withdraw request?",
@@ -1027,6 +1045,7 @@
     "posting": "Posting",
     "active_or_owner": "Active or Owner",
     "this_password_is_bound_to_your_account_owner_key": "This password is bound to your account's owner key and can not be used to login to this site.",
+    "account_frozen": "This account is temporary deactivated due inactivity.",
     "however_you_can_use_it_to": "However, you can use it to ",
     "update_your_password": "update your password",
     "to_obtain_a_more_secure_set_of_keys": "to obtain a more secure set of keys.",
@@ -1157,7 +1176,6 @@
     "transfer_to_savings": "Transfer to Savings",
     "power_up": "Power Up",
     "transfer_to_tip": "Transfer to TIP balance",
-    "claim": "Claim to TIP balance",
     "donate": "Donate",
     "power_down": "Power Down",
     "market": "Market",
@@ -1211,6 +1229,7 @@
     "form_title": "Delegate %(VESTING_TOKEN2)s",
     "delegate": "Delegate",
     "edit": "Edit",
+    "emission_interest": "With right to receive %% emission for these tokens",
     "revoke": "Revoke",
     "interest": "%% Of Curate Rewards",
     "interest_hint": "To account will be able to receive more curation rewards. This is a %% of your interest.",
@@ -1219,7 +1238,8 @@
     "interest_short_hint_delegatee": "That part of yours curation rewards (on delegated GP) will be returned to delegator",
     "interest_short_hint_neutral": "That part of delegatee's curation rewards (on delegated GP) will be returned to delegator",
     "too_large_percent": "Too large percent",
-    "vdo_exists": "You already have delegated some GP to this account. You could edit its amount, or revoke it at all." 
+    "vdo_exists": "You already have delegated some GP to this account. You could edit its amount, or revoke it at all.",
+    "no_interest_emission": "none (emission)"
   },
   "post_editor": {
     "new_editor": "Markdown",

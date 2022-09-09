@@ -1,4 +1,5 @@
 import { PUBLIC_API, CATEGORIES } from 'app/client_config';
+import { contentPrefs as prefs } from 'app/utils/Allowance'
 import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile';
 import { reveseTag, prepareTrendingTags, getFilterTags } from 'app/utils/tags';
 import { stateSetVersion } from 'app/utils/SearchClient'
@@ -8,6 +9,8 @@ const DEFAULT_VOTE_LIMIT = 10000
 const isHardfork = (v) => v.split('.')[1] === '18'
 
 export default async function getState(api, url, offchain = {}) {
+    const curUser = offchain.account
+
     if (!url || typeof url !== 'string' || !url.length || url === '/') url = 'trending'
     const urlParts = url.split('?')
     url = urlParts[0]
@@ -57,14 +60,13 @@ export default async function getState(api, url, offchain = {}) {
 
             switch (parts[1]) {
                 case 'transfers':
-                    const history = await api.getAccountHistory(uname, -1, 1000, [], ['claim', 'donate', 'transfer', 'author_reward', 'curation_reward', 'transfer_to_tip', 'transfer_from_tip', 'transfer_to_vesting', 'withdraw_vesting', 'asset_issue', 'invite', 'transfer_to_savings', 'transfer_from_savings', 'convert_sbd_debt', 'convert', 'fill_convert_request', 'interest', 'worker_reward'])
+                    const history = await api.getAccountHistory(uname, -1, 1000, [], ['donate', 'transfer', 'author_reward', 'curation_reward', 'transfer_to_tip', 'transfer_from_tip', 'transfer_to_vesting', 'withdraw_vesting', 'asset_issue', 'invite', 'transfer_to_savings', 'transfer_from_savings', 'convert_sbd_debt', 'convert', 'fill_convert_request', 'interest', 'worker_reward', 'account_freeze', 'unwanted_cost', 'unlimit_cost'])
                     account.transfer_history = []
                     account.other_history = []
 
                     state.cprops = await api.getChainProperties();
                     history.forEach(operation => {
                         switch (operation[1].op[0]) {
-                            case 'claim':
                             case 'donate':
                             case 'transfer':
                             case 'author_reward':
@@ -82,6 +84,9 @@ export default async function getState(api, url, offchain = {}) {
                             case 'fill_convert_request':
                             case 'interest':
                             case 'worker_reward':
+                            case 'account_freeze':
+                            case 'unwanted_cost':
+                            case 'unlimit_cost':
                                 state.accounts[uname].transfer_history.push(operation)
                             break
 
@@ -123,7 +128,8 @@ export default async function getState(api, url, offchain = {}) {
                 break
 
                 case 'recent-replies':
-                    const replies = await api.getRepliesByLastUpdate(uname, '', 50, DEFAULT_VOTE_LIMIT)
+                    const replies = await api.getRepliesByLastUpdate(uname, '', 50, DEFAULT_VOTE_LIMIT,
+                        prefs(curUser, uname))
                     state.accounts[uname].recent_replies = []
 
                     replies.forEach(reply => {
@@ -139,7 +145,7 @@ export default async function getState(api, url, offchain = {}) {
 
                 case 'posts':
                 case 'comments':
-                    const filter_tags = offchain.account ? [] : getFilterTags()
+                    const filter_tags = curUser ? [] : getFilterTags()
                     const comments = await api.getDiscussionsByComments({ start_author: uname, limit: 20, filter_tag_masks: ['fm-'],
                          filter_tags })
                     state.accounts[uname].comments = []
@@ -239,7 +245,7 @@ export default async function getState(api, url, offchain = {}) {
         }
         accounts.add(account)
 
-        const replies = await api.getAllContentReplies(account, permlink, DEFAULT_VOTE_LIMIT)
+        const replies = await api.getAllContentReplies(account, permlink, DEFAULT_VOTE_LIMIT, prefs([], [account, curUser]))
 
        for (let key in replies) {
             let reply = replies[key]
@@ -274,7 +280,8 @@ export default async function getState(api, url, offchain = {}) {
         state.content[curl].confetti_active = false;
 
         let args = { truncate_body: 1024, select_categories: [category], filter_tag_masks: ['fm-'],
-            filter_tags: getFilterTags() };
+            filter_tags: getFilterTags(),
+            prefs: prefs(curUser) };
         let prev_posts = await api.gedDiscussionsBy('created', {limit: 4, start_author: account, start_permlink: permlink, select_authors: [account], ...args});
         prev_posts = prev_posts.slice(1);
         let p_ids = [];
@@ -301,8 +308,8 @@ export default async function getState(api, url, offchain = {}) {
         }
         state.prev_posts = prev_posts.slice(0, 3);
 
-        if (offchain.account) {
-            state.assets = (await api.getAccountsBalances([offchain.account]))[0]
+        if (curUser) {
+            state.assets = (await api.getAccountsBalances([curUser]))[0]
         }
     } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
         let witnessIds = [];
@@ -344,10 +351,9 @@ export default async function getState(api, url, offchain = {}) {
             const votes = await api.getWorkerRequestVotes(author, permlink, '', 50);
             state.worker_requests[url].votes = votes;
 
-            const voter = offchain.account;
-            if (voter) {
-                const [ myVote ] = await api.getWorkerRequestVotes(author, permlink, voter, 1);
-                state.worker_requests[url].myVote = (myVote && myVote.voter == voter) ? myVote : null;
+            if (curUser) {
+                const [ myVote ] = await api.getWorkerRequestVotes(author, permlink, curUser, 1);
+                state.worker_requests[url].myVote = (myVote && myVote.voter == curUser) ? myVote : null;
             }
         }
     } else if (parts[0] === 'minused_accounts') {
@@ -360,7 +366,7 @@ export default async function getState(api, url, offchain = {}) {
             }
         });
     } else if (Object.keys(PUBLIC_API).includes(parts[0])) {
-        let args = { limit: 20, truncate_body: 0 }
+        let args = { limit: 20, truncate_body: 0, prefs: prefs(curUser) }
         const discussionsType = parts[0]
         if (typeof tag === 'string' && tag.length && (!tag.startsWith('tag-') || tag.length > 4)) {
             if (tag.startsWith('tag-')) {
@@ -415,8 +421,8 @@ export default async function getState(api, url, offchain = {}) {
           requests.push(api.gedDiscussionsBy('promoted', {...args, limit: 1}))
         }
 
-        if (discussionsType == 'created' && offchain.account) {
-            const [ loader ] = await api.getAccounts([offchain.account]);
+        if (discussionsType == 'created' && curUser) {
+            const [ loader ] = await api.getAccounts([curUser]);
             const mutedInNew = getMutedInNew(loader);
             args.filter_authors = mutedInNew;
         }
@@ -426,6 +432,7 @@ export default async function getState(api, url, offchain = {}) {
             delete args.select_categories;
             delete args.filter_tag_masks; // do not exclude forum posts
             delete args.filter_tags;
+            delete args.prefs
         }
         if (discussionsType == 'allcomments') {
             args.comments_only = true;
@@ -433,9 +440,11 @@ export default async function getState(api, url, offchain = {}) {
             delete args.select_categories;
             delete args.filter_tag_masks; // do not exclude forum comments
             delete args.filter_tags;
+            delete args.prefs
         }
         if (discussionsType == 'forums') {
-            args = ['', '', 0, args.limit, $STM_Config.forums.white_list, 0, 0, [], [], 'fm-'];
+            args = ['', '', 0, args.limit, $STM_Config.forums.white_list, 0, 0, [], [], 'fm-',
+                prefs(curUser)];
         }
         requests.push(api.gedDiscussionsBy(discussionsType, args))
         let responses = await Promise.all(requests)

@@ -28,7 +28,6 @@ class PostsList extends PureComponent {
         showSpam: PropTypes.bool,
         fetchState: PropTypes.func.isRequired,
         pathname: PropTypes.string,
-        ignoreResult: PropTypes.any,
     };
 
     static defaultProps = {
@@ -200,7 +199,6 @@ class PostsList extends PureComponent {
             loading,
             category,
             content,
-            ignoreResult,
             account,
             pathname,
         } = this.props;
@@ -220,11 +218,10 @@ class PostsList extends PureComponent {
                 console.error('PostsList --> Missing cont key', item);
                 return;
             }
-            const ignore = ignoreResult && ignoreResult.has(cont.get('author'));
             const hide = cont.getIn(['stats', 'hide']);
 
-            if (!(ignore || hide) || showSpam) {
-                postsInfo.push({ item, ignore });
+            if (!hide || showSpam) {
+                postsInfo.push({ item, ignore: false });
             }
         });
 
@@ -313,12 +310,6 @@ export default connect(
             username,
             content: state.global.get('content'),
             next_from: state.global.get('next_from'),
-            ignoreResult: state.global.getIn([
-                'follow',
-                'getFollowingAsync',
-                username,
-                'ignore_result',
-            ]),
             pathname: state.app.get('location').pathname,
         };
     },

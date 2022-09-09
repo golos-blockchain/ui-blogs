@@ -64,6 +64,23 @@ export default function transactionErrorReducer(
                 break;
         }
 
+        let handled = false
+        if (errorStr.includes('You are blocked by user')) {
+            errorKey = errorStr = tt('chain_errors.user_blocked_user')
+            handled = true
+        } else if (errorStr.includes('You cannot follow because you are blocked by user')) {
+            errorKey = errorStr = tt('chain_errors.user_blocked_user_no_tip')
+            handled = true
+        }
+
+        if (handled) {
+            if (errorCallback) {
+                setTimeout(() => errorCallback(errorKey));
+            }
+
+            return state;
+        }
+
         if (state.hasIn(['TransactionError', type + '_listener'])) {
             if (!hideErrors) {
                 state = state.setIn(
