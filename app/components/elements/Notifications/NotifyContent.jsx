@@ -7,6 +7,7 @@ import Icon from 'app/components/elements/Icon';
 import Userpic from 'app/components/elements/Userpic';
 import iconCross from 'app/assets/icons/cross.svg';
 import { msgsLink } from 'app/utils/ExtLinkUtils'
+import { walletUrl } from 'app/utils/walletUtils'
 
 const actionStyle = {
     // fixme
@@ -33,7 +34,7 @@ const transfer = (scope, type, op) => {
     if (scope === 'donate' || scope === 'donate_msgs') {
         icon = 'notification/donate';
         message = tt('notify_content.donate_AMOUNT', { AMOUNT: amount, });
-        url = `/@${to}/donates-to`;
+        url = walletUrl(`/@${to}/donates-to`)
     } else {
         icon = 'notification/transfer';
         if (isSend) {
@@ -41,7 +42,7 @@ const transfer = (scope, type, op) => {
         } else {
             message = tt('notify_content.receive_AMOUNT', { AMOUNT: amount, });
         }
-        url = `/@${to}/transfers`;
+        url = walletUrl(`/@${to}/transfers`)
     }
 
     return (
@@ -152,7 +153,7 @@ const fillOrder = (scope, type, op) => {
             AMOUNT: current_pays,
             AMOUNT2: open_pays,
         });
-    let url = `/market/${sym1}/${sym2}`;
+    let url = walletUrl(`/market/${sym1}/${sym2}`)
 
     return (
         <div className='NotificationContent__container'>

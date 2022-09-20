@@ -780,11 +780,6 @@
     "questions_or_requests": "Подробные вопросы или пожелания вы всегда можете отправить нам на электронную почту:",
     "support_by_telegram": "Кроме того, для оперативной технической помощи мы ввели службу поддержки пользователей Голоса в Телеграме"
   },
-  "savingswithdrawhistory_jsx": {
-    "cancel_this_withdraw_request": "Отменить запрос вывода средств?",
-    "pending_savings_withdrawals": "Выплаты из сейфа",
-    "withdraw": "Вывод"
-  },
   "settings_jsx": {
     "choose_language": "Выберите язык интерфейса",
     "choose_currency": "Выберите валюту",

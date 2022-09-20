@@ -987,11 +987,6 @@
     "with_negrep": " with negative reputation",
     "with_unlimit": " out of daily limit"
   },
-  "savingswithdrawhistory_jsx": {
-    "cancel_this_withdraw_request": "Cancel this withdraw request?",
-    "pending_savings_withdrawals": "PENDING SAVINGS WITHDRAWS",
-    "withdraw": "Withdraw"
-  },
   "confirmtransactionform_jsx": {
     "ok": "Ok",
     "confirm": "Confirm"

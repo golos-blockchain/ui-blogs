@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import { browserHistory } from 'react-router';
 import golos from 'golos-lib-js';
 import tt from 'counterpart';
+import { LinkWithDropdown } from 'react-foundation-components/lib/global/dropdown'
 
 import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
@@ -20,11 +21,12 @@ import PostsList from 'app/components/cards/PostsList';
 import { authUrl, } from 'app/utils/AuthApiClient'
 import { getGameLevel } from 'app/utils/GameUtils'
 import { msgsHost, msgsLink } from 'app/utils/ExtLinkUtils'
+import LinkEx from 'app/utils/LinkEx'
 import {isFetchingOrRecentlyUpdated} from 'app/utils/StateFunctions';
 import {repLog10} from 'app/utils/ParsersAndFormatters';
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
+import { walletUrl, } from 'app/utils/walletUtils'
 import Tooltip from 'app/components/elements/Tooltip';
-import { LinkWithDropdown } from 'react-foundation-components/lib/global/dropdown';
 import VerticalMenu from 'app/components/elements/VerticalMenu';
 import MarkNotificationRead from 'app/components/elements/MarkNotificationRead';
 import NotifiCounter from 'app/components/elements/NotifiCounter';
@@ -76,10 +78,6 @@ export default class UserProfile extends React.Component {
             np.follow_count !== this.props.follow_count ||
             ns.repLoading !== this.state.repLoading
         )
-    }
-
-    componentWillUnmount() {
-        this.props.clearTransferDefaults()
     }
 
     loadMore(last_post, category) {
@@ -378,24 +376,13 @@ export default class UserProfile extends React.Component {
             </div>
         </div>
 
-        let printLink = null;
-        if( section === 'permissions' ) {
-           if(isMyAccount && wifShown) {
-               printLink = <div><a className='float-right noPrint' onClick={onPrint}>
-                       <Icon name='printer' />&nbsp;{tt('g.print')}&nbsp;&nbsp;
-                   </a></div>
-           }
-        }
-
-        // const wallet_tab_active = section === 'transfers' || section === 'password' || section === 'permissions' ? 'active' : ''; // className={wallet_tab_active}
-
         let donates_to_addon = undefined;
         if (isMyAccount) donates_to_addon = <NotifiCounter fields='donate,donate_msgs' />;
         let rewardsMenu = [
-            {link: `/@${accountname}/donates-to`, label: tt('g.donates_to'), value: tt('g.donates_to'), addon: donates_to_addon},
-            {link: `/@${accountname}/donates-from`, label: tt('g.donates_from'), value: tt('g.donates_from')},
-            {link: `/@${accountname}/author-rewards`, label: tt('g.author_rewards'), value: tt('g.author_rewards')},
-            {link: `/@${accountname}/curation-rewards`, label: tt('g.curation_rewards'), value: tt('g.curation_rewards')}
+            {link: walletUrl(`/@${accountname}/donates-to`), label: tt('g.donates_to'), value: tt('g.donates_to'), addon: donates_to_addon},
+            {link: walletUrl(`/@${accountname}/donates-from`), label: tt('g.donates_from'), value: tt('g.donates_from')},
+            {link: walletUrl(`/@${accountname}/author-rewards`), label: tt('g.author_rewards'), value: tt('g.author_rewards')},
+            {link: walletUrl(`/@${accountname}/curation-rewards`), label: tt('g.curation_rewards'), value: tt('g.curation_rewards')}
         ];
 
         // set account join date
@@ -435,11 +422,11 @@ export default class UserProfile extends React.Component {
                     </LinkWithDropdown>
                     <div className='UserProfile__filler' />
                     <div>
-                        <a href={`/@${accountname}/transfers`} className={`${walletClass} UserProfile__menu-item`} onClick={e => { e.preventDefault(); browserHistory.push(e.target.pathname); return false; }}>
+                        <a href={walletUrl(`/@${accountname}/transfers`)} className={`${walletClass} UserProfile__menu-item`} onClick={e => { e.preventDefault(); browserHistory.push(e.target.pathname); return false; }}>
                             {tt('g.wallet')} {isMyAccount && <NotifiCounter fields='send,receive' />}
                         </a>
                         {isMyAccount ?
-                            <Link className='UserProfile__menu-item' to={`/@${accountname}/filled-orders`} activeClassName='active'>{tt('navigation.market2')} <NotifiCounter fields="fill_order" /></Link>
+                            <LinkEx className='UserProfile__menu-item' to={walletUrl(`/@${accountname}/filled-orders`)} activeClassName='active'>{tt('navigation.market2')} <NotifiCounter fields="fill_order" /></LinkEx>
                             : null
                         }
                         {isMyAccount ?
@@ -467,7 +454,7 @@ export default class UserProfile extends React.Component {
         return (
             <div className='UserProfile'>
 
-                {section !== 'witness' && <div className='UserProfile__banner row expanded'>
+                <div className='UserProfile__banner row expanded'>
 
                     <div className='column' style={cover_image_style}>
                         <div className='UserProfile__buttons-wrapper'>
@@ -513,12 +500,9 @@ export default class UserProfile extends React.Component {
                             <Follow follower={username} following={accountname} what='blog' />
                         </div>
                     </div>
-                </div>}
-                {section !== 'witness' && <div className='UserProfile__top-nav row expanded noPrint'>
+                </div>
+                <div className='UserProfile__top-nav row expanded noPrint'>
                     {top_menu}
-                </div>}
-                <div>
-                  {/*printLink*/}
                 </div>
                 <div>
                   {tab_content}
@@ -562,27 +546,6 @@ module.exports = {
         },
         dispatch => ({
             login: () => {dispatch(user.actions.showLogin())},
-            clearTransferDefaults: () => {dispatch(user.actions.clearTransferDefaults())},
-            showTransfer: (transferDefaults) => {
-                dispatch(user.actions.setTransferDefaults(transferDefaults))
-                dispatch(user.actions.showTransfer())
-            },
-            showPowerdown: powerdownDefaults => {
-                dispatch(user.actions.setPowerdownDefaults(powerdownDefaults));
-                dispatch(user.actions.showPowerdown());
-            },
-            withdrawVesting: ({account, vesting_shares, errorCallback, successCallback}) => {
-                const successCallbackWrapper = (...args) => {
-                    dispatch({type: 'FETCH_STATE', payload: {pathname: `@${account}/transfers`}})
-                    return successCallback(...args)
-                }
-                dispatch(transaction.actions.broadcastOperation({
-                    type: 'withdraw_vesting',
-                    operation: {account, vesting_shares},
-                    errorCallback,
-                    successCallback: successCallbackWrapper,
-                }))
-            },
             voteRep: ({voter, author, weight, success, error}) => {
                 const confirm = () => {
                     if (weight < 0) {

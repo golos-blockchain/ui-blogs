@@ -33,7 +33,7 @@ function TimeAuthorCategory({ content, authorRepLog10, showTags }) {
             <Icon name="clock" className="space-right" />
             <TimeVersions content={content} />
             {' '}
-            <Author author={content.author} authorRepLog10={authorRepLog10} donateUrl={content.url} />
+            <Author author={content.author} authorRepLog10={authorRepLog10} />
             {showTags && (
                 <span>
                     {' '}
