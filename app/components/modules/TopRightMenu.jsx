@@ -18,6 +18,7 @@ import LocalizedCurrency from 'app/components/elements/LocalizedCurrency';
 import { vestsToSteem, toAsset } from 'app/utils/StateFunctions';
 import { authRegisterUrl, } from 'app/utils/AuthApiClient';
 import { msgsHost, msgsLink, } from 'app/utils/ExtLinkUtils';
+import { walletUrl, } from 'app/utils/walletUtils'
 
 const defaultNavigate = (e) => {
     if (e.metaKey || e.ctrlKey) {
@@ -78,13 +79,13 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     </li>;
     const feedLink = `/@${username}/feed`;
     const repliesLink = `/@${username}/recent-replies`;
-    const walletLink = `/@${username}/transfers`;
+    const walletLink = walletUrl(`/@${username}/transfers`)
     const settingsLink = `/@${username}/settings`;
     const accountLink = `/@${username}`;
     const mentionsLink = `/@${username}/mentions`;
-    const donatesLink = `/@${username}/donates-to`;
+    const donatesLink = walletUrl(`/@${username}/donates-to`)
     const messagesLink = msgsHost() ? msgsLink() : '';
-    const ordersLink = `/@${username}/filled-orders`;
+    const ordersLink = walletUrl(`/@${username}/filled-orders`)
 
     const faqItem = <li className={scn}>
         <Link to="/faq" title={tt('navigation.faq')}><Icon name="info_o" size="1_5x" />
@@ -123,12 +124,12 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     }
     additional_menu.push(
         { link: '#', onClick: toggleNightmode, icon: 'editor/eye', value: tt('g.night_mode') },
-        { link: '/market/GOLOS/GBG', icon: 'trade', value: tt("navigation.market") },
+        { link: walletUrl('/market/GOLOS/GBG'), icon: 'trade', value: tt("navigation.market") },
         { link: '/services', icon: 'new/monitor', value: tt("navigation.services") },
         { link: '/search', icon: 'new/search', value: tt("navigation.search") },
-        { link: '/exchanges', icon: 'editor/coin', value: tt("navigation.buy_sell") },
-        { link: '/~witnesses', icon: 'new/like', value: tt("navigation.witnesses"), target: 'blank' },
-        { link: '/workers', icon: 'voters', value: tt("navigation.workers") },
+        { link: walletUrl('/exchanges'), icon: 'editor/coin', value: tt("navigation.buy_sell") },
+        { link: walletUrl('/~witnesses'), icon: 'new/like', value: tt("navigation.witnesses"), target: 'blank' },
+        { link: walletUrl('/workers'), icon: 'voters', value: tt("navigation.workers") },
         { link: 'https://wiki.golos.id/', icon: 'new/wikipedia', value: tt("navigation.wiki"), target: 'blank' },
         { link: 'https://explorer.golos.id/', icon: 'cog', value: tt("navigation.explorer"), target: 'blank' } 
     );

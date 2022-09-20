@@ -24,6 +24,7 @@ global.$STM_Config = {
     elastic_search: config.get('elastic_search'),
     auth_service: config.get('auth_service'),
     notify_service: config.get('notify_service'),
+    wallet_service: config.get('wallet_service'),
     messenger_service: config.get('messenger_service'),
     apidex_service: config.get('apidex_service'),
     hidden_assets: config.get('hidden_assets'),

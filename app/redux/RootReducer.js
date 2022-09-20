@@ -3,7 +3,6 @@ import { combineReducers, __DO_NOT_USE__ActionTypes as ActionTypes } from 'redux
 import {routerReducer} from 'react-router-redux';
 import appReducer from './AppReducer';
 import globalReducerModule from './GlobalReducer';
-import marketReducerModule from './MarketReducer';
 import user from './User';
 import transaction from './Transaction';
 import offchain from './Offchain';
@@ -45,7 +44,6 @@ function initReducer(reducer, type) {
 
 export default combineReducers({
     global: initReducer(globalReducerModule.reducer, 'global'),
-    market: initReducer(marketReducerModule.reducer),
     offchain: initReducer(offchain),
     user: initReducer(user.reducer),
     transaction: initReducer(transaction.reducer),

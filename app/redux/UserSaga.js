@@ -31,7 +31,7 @@ export function* userWatches() {
     
 
 
-const highSecurityPages = Array(/\/market/, /\/@.+\/(transfers|assets|permissions|invites|password)/, /\/~witnesses/)
+const highSecurityPages = Array()
 
 function* lookupPreviousOwnerAuthorityWatch() {
     yield takeLatest('user/lookupPreviousOwnerAuthority', lookupPreviousOwnerAuthority);

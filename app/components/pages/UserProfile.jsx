@@ -10,22 +10,9 @@ import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
 import Icon from 'app/components/elements/Icon'
 import UserKeys from 'app/components/elements/UserKeys';
-import CreateAsset from 'app/components/modules/uia/CreateAsset';
-import Assets from 'app/components/modules/uia/Assets';
-import UpdateAsset from 'app/components/modules/uia/UpdateAsset';
-import TransferAsset from 'app/components/modules/uia/TransferAsset';
-import Invites from 'app/components/elements/Invites';
-import PasswordReset from 'app/components/elements/PasswordReset';
-import UserWallet from 'app/components/modules/UserWallet';
-import WitnessProps from 'app/components/modules/WitnessProps';
 import Settings from 'app/components/modules/Settings';
-import DonatesFrom from 'app/components/modules/DonatesFrom';
-import DonatesTo from 'app/components/modules/DonatesTo';
-import CurationRewards from 'app/components/modules/CurationRewards';
-import AuthorRewards from 'app/components/modules/AuthorRewards';
 import ReputationHistory from 'app/components/modules/ReputationHistory'
 import Mentions from 'app/components/modules/Mentions'
-import FilledOrders from 'app/components/modules/FilledOrders'
 import UserList from 'app/components/elements/UserList';
 import Follow from 'app/components/elements/Follow';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
@@ -43,7 +30,6 @@ import MarkNotificationRead from 'app/components/elements/MarkNotificationRead';
 import NotifiCounter from 'app/components/elements/NotifiCounter';
 import DateJoinWrapper from 'app/components/elements/DateJoinWrapper';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
-import WalletSubMenu from 'app/components/elements/WalletSubMenu';
 import Userpic from 'app/components/elements/Userpic';
 import Callout from 'app/components/elements/Callout';
 import normalizeProfile, { getLastSeen } from 'app/utils/NormalizeProfile';
@@ -265,77 +251,7 @@ export default class UserProfile extends React.Component {
         // const global_status = this.props.global.get('status');
 
         let rewardsClass = '', walletClass = '';
-        if( section === 'transfers' ) {
-            // transfers, check if url has query params
-            const { location: { query } } = this.props;
-            const {to, amount, token, memo} = query;
-            const hasAllParams = (!!to && !!amount && !!token && !!memo);
-            walletClass = 'active'
-            tab_content = <div>
-                <UserWallet
-                    transferDetails={{immediate: hasAllParams, ...query}}
-                    account={accountImm}
-                    showTransfer={this.props.showTransfer}
-                    showPowerdown={this.props.showPowerdown}
-                    current_user={current_user}
-                    withdrawVesting={this.props.withdrawVesting} />
-                { isMyAccount && <div><MarkNotificationRead fields='send,receive' account={account.name} /></div> }
-                </div>;
-        } else if( section === 'assets' ) {
-            walletClass = 'active'
-            tab_content = <div>
-                 <WalletSubMenu account_name={account.name} isMyAccount={isMyAccount} />
-
-                <br />
-                {!action && <Assets account={accountImm} isMyAccount={isMyAccount}
-                    showTransfer={this.props.showTransfer} />
-                }
-                {action === 'update' && <UpdateAsset account={accountImm} symbol={id.toUpperCase()} />}
-                {action === 'transfer' && <TransferAsset account={accountImm} symbol={id.toUpperCase()} />}
-                </div>
-        } else if( section === 'create-asset' && isMyAccount ) {
-            walletClass = 'active'
-            tab_content = <div>
-                 <WalletSubMenu account_name={account.name} isMyAccount={isMyAccount} />
-
-                <br />
-                <CreateAsset account={accountImm} />
-                </div>;
-        }
-        else if( section === 'curation-rewards' ) {
-            rewardsClass = 'active';
-            tab_content = <CurationRewards
-                account={account}
-                current_user={current_user}
-                />
-        }
-        else if( section === 'author-rewards' ) {
-            rewardsClass = 'active';
-            tab_content = <AuthorRewards
-                account={account}
-                current_user={current_user}
-                />
-        }
-        else if( section === 'donates-from' ) {
-            rewardsClass = 'active';
-            tab_content = <DonatesFrom
-                account={account}
-                current_user={current_user}
-                incoming={true}
-                />
-        }
-        else if( section === 'donates-to' ) {
-            rewardsClass = 'active';
-            tab_content = <div>
-                <DonatesTo
-                    account={account}
-                    current_user={current_user}
-                    incoming={false}
-                    />
-                    { isMyAccount && <div><MarkNotificationRead fields='donate,donate_msgs' account={account.name} /></div> }
-                </div>
-        }
-        else if( section === 'followers' ) {
+        if( section === 'followers' ) {
             if (followers && followers.has('blog_result')) {
                 tab_content = <div>
                     <UserList
@@ -455,63 +371,12 @@ export default class UserProfile extends React.Component {
                 </div>
             );
         }
-        else if( (section === 'filled-orders')) {
-            tab_content = (
-                <div>
-                    <FilledOrders
-                        account={account}
-                        current_user={current_user}
-                        loading={fetching}
-                    />
-                    { isMyAccount && <div><MarkNotificationRead fields='fill_order' account={account.name} /></div> }
-                </div>
-            );
-        }
-        else if( section === 'permissions' && isMyAccount ) {
-            walletClass = 'active'
-            tab_content = <div>
-                 <WalletSubMenu account_name={account.name} isMyAccount={isMyAccount} />
 
-                <br />
-                <UserKeys account={accountImm} />
-                { isMyAccount && <div><MarkNotificationRead fields='send,receive' account={account.name} /></div>}
-                </div>;
-        } 
-        else if( section === 'invites' && isMyAccount ) {
-            walletClass = 'active'
-            tab_content = <div>
-                 <WalletSubMenu account_name={account.name} isMyAccount={isMyAccount} />
-
-                <br />
-                <Invites account={accountImm} />
-                </div>;
-        } 
-        else if( section === 'password' ) {
-            walletClass = 'active'
-            tab_content = <div>
-                    <WalletSubMenu account_name={account.name} isMyAccount={isMyAccount} />
-
-                    <br />
-                    <PasswordReset account={accountImm} />
-                </div>
-        }
-        else if( section === 'witness' ) {
-            tab_content = <WitnessProps 
-                account={account} />
-        } 
-
-        if (!(section === 'transfers' ||
-              section === 'assets' ||
-              section === 'create-asset' ||
-              section === 'permissions' ||
-              section === 'password' ||
-              section === 'invites')) {
-            tab_content = <div className='row'>
-                <div className='UserProfile__tab_content column'>
-                    {tab_content}
-                </div>
-            </div>;
-        }
+        tab_content = <div className='row'>
+            <div className='UserProfile__tab_content column'>
+                {tab_content}
+            </div>
+        </div>
 
         let printLink = null;
         if( section === 'permissions' ) {
