@@ -133,7 +133,6 @@ class LoginForm extends Component {
             </div>;
         }
 
-        const { externalTransfer } = this.props;
         const { loginBroadcastOperation, loginDefault, dispatchSubmit, afterLoginRedirectToWelcome, msg} = this.props;
         const {username, password, saveLogin} = this.state;
         const {submitting, valid, handleSubmit} = this.state.login;
@@ -209,7 +208,7 @@ class LoginForm extends Component {
                 <div className="input-group">
                     <span className="input-group-label">@</span>
                     <input className="input-group-field" type="text" required placeholder={tt('loginform_jsx.enter_your_username')} ref="username"
-                        {...username.props} onChange={usernameOnChange} autoComplete="on" disabled={submitting} readOnly={externalTransfer}
+                        {...username.props} onChange={usernameOnChange} autoComplete="on" disabled={submitting}
                     />
                 </div>
                 {username.touched && username.blur && username.error ? <div className="error">{translateError(username.error)}&nbsp;</div> : null}
@@ -306,19 +305,6 @@ export default connect(
         let initialUsername = currentUser && currentUser.has('username') ? currentUser.get('username') : urlAccountName()
         //fixme - redesign (code duplication with USaga, UProfile)
 
-        let externalTransfer = false;
-        const { routing: {locationBeforeTransitions: { pathname, query }}} = state;
-        const section = pathname.split(`/`)[2];
-        const sender = (section === `transfers`) ?
-        pathname.split(`/`)[1].substring(1) : undefined;
-        // /transfers. Check query string
-        if (sender) {
-          const {to, amount, token, memo} = query;
-          externalTransfer = (!!to && !!amount && !!token && !!memo);
-          // explicitly set user name in this case
-          initialUsername = externalTransfer ? sender : initialUsername
-          // console.log(initialUsername)
-        }
         const loginDefault = state.user.get('loginDefault')
         if(loginDefault) {
             const {username, authType} = loginDefault.toJS()

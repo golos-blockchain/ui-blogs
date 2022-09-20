@@ -206,27 +206,13 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
         );
     }
 
-    //fixme - redesign (code duplication with USaga, UProfile)
-    let externalTransfer = false;
-        if (location) {
-        const {pathname} = location;
-        const query = locationQueryParams;
-        const section = pathname.split(`/`)[2];
-        const sender = (section === `transfers`) ? pathname.split(`/`)[1].substring(1) : undefined;
-        // /transfers. Check query string
-        if (sender && query) {
-            const {to, amount, token, memo} = query;
-            externalTransfer = (!!to && !!amount && !!token && !!memo);
-        }
-    }
-
     return (
         <ul className={mcn + mcl}>
             <LocaleSelect />
             {faqItem}
             {searchItem}
             <li className="delim show-for-medium" />
-            {!probablyLoggedIn && !externalTransfer && <li className={scn}>
+            {!probablyLoggedIn && <li className={scn}>
               <a href="/login.html" onClick={showLogin} className={!vertical && 'button small violet hollow'}>{tt('g.login')}</a>
             </li>}
             {!probablyLoggedIn && <li className={scn}>
