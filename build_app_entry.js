@@ -9,29 +9,22 @@ const app_version = require('./package.json').version
 const assets_filename = process.env.NODE_ENV === 'production' ? './tmp/webpack-isotools-assets-prod.json' : './tmp/webpack-isotools-assets-dev.json';
 const assets = require(assets_filename);
 
+let destDir, cfgFile
+const argv = process.argv
+if (argv.length !== 4) {
+    console.log('Usage is: babel-node build_app_entry.js /path/to/build/dest /path/to/config')
+    process.exit(-1)
+}
+destDir = argv[2]
+cfgFile = argv[3]
+
 const props = { body: '', assets, title: '', relativeSrc: false };
 
 let html = ReactDOMServer.renderToString(<ServerHTML {...props} />)
 html = '<!DOCTYPE html>' + html
-if (!fs.existsSync('dist/electron')) {
-    fs.mkdirSync('dist/electron')
-}
-fs.writeFileSync('dist/electron/index.html', html)
-if (!fs.existsSync('msgs-build')) {
-    console.error('No msgs-build - please build ui-messenger first')
-    process.exit(-1)
-}
-fse.copySync('msgs-build', 'dist/electron/msgs', { overwrite: true })
-fs.copyFileSync('electron/app_settings.js', 'dist/electron/app_settings.js')
-fs.copyFileSync('electron/context_menu.js', 'dist/electron/context_menu.js')
-fs.copyFileSync('electron/electron.js', 'dist/electron/electron.js')
-fs.copyFileSync('electron/menu.js', 'dist/electron/menu.js')
-fs.copyFileSync('electron/settings_preload.js', 'dist/electron/settings_preload.js')
-fs.copyFileSync('electron/state_keeper.js', 'dist/electron/state_keeper.js')
-fs.copyFileSync('electron/splash.js', 'dist/electron/splash.js')
-fse.copySync('app/locales', 'dist/electron/locales', { overwrite: true })
-fse.copySync('app/assets/images', 'dist/electron/images', { overwrite: true }) // for some direct links
-fs.copyFileSync('electron/icons/256x256.png', 'dist/electron/256x256.png')
+fs.writeFileSync(destDir + '/index.html', html)
+fse.copySync('app/locales', destDir + '/locales', { overwrite: true })
+fse.copySync('app/assets/images', destDir + '/images', { overwrite: true }) // for some direct links
 
 let cfg = {}
 const copyKey = (key) => {
@@ -55,4 +48,4 @@ copyKey('apidex_service')
 copyKey('hidden_assets')
 copyKey('app_updater')
 copyKey('forums')
-fs.writeFileSync('dist/electron/default_cfg.js', 'module.exports = ' + JSON.stringify(cfg, null, 4))
+fs.writeFileSync(cfgFile, 'module.exports = ' + JSON.stringify(cfg, null, 4))

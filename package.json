@@ -20,9 +20,7 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "build:app": "cross-env NODE_ENV=production NODE_CONFIG_ENV=production,desktop ./node_modules/.bin/webpack --config ./webpack/prod-app.config.js",
-    "postbuild:app": "cross-env NODE_ENV=production NODE_CONFIG_ENV=production,desktop ./node_modules/@babel/node/bin/babel-node.js ./build_app.js",
-    "dev:app": "electron --no-sandbox .",
-    "pack:app": "electron-builder -c.electronVersion=17.1.2"
+    "build:app-entry": "cross-env NODE_ENV=production NODE_CONFIG_ENV=production,desktop ./node_modules/@babel/node/bin/babel-node.js build_app_entry.js"
   },
   "author": "Golos <info@golos.id>",
   "license": "MIT",
@@ -185,41 +183,5 @@
     "tabWidth": 4,
     "semi": true,
     "trailingComma": "es5"
-  },
-  "build": {
-    "productName": "GOLOS Блоги",
-    "appId": "gls.blogs",
-    "files": [
-      "dist/electron",
-      "!node_modules"
-    ],
-    "win": {
-      "executableName": "glsblogs",
-      "artifactName": "glsblogs-${version}.${ext}",
-      "icon": "electron/icons/256x256.png",
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64",
-            "ia32"
-          ]
-        }
-      ]
-    },
-    "linux": {
-      "executableName": "glsblogs",
-      "artifactName": "glsblogs-${version}.${ext}",
-      "category": "Finance",
-      "icon": "electron/icons",
-      "target": [
-        "deb"
-      ]
-    },
-    "directories": {
-      "output": "dist/electron-binaries",
-      "buildResources": "electron"
-    },
-    "npmRebuild": false
   }
 }
