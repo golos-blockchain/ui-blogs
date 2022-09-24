@@ -40,6 +40,10 @@ if (!cfg.url_domains.includes(cfg.site_domain)) {
 copyKey('ws_connection_app')
 copyKey('chain_id')
 copyKey('images')
+copyKey('wallet_service')
+cfg.blogs_service = {
+    host: 'app://' + config.get('site_domain')
+}
 copyKey('auth_service')
 copyKey('notify_service')
 copyKey('messenger_service')
