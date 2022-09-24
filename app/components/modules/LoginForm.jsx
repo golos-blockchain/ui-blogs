@@ -317,7 +317,6 @@ export default connect(
         if (msg_match && msg_match.length > 1) msg = msg_match[1];
         hasError = !!login_error
         return {
-            externalTransfer,
             login_error,
             loginBroadcastOperation,
             initialValues,
