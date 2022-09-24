@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router'
 
 const isExternal = (url) => {
-	return /^https?:\/\//.test(url)
+	return /^(.*?):\/\//.test(url)
 }
 
 class LinkEx extends React.Component {
