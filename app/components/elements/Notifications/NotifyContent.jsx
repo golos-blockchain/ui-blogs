@@ -7,7 +7,8 @@ import Icon from 'app/components/elements/Icon';
 import Userpic from 'app/components/elements/Userpic';
 import iconCross from 'app/assets/icons/cross.svg';
 import { msgsLink } from 'app/utils/ExtLinkUtils'
-import { walletUrl } from 'app/utils/walletUtils'
+import { walletUrl, walletTarget } from 'app/utils/walletUtils'
+import LinkEx from 'app/utils/LinkEx'
 
 const actionStyle = {
     // fixme
@@ -31,6 +32,7 @@ const transfer = (scope, type, op) => {
     let icon = null;
     let message = null;
     let url = null;
+    let target = walletTarget()
     if (scope === 'donate' || scope === 'donate_msgs') {
         icon = 'notification/donate';
         message = tt('notify_content.donate_AMOUNT', { AMOUNT: amount, });
@@ -53,14 +55,14 @@ const transfer = (scope, type, op) => {
                 </span>
             </div>
             <div className='NotificationContent__container_center'>
-                <Link to={url}>
+                <LinkEx to={url} target={target}>
                     <span className='NotificationContent__action_source'>
                         {isSend ? null : from}
                         <span style={{ color: '#919191', fontWeight: '450', }}>
                             {message}
                         </span>
                     </span>
-                </Link>
+                </LinkEx>
             </div>
         </div>
     );

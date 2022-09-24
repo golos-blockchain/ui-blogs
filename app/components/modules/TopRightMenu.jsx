@@ -18,7 +18,7 @@ import LocalizedCurrency from 'app/components/elements/LocalizedCurrency';
 import { vestsToSteem, toAsset } from 'app/utils/StateFunctions';
 import { authRegisterUrl, } from 'app/utils/AuthApiClient';
 import { msgsHost, msgsLink, } from 'app/utils/ExtLinkUtils';
-import { walletUrl, } from 'app/utils/walletUtils'
+import { walletUrl, walletTarget } from 'app/utils/walletUtils'
 
 const defaultNavigate = (e) => {
     if (e.metaKey || e.ctrlKey) {
@@ -124,12 +124,12 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     }
     additional_menu.push(
         { link: '#', onClick: toggleNightmode, icon: 'editor/eye', value: tt('g.night_mode') },
-        { link: walletUrl('/market/GOLOS/GBG'), icon: 'trade', value: tt("navigation.market") },
+        { link: walletUrl('/market/GOLOS/GBG'), target: walletTarget(), icon: 'trade', value: tt("navigation.market") },
         { link: '/services', icon: 'new/monitor', value: tt("navigation.services") },
         { link: '/search', icon: 'new/search', value: tt("navigation.search") },
-        { link: walletUrl('/exchanges'), icon: 'editor/coin', value: tt("navigation.buy_sell") },
-        { link: walletUrl('/~witnesses'), icon: 'new/like', value: tt("navigation.witnesses"), target: 'blank' },
-        { link: walletUrl('/workers'), icon: 'voters', value: tt("navigation.workers") },
+        { link: walletUrl('/exchanges'), target: walletTarget(), icon: 'editor/coin', value: tt("navigation.buy_sell") },
+        { link: walletUrl('/~witnesses'), target: walletTarget(), icon: 'new/like', value: tt("navigation.witnesses") },
+        { link: walletUrl('/workers'), target: walletTarget(), icon: 'voters', value: tt("navigation.workers") },
         { link: 'https://wiki.golos.id/', icon: 'new/wikipedia', value: tt("navigation.wiki"), target: 'blank' },
         { link: 'https://explorer.golos.id/', icon: 'cog', value: tt("navigation.explorer"), target: 'blank' } 
     );
@@ -158,9 +158,9 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
                 {link: messagesLink, icon: 'new/envelope', value: tt('g.messages'), target: '_blank', addon: <NotifiCounter fields="message" />} :
                 null),
             {link: mentionsLink, icon: 'new/mention', value: tt('g.mentions'), addon: <NotifiCounter fields="mention" />},
-            {link: donatesLink, icon: 'editor/coin', value: tt('g.rewards'), addon: <NotifiCounter fields="donate,donate_msgs" />},
-            {link: walletLink, icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields="send,receive" />},
-            {link: ordersLink, icon: 'trade', value: tt('navigation.market2'), addon: <NotifiCounter fields="fill_order" />},
+            {link: donatesLink, target: walletTarget(), icon: 'editor/coin', value: tt('g.rewards'), addon: <NotifiCounter fields="donate,donate_msgs" />},
+            {link: walletLink, target: walletTarget(), icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields="send,receive" />},
+            {link: ordersLink, target: walletTarget(), icon: 'trade', value: tt('navigation.market2'), addon: <NotifiCounter fields="fill_order" />},
             {link: settingsLink, icon: 'new/setting', value: tt('g.settings')},            
             loggedIn ?
                 {link: '#', icon: 'new/logout', onClick: logout, value: tt('g.logout')} :

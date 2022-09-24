@@ -12,3 +12,10 @@ export function walletUrl(pathname = '') {
         return ''
     }
 }
+
+export function walletTarget() {
+    if (process.env.IS_APP) {
+        return '_blank'
+    } 
+    return undefined
+}

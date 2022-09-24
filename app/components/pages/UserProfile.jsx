@@ -25,7 +25,7 @@ import LinkEx from 'app/utils/LinkEx'
 import {isFetchingOrRecentlyUpdated} from 'app/utils/StateFunctions';
 import {repLog10} from 'app/utils/ParsersAndFormatters';
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
-import { walletUrl, } from 'app/utils/walletUtils'
+import { walletUrl, walletTarget } from 'app/utils/walletUtils'
 import Tooltip from 'app/components/elements/Tooltip';
 import VerticalMenu from 'app/components/elements/VerticalMenu';
 import MarkNotificationRead from 'app/components/elements/MarkNotificationRead';
@@ -379,10 +379,10 @@ export default class UserProfile extends React.Component {
         let donates_to_addon = undefined;
         if (isMyAccount) donates_to_addon = <NotifiCounter fields='donate,donate_msgs' />;
         let rewardsMenu = [
-            {link: walletUrl(`/@${accountname}/donates-to`), label: tt('g.donates_to'), value: tt('g.donates_to'), addon: donates_to_addon},
-            {link: walletUrl(`/@${accountname}/donates-from`), label: tt('g.donates_from'), value: tt('g.donates_from')},
-            {link: walletUrl(`/@${accountname}/author-rewards`), label: tt('g.author_rewards'), value: tt('g.author_rewards')},
-            {link: walletUrl(`/@${accountname}/curation-rewards`), label: tt('g.curation_rewards'), value: tt('g.curation_rewards')}
+            {link: walletUrl(`/@${accountname}/donates-to`), target: walletTarget(), label: tt('g.donates_to'), value: tt('g.donates_to'), addon: donates_to_addon},
+            {link: walletUrl(`/@${accountname}/donates-from`), target: walletTarget(), label: tt('g.donates_from'), value: tt('g.donates_from')},
+            {link: walletUrl(`/@${accountname}/author-rewards`), target: walletTarget(), label: tt('g.author_rewards'), value: tt('g.author_rewards')},
+            {link: walletUrl(`/@${accountname}/curation-rewards`), target: walletTarget(), label: tt('g.curation_rewards'), value: tt('g.curation_rewards')}
         ];
 
         // set account join date
@@ -422,11 +422,11 @@ export default class UserProfile extends React.Component {
                     </LinkWithDropdown>
                     <div className='UserProfile__filler' />
                     <div>
-                        <a href={walletUrl(`/@${accountname}/transfers`)} className={`${walletClass} UserProfile__menu-item`} onClick={e => { e.preventDefault(); browserHistory.push(e.target.pathname); return false; }}>
+                        <a href={walletUrl(`/@${accountname}/transfers`)} target={walletTarget()} className={`${walletClass} UserProfile__menu-item`}>
                             {tt('g.wallet')} {isMyAccount && <NotifiCounter fields='send,receive' />}
                         </a>
                         {isMyAccount ?
-                            <LinkEx className='UserProfile__menu-item' to={walletUrl(`/@${accountname}/filled-orders`)} activeClassName='active'>{tt('navigation.market2')} <NotifiCounter fields="fill_order" /></LinkEx>
+                            <LinkEx className='UserProfile__menu-item' to={walletUrl(`/@${accountname}/filled-orders`)} target={walletTarget()} activeClassName='active'>{tt('navigation.market2')} <NotifiCounter fields="fill_order" /></LinkEx>
                             : null
                         }
                         {isMyAccount ?
