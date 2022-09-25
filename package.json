@@ -19,6 +19,7 @@
     "start:local": "./.env.start.local.sh",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
+    "dev:app": "cross-env NODE_CONFIG_ENV=blacklist REGISTER_INTERVAL_SEC=5 IS_APP=1 ./node_modules/@babel/node/bin/babel-node.js ./webpack/dev-server.js",
     "build:app": "cross-env NODE_ENV=production NODE_CONFIG_ENV=production,desktop ./node_modules/.bin/webpack --config ./webpack/prod-app.config.js",
     "build:app-entry": "cross-env NODE_ENV=production NODE_CONFIG_ENV=production,desktop ./node_modules/@babel/node/bin/babel-node.js build_app_entry.js"
   },
