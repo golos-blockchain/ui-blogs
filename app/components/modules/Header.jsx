@@ -68,7 +68,6 @@ class Header extends React.Component {
     }
 
     render() {
-        return <div>process.env.NODE_ENV</div>
         const route = resolveRoute(this.props.location.pathname);
         const current_account_name =  this.props.current_account_name;
         let home_account = false;

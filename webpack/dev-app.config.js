@@ -37,6 +37,10 @@ module.exports = merge(baseConfig, {
         }),
         new StartServerPlugin(),
     ],
+    entry: {
+        app: [ './app/MainApp.js' ],
+        // vendor: ['react', 'react-dom', 'react-router']
+    },
     module: {
         rules: [
             {

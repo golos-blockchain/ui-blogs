@@ -6,8 +6,6 @@ const config = require('config')
 import ServerHTML from './server/server-html';
 
 const app_version = require('./package.json').version
-const assets_filename = process.env.NODE_ENV === 'production' ? './tmp/webpack-isotools-assets-prod.json' : './tmp/webpack-isotools-assets-dev.json';
-const assets = require(assets_filename);
 
 let destDir, cfgFile
 const argv = process.argv
@@ -18,13 +16,18 @@ if (argv.length !== 4) {
 destDir = argv[2]
 cfgFile = argv[3]
 
-const props = { body: '', assets, title: '', relativeSrc: false };
+if (destDir !== 'null') {
+    const assets_filename = process.env.NODE_ENV === 'production' ? './tmp/webpack-isotools-assets-prod.json' : './tmp/webpack-isotools-assets-dev.json';
+    const assets = require(assets_filename);
 
-let html = ReactDOMServer.renderToString(<ServerHTML {...props} />)
-html = '<!DOCTYPE html>' + html
-fs.writeFileSync(destDir + '/index.html', html)
-fse.copySync('app/locales', destDir + '/locales', { overwrite: true })
-fse.copySync('app/assets/images', destDir + '/images', { overwrite: true }) // for some direct links
+    const props = { body: '', assets, title: '', relativeSrc: false };
+
+    let html = ReactDOMServer.renderToString(<ServerHTML {...props} />)
+    html = '<!DOCTYPE html>' + html
+    fs.writeFileSync(destDir + '/index.html', html)
+    fse.copySync('app/locales', destDir + '/locales', { overwrite: true })
+    fse.copySync('app/assets/images', destDir + '/images', { overwrite: true }) // for some direct links
+}
 
 let cfg = {}
 const copyKey = (key) => {
