@@ -1,5 +1,6 @@
 import { Headers } from 'cross-fetch'
 import diff_match_patch from 'diff-match-patch'
+import {config, api} from 'golos-lib-js';
 
 import { detransliterate } from 'app/utils/ParsersAndFormatters'
 import fetchWithTimeout from 'shared/fetchWithTimeout'
@@ -179,7 +180,7 @@ const copyField = (obj, hit, fieldName, fallbackValue) => {
     obj[fieldName] = val !== undefined ? val : fallbackValue
 }
 
-export async function searchData(sr, retries = 3, retryIntervalSec = 2, timeoutMsec = 10000) {
+export async function searchData(sr, retries = 3, retryIntervalSec = 2, timeoutMsec = 10000, myAccount = null) {
     const retryMsec = retryIntervalSec * 1000
     let preResults = null
     for (let i = 0; i < (retries + 1); ++i) {
@@ -196,10 +197,15 @@ export async function searchData(sr, retries = 3, retryIntervalSec = 2, timeoutM
             }
         }
     }
-    let results = preResults.hits.hits.map((hit) => {
+
+    const authors = new Set()
+    const results = []
+    for (let i = 0; i < preResults.hits.hits.length; ++i) {
+        const hit = preResults.hits.hits[i]
         let obj = {}
 
         copyField(obj, hit, 'author')
+        authors.add(obj.author)
         copyField(obj, hit, 'permlink')
         copyField(obj, hit, 'category')
         copyField(obj, hit, 'root_author')
@@ -221,11 +227,33 @@ export async function searchData(sr, retries = 3, retryIntervalSec = 2, timeoutM
         obj.parent_author = ''
         obj.replies = []
 
-        return obj
-    })
+        results.push(obj)
+    }
+
+    let total = (preResults.hits.total && preResults.hits.total.value) || 100
+
+    let filteredResults = []
+    if (myAccount) {
+        const rels = await api.getAccountRelationsAsync({
+            my_account: myAccount,
+            with_accounts: [...authors]
+        })
+
+        for (let i = 0; i < results.length; ++i) {
+            const acc = results[i].author
+            if (rels[acc] && rels[acc].blocking) {
+                --total
+            } else {
+                filteredResults.push(results[i])
+            }
+        }
+    } else {
+        filteredResults = results
+    }
+
     return {
-        results,
-        total: (preResults.hits.total && preResults.hits.total.value) || 100
+        results: filteredResults,
+        total
     }
 }
 

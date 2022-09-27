@@ -193,7 +193,7 @@ class PostFull extends React.Component {
 
         const p = extractContent(immutableAccessor, postContent);
         const content = postContent.toJS();
-        const { author, permlink, parent_author, parent_permlink } = content;
+        const { author, permlink, parent_author, parent_permlink, root_author } = content;
         const jsonMetadata = showReply ? null : p.json_metadata;
         let link = `/@${content.author}/${content.permlink}`;
 
@@ -212,6 +212,7 @@ class PostFull extends React.Component {
             permlink,
             parent_author,
             parent_permlink,
+            root_author,
             category,
             title,
             body,
@@ -326,12 +327,6 @@ class PostFull extends React.Component {
     }
 
     _renderReplyEditor(replyParams, jsonMetadata, isEdit) {
-        const { ignoring, username } = this.props;
-
-        if (ignoring && ignoring.has(username)) {
-            return <h5 className="error">{tt('g.blocked_from_blog')}</h5>
-        }
-
         return (
             <CommentFormLoader
                 editMode={isEdit}
@@ -455,7 +450,7 @@ class PostFull extends React.Component {
     }
 
     _renderFooter(postContent, content, link, authorRepLog10) {
-        const { username, post, ignoring } = this.props;
+        const { username, post, } = this.props;
         const { showReply, showEdit } = this.state;
         const { author, permlink } = content;
 
@@ -547,16 +542,12 @@ export default connect(
     (state, props) => {
         const username = state.user.getIn(['current', 'username'])
 
-        const curr_blog_author = props.cont.get(props.post).get('author')
-        const key = ['follow', 'getFollowingAsync', curr_blog_author, 'ignore_result']
-        const ignoring = state.global.getIn(key)
         let prevPosts = state.global.get('prev_posts')
         prevPosts = prevPosts ? prevPosts.toJS() : []
 
         return {
             ...props,
             username,
-            ignoring,
             prevPosts
         }
     },

@@ -4,8 +4,8 @@
     "type": "git",
     "url": "https://github.com/golos-blockchain/ui-blogs.git"
   },
-  "version": "1.2.2",
-  "description": "Голос - социальная сеть, построенная на публичном блокчейне.",
+  "version": "1.3.0",
+  "description": "Голос Блоги — децентрализованная платформа, работающая на блокчейне Golos.",
   "main": "dist/electron/electron.js",
   "scripts": {
     "build-version": "./server/build-version.sh",
@@ -50,7 +50,7 @@
     "foundation-sites": "^6.4.3",
     "fs-extra": "^10.0.1",
     "git-rev-sync": "^1.12.0",
-    "golos-lib-js": "^0.9.31",
+    "golos-lib-js": "^0.9.43",
     "history": "^2.0.0-rc2",
     "immutable": "^3.8.2",
     "intl": "^1.2.5",

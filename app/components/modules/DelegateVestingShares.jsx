@@ -43,7 +43,7 @@ class DelegateVestingShares extends React.Component {
     }
 
     initForm(props) {
-        const fields = [ 'to', 'amount', 'interestRate' ]
+        const fields = [ 'to', 'amount', 'emissionInterest:checked', 'interestRate' ]
 
         const insufficientFunds = (amount) => {
             const { gprops, currentAccount } = this.props
@@ -78,6 +78,7 @@ class DelegateVestingShares extends React.Component {
                     interestLimit(values.interestRate)
                         ? tt('delegatevestingshares_jsx.too_large_percent')
                         : null,
+                emissionInterest: null,
             })
         })
     }
@@ -119,12 +120,16 @@ class DelegateVestingShares extends React.Component {
                 console.error('getVestingDelegationsAsync', error);
             }
             if (delegations && delegations[0] && delegations[0].delegatee === value) {
-                let amount = delegations[0].vesting_shares;
+                const vdo = delegations[0]
+
+                let amount = vdo.vesting_shares
                 amount = vestsToSteem(amount, gprops);
                 this.state.amount.props.onChange(amount);
 
-                let interestRate = delegations[0].interest_rate / 100;
-                this.state.interestRate.props.onChange(interestRate.toString());
+                let interestRate = vdo.interest_rate / 100;
+                this.state.interestRate.props.onChange(vdo.is_emission ? '0' : interestRate.toString());
+
+                this.state.emissionInterest.props.onChange(vdo.is_emission)
 
                 this.setState({
                     vdoLoading: false,
@@ -159,6 +164,11 @@ class DelegateVestingShares extends React.Component {
         this.state.interestRate.props.onChange(value);
     };
 
+    onChangeEmissionInterest = (e) => {
+        this.state.interestRate.props.onChange('0');
+        this.state.emissionInterest.props.onChange(e.target.checked)
+    }
+
     onClickRevoke = (e) => {
         e.preventDefault();
         const { dispatchSubmit, gprops, currentAccount, } = this.props;
@@ -167,13 +177,14 @@ class DelegateVestingShares extends React.Component {
             to: this.state.to.props.value,
             amount: '0',
             interestRate: this.state.interestRate.props.value,
+            emissionInterest: this.state.emissionInterest.props.checked,
             errorCallback: this.errorCallback, successCallback: this.successCallback,
             gprops, currentAccount })
     };
 
     render() {
         const { gprops, cprops, currentAccount, dispatchSubmit, } = this.props;
-        const { to, amount, interestRate, loading, trxError, vdoLoading, vdoExists, } = this.state;
+        const { to, amount, interestRate, emissionInterest, loading, trxError, vdoLoading, vdoExists, } = this.state;
         const { submitting, valid, handleSubmit, } = this.state.delegate_vesting;
 
         const VESTING_TOKEN2 = tt('token_names.VESTING_TOKEN2')
@@ -276,6 +287,25 @@ class DelegateVestingShares extends React.Component {
                     </div>
                 </div>}
 
+                {!vdoLoading && <div className="row">
+                    <div className="column small-10">
+                        <div className="input-group" style={{marginBottom: "1.25rem"}}>
+                            <label>
+                                <input
+                                    className="input-group-field bold"
+                                    type="checkbox"
+                                    {...emissionInterest.props} onChange={(e) => this.onChangeEmissionInterest(e)}
+                                    disabled={vdoExists}
+                                />
+                                {tt('delegatevestingshares_jsx.emission_interest')}
+                            </label>
+                        </div>
+                        {emissionInterest.touched && emissionInterest.blur && emissionInterest.error &&
+                            <div className="error">{emissionInterest.error}&nbsp;</div>
+                        }
+                    </div>
+                </div>}
+
                 {!vdoLoading && <div className='row'>
                     <div className='column small-12'>
                         {tt('delegatevestingshares_jsx.interest')}
@@ -294,7 +324,7 @@ class DelegateVestingShares extends React.Component {
                                 autoCorrect='off'
                                 autoCapitalize='off'
                                 spellCheck='false'
-                                disabled={loading || vdoExists}
+                                disabled={loading || vdoExists || emissionInterest.props.checked}
                             />
                         </div>
                         {interestRate.touched && interestRate.blur && interestRate.error && <div className='error'>{interestRate.error}&nbsp;</div>}
@@ -338,7 +368,7 @@ export default connect(
 
         let interestRate = calcDefaultInterest(cprops);
 
-        const initialValues = { to: null, interestRate, }
+        const initialValues = { to: null, interestRate, emissionInterest: false }
 
         return {
             ...ownProps,
@@ -350,7 +380,7 @@ export default connect(
     },
 
     dispatch => ({
-        dispatchSubmit: ({ to, amount, interestRate, errorCallback, successCallback, gprops, currentAccount }) => {
+        dispatchSubmit: ({ to, amount, interestRate, emissionInterest, errorCallback, successCallback, gprops, currentAccount }) => {
             const delegator = currentAccount.get('name');
             const delegatee = to;
             const vestingShares = `${steemToVests(amount, gprops)} GESTS`;
@@ -370,6 +400,15 @@ export default connect(
                 __config = { title: tt('delegate_vesting_shares_info_jsx.confirm_title', { VESTING_TOKENS: tt('token_names.VESTING_TOKENS') }), };
             }
 
+            let extensions =[]
+            if (emissionInterest) {
+                extensions.push([0,
+                {
+                    is_emission: true
+                }])
+                interestRate = 100
+            }
+
             dispatch(transaction.actions.broadcastOperation({
                 type: 'delegate_vesting_shares_with_interest',
                 operation: {
@@ -377,6 +416,7 @@ export default connect(
                     delegatee,
                     vesting_shares: vestingShares,
                     interest_rate: Math.trunc(interestRate * 100),
+                    extensions,
                     __config,
                 },
                 confirm,

@@ -17,6 +17,7 @@ import TipAssetList from 'app/components/elements/donate/TipAssetList'
 import VoteSlider from 'app/components/elements/donate/VoteSlider'
 import { checkMemo } from 'app/utils/ParsersAndFormatters';
 import { accuEmissionPerDay } from 'app/utils/StateFunctions'
+import { checkAllowed, AllowTypes } from 'app/utils/Allowance'
 
 class Donate extends React.Component {
     constructor(props) {
@@ -86,18 +87,24 @@ class Donate extends React.Component {
         this.props.setDonateDefaults(donateDefs)
     }
 
-    _onSubmit = (values, actions) => {
+    _onSubmit = async (values, actions) => {
         const { currentUser, opts, dispatchSubmit } = this.props
         const { to, permlink, is_comment } = opts
         const { isMemoEncrypted } = this.state
         const vote = {
             percent: values.sliderPercent * 100
         }
-        dispatchSubmit({
+        await dispatchSubmit({
             to, amount: values.amount.asset, memo: values.memo, isMemoEncrypted,
-            permlink, is_comment, vote, myVote: opts.myVote * 100, currentUser,
+            permlink, is_comment,
+            vote,
+            myVote: opts.myVote * 100,
+            voteAllowType: opts.voteAllowType,
+            currentUser,
             errorCallback: (err) => {
-                actions.setErrors({ memo: err.message || err })
+                if (err) {
+                    actions.setErrors({ memo: err.message || err })
+                }
                 actions.setSubmitting(false)
             }
         })
@@ -254,9 +261,9 @@ export default connect(
         setDonateDefaults: (donateDefaults) => {
             dispatch(user.actions.setDonateDefaults(donateDefaults))
         },
-        dispatchSubmit: ({
+        dispatchSubmit: async ({
             to, amount, memo, isMemoEncrypted,
-            permlink, is_comment, vote, myVote, currentUser, errorCallback
+            permlink, is_comment, vote, myVote, voteAllowType, currentUser, errorCallback
         }) => {
             const username = currentUser.get('username')
 
@@ -277,13 +284,20 @@ export default connect(
             let trx = [
                 ['donate', operation]
             ]
+            let aTypes = [
+                AllowTypes.transfer
+            ]
             if (vote && vote.percent !== myVote) {
                 const voteOp = {
                     voter: username, author: to, permlink,
                     weight: vote.percent
                 }
-                if (amount.amount <= 0) trx = []
+                if (amount.amount <= 0) {
+                    trx = []
+                    aTypes = []
+                }
                 trx.push(['vote', voteOp])
+                aTypes.push(voteAllowType)
 
                 if (!myVote) {
                     localStorage.removeItem('vote_weight'); // deprecated
@@ -303,8 +317,17 @@ export default connect(
                 dispatch(user.actions.hideDonate())
             }
 
+            let confirm
+            const tipAmount = Asset(operation.amount)
+            const blocking = await checkAllowed(operation.from, [operation.to], tipAmount, aTypes)
+            if (blocking.error) {
+                errorCallback(blocking.error)
+                return
+            }
+            confirm = blocking.confirm
+
             dispatch(transaction.actions.broadcastOperation({
-                type: 'donate', username, trx, successCallback, errorCallback
+                type: 'donate', username, trx, confirm, successCallback, errorCallback
             }))
         }
     })

@@ -7,7 +7,7 @@ import {api} from 'golos-lib-js';
 import {pageSession} from 'golos-lib-js/lib/auth';
 
 // operations that require only posting authority
-const postingOps = Set(`vote, comment, delete_comment, custom_json, account_metadata, claim, donate, worker_request_vote`.trim().split(/,\s*/))
+const postingOps = Set(`vote, comment, delete_comment, custom_json, account_metadata, donate, worker_request_vote, account_setup`.trim().split(/,\s*/))
 
 export function* authWatches() {
     yield fork(watchForAuth) 
@@ -127,6 +127,10 @@ export function* findSigningKey({opType, username, password}) {
 
     const account = yield call(getAccount, username);
     if (!account) throw new Error('Account not found')
+
+    if (account.get('frozen')) {
+        throw new Error('Account is frozen: ' + username)
+    }
 
     for (const authType of authTypes) {
         let private_key

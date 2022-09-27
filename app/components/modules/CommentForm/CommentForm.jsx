@@ -14,6 +14,7 @@ import MarkdownViewer, {
     getRemarkable,
 } from 'app/components/cards/MarkdownViewer';
 import { checkPostHtml } from 'app/utils/validator';
+import { checkAllowed, AllowTypes } from 'app/utils/Allowance'
 import './CommentForm.scss';
 
 const DRAFT_KEY = 'golos.comment.draft';
@@ -270,10 +271,12 @@ class CommentForm extends React.Component {
 
         if (editMode) {
             data.permlink = params.permlink;
+            data.root_author = params.root_author
             data.parent_author = params.parent_author;
             data.parent_permlink = params.parent_permlink;
             data.__config.originalBody = params.body;
         } else {
+            data.root_author = params.root_author
             data.parent_author = params.author;
             data.parent_permlink = params.permlink;
             data.__config.comment_options = {};
@@ -283,6 +286,7 @@ class CommentForm extends React.Component {
 
         this.props.onPost(
             data,
+            editMode,
             () => {
                 try {
                     localStorage.removeItem(DRAFT_KEY);
@@ -292,7 +296,7 @@ class CommentForm extends React.Component {
                 this.setState({ disabled: false });
             },
             err => {
-                this.refs.footer.showPostError(err.toString().trim());
+                if (err) this.refs.footer.showPostError(err.toString().trim());
                 this.setState({ disabled: false });
             }
         );
@@ -357,11 +361,20 @@ export default connect(
         author: state.user.getIn(['current', 'username']),
     }),
     dispatch => ({
-        onPost(payload, onSuccess, onError) {
+        async onPost(payload, editMode, onSuccess, onError) {
+            let blocking = await checkAllowed(payload.author,
+                [payload.parent_author, payload.root_author],
+                null, editMode ? AllowTypes.commentEdit : AllowTypes.comment)
+            if (blocking.error) {
+                onError(blocking.error)
+                return
+            }
+            const confirm = blocking.confirm
             dispatch(
                 transaction.actions.broadcastOperation({
                     type: 'comment',
                     operation: payload,
+                    confirm,
                     hideErrors: true,
                     errorCallback: onError,
                     successCallback: onSuccess,

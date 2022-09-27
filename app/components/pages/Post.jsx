@@ -23,7 +23,6 @@ class Post extends React.Component {
         routeParams: PropTypes.object,
         location: PropTypes.object,
         current_user: PropTypes.object,
-        negativeCommenters: PropTypes.any,
     };
 
     constructor() {
@@ -99,14 +98,14 @@ class Post extends React.Component {
         } else {
             children = <p>
                 {tt('poststub.onlyblog')}
-                <Follow following={dis.get('author')} showMute={false} />
+                <Follow following={dis.get('root_author') || dis.get('author')} showMute={false} />
             </p>
         }
         return this._renderStub(children)
     }
 
     render() {
-        const {following, ignoring, content, negativeCommenters, current_user} = this.props
+        const {following, content, current_user} = this.props
         const {showNegativeComments, commentHidden, showAnyway} = this.state
         let { post } = this.props;
         const { aiPosts } = this.props;
@@ -149,12 +148,7 @@ class Post extends React.Component {
         const keep = a => {
             const c = content.get(a);
             const hide = c.getIn(['stats', 'hide'])
-            let ignore = false
-            if(ignoring) {
-                ignore = ignoring.has(c.get('author'))
-                // if(ignore) console.log(current_user && current_user.get('username'), 'is ignoring post author', c.get('author'), '\t', a)
-            }
-            return !hide && !ignore
+            return !hide
         }
         const positiveComments = replies.filter(a => keep(a))
             .map(reply => (
@@ -166,14 +160,12 @@ class Post extends React.Component {
                     sortOrder={sort_order}
                     showNegativeComments={showNegativeComments}
                     onHide={this.onHideComment}
-                    ignoreList={ignoring}
-                    negativeCommenters={negativeCommenters}
                 />)
             );
 
         const negativeGroup = commentHidden &&
             (<div className="hentry Comment root Comment__negative_group">
-                <br /><p>
+                <p>
                     {tt(showNegativeComments ? 'post_jsx.now_showing_comments_with_low_ratings' : 'post_jsx.comments_were_hidden_due_to_low_ratings')}.{' '}
                     {(current_user || showNegativeComments) ? <button className="button hollow tiny float-right" onClick={e => this.toggleNegativeReplies(e)}>
                         {tt(showNegativeComments ? 'g.hide' :'g.show')}
@@ -204,7 +196,9 @@ class Post extends React.Component {
             if (stats.isOnlyblog) {
                 if (!following && (typeof(localStorage) === 'undefined' || session.load())) {
                     return this._renderLoadingStub()
-                } else if (!following || !following.includes(dis.get('author'))) {
+                } else if (!following || 
+                    (!following.includes(dis.get('author')) &&
+                        !following.includes(dis.get('root_author')))) {
                     return this._renderOnlyBlog(dis)
                 }
             }
@@ -290,19 +284,6 @@ export default connect((state, props) => {
     }
     const dis = state.global.get('content').get(post);
 
-    let ignoring = new Set()
-    let negativeCommenters = new Set()
-
-    if (dis && state.global.get('follow')) {
-        const key = ['follow', 'getFollowingAsync', dis.get('author'), 'ignore_result']
-        negativeCommenters = state.global.getIn(key, emptySet)
-    }
-
-    if (current_user) {
-        const key = ['follow', 'getFollowingAsync', current_user.get('username'), 'ignore_result']
-        ignoring = state.global.getIn(key, emptySet)
-    }
-
     let following = null
     if (current_user) {
         const key = ['follow', 'getFollowingAsync', current_user.get('username'), 'blog_result']
@@ -312,9 +293,7 @@ export default connect((state, props) => {
     return {
         content: state.global.get('content'),
         current_user,
-        ignoring,
         following,
-        negativeCommenters
     }
 }, dispatch => ({
     showLogin: e => {

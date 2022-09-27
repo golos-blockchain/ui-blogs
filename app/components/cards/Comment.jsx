@@ -35,8 +35,6 @@ class CommentImpl extends PureComponent {
         rootComment: PropTypes.string,
         anchorLink: PropTypes.string.isRequired,
         deletePost: PropTypes.func.isRequired,
-        ignoreList: PropTypes.any,
-        negativeCommenters: PropTypes.any
     };
 
     static defaultProps = {
@@ -58,7 +56,7 @@ class CommentImpl extends PureComponent {
         const content = this.props.cont.get(this.props.content);
 
         if (content) {
-            this._checkHide(content, this.props.negativeCommenters);
+            this._checkHide(content)
         }
     }
 
@@ -79,7 +77,7 @@ class CommentImpl extends PureComponent {
         const content = np.cont.get(np.content);
 
         if (content) {
-            this._checkHide(content, np.negativeCommenters);
+            this._checkHide(content)
         }
     }
 
@@ -88,16 +86,14 @@ class CommentImpl extends PureComponent {
      * - `hideBody` is true when comment rshares OR author rep is negative.
      *    it hides the comment body (but not the header) until the "reveal comment" link is clicked.
      */
-    _checkHide(content, negativeCommenters) {
+    _checkHide(content) {
         let hide = hideSubtree(this.props.cont, this.props.content)
 
-        if (content) {
-            const comment = content.toJS()
-            if (negativeCommenters.has(comment.author)) {
-                hide = true
-            }
-        }
+        // console.log('CON', content.toJS())
 
+        if (content.get('bad')) {
+            hide = true
+        }
 
         if (hide) {
             const { onHide } = this.props;
@@ -134,19 +130,14 @@ class CommentImpl extends PureComponent {
             depth,
             anchorLink,
             showNegativeComments,
-            ignoreList,
-            negativeCommenters,
             sortOrder,
             username,
-            blocked
         } = this.props;
 
         const post = comment.author + '/' + comment.permlink;
         const { showReply, showEdit, hide, hideBody } = this.state;
 
-        const ignore = ignoreList && ignoreList.has(comment.author);
-
-        if (!showNegativeComments && (hide || ignore)) {
+        if (!showNegativeComments && hide) {
             return null;
         }
 
@@ -210,8 +201,6 @@ class CommentImpl extends PureComponent {
                         rootComment={this._getRootComment(comment)}
                         showNegativeComments={showNegativeComments}
                         onHide={this.props.onHide}
-                        ignoreList={ignoreList}
-                        negativeCommenters={negativeCommenters}
                     />
                 ));
             }
@@ -229,10 +218,6 @@ class CommentImpl extends PureComponent {
                     onCancel={this._onCancel}
                 />
             );
-        }
-
-        if (negativeCommenters && negativeCommenters.has(username)) {
-            renderedEditor = <h5 className="error">{tt('g.blocked_from_blog')}</h5>
         }
 
         return (
@@ -254,7 +239,7 @@ class CommentImpl extends PureComponent {
                 </div>
                 <div
                     className={cn({
-                        downvoted: ignore || gray || blocked,
+                        downvoted: gray,
                         highlighted: this.state.highlight,
                     })}
                 >
@@ -427,20 +412,13 @@ class CommentImpl extends PureComponent {
 
 const Comment = connect(
     (state, props) => {
-        const { cont, content, negativeCommenters } = props;
+        const { cont, content, } = props;
 
         const username = state.user.getIn(['current', 'username']);
         const dis = cont.get(content);
-        let blocked = false
-
-        if (dis) {
-            const comment = dis.toJS()
-            blocked = negativeCommenters.has(comment.author)
-        }
 
         return {
             ...props,
-            blocked,
             // Using a hash here is not standard but intentional; see issue #124 for details
             anchorLink: '#@' + content,
             username,
