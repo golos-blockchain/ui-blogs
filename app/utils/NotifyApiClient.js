@@ -20,6 +20,10 @@ function setSession(request) {
     request.headers['X-Session'] = localStorage.getItem('X-Session');
 }
 
+export function notifySession() {
+    return localStorage.getItem('X-Session')
+}
+
 function saveSession(response) {
     let session = null;
     for (const header of response.headers.entries()) { // Firefox Android not supports response.headers.get()

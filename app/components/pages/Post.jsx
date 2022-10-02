@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import Comment from 'app/components/cards/Comment';
 import PostFull from 'app/components/cards/PostFull';
 import {connect} from 'react-redux';
-import { session } from 'golos-lib-js/lib/auth'
 import {sortComments} from 'app/utils/comments';
 import Follow from 'app/components/elements/Follow'
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
@@ -14,6 +13,7 @@ import tt from 'counterpart';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import { authRegisterUrl, } from 'app/utils/AuthApiClient'
 import user from 'app/redux/User'
+import session from 'app/utils/session'
 
 class Post extends React.Component {
     static propTypes = {
@@ -194,7 +194,7 @@ class Post extends React.Component {
                 return this._renderOnlyApp()
             }
             if (stats.isOnlyblog) {
-                if (!following && (typeof(localStorage) === 'undefined' || session.load())) {
+                if (!following && (typeof(localStorage) === 'undefined' || !session.load().currentName)) {
                     return this._renderLoadingStub()
                 } else if (!following || 
                     (!following.includes(dis.get('author')) &&

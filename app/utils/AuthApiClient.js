@@ -33,6 +33,10 @@ function setSession(request) {
     request.headers['X-Auth-Session'] = localStorage.getItem('X-Auth-Session');
 }
 
+export function authSession() {
+    return localStorage.getItem('X-Auth-Session')
+}
+
 function saveSession(response) {
     let session = null;
     for (const header of response.headers.entries()) { // Firefox Android not supports response.headers.get()
