@@ -113,7 +113,7 @@ class Author extends React.Component {
             {!name ? genderIcon : null}
             <div>
                 <Follow className="float-right" follower={username} following={author} what="blog"
-                        showFollow={follow} showMute={mute} donateUrl={donateUrl}
+                        showFollow={follow} showMute={mute}
                         />
             </div>
 

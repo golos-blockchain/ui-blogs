@@ -5,27 +5,15 @@ import {connect} from 'react-redux';
 import { browserHistory } from 'react-router';
 import golos from 'golos-lib-js';
 import tt from 'counterpart';
+import { LinkWithDropdown } from 'react-foundation-components/lib/global/dropdown'
 
 import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
 import Icon from 'app/components/elements/Icon'
 import UserKeys from 'app/components/elements/UserKeys';
-import CreateAsset from 'app/components/modules/uia/CreateAsset';
-import Assets from 'app/components/modules/uia/Assets';
-import UpdateAsset from 'app/components/modules/uia/UpdateAsset';
-import TransferAsset from 'app/components/modules/uia/TransferAsset';
-import Invites from 'app/components/elements/Invites';
-import PasswordReset from 'app/components/elements/PasswordReset';
-import UserWallet from 'app/components/modules/UserWallet';
-import WitnessProps from 'app/components/modules/WitnessProps';
 import Settings from 'app/components/modules/Settings';
-import DonatesFrom from 'app/components/modules/DonatesFrom';
-import DonatesTo from 'app/components/modules/DonatesTo';
-import CurationRewards from 'app/components/modules/CurationRewards';
-import AuthorRewards from 'app/components/modules/AuthorRewards';
 import ReputationHistory from 'app/components/modules/ReputationHistory'
 import Mentions from 'app/components/modules/Mentions'
-import FilledOrders from 'app/components/modules/FilledOrders'
 import UserList from 'app/components/elements/UserList';
 import Follow from 'app/components/elements/Follow';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
@@ -33,17 +21,17 @@ import PostsList from 'app/components/cards/PostsList';
 import { authUrl, } from 'app/utils/AuthApiClient'
 import { getGameLevel } from 'app/utils/GameUtils'
 import { msgsHost, msgsLink } from 'app/utils/ExtLinkUtils'
+import LinkEx from 'app/utils/LinkEx'
 import {isFetchingOrRecentlyUpdated} from 'app/utils/StateFunctions';
 import {repLog10} from 'app/utils/ParsersAndFormatters';
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
+import { walletUrl, walletTarget } from 'app/utils/walletUtils'
 import Tooltip from 'app/components/elements/Tooltip';
-import { LinkWithDropdown } from 'react-foundation-components/lib/global/dropdown';
 import VerticalMenu from 'app/components/elements/VerticalMenu';
 import MarkNotificationRead from 'app/components/elements/MarkNotificationRead';
 import NotifiCounter from 'app/components/elements/NotifiCounter';
 import DateJoinWrapper from 'app/components/elements/DateJoinWrapper';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
-import WalletSubMenu from 'app/components/elements/WalletSubMenu';
 import Userpic from 'app/components/elements/Userpic';
 import Callout from 'app/components/elements/Callout';
 import normalizeProfile, { getLastSeen } from 'app/utils/NormalizeProfile';
@@ -90,10 +78,6 @@ export default class UserProfile extends React.Component {
             np.follow_count !== this.props.follow_count ||
             ns.repLoading !== this.state.repLoading
         )
-    }
-
-    componentWillUnmount() {
-        this.props.clearTransferDefaults()
     }
 
     loadMore(last_post, category) {
@@ -265,77 +249,7 @@ export default class UserProfile extends React.Component {
         // const global_status = this.props.global.get('status');
 
         let rewardsClass = '', walletClass = '';
-        if( section === 'transfers' ) {
-            // transfers, check if url has query params
-            const { location: { query } } = this.props;
-            const {to, amount, token, memo} = query;
-            const hasAllParams = (!!to && !!amount && !!token && !!memo);
-            walletClass = 'active'
-            tab_content = <div>
-                <UserWallet
-                    transferDetails={{immediate: hasAllParams, ...query}}
-                    account={accountImm}
-                    showTransfer={this.props.showTransfer}
-                    showPowerdown={this.props.showPowerdown}
-                    current_user={current_user}
-                    withdrawVesting={this.props.withdrawVesting} />
-                { isMyAccount && <div><MarkNotificationRead fields='send,receive' account={account.name} /></div> }
-                </div>;
-        } else if( section === 'assets' ) {
-            walletClass = 'active'
-            tab_content = <div>
-                 <WalletSubMenu account_name={account.name} isMyAccount={isMyAccount} />
-
-                <br />
-                {!action && <Assets account={accountImm} isMyAccount={isMyAccount}
-                    showTransfer={this.props.showTransfer} />
-                }
-                {action === 'update' && <UpdateAsset account={accountImm} symbol={id.toUpperCase()} />}
-                {action === 'transfer' && <TransferAsset account={accountImm} symbol={id.toUpperCase()} />}
-                </div>
-        } else if( section === 'create-asset' && isMyAccount ) {
-            walletClass = 'active'
-            tab_content = <div>
-                 <WalletSubMenu account_name={account.name} isMyAccount={isMyAccount} />
-
-                <br />
-                <CreateAsset account={accountImm} />
-                </div>;
-        }
-        else if( section === 'curation-rewards' ) {
-            rewardsClass = 'active';
-            tab_content = <CurationRewards
-                account={account}
-                current_user={current_user}
-                />
-        }
-        else if( section === 'author-rewards' ) {
-            rewardsClass = 'active';
-            tab_content = <AuthorRewards
-                account={account}
-                current_user={current_user}
-                />
-        }
-        else if( section === 'donates-from' ) {
-            rewardsClass = 'active';
-            tab_content = <DonatesFrom
-                account={account}
-                current_user={current_user}
-                incoming={true}
-                />
-        }
-        else if( section === 'donates-to' ) {
-            rewardsClass = 'active';
-            tab_content = <div>
-                <DonatesTo
-                    account={account}
-                    current_user={current_user}
-                    incoming={false}
-                    />
-                    { isMyAccount && <div><MarkNotificationRead fields='donate,donate_msgs' account={account.name} /></div> }
-                </div>
-        }
-        else if( section === 'followers' ) {
+        if( section === 'followers' ) {
             if (followers && followers.has('blog_result')) {
                 tab_content = <div>
                     <UserList
@@ -455,82 +369,20 @@ export default class UserProfile extends React.Component {
                 </div>
             );
         }
-        else if( (section === 'filled-orders')) {
-            tab_content = (
-                <div>
-                    <FilledOrders
-                        account={account}
-                        current_user={current_user}
-                        loading={fetching}
-                    />
-                    { isMyAccount && <div><MarkNotificationRead fields='fill_order' account={account.name} /></div> }
-                </div>
-            );
-        }
-        else if( section === 'permissions' && isMyAccount ) {
-            walletClass = 'active'
-            tab_content = <div>
-                 <WalletSubMenu account_name={account.name} isMyAccount={isMyAccount} />
 
-                <br />
-                <UserKeys account={accountImm} />
-                { isMyAccount && <div><MarkNotificationRead fields='send,receive' account={account.name} /></div>}
-                </div>;
-        } 
-        else if( section === 'invites' && isMyAccount ) {
-            walletClass = 'active'
-            tab_content = <div>
-                 <WalletSubMenu account_name={account.name} isMyAccount={isMyAccount} />
-
-                <br />
-                <Invites account={accountImm} />
-                </div>;
-        } 
-        else if( section === 'password' ) {
-            walletClass = 'active'
-            tab_content = <div>
-                    <WalletSubMenu account_name={account.name} isMyAccount={isMyAccount} />
-
-                    <br />
-                    <PasswordReset account={accountImm} />
-                </div>
-        }
-        else if( section === 'witness' ) {
-            tab_content = <WitnessProps 
-                account={account} />
-        } 
-
-        if (!(section === 'transfers' ||
-              section === 'assets' ||
-              section === 'create-asset' ||
-              section === 'permissions' ||
-              section === 'password' ||
-              section === 'invites')) {
-            tab_content = <div className='row'>
-                <div className='UserProfile__tab_content column'>
-                    {tab_content}
-                </div>
-            </div>;
-        }
-
-        let printLink = null;
-        if( section === 'permissions' ) {
-           if(isMyAccount && wifShown) {
-               printLink = <div><a className='float-right noPrint' onClick={onPrint}>
-                       <Icon name='printer' />&nbsp;{tt('g.print')}&nbsp;&nbsp;
-                   </a></div>
-           }
-        }
-
-        // const wallet_tab_active = section === 'transfers' || section === 'password' || section === 'permissions' ? 'active' : ''; // className={wallet_tab_active}
+        tab_content = <div className='row'>
+            <div className='UserProfile__tab_content column'>
+                {tab_content}
+            </div>
+        </div>
 
         let donates_to_addon = undefined;
         if (isMyAccount) donates_to_addon = <NotifiCounter fields='donate,donate_msgs' />;
         let rewardsMenu = [
-            {link: `/@${accountname}/donates-to`, label: tt('g.donates_to'), value: tt('g.donates_to'), addon: donates_to_addon},
-            {link: `/@${accountname}/donates-from`, label: tt('g.donates_from'), value: tt('g.donates_from')},
-            {link: `/@${accountname}/author-rewards`, label: tt('g.author_rewards'), value: tt('g.author_rewards')},
-            {link: `/@${accountname}/curation-rewards`, label: tt('g.curation_rewards'), value: tt('g.curation_rewards')}
+            {link: walletUrl(`/@${accountname}/donates-to`), target: walletTarget(), label: tt('g.donates_to'), value: tt('g.donates_to'), addon: donates_to_addon},
+            {link: walletUrl(`/@${accountname}/donates-from`), target: walletTarget(), label: tt('g.donates_from'), value: tt('g.donates_from')},
+            {link: walletUrl(`/@${accountname}/author-rewards`), target: walletTarget(), label: tt('g.author_rewards'), value: tt('g.author_rewards')},
+            {link: walletUrl(`/@${accountname}/curation-rewards`), target: walletTarget(), label: tt('g.curation_rewards'), value: tt('g.curation_rewards')}
         ];
 
         // set account join date
@@ -570,11 +422,11 @@ export default class UserProfile extends React.Component {
                     </LinkWithDropdown>
                     <div className='UserProfile__filler' />
                     <div>
-                        <a href={`/@${accountname}/transfers`} className={`${walletClass} UserProfile__menu-item`} onClick={e => { e.preventDefault(); browserHistory.push(e.target.pathname); return false; }}>
+                        <a href={walletUrl(`/@${accountname}/transfers`)} target={walletTarget()} className={`${walletClass} UserProfile__menu-item`}>
                             {tt('g.wallet')} {isMyAccount && <NotifiCounter fields='send,receive' />}
                         </a>
                         {isMyAccount ?
-                            <Link className='UserProfile__menu-item' to={`/@${accountname}/filled-orders`} activeClassName='active'>{tt('navigation.market2')} <NotifiCounter fields="fill_order" /></Link>
+                            <LinkEx className='UserProfile__menu-item' to={walletUrl(`/@${accountname}/filled-orders`)} target={walletTarget()} activeClassName='active'>{tt('navigation.market2')} <NotifiCounter fields="fill_order" /></LinkEx>
                             : null
                         }
                         {isMyAccount ?
@@ -602,7 +454,7 @@ export default class UserProfile extends React.Component {
         return (
             <div className='UserProfile'>
 
-                {section !== 'witness' && <div className='UserProfile__banner row expanded'>
+                <div className='UserProfile__banner row expanded'>
 
                     <div className='column' style={cover_image_style}>
                         <div className='UserProfile__buttons-wrapper'>
@@ -648,12 +500,9 @@ export default class UserProfile extends React.Component {
                             <Follow follower={username} following={accountname} what='blog' />
                         </div>
                     </div>
-                </div>}
-                {section !== 'witness' && <div className='UserProfile__top-nav row expanded noPrint'>
+                </div>
+                <div className='UserProfile__top-nav row expanded noPrint'>
                     {top_menu}
-                </div>}
-                <div>
-                  {/*printLink*/}
                 </div>
                 <div>
                   {tab_content}
@@ -697,27 +546,6 @@ module.exports = {
         },
         dispatch => ({
             login: () => {dispatch(user.actions.showLogin())},
-            clearTransferDefaults: () => {dispatch(user.actions.clearTransferDefaults())},
-            showTransfer: (transferDefaults) => {
-                dispatch(user.actions.setTransferDefaults(transferDefaults))
-                dispatch(user.actions.showTransfer())
-            },
-            showPowerdown: powerdownDefaults => {
-                dispatch(user.actions.setPowerdownDefaults(powerdownDefaults));
-                dispatch(user.actions.showPowerdown());
-            },
-            withdrawVesting: ({account, vesting_shares, errorCallback, successCallback}) => {
-                const successCallbackWrapper = (...args) => {
-                    dispatch({type: 'FETCH_STATE', payload: {pathname: `@${account}/transfers`}})
-                    return successCallback(...args)
-                }
-                dispatch(transaction.actions.broadcastOperation({
-                    type: 'withdraw_vesting',
-                    operation: {account, vesting_shares},
-                    errorCallback,
-                    successCallback: successCallbackWrapper,
-                }))
-            },
             voteRep: ({voter, author, weight, success, error}) => {
                 const confirm = () => {
                     if (weight < 0) {

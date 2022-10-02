@@ -104,10 +104,6 @@ export function* findSigningKey({opType, username, password}) {
     }
     else {
         authTypes = 'active, owner'
-        if (location.pathname.startsWith('/market')) {
-            const saved = pageSession.load();
-            if (saved) return saved[1];
-        }
     }
     authTypes = authTypes.split(', ')
 

@@ -9,6 +9,7 @@ tmp/*
 app/assets/static/*.js
 app/assets/static/*.json
 app/assets/sitemap.xml
+default_cfg.js
 
 config/golos.json
 config/golos-dev.json

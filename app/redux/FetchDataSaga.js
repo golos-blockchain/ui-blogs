@@ -65,11 +65,6 @@ export function* fetchState(location_change_action) {
     let url = `${pathname}`
     url = url.split('?')[0]
     if (url === '/') url = 'trending'
-    // Replace these URLs with /transfers for UserProfile to resolve data correctly
-    if (url.indexOf("/curation-rewards") !== -1) url = url.replace("/curation-rewards", "/transfers")
-    if (url.indexOf("/author-rewards") !== -1) url = url.replace("/author-rewards", "/transfers")
-    if (url.indexOf("/donates-from") !== -1) url = url.replace("/donates-from", "/transfers")
-    if (url.indexOf("/donates-to") !== -1) url = url.replace("/donates-to", "/transfers")
 
     yield put({type: 'FETCH_DATA_BEGIN'})
     try {
@@ -83,7 +78,6 @@ export function* fetchState(location_change_action) {
         state.content = {}
         state.prev_posts = []
         state.assets = {}
-        state.worker_requests = {}
         state.minused_accounts = {}
         state.accounts = {}
 
@@ -117,73 +111,6 @@ export function* fetchState(location_change_action) {
                 state.accounts[uname].guest_bloggers = yield call([api, api.getBlogAuthorsAsync], uname)
 
                 switch (parts[1]) {
-                    case 'transfers':
-                        const history = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {select_ops: ['donate', 'transfer', 'author_reward', 'curation_reward', 'transfer_to_tip', 'transfer_from_tip', 'transfer_to_vesting', 'withdraw_vesting', 'asset_issue', 'invite', 'transfer_to_savings', 'transfer_from_savings', 'convert_sbd_debt', 'convert', 'fill_convert_request', 'interest', 'worker_reward', 'account_freeze', 'unwanted_cost', 'unlimit_cost']})
-                        account.transfer_history = []
-                        account.other_history = []
-
-                        state.cprops = yield call([api, api.getChainPropertiesAsync])                        
-                        history.forEach(operation => {
-                            switch (operation[1].op[0]) {
-                                case 'donate':
-                                case 'transfer':
-                                case 'author_reward':
-                                case 'curation_reward':
-                                case 'transfer_to_tip':
-                                case 'transfer_from_tip':
-                                case 'transfer_to_vesting':
-                                case 'withdraw_vesting':
-                                case 'asset_issue':
-                                case 'invite':
-                                case 'transfer_to_savings':
-                                case 'transfer_from_savings':
-                                case 'convert_sbd_debt':
-                                case 'convert':
-                                case 'fill_convert_request':
-                                case 'interest':
-                                case 'worker_reward':
-                                case 'account_freeze':
-                                case 'unwanted_cost':
-                                case 'unlimit_cost':
-                                    state.accounts[uname].transfer_history.push(operation)
-                                break
-
-                                default:
-                                    state.accounts[uname].other_history.push(operation)
-                            }
-                        })
-                    break
-
-                    case 'create-asset':
-                    case 'assets':
-                        state.assets = (yield call([api, api.getAccountsBalancesAsync], [uname]))[0]
-                        const my_assets = yield call([api, api.getAssetsAsync], '', [], '', 5000)
-                        my_assets.forEach(ma => {
-                            const sym = ma.supply.split(' ')[1]
-                            const precision = ma.supply.split(' ')[0].split('.')[1].length
-
-                            if (sym in state.assets) {
-                                state.assets[sym].my = true
-                            } else {
-                                state.assets[sym] = {
-                                    balance: '0.' + '0'.repeat(precision) + ' ' + sym,
-                                    tip_balance: '0.' + '0'.repeat(precision) + ' ' + sym
-                                }
-                            }
-
-                            state.assets[sym] = {...state.assets[sym], ...ma, precision}
-
-                            if (ma.creator == uname) {
-                                state.assets[sym].my = true
-                            }
-                        })
-
-                        state.cprops = yield call([api, api.getChainPropertiesAsync])
-                    break
-
-                    case 'invites':
-                        state.cprops = yield call([api, api.getChainPropertiesAsync])
-                    break
 
                     case 'recent-replies':
                         const replies = yield call([api, api.getRepliesByLastUpdateAsync], uname, '', 50, constants.DEFAULT_VOTE_LIMIT, 0, ['fm-'],
@@ -249,17 +176,6 @@ export function* fetchState(location_change_action) {
                             const op = operation[1].op;
                             if (op[0] === 'comment_mention' && op[1].mentioned === uname) {
                                 state.accounts[uname].mentions.push(operation);
-                            }
-                        });
-                    break
-
-                    case 'filled-orders':
-                        const fohistory = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {select_ops: ['fill_order']});
-                        account.filled_orders = [];
-                        fohistory.forEach(operation => {
-                            const op = operation[1].op;
-                            if (op[0] === 'fill_order') {
-                                state.accounts[uname].filled_orders.push(operation);
                             }
                         });
                     break
@@ -380,45 +296,6 @@ export function* fetchState(location_change_action) {
             }
 
             console.log('Full post load');
-        } else if (parts[0] === 'witnesses' || parts[0] === '~witnesses') {
-            state.witnesses = {};
-
-            let witnessIds = [];
-            const witnesses = yield call([api, api.getWitnessesByVoteAsync], '', 100);
-            witnesses.forEach(witness => {
-                state.witnesses[witness.owner] = witness;
-                witnessIds.push(witness.id);
-            });
-
-            const voteMap = yield call([api, api.getWitnessVotesAsync], witnessIds, 21, 0, '1.000 GOLOS');
-            witnesses.forEach(witness => {
-                let voteList = voteMap[witness.id];
-                state.witnesses[witness.owner].vote_list = voteList || [];
-            });
-        }  else if (parts[0] === 'workers') {
-            accounts.add('workers');
-            state.cprops = yield call([api, api.getChainPropertiesAsync])
-
-            if (parts.length === 4) {
-                const author = parts[2].substr(1);
-                const permlink = parts[3];
-                const url = `${author}/${permlink}`;
-                const query = {
-                  limit: 1,
-                  start_author: author,
-                  start_permlink: permlink
-                };
-                const [ wr ] = yield call([api, api.getWorkerRequestsAsync], query, 'by_created', true);
-                state.worker_requests[url] = wr;
-
-                const votes = yield call([api, api.getWorkerRequestVotesAsync], author, permlink, '', 50);
-                state.worker_requests[url].votes = votes;
-
-                if (curUser) {
-                    const [ myVote ] = yield call([api, api.getWorkerRequestVotesAsync], author, permlink, curUser, 1);
-                    state.worker_requests[url].myVote = (myVote && myVote.voter == curUser) ? myVote : null
-                }
-            }
         } else if (parts[0] === 'minused_accounts') {
             const mhistory = yield call([api, api.getAccountHistoryAsync], 'null', -1, 1000, {select_ops: ['minus_reputation']});
             state.minused_accounts = [];
@@ -440,9 +317,7 @@ export function* fetchState(location_change_action) {
         }
 
         if (accounts.size > 0) {
-                    console.time('accs');
             const acc = yield call([api, api.getAccountsAsync], Array.from(accounts))
-                    console.timeEnd('accs');
             for (let i in acc) {
                 state.accounts[ acc[i].name ] = acc[i]
             }
