@@ -3,6 +3,7 @@ import {SagaCancellationException} from 'redux-saga';
 import user from 'app/redux/User';
 import NotifyContent from 'app/components/elements/Notifications/NotifyContent';
 import { notificationSubscribe, notificationUnsubscribe, notificationTake } from 'app/utils/NotifyApiClient';
+import session from 'app/utils/session'
 
 const wait = ms => (
     new Promise(resolve => {
@@ -38,6 +39,10 @@ function* onUserLogin(action) {
 
     let removeTaskIds = null;
     while (true) {
+        if (session.load().currentName !== action.username) {
+            console.log('PushNotificationSaga stopped due to logout of', action.username)
+            return
+        }
         let tasks = [];
         try {
             if (document.visibilityState === 'hidden') {

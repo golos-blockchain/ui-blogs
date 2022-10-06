@@ -1,7 +1,6 @@
 /* eslint react/prop-types: 0 */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
-import {pageSession} from 'golos-lib-js/lib/auth';
 import {PrivateKey, PublicKey} from 'golos-lib-js/lib/auth/ecc'
 import transaction from 'app/redux/Transaction'
 import g from 'app/redux/GlobalReducer'
@@ -333,13 +332,7 @@ export default connect(
             const username = data.username.trim().toLowerCase()
             if (loginBroadcastOperation) {
                 const {type, operation, trx, successCallback, errorCallback} = loginBroadcastOperation.toJS()
-                const authSaver = () => {
-                    if (!/^vote|comment/.test(type) && location.pathname.startsWith('/market')) {
-                        pageSession.save(password, username, 'active');
-                    }
-                    successCallback();
-                };
-                dispatch(transaction.actions.broadcastOperation({type, operation, trx, username, password, successCallback: authSaver, errorCallback}))
+                dispatch(transaction.actions.broadcastOperation({type, operation, trx, username, password, successCallback, errorCallback}))
                 // Avoid saveLogin, this could be a user-provided content page and the login might be an active key.  Security will reject that...
                 dispatch(user.actions.usernamePasswordLogin({username, password, saveLogin: true, afterLoginRedirectToWelcome, operationType: type}))
                 dispatch(user.actions.closeLogin())

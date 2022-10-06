@@ -31,6 +31,10 @@
     "title_is_required": "Не заполнено поле заголовок",
     "title_is_not_valid": "Заголовок неправильно заполнен"
   },
+  "change_account_jsx": {
+    "add_account": "Добавить аккаунт",
+    "logout_all": "Выйти из всех аккаунтов"
+  },
   "mobilevalidation_js": {
     "not_be_empty": "не может быть пустым",
     "be_longer": "должен быть длиннее",
@@ -244,6 +248,7 @@
     "loading": "Загрузка",
     "login": "Войти",
     "logout": "Выйти",
+    "change_acc": "Сменить аккаунт",
     "mentions": "Упоминания",
     "memo": "Ключ заметок",
     "messages": "Сообщения",
@@ -440,6 +445,7 @@
     "update_your_password": "обновить ваш пароль",
     "enter_username": "Введите имя пользователя",
     "password_or_wif": "Пароль или соответствующий ключ",
+    "password_or_posting": "Пароль или posting-ключ",
     "requires_auth_key": "Эта операция требует вашего %(authType)s ключа (или используйте главный пароль)",
     "keep_me_logged_in": "Оставить меня залогиненным",
     "donate": "Отблагодарить",

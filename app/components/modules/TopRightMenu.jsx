@@ -55,7 +55,7 @@ const calculateEstimateOutput = ({ account, price_per_golos, savings_withdraws, 
   return Number(((total_steem * price_per_golos) + total_sbd).toFixed(2) );
 }
 
-function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops, username, showLogin, logout, loggedIn, vertical, navigate, probablyLoggedIn, location, locationQueryParams, toggleNightmode}) {
+function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops, username, showLogin, goChangeAccount, loggedIn, vertical, navigate, probablyLoggedIn, location, locationQueryParams, toggleNightmode}) {
     const APP_NAME = tt('g.APP_NAME');
     const mcn = 'menu' + (vertical ? ' vertical show-for-small-only' : '');
     const mcl = vertical ? '' : ' sub-menu';
@@ -163,7 +163,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
             {link: ordersLink, target: walletTarget(), icon: 'trade', value: tt('navigation.market2'), addon: <NotifiCounter fields="fill_order" />},
             {link: settingsLink, icon: 'new/setting', value: tt('g.settings')},            
             loggedIn ?
-                {link: '#', icon: 'new/logout', onClick: logout, value: tt('g.logout')} :
+                {link: '#', icon: 'new/logout', onClick: goChangeAccount, value: tt('g.change_acc')} :
                 {link: '#', onClick: showLogin, value: tt('g.login')}
         ];
 
@@ -231,7 +231,7 @@ TopRightMenu.propTypes = {
     loggedIn: PropTypes.bool,
     probablyLoggedIn: PropTypes.bool,
     showLogin: PropTypes.func.isRequired,
-    logout: PropTypes.func.isRequired,
+    goChangeAccount: PropTypes.func.isRequired,
     vertical: PropTypes.bool,
     navigate: PropTypes.func,
 };
@@ -274,13 +274,13 @@ export default connect(
             if (e) e.preventDefault();
             dispatch(user.actions.showLogin())
         },
-        logout: e => {
-            if (e) e.preventDefault();
-            dispatch(user.actions.logout())
-        },
         toggleNightmode: (e) => {
             if (e) e.preventDefault();
             dispatch(user.actions.toggleNightmode());
         },
+        goChangeAccount: (e) => {
+            if (e) e.preventDefault()
+            dispatch(user.actions.showChangeAccount())
+        }
     })
 )(TopRightMenu);

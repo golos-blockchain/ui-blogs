@@ -8,7 +8,9 @@ import {NotificationStack} from 'react-notification'
 import LoginForm from 'app/components/modules/LoginForm';
 import ConfirmTransactionForm from 'app/components/modules/ConfirmTransactionForm';
 import Donate from 'app/components/modules/Donate'
-import SignUp from 'app/components/modules/SignUp';
+import SignUp from 'app/components/modules/SignUp'
+import ChangeAccount from 'app/components/modules/ChangeAccount'
+import AddAccount from 'app/components/modules/AddAccount'
 import user from 'app/redux/User';
 import tr from 'app/redux/Transaction';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
@@ -22,6 +24,8 @@ class Modals extends React.Component {
         show_donate_modal: PropTypes.bool,
         show_signup_modal: PropTypes.bool,
         show_promote_post_modal: PropTypes.bool,
+        show_change_account_modal: PropTypes.bool,
+        show_add_account_modal: PropTypes.bool,
         hideLogin: PropTypes.func.isRequired,
         hideConfirm: PropTypes.func.isRequired,
         hideSignUp: PropTypes.func.isRequired,
@@ -48,10 +52,14 @@ class Modals extends React.Component {
             show_confirm_modal,
             show_donate_modal,
             show_signup_modal,
+            show_change_account_modal,
+            show_add_account_modal,
             hideLogin,
             hideDonate,
             hideConfirm,
             hideSignUp,
+            hideChangeAccount,
+            hideAddAccount,
             notifications,
             removeNotification,
         } = this.props;
@@ -81,6 +89,14 @@ class Modals extends React.Component {
                     <CloseButton onClick={hideSignUp} />
                     <SignUp />
                 </Reveal>}
+                {show_change_account_modal && <Reveal onHide={hideChangeAccount} show={show_change_account_modal} revealStyle={{ width: '400px' }}>
+                    <CloseButton onClick={hideChangeAccount} />
+                    <ChangeAccount />
+                </Reveal>}
+                {show_add_account_modal && <Reveal onHide={hideAddAccount} show={show_add_account_modal}>
+                    <CloseButton onClick={hideAddAccount} />
+                    <AddAccount />
+                </Reveal>}
                 <NotificationStack
                     style={false}
                     notifications={notifications_array}
@@ -102,6 +118,8 @@ export default connect(
             show_donate_modal: state.user.get('show_donate_modal'),
             show_promote_post_modal: state.user.get('show_promote_post_modal'),
             show_signup_modal: state.user.get('show_signup_modal'),
+            show_change_account_modal: state.user.get('show_change_account_modal'),
+            show_add_account_modal: state.user.get('show_add_account_modal'),
             notifications: state.app.get('notifications'),
         }
     },
@@ -125,6 +143,14 @@ export default connect(
         hideSignUp: e => {
             if (e) e.preventDefault();
             dispatch(user.actions.hideSignUp())
+        },
+        hideChangeAccount: e => {
+            if (e) e.preventDefault();
+            dispatch(user.actions.hideChangeAccount())
+        },
+        hideAddAccount: e => {
+            if (e) e.preventDefault();
+            dispatch(user.actions.hideAddAccount())
         },
         // example: addNotification: ({key, message}) => dispatch({type: 'ADD_NOTIFICATION', payload: {key, message}}),
         removeNotification: (key) => dispatch({type: 'REMOVE_NOTIFICATION', payload: {key}}),
