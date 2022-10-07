@@ -23,7 +23,7 @@ class Services extends React.Component {
                             <div className='column large-3 medium-3 small-6'>
                                 <a target="_blank" href="https://dex.golos.app"><Icon name='money' size='10x'/>
                                 <h5>Golos DEX</h5></a>
-                                <p className='landing-services-block-icon-text'>Торговля токенами на <a target="_blank" href="/market">внутренней бирже</a> и <a target="_blank" href="/convert">обменнике</a>, веб-клиентах <a target="_blank" href="https://dex.golos.app">dex.golos.app</a> или <a target="_blank" href="https://gls.exchange">gls.exchange</a></p>
+                                <p className='landing-services-block-icon-text'>Торговля токенами на <a target="_blank" href="https://wallet.golos.id/market">внутренней бирже</a> и <a target="_blank" href="https://wallet.golos.id/convert">обменнике</a>, веб-клиентах <a target="_blank" href="https://dex.golos.app">dex.golos.app</a> или <a target="_blank" href="https://gls.exchange">gls.exchange</a></p>
                             </div>
                             <div className='column large-3 medium-3 small-6'>
                                 <a target="_blank" href="https://golostalk.com"><Icon name='team' size='10x'/>
