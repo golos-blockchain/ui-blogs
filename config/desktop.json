@@ -39,10 +39,6 @@
     "apidex_service": {
       "host": "https://api-dex.golos.app"
     },
-    "hidden_assets": {
-      "RUDEX": true,
-      "PRIZM": true
-    },
     "app_updater": {
       "host": "https://files.golos.app"
     },

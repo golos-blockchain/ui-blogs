@@ -5,6 +5,7 @@ import LoadingIndicator from 'app/components/elements/LoadingIndicator'
 import tt from 'counterpart'
 
 import { apidexGetPrices } from 'app/utils/ApidexApiClient'
+import { walletUrl } from 'app/utils/walletUtils'
 
 class CMCWidget extends React.Component {
     state = {
@@ -56,6 +57,8 @@ class CMCWidget extends React.Component {
                     </div>
                 </div>)
         }
+        let url = walletUrl(`/exchanges`)
+        
         return (<div class="CMCWidget">
                 <div className="CMCWidget__inner">
                     <div className='CMCWidget__inner2'>
@@ -75,7 +78,7 @@ class CMCWidget extends React.Component {
                                     <span className="CMCWidget__sub">{price_usd ? price_usd.toFixed(6) + ' USD' : null}</span>
                                 </span><br/>
                                 <span style={{ fontSize: '12px' }}>
-                                    <a href="/exchanges" className="CMCWidget__link">{tt('g.buy_or_sell')}</a>
+                                    <a href={url} className="CMCWidget__link">{tt('g.buy_or_sell')}</a>
                                 </span>
                             </span>
                         </div>

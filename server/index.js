@@ -27,7 +27,6 @@ global.$STM_Config = {
     wallet_service: config.get('wallet_service'),
     messenger_service: config.get('messenger_service'),
     apidex_service: config.get('apidex_service'),
-    hidden_assets: config.get('hidden_assets'),
     forums: config.get('forums'),
     blocked_users: config.get('blocked_users'),
     blocked_posts: config.get('blocked_posts'),
