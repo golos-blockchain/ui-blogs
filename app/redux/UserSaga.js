@@ -304,12 +304,6 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     if (!autopost && saveLogin && !operationType)
         yield put(user.actions.saveLogin());
 
-    if (authSession() || notifySession()) { // if changing account
-        notifyApiLogout()
-        authApiLogout()
-        serverApiLogout()
-    }
-
     let alreadyAuthorized = false;
     try {
         const res = yield notifyApiLogin(username, localStorage.getItem('X-Auth-Session'));

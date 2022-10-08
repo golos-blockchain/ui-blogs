@@ -427,7 +427,9 @@ export default connect(
         };
     },
     dispatch => ({
-        loginUser: () => dispatch(user.actions.usernamePasswordLogin()),
+        loginUser: () => {
+            dispatch(user.actions.usernamePasswordLogin())
+        },
         logoutUser: () => dispatch(user.actions.logout()),
         depositSteem: () => {
             dispatch(
