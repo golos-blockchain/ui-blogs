@@ -115,6 +115,7 @@
     "date": "Date",
     "decrypt": "Decrypt",
     "delete": "Delete",
+    "discussions": "Discussions",
     "dismiss": "Dismiss",
     "documentation": "Documentation",
     "edit": "Edit",
@@ -532,6 +533,7 @@
     "user_hasnt_started_bloggin_yet": "Looks like %(name)s hasn't started blogging yet!",
     "user_hasnt_followed_anything_yet": "Looks like %(name)s might not be following anyone yet! If %(name)s recently added new users to follow, their personalized feed will populate once new content is available.",
     "user_hasnt_had_any_replies_yet": "%(name)s hasn't had any replies yet",
+    "user_hasnt_followed_anything": "Subscribe to new comments of a post, and you will immediately receive them on that page.",
     "if_you_recently_added_new_users_to_follow": "If you recently added new users to follow, your personalized feed will populate once new content is available.",
     "explore_APP_NAME": "Explore %(APP_NAME)s",
     "full_faq": "The full F.A.Q on %(APP_NAME)s",
@@ -598,7 +600,9 @@
   "post_jsx": {
     "now_showing_comments_with_low_ratings": "Now showing comments with low ratings",
     "sort_order": "Sort Order",
-    "comments_were_hidden_due_to_low_ratings": "Comments were hidden due to low ratings"
+    "comments_were_hidden_due_to_low_ratings": "Comments were hidden due to low ratings",
+    "subscribe_comments": "Subscribe New",
+    "subscribe_comments_long": "Subscribe New Comments"
   },
   "do_not_bother": {
     "title": "Do not bother",
@@ -933,7 +937,10 @@
     "reveal_comment": "Reveal comment",
     "show_1_more_reply": "Show 1 more reply",
     "show_N_more_replies": "Show %(N)s more replies",
-    "show_N_more_replies_2": "Show %(N)s more replies"
+    "show_N_more_replies_2": "Show %(N)s more replies",
+    "1_comment": "1 reply",
+    "N_comments": "%(N)s replies",
+    "N_comments_2": "%(N)s replies"
   },
   "poststub": {
     "onlyblog": "This post is only for author's followers.",

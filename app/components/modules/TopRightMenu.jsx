@@ -79,6 +79,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     </li>;
     const feedLink = `/@${username}/feed`;
     const repliesLink = `/@${username}/recent-replies`;
+    const discussionsLink = `/@${username}/discussions`
     const walletLink = walletUrl(`/@${username}/transfers`)
     const settingsLink = `/@${username}/settings`;
     const accountLink = `/@${username}`;
@@ -154,13 +155,13 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
             {link: feedLink, icon: 'new/home', value: tt('g.feed'), addon: <NotifiCounter fields="feed" />},
             {link: accountLink, icon: 'new/blogging', value: tt('g.blog')},
             {link: repliesLink, icon: 'new/answer', value: tt('g.replies'), addon: <NotifiCounter fields="comment_reply" />},
+            {link: discussionsLink, icon: 'new/bell', value: tt('g.discussions'), addon: <NotifiCounter fields="subscriptions" />},
             (messagesLink ?
                 {link: messagesLink, icon: 'new/envelope', value: tt('g.messages'), target: '_blank', addon: <NotifiCounter fields="message" />} :
                 null),
             {link: mentionsLink, icon: 'new/mention', value: tt('g.mentions'), addon: <NotifiCounter fields="mention" />},
             {link: donatesLink, target: walletTarget(), icon: 'editor/coin', value: tt('g.rewards'), addon: <NotifiCounter fields="donate,donate_msgs" />},
-            {link: walletLink, target: walletTarget(), icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields="send,receive" />},
-            {link: ordersLink, target: walletTarget(), icon: 'trade', value: tt('navigation.market2'), addon: <NotifiCounter fields="fill_order" />},
+            {link: walletLink, target: walletTarget(), icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields="send,receive,fill_order" />},
             {link: settingsLink, icon: 'new/setting', value: tt('g.settings')},            
             loggedIn ?
                 {link: '#', icon: 'new/logout', onClick: goChangeAccount, value: tt('g.change_acc')} :

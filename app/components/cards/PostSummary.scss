@@ -60,6 +60,14 @@ ul.PostsList__summaries {
   }
 }
 
+.PostSummary__replies {
+  font-weight: bold;
+  color: red;
+  padding-left: 5px;
+  font-size: 80%;
+  text-decoration: none;
+}
+
 .PostSummary__image {
   float: left;
   width: 130px;
@@ -168,6 +176,24 @@ ul.PostsList__summaries {
         width: 0.85rem;
         height: 0.85rem;
         vertical-align: 5%;
+      }
+    }
+  }
+ .unsubscribe {
+    > a {
+      color: $medium-gray;
+    }
+    > a:visited {
+      color: $medium-gray;
+    }
+    padding-left: 0.5rem;
+    font-size: 90%;
+    span {
+      margin-left: 0.5rem;
+    }
+    &:hover {
+      path {
+        fill: red;
       }
     }
   }

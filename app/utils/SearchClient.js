@@ -1,9 +1,9 @@
 import { Headers } from 'cross-fetch'
 import diff_match_patch from 'diff-match-patch'
 import {config, api} from 'golos-lib-js';
+import { fetchEx } from 'golos-lib-js/lib/utils'
 
 import { detransliterate } from 'app/utils/ParsersAndFormatters'
-import fetchWithTimeout from 'shared/fetchWithTimeout'
 
 const dmp = new diff_match_patch()
 
@@ -159,7 +159,8 @@ export async function sendSearchRequest(_index, _type, sr, timeoutMsec = 10000) 
     let body = sr.build ? sr.build() : sr
     let url = new URL($STM_Config.elastic_search.url);
     url += _index + '/' + _type + '/_search?pretty'
-    const response = await fetchWithTimeout(url, timeoutMsec, {
+    const response = await fetchEx(url, {
+        timeout: timeoutMsec,
         method: 'post',
         headers: new Headers({
             'Authorization': 'Basic ' + btoa($STM_Config.elastic_search.login + ':' + $STM_Config.elastic_search.password),

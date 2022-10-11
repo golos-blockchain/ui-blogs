@@ -1,29 +1,32 @@
-import React from 'react';
+import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router';
-import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
-import Icon from 'app/components/elements/Icon';
-import { connect } from 'react-redux';
-import transaction from 'app/redux/Transaction';
-import user from 'app/redux/User';
-import Reblog from 'app/components/elements/Reblog';
-import MuteAuthorInNew from 'app/components/elements/MuteAuthorInNew';
-import PinPost from 'app/components/elements/PinPost';
-import Voting from 'app/components/elements/Voting';
-import {immutableAccessor} from 'app/utils/Accessors';
-import extractContent from 'app/utils/ExtractContent';
-import { browserHistory } from 'react-router';
-import VotesAndComments from 'app/components/elements/VotesAndComments';
-import TagList from 'app/components/elements/TagList';
-import {authorNameAndRep} from 'app/utils/ComponentFormatters';
-import {Map} from 'immutable';
-import Author from 'app/components/elements/Author';
-import UserNames from 'app/components/elements/UserNames';
-import tt from 'counterpart';
-import { CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config';
-import { detransliterate } from 'app/utils/ParsersAndFormatters';
-import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
+import { FormattedPlural } from 'react-intl'
+import { connect } from 'react-redux'
+import { Link, browserHistory } from 'react-router'
+import {Map} from 'immutable'
+import tt from 'counterpart'
+
+import { CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config'
+import Author from 'app/components/elements/Author'
+import Icon from 'app/components/elements/Icon'
+import MuteAuthorInNew from 'app/components/elements/MuteAuthorInNew'
+import PinPost from 'app/components/elements/PinPost'
 import PostSummaryThumb from 'app/components/elements/PostSummaryThumb'
+import Reblog from 'app/components/elements/Reblog'
+import TagList from 'app/components/elements/TagList'
+import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper'
+import UserNames from 'app/components/elements/UserNames'
+import VotesAndComments from 'app/components/elements/VotesAndComments'
+import Voting from 'app/components/elements/Voting'
+import g from 'app/redux/GlobalReducer'
+import transaction from 'app/redux/Transaction'
+import user from 'app/redux/User'
+import {immutableAccessor} from 'app/utils/Accessors'
+import extractContent from 'app/utils/ExtractContent'
+import {authorNameAndRep} from 'app/utils/ComponentFormatters'
+import { addHighlight, unsubscribePost } from 'app/utils/NotifyApiClient'
+import { detransliterate } from 'app/utils/ParsersAndFormatters'
+import { proxifyImageUrl } from 'app/utils/ProxifyUrl'
 import { walletUrl } from 'app/utils/walletUtils'
 
 function isLeftClickEvent(event) {
@@ -38,7 +41,7 @@ function navigate(e, onClick, post, url, isForum, isSearch) {
     if (isForum || isSearch)
         return;
     if (isModifiedEvent(e) || !isLeftClickEvent(e)) return;
-    e.preventDefault();
+    e.preventDefault()
     if (onClick) onClick(post, url);
     else browserHistory.push(url);
 }
@@ -48,6 +51,7 @@ class PostSummary extends React.Component {
         post: PropTypes.string.isRequired,
         pending_payout: PropTypes.string.isRequired,
         total_payout: PropTypes.string.isRequired,
+        event_count: PropTypes.number,
         content: PropTypes.object.isRequired,
         currentCategory: PropTypes.string,
         thumbSize: PropTypes.string,
@@ -67,6 +71,7 @@ class PostSummary extends React.Component {
         return props.thumbSize !== this.props.thumbSize ||
                props.pending_payout !== this.props.pending_payout ||
                props.total_payout !== this.props.total_payout ||
+               props.event_count !== this.props.event_count ||
                props.username !== this.props.username ||
                props.nsfwPref !== this.props.nsfwPref ||
                state.revealNsfw !== this.state.revealNsfw ||
@@ -86,6 +91,26 @@ class PostSummary extends React.Component {
                 window.location.reload()
             }, (err) => {
             })
+    }
+
+    unsubscribe = async (e) => {
+        e.preventDefault()
+
+        const { username, content } = this.props
+
+        if (!username) return
+
+        const author = content.get('author')
+        const permlink = content.get('permlink')
+
+        try {
+            await unsubscribePost(username, author, permlink)
+        } catch (err) {
+            alert(err.message || err)
+            return
+        }
+
+        this.props.unsubscribe(username, author, permlink)
     }
 
     render() {
@@ -193,6 +218,13 @@ class PostSummary extends React.Component {
 
         const link_target = (is_forum || from_search) ? '_blank' : undefined;
 
+        let highlight
+        if (currentCategory === 'discussions') {
+            highlight = { author: content.get('author'), permlink: content.get('permlink') }
+            title_link_url = addHighlight(title_link_url)
+            comments_link = addHighlight(comments_link)
+        }
+
         let content_body = <div className="PostSummary__body entry-content">
             <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search)}>{desc}</a>
         </div>;
@@ -207,8 +239,10 @@ class PostSummary extends React.Component {
 
         let total_search = content.get('total_search')
 
-        let content_title = <h3 className="entry-title">
-            <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search)}>
+        const visitedClassName = this.props.visited ? 'PostSummary__post-visited ' : ''
+
+        let content_title = <React.Fragment>
+            <a className={visitedClassName} href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search)}>
                 {title_text}
             </a>
             {isOnlyblog && <span className="nsfw_post" title={tt('post_editor.onlyblog_hint')}>{tt('g.for_followers')}</span>}
@@ -216,7 +250,7 @@ class PostSummary extends React.Component {
             {warn && <span className="nsfw_post" title={tt('post_editor.nsfw_hint')}>{detransliterate(nsfwTitle)}</span>}
             {worker_post && <a target="_blank" href={worker_post}><span className="worker_post">{tt('workers.worker_post')}</span></a>}
             {promoted_post && <a target="_blank" href="https://wiki.golos.id/users/welcome#prodvinut-post"><span className="promoted_post" title={promosumm}>{tt('g.promoted_title')}</span></a>}
-        </h3>;
+        </React.Fragment>;
 
         // author and category
         let author_category = <span className="vcard">
@@ -248,7 +282,6 @@ class PostSummary extends React.Component {
             }
         }
 
-        const visitedClassName = this.props.visited ? 'PostSummary__post-visited ' : '';
         let thumb = null;
         if(pictures && p.image_link) {
           const size = (thumbSize == 'mobile') ? '800x600' : '256x512'
@@ -281,6 +314,34 @@ class PostSummary extends React.Component {
             return total_search
         }
 
+        let newReplies = null
+        let unsubscribe = null
+        if (currentCategory === 'discussions') {
+            const eventCount = content.get('event_count')
+            if (eventCount) {
+                const commFew = tt('comment_jsx.N_comments_2', { N: eventCount })
+                const commMany = tt('comment_jsx.N_comments', { N: eventCount })
+                newReplies = <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search)}>
+                        <span className='PostSummary__replies'>{'+'}<FormattedPlural value={eventCount}
+                                one={tt('comment_jsx.1_comment')}
+                                few={commFew}
+                                many={commMany}
+                                other={commMany}
+                            />
+                        </span>
+                    </a>
+            }
+            unsubscribe = <span className='unsubscribe'>
+                <a href='#' onClick={this.unsubscribe} title={tt('g.unfollow')}>
+                    <Icon name='cross' size='0_75x' />
+                </a>
+            </span>
+        }
+
+        content_title = <h3 className="entry-title">
+            {content_title}{newReplies}{unsubscribe}
+        </h3>
+
         return (
             <article className={'PostSummary hentry' + (thumb ? ' with-image ' : ' ') + (worker_post ? ' blue-bg ' : ' ') + commentClasses.join(' ')} itemScope itemType ="http://schema.org/blogPost">
                 {total_search}
@@ -295,7 +356,7 @@ class PostSummary extends React.Component {
                   {thumb}
                 </div>
                 <div className="PostSummary__content">
-                    <div className={'PostSummary__header show-for-medium ' + visitedClassName}>
+                    <div className={'PostSummary__header show-for-medium'}>
                         {content_title}
                     </div>
                     {content_body}
@@ -312,16 +373,18 @@ export default connect(
         const content = state.global.get('content').get(post);
         let pending_payout = 0;
         let total_payout = 0;
+        let event_count = 0
         let gray, ignore
         if (content) {
             pending_payout = content.get('pending_payout_value');
             total_payout = content.get('total_payout_value');
+            event_count = content.get('event_count')
             const stats = content.get('stats', Map()).toJS()
             gray = stats.gray
             ignore = stats.ignore
         }
         return {
-            post, content, gray, ignore, pending_payout, total_payout,
+            post, content, gray, ignore, pending_payout, total_payout, event_count,
             username: state.user.getIn(['current', 'username']) || state.offchain.get('account')
         };
     },
@@ -329,6 +392,9 @@ export default connect(
     (dispatch) => ({
         dispatchSubmit: data => { dispatch(user.actions.usernamePasswordLogin({...data})) },
         clearError: () => { dispatch(user.actions.loginError({error: null})) },
+        unsubscribe: (account, author, permlink) => {
+            dispatch(g.actions.unsubscribePost({ account, author, permlink }))
+        },
         deleteReblog: (account, author, permlink, successCallback, errorCallback) => {
             const json = ['delete_reblog', {account, author, permlink}]
             dispatch(transaction.actions.broadcastOperation({

@@ -346,6 +346,29 @@ export default class UserProfile extends React.Component {
               tab_content = (<center><LoadingIndicator type='circle' /></center>);
           }
         }
+        else if( (section === 'discussions')) {
+            if (account.discussions) {
+                let posts = accountImm.get('discussions');
+                if (posts && !posts.size) {
+                    tab_content = <Callout>{tt('user_profile.user_hasnt_followed_anything', {name: accountname}) + '.'}</Callout>
+                } else {
+                    tab_content = (
+                        <div>
+                            <PostsList
+                                posts={posts}
+                                loading={fetching}
+                                category='discussions'
+                                loadMore={this.loadMore}
+                                showSpam={false}
+                            />
+                            {isMyAccount && <div><MarkNotificationRead fields='subscriptions' account={account.name} /></div>}
+                        </div>
+                    )
+                }
+          } else {
+              tab_content = (<center><LoadingIndicator type='circle' /></center>);
+          }
+        }
         else if( (section === 'reputation')) {
             tab_content = (
                 <div>
@@ -397,6 +420,9 @@ export default class UserProfile extends React.Component {
                 <div className='UserProfile__menu menu' style={{flexWrap: 'wrap'}}>
                     <Link className='UserProfile__menu-item' to={`/@${accountname}`} activeClassName='active'>{tt('g.blog')}</Link>
                     <Link className='UserProfile__menu-item' to={`/@${accountname}/comments`} activeClassName='active'>{tt('g.comments')}</Link>
+                    {isMyAccount ? <Link className='UserProfile__menu-item' to={`/@${accountname}/discussions`} activeClassName='active'>
+                        {tt('g.discussions')} <NotifiCounter fields='subscriptions' />
+                    </Link> : null}
                     <Link className='UserProfile__menu-item' to={`/@${accountname}/recent-replies`} activeClassName='active'>
                         {tt('g.replies')} {isMyAccount && <NotifiCounter fields='comment_reply' />}
                     </Link>

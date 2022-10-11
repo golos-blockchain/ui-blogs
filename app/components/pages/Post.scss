@@ -1,3 +1,13 @@
+.Post__comments_subscribe {
+  margin-top: 0.5rem;
+  color: $dark-gray;
+  font-size: 94%;
+  cursor: pointer;
+  > span {
+    margin-left: 5px;
+  }
+}
+
 .Post__comments_sort_order {
   margin: 0.5rem 0;
   color: $dark-gray;

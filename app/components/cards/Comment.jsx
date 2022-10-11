@@ -78,6 +78,11 @@ class CommentImpl extends PureComponent {
 
         if (content) {
             this._checkHide(content)
+            const sub_event = content.get('sub_event')
+            if (sub_event && !this.state.highlight && !this.wasHighlighted) {
+                this.setState({ highlight: true })
+                this.wasHighlighted = true
+            }
         }
     }
 
@@ -220,6 +225,8 @@ class CommentImpl extends PureComponent {
             );
         }
 
+        const { sub_event } = comment
+
         return (
             <div
                 className={cn(
@@ -331,7 +338,7 @@ class CommentImpl extends PureComponent {
             );
 
         return (
-            <div>
+            <div onClick={this.onClick}>
                 <Voting post={post} />
                 {controls}
             </div>
@@ -354,6 +361,12 @@ class CommentImpl extends PureComponent {
 
             return dots;
         }
+    }
+
+    onClick = () => {
+        this.setState({
+            highlight: false
+        })
     }
 
     onShowReply = () => {
