@@ -7,6 +7,7 @@ import cn from 'classnames';
 import tt from 'counterpart';
 import { FormattedPlural } from 'react-intl';
 
+import { isBlocked } from 'app/utils/blacklist'
 import { sortComments } from 'app/utils/comments';
 import user from 'app/redux/User';
 import transaction from 'app/redux/Transaction';
@@ -158,7 +159,7 @@ class CommentImpl extends PureComponent {
         let body = null;
         let controls = null;
 
-        if ($STM_Config.blocked_users.includes(comment.author)) {
+        if (isBlocked(comment.author, $STM_Config.blocked_users)) {
             return null;
         } else if (!this.state.collapsed && !hideBody) {
             body = (

@@ -21,6 +21,7 @@ import Author from 'app/components/elements/Author';
 import Userpic from 'app/components/elements/Userpic';
 import PostFormLoader from 'app/components/modules/PostForm/loader';
 import CommentFormLoader from 'app/components/modules/CommentForm/loader';
+import { isBlocked } from 'app/utils/blacklist'
 import { getEditDraftPermLink } from 'app/utils/postForm';
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
 import PostSummaryThumb from 'app/components/elements/PostSummaryThumb';
@@ -346,7 +347,7 @@ class PostFull extends React.Component {
         const url = `/${category}/@${author}/${permlink}`;
         let contentBody;
 
-        if ($STM_Config.blocked_posts.includes(url) && !username) {
+        if (isBlocked(url, $STM_Config.blocked_posts) && !username) {
             contentBody = tt(
                 'postfull_jsx.this_post_is_not_available_due_to_breach_of_legislation'
             );

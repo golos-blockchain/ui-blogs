@@ -9,6 +9,7 @@ import tt from 'counterpart'
 import { CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config'
 import Author from 'app/components/elements/Author'
 import Icon from 'app/components/elements/Icon'
+import DialogManager from 'app/components/elements/common/DialogManager'
 import MuteAuthorInNew from 'app/components/elements/MuteAuthorInNew'
 import PinPost from 'app/components/elements/PinPost'
 import PostSummaryThumb from 'app/components/elements/PostSummaryThumb'
@@ -22,6 +23,8 @@ import g from 'app/redux/GlobalReducer'
 import transaction from 'app/redux/Transaction'
 import user from 'app/redux/User'
 import {immutableAccessor} from 'app/utils/Accessors'
+import { authRegisterUrl, } from 'app/utils/AuthApiClient'
+import { isBlocked } from 'app/utils/blacklist'
 import extractContent from 'app/utils/ExtractContent'
 import {authorNameAndRep} from 'app/utils/ComponentFormatters'
 import { addHighlight, unsubscribePost } from 'app/utils/NotifyApiClient'
@@ -37,9 +40,13 @@ function isModifiedEvent(event) {
     return !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey)
 }
 
-function navigate(e, onClick, post, url, isForum, isSearch) {
+function navigate(e, onClick, post, url, isForum, isSearch, warn) {
     if (isForum || isSearch)
         return;
+    if (warn) {
+        e.preventDefault()
+        return
+    }
     if (isModifiedEvent(e) || !isLeftClickEvent(e)) return;
     e.preventDefault()
     if (onClick) onClick(post, url);
@@ -64,7 +71,6 @@ class PostSummary extends React.Component {
     constructor() {
         super();
         this.state = {revealNsfw: false}
-        this.onRevealNsfw = this.onRevealNsfw.bind(this)
     }
 
     shouldComponentUpdate(props, state) {
@@ -80,9 +86,26 @@ class PostSummary extends React.Component {
                props.hide !== this.props.hide
     }
 
-    onRevealNsfw(e) {
-        e.preventDefault();
-        this.setState({revealNsfw: true})
+    componentDidUpdate(prevProps) {
+        if (this.state.revealNsfw && !this.props.username && prevProps.username) {
+            this.setState({ revealNsfw: false })
+        }
+    }
+
+    onClick = (e) => {
+        if (this.isNsfwWarn()) {
+            e.preventDefault()
+            const { username, showLogin } = this.props
+            if (!username) {
+                DialogManager.info(<span>
+                        <a href='#' onClick={showLogin}>{tt('poststub.login')}</a>
+                        &nbsp;{tt('g.or')}&nbsp;
+                        <a href={authRegisterUrl()} target='_blank' rel='noreferrer noopener'>{tt('poststub.sign_up')}</a>.
+                    </span>)
+                return
+            }
+            this.setState({revealNsfw: true})
+        }
     }
 
     onDeleteReblog = (account, post) => {
@@ -113,6 +136,13 @@ class PostSummary extends React.Component {
         this.props.unsubscribe(username, author, permlink)
     }
 
+    isNsfwWarn = () => {
+        const { content, nsfwPref, username } = this.props
+        const { isNsfw, } = content.get('stats', Map()).toJS()
+        const myPost = username === content.get('author')
+        return (isNsfw && nsfwPref === 'warn' && !myPost && !this.state.revealNsfw)
+    }
+
     render() {
         const {currentCategory, thumbSize, ignore, onClick} = this.props;
         const {post, content, pending_payout, total_payout, cashout_time, blockEye} = this.props;
@@ -122,7 +152,7 @@ class PostSummary extends React.Component {
 
         const myPost = username === content.get('author')
 
-        if ($STM_Config.blocked_users.includes(content.get('author'))) {
+        if (isBlocked(content.get('author'), $STM_Config.blocked_users)) {
 			return null;
 		}
 
@@ -158,6 +188,12 @@ class PostSummary extends React.Component {
         const {gray, pictures, authorRepLog10, flagWeight, isNsfw, isOnlyblog, isOnlyapp} = content.get('stats', Map()).toJS()
 
         if ((isOnlyblog || (isOnlyapp && !process.env.IS_APP)) && !username) {
+            return null
+        }
+
+        const isPublic = currentCategory !== 'blog' && currentCategory !== 'feed'
+        if (isBlocked(content.get('url'), $STM_Config.blocked_posts)
+            && (!username || isPublic)) {
             return null
         }
 
@@ -225,11 +261,20 @@ class PostSummary extends React.Component {
             comments_link = addHighlight(comments_link)
         }
 
-        let content_body = <div className="PostSummary__body entry-content">
-            <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search)}>{desc}</a>
+        const warn = this.isNsfwWarn() 
+        const filterClasses = []
+        if (warn) filterClasses.push('nsfw-text')
+
+        const stubText = warn && !username
+
+        const nsfwStub = 'Not safe for work 18+'
+
+        let content_body = <div className={'PostSummary__body entry-content ' + filterClasses.join(' ')}>
+            <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search, warn)}>
+                {stubText ? nsfwStub : desc}
+            </a>
         </div>;
 
-        const warn = (isNsfw && nsfwPref === 'warn' && !myPost);
         const promosumm = tt('g.promoted_post') + content.get('promoted');
 
         let worker_post = content.get('has_worker_request')
@@ -242,8 +287,8 @@ class PostSummary extends React.Component {
         const visitedClassName = this.props.visited ? 'PostSummary__post-visited ' : ''
 
         let content_title = <React.Fragment>
-            <a className={visitedClassName} href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search)}>
-                {title_text}
+            <a className={visitedClassName + ' ' + filterClasses.join(' ')} href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search, warn)}>
+                {stubText ? nsfwStub : title_text}
             </a>
             {isOnlyblog && <span className="nsfw_post" title={tt('post_editor.onlyblog_hint')}>{tt('g.for_followers')}</span>}
             {isOnlyapp && <span className="nsfw_post" title={tt('post_editor.visible_option_onlyapp_hint')}>{tt('g.only_app')}</span>}
@@ -254,7 +299,7 @@ class PostSummary extends React.Component {
 
         // author and category
         let author_category = <span className="vcard">
-            <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search)}><TimeAgoWrapper date={is_forum ? p.active : p.created} className="updated" /></a>
+            <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search, warn)}><TimeAgoWrapper date={is_forum ? p.active : p.created} className="updated" /></a>
             {' '}
             {blockEye && <MuteAuthorInNew author={p.author} />}
             <Author author={p.author} authorRepLog10={authorRepLog10} follow={false} mute={false} />
@@ -275,8 +320,8 @@ class PostSummary extends React.Component {
             </span>
         </div>
 
-        if(isNsfw) {
-            if(nsfwPref === 'hide' && !myPost) {
+        if(isNsfw && !myPost) {
+            if(nsfwPref === 'hide') {
                 // user wishes to hide these posts entirely
                 return null;
             }
@@ -300,7 +345,7 @@ class PostSummary extends React.Component {
               src={url}
               href={title_link_url}
               target={link_target}
-              onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search)} />
+              onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search, warn)} />
         }
         const commentClasses = []
         if(gray || ignore) commentClasses.push('downvoted') // rephide
@@ -321,7 +366,7 @@ class PostSummary extends React.Component {
             if (eventCount) {
                 const commFew = tt('comment_jsx.N_comments_2', { N: eventCount })
                 const commMany = tt('comment_jsx.N_comments', { N: eventCount })
-                newReplies = <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search)}>
+                newReplies = <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search, warn)}>
                         <span className='PostSummary__replies'>{'+'}<FormattedPlural value={eventCount}
                                 one={tt('comment_jsx.1_comment')}
                                 few={commFew}
@@ -343,10 +388,10 @@ class PostSummary extends React.Component {
         </h3>
 
         return (
-            <article className={'PostSummary hentry' + (thumb ? ' with-image ' : ' ') + (worker_post ? ' blue-bg ' : ' ') + commentClasses.join(' ')} itemScope itemType ="http://schema.org/blogPost">
+            <article className={'PostSummary hentry' + (thumb ? ' with-image ' : ' ') + (worker_post ? ' blue-bg ' : ' ') + commentClasses.join(' ')} itemScope itemType ="http://schema.org/blogPost" onClick={this.onClick}>
                 {total_search}
                 {reblogged_by}
-                <div className="PostSummary__header show-for-small-only">
+                <div className='PostSummary__header show-for-small-only'>
                     {content_title}
                 </div>
                 <div className="PostSummary__time_author_category_small show-for-small-only">
@@ -356,7 +401,7 @@ class PostSummary extends React.Component {
                   {thumb}
                 </div>
                 <div className="PostSummary__content">
-                    <div className={'PostSummary__header show-for-medium'}>
+                    <div className='PostSummary__header show-for-medium'>
                         {content_title}
                     </div>
                     {content_body}
@@ -408,6 +453,15 @@ export default connect(
                 },
                 successCallback, errorCallback,
             }))
+        },
+        showLogin: e => {
+            if (e) e.preventDefault()
+            try {
+                document.getElementsByClassName('DialogManager__shade')[0].click()
+            } catch (err) {
+                console.error(err)
+            }
+            dispatch(user.actions.showLogin())
         },
     })
 )(PostSummary)

@@ -20,6 +20,7 @@ import config from 'config';
 import { routeRegex } from 'app/ResolveRoute';
 import secureRandom from 'secure-random';
 import { APP_NAME_UP } from 'app/client_config';
+import { isBlocked } from 'app/utils/blacklist'
 
 console.log('application server starting, please wait.');
 
@@ -93,7 +94,7 @@ app.use(function*(next) {
 		} else {
 			userCheck = p.split("/")[1].slice(1);
 		}
-		if ($STM_Config.blocked_users.includes(userCheck)) {
+		if (isBlocked(userCheck, $STM_Config.blocked_users)) {
 			console.log('Illegal content user found blocked', `@${userCheck}`);
 			this.status = 451;
 			return;

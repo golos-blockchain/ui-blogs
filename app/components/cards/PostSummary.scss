@@ -11,11 +11,8 @@ ul.PostsList__summaries {
   clear: left;
   @include clearfix;
 
-  .PostSummary__nsfw-warning {
-    border: 1px solid $medium-gray;
-    border-radius: 0.5rem;
-    padding: 0.75rem 2rem;
-    min-height: 80px;
+  .nsfw-text {
+    filter: blur(4px);
     .PostSummary__footer {
       margin-top: 0.2rem;
       .Reblog__button {display: none;}
@@ -24,6 +21,10 @@ ul.PostsList__summaries {
     .PostSummary__time_author_category_small {
       margin-bottom: 0.2rem;
     }
+  }
+
+  .nsfw-img {
+    filter: blur(7px);
   }
 
   .nsfw_post {

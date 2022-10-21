@@ -14,6 +14,7 @@ import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import g from 'app/redux/GlobalReducer'
 import user from 'app/redux/User'
 import { authRegisterUrl, } from 'app/utils/AuthApiClient'
+import { isBlocked } from 'app/utils/blacklist'
 import { sortComments } from 'app/utils/comments'
 import { subscribePost, unsubscribePost, getSubs } from 'app/utils/NotifyApiClient'
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
@@ -344,7 +345,7 @@ class Post extends React.Component {
                 </div>
             </center>
 
-          if($STM_Config.blocked_users.includes(post.split("/")[0])) {
+          if (isBlocked(post.split('/')[0], $STM_Config.blocked_users)) {
             return (<IllegalContentMessage />)
           }
 
