@@ -497,6 +497,17 @@ class PostFull extends React.Component {
                     <span className="PostFull__responses">
                         <Link
                             to={link}
+                            title={tt('votesandcomments_jsx.view_count', {
+                                count: content.views,
+                            })}
+                        >
+                            <Icon name="eye" className="space-right" />
+                            {content.views}
+                        </Link>
+                    </span>
+                    <span className="PostFull__responses">
+                        <Link
+                            to={link}
                             title={tt('votesandcomments_jsx.response_count', {
                                 count: content.children,
                             })}

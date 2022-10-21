@@ -12,7 +12,7 @@ import constants from './constants';
 import session from 'app/utils/session'
 import { reveseTag, getFilterTags } from 'app/utils/tags';
 import { PUBLIC_API, CATEGORIES, SELECT_TAGS_KEY, DEBT_TOKEN_SHORT, LIQUID_TICKER } from 'app/client_config';
-import { getSubs, } from 'app/utils/NotifyApiClient'
+import { getSubs, notifyGetViews, } from 'app/utils/NotifyApiClient'
 import { SearchRequest, searchData, stateSetVersion } from 'app/utils/SearchClient'
 
 export function* fetchDataWatches () {
@@ -274,6 +274,14 @@ export function* fetchState(location_change_action) {
             }
             accounts.add(account)
             checkAuthor(account)
+
+            try {
+                const views =  yield notifyGetViews([state.content[curl].id])
+                state.content[curl].views = views.result[0].views || 0
+            } catch (err) {
+                console.error(err)
+                state.content[curl].views = 0
+            }
 
             state.content[curl].donate_list = [];
             if (state.content[curl].donates != '0.000 GOLOS') {

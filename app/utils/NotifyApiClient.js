@@ -284,6 +284,31 @@ export async function getEvents(account, author, permlink) {
     }
 }
 
+export function notifyPageView(author, permlink) {
+    if (!notifyAvailable()) return
+    let request = Object.assign({}, requestBase(), {
+        body: JSON.stringify({author, permlink}),
+    })
+    setSession(request)
+    return fetchEx(notifyUrl(`/stats/view`), request).then(r => {
+        saveSession(r)
+        return r.json()
+    })
+}
+
+export function notifyGetViews(commentIds) {
+    if (!notifyAvailable()) return
+    let request = Object.assign({}, requestBase(), {
+        body: JSON.stringify({ items: commentIds }),
+        timeout: 1500
+    })
+    setSession(request)
+    return fetchEx(notifyUrl(`/stats/views`), request).then(r => {
+        saveSession(r)
+        return r.json()
+    })
+}
+
 export function isHighlight() {
     if (!process.env.BROWSER) {
         return false

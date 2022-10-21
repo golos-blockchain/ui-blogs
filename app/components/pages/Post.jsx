@@ -18,7 +18,7 @@ import { sortComments } from 'app/utils/comments'
 import { subscribePost, unsubscribePost, getSubs } from 'app/utils/NotifyApiClient'
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
 import session from 'app/utils/session'
-import { isHighlight, markCommentsRead } from 'app/utils/NotifyApiClient'
+import { isHighlight, markCommentsRead, notifyPageView } from 'app/utils/NotifyApiClient'
 
 class Post extends React.Component {
     static propTypes = {
@@ -41,29 +41,35 @@ class Post extends React.Component {
 
     async componentDidMount() {
         if (process.env.BROWSER) {
-            const account = session.load().currentName
-            if (!account) return
-
             const dis = this.getDiscussion()
-            if (!dis) return
+            if (!dis) {
+                return
+            }
 
             const author = dis.get('author')
             const permlink = dis.get('permlink')
 
-            let found = false
-            const res = await getSubs(account)
-            if (res.result) {
-                for (const sub of res.result.subs) {
-                    const [ subAuthor, subPermlink ] = sub.entityId.split('|')
-                    if (subAuthor === author && subPermlink === permlink) {
-                        found = true
-                        break
+            const account = session.load().currentName
+            if (account) {
+                let found = false
+                const res = await getSubs(account)
+                if (res.result) {
+                    for (const sub of res.result.subs) {
+                        const [ subAuthor, subPermlink ] = sub.entityId.split('|')
+                        if (subAuthor === author && subPermlink === permlink) {
+                            found = true
+                            break
+                        }
                     }
                 }
-            }
-            this.setState({ subscribed: found })
+                this.setState({ subscribed: found })
 
-            this.processHighlight()
+                this.processHighlight()
+            }
+
+            try {
+                notifyPageView(author, permlink)
+            } catch (err) {}
         }
     }
 

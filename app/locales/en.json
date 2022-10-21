@@ -700,6 +700,11 @@
       "one": "1 responses",
       "other": "%(count)s responses"
     },
+    "view_count": {
+      "zero": "0 views",
+      "one": "1 view",
+      "other": "%(count)s views"
+    },
     "click_to_respond": "Click to respond",
     "vote_count": {
       "zero": "no votes",
