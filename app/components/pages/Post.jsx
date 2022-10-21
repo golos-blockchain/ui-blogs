@@ -317,7 +317,7 @@ class Post extends React.Component {
                 return this._renderOnlyApp()
             }
             if (stats.isOnlyblog) {
-                if (!following && (typeof(localStorage) === 'undefined' || !session.load().currentName)) {
+                if (!following && (typeof(localStorage) === 'undefined' || session.load().currentName)) {
                     return this._renderLoadingStub()
                 } else if (!following || 
                     (!following.includes(dis.get('author')) &&
