@@ -19,7 +19,6 @@ import uploadImageWatch from './UserSaga_UploadImage';
 import session from 'app/utils/session'
 
 export function* userWatches() {
-    yield fork(watchRemoveHighSecurityKeys); // keep first to remove keys early when a page change happens
     yield fork(loginWatch);
     yield fork(changeAccountWatch)
     yield fork(saveLoginWatch);
@@ -32,8 +31,6 @@ export function* userWatches() {
 }
     
 
-
-const highSecurityPages = Array()
 
 function* lookupPreviousOwnerAuthorityWatch() {
     yield takeLatest('user/lookupPreviousOwnerAuthority', lookupPreviousOwnerAuthority);
@@ -57,10 +54,6 @@ function* loginErrorWatch() {
 
 function* watchLoadSavingsWithdraw() {
     yield takeLatest('user/LOAD_SAVINGS_WITHDRAW', loadSavingsWithdraw);
-}
-
-export function* watchRemoveHighSecurityKeys() {
-    yield takeLatest('@@router/LOCATION_CHANGE', removeHighSecurityKeys);
 }
 
 function* loadSavingsWithdraw() {
@@ -90,16 +83,6 @@ function* getAccountWatch() {
     yield takeEvery('user/GET_ACCOUNT', getAccountHandler);
 }
 
-function* removeHighSecurityKeys({payload: {pathname}}) {
-    const highSecurityPage = highSecurityPages.find(p => p.test(pathname)) != null
-    // Let the user keep the active key when going from one high security page to another.  This helps when
-    // the user logins into the Wallet then the Permissions tab appears (it was hidden).  This keeps them
-    // from getting logged out when they click on Permissions (which is really bad because that tab
-    // disappears again).
-    if(!highSecurityPage)
-        yield put(user.actions.removeHighSecurityKeys())
-}
-
 /**
     @arg {object} action.username - Unless a WIF is provided, this is hashed with the password and key_type to create private keys.
     @arg {object} action.password - Password or WIF private key.  A WIF becomes the posting key, a password can create all three
@@ -113,11 +96,8 @@ function* usernamePasswordLogin(action) {
         const username = current.get('username')
         yield fork(loadFollows, "getFollowingAsync", username, 'blog')
         if (process.env.BROWSER) {
-            //const notification_channel_created = yield select(state => state.user.get('notification_channel_created'))
-            //if (!notification_channel_created) {
-            const { onUserLogin } = PushNotificationSaga;
-            yield call(onUserLogin, { username });
-            //}
+            const { onUserLogin } = PushNotificationSaga
+            yield call(onUserLogin, { username })
         }
     }
 }
@@ -129,7 +109,7 @@ function* usernamePasswordLogin(action) {
 const clean = (value) => value == null || value === '' || /null|undefined/.test(value) ? undefined : value
 
 function* usernamePasswordLogin2({payload: {username, password, saveLogin,
-        operationType /*high security*/, afterLoginRedirectToWelcome
+        operationType, highSecurityLogin, afterLoginRedirectToWelcome
 }}) {
     // login, using saved password
     let autopost, memoWif, login_owner_pubkey, login_wif_owner_pubkey
@@ -162,12 +142,6 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
         // "alice/active" will login only with Alices active key
         [username, userProvidedRole] = username.split('/')
     }
-
-    const pathname = yield select(state => state.global.get('pathname'))
-    const highSecurityLogin =
-        // /owner|active/.test(userProvidedRole) ||
-        // isHighSecurityOperations.indexOf(operationType) !== -1 ||
-        highSecurityPages.find(p => p.test(pathname)) != null
 
     const isRole = (role, fn) => (!userProvidedRole || role === userProvidedRole ? fn() : undefined)
 
@@ -209,7 +183,7 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     let authority = yield select(state => state.user.getIn(['authority', username]))
     const hasActiveAuth = authority.get('active') === 'full'
     // Forbid loging in with active key
-    if(!operationType) {
+    if(!operationType && !highSecurityLogin) {
         const accountName = account.get('name')
         authority = authority.set('active', 'none')
         yield put(user.actions.setAuthority({accountName, auth: authority}))
@@ -240,6 +214,8 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     }
     if (authority.get('posting') !== 'full')
         private_keys = private_keys.remove('posting_private')
+
+    const pathname = yield select(state => state.global.get('pathname'))
 
     if((!highSecurityLogin || authority.get('active') !== 'full') && !pathname.endsWith('/permissions'))
         private_keys = private_keys.remove('active_private')
