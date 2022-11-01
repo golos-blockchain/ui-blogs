@@ -58,6 +58,7 @@ export async function checkAllowed(blockingName, blockerNames, tipAmount = null,
     if (!accs || accs.length !== 1+blockerNames.length) return {}
 
     const [ blocking, ...blockers ] = accs
+
     const rels = blockerNames.length ? await api.getAccountRelationsAsync({
         my_account: blockingName,
         with_accounts: blockerNames,

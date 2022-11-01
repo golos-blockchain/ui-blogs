@@ -4,22 +4,24 @@ import {accountAuthLookup} from 'app/redux/AuthSaga'
 import user from 'app/redux/User'
 import {getAccount} from 'app/redux/SagaShared'
 import {browserHistory} from 'react-router'
-import {authApiLogin, authApiLogout} from 'app/utils/AuthApiClient';
-import {notifyApiLogin, notifyApiLogout} from 'app/utils/NotifyApiClient';
+import {authApiLogin, authApiLogout, authSession} from 'app/utils/AuthApiClient';
+import {notifyApiLogin, notifyApiLogout, notifySession, notificationUnsubscribe} from 'app/utils/NotifyApiClient';
 import {serverApiLogin, serverApiLogout} from 'app/utils/ServerApiClient';
 import {serverApiRecordEvent} from 'app/utils/ServerApiClient';
 import {loadFollows} from 'app/redux/FollowSaga'
-import {session, signData} from 'golos-lib-js/lib/auth'
+import { signData } from 'golos-lib-js/lib/auth'
 import {PrivateKey, Signature, hash} from 'golos-lib-js/lib/auth/ecc'
 import {api} from 'golos-lib-js'
 import g from 'app/redux/GlobalReducer'
 import React from 'react';
 import PushNotificationSaga from 'app/redux/services/PushNotificationSaga';
 import uploadImageWatch from './UserSaga_UploadImage';
+import session from 'app/utils/session'
 
 export function* userWatches() {
     yield fork(watchRemoveHighSecurityKeys); // keep first to remove keys early when a page change happens
     yield fork(loginWatch);
+    yield fork(changeAccountWatch)
     yield fork(saveLoginWatch);
     yield fork(logoutWatch);
     yield fork(getAccountWatch);
@@ -31,13 +33,16 @@ export function* userWatches() {
     
 
 
-const highSecurityPages = Array(/\/market/, /\/@.+\/(transfers|assets|permissions|invites|password)/, /\/~witnesses/)
+const highSecurityPages = Array()
 
 function* lookupPreviousOwnerAuthorityWatch() {
     yield takeLatest('user/lookupPreviousOwnerAuthority', lookupPreviousOwnerAuthority);
 }
 function* loginWatch() {
     yield takeLatest('user/USERNAME_PASSWORD_LOGIN', usernamePasswordLogin);
+}
+function* changeAccountWatch() {
+    yield takeLatest('user/CHANGE_ACCOUNT', changeAccount)
 }
 function* saveLoginWatch() {
     yield takeLatest('user/SAVE_LOGIN', saveLogin_localStorage);
@@ -101,28 +106,6 @@ function* removeHighSecurityKeys({payload: {pathname}}) {
         key_types: active, owner, posting keys.
 */
 function* usernamePasswordLogin(action) {
-  // todo transform this into middleware?
-  // consider the special situation (external transfer)
-  // get current path from router
-  // const pathname = yield select(state => state.global.get('pathname'))
-  const currentLocation = yield select(state => state.routing)//.get(`locationBeforeTransitions`));
-  const { locationBeforeTransitions: { pathname, query } } = currentLocation;
-  const sender = pathname.split(`/`)[1].substring(1);
-  const {to, amount, token, memo} = query;
-  const externalTransferRequested = (!!to && !!amount && !!token && !!memo);
-  const offchain_account = yield select(state => state.offchain.get('account'))
-  let preventLogin = false;
-  if (externalTransferRequested) {
-    if (offchain_account) {
-      if (offchain_account !== sender)
-        preventLogin = true
-    }
-  }
-
-  if (preventLogin) {
-    return
-  }
-
   // Sets 'loading' while the login is taking place.  The key generation can take a while on slow computers.
     yield call(usernamePasswordLogin2, action)
     const current = yield select(state => state.user.get('current'))
@@ -151,11 +134,14 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     // login, using saved password
     let autopost, memoWif, login_owner_pubkey, login_wif_owner_pubkey
     if (!username && !password) {
-        const data = session.load();
-        if (data) { // auto-login with a low security key (like a posting key)
+        const data = session.load()
+        if (data.currentName) { // auto-login with a low security key (like a posting key)
             autopost = true; // must use simi-colon
             // The 'password' in this case must be the posting private wif .. See setItme('autopost')
-            [username, password, memoWif, login_owner_pubkey] = data;
+            username = data.currentName
+            password = data.getVal(username, 'posting')
+            memoWif = data.getVal(username, 'memo')
+            login_owner_pubkey = data.getVal(username, 'login_owner_pubkey')
             memoWif = clean(memoWif);
             login_owner_pubkey = clean(login_owner_pubkey);
         }
@@ -165,6 +151,7 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
         const offchain_account = yield select(state => state.offchain.get('account'))
         if (offchain_account) {
             notifyApiLogout();
+            authApiLogout();
             serverApiLogout()
         }
         return
@@ -229,7 +216,7 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     }
     const fullAuths = authority.reduce((r, auth, type) => (auth === 'full' ? r.add(type) : r), Set())
     if (!fullAuths.size) {
-        session.clear();
+        session.logout(username)
         const owner_pub_key = account.getIn(['owner', 'key_auths', 0, 0]);
         // const pub_keys = yield select(state => state.user.get('pub_keys_used'))
         // serverApiRecordEvent('login_attempt', JSON.stringify({name: username, ...pub_keys, cur_owner: owner_pub_key}))
@@ -273,7 +260,7 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
             posting_pubkey === active_pubkey
         ) {
             yield put(user.actions.loginError({ error: 'This login gives owner or active permissions and should not be used here.  Please provide a posting only login.' }))
-            session.clear();
+            session.logout(username)
             return
         }
     }
@@ -316,6 +303,12 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     const memoAuth = private_keys.get('memo_private') && private_keys.get('memo_private').toWif() === password;
     if (!autopost && saveLogin && !operationType)
         yield put(user.actions.saveLogin());
+
+    if (authSession() || notifySession()) { // if changing account
+        notifyApiLogout()
+        authApiLogout()
+        serverApiLogout()
+    }
 
     let alreadyAuthorized = false;
     try {
@@ -377,6 +370,22 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     if (afterLoginRedirectToWelcome) browserHistory.push('/welcome');
 }
 
+function* changeAccount(action) {
+    const { currentName } = session.load()
+    if (currentName) {
+        try {
+            yield notificationUnsubscribe(currentName, '__notify_id')
+        } catch (err) {}
+        try {
+            notifyApiLogout()
+            authApiLogout()
+            serverApiLogout()
+        } catch (err) {}
+    }
+    const { payload: { username, password } } = action
+    yield put(user.actions.usernamePasswordLogin({username, password, saveLogin: true }))
+}
+
 function* saveLogin_localStorage() {
     if (!process.env.BROWSER) {
         console.error('Non-browser environment, skipping localstorage')
@@ -388,20 +397,20 @@ function* saveLogin_localStorage() {
         state.user.getIn(['current', 'login_owner_pubkey']),
     ]))
     if (!username) {
-        session.clear();
+        session.clear()
         console.error('Not logged in')
         return
     }
     // Save the lowest security key
     const posting_private = private_keys.get('posting_private')
     if (!posting_private) {
-        session.clear();
+        session.logout(username)
         console.error('No posting key to save?')
         return
     }
     const account = yield select(state => state.global.getIn(['accounts', username]))
     if(!account) {
-        session.clear();
+        session.logout(username)
         console.error('Missing global.accounts[' + username + ']')
         return
     }
@@ -416,23 +425,41 @@ function* saveLogin_localStorage() {
                 throw 'Login will not be saved, posting key is the same as owner key'
         })
     } catch(e) {
-        session.clear();
+        session.logout(username)
         console.error(e)
         return
     }
     const memoKey = private_keys.get('memo_private')
-    session.save(username, posting_private, memoKey, login_owner_pubkey);
+    try {
+        session.load()
+            .addKey(username, 'posting', posting_private)
+            .addKey(username, 'memo', memoKey)
+            .setVal(username, 'login_owner_pubkey', login_owner_pubkey)
+            .setCurrent(username)
+            .save()
+    } catch(e){
+        console.error(e)
+    }
 }
 
 function* logout() {
     yield put(user.actions.saveLoginConfirm(false)) // Just incase it is still showing
     if (process.env.BROWSER) {
-        session.clear();
+        const curName = session.load().currentName
+        if (curName) {
+            const newCurrent = {}
+            session.logout(curName, newCurrent).save()
+            if (newCurrent.name) {
+                const password = newCurrent.data.posting
+                yield put(user.actions.usernamePasswordLogin({ username: newCurrent.name, password, saveLogin: true }))
+                return
+            }
+        }
         localStorage.removeItem('guid')
+        authApiLogout();
+        notifyApiLogout();
+        serverApiLogout();
     }
-    authApiLogout();
-    notifyApiLogout();
-    serverApiLogout();
 }
 
 function* loginError({payload: {/*error*/}}) {

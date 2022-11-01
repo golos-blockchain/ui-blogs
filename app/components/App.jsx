@@ -20,13 +20,13 @@ import ScrollButton from '@elements/ScrollButton';
 import { key_utils } from 'golos-lib-js/lib/auth/ecc';
 import MiniHeader from '@modules/MiniHeader';
 import golos from 'golos-lib-js';
-import { session, pageSession } from 'golos-lib-js/lib/auth';
 import tt from 'counterpart';
 import PageViewsCounter from '@elements/PageViewsCounter';
 import DialogManager from 'app/components/elements/common/DialogManager';
 import { init as initAnchorHelper } from 'app/utils/anchorHelper';
 import { authRegisterUrl, } from 'app/utils/AuthApiClient';
 import { APP_ICON, VEST_TICKER, } from 'app/client_config';
+import session from 'app/utils/session'
 
 const GlobalStyle = createGlobalStyle`
     body {
@@ -82,9 +82,9 @@ class App extends React.Component {
 
     loadDownvotedPrefs = () => {
         try {
-            const acc = session.load()
-            if (acc && acc[0]) {
-                const pref = localStorage.getItem('downvotedPref-' + acc[0])
+            const data = session.load()
+            if (data.currentName) {
+                const pref = localStorage.getItem('downvotedPref-' + data.currentName)
                 if (pref === 'gray_only') {
                     window.NO_HIDE = true
                 } else if (pref === 'no_gray') {
@@ -128,24 +128,6 @@ class App extends React.Component {
         if (process.env.BROWSER) {
             initAnchorHelper();
         }
-
-        if (process.env.BROWSER) {
-            this.savedAuthCleaner();
-        }
-    }
-
-    savedAuthCleaner() {
-        setInterval(() => {
-            const saved = pageSession.load();
-            if (saved) {
-                const created = saved[0];
-                const now = Date.now();
-                if (now - created >= 3600000) {
-                    console.log('session_id cleaned');
-                    pageSession.clear();
-                }
-            }
-        }, 1000)
     }
 
     toggleBodyNightmode(nightmodeEnabled) {

@@ -18,8 +18,6 @@ export default {
             ]);
         } else if (route.page === 'Start') {
             cb(null, [require('@pages/Start')]);
-        } else if (route.page === 'Exchanges') {
-            cb(null, [require('@pages/Exchanges')]);
         } else if (route.page === 'Services') {
             cb(null, [require('@pages/Services')]);
         } else if (route.page === 'Faq') {
@@ -40,12 +38,6 @@ export default {
             cb(null, [require('@pages/XSS')]);
         } else if (route.page === 'Tags') {
             cb(null, [require('@pages/TagsIndex')]);
-        } else if (route.page === 'ChangePassword') {
-            cb(null, [require('@pages/ChangePasswordPage')]);
-        } else if (route.page === 'Witnesses') {
-            cb(null, [require('@pages/WitnessesLoader')]);
-        } else if (route.page === 'Workers') {
-            cb(null, [require('@pages/WorkersLoader')]);
         } else if (route.page === 'MinusedAccounts') {
             cb(null, [require('@pages/MinusedAccounts')]);
         } else if (route.page === 'AppGotoURL') {
@@ -67,10 +59,6 @@ export default {
             else cb(null, [require('@pages/SubmitPostServerRender')]);
         } else if (route.page === 'UserProfile') {
             cb(null, [require('@pages/UserProfile')]);
-        } else if (route.page === 'ConvertAssetsLoader') {
-            cb(null, [require('@pages/ConvertAssetsLoader')]);
-        } else if (route.page === 'Market') {
-            cb(null, [require('@pages/MarketLoader')]);
         } else if (route.page === 'Post') {
             cb(null, [require('@pages/PostPage')]);
         } else if (route.page === 'PostNoCategory') {

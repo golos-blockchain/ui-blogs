@@ -52,11 +52,7 @@
     "password": "golosclient"
   },
   "apidex_service": {
-    "host": "https://devapi-dex.golos.app"
-  },
-  "hidden_assets": {
-    "RUDEX": true,
-    "PRIZM": true
+    "host": "https://api-dex.golos.app"
   },
   "forums": {
     "white_list": ["fm-golostalk", "fm-prizmtalk", "fm-graphenetalks"],

@@ -14,8 +14,6 @@ import CheckLoginOwner from 'app/components/elements/CheckLoginOwner';
 import QrKeyView from 'app/components/elements/QrKeyView';
 import PromotePost from 'app/components/modules/PromotePost';
 import ExplorePost from 'app/components/modules/ExplorePost';
-import DelegateVestingShares from 'app/components/modules/DelegateVestingShares';
-import DelegateVestingSharesInfo from 'app/components/modules/DelegateVestingSharesInfo';
 import FeedsNodes from 'app/components/modules/FeedsNodes';
 
 class Dialogs extends React.Component {
@@ -86,18 +84,6 @@ class Dialogs extends React.Component {
                     <QrKeyView onClose={this['hide_' + k]} {...v.get('params').toJS()} />
                 </Reveal>
            </span>:
-           k === 'delegate_vesting' ? <span key={idx++} >
-                <Reveal onHide={this['hide_' + k]} show>
-                    <CloseButton onClick={this['hide_' + k]} />
-                    <DelegateVestingShares onClose={this['hide_' + k]} {...v.get('params').toJS()} />
-                </Reveal>
-           </span>:
-           k === 'delegate_vesting_info' ? <span key={idx++} >
-           <Reveal onHide={this['hide_' + k]} show>
-               <CloseButton onClick={this['hide_' + k]} />
-               <DelegateVestingSharesInfo onClose={this['hide_' + k]} {...v.get('params').toJS()} />
-           </Reveal>
-            </span>:
            k === 'feeds_nodes' ? <span key={idx++} >
                 <Reveal onHide={this['hide_' + k]} show>
                     <CloseButton onClick={this['hide_' + k]} />
