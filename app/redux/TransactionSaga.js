@@ -204,9 +204,12 @@ function* broadcastOperation(
                 payload.keys.push(signingKey)
             else {
                 if (!password) {
+                    const opInfo = broadcast._operations[type]
+                    let authType = opInfo && opInfo.roles[0]
+                    if (authType === 'posting') authType = ''
                     yield put(user.actions.showLogin({
                       operation: {type, operation: op, trx, username, successCallback, errorCallback, saveLogin: true},
-                      loginDefault: { username, authType: (type == 'transfer' || type == 'account_witness_vote' || type == 'account_witness_proxy') ? 'active' : '' }
+                      loginDefault: { username, authType }
                     }))
                     return
                 }

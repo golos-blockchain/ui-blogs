@@ -73,7 +73,7 @@ class App extends React.Component {
         const n = nextProps;
         return (
             p.location !== n.location ||
-            p.visitor !== n.visitor ||
+            p.new_visitor !== n.new_visitor ||
             p.flash !== n.flash ||
             this.state !== nextState ||
             p.nightmodeEnabled !== n.nightmodeEnabled
@@ -427,7 +427,9 @@ export default connect(
         };
     },
     dispatch => ({
-        loginUser: () => dispatch(user.actions.usernamePasswordLogin()),
+        loginUser: () => {
+            dispatch(user.actions.usernamePasswordLogin())
+        },
         logoutUser: () => dispatch(user.actions.logout()),
         depositSteem: () => {
             dispatch(

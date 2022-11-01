@@ -3,10 +3,7 @@ import {Set, Map, fromJS, List} from 'immutable'
 import user from 'app/redux/User'
 import {getAccount} from 'app/redux/SagaShared'
 import {PrivateKey} from 'golos-lib-js/lib/auth/ecc';
-import {api} from 'golos-lib-js';
-
-// operations that require only posting authority
-const postingOps = Set(`vote, comment, delete_comment, custom_json, account_metadata, donate, worker_request_vote, account_setup`.trim().split(/,\s*/))
+import { broadcast, api } from 'golos-lib-js';
 
 export function* authWatches() {
     yield fork(watchForAuth) 
@@ -98,10 +95,10 @@ function pubkeyThreshold({pubkeys, authority}) {
 
 export function* findSigningKey({opType, username, password}) {
     let authTypes
-    if (postingOps.has(opType)) {
+    const opInfo = broadcast._operations[opType]
+    if (opInfo && opInfo.roles[0] === 'posting') {
         authTypes = 'posting, active'
-    }
-    else {
+    } else {
         authTypes = 'active, owner'
     }
     authTypes = authTypes.split(', ')

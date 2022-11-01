@@ -1,4 +1,4 @@
-import fetchWithTimeout from 'shared/fetchWithTimeout'
+import { fetchEx } from 'golos-lib-js/lib/utils'
 
 const request_base = {
     method: 'get',
@@ -44,7 +44,10 @@ export async function apidexGetPrices(sym) {
         if (cache && (now - cache.time) < 60000) {
             return cache.resp
         } else {
-            let resp = await fetchWithTimeout(apidexUrl(`/api/v1/cmc/${sym}`), 2000, request)
+            let resp = await fetchEx(apidexUrl(`/api/v1/cmc/${sym}`), {
+                ...request,
+                timeout: 2000
+            })
             resp = await resp.json()
             if (resp.data && resp.data.slug)
                 resp['page_url'] = getPageURL(resp.data.slug)

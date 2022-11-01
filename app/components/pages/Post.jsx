@@ -1,19 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import Comment from 'app/components/cards/Comment';
-import PostFull from 'app/components/cards/PostFull';
-import {connect} from 'react-redux';
-import {sortComments} from 'app/utils/comments';
-import Follow from 'app/components/elements/Follow'
-import LoadingIndicator from 'app/components/elements/LoadingIndicator';
-import FoundationDropdownMenu from 'app/components/elements/FoundationDropdownMenu';
-import IllegalContentMessage from 'app/components/elements/IllegalContentMessage';
+import {connect} from 'react-redux'
 import {Set} from 'immutable'
-import tt from 'counterpart';
-import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
-import { authRegisterUrl, } from 'app/utils/AuthApiClient'
+import tt from 'counterpart'
+
+import Comment from 'app/components/cards/Comment'
+import PostFull from 'app/components/cards/PostFull'
+import Follow from 'app/components/elements/Follow'
+import FoundationDropdownMenu from 'app/components/elements/FoundationDropdownMenu'
+import Icon from 'app/components/elements/Icon'
+import IllegalContentMessage from 'app/components/elements/IllegalContentMessage'
+import LoadingIndicator from 'app/components/elements/LoadingIndicator';
+import g from 'app/redux/GlobalReducer'
 import user from 'app/redux/User'
+import { authRegisterUrl, } from 'app/utils/AuthApiClient'
+import { isBlocked } from 'app/utils/blacklist'
+import { sortComments } from 'app/utils/comments'
+import { subscribePost, unsubscribePost, getSubs } from 'app/utils/NotifyApiClient'
+import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
 import session from 'app/utils/session'
+import { isHighlight, markCommentsRead, notifyPageView } from 'app/utils/NotifyApiClient'
 
 class Post extends React.Component {
     static propTypes = {
@@ -31,12 +37,97 @@ class Post extends React.Component {
             showNegativeComments: false
         };
         this.shouldComponentUpdate = shouldComponentUpdate(this, 'Post')
+        this.commentsRef = React.createRef()
     }
 
-    componentDidMount() {
-        if (window.location.hash.indexOf('comments') !== -1) {
-            const comments_el = document.getElementById('comments');
-            if (comments_el) comments_el.scrollIntoView();
+    async componentDidMount() {
+        if (process.env.BROWSER) {
+            const dis = this.getDiscussion()
+            if (!dis) {
+                return
+            }
+
+            const author = dis.get('author')
+            const permlink = dis.get('permlink')
+
+            const account = session.load().currentName
+            if (account) {
+                let found = false
+                const res = await getSubs(account)
+                if (res.result) {
+                    for (const sub of res.result.subs) {
+                        const [ subAuthor, subPermlink ] = sub.entityId.split('|')
+                        if (subAuthor === author && subPermlink === permlink) {
+                            found = true
+                            break
+                        }
+                    }
+                }
+                this.setState({ subscribed: found })
+
+                this.processHighlight()
+            }
+
+            try {
+                notifyPageView(author, permlink)
+            } catch (err) {}
+        }
+    }
+
+    async componentDidUpdate() {
+        this.processHighlight()
+    }
+
+    processHighlight() {
+        const curUser = session.load().currentName
+        if (!curUser) {
+            return
+        }
+        const dis = this.getDiscussion()
+        if (!dis) {
+            return null
+        }
+        const replies = dis.get('replies').toJS()
+        const loaded = replies.length || !dis.get('children')
+        if (loaded) {
+            const author = dis.get('author')
+            const permlink = dis.get('permlink')
+
+            const highlight = isHighlight()
+            if (!this.state.highlight)
+                this.setState({ highlight })
+
+            if (highlight) {
+                if (!dis.get('highlighted')) {
+                    return null
+                }
+                markCommentsRead(curUser, author, permlink)
+                this.props.markSubRead(author, permlink)
+                this.readen = true
+                let counter = 0
+                const scroller = setInterval(() => {
+                    let notYet = false
+                    for (const img of document.getElementsByTagName('img')) {
+                        if (!img.complete) {
+                            notYet = true
+                            break
+                        }
+                    }
+                    ++counter
+                    if ((notYet && counter < 2000) || !this.commentsRef.current) return
+
+                    const proceed = () => {
+                        clearInterval(scroller)
+                        this.commentsRef.current.scrollIntoView()
+                        document.scrollingElement.scrollTop -= 200
+                    }
+                    if (counter > 100) {
+                        setTimeout(proceed, 500)
+                    } else {
+                        proceed()
+                    }
+                }, 1)
+            }
         }
     }
 
@@ -104,18 +195,51 @@ class Post extends React.Component {
         return this._renderStub(children)
     }
 
+    subscribe = async (e, dis) => {
+        e.preventDefault()
+        try {
+            const { current_user, } = this.props
+            const account = current_user && current_user.get('username')
+            if (!account) return
+            if (this.state.subscribed) {
+                await unsubscribePost(account, dis.get('author'), dis.get('permlink'))
+                this.setState({subscribed: false})
+                return
+            }
+            await subscribePost(account, dis.get('author'), dis.get('permlink'))
+            this.setState({subscribed: true})
+        } catch (err) {
+            alert(err.message || err)
+        }
+    }
+
+    getDiscussion = (postGetter = () => {}) => {
+        let { content, post, routeParams } = this.props
+        if (!post) {
+            post = routeParams.username + '/' + routeParams.slug
+        }
+        postGetter(post)
+        const dis = content.get(post)
+        return dis
+    }
+
     render() {
         const {following, content, current_user} = this.props
         const {showNegativeComments, commentHidden, showAnyway} = this.state
         let { post } = this.props;
         const { aiPosts } = this.props;
-        if (!post) {
-            const route_params = this.props.routeParams;
-            post = route_params.username + '/' + route_params.slug;
-        }
-        const dis = content.get(post);
+        const dis = this.getDiscussion(p => post = p)
 
         if (!dis) return null;
+
+        if (process.env.BROWSER) {
+            const author = dis.get('author')
+            const permlink = dis.get('permlink')
+            const highlight = isHighlight()
+            if (highlight && !dis.get('highlighted') && !this.readen) {
+                return this._renderLoadingStub()
+            }
+        }
 
         const stats = dis.get('stats').toJS()
 
@@ -134,7 +258,7 @@ class Post extends React.Component {
 
         let replies = dis.get('replies').toJS();
 
-        let sort_order = 'trending';
+        let sort_order = this.state.highlight ? 'new' : 'trending';
         if( this.props.location && this.props.location.query.sort )
            sort_order = this.props.location.query.sort;
 
@@ -194,7 +318,7 @@ class Post extends React.Component {
                 return this._renderOnlyApp()
             }
             if (stats.isOnlyblog) {
-                if (!following && (typeof(localStorage) === 'undefined' || !session.load().currentName)) {
+                if (!following && (typeof(localStorage) === 'undefined' || session.load().currentName)) {
                     return this._renderLoadingStub()
                 } else if (!following || 
                     (!following.includes(dis.get('author')) &&
@@ -221,9 +345,11 @@ class Post extends React.Component {
                 </div>
             </center>
 
-          if($STM_Config.blocked_users.includes(post.split("/")[0])) {
+          if (isBlocked(post.split('/')[0], $STM_Config.blocked_users)) {
             return (<IllegalContentMessage />)
           }
+
+          const { subscribed } = this.state
           
         return (
             <div className="Post">
@@ -242,12 +368,18 @@ class Post extends React.Component {
         
                 <div id="comments" className="Post_comments row hfeed">
                     <div className="column large-12">
-                        <div className="Post_comments__content">
+                        <div className="Post_comments__content" ref={this.commentsRef}>
                             {(!replies.length && dis.get('children')) ? (
                                 <center>
                                     <LoadingIndicator type="circle" size="25px" />
                                 </center>
                             ) : null}
+                            <div className='Post__comments_subscribe float-left' title={subscribed ? tt('post_jsx.unsubscribe_long') : tt('post_jsx.subscribe_comments_long')} onClick={e => this.subscribe(e, dis)}>
+                                <Icon name='new/bell' />
+                                <span>
+                                    {subscribed ? tt('post_jsx.unsubscribe') : tt('post_jsx.subscribe_comments')}
+                                </span>
+                            </div>
                             {positiveComments.length ?
                             (<div className="Post__comments_sort_order float-right">
                                 {tt('post_jsx.sort_order')}: &nbsp;
@@ -300,5 +432,8 @@ export default connect((state, props) => {
         if (e) e.preventDefault();
         dispatch(user.actions.showLogin())
     },
+    markSubRead: (author, permlink) => {
+        dispatch(g.actions.markSubRead({ author, permlink }))
+    }
 })
 )(Post);
