@@ -48,7 +48,13 @@ function TimeAuthorCategory({ content, authorRepLog10, showTags }) {
 function TimeAuthorCategoryLarge({ content, authorRepLog10 }) {
     return (
         <span className="PostFull__time_author_category_large vcard">
-            <TimeVersions content={content} className='float-right' />
+            <span className="float-right">
+                <Icon name="clock" className="space-right" />
+                <TimeVersions content={content} />
+            </span>
+            <span className="float-right eye">
+                <Icon name='eye' size='1_5x' /> {content.views} /
+            </span>
             <Userpic account={content.author} reputation={authorRepLog10} />
             <div className="right-side">
                 <Author

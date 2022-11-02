@@ -380,13 +380,19 @@ class Post extends React.Component {
                                     {subscribed ? tt('post_jsx.unsubscribe') : tt('post_jsx.subscribe_comments')}
                                 </span>
                             </div>
-                            {positiveComments.length ?
-                            (<div className="Post__comments_sort_order float-right">
+                            <div className="Post__comments_sort_order float-right">
                                 {tt('post_jsx.sort_order')}: &nbsp;
                                 <FoundationDropdownMenu menu={sort_menu} label={sort_label} dropdownPosition="bottom" dropdownAlignment="right" />
-                            </div>) : null}
+                            </div>
                             {positiveComments}
                             {negativeGroup}
+                            {positiveComments.length ?
+                            (<div className='Post__comments_subscribe golos-btn btn-secondary btn-round' align='center' title={subscribed ? tt('post_jsx.unsubscribe_long') : tt('post_jsx.subscribe_comments_long')} onClick={e => this.subscribe(e, dis)}>
+                                <Icon name='new/bell' />
+                                <span>
+                                    {subscribed ? tt('post_jsx.unsubscribe') : tt('post_jsx.subscribe_comments')}
+                                </span>
+                            </div>) : null}
                         </div>
                     </div>
                 </div>

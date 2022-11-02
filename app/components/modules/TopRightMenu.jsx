@@ -125,7 +125,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     }
     additional_menu.push(
         { link: '#', onClick: toggleNightmode, icon: 'editor/eye', value: tt('g.night_mode') },
-        { link: walletUrl('/market/GOLOS/GBG'), target: walletTarget(), icon: 'trade', value: tt("navigation.market") },
+        { link: walletUrl('/market'), target: walletTarget(), icon: 'trade', value: tt("navigation.market") },
         { link: '/services', icon: 'new/monitor', value: tt("navigation.services") },
         { link: '/search', icon: 'new/search', value: tt("navigation.search") },
         { link: walletUrl('/exchanges'), target: walletTarget(), icon: 'editor/coin', value: tt("navigation.buy_sell") },
@@ -156,12 +156,12 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
             {link: accountLink, icon: 'new/blogging', value: tt('g.blog')},
             {link: repliesLink, icon: 'new/answer', value: tt('g.replies'), addon: <NotifiCounter fields="comment_reply" />},
             {link: discussionsLink, icon: 'new/bell', value: tt('g.discussions'), addon: <NotifiCounter fields="subscriptions" />},
-            (messagesLink ?
-                {link: messagesLink, icon: 'new/envelope', value: tt('g.messages'), target: '_blank', addon: <NotifiCounter fields="message" />} :
-                null),
             {link: mentionsLink, icon: 'new/mention', value: tt('g.mentions'), addon: <NotifiCounter fields="mention" />},
             {link: donatesLink, target: walletTarget(), icon: 'editor/coin', value: tt('g.rewards'), addon: <NotifiCounter fields="donate,donate_msgs" />},
             {link: walletLink, target: walletTarget(), icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields="send,receive,fill_order" />},
+            (messagesLink ?
+                {link: messagesLink, icon: 'new/envelope', value: tt('g.messages'), target: '_blank', addon: <NotifiCounter fields="message" />} :
+                null),
             {link: settingsLink, icon: 'new/setting', value: tt('g.settings')},            
             loggedIn ?
                 {link: '#', icon: 'new/logout', onClick: goChangeAccount, value: tt('g.change_acc')} :
