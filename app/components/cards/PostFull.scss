@@ -28,8 +28,9 @@
   font-size: 120%;
   display: block;
   > .eye {
-    color: $dark-gray;
-    margin-right: .4rem;
+    margin-left: .4rem;
+    padding-left: .4rem;
+    border-left: 1px solid $medium-gray;
   }
   > .Userpic {
     margin-top: -4px;

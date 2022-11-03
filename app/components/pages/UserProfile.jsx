@@ -448,8 +448,8 @@ export default class UserProfile extends React.Component {
                         <a href={walletUrl(`/@${accountname}/transfers`)} target={walletTarget()} className={`${walletClass} UserProfile__menu-item`}>
                             {tt('g.wallet')} {isMyAccount && <NotifiCounter fields='send,receive,fill_order' />}
                         </a>
-                        {msgsHost() ? <a target='_blank' rel='noopener noreferrer' className='UserProfile__menu-item' href={msgsLink()}>
-                            {tt('g.messages')} {isMyAccount && <NotifiCounter fields='message' />}
+                        {isMyAccount && msgsHost() ? <a target='_blank' rel='noopener noreferrer' className='UserProfile__menu-item' href={msgsLink()}>
+                            {tt('g.messages')} <NotifiCounter fields='message' />
                         </a> : null}
                         {isMyAccount ? 
                             <Link className='UserProfile__menu-item' to={`/@${accountname}/settings`} activeClassName='active'>{tt('g.settings')}</Link>
