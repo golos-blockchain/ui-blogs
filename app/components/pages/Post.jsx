@@ -386,7 +386,7 @@ class Post extends React.Component {
                             </div>
                             {positiveComments}
                             {negativeGroup}
-                            {positiveComments.length && !subscribed && current_user ?
+                            {(dis.get('children') > 5) && current_user ?
                             (<div className='Post__comments_subscribe golos-btn btn-secondary btn-round' align='center' onClick={e => this.subscribe(e, dis)}>
                                 <Icon name='new/bell' />
                                 <span>
