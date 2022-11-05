@@ -65,6 +65,7 @@
     color: $white;
     background-color: transparent;
     line-height: 1.5rem;
+    fill: $white;
 
     &:hover {
         background-color: #555;
@@ -74,6 +75,7 @@
         z-index: 2;
         color: $black;
         font-weight: bold;
+        fill: $black;
     }
   }
 
@@ -85,9 +87,9 @@
       flex-flow: row wrap;
       width: 100%;
       // Override default svg vertical alignment
-      .Icon > svg, .Icon span.icon {
-          vertical-align: middle!important;
-      }
+      // .Icon > svg, .Icon span.icon {
+      //     vertical-align: middle !important;
+      // }
   }
 }
 

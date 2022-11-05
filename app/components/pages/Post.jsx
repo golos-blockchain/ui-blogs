@@ -386,11 +386,11 @@ class Post extends React.Component {
                             </div>
                             {positiveComments}
                             {negativeGroup}
-                            {positiveComments.length ?
-                            (<div className='Post__comments_subscribe golos-btn btn-secondary btn-round' align='center' title={subscribed ? tt('post_jsx.unsubscribe_long') : tt('post_jsx.subscribe_comments_long')} onClick={e => this.subscribe(e, dis)}>
+                            {(dis.get('children') > 5) && !subscribed && current_user ?
+                            (<div className='Post__comments_subscribe golos-btn btn-secondary btn-round' align='center' onClick={e => this.subscribe(e, dis)}>
                                 <Icon name='new/bell' />
                                 <span>
-                                    {subscribed ? tt('post_jsx.unsubscribe') : tt('post_jsx.subscribe_comments')}
+                                    {subscribed ? tt('post_jsx.unsubscribe_long') : tt('post_jsx.subscribe_comments_long')}
                                 </span>
                             </div>) : null}
                         </div>

@@ -426,34 +426,38 @@ export default class UserProfile extends React.Component {
                     {isMyAccount ? <Link className='UserProfile__menu-item' to={`/@${accountname}/discussions`} activeClassName='active'>
                         {tt('g.discussions')} <NotifiCounter fields='subscriptions' />
                     </Link> : null}
-                    <LinkWithDropdown
-                        closeOnClickOutside
-                        dropdownPosition='bottom'
-                        dropdownAlignment={this.state.linksAlign}
-                        dropdownContent={
-                            <VerticalMenu items={rewardsMenu} />
-                        }
-                    >
-                        <a
-                            className={`${rewardsClass} UserProfile__menu-item`}
-                            ref={this._onLinkRef}
-                        >
-                            {tt('g.rewards')}
-                            {isMyAccount && <NotifiCounter fields='donate,donate_msgs' />}
-                            <Icon name='dropdown-arrow' />
-                        </a>
-                    </LinkWithDropdown>
+                    {isMyAccount ? <Link className='UserProfile__menu-item' to={`/@${accountname}/mentions`} activeClassName='active'>
+                        {tt('g.mentions')} <NotifiCounter fields='mention' />
+                    </Link> : null}
                     <div className='UserProfile__filler' />
                     <div>
                         <a href={walletUrl(`/@${accountname}/transfers`)} target={walletTarget()} className={`${walletClass} UserProfile__menu-item`}>
                             {tt('g.wallet')} {isMyAccount && <NotifiCounter fields='send,receive,fill_order' />}
                         </a>
-                        {msgsHost() ? <a target='_blank' rel='noopener noreferrer' className='UserProfile__menu-item' href={msgsLink()}>
-                            {tt('g.messages')} {isMyAccount && <NotifiCounter fields='message' />}
+                        <LinkWithDropdown
+                            closeOnClickOutside
+                            dropdownPosition='bottom'
+                            dropdownAlignment={this.state.linksAlign}
+                            dropdownContent={
+                                <VerticalMenu items={rewardsMenu} />
+                            }
+                        >
+                            <a
+                                className={`${rewardsClass} UserProfile__menu-item`}
+                                ref={this._onLinkRef}
+                            >
+                                {tt('g.rewards')}
+                                {isMyAccount && <NotifiCounter fields='donate,donate_msgs' />}
+                                <Icon name='dropdown-center' />
+                            </a>
+                        </LinkWithDropdown>
+                        {isMyAccount && msgsHost() ? <a target='_blank' rel='noopener noreferrer' className='UserProfile__menu-item' href={msgsLink()} title={tt('g.messages')}>
+                            <Icon name='new/envelope' /> <NotifiCounter fields='message' />
                         </a> : null}
                         {isMyAccount ? 
-                            <Link className='UserProfile__menu-item' to={`/@${accountname}/settings`} activeClassName='active'>{tt('g.settings')}</Link>
-                        : null}
+                            <Link className='UserProfile__menu-item' to={`/@${accountname}/settings`} activeClassName='active' title={tt('g.settings')}>
+                            <Icon name='new/setting' /> 
+                        </Link> : null}
                     </div>
                 </div>
             </div>
