@@ -156,6 +156,7 @@ export function* fetchState(location_change_action) {
                                     const link = `${author}/${permlink}`
                                     state.accounts[uname].discussions.push(link)
                                     state.content[link] = previews[i]
+                                    state.content[link].from_preview = true
                                     state.content[link].event_count = subs[i] ? subs[i].eventCount : 0
                                 }
                             }
@@ -193,6 +194,7 @@ export function* fetchState(location_change_action) {
                             const link = `${author}/${permlink}`
                             state.accounts[uname].feed.push(link)
                             state.content[link] = previews[i]
+                            state.content[link].from_preview = true
 
                             checkAuthor(author)
 
@@ -253,6 +255,7 @@ export function* fetchState(location_change_action) {
                             const link = `${author}/${permlink}`
 
                             state.content[link] = previews[i]
+                            state.content[link].from_preview = true
                             state.accounts[uname].blog.push(link)
 
                             if (blogEntries[i].reblog_on !== '1970-01-01T00:00:00') {
