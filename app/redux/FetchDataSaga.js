@@ -108,7 +108,7 @@ export function* fetchState(location_change_action) {
             const [ account ] = yield call([api, api.getAccountsAsync], [uname])
             state.accounts[uname] = account
             delete state.accounts[uname].discussions
-            
+
             if (account) {
                 state.accounts[uname].tags_usage = yield call([api, api.getTagsUsedByAuthorAsync], uname)
                 state.accounts[uname].guest_bloggers = yield call([api, api.getBlogAuthorsAsync], uname)
@@ -130,11 +130,11 @@ export function* fetchState(location_change_action) {
 
                     case 'discussions':
                         state.accounts[uname].discussions = []
-                        const account = session.load().currentName
-                        if (account && uname === account) {
+                        const accName = session.load().currentName
+                        if (accName && uname === accName) {
                             let res, subs
                             try {
-                                res = yield getSubs(account)
+                                res = yield getSubs(accName)
                             } catch (err) {
                             }
                             const ids = []
@@ -202,7 +202,7 @@ export function* fetchState(location_change_action) {
                                 state.content[link].first_reblogged_on = feedEntries[i].reblog_on
                             }
                         }
-                    break }
+                    } break
 
                     case 'reputation':
                         const rhistory = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {select_ops: ['account_reputation']});
