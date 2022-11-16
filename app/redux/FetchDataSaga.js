@@ -14,6 +14,7 @@ import { reveseTag, getFilterTags } from 'app/utils/tags';
 import { PUBLIC_API, CATEGORIES, SELECT_TAGS_KEY, DEBT_TOKEN_SHORT, LIQUID_TICKER } from 'app/client_config';
 import { getSubs, notifyGetViews, } from 'app/utils/NotifyApiClient'
 import { SearchRequest, searchData, stateSetVersion } from 'app/utils/SearchClient'
+import { hashPermlink, } from 'app/utils/StateFunctions'
 
 export function* fetchDataWatches () {
     yield fork(watchLocationChange);
@@ -238,7 +239,12 @@ export function* fetchState(location_change_action) {
                         state.accounts[uname].blog = []
 
                         let pinnedPosts = getPinnedPosts(account)
-                        blogEntries.unshift(...pinnedPosts)
+                        for (const pp of pinnedPosts){
+                            const hashlink = hashPermlink(pp.permlink)
+                            blogEntries.unshift({
+                                author: pp.author, hashlink, reblog_on: pp.reblog_on
+                            })
+                        }
 
                         const ids = []
 
