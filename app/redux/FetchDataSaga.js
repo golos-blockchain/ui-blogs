@@ -14,6 +14,7 @@ import { reveseTag, getFilterTags } from 'app/utils/tags';
 import { PUBLIC_API, CATEGORIES, SELECT_TAGS_KEY, DEBT_TOKEN_SHORT, LIQUID_TICKER } from 'app/client_config';
 import { getSubs, notifyGetViews, } from 'app/utils/NotifyApiClient'
 import { SearchRequest, searchData, stateSetVersion } from 'app/utils/SearchClient'
+import { hashPermlink, } from 'app/utils/StateFunctions'
 
 export function* fetchDataWatches () {
     yield fork(watchLocationChange);
@@ -108,7 +109,7 @@ export function* fetchState(location_change_action) {
             const [ account ] = yield call([api, api.getAccountsAsync], [uname])
             state.accounts[uname] = account
             delete state.accounts[uname].discussions
-            
+
             if (account) {
                 state.accounts[uname].tags_usage = yield call([api, api.getTagsUsedByAuthorAsync], uname)
                 state.accounts[uname].guest_bloggers = yield call([api, api.getBlogAuthorsAsync], uname)
@@ -130,11 +131,11 @@ export function* fetchState(location_change_action) {
 
                     case 'discussions':
                         state.accounts[uname].discussions = []
-                        const account = session.load().currentName
-                        if (account && uname === account) {
+                        const accName = session.load().currentName
+                        if (accName && uname === accName) {
                             let res, subs
                             try {
-                                res = yield getSubs(account)
+                                res = yield getSubs(accName)
                             } catch (err) {
                             }
                             const ids = []
@@ -156,6 +157,7 @@ export function* fetchState(location_change_action) {
                                     const link = `${author}/${permlink}`
                                     state.accounts[uname].discussions.push(link)
                                     state.content[link] = previews[i]
+                                    state.content[link].from_preview = true
                                     state.content[link].event_count = subs[i] ? subs[i].eventCount : 0
                                 }
                             }
@@ -193,6 +195,7 @@ export function* fetchState(location_change_action) {
                             const link = `${author}/${permlink}`
                             state.accounts[uname].feed.push(link)
                             state.content[link] = previews[i]
+                            state.content[link].from_preview = true
 
                             checkAuthor(author)
 
@@ -202,7 +205,7 @@ export function* fetchState(location_change_action) {
                                 state.content[link].first_reblogged_on = feedEntries[i].reblog_on
                             }
                         }
-                    break }
+                    } break
 
                     case 'reputation':
                         const rhistory = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {select_ops: ['account_reputation']});
@@ -236,7 +239,12 @@ export function* fetchState(location_change_action) {
                         state.accounts[uname].blog = []
 
                         let pinnedPosts = getPinnedPosts(account)
-                        blogEntries.unshift(...pinnedPosts)
+                        for (const pp of pinnedPosts){
+                            const hashlink = hashPermlink(pp.permlink)
+                            blogEntries.unshift({
+                                author: pp.author, hashlink, reblog_on: pp.reblog_on
+                            })
+                        }
 
                         const ids = []
 
@@ -253,6 +261,7 @@ export function* fetchState(location_change_action) {
                             const link = `${author}/${permlink}`
 
                             state.content[link] = previews[i]
+                            state.content[link].from_preview = true
                             state.accounts[uname].blog.push(link)
 
                             if (blogEntries[i].reblog_on !== '1970-01-01T00:00:00') {
