@@ -174,8 +174,10 @@ class CommentImpl extends PureComponent {
             controls = this._renderControls(post, comment);
         }
 
+        const isHighlight = process.env.BROWSER && window.location.search.includes('&highlight=1')
+
         if (!this.state.collapsed && comment.children > 0) {
-            if ((depth > 0 && depth % 8 === 0) && this.state.depthCollapsed) {
+            if ((depth > 0 && depth % 8 === 0) && this.state.depthCollapsed && !isHighlight) {
                 const comment_permlink = `/${comment.category}/@${
                     comment.author
                 }/${comment.permlink}`;
