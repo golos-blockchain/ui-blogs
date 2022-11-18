@@ -153,6 +153,17 @@ export default createModule({
             },
         },
         {
+            action: 'MARK_SUB_READ',
+            reducer: (state, { payload: { author, permlink } }) => {
+                const key = author + '/' + permlink
+                return state.updateIn(['content', key], Map(), c => {
+                    c = c.set('highlighted', false)
+                    c = c.set('event_count', 0)
+                    return c
+                })
+            }
+        },
+        {
             action: 'RECEIVE_WORKER_REQUEST',
             reducer: (state, { payload: { wr } }) => {
                 wr = fromJS(wr);
@@ -438,6 +449,17 @@ export default createModule({
 
                 return newState;
             },
+        },
+        {
+            action: 'UNSUBSCRIBE_POST',
+            reducer: (state, { payload: { account, author, permlink } }) => {
+                const link = `${author}/${permlink}`
+                const newState = state.updateIn(['accounts', account, 'discussions'], data => {
+                    data = data.filter(v => v !== link)
+                    return data
+                })
+                return newState
+            }
         },
         {
             action: 'REQUEST_META',

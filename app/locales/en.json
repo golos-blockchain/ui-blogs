@@ -57,15 +57,6 @@
     "mention_comment": "comment ",
     "you": "you"
   },
-  "filled_orders_jsx": {
-    "title": "Filled market orders",
-    "orders_info": "Golos blockchain has its own internal DEX (decentralized exchange), which means it is possible to exchange GOLOS and UIA tokens (user-issued assets to other cryptocurrencies) right here.",
-    "empty_NAME": "%(NAME)s have no filled orders yet. You can buy or sell tokens in the ",
-    "empty2": "market",
-    "exchanged": "Exchange %(AMOUNT)s for %(AMOUNT2)s",
-    "quick_convert": "Quick Convert",
-    "open_market": "Go To Market (DEX)"
-  },
   "g": {
     "golos_fest": "Golos.id News",
     "APP_NAME": "Golos",
@@ -115,6 +106,7 @@
     "date": "Date",
     "decrypt": "Decrypt",
     "delete": "Delete",
+    "discussions": "Discussions",
     "dismiss": "Dismiss",
     "documentation": "Documentation",
     "edit": "Edit",
@@ -256,15 +248,6 @@
     "passwords_do_not_match": "Passwords do not match",
     "no_topics_by_order_found": "There are no posts in the category %(order)s for the last 7 days...",
     "you_need_private_password_or_key_not_a_public_key": "You need a private password or key (not a public key)",
-    "the_rules_of_APP_NAME": {
-        "one": "The first rule of %(APP_NAME)s is: Do not lose your password.",
-        "second": "The second rule of %(APP_NAME)s is: Do <strong>not</strong> lose your password.",
-        "third": "The third rule of %(APP_NAME)s is: We cannot recover your password.",
-        "fourth": "The fourth rule: If you can remember the password, it's not secure.",
-        "fifth": "The fifth rule: Use only randomly-generated passwords.",
-        "sixth": "The sixth rule: Do not tell anyone your password.",
-        "seventh": "The seventh rule: Always back up your password."
-    },
     "current_password": "Current Password",
     "generated_password": "Generated Password",
     "recover_password": "Restore Access",    
@@ -350,17 +333,6 @@
     "night_mode": "Night Mode",
     "social_network": "Social network",
     "about_project": "Golos Blogs - social platform and blogger community, developed on the GOLOS blockchain"
-  },
-  "exchanges_jsx": {
-    "title": "Buying and selling tokens",
-    "temporarily_disabled": "Token deposit/withdraw is temporarily disabled",
-    "guide_user": "Instructions for the exchange",
-    "pause": "Tokens input/output is temporarily suspended...",
-    "total_supply": "Information about the total supply of tokens",
-    "other_options": "for RUB / UAH / USD and many other options",
-    "questions": "Any questions",
-    "community_chat": "You can get answers in the community chat",
-    "delegate_chat": "and in the delegates chat"
   },
   "navigation": {
     "about": "About",
@@ -490,48 +462,13 @@
     "account_name_is_not_available": "Account name is not available",
     "prev_posts": "See also"
   },
-  "market_jsx": {
-    "action": "Action",
-    "date_created": "Date Created",
-    "date_trade": "Date Trade",
-    "last_price": "Last price",
-    "24h_volume": "24h volume",
-    "spread": "Spread",
-    "total": "Total",
-    "available": "Available",
-    "lowest_ask": "Lowest ask",
-    "highest_bid": "Highest bid",
-    "buy_orders": "Buy Orders",
-    "sell_orders": "Sell Orders",
-    "trade_history": "Trade History",
-    "open_orders": "Open Orders",
-    "sell_amount_for_atleast": "Sell %(amount_to_sell)s for at least %(min_to_receive)s (%(effectivePrice)s)",
-    "buy_atleast_amount_for": "Buy at least %(min_to_receive)s for %(amount_to_sell)s (%(effectivePrice)s)",
-    "price_warning_above": "This price is well above the current market price of %(marketPrice)s, are you sure?",
-    "price_warning_below": "This price is well below the current market price of %(marketPrice)s, are you sure?",
-    "order_cancel_confirm": "Cancel order %(order_id)s from %(user)s?",
-    "order_cancel_confirm_few": "Cancel %(order_cnt)s order(-s) from %(user)s?",
-    "order_cancel_all_confirm": "Cancel all orders between %(symbol1)s and %(symbol2)s from %(user)s?",
-    "order_cancelled": "Order %(order_id)s cancelled.",
-    "higher": "Higher",
-    "lower": "Lower",
-    "total_DEBT_TOKEN_SHORT_CURRENCY_SIGN": "Total %(DEBT_TOKEN_SHORT)s)",
-    "not_exists": " not exists",
-    "forbids": " is not tradable with ",
-    "asset_problem_go_home": "Choose another market pair",
-    "asset_is_overridable": " can revoke tokes from users balances!",
-    "asset_": "Token issuer ",
-    "market_fee_percent_": "Trade fee ",
-    "market_depth_": "market depth",
-    "market_pair": "Market Pair",
-    "orders_canceled": "Selected orders successfully cancelled."
-  },
   "user_profile": {
     "unknown_account": "Unknown Account",
     "user_hasnt_made_any_posts_yet": "Looks like %(name)s hasn't made any posts yet!",
     "user_hasnt_started_bloggin_yet": "Looks like %(name)s hasn't started blogging yet!",
     "user_hasnt_followed_anything_yet": "Looks like %(name)s might not be following anyone yet! If %(name)s recently added new users to follow, their personalized feed will populate once new content is available.",
     "user_hasnt_had_any_replies_yet": "%(name)s hasn't had any replies yet",
+    "user_hasnt_followed_anything": "Subscribe to new comments of a post, and you will immediately receive them on that page.",
     "if_you_recently_added_new_users_to_follow": "If you recently added new users to follow, your personalized feed will populate once new content is available.",
     "explore_APP_NAME": "Explore %(APP_NAME)s",
     "full_faq": "The full F.A.Q on %(APP_NAME)s",
@@ -563,10 +500,6 @@
       "other": "%(count)s posts"
     }
   },
-  "authorrewards_jsx": {
-    "estimated_author_rewards_last_week": "Estimated author rewards last week",
-    "author_rewards_history": "Author Rewards History"
-  },
   "plurals": {
     "reply_count": {
       "zero": "no replies",
@@ -586,19 +519,12 @@
     "transfers_are_temporary_disabled": "Transfers are temporary disabled",
     "history": "History"
   },
-  "curationrewards_jsx": {
-    "curation_rewards_last_24_hours": "Curation rewards last 24 hours",
-    "daily_average_curation_rewards": "Daily average curation rewards",
-    "estimated_curation_rewards_last_week": "Estimated curation rewards last week",
-    "curation_rewards_last_week": "Curation rewards last week",
-    "curation_rewards_history": "Curation Rewards History",
-    "replenish_golos_power": "Replenish your Golos Power",
-    "replenish_golos_power_AMOUNT": " with %(AMOUNT)s to receive your curaton rewards."
-  },
   "post_jsx": {
     "now_showing_comments_with_low_ratings": "Now showing comments with low ratings",
     "sort_order": "Sort Order",
-    "comments_were_hidden_due_to_low_ratings": "Comments were hidden due to low ratings"
+    "comments_were_hidden_due_to_low_ratings": "Comments were hidden due to low ratings",
+    "subscribe_comments": "Subscribe New",
+    "subscribe_comments_long": "Subscribe New Comments"
   },
   "do_not_bother": {
     "title": "Do not bother",
@@ -613,15 +539,6 @@
     "window_error": "You have reached limit now sending of operations requires cost. %(AMOUNT)s required on your TIP-balance.",
     "blocking_fatal_error": "User blocked you, now sending of transfers and donates is forbidden.",
     "bother_fatal_error": "User wants to not be bothered by accounts with low-reputation, now sending of transfers and donates is forbidden."
-  },
-  "key_file": {
-    "file_title": "Keys Of @",
-    "file_desc": "There are private keys, which are authorizing your account. Store this file in secure place.",
-    "password_desc": "Password (use it to log in on Golos): ",
-    "posting_desc": "Posting Key (also can be used as Golos password): ",
-    "active_desc": "Active Key: ",
-    "owner_desc": "Owner Key: ",
-    "memo_desc": "Memo Key: "
   },
   "voting_jsx": {
     "stop_seeing_content_from_this_user": "Stop seeing content from this user",
@@ -652,49 +569,17 @@
     "raw_html": "Raw HTML",
     "please_remove_following_html_elements": "Please remove the following HTML elements from your post: "
   },
-  "witnesses_jsx": {
-    "witness_info": "Witnesses - are users who are elected by the community vote and are engaged in supporting the nodes that ensure the operation of the blockchain and many other issues related to the development of the project.",
-    "witness_thread": "witness thread",
-    "top_witnesses": "Witness Voting",
-    "what_is_api": "API-nodes have higher demands on server resources, it is through them come the queries to the blockchain for sending/receiving information, they are important for the development of a variety of clients and services...",
-    "what_is_seed": "SEED-nodes are the basis for data exchange for the functioning of the blockchain, accepting and distributing blocks they unload the network bandwidth, reducing the response for geographically close connections...",
-    "you_can_vote_for_maximum_of_witnesses": "You can vote for a maximum of 30 witnesses",
-    "chat_delegates": "Delegates Chat",
-    "chain_properties": "Сhain properties",
-    "witness": "Witness",
-    "witness_0": "You haven't supported any delegates yet",
-    "witness_1": "witness with a force of",
-    "witness_2": "witnesses with a force of",
-    "witness_supported": "You supported",
-    "witness_addon": "for each of them",
-    "information": "Information",
-    "load_more": "Load more",
-    "approval": "Votes",
-    "missed_1": "Missed",
-    "missed_2": "blocks",
-    "last_block": "Last block",
-    "price_feed": "Price feed",
-    "props": "Props",
-    "reg_fee": "Registration fee",
-    "apr": "APR",
-    "block_size": "Block size",
-    "witness_deactive": "Withness suspended the signature of the blocks",
-    "no_price_feed": "Withness did not publish the price feed",
-    "version": "Version",
-    "if_you_want_to_vote_outside_of_top_enter_account_name": "If you would like to vote for a witness outside of the top 100, enter the account name below to cast a vote",
-    "set_witness_proxy": "You can also choose a proxy that will vote for witnesses for you. This will reset your current witness selection.",
-    "witness_set": "You have set a voting proxy. If you would like to reenable manual voting, please clear your proxy.",
-    "witness_proxy_current": "Your current proxy is",
-    "witness_proxy_set": "Set proxy",
-    "witness_proxy_clear": "Clear proxy",
-    "proxy_update_error": "Your proxy was not updated"
-  },
   "votesandcomments_jsx": {
     "no_responses_yet_click_to_respond": "No responses yet. Click to respond.",
     "response_count": {
       "zero": "no responses",
       "one": "1 responses",
       "other": "%(count)s responses"
+    },
+    "view_count": {
+      "zero": "0 views",
+      "one": "1 view",
+      "other": "%(count)s views"
     },
     "click_to_respond": "Click to respond",
     "vote_count": {
@@ -703,99 +588,6 @@
       "other": "%(count)s votes"
     },
     "account_frozen": "Deactivated due inactivity."
-  },
-  "assets_jsx": {
-    "assets_info": "User Issued Assets (tokens) that can be exchanged, traded on an internal exchange, and used in various blockchain services.",
-    "create_asset": "Creating asset",
-    "symbol": "Ticker",
-    "symbol_too_short": "At least 3 characters",
-    "subsymbol_too_short": "Too short sub-ticker",
-    "symbol_exists": "Asset already exists",
-    "top_symbol_not_your": "Top level asset is not your",
-    "top_symbol_not_exists": "Top level asset not exists",
-    "max_supply": "Max supply",
-    "precision": "Decimals",
-    "allow_fee": "Allow to set trading fee",
-    "allow_override_transfer": "Allow revoke assets by creator (TIP-balance will not work)",
-    "allow_danger_note": "Cannot enable which forbidden on asset created!",
-    "create_btn": "Create asset",
-    "description": "Asset description URL",
-    "image_with_text": "Ticker image URL (48x48)",
-    "my_assets": "My assets",
-    "all_assets": "All assets",
-    "load_more": "Show all",
-    "anti_load_more": "Collapse",
-    "creator": "Issuer",
-    "supply_count": "Tokens issued",
-    "issue_btn": "Issue",
-    "update_btn": "Edit",
-    "balance": "main balance",
-    "tip_balance": "TIP-balance",
-    "overridable_no_tip": "Revokable tokens not support TIP balance",
-    "update_asset": "Editing asset",
-    "fee_percent": "Trade fee (%%)",
-    "fee_not_allowed": "Fee not allowed when asset created",
-    "symbols_whitelist": "Tokens to which can trade (one token per line, if empty - all allowed)",
-    "transfer_asset_btn": "Transfer to another one",
-    "transfer_asset_btn2": "Transfer",
-    "transfer_asset": "Transferring asset",
-    "transfer_new_owner": "To who",
-    "cannot_transfer_to_oneself": "Cannot transfer to yourself.",
-    "trade_asset": "Go to trading on the internal exchange",
-    "mute_asset": "Do not show asset",
-    "mute_asset_confirm_TICKER": "Confirm muting of %(TICKER)s? You will be able to unmute this asset in Settings of your profile.",
-    "deposit": "Deposit",
-    "withdrawal": "Withdrawal"
-  },
-  "asset_edit_deposit_jsx": {
-    "title": "Deposit Rules",
-    "to_type_fixed": "Fixed gate address",
-    "to_type_transfer": "Requesting gate address",
-    "to_type_api": "Gate address from API",
-    "to_fixed": "Where to send tokens:",
-    "to_transfer": "Where to send 0.001 GOLOS in order to request address:",
-    "to_api": "Template of request URL, to insert current user account:",
-    "to_api_example": "Example: https://site.ru/get_address/<account>",
-    "to_api_confirm": "We hope your API supports requests like that: ",
-    "to_api_description": "Response should be a JSON object.\nIt should have format like in following example:",
-    "to_api_error_url": "URL should start with http:// or https://",
-    "to_api_error": "Template should include <account> - a place for  name.",
-    "memo_fixed": "Memo:",
-    "memo_transfer": "Memo (for 0.001 GOLOS transfer):",
-    "transfer_title_SYM": "Deposit Of %(SYM)s",
-    "transfer_desc": "To receive a deposit address, please send 0.001 GOLOS to ",
-    "transfer_desc_2": " with memo: ",
-    "waiting": "Transfer of 0.001 GOLOS was sent. Responding transfer with address will acquire in ~5 minutes...",
-    "timeouted": "Transfer with address is not acquired. Try again or contact the issuer of ",
-    "api_error": "Cannot get address. Try again later. If problem still occurs, contact the issuer of ",
-    "api_error_details": "and send the error details:"
-  },
-  "asset_edit_withdrawal_jsx": {
-    "title": "Withdrawal Rules",
-    "to": "Where to send tokens: ",
-    "min_amount": "Min amount: ",
-    "details": "Additional info: ",
-    "unavailable": "Service maintenance",
-    "way_name": "Service name: ",
-    "way_name_placeholder": "USDT (TRC-20)",
-    "way_memo": "Memo for transfer: ",
-    "way_memo_placeholder": "USDT-wallet-address",
-    "way_prefix": "Memo prefix: ",
-    "way_prefix_placeholder": "tron:",
-    "way_add": "Add another method",
-    "way_name_error": "Specify the name of the network/system, example: USDT (TRC-20), DOGE...",
-    "way_prefix_error": "Do not prepend memo itself with the prefix.",
-    "wrong_prefix_end": "Prefix should end with one of these characters: : - _",
-    "wrong_prefix_start": "Prefix should not start with space.",
-    "wrong_memo_start": "Memo should not start with space.",
-    "wrong_memo_end": "Memo should not end with space.",
-    "transfer_title_SYM": "Withdrawal of %(SYM)s",
-    "transfer_desc": "Withdrawal of tokens.",
-    "transfer_by": "by",
-    "transfer_way": "Where",
-    "transfer_no_memo": "To withdraw funds please fill the memo",
-    "no_way_error": "If you set at leas one of these fields, you should also set at least 1 withdrawal method or Details field.",
-    "no_to_error": "If you set withdraw via transfer with memo, please also set, to which account to transfer."
   },
   "invites_jsx": {
     "create_invite": "Create new invite check",
@@ -838,74 +630,9 @@
     "APP_NAME_password_backup_required": "%(APP_NAME)s Password Backup (required)",
     "after_printing_write_down_your_user_name": "After printing, write down your user name"
   },
-  "convert_assets_jsx": {
-    "description": [
-        "Here you can sell or buy tokens.",
-        "Instantly and just in two clicks."
-    ],
-    "sell": "sell",
-    "buy": "buy",
-    "sell_amount": "Sell amount:",
-    "buy_amount": "Buy amount:",
-    "amount_with_fee": "Amount with fee:",
-    "price": "Price per ",
-    "no_tradables": "Cannot exchange this asset",
-    "please_authorize": "Please authorize.",
-    "too_low_amount": "Amount is too low, so order will be added into market queue.",
-    "too_much_amount1": "Instantly we can exchange ",
-    "too_much_amount2": " only (you will receive ",
-    "too_much_amount2a": " only (you will pay ",
-    "too_much_amount3": "). The rest of the funds ",
-    "too_much_amount4": " will be added into market queue.",
-    "no_orders_DIRECTION": "No tokens in %(DIRECTION)s at current moment. Order will be placed into market queue.",
-    "too_big_price": "No orders for that price, so exchange can take up to few days.",
-    "order_can_be_canceled": "If exchange will not occur even in the future, you can cancel the order, and funds will be refunded instantly.",
-    "coinmarketcap_value": "Value: ",
-    "finished": "Exchange is successful!",
-    "finished_desc": "Funds are on ",
-    "finished_balance": "your balance",
-    "partly": "Exchange proceed partly...",
-    "partly_desc": "There is remain to receive ",
-    "partly_desc2": ". Maybe older will proceed in few days. You can ",
-    "partly_link": "cancel the order.",
-    "partly_desc3": "Received amount is on ",
-    "not": "Exchange not yet proceed...",
-    "not_desc": "Exchange takes more time than usually. Maybe older will proceed in few days. If no, or if you cannot wait, you can ",
-    "price_warning": "This price is above than recommended one. Continue?"
- },
-  "converttosteem_jsx": {
-    "title_FROM_TO": "Convert %(FROM)s to %(TO)s",
-    "confirm_title": "Confirm Convert",
-    "this_will_take_days": "This action will take place 3.5 days from now and can not be canceled. These tokens will immediately become unavailable",
-    "tokens_will_be_unavailable": "This action will take place 3.5 days from now and can not be canceled. These tokens will immediately become unavailable",
-    "this_will_take_days_hint": "This is a price feed conversion. The 3.5 day delay is necessary to prevent abuse from gaming the price feed average",
-    "fee": "Fee will be ",
-    "no_fee": "No fee.",
-    "too_low_amount": "Too low amount.",
-    "you_will_receive": "You will receive "
-  },
   "time_versions_jsx": {
     "rev": "rev.",
     "version_NUM": "(rev. %(NUM)s)"
-  },
-  "tips_js": {
-    "tip_balance_hint": "Balance that you use to reward users and that you use to earn rewards for yourself. Tokens from it can also be sent to increase the Golos Power.",
-    "tradeable_tokens_that_may_be_transferred_anywhere_at_anytime": "Tradable digital tokens that can be transferred anywhere at any time.",
-    "LIQUID_TOKEN_can_be_converted_to_VESTING_TOKEN_in_a_process_called_powering_up": "For example, converted to Golos Power or sent to the TIP balance for rewards.",
-    "tokens_worth_about_AMOUNT_of_LIQUID_TOKEN": "Tokens worth about %(TOKEN_WORTH)s in %(LIQUID_TICKER)s.",
-    "influence_tokens_which_give_you_more_control_over": "The more Golos Power you have, the higher the percentage goes to the TIP balance and the higher the impact on the project development by selecting delegates and supporting applications for funding from the workers foundation.",
-    "the_more_you_hold_the_more_you_influence_post_rewards": "The more you hold the more you influence post rewards and earn for accurate voting.",
-    "vesting_emission_per_day": "~ %(EMISSION_STAKE)s daily",
-    "vesting_emission_per_day_title": "Amount that, depending on the Golos Power, is transferred daily to the TIP balance\n(your share of the blockchain token issue per day)",
-    "the_estimated_value_is_based_on_an_average_value_of_steem_in_US_dollars": "The estimated cost is calculated on an 7-day average cost of %(LIQUID_TOKEN)s.",
-    "VESTING_TOKEN_is_non_transferrable_and_requires_convert_back_to_LIQUID_TOKEN": "%(VESTING_TOKEN2)s is non-transferrable and requires 1 month (4 payments) to convert back to %(LIQUID_TOKEN)s.",
-    "converted_VESTING_TOKEN_can_be_sent_to_yourself_but_can_not_transfer_again": "Converted %(VESTING_TOKEN)s can be sent to yourself or someone else but can not transfer again without converting back to %(LIQUID_TOKEN)s.",
-    "profile": "Profile",
-    "send_to_account": "Send to account",
-    "confirm_email": "Confirm Email",
-    "confirm_phone": "Please verify your phone number",
-    "authenticate_for_this_transaction": "Authenticate for this transaction",
-    "login_to_your_APP_NAME_account": "Login to your %(APP_NAME)s Account"
   },
   "promote_post_jsx": {
     "promote_post": "Promote Post",
@@ -933,7 +660,10 @@
     "reveal_comment": "Reveal comment",
     "show_1_more_reply": "Show 1 more reply",
     "show_N_more_replies": "Show %(N)s more replies",
-    "show_N_more_replies_2": "Show %(N)s more replies"
+    "show_N_more_replies_2": "Show %(N)s more replies",
+    "1_comment": "1 reply",
+    "N_comments": "%(N)s replies",
+    "N_comments_2": "%(N)s replies"
   },
   "poststub": {
     "onlyblog": "This post is only for author's followers.",
@@ -1066,18 +796,6 @@
     "add_account": "Add Account",
     "logout_all": "Log out all accounts"
   },
-  "mobilevalidation_js": {
-    "not_be_empty": "not be empty",
-    "be_longer": "be longer",
-    "have_only_digits": "have only digits",
-    "you_can_change_your_number": "You can select another one phone number.",
-    "select_another_number": "Select another phone",
-    "waiting_from_you": "Waiting SMS message with confirmation code %(code)s from your number to our verification number %(phone)s.",
-    "waiting_from_you_line_1": "Please, send SMS with text %(code)s on %(phone)s",
-    "waiting_from_you_line_2": "Golos.id interested in registration real people, not robots. We ask you to send SMS.",
-    "attempts_10": "Confirmation was attempted a moment ago. You can try again only in 10 seconds",
-    "attempts_300": "Confirmation was attempted a moment ago. You can try again only in 5 minutes"
-  },
   "chainvalidation_js": {
     "account_name_should": "Account name should ",
     "not_be_empty": "not be empty.",
@@ -1171,34 +889,6 @@
     "verified_exchange_no_memo": "You must include a memo for your exchange transfer, according to exchanger's rules.",
     "verified_exchange_liquid_only": "You may exchange tokens from GOLOS balance only."
   },
-  "userwallet_jsx": {
-    "conversion_complete_tip": "Will complete on",
-    "in_conversion": "%(amount)s in conversion",
-    "transfer_to_savings": "Transfer to Savings",
-    "power_up": "Power Up",
-    "transfer_to_tip": "Transfer to TIP balance",
-    "donate": "Donate",
-    "power_down": "Power Down",
-    "market": "Market",
-    "convert_to_DEBT_TOKEN": "Convert to %(DEBT_TOKEN)s",
-    "convert_to_LIQUID_TOKEN": "Convert to %(LIQUID_TOKEN)s",
-    "withdraw_LIQUID_TOKEN": "Withdraw GOLOS",
-    "withdraw_DEBT_TOKENS": "Withdraw GBG",
-    "tokens_worth_about_1_of_LIQUID_TICKER": "Tradable digital tokens that, the price of which tends to the value of ~1 mg of gold in GOLOS tokens.",
-    "balances": "BALANCES",
-    "buy_LIQUID_TOKEN_or_VESTING_TOKEN": "Buy %(LIQUID_TOKEN)s or %(VESTING_TOKEN)s",
-    "savings": "SAVINGS",
-    "estimated_account_value": "Estimated Account Value",
-    "next_power_down_to_happen": "Power down in the size of",
-    "next_power_down_is_scheduled": "scheduled",
-    "transfers_are_temporary_disabled": "Transfers are temporary disabled.",
-    "cancel_power_down": "Cancel Power Down",
-    "top_dpos": "User rating on",
-    "account_idleness": "Your account has not had any actions using the active key for a long time",
-    "worker_foundation": "Workers foundation",
-    "history_viewing": "Operation history",
-    "history": "HISTORY"
-  },
   "user_saga_js": {
     "image_upload": {
       "uploading": "Uploading",
@@ -1225,22 +915,6 @@
     "account_does_not_have_sufficient_power_for_withdraw": "Account does not have sufficient Golos Power for withdraw",
     "missing_active_authority": "Missing Active Authority",
     "voting_weight_is_too_small": "Voting weight is too small, please accumulate more voting power or steem power"
-  },
-  "delegatevestingshares_jsx":{
-    "form_title": "Delegate %(VESTING_TOKEN2)s",
-    "delegate": "Delegate",
-    "edit": "Edit",
-    "emission_interest": "With right to receive %% emission for these tokens",
-    "revoke": "Revoke",
-    "interest": "%% Of Curate Rewards",
-    "interest_hint": "To account will be able to receive more curation rewards. This is a %% of your interest.",
-    "interest_short": "%% Of Interest",
-    "interest_short_hint_delegator": "That part of delegatee's curation rewards (on delegated GP) will be returned to you",
-    "interest_short_hint_delegatee": "That part of yours curation rewards (on delegated GP) will be returned to delegator",
-    "interest_short_hint_neutral": "That part of delegatee's curation rewards (on delegated GP) will be returned to delegator",
-    "too_large_percent": "Too large percent",
-    "vdo_exists": "You already have delegated some GP to this account. You could edit its amount, or revoke it at all.",
-    "no_interest_emission": "none (emission)"
   },
   "post_editor": {
     "new_editor": "Markdown",
@@ -1305,21 +979,6 @@
     "alert": "Alert",
     "confirm": "Confirmation",
     "prompt": "Enter the data"
-  },
-  "powerdown_jsx": {
-    "power_down": "Power Down",
-    "amount": "Amount",
-    "already_power_down": "You are already powering down %(AMOUNT)s %(LIQUID_TICKER)s (%(WITHDRAWN)s %(LIQUID_TICKER)s paid out so far). Note that if you change the power down amount the payout schedule will reset.",
-    "delegating": "You are delegating %(AMOUNT)s %(LIQUID_TICKER)s. That amount is locked up and not available to power down until the delegation is removed and a full reward period has passed.",
-    "per_week": "That's ~%(AMOUNT)s %(LIQUID_TICKER)s per week.",
-    "warning": "Leaving less than %(AMOUNT)s %(VESTING_TOKEN)s in your account is not recommended and can leave your account in a unusable state.",
-    "error": "Unable to power down (ERROR: %(MESSAGE)s)"
-  },
-  "delegate_vesting_shares_info_jsx": {
-    "confirm_title": "Cancel %(VESTING_TOKENS)s delegation",
-    "confirm_cancel_delegation": "Are you sure you want to cancel %(VESTING_TOKEN2)s delegation (you will receive tokens back during 7 days)?",
-    "from": "From",
-    "to": "To"
   },
   "faq_jsq": {
     "page_title": "Frequently Asked Questions",

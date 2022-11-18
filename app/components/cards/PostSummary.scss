@@ -11,11 +11,8 @@ ul.PostsList__summaries {
   clear: left;
   @include clearfix;
 
-  .PostSummary__nsfw-warning {
-    border: 1px solid $medium-gray;
-    border-radius: 0.5rem;
-    padding: 0.75rem 2rem;
-    min-height: 80px;
+  .nsfw-text {
+    filter: blur(3px);
     .PostSummary__footer {
       margin-top: 0.2rem;
       .Reblog__button {display: none;}
@@ -24,6 +21,10 @@ ul.PostsList__summaries {
     .PostSummary__time_author_category_small {
       margin-bottom: 0.2rem;
     }
+  }
+
+  .nsfw-img {
+    filter: blur(5px);
   }
 
   .nsfw_post {
@@ -58,6 +59,14 @@ ul.PostsList__summaries {
      margin: 0 0 0 0.5rem;
      padding: 0 0.2rem;
   }
+}
+
+.PostSummary__replies {
+  font-weight: bold;
+  color: red;
+  padding-left: 10px;
+  font-size: 80%;
+  text-decoration: none;
 }
 
 .PostSummary__image {
@@ -168,6 +177,25 @@ ul.PostsList__summaries {
         width: 0.85rem;
         height: 0.85rem;
         vertical-align: 5%;
+      }
+    }
+  }
+ .unsubscribe {
+    > a {
+      color: $medium-gray;
+    }
+    > a:visited {
+      color: $medium-gray;
+    }
+    padding-left: 0.5rem;
+    font-size: 90%;
+    span {
+      margin-left: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    &:hover {
+      path {
+        fill: red;
       }
     }
   }

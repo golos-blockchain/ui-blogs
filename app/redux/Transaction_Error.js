@@ -50,8 +50,8 @@ export default function transactionErrorReducer(
                     )
                 ) {
                     errorKey =
-                        'Account requires 10x the account creation fee in Golos Power ' +
-                        '(approximately 300 SP) before it can power down.';
+                        'To power down requires 10x the account creation fee in Golos Power ' +
+                        '(~ 1000 GP) before it can power down.';
                 } else if (
                     errorStr.includes(
                         'Account does not have sufficient Golos Power for withdraw.'

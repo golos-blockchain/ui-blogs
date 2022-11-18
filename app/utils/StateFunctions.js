@@ -1,9 +1,17 @@
 import assert from 'assert';
-import constants from 'app/redux/constants';
-import {parsePayoutAmount, repLog10} from 'app/utils/ParsersAndFormatters';
-import {Long} from 'bytebuffer';
-import {VEST_TICKER, LIQUID_TICKER} from 'app/client_config'
+import ByteBuffer, { Long } from 'bytebuffer';
 import {Map, Seq, fromJS} from 'immutable';
+import { Signature, hash } from 'golos-lib-js/lib/auth/ecc/index'
+
+import { VEST_TICKER, LIQUID_TICKER } from 'app/client_config'
+import constants from 'app/redux/constants'
+import { parsePayoutAmount, repLog10 } from 'app/utils/ParsersAndFormatters'
+
+export const hashPermlink = (permlink) => {
+    const h = hash.sha256(permlink, 'binary')
+    const buf = ByteBuffer.fromBinary(h, ByteBuffer.LITTLE_ENDIAN)
+    return buf.readUint64().toString()
+}
 
 // '1000000' -> '1,000,000'
 export const numberWithCommas = (x) => x.replace(/\B(?=(\d{3})+(?!\d))/g, ",")

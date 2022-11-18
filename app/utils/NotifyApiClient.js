@@ -1,11 +1,13 @@
-const request_base = {
+import { fetchEx } from 'golos-lib-js/lib/utils'
+
+const requestBase = () => ({
     method: 'post',
     credentials: 'include',
     headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
     }
-};
+})
 
 const notifyAvailable = () => {
     return process.env.BROWSER && typeof($STM_Config) !== 'undefined'
@@ -38,11 +40,11 @@ function saveSession(response) {
 
 export function notifyApiLogin(account, authSession) {
     if (!notifyAvailable()) return;
-    let request = Object.assign({}, request_base, {
+    let request = Object.assign({}, requestBase(), {
         body: JSON.stringify({account, authSession}),
     });
     setSession(request);
-    return fetch(notifyUrl(`/login_account`), request).then(r => {
+    return fetchEx(notifyUrl(`/login_account`), request).then(r => {
         saveSession(r);
         return r.json();
     });
@@ -50,20 +52,20 @@ export function notifyApiLogin(account, authSession) {
 
 export function notifyApiLogout() {
     if (!notifyAvailable()) return;
-    let request = Object.assign({}, request_base, {
+    let request = Object.assign({}, requestBase(), {
         method: 'get',
     });
     setSession(request);
-    fetch(notifyUrl(`/logout_account`), request).then(r => {
+    fetchEx(notifyUrl(`/logout_account`), request).then(r => {
         saveSession(r);
     });
 }
 
 export function getNotifications(account) {
     if (!notifyAvailable()) return Promise.resolve(null);
-    let request = Object.assign({}, request_base, {method: 'get'});
+    let request = Object.assign({}, requestBase(), {method: 'get'});
     setSession(request);
-    return fetch(notifyUrl(`/counters/@${account}`), request).then(r => {
+    return fetchEx(notifyUrl(`/counters/@${account}`), request).then(r => {
         saveSession(r);
         return r.json();
     }).then(res => {
@@ -73,10 +75,10 @@ export function getNotifications(account) {
 
 export function markNotificationRead(account, fields) {
     if (!notifyAvailable()) return Promise.resolve(null);
-    let request = Object.assign({}, request_base, {method: 'put', mode: 'cors'});
+    let request = Object.assign({}, requestBase(), {method: 'put', mode: 'cors'});
     setSession(request);
     const fields_str = fields.join(',');
-    return fetch(notifyUrl(`/counters/@${account}/${fields_str}`), request).then(r => {
+    return fetchEx(notifyUrl(`/counters/@${account}/${fields_str}`), request).then(r => {
         saveSession(r);
         return r.json();
     }).then(res => {
@@ -88,9 +90,9 @@ export async function notificationSubscribe(account, scopes = 'message', sidKey 
     if (!notifyAvailable()) return;
     if (window[sidKey]) return;
     try {
-        let request = Object.assign({}, request_base, {method: 'get'});
+        let request = Object.assign({}, requestBase(), {method: 'get'});
         setSession(request);
-        let response = await fetch(notifyUrl(`/subscribe/@${account}/${scopes}`), request);
+        let response = await fetchEx(notifyUrl(`/subscribe/@${account}/${scopes}`), request);
         const result = await response.json();
         if (response.ok) {
             saveSession(response);
@@ -113,9 +115,9 @@ export async function notificationUnsubscribe(account, sidKey = '__subscriber_id
     let url = notifyUrl(`/unsubscribe/@${account}/${window[sidKey]}`);
     let response;
     try {
-        let request = Object.assign({}, request_base, {method: 'get'});
+        let request = Object.assign({}, requestBase(), {method: 'get'});
         setSession(request);
-        response = await fetch(url, request);
+        response = await fetchEx(url, request);
         if (response.ok) {
             saveSession(response);
         }
@@ -139,9 +141,12 @@ export async function notificationTake(account, removeTaskIds, forEach, sidKey =
         url += '/' + removeTaskIds;
     let response;
     try {
-        let request = Object.assign({}, request_base, {method: 'get'});
+        let request = Object.assign({}, requestBase(), {method: 'get'});
         setSession(request);
-        response = await fetch(url, request);
+        response = await fetchEx(url, {
+            ...request,
+            timeout: null
+        })
         if (response.ok) {
             saveSession(response);
         }
@@ -167,6 +172,167 @@ export async function notificationTake(account, removeTaskIds, forEach, sidKey =
     } catch (ex) {
         console.error(ex);
         throw ex;
+    }
+}
+
+function getSubId(author, permlink) {
+    return author + '|' + permlink
+}
+
+export async function subscribePost(account, author, permlink) {
+    const entity_id = getSubId(author, permlink)
+
+    const request = Object.assign({}, requestBase(), {
+        body: JSON.stringify({account, entity_id}),
+    })
+    try {
+        setSession(request)
+        const response = await fetchEx(notifyUrl(`/subs/subscribe`), request)
+        const result = await response.json()
+        if (result.status === 'ok') {
+        } else {
+            throw new Error(response.status + ': ' + result.error)
+        }
+    } catch (ex) {
+        console.error(ex)
+        throw ex
+    }
+}
+
+export async function unsubscribePost(account, author, permlink) {
+    const entity_id = getSubId(author, permlink)
+
+    const request = Object.assign({}, requestBase(), {
+        method: 'DELETE'
+    })
+    try {
+        setSession(request)
+        const response = await fetchEx(notifyUrl(`/subs/@${account}/${entity_id}/unsubscribe`), request)
+        const result = await response.json()
+        if (result.status === 'ok') {
+            console.log('unsi', result)
+        } else {
+            throw new Error(response.status + ': ' + result.error)
+        }
+    } catch (ex) {
+        console.error(ex)
+        throw ex
+    }
+}
+
+export async function markCommentsRead(account, author, permlink) {
+    const entity_id = getSubId(author, permlink)
+
+    const request = Object.assign({}, requestBase(), {
+        method: 'PATCH'
+    })
+    try {
+        setSession(request)
+        const response = await fetchEx(notifyUrl(`/subs/@${account}/${entity_id}`), request)
+        const result = await response.json()
+        if (result.status === 'ok') {
+            console.log('mark_read', result)
+        } else {
+            throw new Error(response.status + ': ' + result.error)
+        }
+    } catch (ex) {
+        console.error(ex)
+        throw ex
+    }
+}
+
+export async function getSubs(account, from, limit) {
+    const params = new URLSearchParams()
+    if (from) params.set('from', from)
+    if (limit) params.set('limit', limit)
+    try {
+        let request = Object.assign({}, requestBase(), {method: 'get'});
+        setSession(request)
+        const url = notifyUrl(`/subs/@${account}`) + '?' + params.toString()
+        const response = await fetchEx(url, request)
+        const result = await response.json()
+        if (result.status === 'ok') {
+            return result
+        } else {
+            throw new Error(response.status + ': ' + result.error)
+        }
+    } catch (ex) {
+        console.error(ex)
+        throw ex
+    }
+}
+
+export async function getEvents(account, author, permlink) {
+    const entity_id = getSubId(author, permlink)
+    try {
+        let request = Object.assign({}, requestBase(), {method: 'get'});
+        setSession(request)
+        const url = notifyUrl(`/subs/@${account}/${entity_id}/events`)
+        const response = await fetchEx(url, {
+            ...request,
+            timeout: 1500
+        })
+        const result = await response.json()
+        if (result.status === 'ok') {
+            return result.result || []
+        } else {
+            throw new Error(response.status + ': ' + result.error)
+        }
+    } catch (ex) {
+        console.error(ex)
+        throw ex
+    }
+}
+
+export function notifyPageView(author, permlink) {
+    if (!notifyAvailable()) return
+    let request = Object.assign({}, requestBase(), {
+        body: JSON.stringify({author, permlink}),
+    })
+    setSession(request)
+    return fetchEx(notifyUrl(`/stats/view`), request).then(r => {
+        saveSession(r)
+        return r.json()
+    })
+}
+
+export function notifyGetViews(commentIds) {
+    if (!notifyAvailable()) return
+    let request = Object.assign({}, requestBase(), {
+        body: JSON.stringify({ items: commentIds }),
+        timeout: 1500
+    })
+    setSession(request)
+    return fetchEx(notifyUrl(`/stats/views`), request).then(r => {
+        saveSession(r)
+        return r.json()
+    })
+}
+
+export function isHighlight() {
+    if (!process.env.BROWSER) {
+        return false
+    }
+    let pa
+    try {
+        pa = new URLSearchParams(window.location.search)
+    } catch (err) {
+        console.error(err)
+        return false
+    }
+    return pa.has('highlight')
+}
+
+export function addHighlight(url) {
+    if (!process.env.BROWSER) {
+        return url
+    }
+    const [ main, hash ] = url.split('#')
+    const [ body, search ] = main.split('?')
+    if (!search) {
+        return body + '?highlight=1' + (hash ? '#' + hash : '')
+    } else {
+        return body + '?' + search + '&highlight=1' + (hash ? '#' + hash : '')
     }
 }
 

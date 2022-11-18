@@ -267,17 +267,6 @@ class Settings extends React.Component {
         })
     }
 
-    unmuteAsset = (e) => {
-        const sym = e.currentTarget.dataset.sym;
-        let mutedUIA = [];
-        mutedUIA = localStorage.getItem('mutedUIA');
-        if (mutedUIA) try { mutedUIA = JSON.parse(mutedUIA) } catch (ex) {}
-        if (!mutedUIA) mutedUIA = [];
-        mutedUIA = mutedUIA.filter(o => o !== sym)
-        localStorage.setItem('mutedUIA', JSON.stringify(mutedUIA));
-        window.location.reload()
-    }
-
     onNotifyPresetChange = e => {
         let notifyPresets = {...this.state.notifyPresets};
         notifyPresets[e.target.dataset.type] = e.target.checked;
@@ -308,16 +297,6 @@ class Settings extends React.Component {
         const following = follow && follow.getIn(['getFollowingAsync', account.name]);
         const ignores = isOwnAccount && block && block.getIn(['blocking', account.name, 'result'])
         const mutedInNew = isOwnAccount && props.mutedInNew;
-        let mutedUIA = [];
-        if (process.env.BROWSER) {
-          mutedUIA = localStorage.getItem('mutedUIA');
-          if (mutedUIA) try { mutedUIA = JSON.parse(mutedUIA) } catch (ex) {}
-          if (!mutedUIA) mutedUIA = [];
-        }
-        let mutedUIAlist = [];
-        for (let sym of mutedUIA) {
-          mutedUIAlist.push(<p key={sym}>{sym}&nbsp;<a data-sym={sym} onClick={this.unmuteAsset}>X</a></p>)
-        }
         const {pImageUploading, cImageUploading} = this.state;
 
         const languageSelectBox = <select defaultValue={process.env.BROWSER ? cookie.load(LOCALE_COOKIE_KEY) : DEFAULT_LANGUAGE} onChange={this.onLanguageChange}>
@@ -531,15 +510,6 @@ class Settings extends React.Component {
                             value={tt('settings_jsx.update')}
                             disabled={!this.state.notifyPresetsTouched}
                         />
-                    </div>
-                </div>}
-
-            {mutedUIA && mutedUIA.length > 0 &&
-                <div className="row">
-                    <div className="small-12 columns">
-                        <br /><br />
-                        <h3>{tt('settings_jsx.muted_uia')}</h3>
-                        {mutedUIAlist}
                     </div>
                 </div>}
 

@@ -144,8 +144,6 @@ class Header extends React.Component {
             if(route.params[1] === "posts" || route.params[1] === "comments"){
                 page_title = tt('header_jsx.comments_by') + " " + user_title;
             }
-        } else if (route.page === 'ConvertAssetsLoader') {
-            page_title = tt('g.convert_assets')
         } else {
             page_name = ''; //page_title = route.page.replace( /([a-z])([A-Z])/g, '$1 $2' ).toLowerCase();
         }

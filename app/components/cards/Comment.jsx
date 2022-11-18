@@ -7,6 +7,7 @@ import cn from 'classnames';
 import tt from 'counterpart';
 import { FormattedPlural } from 'react-intl';
 
+import { isBlocked } from 'app/utils/blacklist'
 import { sortComments } from 'app/utils/comments';
 import user from 'app/redux/User';
 import transaction from 'app/redux/Transaction';
@@ -78,6 +79,11 @@ class CommentImpl extends PureComponent {
 
         if (content) {
             this._checkHide(content)
+            const sub_event = content.get('sub_event')
+            if (sub_event && !this.state.highlight && !this.wasHighlighted) {
+                this.setState({ highlight: true })
+                this.wasHighlighted = true
+            }
         }
     }
 
@@ -153,7 +159,7 @@ class CommentImpl extends PureComponent {
         let body = null;
         let controls = null;
 
-        if ($STM_Config.blocked_users.includes(comment.author)) {
+        if (isBlocked(comment.author, $STM_Config.blocked_users)) {
             return null;
         } else if (!this.state.collapsed && !hideBody) {
             body = (
@@ -168,8 +174,10 @@ class CommentImpl extends PureComponent {
             controls = this._renderControls(post, comment);
         }
 
+        const isHighlight = process.env.BROWSER && window.location.search.includes('&highlight=1')
+
         if (!this.state.collapsed && comment.children > 0) {
-            if ((depth > 0 && depth % 8 === 0) && this.state.depthCollapsed) {
+            if ((depth > 0 && depth % 8 === 0) && this.state.depthCollapsed && !isHighlight) {
                 const comment_permlink = `/${comment.category}/@${
                     comment.author
                 }/${comment.permlink}`;
@@ -219,6 +227,8 @@ class CommentImpl extends PureComponent {
                 />
             );
         }
+
+        const { sub_event } = comment
 
         return (
             <div
@@ -331,7 +341,7 @@ class CommentImpl extends PureComponent {
             );
 
         return (
-            <div>
+            <div onClick={this.onClick}>
                 <Voting post={post} />
                 {controls}
             </div>
@@ -354,6 +364,12 @@ class CommentImpl extends PureComponent {
 
             return dots;
         }
+    }
+
+    onClick = () => {
+        this.setState({
+            highlight: false
+        })
     }
 
     onShowReply = () => {

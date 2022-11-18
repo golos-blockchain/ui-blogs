@@ -37,7 +37,6 @@
 @import "./elements/VerticalMenu";
 @import "./elements/VotesAndComments";
 @import "./elements/Voting";
-@import "./elements/WitnessSettings";
 @import "./elements/common/YoutubePlayer/YoutubePlayer";
 @import "./elements/common/TelegramPlayer/TelegramPlayer";
 @import "./elements/common/Button/index";
@@ -48,6 +47,7 @@
 @import "./elements/common/DialogManager/index";
 @import "./elements/common/TooltipManager/index";
 @import "./elements/market/CMCWidget";
+@import "./elements/donate/Donate";
 @import "./elements/postEditor/MarkdownEditor/MarkdownEditor";
 @import "./elements/postEditor/MarkdownEditorToolbar/index";
 @import "./elements/postEditor/EditorSwitcher/EditorSwitcher";

@@ -346,6 +346,29 @@ export default class UserProfile extends React.Component {
               tab_content = (<center><LoadingIndicator type='circle' /></center>);
           }
         }
+        else if( (section === 'discussions')) {
+            if (account.discussions) {
+                let posts = accountImm.get('discussions');
+                if (posts && !posts.size) {
+                    tab_content = <Callout>{tt('user_profile.user_hasnt_followed_anything', {name: accountname}) + '.'}</Callout>
+                } else {
+                    tab_content = (
+                        <div>
+                            <PostsList
+                                posts={posts}
+                                loading={fetching}
+                                category='discussions'
+                                loadMore={this.loadMore}
+                                showSpam={false}
+                            />
+                            {isMyAccount && <div><MarkNotificationRead fields='subscriptions' account={account.name} /></div>}
+                        </div>
+                    )
+                }
+          } else {
+              tab_content = (<center><LoadingIndicator type='circle' /></center>);
+          }
+        }
         else if( (section === 'reputation')) {
             tab_content = (
                 <div>
@@ -395,44 +418,43 @@ export default class UserProfile extends React.Component {
         const top_menu = <div className='row UserProfile__top-menu'>
             <div className='columns'>
                 <div className='UserProfile__menu menu' style={{flexWrap: 'wrap'}}>
-                    <Link className='UserProfile__menu-item' to={`/@${accountname}`} activeClassName='active'>{tt('g.blog')}</Link>
-                    <Link className='UserProfile__menu-item' to={`/@${accountname}/comments`} activeClassName='active'>{tt('g.comments')}</Link>
+                    <Link className='UserProfile__menu-item' to={`/@${accountname}`} activeClassName='active'>
+                    	{tt('g.blog')}
+                    </Link>
+                    <Link className='UserProfile__menu-item' to={`/@${accountname}/comments`} activeClassName='active'>
+                    	{tt('g.comments')}
+                    </Link>
                     <Link className='UserProfile__menu-item' to={`/@${accountname}/recent-replies`} activeClassName='active'>
                         {tt('g.replies')} {isMyAccount && <NotifiCounter fields='comment_reply' />}
                     </Link>
-                    {msgsHost() ? <a target='_blank' rel='noopener noreferrer' className='UserProfile__menu-item' href={msgsLink()}>
-                        {tt('g.messages')} {isMyAccount && <NotifiCounter fields='message' />}
-                    </a> : null}
-                    <LinkWithDropdown
-                        closeOnClickOutside
-                        dropdownPosition='bottom'
-                        dropdownAlignment={this.state.linksAlign}
-                        dropdownContent={
-                            <VerticalMenu items={rewardsMenu} />
-                        }
-                    >
-                        <a
-                            className={`${rewardsClass} UserProfile__menu-item`}
-                            ref={this._onLinkRef}
-                        >
-                            {tt('g.rewards')}
-                            {isMyAccount && <NotifiCounter fields='donate,donate_msgs' />}
-                            <Icon name='dropdown-arrow' />
-                        </a>
-                    </LinkWithDropdown>
+                    {isMyAccount ? <Link className='UserProfile__menu-item' to={`/@${accountname}/discussions`} activeClassName='active'>
+                        {tt('g.discussions')} <NotifiCounter fields='subscriptions' />
+                    </Link> : null}
+                    <Link className='UserProfile__menu-item' to={`/@${accountname}/mentions`} activeClassName='active'>
+                        {tt('g.mentions')} {isMyAccount && <NotifiCounter fields='mention' />}
+                    </Link>
                     <div className='UserProfile__filler' />
                     <div>
                         <a href={walletUrl(`/@${accountname}/transfers`)} target={walletTarget()} className={`${walletClass} UserProfile__menu-item`}>
-                            {tt('g.wallet')} {isMyAccount && <NotifiCounter fields='send,receive' />}
+                            {tt('g.wallet')} {isMyAccount && <NotifiCounter fields='send,receive,fill_order' />}
                         </a>
-                        {isMyAccount ?
-                            <LinkEx className='UserProfile__menu-item' to={walletUrl(`/@${accountname}/filled-orders`)} target={walletTarget()} activeClassName='active'>{tt('navigation.market2')} <NotifiCounter fields="fill_order" /></LinkEx>
-                            : null
-                        }
-                        {isMyAccount ?
-                            <Link className='UserProfile__menu-item' to={`/@${accountname}/settings`} activeClassName='active'>{tt('g.settings')}</Link>
-                            : null
-                        }
+                        <LinkWithDropdown
+                            closeOnClickOutside
+                            dropdownPosition='bottom'
+                            dropdownAlignment={this.state.linksAlign}
+                            dropdownContent={<VerticalMenu items={rewardsMenu} />}
+                        	>
+                            <a className={`${rewardsClass} UserProfile__menu-item`} ref={this._onLinkRef}>
+                                {tt('g.rewards')} {isMyAccount && <NotifiCounter fields='donate,donate_msgs' />}
+                                <Icon name='dropdown-center' />
+                            </a>
+	                    </LinkWithDropdown>
+                        {isMyAccount && msgsHost() ? <a target='_blank' rel='noopener noreferrer' className='UserProfile__menu-item' href={msgsLink()} title={tt('g.messages')}>
+                            <Icon name='new/envelope' /> <NotifiCounter fields='message' />
+                        </a> : null}
+                        {isMyAccount ? <Link className='UserProfile__menu-item' to={`/@${accountname}/settings`} activeClassName='active' title={tt('g.settings')}>
+                            <Icon name='new/setting' />
+                        </Link> : null}
                     </div>
                 </div>
             </div>
