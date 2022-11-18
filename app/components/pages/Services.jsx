@@ -18,7 +18,7 @@ class Services extends React.Component {
                             <div className='column large-3 medium-3 small-6'>
                                 <a target="_blank" href="https://wiki.golos.id"><Icon name='blockchain' size='10x'/>
                                 <h5>Golos Blogs</h5></a>
-                                <p className='landing-services-block-icon-text'>Основные веб-клиенты блогов <a target="_blank" href="https://golos.id">golos.id</a> и <a target="_blank" href="https://golos.in">golos.in</a>, альтернативные <a target="_blank" href="https://wiki.golos.id">клиенты</a>, а также Desktop (для <a target="_blank" href="https://files.golos.app/blogs-win/latest.exe">Windows</a> и <a target="_blank" href="https://files.golos.app/blogs-linux/latest.deb">Linux</a>)</p>
+                                <p className='landing-services-block-icon-text'>Основные веб-клиенты блогов <a target="_blank" href="https://golos.id">golos.id</a> и <a target="_blank" href="https://golos.in">golos.in</a>, альтернативные <a target="_blank" href="https://wiki.golos.id">клиенты</a>, а также Desktop (для <a target="_blank" href="https://files.golos.app/desktop-windows/latest.exe">Windows</a> и <a target="_blank" href="https://files.golos.app/desktop-linux/latest.deb">Linux</a>)</p>
                             </div>
                             <div className='column large-3 medium-3 small-6'>
                                 <a target="_blank" href="https://dex.golos.app"><Icon name='money' size='10x'/>
