@@ -760,10 +760,6 @@
     "rev": "ред.",
     "version_NUM": "(версия %(NUM)s)"
   },
-  "time_versions_jsx": {
-    "rev": "ред.",
-    "version_NUM": "(версия %(NUM)s)"
-  },
   "transfer_jsx": {
     "amount_is_in_form": "Сумма должна быть в формате 99999.999",
     "insufficient_funds": "Недостаточно средств",

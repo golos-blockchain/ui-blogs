@@ -418,17 +418,21 @@ export default class UserProfile extends React.Component {
         const top_menu = <div className='row UserProfile__top-menu'>
             <div className='columns'>
                 <div className='UserProfile__menu menu' style={{flexWrap: 'wrap'}}>
-                    <Link className='UserProfile__menu-item' to={`/@${accountname}`} activeClassName='active'>{tt('g.blog')}</Link>
-                    <Link className='UserProfile__menu-item' to={`/@${accountname}/comments`} activeClassName='active'>{tt('g.comments')}</Link>
+                    <Link className='UserProfile__menu-item' to={`/@${accountname}`} activeClassName='active'>
+                    	{tt('g.blog')}
+                    </Link>
+                    <Link className='UserProfile__menu-item' to={`/@${accountname}/comments`} activeClassName='active'>
+                    	{tt('g.comments')}
+                    </Link>
                     <Link className='UserProfile__menu-item' to={`/@${accountname}/recent-replies`} activeClassName='active'>
                         {tt('g.replies')} {isMyAccount && <NotifiCounter fields='comment_reply' />}
                     </Link>
                     {isMyAccount ? <Link className='UserProfile__menu-item' to={`/@${accountname}/discussions`} activeClassName='active'>
                         {tt('g.discussions')} <NotifiCounter fields='subscriptions' />
                     </Link> : null}
-                    {isMyAccount ? <Link className='UserProfile__menu-item' to={`/@${accountname}/mentions`} activeClassName='active'>
-                        {tt('g.mentions')} <NotifiCounter fields='mention' />
-                    </Link> : null}
+                    <Link className='UserProfile__menu-item' to={`/@${accountname}/mentions`} activeClassName='active'>
+                        {tt('g.mentions')} {isMyAccount && <NotifiCounter fields='mention' />}
+                    </Link>
                     <div className='UserProfile__filler' />
                     <div>
                         <a href={walletUrl(`/@${accountname}/transfers`)} target={walletTarget()} className={`${walletClass} UserProfile__menu-item`}>
@@ -438,25 +442,18 @@ export default class UserProfile extends React.Component {
                             closeOnClickOutside
                             dropdownPosition='bottom'
                             dropdownAlignment={this.state.linksAlign}
-                            dropdownContent={
-                                <VerticalMenu items={rewardsMenu} />
-                            }
-                        >
-                            <a
-                                className={`${rewardsClass} UserProfile__menu-item`}
-                                ref={this._onLinkRef}
-                            >
-                                {tt('g.rewards')}
-                                {isMyAccount && <NotifiCounter fields='donate,donate_msgs' />}
+                            dropdownContent={<VerticalMenu items={rewardsMenu} />}
+                        	>
+                            <a className={`${rewardsClass} UserProfile__menu-item`} ref={this._onLinkRef}>
+                                {tt('g.rewards')} {isMyAccount && <NotifiCounter fields='donate,donate_msgs' />}
                                 <Icon name='dropdown-center' />
                             </a>
-                        </LinkWithDropdown>
+	                    </LinkWithDropdown>
                         {isMyAccount && msgsHost() ? <a target='_blank' rel='noopener noreferrer' className='UserProfile__menu-item' href={msgsLink()} title={tt('g.messages')}>
                             <Icon name='new/envelope' /> <NotifiCounter fields='message' />
                         </a> : null}
-                        {isMyAccount ? 
-                            <Link className='UserProfile__menu-item' to={`/@${accountname}/settings`} activeClassName='active' title={tt('g.settings')}>
-                            <Icon name='new/setting' /> 
+                        {isMyAccount ? <Link className='UserProfile__menu-item' to={`/@${accountname}/settings`} activeClassName='active' title={tt('g.settings')}>
+                            <Icon name='new/setting' />
                         </Link> : null}
                     </div>
                 </div>
