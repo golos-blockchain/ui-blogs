@@ -48,17 +48,12 @@
 @import "./elements/common/DialogManager/index";
 @import "./elements/common/TooltipManager/index";
 @import "./elements/market/CMCWidget";
-@import "./elements/market/ConvertAssetsBtn";
-@import "./elements/market/MarketPair";
-@import "./elements/market/OrderForm";
-@import "./elements/market/TickerPriceStat";
 @import "./elements/postEditor/MarkdownEditor/MarkdownEditor";
 @import "./elements/postEditor/MarkdownEditorToolbar/index";
 @import "./elements/postEditor/EditorSwitcher/EditorSwitcher";
 @import "./elements/postEditor/PostTitle/PostTitle";
 @import "./elements/postEditor/TagsEditLine/index";
 @import "./elements/postEditor/TagInput/index";
-@import "./elements/workers/WorkerRequestVoting";
 
 // dialogs
 @import "./dialogs/DialogFrame/index";
@@ -67,28 +62,21 @@
 @import "./dialogs/LinkOptionsDialog/index";
 
 // modules
-@import "./modules/uia/AssetEditWithdrawal";
 @import "./modules/BottomPanel";
-@import "./modules/ConvertAssets";
+@import "./modules/ChangeAccount";
 @import "./modules/Footer";
 @import "./modules/Header";
 @import "./modules/LoginForm";
 @import "./modules/Settings";
 @import "./modules/SidePanel";
 @import "./modules/SignUp";
-@import "./modules/Transfer";
 @import "./modules/BottomPanel";
-@import "./modules/UserWallet";
-@import "./modules/WitnessProps";
 @import "./modules/TopRightMenu";
-@import "./modules/UserWallet";
-@import "./modules/Powerdown.scss";
 @import "./modules/Modals";
 @import "./modules/PostForm/PostForm";
 
 // pages
 @import "./pages/Start";
-@import "./pages/Exchanges";
 @import "./pages/Services";
 @import "./pages/LeavePage";
 @import "./pages/Search";
@@ -98,4 +86,3 @@
 @import "./pages/TagsIndex";
 @import "./pages/Topics";
 @import "./pages/UserProfile";
-@import "./pages/Witnesses";

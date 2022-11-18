@@ -24,6 +24,7 @@ import { CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config';
 import { detransliterate } from 'app/utils/ParsersAndFormatters';
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
 import PostSummaryThumb from 'app/components/elements/PostSummaryThumb'
+import { walletUrl } from 'app/utils/walletUtils'
 
 function isLeftClickEvent(event) {
     return event.button === 0
@@ -201,7 +202,7 @@ class PostSummary extends React.Component {
 
         let worker_post = content.get('has_worker_request')
         if (worker_post) {
-            worker_post = '/workers/created/@' + content.get('author') + '/' + content.get('permlink')
+            worker_post = walletUrl() + 'workers/created/@' + content.get('author') + '/' + content.get('permlink')
         }
 
         let total_search = content.get('total_search')

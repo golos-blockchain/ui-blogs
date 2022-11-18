@@ -1,7 +1,6 @@
 /* eslint react/prop-types: 0 */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
-import {pageSession} from 'golos-lib-js/lib/auth';
 import {PrivateKey, PublicKey} from 'golos-lib-js/lib/auth/ecc'
 import transaction from 'app/redux/Transaction'
 import g from 'app/redux/GlobalReducer'
@@ -133,7 +132,6 @@ class LoginForm extends Component {
             </div>;
         }
 
-        const { externalTransfer } = this.props;
         const { loginBroadcastOperation, loginDefault, dispatchSubmit, afterLoginRedirectToWelcome, msg} = this.props;
         const {username, password, saveLogin} = this.state;
         const {submitting, valid, handleSubmit} = this.state.login;
@@ -209,7 +207,7 @@ class LoginForm extends Component {
                 <div className="input-group">
                     <span className="input-group-label">@</span>
                     <input className="input-group-field" type="text" required placeholder={tt('loginform_jsx.enter_your_username')} ref="username"
-                        {...username.props} onChange={usernameOnChange} autoComplete="on" disabled={submitting} readOnly={externalTransfer}
+                        {...username.props} onChange={usernameOnChange} autoComplete="on" disabled={submitting}
                     />
                 </div>
                 {username.touched && username.blur && username.error ? <div className="error">{translateError(username.error)}&nbsp;</div> : null}
@@ -306,19 +304,6 @@ export default connect(
         let initialUsername = currentUser && currentUser.has('username') ? currentUser.get('username') : urlAccountName()
         //fixme - redesign (code duplication with USaga, UProfile)
 
-        let externalTransfer = false;
-        const { routing: {locationBeforeTransitions: { pathname, query }}} = state;
-        const section = pathname.split(`/`)[2];
-        const sender = (section === `transfers`) ?
-        pathname.split(`/`)[1].substring(1) : undefined;
-        // /transfers. Check query string
-        if (sender) {
-          const {to, amount, token, memo} = query;
-          externalTransfer = (!!to && !!amount && !!token && !!memo);
-          // explicitly set user name in this case
-          initialUsername = externalTransfer ? sender : initialUsername
-          // console.log(initialUsername)
-        }
         const loginDefault = state.user.get('loginDefault')
         if(loginDefault) {
             const {username, authType} = loginDefault.toJS()
@@ -331,7 +316,6 @@ export default connect(
         if (msg_match && msg_match.length > 1) msg = msg_match[1];
         hasError = !!login_error
         return {
-            externalTransfer,
             login_error,
             loginBroadcastOperation,
             initialValues,
@@ -348,13 +332,7 @@ export default connect(
             const username = data.username.trim().toLowerCase()
             if (loginBroadcastOperation) {
                 const {type, operation, trx, successCallback, errorCallback} = loginBroadcastOperation.toJS()
-                const authSaver = () => {
-                    if (!/^vote|comment/.test(type) && location.pathname.startsWith('/market')) {
-                        pageSession.save(password, username, 'active');
-                    }
-                    successCallback();
-                };
-                dispatch(transaction.actions.broadcastOperation({type, operation, trx, username, password, successCallback: authSaver, errorCallback}))
+                dispatch(transaction.actions.broadcastOperation({type, operation, trx, username, password, successCallback, errorCallback}))
                 // Avoid saveLogin, this could be a user-provided content page and the login might be an active key.  Security will reject that...
                 dispatch(user.actions.usernamePasswordLogin({username, password, saveLogin: true, afterLoginRedirectToWelcome, operationType: type}))
                 dispatch(user.actions.closeLogin())

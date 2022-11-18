@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import { Link } from 'react-router'
-import Icon from 'app/components/elements/Icon.jsx';
+
+import Icon from 'app/components/elements/Icon'
+import LinkEx from 'app/utils/LinkEx'
 
 export default class VerticalMenu extends React.Component {
     static propTypes = {
@@ -35,11 +36,11 @@ export default class VerticalMenu extends React.Component {
                 const iconSize = i.iconSize || '1x'
                 const target = i.target
                 return <li data-link={i.link} data-value={i.value} key={i.key ? i.key : i.value} onClick={i.link ? this.closeMenu : null}>
-                    {i.link ? <Link to={i.link} target={target} onClick={i.onClick}>
+                    {i.link ? <LinkEx to={i.link} target={target} onClick={i.onClick}>
                         {i.icon && <Icon name={i.icon} size={iconSize} />}{i.label ? i.label : i.value}
                         {i.data && <span>{i.data}</span>}
                         &nbsp; {i.addon}
-                    </Link> :
+                    </LinkEx> :
                     <span>
                         {i.icon && <Icon name={i.icon} size={iconSize} />}{i.label ? i.label : i.value}
                     </span>

@@ -18,7 +18,6 @@ export default class Follow extends React.Component {
         follower: string, // OPTIONAL default to current user
         showFollow: bool,
         showMute: bool,
-        donateUrl: string,
         children: any,
         showLogin: PropTypes.func.isRequired,
     };
@@ -88,34 +87,6 @@ export default class Follow extends React.Component {
         this.props.showLogin(e);
     }
 
-    showTransfer = () => {
-        const asset = LIQUID_TICKER;
-        const transferType = 'Transfer to Account';
-        // const memo = url;
-        // const memo = window.JSON.stringify({donate: {post: this.props.donateUrl}});
-        // store/user/transfer_defaults structure initialized correctly for each transfer type
-        // (click in wallet, external link, donate from PostFull)
-        // so, mark this kind of transfer with a flag for now to analyze in transfer.jsx
-        // the rest of transfer types don't have the flag for now
-        // todo redesign transfer types globally
-        const flag = {
-            type: `donate`,
-            fMemo: () => JSON.stringify({ donate: { post: this.props.donateUrl } }),
-        };
-
-        document.body.click();
-
-        this.props.showTransfer({
-            flag,
-            to: this.props.following,
-            asset,
-            transferType,
-            // memo,
-            disableMemo: false,
-            disableTo: true,
-        });
-    };
-
     unmuteNew = () => {
         let {follower, following, metaData, updateAccount} = this.props
 
@@ -147,12 +118,11 @@ export default class Follow extends React.Component {
         if(follower === following && !this.props.showMuteInNew) return <span></span>
 
         const {isFollowing, isBlocking} = this.props; // redux
-        const {showFollow, showMute, showMuteInNew, donateUrl, children} = this.props; // html
+        const {showFollow, showMute, showMuteInNew, children} = this.props; // html
         const {busy} = this.state;
 
         const cnBusy = busy ? 'disabled' : '';
         const cnInactive = 'button slim hollow secondary ' + cnBusy;
-        const cnDonate = 'button slim alert ' + cnBusy;
         const cnMessage = 'button slim ' + cnBusy;
         return <span>
             {showFollow && !isFollowing &&
@@ -169,9 +139,6 @@ export default class Follow extends React.Component {
 
             {showMuteInNew &&
                 <label className={cnInactive} onClick={this.unmuteNew}>{tt('g.unmute')}</label>}
-
-            {donateUrl &&
-                <label style={{color: '#fff'}} className={cnDonate} onClick={this.showTransfer}>&nbsp;{tt('g.transfer2')}&nbsp;</label>}
 
             {children && <span>&nbsp;&nbsp;{children}</span>}
         </span>
@@ -255,10 +222,6 @@ module.exports = connect(
         showLogin: e => {
             if (e) e.preventDefault();
             dispatch(user.actions.showLogin())
-        },
-        showTransfer(transferDefaults) {
-            dispatch(user.actions.setTransferDefaults(transferDefaults));
-            dispatch(user.actions.showTransfer());
         },
     })
 )(Follow);

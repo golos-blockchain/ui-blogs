@@ -6,6 +6,7 @@ import transaction from 'app/redux/Transaction';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import * as api from 'app/utils/APIWrapper'
 import { DEBT_TOKEN_SHORT, DEBT_TICKER} from 'app/client_config';
+import { walletUrl } from 'app/utils/walletUtils'
 import tt from 'counterpart';
 
 class PromotePost extends Component {
@@ -98,6 +99,7 @@ class PromotePost extends Component {
         const balanceValue = currentAccount.get('sbd_balance');
         const balance = balanceValue ? balanceValue.split(' ')[0] : 0.0;
         const submitDisabled = !amount;
+        let url = walletUrl(`/convert`)
 
         return (
            <div className="PromotePost row">
@@ -119,7 +121,7 @@ class PromotePost extends Component {
                                </div>
                            </div>
                        </div>
-                       <div>{`${tt('transfer_jsx.balance')}: ${balance} ${DEBT_TOKEN_SHORT} `} <span className="secondary">({tt('promote_post_jsx.buy_gbg')} <a target="_blank" href="/market/GBG/GOLOS">{tt('promote_post_jsx.market')}</a>)</span></div>
+                       <div>{`${tt('transfer_jsx.balance')}: ${balance} ${DEBT_TOKEN_SHORT} `} <span className="secondary">({tt('promote_post_jsx.buy_gbg')} <a target="_blank" href={url}>{tt('promote_post_jsx.market')}</a>)</span></div>
                        <br />
                        {loading && <span><LoadingIndicator type="circle" /><br /></span>}
                        {!loading && <span>
