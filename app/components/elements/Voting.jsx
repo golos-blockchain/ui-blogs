@@ -173,7 +173,7 @@ class Voting extends React.Component {
                 </span>
         }
 
-        const total_votes = (post_obj.get('from_search') || post_obj.get('from_preview')) ?
+        const total_votes = post_obj.get('from_search') ?
             post_obj.get('net_votes') :
             post_obj.getIn(['stats', 'total_votes'])
 
