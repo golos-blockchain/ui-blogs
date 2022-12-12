@@ -130,7 +130,7 @@ class Footer extends React.Component {
                             <span className="left">
                                 © 2016-{year} {tt('g.about_project')}
                             </span>
-                            <span className="right">
+                            <span className="right show-for-large">
                                 <a href='mailto:info@golos.id'><Icon name="new/envelope" /> Contact Us</a>
                             </span>
                         </div>
