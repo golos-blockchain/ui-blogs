@@ -78,7 +78,7 @@ class CMCWidget extends React.Component {
                                     <span className="CMCWidget__sub">{price_usd ? price_usd.toFixed(6) + ' USD' : null}</span>
                                 </span><br/>
                                 <span style={{ fontSize: '12px' }}>
-                                    <a href={url} className="CMCWidget__link">{tt('g.buy_or_sell')}</a>
+                                    <a href={url} target="_blank" className="CMCWidget__link">{tt('g.buy_or_sell')}</a>
                                 </span>
                             </span>
                         </div>

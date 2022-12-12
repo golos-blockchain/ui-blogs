@@ -445,7 +445,8 @@ export default class UserProfile extends React.Component {
                             dropdownContent={<VerticalMenu items={rewardsMenu} />}
                         	>
                             <a className={`${rewardsClass} UserProfile__menu-item`} ref={this._onLinkRef}>
-                                {tt('g.rewards')} {isMyAccount && <NotifiCounter fields='donate,donate_msgs' />}
+                                {tt('g.rewards')}
+                                {isMyAccount && <NotifiCounter fields='donate,donate_msgs' />}
                                 <Icon name='dropdown-center' />
                             </a>
 	                    </LinkWithDropdown>
