@@ -538,7 +538,9 @@
     "window_confirm": "You have reached limit, now sending of operations requires cost. Do you want to send them %(AMOUNT)s from TIP-balance?",
     "window_error": "You have reached limit now sending of operations requires cost. %(AMOUNT)s required on your TIP-balance.",
     "blocking_fatal_error": "User blocked you, now sending of transfers and donates is forbidden.",
-    "bother_fatal_error": "User wants to not be bothered by accounts with low-reputation, now sending of transfers and donates is forbidden."
+    "bother_fatal_error": "User wants to not be bothered by accounts with low-reputation, now sending of transfers and donates is forbidden.",
+    "general_confirm": "Sending of operation requires cost. Do you want to send them %(AMOUNT)s from TIP-balance?",
+    "general_error": "Sending of operation requires cost. %(AMOUNT)s required on your TIP-balance."
   },
   "voting_jsx": {
     "stop_seeing_content_from_this_user": "Stop seeing content from this user",
