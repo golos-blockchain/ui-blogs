@@ -48,8 +48,6 @@ export default {
             cb(null, [require('@pages/app/AppSettings')]);
         } else if (route.page === 'AppUpdate') {
             cb(null, [require('@pages/app/AppUpdate')]);
-        } else if (route.page === 'Nodes') {
-            cb(null, [require('@pages/NodesLoader')]);
         } else if (route.page === 'LeavePage') {
             cb(null, [require('@pages/LeavePage')]);
         } else if (route.page === 'Search') {
