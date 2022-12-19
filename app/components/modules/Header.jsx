@@ -198,7 +198,7 @@ class Header extends React.Component {
                                 <li className="Header__top-logo">
                                     <Link to={logo_link}>
                                         {christmas ?
-                                            <img src={require('app/assets/images/golos-NG.png')} height='40' width='44' /> :
+                                            <img src={require('app/assets/images/logo-ng1.png')} width='46' height='50' /> :
                                             <Icon name={APP_ICON} size="2x" />}
                                     </Link>
                                 </li>

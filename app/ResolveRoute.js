@@ -58,9 +58,6 @@ export default function resolveRoute(path)
             return {page: 'AppUpdate'};
         }
     }
-    if (path === '/nodes') {
-        return {page: 'Nodes'};
-    }
     if (path === '/submit') {
         return {page: 'SubmitPost', hideSubMenu: true};
     }

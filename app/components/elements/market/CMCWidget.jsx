@@ -58,24 +58,32 @@ class CMCWidget extends React.Component {
                 </div>)
         }
         let url = walletUrl(`/exchanges`)
+
+        const now = new Date()
+        const nowMonth = now.getMonth() + 1
+        const nowDay = now.getDate()
+        const christmas = (nowMonth === 12 && nowDay >= 15)
+            || (nowMonth === 1 && nowDay <= 15)
         
         return (<div class="CMCWidget">
                 <div className="CMCWidget__inner">
                     <div className='CMCWidget__inner2'>
                         <div className="CMCWidget__icon-parent">
-                            <Icon name='golos' size='2x' />
+                            {christmas ?
+                                <img src={require('app/assets/images/logo-ng2.png')} width='50' height='50' /> :
+                                <Icon name='golos' size="2x" />}
                         </div>
                         <div className="CMCWidget__main-parent">
                             <span style={{ fontSize: '18px' }}>
                                 <a href={page_url} target="_blank" className="CMCWidget__link">Golos Blockchain </a>
                             </span><br/>
                             <span style={{ fontSize: '16px' }}>
-                                <span className="CMCWidget__main-val">{price_rub ? price_rub.toFixed(6) : null}</span>                
+                                <span className="CMCWidget__main-val">{price_rub ? price_rub.toFixed(5) : null}</span>                
                                 <span className="CMCWidget__main-cur">&nbsp;RUB&nbsp;
                                 {(price_change && price_change.toFixed) ? <span style={{ color: price_change < 0 ? '#d94040' : '#009600' }}>({price_change.toFixed(2)}%)</span> : null}
                                 </span><br />
                                 <span className="CMCWidget__sub-parent">
-                                    <span className="CMCWidget__sub">{price_usd ? price_usd.toFixed(6) + ' USD' : null}</span>
+                                    <span className="CMCWidget__sub">{price_usd ? price_usd.toFixed(5) + ' USD' : null}</span>
                                 </span><br/>
                                 <span style={{ fontSize: '12px' }}>
                                     <a href={url} target="_blank" className="CMCWidget__link">{tt('g.buy_or_sell')}</a>
