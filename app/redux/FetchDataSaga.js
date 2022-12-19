@@ -6,12 +6,15 @@ import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile';
 import {loadFollows, fetchFollowCount} from 'app/redux/FollowSaga';
 import { getBlockings, listBlockings } from 'app/redux/BlockingSaga'
 import { contentPrefs as prefs } from 'app/utils/Allowance'
-import {getContent} from 'app/redux/SagaShared';
+import { applyEventHighlight, getContent } from 'app/redux/SagaShared'
 import GlobalReducer from './GlobalReducer';
 import constants from './constants';
+import session from 'app/utils/session'
 import { reveseTag, getFilterTags } from 'app/utils/tags';
 import { PUBLIC_API, CATEGORIES, SELECT_TAGS_KEY, DEBT_TOKEN_SHORT, LIQUID_TICKER } from 'app/client_config';
+import { getSubs, notifyGetViews, } from 'app/utils/NotifyApiClient'
 import { SearchRequest, searchData, stateSetVersion } from 'app/utils/SearchClient'
+import { hashPermlink, } from 'app/utils/StateFunctions'
 
 export function* fetchDataWatches () {
     yield fork(watchLocationChange);
@@ -105,7 +108,8 @@ export function* fetchState(location_change_action) {
             const uname = parts[0].substr(1)
             const [ account ] = yield call([api, api.getAccountsAsync], [uname])
             state.accounts[uname] = account
-            
+            delete state.accounts[uname].discussions
+
             if (account) {
                 state.accounts[uname].tags_usage = yield call([api, api.getTagsUsedByAuthorAsync], uname)
                 state.accounts[uname].guest_bloggers = yield call([api, api.getBlogAuthorsAsync], uname)
@@ -125,6 +129,40 @@ export function* fetchState(location_change_action) {
                         })
                     break
 
+                    case 'discussions':
+                        state.accounts[uname].discussions = []
+                        const accName = session.load().currentName
+                        if (accName && uname === accName) {
+                            let res, subs
+                            try {
+                                res = yield getSubs(accName)
+                            } catch (err) {
+                            }
+                            const ids = []
+                            if (res && res.result) {
+                                subs = res.result.subs
+                                for (let sub of subs) {
+                                    const [ author, permlink ] = sub.entityId.split('|')
+                                    ids.push({
+                                        author,
+                                        hashlink: sub.hashlink
+                                    })
+                                }
+                            }
+                            if (ids.length) {
+                                const previews = yield call([api, api.getContentPreviewsAsync], ids, 500)
+                                for (const i in previews) {
+                                    const { author, permlink } = previews[i]
+                                    checkAuthor(author)
+                                    const link = `${author}/${permlink}`
+                                    state.accounts[uname].discussions.push(link)
+                                    state.content[link] = previews[i]
+                                    state.content[link].event_count = subs[i] ? subs[i].eventCount : 0
+                                }
+                            }
+                        }
+                    break
+
                     case 'posts':
                     case 'comments':
                         const filter_tags = curUser ? ['test'] : getFilterTags()
@@ -138,25 +176,34 @@ export function* fetchState(location_change_action) {
                         })
                     break
 
-                    case 'feed':
+                    case 'feed': {
                         const feedEntries = yield call([api, api.getFeedEntriesAsync], uname, 0, 20, ['fm-'])
                         state.accounts[uname].feed = []
 
-                        for (let key in feedEntries) {
-                            const { author, permlink } = feedEntries[key]
+                        const ids = []
+
+                        for (const i in feedEntries) {
+                            const { author, hashlink } = feedEntries[i]
+
+                            ids.push({ author, hashlink })
+                        }
+
+                        const previews = yield call([api, api.getContentPreviewsAsync], ids, 10000)
+                        for (const i in previews) {
+                            const { author, permlink } = previews[i]
                             const link = `${author}/${permlink}`
                             state.accounts[uname].feed.push(link)
-                            state.content[link] = yield call([api, api.getContentAsync], author, permlink, constants.DEFAULT_VOTE_LIMIT)
+                            state.content[link] = previews[i]
 
                             checkAuthor(author)
 
-                            if (feedEntries[key].reblog_by.length > 0) {
-                                state.content[link].first_reblogged_by = feedEntries[key].reblog_by[0]
-                                state.content[link].reblogged_by = feedEntries[key].reblog_by
-                                state.content[link].first_reblogged_on = feedEntries[key].reblog_on
+                            if (feedEntries[i].reblog_by.length > 0) {
+                                state.content[link].first_reblogged_by = feedEntries[i].reblog_by[0]
+                                state.content[link].reblogged_by = feedEntries[i].reblog_by
+                                state.content[link].first_reblogged_on = feedEntries[i].reblog_on
                             }
                         }
-                    break
+                    } break
 
                     case 'reputation':
                         const rhistory = yield call([api, api.getAccountHistoryAsync], uname, -1, 1000, {select_ops: ['account_reputation']});
@@ -190,17 +237,32 @@ export function* fetchState(location_change_action) {
                         state.accounts[uname].blog = []
 
                         let pinnedPosts = getPinnedPosts(account)
-                        blogEntries.unshift(...pinnedPosts)
+                        for (const pp of pinnedPosts){
+                            const hashlink = hashPermlink(pp.permlink)
+                            blogEntries.unshift({
+                                author: pp.author, hashlink, reblog_on: pp.reblog_on
+                            })
+                        }
 
-                        for (let key in blogEntries) {
-                            const { author, permlink } = blogEntries[key]
+                        const ids = []
+
+                        for (const i in blogEntries) {
+                            const { author, hashlink } = blogEntries[i]
+
+                            ids.push({ author, hashlink })
+                        }
+
+                        const previews = yield call([api, api.getContentPreviewsAsync], ids, 10000)
+                        for (const i in previews) {
+                            const { author, permlink } = previews[i]
+
                             const link = `${author}/${permlink}`
 
-                            state.content[link] = yield call([api, api.getContentAsync], author, permlink, constants.DEFAULT_VOTE_LIMIT)
+                            state.content[link] = previews[i]
                             state.accounts[uname].blog.push(link)
-                        
-                            if (blogEntries[key].reblog_on !== '1970-01-01T00:00:00') {
-                                state.content[link].first_reblogged_on = blogEntries[key].reblog_on
+
+                            if (blogEntries[i].reblog_on !== '1970-01-01T00:00:00') {
+                                state.content[link].first_reblogged_on = blogEntries[i].reblog_on
                             }
                         }
                     break
@@ -218,6 +280,14 @@ export function* fetchState(location_change_action) {
             }
             accounts.add(account)
             checkAuthor(account)
+
+            try {
+                const views =  yield notifyGetViews([state.content[curl].id])
+                state.content[curl].views = views.result[0].views || 0
+            } catch (err) {
+                console.error(err)
+                state.content[curl].views = 0
+            }
 
             state.content[curl].donate_list = [];
             if (state.content[curl].donates != '0.000 GOLOS') {
@@ -260,7 +330,10 @@ export function* fetchState(location_change_action) {
                     state.content[link].donate_uia_list = yield call([api, api.getDonatesAsync], true, {author: reply.author, permlink: reply.permlink}, '', '', 20, 0, true)
                 }
                 state.content[link].confetti_active = false
+                state.content[link].sub_event = false
             }
+
+            yield applyEventHighlight(state.content, account, permlink, curUser)
 
             let args = { truncate_body: 128, select_categories: [category], filter_tag_masks: ['fm-'],
                 filter_tags: getFilterTags(),

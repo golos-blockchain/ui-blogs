@@ -1,6 +1,7 @@
 import config from 'config';
 import * as golos from 'golos-lib-js';
 const version = require('./version');
+const { packBlacklist } = require('../app/utils/blacklist')
 
 delete process.env.BROWSER;
 
@@ -11,6 +12,12 @@ const ROOT = path.join(__dirname, '..');
 // it will avoid `../../../../../` require strings
 process.env.NODE_PATH = path.resolve(__dirname, '..');
 require('module').Module._initPaths();
+
+let blocked_users = config.get('blocked_users')
+blocked_users = packBlacklist(blocked_users)
+
+let blocked_posts = config.get('blocked_posts')
+blocked_posts = packBlacklist(blocked_posts)
 
 global.$STM_Config = {
     ws_connection_client: config.get('ws_connection_client'),
@@ -28,8 +35,8 @@ global.$STM_Config = {
     messenger_service: config.get('messenger_service'),
     apidex_service: config.get('apidex_service'),
     forums: config.get('forums'),
-    blocked_users: config.get('blocked_users'),
-    blocked_posts: config.get('blocked_posts'),
+    blocked_users,
+    blocked_posts,
     ui_version: version || '1.0-unknown',
 };
 

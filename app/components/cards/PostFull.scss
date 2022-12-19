@@ -22,11 +22,16 @@
 }
 
 .PostFull__time_author_category_large {
-  margin: 1.75rem 1.5rem 1.2rem 0;
+  margin: 1.75rem 0 1.2rem 0;
   color: #aaa;
   strong, a {color: #999}
   font-size: 120%;
   display: block;
+  > .eye {
+    margin-left: .4rem;
+    padding-left: .4rem;
+    border-left: 1px solid $medium-gray;
+  }
   > .Userpic {
     margin-top: -4px;
     float: left;

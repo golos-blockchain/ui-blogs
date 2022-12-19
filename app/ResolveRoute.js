@@ -1,9 +1,9 @@
 export const routeRegex = {
     PostsIndex: /^\/(@[\w\.\d-]+)\/feed\/?$/,
     UserProfile1: /^\/(@[\w\.\d-]+)\/?$/,
-    UserProfile2: /^\/(@[\w\.\d-]+)\/(blog|posts|comments|reputation|mentions|created|recent-replies|feed|followed|followers|settings)\/??(?:&?[^=&]*=[^=&]*)*$/,
+    UserProfile2: /^\/(@[\w\.\d-]+)\/(blog|posts|comments|reputation|mentions|created|recent-replies|discussions|feed|followed|followers|settings)\/??(?:&?[^=&]*=[^=&]*)*$/,
     UserProfile3: /^\/(@[\w\.\d-]+)\/[\w\.\d-]+/,
-    UserEndPoints: /^(blog|posts|comments|reputation|mentions|created|recent-replies|feed|followed|followers|settings)$/,
+    UserEndPoints: /^(blog|posts|comments|reputation|mentions|created|recent-replies|discussions|feed|followed|followers|settings)$/,
     CategoryFilters: /^\/(hot|responses|donates|forums|trending|promoted|allposts|allcomments|created|active)\/?$/ig,
     PostNoCategory: /^\/(@[\w\.\d-]+)\/([\w\d-]+)/,
     Post: /^\/([\w\d\-\/]+)\/(\@[\w\d\.-]+)\/([\w\d-]+)\/?($|\?)/,
@@ -57,9 +57,6 @@ export default function resolveRoute(path)
         if (path === '/__app_update') {
             return {page: 'AppUpdate'};
         }
-    }
-    if (path === '/nodes') {
-        return {page: 'Nodes'};
     }
     if (path === '/submit') {
         return {page: 'SubmitPost', hideSubMenu: true};

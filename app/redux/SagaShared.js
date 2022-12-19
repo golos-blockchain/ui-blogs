@@ -1,8 +1,10 @@
 import { fromJS } from 'immutable'
-import { fork, call, put, select, takeEvery } from 'redux-saga/effects';
+import { fork, call, put, select, takeEvery } from 'redux-saga/effects'
+import { api } from 'golos-lib-js'
+
+import constants from './constants'
 import g from 'app/redux/GlobalReducer'
-import constants from './constants';
-import { api } from 'golos-lib-js';
+import { isHighlight, getEvents } from 'app/utils/NotifyApiClient'
 
 export function* sharedWatches() {
     yield fork(watchTransactionErrors)
@@ -62,5 +64,25 @@ export function* getWorkerRequest({author, permlink, voter}) {
             wr.myVote = (myVote && myVote.voter == voter) ? myVote : null
         }
         yield put(g.actions.receiveWorkerRequest({wr}))
+    }
+}
+
+export function* applyEventHighlight(contentMap, author, permlink, curUser) {
+    if (isHighlight() && curUser) {
+        let events = []
+        try {
+            events = yield getEvents(curUser, author, permlink)
+        } catch (err) {}
+        const now = Date.now()
+        for (const event of events) {
+            try {
+                const ed = JSON.parse(event.data)
+                const link = `${ed.author}/${ed.permlink}`
+                contentMap[link].sub_event = event
+            } catch (err) {
+                console.error('Cannot apply Sub API event', event.data, err)
+            }
+        }
+        contentMap[author + '/' + permlink].highlighted = true
     }
 }

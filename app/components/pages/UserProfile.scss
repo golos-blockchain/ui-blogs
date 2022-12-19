@@ -65,6 +65,7 @@
     color: $white;
     background-color: transparent;
     line-height: 1.5rem;
+    fill: $white;
 
     &:hover {
         background-color: #555;
@@ -74,6 +75,7 @@
         z-index: 2;
         color: $black;
         font-weight: bold;
+        fill: $black;
     }
   }
 
@@ -85,9 +87,9 @@
       flex-flow: row wrap;
       width: 100%;
       // Override default svg vertical alignment
-      .Icon > svg, .Icon span.icon {
-          vertical-align: middle!important;
-      }
+      // .Icon > svg, .Icon span.icon {
+      //     vertical-align: middle !important;
+      // }
   }
 }
 
@@ -259,81 +261,6 @@
 .UserWallet__balance {
     > div:nth-child(2) {
         text-align: right;
-    }
-}
-
-.CreateInvite__copy-button {
-  cursor: pointer;
-
-  .Icon {
-    width: 2.12rem;
-    height: 2.12rem;
-
-    & > svg {
-      width: 2.12rem;
-      height: 2.12rem;
-      vertical-align: top;
-    }
-  }
-}
-
-.Assets__header {
-  display: inline-block;  
-}
-
-.Assets__disabled {
-  color: rgb(150, 150, 150); 
-  cursor: default; 
-}
-
-.Assets__info {
-  font-size: 90%;
-}
-
-.Assets__center {
-  text-align: center;
-}
-
-.Assets__cost {
-  font-weight: bold !important;
-}
-
-.Assets__marginTop {
-  margin-top: 13px;
-}
-
-.Assets__marginTop2 {
-  margin-top: 5px;
-}
-
-.Assets__marginRight {
-  margin-right: 6px;
-}
-
-.Assets__marginBottom {
-  margin-bottom: 3px;
-}
-
-.Assets__noMarginBottom {
-  margin-bottom: 0px;
-}
-
-.Assets__inlineBtn {
-  margin-bottom: 0px;
-  margin-left: 0.5rem;
-  margin-right: 0px !important;
-}
-
-.FilledOrders__market-link {
-    svg {
-        fill: #0078C4;
-    }
-}
-
-.FilledOrders__convert-link {
-    svg {
-        fill: #0078C4;
-        transform: rotate(90deg);
     }
 }
 

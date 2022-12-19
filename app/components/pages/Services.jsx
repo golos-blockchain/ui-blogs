@@ -9,7 +9,7 @@ class Services extends React.Component {
                 <div className='landing-services-block'>                    
                     <img className="float-center" style={{marginTop: "60px"}} src={require("app/assets/images/services.png")} width="500" />
                     <div className='row landing-services-block-center float-center'>
-                        {tt('services.title_1')},<br />{tt('services.title_2')}.
+                        {tt('services.title_1')},<br />{tt('services.title_2')}:
                     </div>
                 </div>
                 <div className='landing-services-block'>
@@ -18,23 +18,23 @@ class Services extends React.Component {
                             <div className='column large-3 medium-3 small-6'>
                                 <a target="_blank" href="https://wiki.golos.id"><Icon name='blockchain' size='10x'/>
                                 <h5>Golos Blogs</h5></a>
-                                <p className='landing-services-block-icon-text'>Основные веб-клиенты блогов <a target="_blank" href="https://golos.id">golos.id</a> и <a target="_blank" href="https://golos.in">golos.in</a>, альтернативные <a target="_blank" href="https://wiki.golos.id">клиенты</a>, а также Desktop (для <a target="_blank" href="https://files.golos.app/blogs-win/latest.exe">Windows</a> и <a target="_blank" href="https://files.golos.app/blogs-linux/latest.deb">Linux</a>)</p>
+                                <p className='landing-services-block-icon-text'>Основные веб-клиенты блогов <a target="_blank" href="https://golos.id">golos.id</a> и <a target="_blank" href="https://golos.in">golos.in</a>, альтернативные <a target="_blank" href="https://wiki.golos.id">клиенты</a>, а также Desktop (для <a target="_blank" href="https://files.golos.app/desktop-windows/latest.exe">Windows</a> и <a target="_blank" href="https://files.golos.app/desktop-linux/latest.deb">Linux</a>)</p>
                             </div>
                             <div className='column large-3 medium-3 small-6'>
-                                <a target="_blank" href="https://dex.golos.app"><Icon name='money' size='10x'/>
-                                <h5>Golos DEX</h5></a>
-                                <p className='landing-services-block-icon-text'>Торговля токенами на <a target="_blank" href="https://wallet.golos.id/market">внутренней бирже</a> и <a target="_blank" href="https://wallet.golos.id/convert">обменнике</a>, веб-клиентах <a target="_blank" href="https://dex.golos.app">dex.golos.app</a> или <a target="_blank" href="https://gls.exchange">gls.exchange</a></p>
+                                <a target="_blank" href="https://wallet.golos.id"><Icon name='money' size='10x'/>
+                                <h5>Golos Wallet + DEX</h5></a>
+                                <p className='landing-services-block-icon-text'>Кошелек и торговля на <a target="_blank" href="https://wallet.golos.id/market">внутренней бирже</a> и <a target="_blank" href="https://wallet.golos.id/convert">обменнике</a>, веб-клиентах <a target="_blank" href="https://dex.golos.app">dex.golos.app</a> или <a target="_blank" href="https://gls.exchange">gls.exchange</a></p>
+                            </div>
+                            <div className='column large-3 medium-3 small-6'>
+                                <a target="_blank" href="https://chat.golos.app"><Icon name='rocket' size='10x'/>
+                                <h5>Golos Messenger</h5></a>
+                                <p className='landing-services-block-icon-text'>Чаты с приватными сообщениями на <a target="_blank" href="https://chat.golos.app">chat.golos.app</a> или для установки на Android <a target="_blank" href="https://files.golos.app/msg-android/latest.apk">apk-файл</a> (<a target="_blank" href={require("app/assets/images/msg-load.png")}>QR-код</a>)</p>
                             </div>
                             <div className='column large-3 medium-3 small-6'>
                                 <a target="_blank" href="https://golostalk.com"><Icon name='team' size='10x'/>
                                 <h5>Golos Forums</h5></a>
                                 <p className='landing-services-block-icon-text'>Формат общения по категориям/темам: <a target="_blank" href="https://golostalk.com">golostalk.com</a>, <a target="_blank" href="https://prizmtalk.com">prizmtalk.com</a>, <a target="_blank" href="https://forum.gph.ai">forum.gph.ai</a></p>
-                            </div> 
-                            <div className='column large-3 medium-3 small-6'>
-                                <a target="_blank" href="https://chat.golos.app"><Icon name='rocket' size='10x'/>
-                                <h5>Golos Messenger</h5></a>
-                                <p className='landing-services-block-icon-text'>Чаты с приватными сообщениями на <a target="_blank" href="https://chat.golos.app">chat.golos.app</a> или для установки на Android <a target="_blank" href="https://files.golos.app/msg-android/latest.apk">apk-файл</a> (<a target="_blank" href={require("app/assets/images/msg-load.png")}>QR-код</a>)</p>
-                            </div>                                                       
+                            </div>
                         </div>
                     </div>
                     <div className='column large-12 medium-12 small-12'>

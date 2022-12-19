@@ -144,8 +144,6 @@ class Header extends React.Component {
             if(route.params[1] === "posts" || route.params[1] === "comments"){
                 page_title = tt('header_jsx.comments_by') + " " + user_title;
             }
-        } else if (route.page === 'ConvertAssetsLoader') {
-            page_title = tt('g.convert_assets')
         } else {
             page_name = ''; //page_title = route.page.replace( /([a-z])([A-Z])/g, '$1 $2' ).toLowerCase();
         }
@@ -185,6 +183,12 @@ class Header extends React.Component {
                 return {link: sortOrderToLink(so[0], topic_original_link, current_account_name), value: so[1], active};
             });
 
+        const now = new Date()
+        const nowMonth = now.getMonth() + 1
+        const nowDay = now.getDate()
+        const christmas = (nowMonth === 12 && nowDay >= 15)
+            || (nowMonth === 1 && nowDay <= 15)
+
         return (
             <header className="Header noPrint">
                 <div className="Header__top header">
@@ -193,8 +197,9 @@ class Header extends React.Component {
                             <ul className="menu">
                                 <li className="Header__top-logo">
                                     <Link to={logo_link}>
-                                        <Icon name={APP_ICON} size="2x" />
-                                        {/* <img src={require("app/assets/images/golos-NG.png")} height="40" width="44" /> */}
+                                        {christmas ?
+                                            <img src={require('app/assets/images/logo-ng1.png')} width='46' height='50' /> :
+                                            <Icon name={APP_ICON} size="2x" />}
                                     </Link>
                                 </li>
                                 <li className="Header__top-steemit show-for-large noPrint">

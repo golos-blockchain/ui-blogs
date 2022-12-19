@@ -160,6 +160,7 @@ export default connect(
             dispatch(transaction.actions.broadcastOperation({
                 type: 'transfer',
                 operation,
+                username,
                 successCallback,
                 errorCallback
             }))
