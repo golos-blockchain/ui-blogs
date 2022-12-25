@@ -23,6 +23,7 @@ global.$STM_Config = {
     ws_connection_client: config.get('ws_connection_client'),
     hide_comment_neg_rep: config.get('hide_comment_neg_rep'),
     show_adv_banners: config.get('show_adv_banners'),
+    logo: config.get('logo'),
     add_notify_site: config.get('add_notify_site'),
     images: config.get('images'),
     site_domain: config.get('site_domain'),

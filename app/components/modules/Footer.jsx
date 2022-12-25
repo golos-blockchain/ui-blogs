@@ -111,17 +111,22 @@ class Footer extends React.Component {
             },
         );
 
+        const randomBanner = Math.random() > 0.5 ? 
+            <a target='_blank' href='https://golostalk.com'>
+                <img src={require('app/assets/images/banners/golostalk.png')} width='800' height='100' />
+            </a> : 
+            <a target='_blank' href='https://chat.golos.app'>
+                <img src={require('app/assets/images/banners/messenger.png')} width='800' height='100' />
+            </a>;
+
         return (
             <section className="Footer">
                 <div className="Footer__menus">
-                    <div className="row" id="footer">                    
+                    <div className="row" id="footer">
                         {this._renderMenus(menuItems)}
 
                         {$STM_Config.show_adv_banners ?
-                        (<iframe data-aa='1148805' src='//ad.a-ads.com/1148805?size=728x90' scrolling='no'
-                        style={{width:'728px', height:'90px', border:'0px', padding:'0', overflow:'hidden'}}
-                        allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe>) : (<div><a target='_blank' href='https://golostalk.com'><img src={require('app/assets/images/banners/golostalk.png')} width='800' height='100' /></a></div>)}
-
+                            <iframe data-aa='1148805' src='//ad.a-ads.com/1148805?size=728x90' scrolling='no' style={{width:'728px', height:'90px', border:'0px', padding:'0', overflow:'hidden'}} allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe> : randomBanner}
                     </div>
                 </div>
                 <div className="Footer__description">
