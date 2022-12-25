@@ -183,12 +183,6 @@ class Header extends React.Component {
                 return {link: sortOrderToLink(so[0], topic_original_link, current_account_name), value: so[1], active};
             });
 
-        const now = new Date()
-        const nowMonth = now.getMonth() + 1
-        const nowDay = now.getDate()
-        const christmas = (nowMonth === 12 && nowDay >= 15)
-            || (nowMonth === 1 && nowDay <= 15)
-
         return (
             <header className="Header noPrint">
                 <div className="Header__top header">
@@ -196,11 +190,7 @@ class Header extends React.Component {
                         <div className="columns">
                             <ul className="menu">
                                 <li className="Header__top-logo">
-                                    <Link to={logo_link}>
-                                        {christmas ?
-                                            <img src={require('app/assets/images/golos-NG.png')} height='40' width='44' /> :
-                                            <Icon name={APP_ICON} size="2x" />}
-                                    </Link>
+                                    <Link to={logo_link}><img src={$STM_Config.logo} width='48' height='48' /></Link>
                                 </li>
                                 <li className="Header__top-steemit show-for-large noPrint">
                                     <Link to={logo_link}>{APP_NAME_UP}<span className="beta">blogs</span></Link>

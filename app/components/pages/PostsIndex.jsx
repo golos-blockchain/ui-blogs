@@ -227,15 +227,14 @@ class PostsIndex extends React.Component {
                         <span className="strike"><a target="_blank" href="/@graphenelab/reliz-novoi-birzhi-golos">{tt('g.more_hint')}</a></span>
                     </p>
 
-                    <p align="center">
-                        <a target="_blank" href={"https://golostalk.com"}><img src={require("app/assets/images/banners/golostalk2.png")} width="220" height="180" /></a>
-                        <span className="strike"><a target="_blank" href="/@lex/zapusk-foruma-golostalk-com">{tt('g.more_hint')}</a></span>
-                    </p>
+                    {!$STM_Config.show_adv_banners ?
+                        <p align="center">
+                            <a target="_blank" href={"https://golostalk.com"}><img src={require("app/assets/images/banners/golostalk2.png")} width="220" height="180" /></a>
+                            <span className="strike"><a target="_blank" href="/@lex/zapusk-foruma-golostalk-com">{tt('g.more_hint')}</a></span>
+                        </p> : null}
 
                     {$STM_Config.show_adv_banners ?
-                    (<iframe data-aa='1148471' src='//ad.a-ads.com/1148471?size=240x400' scrolling='no'
-                    style={{width:'240px', height:'400px', border:'0px', padding:'0', overflow:'hidden'}}
-                    allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe>) : null}
+                        <iframe data-aa='1148471' src='//ad.a-ads.com/1148471?size=240x400' scrolling='no' style={{width:'240px', height:'400px', border:'0px', padding:'0', overflow:'hidden'}} allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe> : null}
 
                     </div>
                 </div>

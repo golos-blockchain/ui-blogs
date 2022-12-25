@@ -64,11 +64,6 @@
     "general_confirm": "Эта операция платная. Хотите отправить операцию за %(AMOUNT)s с TIP-баланса?",
     "general_error": "Отправка операции возможна за %(AMOUNT)s на TIP-балансе. Недостаточно средств!"
   },
-  "explorepost_jsx": {
-    "copied": "Скопировано!",
-    "copy": "Скопировать",
-    "alternative_sources": "Альтернативные источники"
-  },
   "search": {
     "placeholder": "Поиск постов и комментариев",
     "results": "Результатов: ",
@@ -797,42 +792,6 @@
     "verified_exchange_no_memo": "Для перевода токенов на этот аккаунт нужно указать заметку/memo.",
     "verified_exchange_liquid_only": "Перевод токенов на этот аккаунт с TIP-баланса невозможен, используйте основной баланс."
   },
-  "transferhistoryrow_jsx": {
-    "to_savings": "в сейф",
-    "from_savings": "из сейфа",
-    "cancel_transfer_from_savings": "Отменить перевод из сейфа",
-    "stop_power_down": "Понижение %(VESTING_TOKENS)s остановлено",
-    "start_power_down_of": "Понижение %(VESTING_TOKENS)s начато с",
-    "receive_interest_of": "Начислены проценты ",
-    "transfer": "Отправлено ",
-    "transferred": "Передано ",
-    "percen_referral": " - процент от награды в адрес вашего реферала ",
-    "funded_workers": "Профинансировано ",
-    "to_golos_power": " в Силу Голоса",
-    "to_golos_liquid": " на основной баланс",
-    "to_tip": " на TIP-баланс ",
-    "from_tip": " с TIP-баланса ",
-    "to": " для ",
-    "from": " от ",
-    "for": " за ",
-    "for_msg_in": " за сообщение в ",
-    "chat": "чате",
-    "issue": "Эмиссия токенов ",
-    "orders_canceled": "Биржевые ордера отменены, автоконвертация ",
-    "conversion_started": "Запущена 3.5 дневная конвертация ",
-    "were_converted": " были сконвертированы в ",
-    "including_conversion_fee": "в т.ч. комиссия",
-    "to_account": " на аккаунт ",
-    "claimed": "Списано ",
-    "account_unfreeze": " за активацию аккаунта",
-    "received": "Получено ",
-    "for_unwanted": " за нежелательное действие (ЧС)",
-    "comment": "пост",
-    "vote": "голос",
-    "some_action": "действие",
-    "with_negrep": " при отрицательной репутации",
-    "with_unlimit": " вне суточного лимита"
-  },
   "user_profile": {
     "unknown_account": "Неизвестный аккаунт",
     "user_hasnt_made_any_posts_yet": "Похоже, что %(name)s еще не написал постов!",
@@ -1063,7 +1022,7 @@
   },
   "services": {
     "title_1": "Наиболее популярные сервисы, игры и боты",
-    "title_2": "которые могут оказаться полезными для взаимодействия с блокчейном Голос",
+    "title_2": "которые могут быть полезными для взаимодействия с блокчейном Голос",
     "developer": "Разработчик",
     "services": "Сервисы",
     "games": "Игры",
