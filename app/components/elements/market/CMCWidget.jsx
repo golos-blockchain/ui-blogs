@@ -70,7 +70,7 @@ class CMCWidget extends React.Component {
                     <div className='CMCWidget__inner2'>
                         <div className="CMCWidget__icon-parent">
                             {christmas ?
-                                <img src={require('app/assets/images/logo-ng2.png')} width='50' height='50' /> :
+                                <img src={require('app/assets/images/logo-ng3.png')} width='40' height='46' /> :
                                 <Icon name='golos' size="2x" />}
                         </div>
                         <div className="CMCWidget__main-parent">

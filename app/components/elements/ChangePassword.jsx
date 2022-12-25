@@ -9,7 +9,6 @@ import tt from 'counterpart';
 import transaction from 'app/redux/Transaction'
 import LoadingIndicator from 'app/components/elements/LoadingIndicator'
 import {validate_account_name} from 'app/utils/ChainValidation'
-import KeyFile from 'app/utils/KeyFile';
 import { APP_NAME } from 'app/client_config';
 
 const {string, oneOf} = PropTypes
@@ -295,18 +294,12 @@ export default connect(
                     {authType: 'posting', oldAuth: password, newAuth: ph('posting', newWif)},
                     {authType: 'memo', oldAuth: password, newAuth: ph('memo', newWif)},
                 ];
-            const keyFile = new KeyFile(accountName, {
-                password: newWif,
-                owner: auths[0].newAuth, active: auths[1].newAuth,
-                posting: auths[2].newAuth, memo: auths[3].newAuth,
-            });
             dispatch(transaction.actions.updateAuthorities({
                 twofa,
                 // signingKey provides the password if it was not provided in auths
                 signingKey: authType ? password : null,
                 accountName, auths,
                 onSuccess: () => {
-                    keyFile.save();
                     success();
                 }, onError: error,
                 // notifySuccess: 'Change password success'

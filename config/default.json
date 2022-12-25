@@ -1,9 +1,12 @@
 {
-  "google_analytics_id": "UA-146157213-1",
+  "site_domain": "beta.golos.today",
+  "chain_id": "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12",
+  "ws_connection_client": "wss://apibeta.golos.today/ws",
+  "ws_connection_server": "wss://apibeta.golos.today/ws",
   "helmet": {
     "directives": {
       "defaultSrc": "'self'",
-      "childSrc": "'self' *.a-ads.com www.youtube.com w.soundcloud.com player.vimeo.com www.google.com coub.com *.yandex.ru vk.com login.vk.com ok.com rutube.ru",
+      "childSrc": "'self' www.youtube.com w.soundcloud.com player.vimeo.com www.google.com coub.com *.yandex.ru vk.com login.vk.com ok.com rutube.ru *.a-ads.com",
       "scriptSrc": "'self' 'unsafe-inline' 'unsafe-eval' app.sharpay.io www.google-analytics.com",
       "styleSrc": "'self' 'unsafe-inline' fonts.googleapis.com",
       "imgSrc": "* data:",
@@ -12,21 +15,19 @@
       "frameAncestors": "'none'"
     }
   },
-  "hide_comment_neg_rep": false,
-  "show_adv_banners": true,
-  "add_notify_site": {
-    "show": false,
-    "id": 145678655,
-    "link": "/@lex/obmen-lichnymi-soobsheniyami-i-nachalo-dlya-golos-messenger",
-    "title": "Обмен личными сообщениями и начало для Golos Messenger"
-  },
   "server_session_secret": "exiKdyF+IwRIXJDmtGIl4vWUz4i3eVSISpfZoeYc0s4=", // Generated via Node - crypto.randomBytes(32).toString('base64')
   "session_cookie_key": "gls.session",
   "session_key": "golos",
-  "site_domain": "beta.golos.today",
-  "ws_connection_client": "wss://apibeta.golos.today/ws",
-  "ws_connection_server": "wss://apibeta.golos.today/ws",
-  "chain_id": "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12",
+  "google_analytics_id": "UA-146157213-1",
+  "logo": "https://i.imgur.com/UQz7tKn.png",
+  "add_notify_site": {
+    "show": false,
+    "id": 1,
+    "link": "/@lex/obmen-lichnymi-soobsheniyami-i-nachalo-dlya-golos-messenger",
+    "title": "Обмен личными сообщениями и начало для Golos Messenger"
+  },
+  "hide_comment_neg_rep": false,
+  "show_adv_banners": true,
   "images": {
     "img_proxy_prefix": "https://devimages.golos.today",
     "img_proxy_backup_prefix": "https://steemitimages.com",
@@ -36,15 +37,15 @@
   "wallet_service": {
     "host": "https://devwallet.golos.today"
   },
+  "messenger_service": {
+    "host": "https://devchat.golos.app"
+  },
   "auth_service": {
     "host": "https://dev.golos.app",
     "custom_client": "blogs"
   },
   "notify_service": {
     "host": "https://devnotify.golos.app"
-  },
-  "messenger_service": {
-    "host": "https://devchat.golos.app"
   },
   "elastic_search": {
     "url": "https://devsearch.golos.today",
