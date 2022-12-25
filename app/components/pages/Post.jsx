@@ -361,9 +361,7 @@ class Post extends React.Component {
 
                 <div className="row hfeed">
                     {$STM_Config.show_adv_banners ?
-                    (<iframe data-aa='1150095' src='//acceptable.a-ads.com/1150095' scrolling='no'
-                    style={{width:'100%', maxWidth:'50rem', margin:'0 auto', border:'0px', padding:'0', overflow:'hidden'}}
-                    allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe>) : null}
+                        (<iframe data-aa='1150095' src='//acceptable.a-ads.com/1150095' scrolling='no' style={{width:'100%', maxWidth:'50rem', margin:'0 auto', border:'0px', padding:'0', overflow:'hidden'}} allowtransparency='true' sandbox='allow-same-origin allow-scripts allow-popups' loading='lazy'></iframe>) : null}
                 </div>
         
                 <div id="comments" className="Post_comments row hfeed">
@@ -397,13 +395,23 @@ class Post extends React.Component {
                     </div>
                 </div>
 
-                <p align="center">
-                	{/*<a target="_blank" href="https://dex.golos.app"><img src={require("app/assets/images/banners/golosdex.png")} width="800" height="100" /></a>
-                    <span className="strike"><a target="_blank" href="/@graphenelab/reliz-novoi-birzhi-golos">{tt('g.more_hint')}</a></span>*/}
-
-                    <a target="_blank" href="/@lex/alternativnyi-klient-blogov-golos-desktop-izmeneniya-v-tredakh-kommentariev"><img src={require("app/assets/images/banners/desktop.png")} width="800" height="100" /></a>
-                    <span className="strike"><a target="_blank" href="/@lex/alternativnyi-klient-blogov-golos-desktop-izmeneniya-v-tredakh-kommentariev">{tt('g.more_hint')}</a></span>
-                </p>
+                {Math.random() > 0.5 ? 
+                    <p align="center">
+                        <a target="_blank" href="/@lex/alternativnyi-klient-blogov-golos-desktop-izmeneniya-v-tredakh-kommentariev">
+                            <img src={require("app/assets/images/banners/desktop.png")} width="800" height="100" />
+                        </a>
+                        <span className="strike">
+                            <a target="_blank" href="/@lex/alternativnyi-klient-blogov-golos-desktop-izmeneniya-v-tredakh-kommentariev">{tt('g.more_hint')}</a>
+                        </span>
+                    </p> : 
+                    <p align="center">
+                        <a target="_blank" href="https://dex.golos.app/#/trade/GOLOS_YMUSDT">
+                            <img src={require("app/assets/images/banners/golosdex.png")} width="800" height="100" />
+                        </a>
+                        <span className="strike">
+                            <a target="_blank" href="/@graphenelab/reliz-novoi-birzhi-golos">{tt('g.more_hint')}</a>
+                        </span>
+                    </p>}
 
             </div>
         );

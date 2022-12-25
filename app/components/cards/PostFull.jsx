@@ -81,7 +81,6 @@ class PostFull extends React.Component {
         unlock: PropTypes.func.isRequired,
         deletePost: PropTypes.func.isRequired,
         showPromotePost: PropTypes.func.isRequired,
-        showExplorePost: PropTypes.func.isRequired,
     };
 
     constructor(props) {
@@ -179,10 +178,6 @@ class PostFull extends React.Component {
         const permlink = postContent.get('permlink');
 
         this.props.showPromotePost(author, permlink);
-    };
-
-    showExplorePost = () => {
-        this.props.showExplorePost(this.share_params.link);
     };
 
     render() {
@@ -590,12 +585,6 @@ export default connect(
             dispatch({
                 type: 'global/SHOW_DIALOG',
                 payload: { name: 'promotePost', params: { author, permlink } },
-            });
-        },
-        showExplorePost(permlink) {
-            dispatch({
-                type: 'global/SHOW_DIALOG',
-                payload: { name: 'explorePost', params: { permlink } },
             });
         },
     })
