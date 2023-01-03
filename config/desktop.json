@@ -6,6 +6,7 @@
       "golos.in",
       "golos.today"
     ],
+    "logo": "https://i.imgur.com/UQz7tKn.png",
     "ws_connection_app": [
       { "address": "wss://api.golos.id/ws" },
       { "address": "wss://api.aleksw.space/ws" },
@@ -47,6 +48,7 @@
       "fm-golostalk": {"domain": "golostalk.com"},
       "fm-prizmtalk": {"domain": "prizmtalk.com"},
       "fm-graphenetalks": {"domain": "forum.gph.ai"}
-    }
+    },
+    "main_app": "blogs"
   }
 }
