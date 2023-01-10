@@ -28,7 +28,7 @@
   "dependencies": {
     "@appigram/react-rangeslider": "2.2.5",
     "@popperjs/core": "^2.6.0",
-    "@xmldom/xmldom": "^0.7.5",
+    "@xmldom/xmldom": "^0.8.6",
     "assert": "^1.4.1",
     "autoprefixer": "^8.6.1",
     "bs58": "^3.1.0",
@@ -154,7 +154,7 @@
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.4.0",
-    "jsdom": "^11.11.0",
+    "jsdom": "^21.0.0",
     "mini-css-extract-plugin": "^0.4.0",
     "mocha": "^5.2.0",
     "node-watch": "^0.7.1",
