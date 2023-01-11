@@ -71,7 +71,7 @@
     "koa-session": "^3.4.0",
     "koa-static-cache": "^4.1.1",
     "libsodium-wrappers": "0.4.8",
-    "lightbox-react": "^0.3.7",
+    "lightbox-react": "^0.3.8",
     "lodash": "^4.17.11",
     "minimist": "^1.2.0",
     "multiselect-react-dropdown": "^1.6.7",
