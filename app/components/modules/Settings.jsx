@@ -196,7 +196,9 @@ class Settings extends React.Component {
         cookie.save(LOCALE_COOKIE_KEY, language, {path: "/", expires: new Date(Date.now() + 60 * 60 * 24 * 365 * 10 * 1000)});
         localStorage.setItem('language', language)
         this.props.changeLanguage(language)
-        this.notify()
+        setTimeout(() => {
+            this.notify()
+        }, 500)
     }
 
     handleSubmit = ({updateInitialValues}) => {
