@@ -2625,6 +2625,7 @@ circular-json@^0.3.1:
 class-autobind@^0.1.2:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/class-autobind/-/class-autobind-0.1.4.tgz#34516c49167cf8d3f639ddc186bcfa2268afff34"
+  integrity sha512-Hd4wk0aVnIiMKCI/qA006/U+yOlbLV0BVAeaQqh9NyQZMPWfIOJh5fPZqN3T9Y9UydYdfIa27Hxp+dPh7jYT3w==
 
 class-utils@^0.3.5:
   version "0.3.6"
@@ -3804,18 +3805,21 @@ dot-prop@^5.2.0:
 draft-js-export-html@^0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/draft-js-export-html/-/draft-js-export-html-0.2.2.tgz#9a945eb7753945134f4b8978f03d322a4b0e640e"
+  integrity sha512-51IBERCNQuHrIHPmm0JNxDniJN3RGQM7CO4/SCDaBC82KZisSxlPr+NDohMsUKEBFXSTzFQAGCVhge8ZnuSStQ==
   dependencies:
     draft-js-utils "^0.1.5"
 
 draft-js-export-markdown@^0.2.0:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/draft-js-export-markdown/-/draft-js-export-markdown-0.2.2.tgz#5b0a1a10591d8b96199dcb70b04b1ab7deb72a33"
+  integrity sha512-HXZ2E8zpDGlGbD6nVkgn2rxlv0J059SsQTKLTHNtpWuuCmU68TqfaS0Wl6RB0Jzh8kb0MBRKVgCSs396G/O+cg==
   dependencies:
     draft-js-utils "^0.1.5"
 
 draft-js-import-element@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/draft-js-import-element/-/draft-js-import-element-0.2.0.tgz#de507359a38284ad48f4f5b03e35d2ab062cbf9e"
+  integrity sha512-b6rD/T2MYcErF1zqthxWXqEoVPNVkdBAKr5g6X2uWZc8Sm8ST7eqAvgPGQvgJjlfNMYuUXl4YUhCe4qRI9Sldg==
   dependencies:
     draft-js-utils "^0.1.5"
     synthetic-dom "^0.1.4"
@@ -3823,12 +3827,14 @@ draft-js-import-element@^0.2.0:
 draft-js-import-html@^0.1.10:
   version "0.1.10"
   resolved "https://registry.yarnpkg.com/draft-js-import-html/-/draft-js-import-html-0.1.10.tgz#9264b99dafa489f8fd737bcd7538b0f03b82664c"
+  integrity sha512-3XXphZzcGKaLqwd/MaFAHw89FHI1Zmb6LnPsg0QqGs8x6qjgcaDhTVh3shl+pauAEH78t0Wgt+QDVbebKijmig==
   dependencies:
     draft-js-import-element "^0.2.0"
 
 draft-js-import-markdown@^0.1.6:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/draft-js-import-markdown/-/draft-js-import-markdown-0.1.7.tgz#7c961fd13e515940a9df7cf7a3c3762bf114923d"
+  integrity sha512-i5ux10xFJU5J4dZOywQh5h5kvED55oklLeJ9isSQ8l0pqtYZqCUZRS7IiXkSNSn/xupdTD52ywZe4jqV5fM4Yg==
   dependencies:
     draft-js-import-element "^0.2.0"
     synthetic-dom "^0.1.4"
@@ -3836,10 +3842,12 @@ draft-js-import-markdown@^0.1.6:
 draft-js-utils@^0.1.5:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/draft-js-utils/-/draft-js-utils-0.1.7.tgz#e2b6927ca620edf1855a4bfc1cf1d21080a70f16"
+  integrity sha512-ji64YeVsRJ90UJ4QPmhhF4ryN+EvDAw6Y1R8aCqIJy7CbPsxMOECmtWBmSciEfcrE3dKZFoZKjRPV11pwGEoNg==
 
 draft-js@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/draft-js/-/draft-js-0.7.0.tgz#29506980d2cb96db2697054fae619e6f5b5d4101"
+  integrity sha512-yqJ2mI3rpinOnB/8n36rUo2JzhWJV9BLZsFzyyFaEomlOXCAtlqpGbMxezQAARd/AzjnETY8tCaqu4ekKV6Y9w==
   dependencies:
     fbjs "^0.8.1"
     immutable "^3.7.4"
@@ -4463,7 +4471,20 @@ fastparse@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/fastparse/-/fastparse-1.1.1.tgz#d1e2643b38a94d7583b479060e6c4affc94071f8"
 
-fbjs@^0.8.1, fbjs@^0.8.9:
+fbjs@^0.8.1:
+  version "0.8.18"
+  resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.18.tgz#9835e0addb9aca2eff53295cd79ca1cfc7c9662a"
+  integrity sha512-EQaWFK+fEPSoibjNy8IxUtaFOMXcWsY0JaVrQoZR9zC8N2Ygf9iDITPWjUTVIax95b6I742JFLqASHfsag/vKA==
+  dependencies:
+    core-js "^1.0.0"
+    isomorphic-fetch "^2.1.1"
+    loose-envify "^1.0.0"
+    object-assign "^4.1.0"
+    promise "^7.1.1"
+    setimmediate "^1.0.5"
+    ua-parser-js "^0.7.30"
+
+fbjs@^0.8.9:
   version "0.8.17"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.17.tgz#c4d598ead6949112653d6588b01a5cdcd9f90fdd"
   dependencies:
@@ -8951,6 +8972,7 @@ react-router@3.2.6:
 react-rte-image@^0.3.1:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/react-rte-image/-/react-rte-image-0.3.1.tgz#311d48d0de252fd77a45c2e0107c5fb5c6a116e4"
+  integrity sha512-69gX5x1YwGdvkp98bNPCIs52S+r8gR8gvXW+5YiE4hm7UEzMGMQzpUh5EYhOxuRp3v07M+IFUOuMFKaN/dmlzg==
   dependencies:
     class-autobind "^0.1.2"
     classnames "^2.2.5"
@@ -10390,6 +10412,7 @@ sync-request@^3.0.1:
 synthetic-dom@^0.1.4:
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/synthetic-dom/-/synthetic-dom-0.1.5.tgz#d4ccde4a6ac78b8a9677cf31617da8df541106b4"
+  integrity sha512-FEiUZs+SUPNjx7cvVb/XiGRQ1F632Vlwr5LMuQTN8dZOV+x8XWCz5qfskt3mdUE2xbRek4qQKEi3xu6pRu09yA==
 
 table@4.0.2:
   version "4.0.2"
@@ -10710,6 +10733,11 @@ ua-parser-js@^0.7.18:
   version "0.7.28"
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.28.tgz#8ba04e653f35ce210239c64661685bf9121dec31"
   integrity sha512-6Gurc1n//gjp9eQNXjD9O3M/sMwVtN5S8Lv9bvOYBfKfDNiIIhqiyi01vMBO45u4zkDE420w/e0se7Vs+sIg+g==
+
+ua-parser-js@^0.7.30:
+  version "0.7.32"
+  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.32.tgz#cd8c639cdca949e30fa68c44b7813ef13e36d211"
+  integrity sha512-f9BESNVhzlhEFf2CHMSj40NWOjYPl1YKYbrvIr/hFTDEmLq7SRbWvm7FcdcpCYT95zrOhC7gZSxjdnnTpBcwVw==
 
 uglify-es@^3.3.4:
   version "3.3.9"
