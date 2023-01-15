@@ -100,7 +100,7 @@
     "react-router": "3.2.6",
     "react-router-redux": "^4.0.8",
     "react-router-scroll": "^0.4.4",
-    "react-rte-image": "^0.3.1",
+    "react-rte": "^0.16.5",
     "react-scroll-up": "^1.4.0",
     "react-slick": "^0.29.0",
     "react-tooltip": "^3.4.0",

@@ -24,7 +24,7 @@ import KEYS from 'app/utils/keyCodes';
 
 const remarkable = new Remarkable({ html: true, breaks: true });
 const RichTextEditor = process.env.BROWSER
-    ? require('react-rte-image').default
+    ? require('react-rte').default
     : null;
 const RTE_DEFAULT = false;
 
