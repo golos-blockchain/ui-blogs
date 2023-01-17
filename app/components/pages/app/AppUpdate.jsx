@@ -13,7 +13,7 @@ class AppUpdate extends React.Component {
 
     appUpdaterUrl = (file) => {
         let url = new URL(
-            '/blogs-' + ($STM_Config.platform === 'linux' ? 'linux' : 'win') + '/' + file,
+            '/desktop-' + ($STM_Config.platform === 'linux' ? 'linux' : 'win') + '/' + file,
             $STM_Config.app_updater.host
         )
         return url.toString()
