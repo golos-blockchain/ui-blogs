@@ -40,12 +40,13 @@ cfg.url_domains = [...config.get('desktop.another_domains')]
 if (!cfg.url_domains.includes(cfg.site_domain)) {
     cfg.url_domains.push(cfg.site_domain)
 }
+copyKey('logo')
 copyKey('ws_connection_app')
 copyKey('chain_id')
 copyKey('images')
 copyKey('wallet_service')
 cfg.blogs_service = {
-    host: 'app://' + config.get('site_domain')
+    host: 'app://' + config.get('desktop.site_domain')
 }
 copyKey('auth_service')
 copyKey('notify_service')
@@ -54,4 +55,5 @@ copyKey('elastic_search')
 copyKey('apidex_service')
 copyKey('app_updater')
 copyKey('forums')
+copyKey('main_app')
 fs.writeFileSync(cfgFile, 'module.exports = ' + JSON.stringify(cfg, null, 4))

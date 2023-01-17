@@ -1,7 +1,6 @@
 import React, { PureComponent, createRef } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import is from 'styled-is';
+import styled, { css } from 'styled-components'
 import tt from 'counterpart';
 
 import { checkMobileDevice } from 'src/app/helpers/browser';
@@ -56,13 +55,13 @@ const Captions = styled.div`
 
 const Caption = styled.div`
     flex: 1;
-    ${is('left')`
+    ${props => props.left && css`
         text-align: left;
     `}
-    ${is('center')`
+    ${props => props.center && css`
         text-align: center;
     `}
-    ${is('right')`
+    ${props => props.right && css`
         text-align: right;
     `}
 `;
@@ -73,7 +72,7 @@ const Wrapper = styled.div`
     user-select: none;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-    ${is('disabled')`
+    ${props => props.disabled && css`
         cursor: default;
         
         ${Progress} {
@@ -96,7 +95,7 @@ const Wrapper = styled.div`
         border-radius: 1px;
         background: #e1e1e1;
     }
-    ${is('red')`
+    ${props => props.red && css`
         ${Progress} {
             background: #ff4e00;
         }

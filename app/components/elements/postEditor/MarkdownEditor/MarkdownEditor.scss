@@ -34,9 +34,9 @@
 
 .MarkdownEditor {
   & .CodeMirror {
-    padding: 0;
+    padding: 0 !important;
     margin: 0 -4px;
-    border: none;
+    border: none !important;
     border-radius: 0;
 
     @include themify($themes) {
@@ -59,7 +59,7 @@
   //}
 
   &_comment .CodeMirror {
-    padding: 10px 8px 0;
+    padding: 10px 8px 0 !important;
     margin: 0;
 
     @include themify($themes) {
@@ -70,13 +70,13 @@
   }
 
   & .CodeMirror-scroll {
-    min-height: 350px;
+    min-height: 350px !important;
   }
 
   &_comment {
     & .CodeMirror,
     & .CodeMirror-scroll {
-      min-height: 3em;
+      min-height: 3em !important;
     }
   }
 

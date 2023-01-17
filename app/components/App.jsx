@@ -1,8 +1,14 @@
 import React from 'react';
+import golos from 'golos-lib-js';
+import { key_utils } from 'golos-lib-js/lib/auth/ecc';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Toaster } from 'react-hot-toast'
 import cn from 'classnames';
-import { createGlobalStyle } from 'styled-components';
+import tt from 'counterpart';
+import CloseButton from 'react-foundation-components/lib/global/close-button';
+import { createGlobalStyle } from 'styled-components'
+
 import AppPropTypes from 'app/utils/AppPropTypes';
 import Header from 'app/components/modules/Header';
 import Footer from 'app/components/modules/Footer';
@@ -12,15 +18,11 @@ import user from 'app/redux/User';
 import g from 'app/redux/GlobalReducer';
 import { Link } from 'react-router';
 import resolveRoute from 'app/ResolveRoute';
-import CloseButton from 'react-foundation-components/lib/global/close-button';
 import Dialogs from '@modules/Dialogs';
 import Modals from '@modules/Modals';
 import Icon from '@elements/Icon';
 import ScrollButton from '@elements/ScrollButton';
-import { key_utils } from 'golos-lib-js/lib/auth/ecc';
 import MiniHeader from '@modules/MiniHeader';
-import golos from 'golos-lib-js';
-import tt from 'counterpart';
 import PageViewsCounter from '@elements/PageViewsCounter';
 import DialogManager from 'app/components/elements/common/DialogManager';
 import { init as initAnchorHelper } from 'app/utils/anchorHelper';
@@ -378,6 +380,7 @@ class App extends React.Component {
                 }
                 onMouseMove={this.onEntropyEvent}
             >
+                {process.env.BROWSER ? <Toaster position='bottom-left' /> : null}
                 {noHeader ? null : (miniHeader ? <MiniHeader /> : <Header />)}
                 <div className={cn('App__content' +
                     (noHeader ? ' no-header' : ''), {

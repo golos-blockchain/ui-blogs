@@ -105,11 +105,16 @@ function _parseHtml(html, mutate) {
       html = '<html></html>'
     }
 
+    if (!html.includes('<html')) {
+        html = '<html>' + html + '</html>'
+    }
+
     const doc = DOMParser.parseFromString(html, 'text/html');
 
     const savedDocumentElement = doc.documentElement;
 
-    traverse(doc, state);
+    // inside <html>
+    traverse(doc.childNodes[0], state);
 
     if (!doc.documentElement) {
         doc.documentElement = savedDocumentElement;
@@ -213,7 +218,7 @@ function iframe(state, child) {
         child.parentNode.replaceChild(
             DOMParser.parseFromString(
                 `<div class="videoWrapper">${html}</div>`
-            ),
+            ).firstChild,
             child
         );
     }
@@ -302,7 +307,7 @@ function linkifyNode(state, child) {
         if (state.mutate && content !== data) {
             const newChild = DOMParser.parseFromString(
                 `<span>${content}</span>`
-            );
+            ).firstChild
 
             child.parentNode.replaceChild(newChild, child);
         }
@@ -397,7 +402,7 @@ function embedYouTubeNode(state, node) {
         return;
     }
 
-    const v = DOMParser.parseFromString(`~~~ embed:${yt.id} youtube ~~~`);
+    const v = DOMParser.parseFromString(`~~~ embed:${yt.id} youtube ~~~`).firstChild
     node.parentNode.replaceChild(v, node);
 
     if (state.links) {
@@ -440,7 +445,7 @@ function embedVimeoNode(state, node) {
     const id = match[1];
 
     const url = `https://player.vimeo.com/video/${id}`;
-    const v = DOMParser.parseFromString(`~~~ embed:${id} vimeo ~~~`);
+    const v = DOMParser.parseFromString(`~~~ embed:${id} vimeo ~~~`).firstChild
     node.parentNode.replaceChild(v, node);
 
     if (state.links) {
@@ -460,7 +465,7 @@ function embedCoubNode(state, node) {
     const id = match[1];
 
     node.parentNode.replaceChild(
-        DOMParser.parseFromString(`~~~ embed:${id} coub ~~~`),
+        DOMParser.parseFromString(`~~~ embed:${id} coub ~~~`).firstChild,
         node
     );
 
@@ -481,7 +486,7 @@ function embedRutubeNode(state, node) {
     const id = match[1];
 
     node.parentNode.replaceChild(
-        DOMParser.parseFromString(`~~~ embed:${id} rutube ~~~`),
+        DOMParser.parseFromString(`~~~ embed:${id} rutube ~~~`).firstChild,
         node
     );
 
@@ -502,7 +507,7 @@ function embedOkruNode(state, node) {
     const id = match[1];
 
     node.parentNode.replaceChild(
-        DOMParser.parseFromString(`~~~ embed:${id} ok_video ~~~`),
+        DOMParser.parseFromString(`~~~ embed:${id} ok_video ~~~`).firstChild,
         node
     );
 
@@ -524,7 +529,7 @@ function embedTelegramNode(state, node) {
     const id = match[2]
 
     node.parentNode.replaceChild(
-        DOMParser.parseFromString(`~~~ embed:${author}_${id} telegram ~~~`),
+        DOMParser.parseFromString(`~~~ embed:${author}_${id} telegram ~~~`).firstChild,
         node
     );
 
@@ -568,7 +573,7 @@ function header(state, node) {
         node.appendChild(
             DOMParser.parseFromString(
                 `<a class="header-anchor" href="#${id}"></a>`
-            )
+            ).firstChild
         );
     }
 }
