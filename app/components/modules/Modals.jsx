@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
 import Reveal from 'react-foundation-components/lib/global/reveal';
-import {NotificationStack} from 'react-notification'
 
 import LoginForm from 'app/components/modules/LoginForm';
 import ConfirmTransactionForm from 'app/components/modules/ConfirmTransactionForm';
@@ -97,11 +96,6 @@ class Modals extends React.Component {
                     <CloseButton onClick={hideAddAccount} />
                     <AddAccount />
                 </Reveal>}
-                <NotificationStack
-                    style={false}
-                    notifications={notifications_array}
-                    onDismiss={n => removeNotification(n.key)}
-                />
             </div>
         );
     }

@@ -35,6 +35,7 @@ export const AllowTypes = {
     postEdit: 5,
     vote: 6,
     voteArchived: 7,
+    voteRep: 8,
 }
 
 function getServiceCost(actor, aType) {
@@ -45,6 +46,8 @@ function getServiceCost(actor, aType) {
         res = actor.services.post
     } else if (aType === AllowTypes.vote) { // but not voteArchived
         res = actor.services.vote
+    } else if (aType === AllowTypes.voteRep) {
+        res = actor.services.vote_rep
     }
     return res ? Asset(res) : Asset(0, 3, 'GOLOS')
 }
@@ -78,6 +81,7 @@ export async function checkAllowed(blockingName, blockerNames, tipAmount = null,
     let hasNegRep = false
     let blockType
     let fatal = false
+    let isGeneral = false
     for (const aType of aTypes) {
         const setFatal = () => {
             if (aType === AllowTypes.transfer) {
@@ -85,9 +89,13 @@ export async function checkAllowed(blockingName, blockerNames, tipAmount = null,
             }
         }
 
+        if (aType === AllowTypes.voteRep) {
+            isGeneral = true
+        }
+
         const negRep = aType == AllowTypes.comment ||
             aType == AllowTypes.post || aType == AllowTypes.vote ||
-            aType == AllowTypes.voteArchived
+            aType == AllowTypes.voteArchived || aType == AllowTypes.voteRep
         if (negRep && blocking.reputation < 0) {
             cost = cost.plus(await unlim())
             hasNegRep = true
@@ -133,6 +141,9 @@ export async function checkAllowed(blockingName, blockerNames, tipAmount = null,
 
     if (cost.amount) {
         addAmount()
+        if (isGeneral) {
+            return await returnError(blocking, cost, 'general', fatal)
+        }
         return await returnError(blocking, cost, 'window', fatal)
     }
 

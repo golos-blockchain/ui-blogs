@@ -1,9 +1,8 @@
 import { LOCALE_COOKIE_KEY, LANGUAGES } from 'app/client_config';
 import React, { PureComponent } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components'
 import { connect } from 'react-redux';
 import cookie from "react-cookie";
-import is from 'styled-is';
 import user from 'app/redux/User';
 
 const HIDE_CHEVRON_WIDTH = 500;
@@ -44,7 +43,7 @@ const Chevron = styled.div`
     border: 3px solid transparent;
     border-top-color: #363636;
 
-    ${is('open')`
+    ${props => props.open && css`
         top: 19px;
         border-top-color: transparent;
         border-bottom-color: #363636;
@@ -71,7 +70,7 @@ const List = styled.div`
     transition: opacity 0.4s;
     pointer-events: none;
 
-    ${is('open')`
+    ${props => props.open && css`
         opacity: 1;
         pointer-events: initial;
     `};

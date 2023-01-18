@@ -8,14 +8,14 @@ import cn from 'classnames';
 import MarkdownEditorToolbar from 'app/components/elements/postEditor/MarkdownEditorToolbar';
 import DialogManager from 'app/components/elements/common/DialogManager';
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
-import 'simplemde/dist/simplemde.min.css';
+import 'easymde/dist/easymde.min.css';
 
 const DELAYED_TIMEOUT = 1000;
 const LINE_HEIGHT = 28;
-let SimpleMDE;
+let EasyMDE;
 
 if (process.env.BROWSER) {
-    SimpleMDE = require('simplemde');
+    EasyMDE = require('easymde');
 }
 
 let lastWidgetId = 0;
@@ -64,8 +64,10 @@ export default class MarkdownEditor extends PureComponent {
     _init() {
         const props = this.props;
 
-        this._simplemde = new SimpleMDE({
+        this._easymde = new EasyMDE({
             spellChecker: false,
+            inputStyle: 'contenteditable',
+            nativeSpellcheck: true,
             status: false,
             autofocus: props.autoFocus,
             placeholder: props.placeholder,
@@ -83,7 +85,7 @@ export default class MarkdownEditor extends PureComponent {
 
         this._lineWidgets = [];
 
-        this._cm = this._simplemde.codemirror;
+        this._cm = this._easymde.codemirror;
         this._cm.on('change', this._onChange);
         this._cm.on('paste', this._onPaste);
 
@@ -97,8 +99,8 @@ export default class MarkdownEditor extends PureComponent {
 
         // DEV: For experiments
         if (process.env.NODE_ENV !== 'production') {
-            window.SM = SimpleMDE;
-            window.sm = this._simplemde;
+            window.SM = EasyMDE;
+            window.sm = this._easymde;
             window.cm = this._cm;
         }
 
@@ -118,7 +120,7 @@ export default class MarkdownEditor extends PureComponent {
         this._cm.off('paste', this._onPaste);
         this._cm.off('cursorActivity', this._onCursorActivityLazy);
         this._cm = null;
-        this._simplemde = null;
+        this._easymde = null;
     }
 
     render() {
@@ -137,12 +139,12 @@ export default class MarkdownEditor extends PureComponent {
                     accept="image/*"
                     onDrop={this._onDrop}
                 >
-                    {this._simplemde ? (
+                    {this._easymde ? (
                         <MarkdownEditorToolbar
                             commentMode={commentMode}
-                            editor={this._simplemde}
+                            editor={this._easymde}
                             uploadImage={uploadImage}
-                            SM={SimpleMDE}
+                            SM={EasyMDE}
                         />
                     ) : null}
                     <textarea
@@ -159,11 +161,11 @@ export default class MarkdownEditor extends PureComponent {
     }
 
     getValue() {
-        return this._simplemde.value();
+        return this._easymde.value();
     }
 
     setValue(value) {
-        this._simplemde.value(value);
+        this._easymde.value(value);
     }
 
     replaceSelection(text) {
@@ -266,7 +268,7 @@ export default class MarkdownEditor extends PureComponent {
     }
 
     _cutIframes() {
-        const text = this._simplemde.value();
+        const text = this._easymde.value();
 
         let updated = false;
 
@@ -314,7 +316,7 @@ export default class MarkdownEditor extends PureComponent {
             this._lineWidgets = [];
 
             const cursor = this._cm.getCursor();
-            this._simplemde.value(updatedText);
+            this._easymde.value(updatedText);
 
             setTimeout(() => {
                 this._cm.setCursor(cursor);

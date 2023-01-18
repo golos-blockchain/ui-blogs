@@ -4,7 +4,7 @@ import './HtmlEditor.scss';
 let RichTextEditor;
 
 if (process.env.BROWSER) {
-    RichTextEditor = require('react-rte-image').default;
+    RichTextEditor = require('react-rte').default;
 }
 
 export default class HtmlEditor extends React.PureComponent {
@@ -30,9 +30,34 @@ export default class HtmlEditor extends React.PureComponent {
             return;
         }
 
+        const toolbarConfig = {
+            display: ['INLINE_STYLE_BUTTONS', 'BLOCK_TYPE_BUTTONS', 'LINK_BUTTONS',
+                'IMAGE_BUTTON', 'BLOCK_TYPE_DROPDOWN', 'HISTORY_BUTTONS'],
+            INLINE_STYLE_BUTTONS: [
+                { label: 'Bold', style: 'BOLD'},
+                { label: 'Italic', style: 'ITALIC'},
+                { label: 'Strikethrough', style: 'STRIKETHROUGH'},
+                { label: 'Monospace', style: 'CODE'}
+            ],
+            BLOCK_TYPE_BUTTONS: [
+                { label: 'UL', style: 'unordered-list-item'},
+                { label: 'OL', style: 'ordered-list-item'},
+                { label: 'Blockquote', style: 'blockquote'},
+            ],
+            BLOCK_TYPE_DROPDOWN: [
+                {label: 'Normal', style: 'unstyled'},
+                {label: 'Heading Large', style: 'header-one'},
+                {label: 'Heading Medium', style: 'header-two'},
+                {label: 'Heading Small', style: 'header-three'},
+                {label: 'Code Block', style: 'code-block'},
+            ]
+        }
+
         return (
             <RichTextEditor
                 className="HtmlEditor"
+                toolbarClassName='editorToolbar'
+                toolbarConfig={toolbarConfig}
                 value={this.props.value}
                 onChange={this.props.onChange}
                 ref="editor"

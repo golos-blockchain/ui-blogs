@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { toast } from 'react-hot-toast'
 import tt from 'counterpart';
 import { Asset } from 'golos-lib-js/lib/utils';
 
@@ -25,7 +25,11 @@ const cross = () => {
         dangerouslySetInnerHTML={{ __html: iconCross }} />);
 };
 
-const transfer = (scope, type, op) => {
+const onClick = (e, t) => {
+    toast.dismiss(t.id)
+}
+
+const transfer = (t, scope, type, op) => {
     const { from, to, amount, } = op;
     const isSend = scope === 'send';
 
@@ -55,7 +59,7 @@ const transfer = (scope, type, op) => {
                 </span>
             </div>
             <div className='NotificationContent__container_center'>
-                <LinkEx to={url} target={target}>
+                <LinkEx to={url} target={target} onClick={e => onClick(e, t)}>
                     <span className='NotificationContent__action_source'>
                         {isSend ? null : from}
                         <span style={{ color: '#919191', fontWeight: '450', }}>
@@ -68,7 +72,7 @@ const transfer = (scope, type, op) => {
     );
 };
 
-const comment = (scope, type, op) => {
+const comment = (t, scope, type, op) => {
     const { author, permlink, parent_author, parent_permlink, _depth, mentioned, } = op;
 
     let icon = null;
@@ -102,20 +106,20 @@ const comment = (scope, type, op) => {
                 </span>
             </div>
             <div className='NotificationContent__container_center'>
-                <Link to={url}>
+                <LinkEx to={url} onClick={e => onClick(e, t)}>
                     <span className='NotificationContent__action_source'>
                         {author}
                         <span style={{ color: '#919191', fontWeight: '450', }}>
                             {message}.
                         </span>
                     </span>
-                </Link>
+                </LinkEx>
             </div>
         </div>
     );
 };
 
-const message = (scope, type, op) => {
+const message = (t, scope, type, op) => {
     const { from, to } = op;
 
     let icon = 'notification/message';
@@ -143,7 +147,7 @@ const message = (scope, type, op) => {
     );
 };
 
-const fillOrder = (scope, type, op) => {
+const fillOrder = (t, scope, type, op) => {
     const { current_pays, open_pays, } = op;
 
     const sym1 = Asset(current_pays).symbol;
@@ -177,15 +181,15 @@ const fillOrder = (scope, type, op) => {
     );
 };
 
-function render(action) {
+export default function render(t, action) {
     const { scope, type, op } = action;
     try {
         return (
-            type === 'transfer' ? transfer(scope, type, op) :
-            (type === 'donate' || type === 'donate_msgs') ? transfer(scope, type, op) :
-            (type === 'comment' || type === 'comment_reply' || type === 'comment_mention') ? comment(scope, type, op) :
-            type === 'private_message' ? message(scope, type, op) :
-            type === 'fill_order' ? fillOrder(scope, type, op) :
+            type === 'transfer' ? transfer(t, scope, type, op) :
+            (type === 'donate' || type === 'donate_msgs') ? transfer(t, scope, type, op) :
+            (type === 'comment' || type === 'comment_reply' || type === 'comment_mention') ? comment(t, scope, type, op) :
+            type === 'private_message' ? message(t, scope, type, op) :
+            type === 'fill_order' ? fillOrder(t, scope, type, op) :
             null
         );
     } catch (err) {
@@ -193,51 +197,3 @@ function render(action) {
         throw err;
     }
 }
-
-export default action => ({
-    // the following two are merged by react-notification
-    // and overload .notification-bar css class
-    barStyle: {},
-    activeBarStyle: {
-        // left: 'auto',
-        // right: '1rem',
-        // transition: '',
-        // transitionProperty: 'right',
-        // transitionDuration: '.5s',
-        // transitionTimingFunction: 'cubic-bezier(0.89, 0.01, 0.5, 1.1)',
-        background: '#FFFFFF',
-        borderRadius: '6px',
-        paddingTop: '11px',
-        paddingBottom: '11px',
-        paddingLeft: '21px',
-        paddingRight: '14px'
-    },
-    // title can be inline-styled
-    title: render(action),
-    titleStyle: {
-        display: 'flex',
-        alignItems: 'center',
-        height: '100%',
-        // override react-notification
-        marginRight: '0px'
-    },
-    message: '',
-    action:
-        <span style={actionStyle}>
-            {cross()}
-        </span>,
-    actionStyle: {
-        // background: 'red',
-        padding: '0px',
-        marginLeft: '18px',
-        color: 'blue',
-        font: '.75rem normal Roboto, sans-serif',
-        lineHeight: '1rem',
-        letterSpacing: '.125ex',
-        textTransform: 'uppercase',
-        borderRadius: '0px',
-        cursor: 'pointer'
-    },
-    key: 'chain_' + Date.now(),
-    dismissAfter: 10000,
-});

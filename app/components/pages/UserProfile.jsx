@@ -18,6 +18,7 @@ import UserList from 'app/components/elements/UserList';
 import Follow from 'app/components/elements/Follow';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import PostsList from 'app/components/cards/PostsList';
+import { checkAllowed, AllowTypes } from 'app/utils/Allowance'
 import { authUrl, } from 'app/utils/AuthApiClient'
 import { getGameLevel } from 'app/utils/GameUtils'
 import { msgsHost, msgsLink } from 'app/utils/ExtLinkUtils'
@@ -569,8 +570,24 @@ module.exports = {
         },
         dispatch => ({
             login: () => {dispatch(user.actions.showLogin())},
-            voteRep: ({voter, author, weight, success, error}) => {
+            voteRep: async ({voter, author, weight, success, error}) => {
+                let blocking
+                if (weight < 0) {
+                    blocking = await checkAllowed(voter, [],
+                        null, AllowTypes.voteRep)
+                    if (blocking.error) {
+                        dispatch({
+                            type: 'ADD_NOTIFICATION',
+                            payload: {
+                                message: blocking.error,
+                                dismissAfter: 5000,
+                            },
+                        })
+                        return
+                    }
+                }
                 const confirm = () => {
+                    if (blocking && blocking.confirm) return blocking.confirm
                     if (weight < 0) {
                         return tt('reputation_panel_jsx.confirm_downvote_ACCOUNT_NAME', {
                             ACCOUNT_NAME: author,
