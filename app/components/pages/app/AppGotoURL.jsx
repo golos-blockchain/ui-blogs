@@ -36,6 +36,18 @@ class AppGotoURL extends React.Component {
                 this.close()
                 return
             }
+            for (const serviceKey of ['wallet_service', 'messenger_service']) {
+                if ($STM_Config[serviceKey]) {
+                    let serviceUrl = $STM_Config[serviceKey].host
+                    serviceUrl = new URL(serviceUrl)
+                    if (url.host === serviceUrl.host) {
+                        url.protocol = 'app:'
+                        window.appNavigation.loadURL(url.toString())
+                        this.close()
+                        return
+                    }
+                }
+            }
         } catch (err) {
             console.error(err)
         }

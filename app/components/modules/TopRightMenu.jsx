@@ -282,6 +282,6 @@ export default connect(
         goChangeAccount: (e) => {
             if (e) e.preventDefault()
             dispatch(user.actions.showChangeAccount())
-        }
+        },
     })
 )(TopRightMenu);

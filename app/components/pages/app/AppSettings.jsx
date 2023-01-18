@@ -23,6 +23,7 @@ class AppSettings extends React.Component {
         cfg.auth_service.host = data.auth_service
         cfg.notify_service.host = data.notify_service
         cfg.elastic_search.url = data.elastic_search
+        cfg.main_app = data.main_app
         window.appSettings.save(cfg)
     }
 
@@ -38,6 +39,7 @@ class AppSettings extends React.Component {
             auth_service: $STM_Config.auth_service.host,
             notify_service: $STM_Config.notify_service.host,
             elastic_search: $STM_Config.elastic_search.url,
+            main_app: $STM_Config.main_app,
         }
         this.initialValues = initialValues
     }
@@ -156,6 +158,20 @@ class AppSettings extends React.Component {
                                     type='text'
                                     autoComplete='off'
                                 />
+                            </div>
+                        </div>
+                    </div>
+                    <div className='row'>
+                        <div className='column small-12' style={{paddingTop: 5}}>
+                            {tt('app_settings.main_app')}
+                            <div className='input-group' style={{marginBottom: '1.25rem'}}>
+                                <Field name='main_app'
+                                    as='select'
+                                >
+                                    <option value='blogs'>{tt('app_settings.blogs_service')}</option>
+                                    <option value='wallet'>{tt('app_settings.wallet_service')}</option>
+                                    <option value='msgs'>{tt('app_settings.messenger_service')}</option>
+                                </Field>
                             </div>
                         </div>
                     </div>

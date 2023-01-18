@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import tt from 'counterpart';
-import styled from 'styled-components';
-import is from 'styled-is';
+import styled, { css } from 'styled-components'
 import Icon from 'app/components/elements/Icon';
 
 const Wrapper = styled.div`
@@ -25,7 +24,7 @@ const Root = styled.i`
     background: #fff;
     box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.2);
     z-index: 10;
-    ${is('isPreview')`
+    ${props => props.isPreview && css`
         color: #fff !important;
         background: #2879ff;
     `};

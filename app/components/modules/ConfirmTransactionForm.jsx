@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import transaction from 'app/redux/Transaction'
-import {findParent} from 'app/utils/DomUtils';
 import tt from 'counterpart';
 
 class ConfirmTransactionForm extends Component {
@@ -17,16 +16,6 @@ class ConfirmTransactionForm extends Component {
         confirmErrorCallback: PropTypes.func,
         okClick: PropTypes.func,
     };
-    componentDidMount() {
-        document.body.addEventListener('click', this.closeOnOutsideClick);
-    }
-    componentWillUnmount() {
-        document.body.removeEventListener('click', this.closeOnOutsideClick);
-    }
-    closeOnOutsideClick = (e) =>  {
-        const inside_dialog = findParent(e.target, 'ConfirmTransactionForm');
-        if (!inside_dialog) this.onCancel();
-    }
     onCancel = () => {
         const {confirmErrorCallback, onCancel} = this.props;
         if(confirmErrorCallback) confirmErrorCallback();
