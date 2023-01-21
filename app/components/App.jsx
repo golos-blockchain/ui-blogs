@@ -53,11 +53,8 @@ const availableDomains = [
     't.me',
     'twitter.com',
     'vk.com',
-    'facebook.com',
-    'instagram.com',
     'coinmarketcap.com',
     'sharpay.io',
-    'coins.black',
     'golos.chatbro.com',
     'yandex.ru',
     'google.com'
