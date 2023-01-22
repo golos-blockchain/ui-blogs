@@ -38,7 +38,9 @@ export default class DropdownMenu extends React.Component {
     show = (e) => {
         e.preventDefault();
         this.setState({shown: true});
-        document.addEventListener('click', this.hide);
+        setTimeout(() => {
+            document.addEventListener('click', this.hide)
+        }, 1)
     };
 
     hide = (e) => {
