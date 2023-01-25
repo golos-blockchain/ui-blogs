@@ -1,11 +1,11 @@
 {
-  "name": "Golos.id",
+  "name": "ui-blogs",
   "repository": {
     "type": "git",
     "url": "https://github.com/golos-blockchain/ui-blogs.git"
   },
-  "version": "1.4.0",
-  "description": "Голос Блоги — децентрализованная платформа, работающая на блокчейне Golos.",
+  "version": "1.4.1",
+  "description": "Golos Blogs — децентрализованная платформа блогов, работающая на блокчейне Golos.",
   "main": "dist/electron/electron.js",
   "scripts": {
     "build-version": "./server/build-version.sh",

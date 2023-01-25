@@ -373,7 +373,7 @@ class Post extends React.Component {
                                 </center>
                             ) : null}
                             <div className='Post__comments_subscribe float-left' title={subscribed ? tt('post_jsx.unsubscribe_long') : tt('post_jsx.subscribe_comments_long')} onClick={e => this.subscribe(e, dis)}>
-                                <Icon name='new/bell' />
+                                {subscribed ? <Icon name='new/bellno' /> : <Icon name='new/bell' />}
                                 <span>
                                     {subscribed ? tt('post_jsx.unsubscribe') : tt('post_jsx.subscribe_comments')}
                                 </span>

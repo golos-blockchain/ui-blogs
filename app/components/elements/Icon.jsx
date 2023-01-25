@@ -100,6 +100,7 @@ const icons = new Map([
     ['new/setting', require('app/assets/icons/new/setting.svg')],
     ['new/logout', require('app/assets/icons/new/logout.svg')],
     ['new/bell', require('app/assets/icons/new/bell.svg')],
+    ['new/bellno', require('app/assets/icons/new/bell-no.svg')],
     ['new/messenger', require('app/assets/icons/new/messenger.svg')],
     ['new/more', require('app/assets/icons/new/more.svg')],
     ['new/like', require('app/assets/icons/new/like.svg')],
