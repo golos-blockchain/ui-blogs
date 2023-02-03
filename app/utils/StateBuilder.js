@@ -23,6 +23,7 @@ export default async function getState(api, url, offchain = {}) {
     const state = {}
     state.current_route = `/${url}`
     state.props = await api.getDynamicGlobalProperties()
+    state.chain_failure = state.props.chain_status === false
     state.categories = {}
     state.tags = {}
     state.content = {}

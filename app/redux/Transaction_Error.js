@@ -149,7 +149,11 @@ export default function transactionErrorReducer(
             ) {
                 errorKey = errorStr = tt('chain_errors.voting_weight_is_too_small');
             }
-            
+
+            if (errorStr.includes('Node is stopped, so cannot broadcast.')) {
+                errorKey = errorStr = tt('chain_failure_jsx.title')
+            }
+
             if (!hideErrors) {
                 state = state.update('errors', errors => {
                     if (errors) {

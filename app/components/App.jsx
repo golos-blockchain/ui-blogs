@@ -24,6 +24,7 @@ import Icon from '@elements/Icon';
 import ScrollButton from '@elements/ScrollButton';
 import MiniHeader from '@modules/MiniHeader';
 import PageViewsCounter from '@elements/PageViewsCounter';
+import ChainFailure from 'app/components/elements/ChainFailure'
 import DialogManager from 'app/components/elements/common/DialogManager';
 import { init as initAnchorHelper } from 'app/utils/anchorHelper';
 import { authRegisterUrl, } from 'app/utils/AuthApiClient';
@@ -385,6 +386,7 @@ class App extends React.Component {
                 })}>
                     {welcome_screen}
                     {callout}
+                    <ChainFailure />
                     {children}
                     {noFooter ? null : <Footer />}
                     <ScrollButton />

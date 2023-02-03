@@ -754,6 +754,9 @@
     "free_money": "FREE MONEY!",
     "join_our": "Join our"
   },
+  "chain_failure_jsx": {
+    "title": "Cannot connect Golos node. Cannot send operations. We will fix it soon..."
+  },
   "change_account_jsx": {
     "add_account": "Add Account",
     "logout_all": "Log out all accounts"
