@@ -3,6 +3,7 @@ import { Formik, Form, Field } from 'formik'
 import tt from 'counterpart'
 
 import Icon from 'app/components/elements/Icon'
+import { loadNsfwSettings, loadGrayHideSettings } from 'app/utils/ContentAccess'
 
 class ContentSettings extends React.Component {
     state = {
@@ -10,11 +11,8 @@ class ContentSettings extends React.Component {
 
     componentDidMount() {
         const { account } = this.props
-        const hasLocalStorage = typeof(localStorage) !== 'undefined'
-        const nsfwPref = (hasLocalStorage ? localStorage.getItem('nsfwPref-' + account) : null)
-            || 'warn'
-        const downvotedPref = (hasLocalStorage ? localStorage.getItem('downvotedPref-' + account) : null)
-            || 'gray_and_hide'
+        const nsfwPref = loadNsfwSettings(account)
+        const downvotedPref = loadGrayHideSettings(account)
         this.setState({
             initialValues: {
                 nsfwPref,

@@ -49,8 +49,8 @@ export function getBlogAuthors(blogAccount) {
     return api.getBlogAuthorsAsync(blogAccount)
 }
 
-export function getBlogEntries(account, entryId, limit) {
-    return api.getBlogEntriesAsync(account, entryId, limit, ['fm-'])
+export function getBlogEntries(account, entryId, limit, tagMasks = ['fm-'], prefs = {}) {
+    return api.getBlogEntriesAsync(account, entryId, limit, tagMasks, prefs)
 }
 
 export function getFeedEntries(account, entryId, limit) {

@@ -134,7 +134,7 @@ export const replyAction = (dispatch, remarkable) => ({
         delete meta.links;
     }
 
-    meta.app = 'golos-blog/0.1';
+    meta.app = $STM_Config.site_domain + '/0.1';
 
     if (isStory) {
         meta.format = isHtml ? 'html' : 'markdown';
