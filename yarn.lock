@@ -9816,6 +9816,11 @@ simple-html-tokenizer@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/simple-html-tokenizer/-/simple-html-tokenizer-0.1.1.tgz#05c2eec579ffffe145a030ac26cfea61b980fabe"
 
+simple-jsonrpc-js@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/simple-jsonrpc-js/-/simple-jsonrpc-js-1.2.0.tgz#f958b9c28016f3da47c0a6e3c0b6586b3c10ba34"
+  integrity sha512-owkAmh7fjSYBUZVestTPCZMKYQvNiDejqZ/iGfVaKs1nrC1ZBDA3qGraf94+JNFJmu536Tb8oPe8PSPuq7GO6Q==
+
 simple-swizzle@^0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/simple-swizzle/-/simple-swizzle-0.2.2.tgz#a4da6b635ffcccca33f70d17cb92592de95e557a"

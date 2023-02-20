@@ -19,8 +19,20 @@ blocked_users = packBlacklist(blocked_users)
 let blocked_posts = config.get('blocked_posts')
 blocked_posts = packBlacklist(blocked_posts)
 
+const concatURL = (url, base) => {
+    const scheme = process.env.NODE_ENV === 'development' ? 'http://' : 'https://'
+    base = scheme + base
+    return new URL(url, base).toString()
+}
+
+const optGet = (key) => {
+    return config.has(key) && config.get(key)
+}
+
 global.$STM_Config = {
-    ws_connection_client: config.get('ws_connection_client'),
+    ws_connection_client: optGet('proxy_node') ?
+        concatURL('/api/v1/node_send', config.get('site_domain')) :
+        config.get('ws_connection_client'),
     hide_comment_neg_rep: config.get('hide_comment_neg_rep'),
     show_adv_banners: config.get('show_adv_banners'),
     logo: config.get('logo'),

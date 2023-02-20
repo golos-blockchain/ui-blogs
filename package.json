@@ -112,6 +112,7 @@
     "sanitize-html": "^2.5.3",
     "sass-loader": "6.0.6",
     "secure-random": "^1.1.1",
+    "simple-jsonrpc-js": "^1.2.0",
     "slick-carousel": "^1.8.1",
     "speakingurl": "^9.0.0",
     "string-to-stream": "^1.1.1",
