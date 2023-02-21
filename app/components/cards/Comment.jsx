@@ -317,7 +317,7 @@ class CommentImpl extends PureComponent {
                     </div>
                     <div className="Comment__footer">{controls}</div>
                 </div>
-                <div className="Comment__replies hfeed">
+                <div className={'Comment__replies hfeed' + (depth <= 5 ? ' Comment__depth' : '')}>
                     {showReply && renderedEditor}
                     {replies}
                 </div>
