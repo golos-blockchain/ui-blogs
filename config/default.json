@@ -3,6 +3,7 @@
   "chain_id": "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12",
   "ws_connection_client": "wss://apibeta.golos.today/ws",
   "ws_connection_server": "wss://apibeta.golos.today/ws",
+  "proxy_node": true,
   "helmet": {
     "directives": {
       "defaultSrc": "'self'",

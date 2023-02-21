@@ -8,6 +8,7 @@ import tt from 'counterpart'
 
 import { CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config'
 import Author from 'app/components/elements/Author'
+import ForeignApp from 'app/components/elements/ForeignApp'
 import Icon from 'app/components/elements/Icon'
 import DialogManager from 'app/components/elements/common/DialogManager'
 import MuteAuthorInNew from 'app/components/elements/MuteAuthorInNew'
@@ -24,7 +25,7 @@ import transaction from 'app/redux/Transaction'
 import user from 'app/redux/User'
 import {immutableAccessor} from 'app/utils/Accessors'
 import { authRegisterUrl, } from 'app/utils/AuthApiClient'
-import { isBlocked } from 'app/utils/blacklist'
+import { hideSummary } from 'app/utils/ContentAccess'
 import extractContent from 'app/utils/ExtractContent'
 import {authorNameAndRep} from 'app/utils/ComponentFormatters'
 import { addHighlight, unsubscribePost } from 'app/utils/NotifyApiClient'
@@ -82,8 +83,7 @@ class PostSummary extends React.Component {
                props.nsfwPref !== this.props.nsfwPref ||
                state.revealNsfw !== this.state.revealNsfw ||
                props.visited !== this.props.visited ||
-               props.gray !== this.props.gray ||
-               props.hide !== this.props.hide
+               props.gray !== this.props.gray
     }
 
     componentDidUpdate(prevProps) {
@@ -144,17 +144,11 @@ class PostSummary extends React.Component {
     }
 
     render() {
-        const {currentCategory, thumbSize, ignore, onClick} = this.props;
+        const {currentCategory, thumbSize, onClick} = this.props;
         const {post, content, pending_payout, total_payout, cashout_time, blockEye} = this.props;
         const {account} = this.props;
         const {nsfwPref, username} = this.props
         if (!content) return null;
-
-        const myPost = username === content.get('author')
-
-        if (isBlocked(content.get('author'), $STM_Config.blocked_users)) {
-			return null;
-		}
 
         let reblogged_by;
         if(content.get('reblogged_by') && content.get('reblogged_by').size > 0) {
@@ -185,15 +179,15 @@ class PostSummary extends React.Component {
                          </div>
         }
 
-        const {gray, pictures, authorRepLog10, flagWeight, isNsfw, isOnlyblog, isOnlyapp} = content.get('stats', Map()).toJS()
+        const {gray, pictures, authorRepLog10, flagWeight, isNsfw, isOnlyblog, isOnlyapp, foreignApp} = content.get('stats', Map()).toJS()
 
-        if ((isOnlyblog || (isOnlyapp && !process.env.IS_APP)) && !username) {
-            return null
-        }
-
-        const isPublic = currentCategory !== 'blog' && currentCategory !== 'feed'
-        if (isBlocked(content.get('url'), $STM_Config.blocked_posts)
-            && (!username || isPublic)) {
+        if (hideSummary({
+            author: content.get('author'), url: content.get('url'),
+            app: content.get('app'),
+            currentCategory,
+            isNsfw, isOnlyblog, isOnlyapp,
+            username, nsfwPref
+        })) {
             return null
         }
 
@@ -292,6 +286,7 @@ class PostSummary extends React.Component {
             </a>
             {isOnlyblog && <span className="nsfw_post" title={tt('post_editor.onlyblog_hint')}>{tt('g.for_followers')}</span>}
             {isOnlyapp && <span className="nsfw_post" title={tt('post_editor.visible_option_onlyapp_hint')}>{tt('g.only_app')}</span>}
+            {foreignApp && <ForeignApp foreignApp={foreignApp} />}
             {warn && <span className="nsfw_post" title={tt('post_editor.nsfw_hint')}>{detransliterate(nsfwTitle)}</span>}
             {worker_post && <a target="_blank" href={worker_post}><span className="worker_post">{tt('workers.worker_post')}</span></a>}
             {promoted_post && <a target="_blank" href="https://wiki.golos.id/users/welcome#prodvinut-post"><span className="promoted_post" title={promosumm}>{tt('g.promoted_title')}</span></a>}
@@ -320,13 +315,6 @@ class PostSummary extends React.Component {
             </span>
         </div>
 
-        if(isNsfw && !myPost) {
-            if(nsfwPref === 'hide') {
-                // user wishes to hide these posts entirely
-                return null;
-            }
-        }
-
         let thumb = null;
         if(pictures && p.image_link) {
           const size = (thumbSize == 'mobile') ? '800x600' : '256x512'
@@ -348,7 +336,7 @@ class PostSummary extends React.Component {
               onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search, warn)} />
         }
         const commentClasses = []
-        if(gray || ignore) commentClasses.push('downvoted') // rephide
+        if(gray) commentClasses.push('downvoted') // rephide
 
         total_search = total_search ? <span class="strike" style={{ fontSize: '1rem', paddingBottom: '1rem' }}>
                 {tt('g.and_more_search_posts_COUNT', { COUNT: total_search })}
@@ -419,17 +407,16 @@ export default connect(
         let pending_payout = 0;
         let total_payout = 0;
         let event_count = 0
-        let gray, ignore
+        let gray
         if (content) {
             pending_payout = content.get('pending_payout_value');
             total_payout = content.get('total_payout_value');
             event_count = content.get('event_count')
             const stats = content.get('stats', Map()).toJS()
             gray = stats.gray
-            ignore = stats.ignore
         }
         return {
-            post, content, gray, ignore, pending_payout, total_payout, event_count,
+            post, content, gray, pending_payout, total_payout, event_count,
             username: state.user.getIn(['current', 'username']) || state.offchain.get('account')
         };
     },

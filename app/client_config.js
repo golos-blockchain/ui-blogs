@@ -49,7 +49,7 @@ export const PUBLIC_API = {
   author:          'getDiscussionsByBlogAsync',
 }
 
-export const SEO_TITLE = 'Блокчейн Голос'
+export const SEO_TITLE = 'Golos Blogs'
 export const USER_GENDER = ['undefined', 'male', 'female']
 
 export const CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME = 1568627859000

@@ -27,6 +27,9 @@
     "title_is_required": "Не заполнено поле заголовок",
     "title_is_not_valid": "Заголовок неправильно заполнен"
   },
+  "chain_failure_jsx": {
+    "title": "Соединение с нодой Golos потеряно. Операции в данный момент невозможны. Скоро починим..."
+  },
   "change_account_jsx": {
     "add_account": "Добавить аккаунт",
     "logout_all": "Выйти из всех аккаунтов"
@@ -331,7 +334,7 @@
     "account_name_should_start_with_a_letter": "Имя аккаунта должно начинаться с буквы.",
     "account_name_should_be_shorter": "Имя аккаунта должно быть короче.",
     "account_name_should_be_longer": "Имя аккаунта должно быть длиннее.",
-    "account_name_should_have_only_letters_digits_or_dashes": "Имя аккаунта должно должно состоять только из букв, цифр или дефисов.",
+    "account_name_should_have_only_letters_digits_or_dashes": "Имя аккаунта должно состоять только из букв, цифр или дефисов.",
     "cannot_increase_reward_of_post_within_the_last_minute_before_payout": "Голосование возможно только в первые 24 часа с момента публикации",
     "vote_currently_exists_user_must_be_indicate_a_to_reject_witness": "голос уже существует, пользователь должен обозначить желание убрать делегата",
     "only_one_APP_NAME_account_allowed_per_ip_address_every_10_minutes": "Только один %(APP_NAME)s аккаунт разрешен с одного IP адреса каждые десять минут",
@@ -610,7 +613,7 @@
     "author_reward_of_VESTING_TOKEN_for": "Авторские вознаграждения %(payout)s и %(reward)s %(VESTING_TOKENS)s за",
     "recieve_interest_of": "Получены проценты в размере %(interest)s",
     "recent_password": "Недавний пароль",
-    "your_password_permissions_were_reduced": "Ваши резрешения пароля были снижены",
+    "your_password_permissions_were_reduced": "Ваши разрешения пароля были снижены",
     "if_you_did_not_make_this_change": "Если вы не делали этих изменений, пожалуйста",
     "owhership_changed_on": "Изменение владельца на",
     "i_understand_dont_show_again": "Понимаю, больше не показывать",
@@ -621,10 +624,12 @@
   },
   "poststub": {
     "onlyblog": "Этот пост только для подписчиков автора.",
+    "foreignapp": "Этот пост создан в альтернативном клиенте и доступен только для авторизованных.",
     "login": "Авторизуйтесь",
     "sign_up": "зарегистрируйтесь",
     "onlyapp": "Этот пост доступен только в десктопном приложении Golos.",
-    "install": "Установить приложение"
+    "install": "Установить приложение",
+    "login_to_see_comment": "Авторизуйтесь, чтобы видеть комментарий."
   },
   "postsummary_jsx": {
     "resteemed": "Репост",
@@ -645,7 +650,7 @@
     "spend_your_DEBT_TOKEN_to_advertise_this_post": "Используйте токены GBG, чтобы прорекламировать этот пост в топе блока продвигаемого контента на главной странице",
     "to_promote_this_post_sent": "Для размещения поста в топе уже собрано: ",
     "remaining_to_promote": "За 1-е место в топе необходимо отправить: ",
-    "you_successfully_promoted_this_post": "Вы успешно продвинули этот пост",
+    "you_successfully_promoted_this_post": "Вы продвинули этот пост",
     "leave_this_unchecked_to_receive_half_your_reward": "Оставьте неотмеченным для получения 1/2 вознаграждения в %(VESTING_TOKEN)s и 1/2 %(DEBT_TOKEN)s",
     "pay_me_100_in_VESTING_TOKEN": "Заплатить мне 100%% в %(VESTING_TOKEN)s",
     "this_post_was_hidden_due_to_low_ratings": "Этот пост был скрыт из-за низкого рейтинга",

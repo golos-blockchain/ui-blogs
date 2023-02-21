@@ -1,7 +1,7 @@
 /* eslint react/prop-types: 0 */
 import React from 'react';
 import { FormattedRelativeTime } from 'react-intl'
-import { selectUnit } from '@formatjs/intl-utils'
+import { selectUnit } from 'app/utils/selectUnit'
 
 import Tooltip from 'app/components/elements/Tooltip'
 

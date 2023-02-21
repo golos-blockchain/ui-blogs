@@ -9,6 +9,7 @@ import favicon from 'koa-favicon';
 import staticCache from 'koa-static-cache';
 import useRedirects from './redirects';
 import useGeneralApi from './api/general';
+import useNodeSend from './api/node_send'
 import useUserJson from './json/user_json';
 import usePostJson from './json/post_json';
 import isBot from 'koa-isbot';
@@ -177,6 +178,7 @@ useRedirects(app);
 useUserJson(app);
 usePostJson(app);
 useGeneralApi(app);
+useNodeSend(app)
 
 // helmet wants some things as bools and some as lists, makes config difficult.
 // our config uses strings, this splits them to lists on whitespace.

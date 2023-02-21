@@ -1,5 +1,6 @@
 import { PUBLIC_API, CATEGORIES } from 'app/client_config';
 import { contentPrefs as prefs } from 'app/utils/Allowance'
+import { getFilterApps, } from 'app/utils/ContentAccess'
 import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile';
 import { reveseTag, prepareTrendingTags, getFilterTags } from 'app/utils/tags';
 import { stateSetVersion } from 'app/utils/SearchClient'
@@ -23,6 +24,7 @@ export default async function getState(api, url, offchain = {}) {
     const state = {}
     state.current_route = `/${url}`
     state.props = await api.getDynamicGlobalProperties()
+    state.chain_failure = state.props.chain_status === false
     state.categories = {}
     state.tags = {}
     state.content = {}
@@ -56,10 +58,12 @@ export default async function getState(api, url, offchain = {}) {
             state.accounts[uname].tags_usage = await api.getTagsUsedByAuthor(uname)
             state.accounts[uname].guest_bloggers = await api.getBlogAuthors(uname)
 
+            const filter_apps = getFilterApps()
+
             switch (parts[1]) {
                 case 'recent-replies':
                     const replies = await api.getRepliesByLastUpdate(uname, '', 50, DEFAULT_VOTE_LIMIT,
-                        prefs(curUser, uname))
+                        { ...prefs(curUser, uname), })
                     state.accounts[uname].recent_replies = []
 
                     replies.forEach(reply => {
@@ -73,7 +77,9 @@ export default async function getState(api, url, offchain = {}) {
                 case 'comments':
                     const filter_tags = curUser ? [] : getFilterTags()
                     const comments = await api.getDiscussionsByComments({ start_author: uname, limit: 20, filter_tag_masks: ['fm-'],
-                         filter_tags })
+                         filter_tags, prefs: {
+                            filter_apps
+                         } })
                     state.accounts[uname].comments = []
 
                     comments.forEach(comment => {
@@ -127,7 +133,7 @@ export default async function getState(api, url, offchain = {}) {
 
                 case 'blog':
                 default:
-                    const blogEntries = await api.getBlogEntries(uname, 0, 20)
+                    const blogEntries = await api.getBlogEntries(uname, 0, 20, ['fm-'], {})
                     state.accounts[uname].blog = []
 
                   let pinnedPosts = getPinnedPosts(account)
@@ -194,9 +200,10 @@ export default async function getState(api, url, offchain = {}) {
         }
         state.content[curl].confetti_active = false;
 
+        const filter_apps = getFilterApps()
         let args = { truncate_body: 1024, select_categories: [category], filter_tag_masks: ['fm-'],
             filter_tags: getFilterTags(),
-            prefs: prefs(curUser) };
+            prefs: { ...prefs(curUser), filter_apps } };
         let prev_posts = await api.gedDiscussionsBy('created', {limit: 4, start_author: account, start_permlink: permlink, select_authors: [account], ...args});
         prev_posts = prev_posts.slice(1);
         let p_ids = [];
@@ -236,7 +243,9 @@ export default async function getState(api, url, offchain = {}) {
             }
         });
     } else if (Object.keys(PUBLIC_API).includes(parts[0])) {
-        let args = { limit: 20, truncate_body: 0, prefs: prefs(curUser) }
+        const filter_apps = getFilterApps()
+        let args = { limit: 20, truncate_body: 0,
+            prefs: { ...prefs(curUser), filter_apps } }
         const discussionsType = parts[0]
         if (typeof tag === 'string' && tag.length && (!tag.startsWith('tag-') || tag.length > 4)) {
             if (tag.startsWith('tag-')) {

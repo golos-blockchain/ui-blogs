@@ -1,11 +1,11 @@
 {
-  "name": "Golos.id",
+  "name": "ui-blogs",
   "repository": {
     "type": "git",
     "url": "https://github.com/golos-blockchain/ui-blogs.git"
   },
-  "version": "1.4.0",
-  "description": "Голос Блоги — децентрализованная платформа, работающая на блокчейне Golos.",
+  "version": "1.4.1",
+  "description": "Golos Blogs — децентрализованная платформа блогов, работающая на блокчейне Golos.",
   "main": "dist/electron/electron.js",
   "scripts": {
     "build-version": "./server/build-version.sh",
@@ -51,7 +51,7 @@
     "foundation-sites": "^6.4.3",
     "fs-extra": "^10.0.1",
     "git-rev-sync": "^3.0.2",
-    "golos-lib-js": "^0.9.48",
+    "golos-lib-js": "^0.9.51",
     "history": "^2.0.0-rc2",
     "immutable": "^3.8.2",
     "intl": "^1.2.5",
@@ -112,6 +112,7 @@
     "sanitize-html": "^2.5.3",
     "sass-loader": "6.0.6",
     "secure-random": "^1.1.1",
+    "simple-jsonrpc-js": "^1.2.0",
     "slick-carousel": "^1.8.1",
     "speakingurl": "^9.0.0",
     "string-to-stream": "^1.1.1",

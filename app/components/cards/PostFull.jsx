@@ -18,6 +18,7 @@ import MarkdownViewer from 'app/components/cards/MarkdownViewer';
 import ReplyEditor from 'app/components/elements/ReplyEditor';
 import TagList from 'app/components/elements/TagList';
 import Author from 'app/components/elements/Author';
+import ForeignApp from 'app/components/elements/ForeignApp'
 import Userpic from 'app/components/elements/Userpic';
 import PostFormLoader from 'app/components/modules/PostForm/loader';
 import CommentFormLoader from 'app/components/modules/CommentForm/loader';
@@ -46,12 +47,17 @@ function TimeAuthorCategory({ content, authorRepLog10, showTags }) {
 }
 
 function TimeAuthorCategoryLarge({ content, authorRepLog10 }) {
+    const foreignApp = content.stats && content.stats.foreignApp
     return (
         <span className="PostFull__time_author_category_large vcard">
             <span className="float-right eye">
                 <Icon name='eye' /> {content.views}
             </span>
             <TimeVersions content={content} className='float-right' />
+            {foreignApp && <span className='float-right'>
+                <ForeignApp foreignApp={foreignApp} />
+                &nbsp;&nbsp;
+            </span>}
             <Userpic account={content.author} reputation={authorRepLog10} />
             <div className="right-side">
                 <Author
