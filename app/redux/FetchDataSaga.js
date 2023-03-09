@@ -10,6 +10,7 @@ import { applyEventHighlight, getContent } from 'app/redux/SagaShared'
 import GlobalReducer from './GlobalReducer';
 import constants from './constants';
 import session from 'app/utils/session'
+import { getFilterApps, } from 'app/utils/ContentAccess';
 import { reveseTag, getFilterTags } from 'app/utils/tags';
 import { PUBLIC_API, CATEGORIES, SELECT_TAGS_KEY, DEBT_TOKEN_SHORT, LIQUID_TICKER } from 'app/client_config';
 import { getSubs, notifyGetViews, } from 'app/utils/NotifyApiClient'
@@ -114,11 +115,13 @@ export function* fetchState(location_change_action) {
                 state.accounts[uname].tags_usage = yield call([api, api.getTagsUsedByAuthorAsync], uname)
                 state.accounts[uname].guest_bloggers = yield call([api, api.getBlogAuthorsAsync], uname)
 
+                const filter_apps = getFilterApps()
+
                 switch (parts[1]) {
 
                     case 'recent-replies':
                         const replies = yield call([api, api.getRepliesByLastUpdateAsync], uname, '', 50, constants.DEFAULT_VOTE_LIMIT, 0, ['fm-'],
-                            prefs(uname, curUser))
+                            { ...prefs(uname, curUser), })
                         state.accounts[uname].recent_replies = []
 
                         replies.forEach(reply => {
@@ -166,7 +169,11 @@ export function* fetchState(location_change_action) {
                     case 'posts':
                     case 'comments':
                         const filter_tags = curUser ? ['test'] : getFilterTags()
-                        const comments = yield call([api, api.getDiscussionsByCommentsAsync], { start_author: uname, limit: 20, filter_tag_masks: ['fm-'], filter_tags })
+                        const comments = yield call([api, api.getDiscussionsByCommentsAsync], { start_author: uname, limit: 20, filter_tag_masks: ['fm-'], filter_tags,
+                            prefs: {
+                                filter_apps
+                            }
+                        })
                         state.accounts[uname].comments = []
 
                         comments.forEach(comment => {
@@ -233,7 +240,7 @@ export function* fetchState(location_change_action) {
 
                     case 'blog':
                     default:
-                        const blogEntries = yield call([api, api.getBlogEntriesAsync], uname, 0, 20, ['fm-'])
+                        const blogEntries = yield call([api, api.getBlogEntriesAsync], uname, 0, 20, ['fm-'], {})
                         state.accounts[uname].blog = []
 
                         let pinnedPosts = getPinnedPosts(account)
@@ -335,9 +342,10 @@ export function* fetchState(location_change_action) {
 
             yield applyEventHighlight(state.content, account, permlink, curUser)
 
+            const filter_apps = getFilterApps()
             let args = { truncate_body: 128, select_categories: [category], filter_tag_masks: ['fm-'],
                 filter_tags: getFilterTags(),
-                prefs: prefs(curUser) };
+                prefs: { ...prefs(curUser), filter_apps } };
             let prev_posts = yield call([api, api[PUBLIC_API.created]], {limit: 4, start_author: account, start_permlink: permlink, select_authors: [account], ...args});
             prev_posts = prev_posts.slice(1);
             let p_ids = [];
@@ -430,6 +438,7 @@ export function* fetchData(action) {
     const curUser = localStorage.getItem('invite')
 
     let ignore_tags = getFilterTags()
+    let filter_apps = getFilterApps()
 
     let { category } = action.payload;
 
@@ -444,7 +453,7 @@ export function* fetchData(action) {
             start_author: author,
             start_permlink: permlink,
             filter_tag_masks: ['fm-'],
-            prefs: prefs(curUser)
+            prefs: { ...prefs(curUser), filter_apps }
         }
     ];
     if (category.length && (!category.startsWith('tag-') || category.length > 4)) {
@@ -454,13 +463,11 @@ export function* fetchData(action) {
             reversed
                 ? args[0].select_tags = [tag_raw, reversed]
                 : args[0].select_tags = [tag_raw]
-            args[0].filter_tags = ignore_tags
         } else {
             const reversed = reveseTag(category)
             reversed
                 ? args[0].select_categories = [category, reversed]
                 : args[0].select_categories = [category]
-            args[0].filter_tags = ignore_tags
         }
     } else {
         let select_tags = cookie.load(SELECT_TAGS_KEY);
@@ -476,7 +483,6 @@ export function* fetchData(action) {
             })
             args[0].select_categories = selectTags;
             category = select_tags.sort().join('/')
-            args[0].filter_tags = ignore_tags
         } else {
             let selectTags = []
             
@@ -488,9 +494,10 @@ export function* fetchData(action) {
                 
             })
             args[0].select_categories = selectTags;
-            args[0].filter_tags = ignore_tags
         }
     }
+
+    args[0].filter_tags = ignore_tags
 
     if (order == 'created' && curUser) {
         const [ loader ] = yield call([api, api.getAccountsAsync], [curUser])
@@ -553,7 +560,7 @@ export function* fetchData(action) {
     } else if( order === 'by_replies' ) {
         call_name = 'getRepliesByLastUpdateAsync';
         args = [author, permlink, constants.FETCH_DATA_BATCH_SIZE, constants.DEFAULT_VOTE_LIMIT, 0, ['fm-'],
-            prefs(uname, curUser)]
+            prefs(author, curUser)]
     } else if (order === 'forums') {
         call_name = PUBLIC_API.forums;
         args = [author, permlink, 0, constants.FETCH_DATA_BATCH_SIZE, $STM_Config.forums.white_list, 0, 0, [], [], 'fm-',

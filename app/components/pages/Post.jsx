@@ -16,6 +16,7 @@ import user from 'app/redux/User'
 import { authRegisterUrl, } from 'app/utils/AuthApiClient'
 import { isBlocked } from 'app/utils/blacklist'
 import { sortComments } from 'app/utils/comments'
+import { hidePost } from 'app/utils/ContentAccess'
 import { subscribePost, unsubscribePost, getSubs } from 'app/utils/NotifyApiClient'
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
 import session from 'app/utils/session'
@@ -178,20 +179,24 @@ class Post extends React.Component {
     }
 
     _renderOnlyBlog = (dis) => {
-        const { current_user, showLogin } = this.props
-        let children
+        const { current_user, } = this.props
         if (!current_user) {
-            children = <p>{tt('poststub.onlyblog')}&nbsp;
-                <a href='#' onClick={showLogin}>{tt('poststub.login')}</a>
-                &nbsp;{tt('g.or')}&nbsp;
-                <a href={authRegisterUrl()} target='_blank' rel='noreferrer noopener'>{tt('poststub.sign_up')}</a>.
-            </p> 
-        } else {
-            children = <p>
-                {tt('poststub.onlyblog')}
-                <Follow following={dis.get('root_author') || dis.get('author')} showMute={false} />
-            </p>
+            return this._renderOnlyAuth(true)
         }
+        const children = <p>
+            {tt('poststub.onlyblog')}
+            <Follow following={dis.get('root_author') || dis.get('author')} showMute={false} />
+        </p>
+        return this._renderStub(children)
+    }
+
+    _renderOnlyAuth = (onlyblog) => {
+        const { showLogin } = this.props
+        const children = <p>{onlyblog ? tt('poststub.onlyblog') : tt('poststub.foreignapp')}&nbsp;
+            <a href='#' onClick={showLogin}>{tt('poststub.login')}</a>
+            &nbsp;{tt('g.or')}&nbsp;
+            <a href={authRegisterUrl()} target='_blank' rel='noreferrer noopener'>{tt('poststub.sign_up')}</a>.
+        </p>
         return this._renderStub(children)
     }
 
@@ -313,20 +318,24 @@ class Post extends React.Component {
             });
         }
         let emptyPost = dis.get('created') === '1970-01-01T00:00:00' && dis.get('body') === ''
-        if (!current_user || current_user.get('username') !== dis.get('author')) {
-            if (stats.isOnlyapp && !process.env.IS_APP) {
-                return this._renderOnlyApp()
-            }
-            if (stats.isOnlyblog) {
-                if (!following && (typeof(localStorage) === 'undefined' || session.load().currentName)) {
-                    return this._renderLoadingStub()
-                } else if (!following || 
-                    (!following.includes(dis.get('author')) &&
-                        !following.includes(dis.get('root_author')))) {
-                    return this._renderOnlyBlog(dis)
-                }
-            }
+
+        const hp = hidePost({
+            dis,
+            isOnlyapp: stats.isOnlyapp,
+            isOnlyblog: stats.isOnlyblog,
+            username: current_user && current_user.get('username'),
+            following
+        })
+        if (hp === 'onlyapp') {
+            return this._renderOnlyApp()
+        } else if (hp === 'onlyblog') {
+            return this._renderOnlyBlog(dis)
+        } else if (hp === 'loading') {
+            return this._renderLoadingStub()
+        } else if (hp === 'onlyauth') {
+            return this._renderOnlyAuth()
         }
+
         if(emptyPost)
             return <center>
                 <div className="NotFound float-center">

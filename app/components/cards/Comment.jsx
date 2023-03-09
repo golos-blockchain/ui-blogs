@@ -8,12 +8,14 @@ import tt from 'counterpart';
 import { FormattedPlural } from 'react-intl';
 
 import { isBlocked } from 'app/utils/blacklist'
+import { hideComment } from 'app/utils/ContentAccess'
 import { sortComments } from 'app/utils/comments';
 import user from 'app/redux/User';
 import transaction from 'app/redux/Transaction';
 import CommentFormLoader from 'app/components/modules/CommentForm/loader';
 import MarkdownViewer from 'app/components/cards/MarkdownViewer';
 import Author from 'app/components/elements/Author';
+import ForeignApp from 'app/components/elements/ForeignApp'
 import Voting from 'app/components/elements/Voting';
 import TimeVersions from 'app/components/elements/TimeVersions';
 import Userpic from 'app/components/elements/Userpic';
@@ -115,6 +117,10 @@ class CommentImpl extends PureComponent {
         });
     }
 
+    _renderOnlyAuth() {
+        return <div>({tt('poststub.login_to_see_comment')})</div>
+    }
+
     render() {
         const { cont } = this.props;
         const dis = cont.get(this.props.content);
@@ -130,7 +136,7 @@ class CommentImpl extends PureComponent {
             comment.stats = {};
         }
 
-        const { authorRepLog10, pictures, gray } = comment.stats;
+        const { authorRepLog10, pictures, gray, foreignApp } = comment.stats;
         const { json_metadata } = comment;
         const {
             depth,
@@ -159,9 +165,11 @@ class CommentImpl extends PureComponent {
         let body = null;
         let controls = null;
 
+        const onlyauth = hideComment({ dis, username }) === 'onlyauth'
+
         if (isBlocked(comment.author, $STM_Config.blocked_users)) {
             return null;
-        } else if (!this.state.collapsed && !hideBody) {
+        } else if (!this.state.collapsed && !hideBody && !onlyauth) {
             body = (
                 <MarkdownViewer
                     formId={post + '-viewer'}
@@ -272,6 +280,10 @@ class CommentImpl extends PureComponent {
                             />
                         </span>
                         &nbsp; &middot; &nbsp;
+                        {foreignApp && <span>
+                            <ForeignApp foreignApp={foreignApp} />
+                            &nbsp;&nbsp;
+                        </span>}
                         <Link
                             to={this._getCommentLink(comment)}
                             className="PlainLink"
@@ -280,7 +292,8 @@ class CommentImpl extends PureComponent {
                                 content={comment}
                             />
                         </Link>
-                        {this.state.collapsed || hideBody ? (
+                        {onlyauth ? this._renderOnlyAuth() : null}
+                        {this.state.collapsed || hideBody || onlyauth ? (
                             <Voting post={post} showList={false} />
                         ) : null}
                         {this.state.collapsed && comment.children > 0 ? (
@@ -304,7 +317,7 @@ class CommentImpl extends PureComponent {
                     </div>
                     <div className="Comment__footer">{controls}</div>
                 </div>
-                <div className="Comment__replies hfeed">
+                <div className={'Comment__replies hfeed' + (depth <= 5 ? ' Comment__depth' : '')}>
                     {showReply && renderedEditor}
                     {replies}
                 </div>

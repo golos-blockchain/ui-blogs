@@ -118,10 +118,13 @@
 
 .Comment__replies {
   margin-top: 1.4rem;
-  margin-left: 32px;
   .Comment {
     margin-bottom: 1.4rem;
   }
+}
+
+.Comment__depth {
+  margin-left: 32px;
 }
 
 .Comment__negative_group {

@@ -24,11 +24,13 @@ import Icon from '@elements/Icon';
 import ScrollButton from '@elements/ScrollButton';
 import MiniHeader from '@modules/MiniHeader';
 import PageViewsCounter from '@elements/PageViewsCounter';
+import ChainFailure from 'app/components/elements/ChainFailure'
 import DialogManager from 'app/components/elements/common/DialogManager';
 import { init as initAnchorHelper } from 'app/utils/anchorHelper';
 import { authRegisterUrl, } from 'app/utils/AuthApiClient';
 import { APP_ICON, VEST_TICKER, } from 'app/client_config';
 import session from 'app/utils/session'
+import { loadGrayHideSettings } from 'app/utils/ContentAccess'
 
 const GlobalStyle = createGlobalStyle`
     body {
@@ -83,7 +85,7 @@ class App extends React.Component {
         try {
             const data = session.load()
             if (data.currentName) {
-                const pref = localStorage.getItem('downvotedPref-' + data.currentName)
+                const pref = loadGrayHideSettings(data.currentName)
                 if (pref === 'gray_only') {
                     window.NO_HIDE = true
                 } else if (pref === 'no_gray') {
@@ -385,6 +387,7 @@ class App extends React.Component {
                 })}>
                     {welcome_screen}
                     {callout}
+                    <ChainFailure />
                     {children}
                     {noFooter ? null : <Footer />}
                     <ScrollButton />
