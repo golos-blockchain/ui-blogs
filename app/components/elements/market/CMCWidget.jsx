@@ -47,9 +47,9 @@ class CMCWidget extends React.Component {
     render() {
         const { loaded, failed, price_usd, price_rub, page_url, price_change } = this.state
         if (!loaded) {
-            return (<div class="CMCWidget">
+            return (<div className="CMCWidget">
                     <div className="CMCWidget__inner">
-                        <div className='CMCWidget__inner2' style={{ 'justify-content': 'center' }} >
+                        <div className='CMCWidget__inner2' style={{ justifyContent: 'center' }} >
                             {!failed ?
                                 <LoadingIndicator type='circle' size='25px' /> :
                                 null}
@@ -65,7 +65,7 @@ class CMCWidget extends React.Component {
         const christmas = (nowMonth === 12 && nowDay >= 15)
             || (nowMonth === 1 && nowDay <= 15)
         
-        return (<div class="CMCWidget">
+        return (<div className="CMCWidget">
                 <div className="CMCWidget__inner">
                     <div className='CMCWidget__inner2'>
                         <div className="CMCWidget__icon-parent">
