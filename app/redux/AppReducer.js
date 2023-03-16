@@ -1,6 +1,5 @@
 import {Map, OrderedMap} from 'immutable';
 import tt from 'counterpart';
-import { showToast, showCustomToast } from 'app/components/elements/Notifications/ToastUtils'
 
 const defaultState = Map({
     requests: {},
@@ -41,19 +40,7 @@ export default function reducer(state = defaultState, action) {
     }
     let res = state;
     if (action.type === 'ADD_NOTIFICATION') {
-        const { payload } = action
-        const opts = {
-            dismissAfter: payload.dismissAfter,
-            action: payload.action
-        }
-        if (payload.key) {
-            opts.id = payload.key
-        }
-        if (payload.custom) {
-            showCustomToast(payload.message, opts)
-        } else {
-            showToast(payload.message, opts)
-        }
+        // saga
     }
     if (action.type === 'REMOVE_NOTIFICATION') {
         res = res.update('notifications', s => s.delete(action.payload.key));
