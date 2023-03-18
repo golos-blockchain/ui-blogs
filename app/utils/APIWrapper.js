@@ -82,11 +82,7 @@ export function getContentReplies(author, permlink, voteLimit) {
 }
 
 export function getAllContentReplies(author, permlink, voteLimit, prefs) {
-    if ($STM_Config.hide_comment_neg_rep) {
-        return api.getAllContentRepliesAsync(author, permlink, voteLimit, 0, [], [], true, null, prefs)
-    } else {
-        return api.getAllContentRepliesAsync(author, permlink, voteLimit, 0, [], [], false, null, prefs)
-    }
+    return api.getAllContentRepliesAsync(author, permlink, voteLimit, 0, [], [], false, null, prefs)
 }
 
 export function getDonates(uia, target, from, to, voteLimit, offset) {

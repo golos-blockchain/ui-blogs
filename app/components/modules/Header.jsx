@@ -190,10 +190,10 @@ class Header extends React.Component {
                         <div className="columns">
                             <ul className="menu">
                                 <li className="Header__top-logo">
-                                    <Link to={logo_link}><img src={$STM_Config.logo} width='48' height='48' /></Link>
+                                    <Link to={logo_link}><img src={$STM_Config.logo.icon} /></Link>
                                 </li>
                                 <li className="Header__top-steemit show-for-large noPrint">
-                                    <Link to={logo_link}>{APP_NAME_UP}<span className="beta">blogs</span></Link>
+                                    <Link to={logo_link}><img src={$STM_Config.logo.title} /></Link>
                                 </li>
                                 {selected_sort_order && <DropdownMenu className="Header__sort-order-menu show-for-small-only" items={sort_order_menu} selected={selected_sort_order[1]} el="li" />}
                             </ul>

@@ -1,12 +1,14 @@
 {
   "desktop": {
-    "hide_comment_neg_rep": false,
     "site_domain": "golos.id",
     "another_domains": [
       "golos.in",
       "golos.today"
     ],
-    "logo": "https://i.imgur.com/UQz7tKn.png",
+    "logo": {
+      "icon": "https://i.imgur.com/55rZWcS.png",
+      "title": "https://i.imgur.com/LW4Z2iQ.png"
+    },
     "ws_connection_app": [
       { "address": "wss://api.golos.id/ws" },
       { "address": "wss://api.aleksw.space/ws" },

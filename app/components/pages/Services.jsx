@@ -54,9 +54,6 @@ class Services extends React.Component {
                                 <h4><a target="_blank" rel="noopener noreferrer" href="https://pisolog.net/stats/accounts/allaccounts"><Icon name="new/monitor" /> pisolog.net</a></h4>
                                 {tt('services.developer')} <a href="/@bitwheeze">@bitwheeze</a>
                                 <p>Наглядная статистика по аккаунтам, кураторам, репутации, изменениям Силы Голоса... <a href="/@bitwheeze/osen">{tt('g.more_hint')}</a> <Icon name="extlink" /></p>
-                                <h4><a target="_blank" rel="noopener noreferrer" href="https://golos.cf/"><Icon name="new/monitor" /> golos.cf</a></h4>
-                                {tt('services.developer')} <a href="/@vik">@vik</a>
-                                <p>Функциональный сервис для получения информации из блокчейна о любом аккаунте, истории операций... <a href="/@vik/explorer-guide">{tt('g.more_hint')}</a> <Icon name="extlink" /></p>
                             </div>
                         </div>
                     </div>

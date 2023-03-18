@@ -34,7 +34,6 @@ const copyKey = (key) => {
     cfg[key] = config.get('desktop.' + key)
 }
 cfg.app_version = app_version
-copyKey('hide_comment_neg_rep')
 copyKey('site_domain')
 cfg.url_domains = [...config.get('desktop.another_domains')]
 if (!cfg.url_domains.includes(cfg.site_domain)) {
