@@ -8,10 +8,10 @@ const SECS_PER_MONTH = SECS_PER_DAY * 31;
 const SECS_PER_YEAR = SECS_PER_DAY * 366;
 
 const DEFAULT_THRESHOLDS = {
-  second: 45, // seconds to minute
-  minute: 45, // minutes to hour
-  hour: 22, // hour to day
-  day: 5, // day to week
+  second: 55, // seconds to minute
+  minute: 55, // minutes to hour
+  hour: 23, // hour to day
+  day: 6 // day to week
 };
 
 export function selectUnit(

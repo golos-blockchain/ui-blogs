@@ -23,7 +23,7 @@ class Services extends React.Component {
                             <div className='column large-3 medium-3 small-6'>
                                 <a target="_blank" href="https://wallet.golos.id"><Icon name='money' size='10x'/>
                                 <h5>Golos Wallet + DEX</h5></a>
-                                <p className='landing-services-block-icon-text'>Кошелек и торговля на <a target="_blank" href="https://wallet.golos.id/market">внутренней бирже</a> и <a target="_blank" href="https://wallet.golos.id/convert">обменнике</a>, веб-клиентах <a target="_blank" href="https://dex.golos.app/#/trade/GOLOS_YMUSDT">dex.golos.app</a> или <a target="_blank" href="https://gls.exchange">gls.exchange</a></p>
+                                <p className='landing-services-block-icon-text'>Кошелек и торговля на <a target="_blank" href="https://wallet.golos.id/market/GOLOS/YMUSDT">внутренней бирже</a> и <a target="_blank" href="https://wallet.golos.id/convert/GOLOS/YMUSDT">обменнике</a>, веб-клиентах <a target="_blank" href="https://dex.golos.app/#/trade/GOLOS_YMUSDT">dex.golos.app</a> или <a target="_blank" href="https://gls.exchange/#/trade/GOLOS_YMUSDT">gls.exchange</a></p>
                             </div>
                             <div className='column large-3 medium-3 small-6'>
                                 <a target="_blank" href="https://chat.golos.app"><Icon name='rocket' size='10x'/>
@@ -54,9 +54,6 @@ class Services extends React.Component {
                                 <h4><a target="_blank" rel="noopener noreferrer" href="https://pisolog.net/stats/accounts/allaccounts"><Icon name="new/monitor" /> pisolog.net</a></h4>
                                 {tt('services.developer')} <a href="/@bitwheeze">@bitwheeze</a>
                                 <p>Наглядная статистика по аккаунтам, кураторам, репутации, изменениям Силы Голоса... <a href="/@bitwheeze/osen">{tt('g.more_hint')}</a> <Icon name="extlink" /></p>
-                                <h4><a target="_blank" rel="noopener noreferrer" href="https://golos.cf/"><Icon name="new/monitor" /> golos.cf</a></h4>
-                                {tt('services.developer')} <a href="/@vik">@vik</a>
-                                <p>Функциональный сервис для получения информации из блокчейна о любом аккаунте, истории операций... <a href="/@vik/explorer-guide">{tt('g.more_hint')}</a> <Icon name="extlink" /></p>
                             </div>
                         </div>
                     </div>

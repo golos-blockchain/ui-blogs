@@ -8,6 +8,10 @@ RUN yarn build-version && yarn build
 FROM node:16.1-alpine
 
 WORKDIR /var/app
+
+ARG SOURCE_COMMIT
+ENV SOURCE_COMMIT ${SOURCE_COMMIT}
+
 COPY --from=build /var/app /var/app
 ENV PORT 8080
 ENV NODE_ENV production

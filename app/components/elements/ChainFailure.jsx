@@ -12,7 +12,7 @@ class ChainFailure extends React.Component {
             return (
                 <div className="App__announcement row">
                     <div className="column">
-                        <div align="center" className="callout alert" style={{backgroundColor: 'rgb(217, 0, 0)', color: 'white'}}>
+                        <div align="center" className="callout alert" style={{backgroundColor: 'rgb(250, 62, 62)', color: 'white'}}>
                             <Icon className="logo-icon" name={APP_ICON} /> {tt('chain_failure_jsx.title')}
                         </div>
                     </div>
