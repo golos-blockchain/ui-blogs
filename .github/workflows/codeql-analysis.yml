@@ -1,4 +1,4 @@
-name: CodeQL beta
+name: CodeQL
 
 on:
   push:
@@ -12,8 +12,11 @@ jobs:
       contents: read
       security-events: write
     steps:
-    - uses: actions/checkout@v2
-    - uses: github/codeql-action/init@v1
+
+    - uses: actions/checkout@v3
+
+    - uses: github/codeql-action/init@v2
       with:
         languages: javascript
-    - uses: github/codeql-action/analyze@v1
+        
+    - uses: github/codeql-action/analyze@v2

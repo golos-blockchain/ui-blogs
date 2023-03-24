@@ -1,6 +1,5 @@
 const webpack = require('webpack');
 const merge = require('webpack-merge');
-const git = require('git-rev-sync');
 const baseConfig = require('./base.config');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
@@ -18,8 +17,6 @@ module.exports = merge(baseConfig, {
             'process.env': {
                 BROWSER: JSON.stringify(true),
                 NODE_ENV: JSON.stringify('production'),
-                // FIXME this requires we put .git into the docker image :(
-                VERSION: JSON.stringify(git.tag()),
             },
             global: {
                 TYPED_ARRAY_SUPPORT: JSON.stringify(false),

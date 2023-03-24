@@ -33,7 +33,6 @@ global.$STM_Config = {
     ws_connection_client: optGet('proxy_node') ?
         concatURL('/api/v1/node_send', config.get('site_domain')) :
         config.get('ws_connection_client'),
-    hide_comment_neg_rep: config.get('hide_comment_neg_rep'),
     show_adv_banners: config.get('show_adv_banners'),
     logo: config.get('logo'),
     add_notify_site: config.get('add_notify_site'),

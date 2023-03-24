@@ -172,7 +172,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
 
         return (
             <ul className={mcn + mcl}>
-                <LocaleSelect />
+                <span className={scn}><LocaleSelect /></span>
                 {faqItem}
                 {searchItem}
                 <li className="delim show-for-medium" />

@@ -309,12 +309,7 @@ export function* fetchState(location_change_action) {
 
             yield put(GlobalReducer.actions.receiveState(state))
 
-            let replies = [];
-            if ($STM_Config.hide_comment_neg_rep) {
-                replies =  yield call([api, api.getAllContentRepliesAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT, 0, [], [], true, null, prefs([], [account, curUser]))
-            } else {
-                replies =  yield call([api, api.getAllContentRepliesAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT, 0, [], [], false, null, prefs([], [account, curUser]))
-            }
+            const replies =  yield call([api, api.getAllContentRepliesAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT, 0, [], [], false, null, prefs([], [account, curUser]))
 
             for (let key in replies) {
                 let reply = replies[key]

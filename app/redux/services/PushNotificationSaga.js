@@ -1,6 +1,7 @@
-import {take, call, put, select, fork, cancel} from 'redux-saga/effects';
+import {take, call, put, select, fork, cancel, takeLatest} from 'redux-saga/effects';
 import {SagaCancellationException} from 'redux-saga';
 import user from 'app/redux/User';
+import { showToast, showCustomToast } from 'app/components/elements/Notifications/ToastUtils'
 import NotifyContent from 'app/components/elements/Notifications/NotifyContent';
 import { notificationSubscribe, notificationUnsubscribe, notificationTake } from 'app/utils/NotifyApiClient';
 import session from 'app/utils/session'
@@ -29,7 +30,7 @@ function getScopePresets(username) {
     return Object.keys(presets).filter(k => presets[k]);
 }
 
-function* onUserLogin(action) {
+export function* onUserLogin(action) {
     let presets = getScopePresets(action.username).join(',');
 
     if (!presets) {
@@ -102,6 +103,31 @@ function* onUserLogin(action) {
     }
 }
 
+function* onAddNotification(action) {
+    const { payload } = action
+    const opts = {
+        dismissAfter: payload.dismissAfter,
+        action: payload.action
+    }
+    if (payload.key) {
+        opts.id = payload.key
+    }
+    if (payload.custom) {
+        showCustomToast(payload.message, opts)
+    } else {
+        showToast(payload.message, opts)
+    }
+}
+
+function* addNotificationWatch() {
+    yield takeLatest('ADD_NOTIFICATION', onAddNotification)
+}
+
+export function* pushNotificationWatches() {
+    yield fork(addNotificationWatch)
+}
+
 export default {
-    onUserLogin
+    onUserLogin,
+    pushNotificationWatches,
 }

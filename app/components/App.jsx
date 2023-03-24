@@ -47,7 +47,6 @@ const availableDomains = [
     'golostalk.com',
     'prizmtalk.com',
     'gph.ai',
-    'golos.cf',
     'dpos.space',
     'pisolog.net',
     'rudex.org',
