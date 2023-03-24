@@ -49,8 +49,8 @@ export function getBlogAuthors(blogAccount) {
     return api.getBlogAuthorsAsync(blogAccount)
 }
 
-export function getBlogEntries(account, entryId, limit) {
-    return api.getBlogEntriesAsync(account, entryId, limit, ['fm-'])
+export function getBlogEntries(account, entryId, limit, tagMasks = ['fm-'], prefs = {}) {
+    return api.getBlogEntriesAsync(account, entryId, limit, tagMasks, prefs)
 }
 
 export function getFeedEntries(account, entryId, limit) {
@@ -82,11 +82,7 @@ export function getContentReplies(author, permlink, voteLimit) {
 }
 
 export function getAllContentReplies(author, permlink, voteLimit, prefs) {
-    if ($STM_Config.hide_comment_neg_rep) {
-        return api.getAllContentRepliesAsync(author, permlink, voteLimit, 0, [], [], true, null, prefs)
-    } else {
-        return api.getAllContentRepliesAsync(author, permlink, voteLimit, 0, [], [], false, null, prefs)
-    }
+    return api.getAllContentRepliesAsync(author, permlink, voteLimit, 0, [], [], false, null, prefs)
 }
 
 export function getDonates(uia, target, from, to, voteLimit, offset) {

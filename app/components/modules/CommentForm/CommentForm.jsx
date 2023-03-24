@@ -229,7 +229,7 @@ class CommentForm extends React.Component {
         }
 
         const meta = {
-            app: 'golos-blog/0.1',
+            app: $STM_Config.site_domain + '/0.1',
             format: 'markdown',
             tags: [],
         };

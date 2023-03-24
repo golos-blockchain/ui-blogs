@@ -610,7 +610,7 @@ class PostForm extends React.Component {
         }
 
         const meta = {
-            app: 'golos-blog/0.1',
+            app: $STM_Config.site_domain + '/0.1',
             format: editorId === EDITORS_TYPES.HTML ? 'html' : 'markdown',
             tags: processedTags,
         };

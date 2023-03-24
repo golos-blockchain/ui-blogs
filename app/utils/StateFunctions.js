@@ -5,7 +5,9 @@ import { Signature, hash } from 'golos-lib-js/lib/auth/ecc/index'
 
 import { VEST_TICKER, LIQUID_TICKER } from 'app/client_config'
 import constants from 'app/redux/constants'
+import { grayContent, hideContent } from 'app/utils/ContentAccess'
 import { parsePayoutAmount, repLog10 } from 'app/utils/ParsersAndFormatters'
+import { getFilterApps, } from 'app/utils/ContentAccess';
 
 export const hashPermlink = (permlink) => {
     const h = hash.sha256(permlink, 'binary')
@@ -110,32 +112,21 @@ export function contentStats0(content) {
 
     // post must have non-trivial negative rshares to be grayed out
 
-    const grayThreshold = -5000000000000 // dislikes ~100k Golos Power
-    const meetsGrayThreshold = net_rshares_adj.compare(grayThreshold) < 0
-    const grayThreshold2 = -50000000000000 // dislikes ~1m Golos Power
-    const meetsGrayThreshold2 = net_rshares_adj.compare(grayThreshold2) < 0
-    const hideThreshold = -500000000000000 // dislikes ~10m Golos Power
-    const meetsHideThreshold = net_rshares_adj.compare(hideThreshold) < 0
-
     const hasPositiveRshares = Long.fromString(String(content.get('net_rshares'))).gt(Long.ZERO)
     const allowDelete = !hasPositiveRshares && content.get('children') === 0
     const authorRepLog10 = repLog10(content.get('author_reputation'))
 
-    let noGray, noHide
-    if (process.env.BROWSER) {
-        noGray = window.NO_GRAY
-        noHide = window.NO_HIDE
-    }
-
-    const gray = !noGray && (authorRepLog10 < 0 || (authorRepLog10 < 70 && meetsGrayThreshold) || meetsGrayThreshold2)
-    const hide = !noHide && (authorRepLog10 < -25 || meetsHideThreshold)
+    const gray = grayContent(net_rshares_adj, authorRepLog10)
+    const hide = hideContent(net_rshares_adj, authorRepLog10)
     const pictures = !gray
 
     // Combine tags+category to check nsfw status
     const json = content.get('json_metadata')
+    let jObj
     let tags = []
     try {
-        tags = (json && JSON.parse(json).tags) || [];
+        jObj = json && JSON.parse(json)
+        tags = jObj.tags || [];
         if(typeof tags == 'string') {
             tags = [tags];
         } if(!Array.isArray(tags)) {
@@ -153,6 +144,18 @@ export function contentStats0(content) {
 
     const isOnlyapp = tags.filter(tag => tag && tag.match(/^onlyapp/i)).length > 0;
 
+    let foreignApp
+    if (content.get('app') && jObj && getFilterApps().includes(content.get('app'))) {
+        foreignApp = {}
+        foreignApp.domain = jObj.app.split('/')[0]
+        foreignApp.url = 'https://' + foreignApp.domain + content.get('url')
+        try {
+            new URL(foreignApp.url)
+        } catch (err) {
+            delete foreignApp.url
+        }
+    }
+
     return {
         hide,
         gray,
@@ -164,7 +167,8 @@ export function contentStats0(content) {
         isOnlyapp,
         flagWeight,
         total_votes,
-        up_votes
+        up_votes,
+        foreignApp,
     }
 }
 

@@ -669,10 +669,12 @@
   },
   "poststub": {
     "onlyblog": "This post is only for author's followers.",
+    "foreignapp": "This post is made in alternative app and available for logged in users only.",
     "login": "Sign in",
     "sign_up": "sign up",
     "onlyapp": "This post is available only in GOLOS Blogs desktop application.",
-    "install": "Install application"
+    "install": "Install application",
+    "login_to_see_comment": "Log in to see this comment."
   },
   "postsummary_jsx": {
     "resteemed": "Reposted",
@@ -753,6 +755,9 @@
     "sign_up_now_to_receive": "Sign up now to receive ",
     "free_money": "FREE MONEY!",
     "join_our": "Join our"
+  },
+  "chain_failure_jsx": {
+    "title": "Cannot connect Golos node. Cannot send operations. We will fix it soon..."
   },
   "change_account_jsx": {
     "add_account": "Add Account",
