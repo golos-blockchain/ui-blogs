@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 const merge = require('webpack-merge');
 const path = require('path');
-const git = require('git-rev-sync');
 let prodConfig = require('./prod.config');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
@@ -13,8 +12,6 @@ module.exports = merge(prodConfig, {
             'process.env': {
                 BROWSER: JSON.stringify(true),
                 NODE_ENV: JSON.stringify('production'),
-                // FIXME this requires we put .git into the docker image :(
-                VERSION: JSON.stringify(git.tag()),
                 IS_APP: JSON.stringify(true),
             },
             global: {
