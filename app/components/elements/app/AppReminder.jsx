@@ -31,7 +31,8 @@ class AppReminder extends React.Component {
         }
         return <span className='AppReminder callout primary' onClick={this.showModal}>
             <CloseButton
-                onClick={() => {
+                onClick={(e) => {
+                    e.stopPropagation()
                     this.hideMe()
                 }}
             />
