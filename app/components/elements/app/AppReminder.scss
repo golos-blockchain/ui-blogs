@@ -1,0 +1,14 @@
+.AppReminder {
+    background-color: #d0edff !important;
+    color: #333;
+    border-radius: 5px;
+    position: fixed;
+    left: 20px;
+    bottom: 1px;
+    padding-right: 5rem;
+    cursor: pointer;
+
+    .close-button {
+        margin-top: 4px;
+    }
+}

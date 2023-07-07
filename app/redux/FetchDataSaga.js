@@ -540,6 +540,7 @@ export function* fetchData(action) {
         args[0].select_authors = [accountname];
     } else if (order === 'by_author') {
         call_name = 'getDiscussionsByBlogAsync';
+        args[0].filter_tags = args[0].filter_tags.filter(tag => tag !== 'onlyblog')
         delete args[0].select_tags;
         delete args[0].select_categories;
         delete args[0].prefs

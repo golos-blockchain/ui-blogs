@@ -10,6 +10,7 @@ import Donate from 'app/components/modules/Donate'
 import SignUp from 'app/components/modules/SignUp'
 import ChangeAccount from 'app/components/modules/ChangeAccount'
 import AddAccount from 'app/components/modules/AddAccount'
+import AppDownload from 'app/components/modules/app/AppDownload'
 import user from 'app/redux/User';
 import tr from 'app/redux/Transaction';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
@@ -25,11 +26,13 @@ class Modals extends React.Component {
         show_promote_post_modal: PropTypes.bool,
         show_change_account_modal: PropTypes.bool,
         show_add_account_modal: PropTypes.bool,
+        show_app_download_modal: PropTypes.bool,
         hideLogin: PropTypes.func.isRequired,
         hideConfirm: PropTypes.func.isRequired,
         hideSignUp: PropTypes.func.isRequired,
         hideDonate: PropTypes.func.isRequired,
         hidePromotePost: PropTypes.func.isRequired,
+        hideAppDownload: PropTypes.func.isRequired,
         notifications: PropTypes.object,
         removeNotification: PropTypes.func,
     };
@@ -53,12 +56,14 @@ class Modals extends React.Component {
             show_signup_modal,
             show_change_account_modal,
             show_add_account_modal,
+            show_app_download_modal,
             hideLogin,
             hideDonate,
             hideConfirm,
             hideSignUp,
             hideChangeAccount,
             hideAddAccount,
+            hideAppDownload,
             notifications,
             removeNotification,
         } = this.props;
@@ -96,6 +101,10 @@ class Modals extends React.Component {
                     <CloseButton onClick={hideAddAccount} />
                     <AddAccount />
                 </Reveal>}
+                {show_app_download_modal && <Reveal onHide={hideAppDownload} show={show_app_download_modal}>
+                    <CloseButton onClick={hideAppDownload} />
+                    <AppDownload />
+                </Reveal>}
             </div>
         );
     }
@@ -114,6 +123,7 @@ export default connect(
             show_signup_modal: state.user.get('show_signup_modal'),
             show_change_account_modal: state.user.get('show_change_account_modal'),
             show_add_account_modal: state.user.get('show_add_account_modal'),
+            show_app_download_modal: state.user.get('show_app_download_modal'),
             notifications: state.app.get('notifications'),
         }
     },
@@ -145,6 +155,10 @@ export default connect(
         hideAddAccount: e => {
             if (e) e.preventDefault();
             dispatch(user.actions.hideAddAccount())
+        },
+        hideAppDownload: e => {
+            if (e) e.preventDefault()
+            dispatch(user.actions.hideAppDownload())
         },
         // example: addNotification: ({key, message}) => dispatch({type: 'ADD_NOTIFICATION', payload: {key, message}}),
         removeNotification: (key) => dispatch({type: 'REMOVE_NOTIFICATION', payload: {key}}),

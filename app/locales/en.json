@@ -1056,6 +1056,12 @@
     "mention_comment": " mentioned you in their comment",
     "message": " sent you a private message"
   },
+  "app_download": {
+    "title": "Download Golos Desktop"
+  },
+  "app_reminder": {
+    "text": "Install desktop application for Windows or Linux to receive data directly from blockchain"
+  },
   "app_goto_url": {
     "goto": "Goto",
     "wrong_domain_DOMAINS": "This address is not belong to GOLOS Blogs.\nGOLOS Blogs domains are: %(DOMAINS)s\nThis address will be opened in external browser."
