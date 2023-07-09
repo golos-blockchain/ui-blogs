@@ -3,25 +3,25 @@ import { toAsset, vestsToSteem } from 'app/utils/StateFunctions'
 
 export function getGameLevel(account, gprops, smallIcon = false) {
     let levels = [
-      {"power_from": 0.000, "imgs": ["1.png", "1big.png"],
+      {"power_from": 0.000, "imgs": ["1.png", "1big.png?v=2"],
         "title": ["Креветки", "Shrimp"]},
-      {"power_from": 0.005, "imgs": ["2.png", "2big.png"],
+      {"power_from": 0.005, "imgs": ["2.png", "2big.png?v=2"],
         "title": ["Крабы", "Crabs"]},
-      {"power_from": 0.010, "imgs": ["3.png", "3big.png"],
+      {"power_from": 0.010, "imgs": ["3.png", "3big.png?v=2"],
         "title": ["Осьминоги", "Octopuses"]},
-      {"power_from": 0.025, "imgs": ["4.png", "4big.png"],
+      {"power_from": 0.025, "imgs": ["4.png", "4big.png?v=2"],
         "title": ["Рыбы", "Fish"]},
-      {"power_from": 0.050, "imgs": ["5.png", "5big.png"],
+      {"power_from": 0.050, "imgs": ["5.png", "5big.png?v=2"],
         "title": ["Черепахи", "Turtles"]},
-      {"power_from": 0.100, "imgs": ["6.png", "6big.png"],
+      {"power_from": 0.100, "imgs": ["6.png", "6big.png?v=2"],
         "title": ["Дельфины", "Dolphins"]},
-      {"power_from": 0.250, "imgs": ["7.png", "7big.png"],
+      {"power_from": 0.250, "imgs": ["7.png", "7big.png?v=2"],
         "title": ["Акулы", "Sharks"]},
-      {"power_from": 0.500, "imgs": ["8.png", "8big.png"],
+      {"power_from": 0.500, "imgs": ["8.png", "8big.png?v=2"],
         "title": ["Косатки", "Orca"]},
-      {"power_from": 1.000, "imgs": ["9.png", "9big.png"],
+      {"power_from": 1.000, "imgs": ["9.png", "9big.png?v=2"],
         "title": ["Киты", "Whales"]},
-      {"power_from": 5.000, "imgs": ["10.png", "10big.png"],
+      {"power_from": 5.000, "imgs": ["10.png", "10big.png?v=2"],
         "title": ["Повелители морей", "Lords of the Seas"]}
     ]
     let level = null
