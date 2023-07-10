@@ -1,5 +1,7 @@
 .AppReminder {
-    background-color: #d0edff !important;
+    @include themify($themes) {
+        background-color: themed('modalReminder') !important;
+    }
     color: #333;
     border-radius: 5px;
     position: fixed;
