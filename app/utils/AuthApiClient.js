@@ -1,3 +1,5 @@
+import { fetchEx } from 'golos-lib-js/lib/utils'
+
 const request_base = {
     method: 'post',
     credentials: 'include',
@@ -72,3 +74,14 @@ export function authApiLogout() {
     });
 }
 
+export function cryptostoreEncrypt() {
+    if (!authAvailable()) return {}
+    let request = Object.assign({}, request_base, {
+        body: JSON.stringify({}),
+    })
+    setSession(request)
+    return fetchEx(authUrl(`/api/cryptostore/encrypt`), request).then(r => {
+        saveSession(r)
+        return r.json()
+    })
+}

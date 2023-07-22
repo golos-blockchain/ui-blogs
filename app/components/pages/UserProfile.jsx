@@ -14,6 +14,7 @@ import UserKeys from 'app/components/elements/UserKeys';
 import Settings from 'app/components/modules/Settings';
 import ReputationHistory from 'app/components/modules/ReputationHistory'
 import Mentions from 'app/components/modules/Mentions'
+import Sponsors from 'app/components/modules/Sponsors'
 import UserList from 'app/components/elements/UserList';
 import Follow from 'app/components/elements/Follow';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
@@ -253,6 +254,7 @@ export default class UserProfile extends React.Component {
         if( section === 'followers' ) {
             if (followers && followers.has('blog_result')) {
                 tab_content = <div>
+                    <Sponsors />
                     <UserList
                         title={tt('user_profile.followers')}
                         account={account}

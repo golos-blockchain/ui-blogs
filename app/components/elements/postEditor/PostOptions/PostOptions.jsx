@@ -10,7 +10,7 @@ import Slider from 'golos-ui/Slider';
 import Icon from 'app/components/elements/Icon';
 import Hint from 'app/components/elements/common/Hint';
 import RadioGroup from 'app/components/elements/common/RadioGroup';
-import { PAYOUT_OPTIONS, VISIBLE_OPTIONS, VISIBLE_TYPES } from 'app/components/modules/PostForm/PostForm';
+import { PAYOUT_OPTIONS } from 'app/components/modules/PostForm/PostForm';
 import './PostOptions.scss';
 
 const SliderStyled = styled(Slider)`
@@ -34,14 +34,11 @@ const CuratorValue = styled.b`
 class PostOptions extends React.PureComponent {
     static propTypes = {
         nsfw: PropTypes.bool.isRequired,
-        visibleType: PropTypes.number.isRequired,
-        publishedLimited: PropTypes.bool.isRequired,
         payoutType: PropTypes.number.isRequired,
         curationPercent: PropTypes.number.isRequired,
 
         editMode: PropTypes.bool,
         onNsfwClick: PropTypes.func.isRequired,
-        onVisibleTypeChange: PropTypes.func.isRequired,
         onPayoutChange: PropTypes.func.isRequired,
         onCurationPercentChange: PropTypes.func.isRequired,
     };
@@ -52,7 +49,6 @@ class PostOptions extends React.PureComponent {
         this._onAwayClickListen = false;
 
         this.state = {
-            showEyeMenu: false,
             showCoinMenu: false,
 
             minCurationPercent: 0,
@@ -69,7 +65,7 @@ class PostOptions extends React.PureComponent {
     }
 
     render() {
-      const { showEyeMenu, showCoinMenu, curatorPercent, minCurationPercent, maxCurationPercent } = this.state;
+      const { showCoinMenu, curatorPercent, minCurationPercent, maxCurationPercent } = this.state;
         return (
             <div className="PostOptions">
                 <span
@@ -83,22 +79,6 @@ class PostOptions extends React.PureComponent {
                         size="1_5x"
                         data-tooltip={tt('post_editor.nsfw_hint')}
                     />
-                </span>
-                <span className="PostOptions__item-wrapper">
-                    <span
-                        className={cn('PostOptions__item', {
-                            PostOptions__item_warning: !showEyeMenu && this.props.visibleType !== VISIBLE_TYPES.ALL,
-                            PostOptions__item_active: showEyeMenu
-                        })}
-                        onClick={this._onEyeClick}
-                    >
-                        <Icon
-                            name="editor/visible"
-                            size="1_5x"
-                            data-tooltip={tt('post_editor.set_visible_type')}
-                        />
-                    </span>
-                    {showEyeMenu ? this._renderEyeMenu() : null}
                 </span>
                 <span className="PostOptions__item-wrapper">
                     <span
@@ -118,47 +98,6 @@ class PostOptions extends React.PureComponent {
             </div>
         );
     }
-
-    _renderEyeMenu() {
-        const { editMode, publishedLimited, visibleType } = this.props;
-
-        const disableChoice = editMode && publishedLimited
-
-        return (
-            <Hint align="center" innerRef={this._popupEyeRef}>
-                <div className="PostOptions__bubble-text">
-                    {tt('post_editor.set_visible_type')}:
-                </div>
-                <RadioGroup
-                    disabled={disableChoice}
-                    title={disableChoice ? tt('post_editor.onlyapp_cannot_be_removed') : ''}
-                    options={VISIBLE_OPTIONS.map(({ id, title, hint }) => ({
-                        id,
-                        title: tt(title) + ' ',
-                        hint: hint ? tt(hint) : null,
-                    }))}
-                    value={visibleType}
-                    onChange={this.props.onVisibleTypeChange}
-                />
-            </Hint>
-        );
-    }
-
-    _onEyeClick = () => {
-        this.setState(
-            {
-                showEyeMenu: !this.state.showEyeMenu,
-            },
-            () => {
-                const { showEyeMenu } = this.state;
-
-                if (showEyeMenu && !this._onAwayClickListen) {
-                    window.addEventListener('mousedown', this._onAwayClick);
-                    this._onAwayClickListen = true;
-                }
-            }
-        );
-    };
 
     _renderCoinMenu() {
         const { editMode, payoutType } = this.props;
@@ -207,22 +146,16 @@ class PostOptions extends React.PureComponent {
     };
 
     _onAwayClick = e => {
-        if ((!this._popupEye || !this._popupEye.contains(e.target)) &&
-            (!this._popupPayout || !this._popupPayout.contains(e.target))) {
+        if (!this._popupPayout || !this._popupPayout.contains(e.target)) {
             setTimeout(() => {
                 if (!this._unmount) {
                     this.setState({
-                        showEyeMenu: false,
                         showCoinMenu: false,
                     });
                 }
             }, 50);
         }
     };
-
-    _popupEyeRef = el => {
-        this._popupEye = el
-    }
 
     _popupPayoutRef = el => {
         this._popupPayout = el
