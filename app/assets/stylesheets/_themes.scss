@@ -79,6 +79,7 @@ $themes: (
     buttonBoxShadowHover: $color-blue-black,
     modalBackgroundColor: $color-white,
     modalTextColorPrimary: $color-text-dark,
+    modalReminder: #d0edff,
   ),
   dark: (
     colorAccent: $color-teal,
@@ -121,6 +122,7 @@ $themes: (
     inputPriceWarning: rgba(255, 153, 0, 0.83),
     modalBackgroundColor: $color-white,
     modalTextColorPrimary: $color-text-dark,
+    modalReminder: $color-blue-dark,
   ),
 );
 
