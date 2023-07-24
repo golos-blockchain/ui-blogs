@@ -18,6 +18,7 @@ export default class PostFooter extends PureComponent {
         tags: PropTypes.array,
         publishedLimited: PropTypes.bool,
         postDisabled: PropTypes.bool,
+        postEncrypted: PropTypes.bool,
         disabledHint: PropTypes.string,
         onPayoutTypeChange: PropTypes.func.isRequired,
         onCurationPercentChange: PropTypes.func.isRequired,
@@ -68,9 +69,9 @@ export default class PostFooter extends PureComponent {
     onPostClick = (e) => {
         e.preventDefault()
 
-        const { editMode } = this.props
+        const { editMode, postEncrypted } = this.props
         if (editMode) {
-            this.props.onPost(VISIBLE_TYPES.ALL)
+            this.props.onPost(postEncrypted ? VISIBLE_TYPES.ONLY_SPONSORS : VISIBLE_TYPES.ALL)
             return
         }
 

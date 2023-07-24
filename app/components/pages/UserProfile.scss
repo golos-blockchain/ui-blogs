@@ -192,6 +192,15 @@
     }
 }
 
+.sponsors_notify {
+    a {
+        .NotifiCounter {
+            top: -1px !important;
+            margin-left: 0.5rem;
+        }
+    }
+}
+
 .UserProfile__rep-panel {
     .Icon {
         margin-left: 5px;

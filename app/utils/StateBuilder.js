@@ -4,6 +4,7 @@ import { getFilterApps, } from 'app/utils/ContentAccess'
 import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile';
 import { reveseTag, prepareTrendingTags, getFilterTags } from 'app/utils/tags';
 import { stateSetVersion } from 'app/utils/SearchClient'
+import { makeOid, markEncryptedContent, SPONSORS_PER_PAGE } from 'app/utils/sponsors'
 
 const DEFAULT_VOTE_LIMIT = 10000
 
@@ -21,6 +22,8 @@ export default async function getState(api, url, offchain = {}) {
     // decode tag for cyrillic symbols
     const tag = typeof parts[1] !== 'undefined' ? decodeURIComponent(parts[1]) : ''
 
+    let has_encrypted = false
+
     const state = {}
     state.current_route = `/${url}`
     state.props = await api.getDynamicGlobalProperties()
@@ -28,9 +31,13 @@ export default async function getState(api, url, offchain = {}) {
     state.categories = {}
     state.tags = {}
     state.content = {}
+    state.decrypting = false
     state.prev_posts = []
-    state.assets = {}
-    state.minused_accounts = []
+    state.assets = {} // account balances
+    state.tokens = []
+    state.sponsors = { data: [] }
+    state.sponsoreds = { data: [] }
+    state.minused_accounts = {}
     state.accounts = {}
     state.discussion_idx = {}
     state.feed_price = await api.getCurrentMedianHistoryPrice()
@@ -104,6 +111,8 @@ export default async function getState(api, url, offchain = {}) {
                             state.content[link].reblogged_by = feedEntries[key].reblog_by
                             state.content[link].first_reblogged_on = feedEntries[key].reblog_on
                         }
+
+                        markEncryptedContent(state.content[link], state)
                     }
                 break
 
@@ -131,6 +140,36 @@ export default async function getState(api, url, offchain = {}) {
                     });
                 break
 
+                case 'sponsors':
+                    const oid = makeOid()
+                    state.pso = await api.getPaidSubscriptionOptions({
+                        author: uname,
+                        oid
+                    })
+                    if (!state.pso.author) {
+                        state.pso.oid = oid
+                    }
+                    const tokens = await api.getAssets('', [], '', 5000, 'by_marketed')
+                    state.tokens = tokens.filter(t => !t.allow_override_transfer)
+                    state.sponsors = {
+                        data: await api.getPaidSubscribers({
+                            author: uname,
+                            oid,
+                            sort: 'by_date',
+                            from: '', limit: SPONSORS_PER_PAGE + 1
+                        })
+                    }
+                    state.sponsoreds = {
+                        data: await api.getPaidSubscriptions({
+                            subscriber: uname,
+                            select_oid: oid,
+                            start_author: '',
+                            sort: 'by_date',
+                            limit: SPONSORS_PER_PAGE + 1
+                        })
+                    }
+                break
+
                 case 'blog':
                 default:
                     const blogEntries = await api.getBlogEntries(uname, 0, 20, ['fm-'], {})
@@ -149,6 +188,8 @@ export default async function getState(api, url, offchain = {}) {
                         if (blogEntries[key].reblog_on !== '1970-01-01T00:00:00') {
                             state.content[link].first_reblogged_on = blogEntries[key].reblog_on
                         }
+
+                        markEncryptedContent(state.content[link], state)
                     }
                 break
             }
@@ -165,6 +206,8 @@ export default async function getState(api, url, offchain = {}) {
             await stateSetVersion(state.content[curl], urlParts[1])
         }
         accounts.add(account)
+
+        markEncryptedContent(state.content[curl])
 
         const replies = await api.getAllContentReplies(account, permlink, DEFAULT_VOTE_LIMIT, prefs([], [account, curUser]))
 
@@ -203,7 +246,7 @@ export default async function getState(api, url, offchain = {}) {
         const filter_apps = getFilterApps()
         let args = { truncate_body: 1024, select_categories: [category], filter_tag_masks: ['fm-'],
             filter_tags: getFilterTags(),
-            prefs: { ...prefs(curUser), filter_apps } };
+            prefs: { ...prefs(curUser), filter_apps, } };
         let prev_posts = await api.gedDiscussionsBy('created', {limit: 4, start_author: account, start_permlink: permlink, select_authors: [account], ...args});
         prev_posts = prev_posts.slice(1);
         let p_ids = [];
@@ -232,6 +275,15 @@ export default async function getState(api, url, offchain = {}) {
 
         if (curUser) {
             state.assets = (await api.getAccountsBalances([curUser]))[0]
+
+            const ps = await api.getPaidSubscribe({
+                author: account,
+                oid: makeOid(),
+                subscriber: curUser
+            })
+            if (ps.subscription.author && !ps.subscribe.subscriber) {
+                state.pso = ps.subscription
+            }
         }
     } else if (parts[0] === 'minused_accounts') {
         const mhistory = await api.getAccountHistory('null', -1, 1000, [], ['minus_reputation']);
@@ -245,7 +297,7 @@ export default async function getState(api, url, offchain = {}) {
     } else if (Object.keys(PUBLIC_API).includes(parts[0])) {
         const filter_apps = getFilterApps()
         let args = { limit: 20, truncate_body: 0,
-            prefs: { ...prefs(curUser), filter_apps } }
+            prefs: { ...prefs(curUser), filter_apps, filter_special: true } }
         const discussionsType = parts[0]
         if (typeof tag === 'string' && tag.length && (!tag.startsWith('tag-') || tag.length > 4)) {
             if (tag.startsWith('tag-')) {
@@ -341,6 +393,8 @@ export default async function getState(api, url, offchain = {}) {
               discussion_idxes[discussionsType].push(link)
             }
             state.content[link] = discussion
+
+            markEncryptedContent(state.content[link], state)
         })
         
         const discussions_key = typeof tag === 'string' && tag.length 

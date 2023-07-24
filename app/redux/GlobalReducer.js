@@ -55,7 +55,12 @@ export default createModule({
                         );
                     }
                 }
-                let res = state.mergeDeep(payload);
+                let res = state.setIn(['sponsors', 'data'], Set())
+                if (!payload.has('pso')) {
+                    res = res.delete('pso')
+                }
+                res = res.setIn(['sponsoreds', 'data'], Set())
+                res = res.mergeDeep(payload);
                 let con = res.get('content').withMutations(con => {
                     con.forEach((cc, key) => {
                         if (!payload.hasIn(['content', key, 'versions'])) {
@@ -549,6 +554,14 @@ export default createModule({
         },
         {
             action: 'SHOW_VERSION',
+            reducer: state => state, // saga
+        },
+        {
+            action: 'FETCH_SPONSORS',
+            reducer: state => state, // saga
+        },
+        {
+            action: 'FETCH_SPONSOREDS',
             reducer: state => state, // saga
         },
     ],

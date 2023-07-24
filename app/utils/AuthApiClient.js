@@ -74,14 +74,35 @@ export function authApiLogout() {
     });
 }
 
-export function cryptostoreEncrypt() {
+export async function cryptostoreEncrypt() {
     if (!authAvailable()) return {}
     let request = Object.assign({}, request_base, {
         body: JSON.stringify({}),
     })
     setSession(request)
-    return fetchEx(authUrl(`/api/cryptostore/encrypt`), request).then(r => {
-        saveSession(r)
-        return r.json()
+    let r = await fetchEx(authUrl(`/api/cryptostore/encrypt`), request)
+    saveSession(r)
+    const obj = await r.json()
+    if (obj.status !== 'ok') {
+        console.error('cryptostoreEncrypt', obj)
+        throw new Error(obj.error)
+    }
+    return obj // .key, .generated
+}
+
+
+export async function cryptostoreDecrypt(entries, oid) {
+    if (!authAvailable()) return {}
+    let request = Object.assign({}, request_base, {
+        body: JSON.stringify({ entries, oid }),
     })
+    setSession(request)
+    let r = await fetchEx(authUrl(`/api/cryptostore/decrypt`), request)
+    saveSession(r)
+    const obj = await r.json()
+    if (obj.status !== 'ok') {
+        console.error('cryptostoreDecrypt', obj)
+        throw new Error(obj.error)
+    }
+    return obj
 }

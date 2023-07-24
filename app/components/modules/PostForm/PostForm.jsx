@@ -203,7 +203,7 @@ class PostForm extends React.Component {
     }
 
     render() {
-        const { editMode, categories } = this.props;
+        const { editMode, editParams, categories } = this.props;
 
         const {
             editorId,
@@ -290,6 +290,7 @@ class PostForm extends React.Component {
                             postDisabled={
                                 Boolean(disallowPostCode) || isPosting
                             }
+                            postEncrypted={editMode ? editParams.encrypted : false}
                             disabledHint={
                                 disallowPostCode
                                     ? tt(disallowPostCode)
@@ -793,15 +794,29 @@ export default connect(
     dispatch => ({
         async onPost(payload, editMode, visibleType, onSuccess, onError) {
             if (visibleType === VISIBLE_TYPES.ONLY_SPONSORS) {
-                const pso = await api.getPaidSubscriptionOptions({
-                    author: payload.author,
-                    oid: makeOid(payload.author)
-                })
-                if (!pso.author) {
-                    window.location.href = '/@lex/followers#sponsorship'
+                let pso
+                try {
+                    pso = await api.getPaidSubscriptionOptionsAsync({
+                        author: payload.author,
+                        oid: makeOid()
+                    })
+                } catch (err) {
+                    console.error('Cannot get paid subscription', err)
+                    onError(err)
                     return
                 }
-                await encryptPost(payload)
+                if (!pso.author) {
+                    window.location.href = '/@lex/sponsors'
+                    return
+                }
+
+                try {
+                    payload.body = await encryptPost(payload)
+                } catch (err) {
+                    console.error('Cannot encrypt', err)
+                    onError(err)
+                    return
+                }
             }
 
             let blocking = await checkAllowed(payload.author,

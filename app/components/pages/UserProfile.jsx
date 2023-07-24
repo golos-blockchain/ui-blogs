@@ -254,7 +254,6 @@ export default class UserProfile extends React.Component {
         if( section === 'followers' ) {
             if (followers && followers.has('blog_result')) {
                 tab_content = <div>
-                    <Sponsors />
                     <UserList
                         title={tt('user_profile.followers')}
                         account={account}
@@ -394,6 +393,11 @@ export default class UserProfile extends React.Component {
                     { isMyAccount && <div><MarkNotificationRead fields='mention' account={account.name} /></div> }
                 </div>
             );
+        } else if (section === 'sponsors') {
+            tab_content = <div>
+                <Sponsors account={account} current_user={current_user} />
+                <MarkNotificationRead fields='new_sponsor,sponsor_inactive' account={account.name} />
+            </div>
         }
 
         tab_content = <div className='row'>
@@ -507,6 +511,9 @@ export default class UserProfile extends React.Component {
                                 <span><Link to={`/@${accountname}/followers`}>{tt('user_profile.follower_count', {count: followerCount})}</Link></span>
                                 <span><Link to={`/@${accountname}`}>{tt('user_profile.post_count', {count: account.post_count || 0})}</Link></span>
                                 <span><Link to={`/@${accountname}/followed`}>{tt('user_profile.followed_count', {count: followingCount})}</Link></span>
+                                <span className='sponsors_notify'><Link to={`/@${accountname}/sponsors`}>{tt('user_profile.sponsor_count', {count: account.sponsor_count || 0})}
+                                    <NotifiCounter fields='new_sponsor,sponsor_inactive' />
+                                </Link></span>
                             </div>
                             <p className='UserProfile__info'>
                                 {location && <span><Icon name='location' /> {location}</span>}

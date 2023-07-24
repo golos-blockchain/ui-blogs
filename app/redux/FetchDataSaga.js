@@ -16,6 +16,7 @@ import { PUBLIC_API, CATEGORIES, SELECT_TAGS_KEY, DEBT_TOKEN_SHORT, LIQUID_TICKE
 import { getSubs, notifyGetViews, } from 'app/utils/NotifyApiClient'
 import { SearchRequest, searchData, stateSetVersion } from 'app/utils/SearchClient'
 import { hashPermlink, } from 'app/utils/StateFunctions'
+import { makeOid, tryDecryptContents, SPONSORS_PER_PAGE } from 'app/utils/sponsors'
 
 export function* fetchDataWatches () {
     yield fork(watchLocationChange);
@@ -80,8 +81,12 @@ export function* fetchState(location_change_action) {
         const state = {}
         state.current_route = location
         state.content = {}
+        state.decrypting = false
         state.prev_posts = []
-        state.assets = {}
+        state.assets = {} // account balances
+        state.tokens = []
+        state.sponsors = { data: [] }
+        state.sponsoreds = { data: [] }
         state.minused_accounts = {}
         state.accounts = {}
 
@@ -153,7 +158,7 @@ export function* fetchState(location_change_action) {
                                 }
                             }
                             if (ids.length) {
-                                const previews = yield call([api, api.getContentPreviewsAsync], ids, 500)
+                                const previews = yield call([api, api.getContentPreviewsAsync], ids, 500, 'false')
                                 for (const i in previews) {
                                     const { author, permlink } = previews[i]
                                     checkAuthor(author)
@@ -195,7 +200,10 @@ export function* fetchState(location_change_action) {
                             ids.push({ author, hashlink })
                         }
 
-                        const previews = yield call([api, api.getContentPreviewsAsync], ids, 10000)
+                        const previews = yield call([api, api.getContentPreviewsAsync], ids, 10000, 'false')
+
+                        yield tryDecryptContents(previews)
+
                         for (const i in previews) {
                             const { author, permlink } = previews[i]
                             const link = `${author}/${permlink}`
@@ -238,6 +246,36 @@ export function* fetchState(location_change_action) {
                         yield fork(listBlockings, uname)
                     break
 
+                    case 'sponsors':
+                        const oid = makeOid()
+                        state.pso = yield call([api, api.getPaidSubscriptionOptionsAsync], {
+                            author: uname,
+                            oid
+                        })
+                        if (!state.pso.author) {
+                            state.pso.oid = oid
+                        }
+                        const tokens = yield call([api, api.getAssetsAsync], '', [], '', 5000, 'by_marketed')
+                        state.tokens = tokens.filter(t => !t.allow_override_transfer)
+                        state.sponsors = {
+                            data: yield call([api, api.getPaidSubscribersAsync], {
+                                author: uname,
+                                oid,
+                                sort: 'by_date',
+                                from: '', limit: SPONSORS_PER_PAGE + 1
+                            })
+                        }
+                        state.sponsoreds = {
+                            data: yield call([api, api.getPaidSubscriptionsAsync], {
+                                subscriber: uname,
+                                select_oid: oid,
+                                start_author: '',
+                                sort: 'by_date',
+                                limit: SPONSORS_PER_PAGE + 1
+                            })
+                        }
+                    break
+
                     case 'blog':
                     default:
                         const blogEntries = yield call([api, api.getBlogEntriesAsync], uname, 0, 20, ['fm-'], {})
@@ -259,7 +297,10 @@ export function* fetchState(location_change_action) {
                             ids.push({ author, hashlink })
                         }
 
-                        const previews = yield call([api, api.getContentPreviewsAsync], ids, 10000)
+                        const previews = yield call([api, api.getContentPreviewsAsync], ids, 10000, 'false')
+
+                        yield tryDecryptContents(previews)
+
                         for (const i in previews) {
                             const { author, permlink } = previews[i]
 
@@ -295,6 +336,8 @@ export function* fetchState(location_change_action) {
                 console.error(err)
                 state.content[curl].views = 0
             }
+
+            yield tryDecryptContents([state.content[curl]])
 
             state.content[curl].donate_list = [];
             if (state.content[curl].donates != '0.000 GOLOS') {
@@ -369,6 +412,15 @@ export function* fetchState(location_change_action) {
 
             if (curUser) {
                 state.assets = (yield call([api, api.getAccountsBalancesAsync], [curUser]))[0]
+
+                const ps = yield call([api, api.getPaidSubscribeAsync], {
+                    author: account,
+                    oid: makeOid(),
+                    subscriber: curUser
+                })
+                if (ps.subscription.author && !ps.subscribe.subscriber) {
+                    state.pso = ps.subscription
+                }
             }
 
             console.log('Full post load');
@@ -448,7 +500,7 @@ export function* fetchData(action) {
             start_author: author,
             start_permlink: permlink,
             filter_tag_masks: ['fm-'],
-            prefs: { ...prefs(curUser), filter_apps }
+            prefs: { ...prefs(curUser), filter_apps, filter_special: true }
         }
     ];
     if (category.length && (!category.startsWith('tag-') || category.length > 4)) {
@@ -567,8 +619,6 @@ export function* fetchData(action) {
     yield put({ type: 'FETCH_DATA_BEGIN' });
 
     try {
-        let posts = []
-
         let data = []
 
         if (!from) {
@@ -582,7 +632,7 @@ export function* fetchData(action) {
               // Add top 3 from promo to tranding and 1 to hot, created
               args[0].limit = order == 'trending' ? 3 : 1
               const promo_posts = yield call([api, api[PUBLIC_API.promoted]], ...args);
-              posts = posts.concat(promo_posts)
+              data = data.concat(promo_posts)
             }
         }
 
@@ -630,13 +680,11 @@ export function* fetchData(action) {
             }
         }
 
-        data.forEach(post => {
-          posts.push(post)
-        })
+        yield tryDecryptContents(data)
 
         yield put(
             GlobalReducer.actions.receiveData({
-                data: posts,
+                data,
                 order,
                 category,
                 author,

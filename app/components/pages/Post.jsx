@@ -3,9 +3,11 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import {Set} from 'immutable'
 import tt from 'counterpart'
+import { Asset } from 'golos-lib-js/lib/utils'
 
 import Comment from 'app/components/cards/Comment'
 import PostFull from 'app/components/cards/PostFull'
+import EncryptedStub from 'app/components/elements/EncryptedStub'
 import Follow from 'app/components/elements/Follow'
 import FoundationDropdownMenu from 'app/components/elements/FoundationDropdownMenu'
 import Icon from 'app/components/elements/Icon'
@@ -20,6 +22,7 @@ import { hidePost } from 'app/utils/ContentAccess'
 import { subscribePost, unsubscribePost, getSubs } from 'app/utils/NotifyApiClient'
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
 import session from 'app/utils/session'
+import { EncryptedStates } from 'app/utils/sponsors'
 import { isHighlight, markCommentsRead, notifyPageView } from 'app/utils/NotifyApiClient'
 
 class Post extends React.Component {
@@ -244,6 +247,13 @@ class Post extends React.Component {
             if (highlight && !dis.get('highlighted') && !this.readen) {
                 return this._renderLoadingStub()
             }
+        }
+
+        const encrypted = dis.get('encrypted')
+        if (encrypted === EncryptedStates.loading) {
+            return this._renderLoadingStub(tt('poststub'))
+        } else if (encrypted && encrypted !== EncryptedStates.decrypted) {
+            return this._renderStub(<EncryptedStub dis={dis} encrypted={encrypted} />)
         }
 
         const stats = dis.get('stats').toJS()
