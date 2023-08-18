@@ -806,7 +806,7 @@ export default connect(
                     return
                 }
                 if (!pso.author) {
-                    window.location.href = '/@lex/sponsors'
+                    window.location.href = '/@' + payload.author + '/sponsors'
                     return
                 }
 

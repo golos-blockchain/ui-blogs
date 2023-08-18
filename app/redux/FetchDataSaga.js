@@ -159,6 +159,9 @@ export function* fetchState(location_change_action) {
                             }
                             if (ids.length) {
                                 const previews = yield call([api, api.getContentPreviewsAsync], ids, 500, 'false')
+
+                                yield tryDecryptContents(previews)
+
                                 for (const i in previews) {
                                     const { author, permlink } = previews[i]
                                     checkAuthor(author)

@@ -153,11 +153,11 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     if (loggedIn) { // change back to if(username) after bug fix:  Clicking on Login does not cause drop-down to close #TEMP!
         let user_menu = [
             {link: feedLink, icon: 'new/home', value: tt('g.feed'), addon: <NotifiCounter fields="feed" />},
-            {link: accountLink, icon: 'new/blogging', value: tt('g.blog')},
+            {link: accountLink, icon: 'new/blogging', value: tt('g.blog'), addon: <NotifiCounter fields="new_sponsor,sponsor_inactive" />},
             {link: repliesLink, icon: 'new/answer', value: tt('g.replies'), addon: <NotifiCounter fields="comment_reply" />},
             {link: discussionsLink, icon: 'new/bell', value: tt('g.discussions'), addon: <NotifiCounter fields="subscriptions" />},
             {link: mentionsLink, icon: 'new/mention', value: tt('g.mentions'), addon: <NotifiCounter fields="mention" />},
-            {link: walletLink, target: walletTarget(), icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields="send,receive,fill_order" />},
+            {link: walletLink, target: walletTarget(), icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields="send,receive,fill_order,delegate_vs" />},
             {link: donatesLink, target: walletTarget(), icon: 'hf/hf8', value: tt('g.rewards'), addon: <NotifiCounter fields="donate,donate_msgs" />},
             (messagesLink ?
                 {link: messagesLink, icon: 'new/envelope', value: tt('g.messages'), target: '_blank', addon: <NotifiCounter fields="message" />} :

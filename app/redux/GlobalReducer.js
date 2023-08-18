@@ -55,11 +55,11 @@ export default createModule({
                         );
                     }
                 }
-                let res = state.setIn(['sponsors', 'data'], Set())
+                let res = state.setIn(['sponsors', 'data'], List())
                 if (!payload.has('pso')) {
                     res = res.delete('pso')
                 }
-                res = res.setIn(['sponsoreds', 'data'], Set())
+                res = res.setIn(['sponsoreds', 'data'], List())
                 res = res.mergeDeep(payload);
                 let con = res.get('content').withMutations(con => {
                     con.forEach((cc, key) => {

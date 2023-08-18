@@ -101,7 +101,8 @@ class App extends React.Component {
     }
 
     showAppReminder = () => {
-        if (process.env.IS_APP || typeof(localStorage) === 'undefined') {
+        if (process.env.IS_APP || typeof(localStorage) === 'undefined'
+            || location.pathname.startsWith('/submit')) {
             return false
         }
         const now = Date.now()

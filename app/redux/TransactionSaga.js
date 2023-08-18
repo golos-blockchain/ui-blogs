@@ -371,11 +371,13 @@ function* accepted_paid_subscription_transfer({operation}) {
 
     yield put(g.actions.update({
         key: ['sponsors', 'data'],
+        notSet: List(),
         updater,
     }))
 
     yield put(g.actions.update({
         key: ['sponsoreds', 'data'],
+        notSet: List(),
         updater,
     }))
 }
