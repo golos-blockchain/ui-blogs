@@ -353,6 +353,17 @@ export function* fetchState(location_change_action) {
             }
             state.content[curl].confetti_active = false
 
+            if (curUser) {
+                const ps = yield call([api, api.getPaidSubscribeAsync], {
+                    author: account,
+                    oid: makeOid(),
+                    subscriber: curUser
+                })
+                if (ps.subscription.author && !ps.subscribe.subscriber) {
+                    state.pso = ps.subscription
+                }
+            }
+
             yield put(GlobalReducer.actions.receiveState(state))
 
             const replies =  yield call([api, api.getAllContentRepliesAsync], account, permlink, constants.DEFAULT_VOTE_LIMIT, 0, [], [], false, null, prefs([], [account, curUser]))
@@ -415,15 +426,6 @@ export function* fetchState(location_change_action) {
 
             if (curUser) {
                 state.assets = (yield call([api, api.getAccountsBalancesAsync], [curUser]))[0]
-
-                const ps = yield call([api, api.getPaidSubscribeAsync], {
-                    author: account,
-                    oid: makeOid(),
-                    subscriber: curUser
-                })
-                if (ps.subscription.author && !ps.subscribe.subscriber) {
-                    state.pso = ps.subscription
-                }
             }
 
             console.log('Full post load');

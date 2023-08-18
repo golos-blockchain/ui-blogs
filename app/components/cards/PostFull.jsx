@@ -130,13 +130,14 @@ class PostFull extends React.Component {
     }
 
     shouldComponentUpdate(props, state) {
-        const { cont, post, prevPosts, username } = this.props;
+        const { cont, post, prevPosts, username, pso } = this.props;
 
         return (
             cont !== props.cont ||
             post !== props.post ||
             prevPosts.length !== props.prevPosts.length ||
             username !== props.username ||
+            pso !== props.pso ||
             this.state !== state
         );
     }
