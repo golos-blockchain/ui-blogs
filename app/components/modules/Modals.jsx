@@ -1,12 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
+import Confetti from 'react-dom-confetti'
 import CloseButton from 'react-foundation-components/lib/global/close-button';
 import Reveal from 'react-foundation-components/lib/global/reveal';
 
+import { CONFETTI_CONFIG } from 'app/client_config'
 import LoginForm from 'app/components/modules/LoginForm';
 import ConfirmTransactionForm from 'app/components/modules/ConfirmTransactionForm';
 import Donate from 'app/components/modules/Donate'
+import GiftNFT from 'app/components/modules/GiftNFT'
 import SignUp from 'app/components/modules/SignUp'
 import ChangeAccount from 'app/components/modules/ChangeAccount'
 import AddAccount from 'app/components/modules/AddAccount'
@@ -22,11 +25,13 @@ class Modals extends React.Component {
         show_login_modal: PropTypes.bool,
         show_confirm_modal: PropTypes.bool,
         show_donate_modal: PropTypes.bool,
+        show_gift_nft_modal: PropTypes.bool,
         show_signup_modal: PropTypes.bool,
         show_promote_post_modal: PropTypes.bool,
         show_change_account_modal: PropTypes.bool,
         show_add_account_modal: PropTypes.bool,
         show_app_download_modal: PropTypes.bool,
+        confetti_nft_active: PropTypes.bool,
         hideLogin: PropTypes.func.isRequired,
         hideConfirm: PropTypes.func.isRequired,
         hideSignUp: PropTypes.func.isRequired,
@@ -53,12 +58,15 @@ class Modals extends React.Component {
             show_login_modal,
             show_confirm_modal,
             show_donate_modal,
+            show_gift_nft_modal,
             show_signup_modal,
             show_change_account_modal,
             show_add_account_modal,
             show_app_download_modal,
+            confetti_nft_active,
             hideLogin,
             hideDonate,
+            hideGiftNFT,
             hideConfirm,
             hideSignUp,
             hideChangeAccount,
@@ -89,6 +97,10 @@ class Modals extends React.Component {
                     <CloseButton onClick={hideDonate} />
                     <Donate />
                 </Reveal>}
+                {show_gift_nft_modal && <Reveal onHide={hideGiftNFT} show={show_gift_nft_modal} revealStyle={{ width: '600px' }}>
+                    <CloseButton onClick={hideGiftNFT} />
+                    <GiftNFT onCancel={hideGiftNFT} />
+                </Reveal>}
                 {show_signup_modal && <Reveal onHide={hideSignUp} show={show_signup_modal}>
                     <CloseButton onClick={hideSignUp} />
                     <SignUp />
@@ -105,6 +117,9 @@ class Modals extends React.Component {
                     <CloseButton onClick={hideAppDownload} />
                     <AppDownload />
                 </Reveal>}
+                <div style={{ position: 'fixed', zIndex: 10000000, bottom: '50%', left: '50%' }}>
+                    <Confetti config={{...CONFETTI_CONFIG, elementCount: 1000}} active={confetti_nft_active} />
+                </div>
             </div>
         );
     }
@@ -119,12 +134,14 @@ export default connect(
             loginUnclosable,
             show_confirm_modal: state.transaction.get('show_confirm_modal'),
             show_donate_modal: state.user.get('show_donate_modal'),
+            show_gift_nft_modal: state.user.get('show_gift_nft_modal'),
             show_promote_post_modal: state.user.get('show_promote_post_modal'),
             show_signup_modal: state.user.get('show_signup_modal'),
             show_change_account_modal: state.user.get('show_change_account_modal'),
             show_add_account_modal: state.user.get('show_add_account_modal'),
             show_app_download_modal: state.user.get('show_app_download_modal'),
             notifications: state.app.get('notifications'),
+            confetti_nft_active: state.global.get('confetti_nft_active')
         }
     },
     dispatch => ({
@@ -139,6 +156,10 @@ export default connect(
         hideDonate: e => {
             if (e) e.preventDefault()
             dispatch(user.actions.hideDonate())
+        },
+        hideGiftNFT: e => {
+            if (e) e.preventDefault()
+            dispatch(user.actions.hideGiftNft())
         },
         hidePromotePost: e => {
             if (e) e.preventDefault();

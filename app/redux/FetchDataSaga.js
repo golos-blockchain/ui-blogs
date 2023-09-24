@@ -1,6 +1,7 @@
 import { call, put, select, fork, cancelled, takeLatest, takeEvery } from 'redux-saga/effects';
 import cookie from "react-cookie";
 import {config, api} from 'golos-lib-js';
+import { Asset } from 'golos-lib-js/lib/utils'
 
 import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile';
 import {loadFollows, fetchFollowCount} from 'app/redux/FollowSaga';
@@ -13,6 +14,7 @@ import session from 'app/utils/session'
 import { getFilterApps, } from 'app/utils/ContentAccess';
 import { reveseTag, getFilterTags } from 'app/utils/tags';
 import { PUBLIC_API, CATEGORIES, SELECT_TAGS_KEY, DEBT_TOKEN_SHORT, LIQUID_TICKER } from 'app/client_config';
+import { parseNFTImage, NFTImageStub } from 'app/utils/NFTUtils'
 import { getSubs, notifyGetViews, } from 'app/utils/NotifyApiClient'
 import { SearchRequest, searchData, stateSetVersion } from 'app/utils/SearchClient'
 import { hashPermlink, } from 'app/utils/StateFunctions'
@@ -27,6 +29,7 @@ export function* fetchDataWatches () {
     yield fork(watchFetchExchangeRates);
     yield fork(watchFetchVestingDelegations);
     yield fork(watchFetchUiaBalances);
+    yield fork(watchFetchNftTokens)
 }
 
 export function* watchGetContent() {
@@ -89,6 +92,7 @@ export function* fetchState(location_change_action) {
         state.sponsoreds = { data: [] }
         state.minused_accounts = {}
         state.accounts = {}
+        state.confetti_nft_active = false
 
         const authorsForCheck = new Set() // if not blocked by current user
         const checkAuthor = (author) => authorsForCheck.add(author)
@@ -840,5 +844,54 @@ export function* fetchUiaBalances({ payload: { account } }) {
         }
     } catch (err) {
         console.error('fetchUiaBalances', err)
+    }
+}
+
+export function* watchFetchNftTokens() {
+    yield takeLatest('global/FETCH_NFT_TOKENS', fetchNftTokens)
+}
+
+export function* fetchNftTokens({ payload: { account, start_token_id } }) {
+    try {
+        const limit = 20
+
+        const nft_tokens = yield call([api, api.getNftTokensAsync], {
+            owner: account,
+            start_token_id,
+            limit: limit + 1
+        })
+
+        let next_from
+        if (nft_tokens.length > limit) {
+            next_from = nft_tokens.pop().token_id
+        }
+
+        const syms = new Set()
+
+        let nft_assets
+
+        try {
+            for (const no of nft_tokens) {
+                no.image = parseNFTImage(no.json_metadata) || NFTImageStub()
+
+                const price = Asset(no.last_buy_price)
+                syms.add(price.symbol)
+            }
+
+            nft_assets = {}
+            if (syms.size) {
+                const assets = yield call([api, api.getAssets], '', [...syms])
+                for (const a of assets) {
+                    const supply = Asset(a.supply)
+                    nft_assets[supply.symbol] = a
+                }
+            }
+        } catch (err) {
+            console.error(err)
+        }
+
+        yield put(GlobalReducer.actions.receiveNftTokens({nft_tokens, next_from, nft_assets}))
+    } catch (err) {
+        console.error('fetchNftTokens', err)
     }
 }

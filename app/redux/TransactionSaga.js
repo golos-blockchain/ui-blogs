@@ -51,6 +51,7 @@ const hook = {
     accepted_donate,
     accepted_worker_request_vote,
     accepted_paid_subscription_transfer,
+    accepted_nft_transfer,
 }
 
 function* encryptMemoIfNeed(memoStr, to) {
@@ -379,6 +380,22 @@ function* accepted_paid_subscription_transfer({operation}) {
         key: ['sponsoreds', 'data'],
         notSet: List(),
         updater,
+    }))
+}
+
+function* accepted_nft_transfer({operation}) {
+    yield put(g.actions.update({
+        key: ['confetti_nft_active'],
+        updater: data => {
+            return true
+        },
+    }))
+    yield new Promise(resolve => setTimeout(resolve, 250))
+    yield put(g.actions.update({
+        key: ['confetti_nft_active'],
+        updater: data => {
+            return false
+        },
     }))
 }
 

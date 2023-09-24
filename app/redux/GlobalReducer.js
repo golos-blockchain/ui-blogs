@@ -60,6 +60,8 @@ export default createModule({
                     res = res.delete('pso')
                 }
                 res = res.setIn(['sponsoreds', 'data'], List())
+                if (res.has('nft_tokens'))
+                    res = res.delete('nft_tokens')
                 res = res.mergeDeep(payload);
                 let con = res.get('content').withMutations(con => {
                     con.forEach((cc, key) => {
@@ -189,6 +191,36 @@ export default createModule({
             action: 'RECEIVE_UIA_BALANCES',
             reducer: (state, { payload: { assets } }) => {
                 return state.set('assets', fromJS(assets))
+            },
+        },
+        {
+            action: 'FETCH_NFT_TOKENS',
+            reducer: state => state,
+        },
+        {
+            action: 'RECEIVE_NFT_TOKENS',
+            reducer: (state, { payload: { nft_tokens, next_from, nft_assets } }) => {
+                let new_state = state
+                if (!new_state.has('nft_tokens')) {
+                    new_state = new_state.set('nft_tokens', fromJS({
+                        data: nft_tokens,
+                        next_from: next_from
+                    }))
+                } else {
+                    new_state = new_state.update('nft_tokens', tokens => {
+                        tokens = tokens.update('data', data => {
+                            for (const token of nft_tokens) {
+                                data = data.push(fromJS(token))
+                            }
+                            return data
+                        })
+                        tokens = tokens.set('next_from', next_from)
+                        return tokens
+                    })
+                }
+                if (nft_assets)
+                    new_state = new_state.set('nft_assets', fromJS(nft_assets))
+                return new_state
             },
         },
         {

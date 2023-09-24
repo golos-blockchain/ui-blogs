@@ -122,6 +122,7 @@
     "follow": "Follow",
     "for": " for ",
     "from": " from ",
+    "gift": "Gift",
     "gp": "GP",
     "here": "здесь",
     "hide": "Hide",
@@ -909,7 +910,8 @@
     "balance": "Balance",
     "private_key_in_memo": "Do not write your private keys in this field!",
     "verified_exchange_no_memo": "You must include a memo for your exchange transfer, according to exchanger's rules.",
-    "verified_exchange_liquid_only": "You may exchange tokens from GOLOS balance only."
+    "verified_exchange_liquid_only": "You may exchange tokens from GOLOS balance only.",
+    "gift_nft": "Gift NFT"
   },
   "user_saga_js": {
     "image_upload": {

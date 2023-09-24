@@ -1,0 +1,18 @@
+.GiftNFT {
+    tr {
+        cursor: pointer;
+        td:first-child {
+            width: 10px;
+            white-space: nowrap;
+        }
+    }
+    tr:hover {
+        background-color: rgba(208,208,208,0.45);
+    }
+
+    .price-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 0.25rem;
+    }
+}
