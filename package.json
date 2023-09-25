@@ -79,7 +79,7 @@
     "minimist": "^1.2.0",
     "multiselect-react-dropdown": "^1.6.7",
     "multistream": "^2.1.1",
-    "node-sass": "6.0.0",
+    "node-sass": "8.0.0",
     "numeral": "^2.0.6",
     "polished": "^1.9.2",
     "prop-types": "^15.6.1",
