@@ -443,7 +443,7 @@ export default class UserProfile extends React.Component {
                     <div className='UserProfile__filler' />
                     <div>
                         <a href={walletUrl(`/@${accountname}/transfers`)} target={walletTarget()} className={`${walletClass} UserProfile__menu-item`}>
-                            {tt('g.wallet')} {isMyAccount && <NotifiCounter fields='send,receive,fill_order' />}
+                            {tt('g.wallet')} {isMyAccount && <NotifiCounter fields='send,receive,fill_order,nft_receive' />}
                         </a>
                         <LinkWithDropdown
                             closeOnClickOutside
@@ -512,7 +512,7 @@ export default class UserProfile extends React.Component {
                                 <span><Link to={`/@${accountname}`}>{tt('user_profile.post_count', {count: account.post_count || 0})}</Link></span>
                                 <span><Link to={`/@${accountname}/followed`}>{tt('user_profile.followed_count', {count: followingCount})}</Link></span>
                                 <span className='sponsors_notify'><Link to={`/@${accountname}/sponsors`}>{tt('user_profile.sponsor_count', {count: account.sponsor_count || 0})}
-                                    <NotifiCounter fields='new_sponsor,sponsor_inactive' />
+                                    {isMyAccount && <NotifiCounter fields='new_sponsor,sponsor_inactive' />}
                                 </Link></span>
                             </div>
                             <p className='UserProfile__info'>
