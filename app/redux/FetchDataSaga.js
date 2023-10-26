@@ -641,7 +641,7 @@ export function* fetchData(action) {
               // Add top 3 from promo to tranding and 1 to hot, created
               args[0].limit = order == 'trending' ? 3 : 1
               const promo_posts = yield call([api, api[PUBLIC_API.promoted]], ...args);
-              data = data.concat(promo_posts)
+              data = promo_posts.concat(data)
             }
         }
 
