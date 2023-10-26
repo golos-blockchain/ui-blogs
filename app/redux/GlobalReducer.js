@@ -6,6 +6,18 @@ import { contentStats, fromJSGreedy } from 'app/utils/StateFunctions';
 
 const emptyContentMap = Map(emptyContent);
 
+const upsertNftAssets = (state, nft_assets, start_token_id) => {
+    if (!start_token_id) {
+        state = state.set('nft_assets', fromJS(nft_assets))
+    } else {
+        state = state.update('nft_assets', data => {
+            data = data.merge(nft_assets)
+            return data
+        })
+    }
+    return state
+}
+
 export default createModule({
     name: 'global',
     initialState: Map({ status: {} }),
@@ -199,7 +211,7 @@ export default createModule({
         },
         {
             action: 'RECEIVE_NFT_TOKENS',
-            reducer: (state, { payload: { nft_tokens, next_from, nft_assets } }) => {
+            reducer: (state, { payload: { nft_tokens, start_token_id, next_from, nft_assets } }) => {
                 let new_state = state
                 if (!new_state.has('nft_tokens')) {
                     new_state = new_state.set('nft_tokens', fromJS({
@@ -219,7 +231,7 @@ export default createModule({
                     })
                 }
                 if (nft_assets)
-                    new_state = new_state.set('nft_assets', fromJS(nft_assets))
+                    new_state = upsertNftAssets(new_state, nft_assets, start_token_id)
                 return new_state
             },
         },

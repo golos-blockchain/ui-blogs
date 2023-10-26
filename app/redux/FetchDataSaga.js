@@ -853,10 +853,11 @@ export function* watchFetchNftTokens() {
 
 export function* fetchNftTokens({ payload: { account, start_token_id } }) {
     try {
-        const limit = 20
+        const limit = 10
 
         const nft_tokens = yield call([api, api.getNftTokensAsync], {
             owner: account,
+            state: 'not_selling_only',
             start_token_id,
             limit: limit + 1
         })
@@ -890,7 +891,7 @@ export function* fetchNftTokens({ payload: { account, start_token_id } }) {
             console.error(err)
         }
 
-        yield put(GlobalReducer.actions.receiveNftTokens({nft_tokens, next_from, nft_assets}))
+        yield put(GlobalReducer.actions.receiveNftTokens({nft_tokens, start_token_id, next_from, nft_assets}))
     } catch (err) {
         console.error('fetchNftTokens', err)
     }
