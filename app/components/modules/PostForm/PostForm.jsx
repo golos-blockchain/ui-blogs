@@ -608,7 +608,8 @@ class PostForm extends React.Component {
         }
 
         if (rtags.images.size) {
-            meta.image = [...rtags.images];
+            const [firstImage] = rtags.images
+            meta.image = [firstImage]
         }
 
         if (rtags.links.size) {
