@@ -14,6 +14,7 @@ const defaultState = fromJS({
     show_open_orders_modal: false,
     show_change_account_modal: false,
     show_add_account_modal: false,
+    show_app_download_modal: false,
     pub_keys_used: null,
     locale: DEFAULT_LANGUAGE,
     nightmodeEnabled: false,
@@ -86,6 +87,8 @@ export default createModule({
         { action: 'HIDE_CHANGE_ACCOUNT', reducer: state => state.set('show_change_account_modal', false) },
         { action: 'SHOW_ADD_ACCOUNT', reducer: state => state.set('show_add_account_modal', true) },
         { action: 'HIDE_ADD_ACCOUNT', reducer: state => state.set('show_add_account_modal', false) },
+        { action: 'SHOW_APP_DOWNLOAD', reducer: state => state.set('show_app_download_modal', true) },
+        { action: 'HIDE_APP_DOWNLOAD', reducer: state => state.set('show_app_download_modal', false) },
         {
             action: 'USERNAME_PASSWORD_LOGIN',
             reducer: state => state, // saga
