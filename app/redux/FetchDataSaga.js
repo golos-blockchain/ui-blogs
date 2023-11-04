@@ -12,7 +12,7 @@ import GlobalReducer from './GlobalReducer';
 import constants from './constants';
 import session from 'app/utils/session'
 import { getFilterApps, } from 'app/utils/ContentAccess';
-import { reveseTag, getFilterTags } from 'app/utils/tags';
+import { reveseTag, getFilterTags, isNsfwMeta, nsfwTags } from 'app/utils/tags';
 import { PUBLIC_API, CATEGORIES, SELECT_TAGS_KEY, DEBT_TOKEN_SHORT, LIQUID_TICKER } from 'app/client_config';
 import { parseNFTImage, NFTImageStub } from 'app/utils/NFTUtils'
 import { getSubs, notifyGetViews, } from 'app/utils/NotifyApiClient'
@@ -398,9 +398,10 @@ export function* fetchState(location_change_action) {
 
             yield applyEventHighlight(state.content, account, permlink, curUser)
 
+            const ppFilterTags = isNsfwMeta(state.content[curl].json_metadata) ? [] : nsfwTags()
             const filter_apps = getFilterApps()
             let args = { truncate_body: 128, select_categories: [category], filter_tag_masks: ['fm-'],
-                filter_tags: getFilterTags(),
+                filter_tags: [...getFilterTags(), ...ppFilterTags],
                 prefs: { ...prefs(curUser), filter_apps } };
             let prev_posts = yield call([api, api[PUBLIC_API.created]], {limit: 4, start_author: account, start_permlink: permlink, select_authors: [account], ...args});
             prev_posts = prev_posts.slice(1);

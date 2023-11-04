@@ -2,7 +2,7 @@ import { PUBLIC_API, CATEGORIES } from 'app/client_config';
 import { contentPrefs as prefs } from 'app/utils/Allowance'
 import { getFilterApps, } from 'app/utils/ContentAccess'
 import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile';
-import { reveseTag, prepareTrendingTags, getFilterTags } from 'app/utils/tags';
+import { reveseTag, prepareTrendingTags, getFilterTags, isNsfwMeta, nsfwTags } from 'app/utils/tags'
 import { stateSetVersion } from 'app/utils/SearchClient'
 import { makeOid, markEncryptedContent, SPONSORS_PER_PAGE } from 'app/utils/sponsors'
 
@@ -243,9 +243,10 @@ export default async function getState(api, url, offchain = {}) {
         }
         state.content[curl].confetti_active = false;
 
+        const ppFilterTags = isNsfwMeta(state.content[curl].json_metadata) ? [] : nsfwTags()
         const filter_apps = getFilterApps()
         let args = { truncate_body: 1024, select_categories: [category], filter_tag_masks: ['fm-'],
-            filter_tags: getFilterTags(),
+            filter_tags: [...getFilterTags(), ...ppFilterTags],
             prefs: { ...prefs(curUser), filter_apps, } };
         let prev_posts = await api.gedDiscussionsBy('created', {limit: 4, start_author: account, start_permlink: permlink, select_authors: [account], ...args});
         prev_posts = prev_posts.slice(1);

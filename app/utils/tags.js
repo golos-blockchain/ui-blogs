@@ -14,6 +14,27 @@ function filterRealTags(tags) {
     return tags.filter(tag => tag !== NSFW_TAG_NUMERIC && tag !== NSFW_TAG);
 }
 
+export function isNsfwMeta(json) {
+    let jObj
+    let tags = []
+    try {
+        jObj = json ? JSON.parse(json) : {}
+        tags = jObj.tags || [];
+        if(typeof tags == 'string') {
+            tags = [tags];
+        } if(!Array.isArray(tags)) {
+            tags = [];
+        }
+    } catch(e) {
+        tags = []
+    }
+    return tags.includes(NSFW_TAG) || tags.includes(NSFW_TAG_NUMERIC)
+}
+
+export function nsfwTags() {
+    return [NSFW_TAG, NSFW_TAG_NUMERIC]
+}
+
 export function getFilterTags() {
     let ignore_tags = [...IGNORE_TAGS]
     if (!process.env.IS_APP) {
