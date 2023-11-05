@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import Turndown from 'turndown';
 import cn from 'classnames';
 import tt from 'counterpart';
+import { api } from 'golos-lib-js'
 import transaction from 'app/redux/Transaction';
 import HtmlReady, { getTags } from 'shared/HtmlReady';
 import DialogManager from 'app/components/elements/common/DialogManager';
@@ -29,6 +30,7 @@ import {
 } from 'app/utils/tags';
 import { DRAFT_KEY, EDIT_KEY } from 'app/utils/postForm';
 import { checkAllowed, AllowTypes } from 'app/utils/Allowance'
+import { makeOid, encryptPost, } from 'app/utils/sponsors'
 
 const EDITORS_TYPES = {
     MARKDOWN: 1,
@@ -45,7 +47,7 @@ export const PAYOUT_TYPES = {
 export const VISIBLE_TYPES = {
     ALL: 1,
     ONLY_BLOG: 2,
-    ONLY_APP: 3,
+    ONLY_SPONSORS: 3,
 };
 
 const DEFAULT_CURATION_PERCENT = 5000; // 50%
@@ -65,22 +67,6 @@ export const PAYOUT_OPTIONS = [
         id: PAYOUT_TYPES.PAY_0,
         title: 'post_editor.payout_option_0',
         hint: 'post_editor.payout_option_0_hint',
-    },
-];
-
-export const VISIBLE_OPTIONS = [
-    {
-        id: VISIBLE_TYPES.ALL,
-        title: 'post_editor.visible_option_all',
-    },
-    {
-        id: VISIBLE_TYPES.ONLY_BLOG,
-        title: 'post_editor.visible_option_onlyblog',
-    },
-    {
-        id: VISIBLE_TYPES.ONLY_APP,
-        title: 'post_editor.visible_option_onlyapp',
-        hint: 'post_editor.visible_option_onlyapp_hint',
     },
 ];
 
@@ -106,7 +92,6 @@ class PostForm extends React.Component {
             emptyBody: true,
             rteState: null,
             tags: [],
-            publishedLimited: false,
             postError: null,
             payoutType: PAYOUT_TYPES.PAY_100,
             curationPercent: DEFAULT_CURATION_PERCENT,
@@ -130,7 +115,6 @@ class PostForm extends React.Component {
 
         if (editMode) {
             const tags = this._getTagsFromMetadata();
-            this.state.publishedLimited = tags.includes(ONLYAPP_TAG) || tags.includes(ONLYBLOG_TAG)
             if (!isLoaded) {
                 this._fillFromMetadata(tags);
             }
@@ -219,14 +203,13 @@ class PostForm extends React.Component {
     }
 
     render() {
-        const { editMode, categories } = this.props;
+        const { editMode, editParams, categories } = this.props;
 
         const {
             editorId,
             title,
             text,
             tags,
-            publishedLimited,
             payoutType,
             curationPercent,
             isPreview,
@@ -298,7 +281,6 @@ class PostForm extends React.Component {
                             editMode={editMode}
                             errorText={postError}
                             tags={tags}
-                            publishedLimited={publishedLimited}
                             categories={categories.get('categories').toJS()}
                             onTagsChange={this._onTagsChange}
                             payoutType={payoutType}
@@ -308,12 +290,13 @@ class PostForm extends React.Component {
                             postDisabled={
                                 Boolean(disallowPostCode) || isPosting
                             }
+                            postEncrypted={editMode ? editParams.encrypted : false}
                             disabledHint={
                                 disallowPostCode
                                     ? tt(disallowPostCode)
                                     : null
                             }
-                            onPostClick={this._postSafe}
+                            onPost={this._postSafe}
                             onResetClick={this._onResetClick}
                             onCancelClick={this._onCancelClick}
                         />
@@ -551,7 +534,7 @@ class PostForm extends React.Component {
         };
     }
 
-    _post = () => {
+    _post = (visibleType) => {
         const { author, editMode } = this.props;
         const { title, tags, payoutType, curationPercent, editorId } = this.state;
         let error;
@@ -582,7 +565,12 @@ class PostForm extends React.Component {
             return;
         }
 
-        const processedTags = processTagsToSend(tags);
+        let processedTags = processTagsToSend(tags);
+
+        if (visibleType === VISIBLE_TYPES.ONLY_BLOG) {
+            if (!processedTags.includes(ONLYBLOG_TAG))
+                processedTags.push(ONLYBLOG_TAG)
+        }
 
         const body = this.refs.editor.getValue();
         let html;
@@ -620,7 +608,8 @@ class PostForm extends React.Component {
         }
 
         if (rtags.images.size) {
-            meta.image = [...rtags.images];
+            const [firstImage] = rtags.images
+            meta.image = [firstImage]
         }
 
         if (rtags.links.size) {
@@ -667,6 +656,7 @@ class PostForm extends React.Component {
         this.props.onPost(
             data,
             editMode,
+            visibleType,
             () => {
                 try {
                     if (editMode) {
@@ -803,7 +793,33 @@ export default connect(
         categories: state.global.get('tag_idx'),
     }),
     dispatch => ({
-        async onPost(payload, editMode, onSuccess, onError) {
+        async onPost(payload, editMode, visibleType, onSuccess, onError) {
+            if (visibleType === VISIBLE_TYPES.ONLY_SPONSORS) {
+                let pso
+                try {
+                    pso = await api.getPaidSubscriptionOptionsAsync({
+                        author: payload.author,
+                        oid: makeOid()
+                    })
+                } catch (err) {
+                    console.error('Cannot get paid subscription', err)
+                    onError(err)
+                    return
+                }
+                if (!pso.author) {
+                    window.location.href = '/@' + payload.author + '/sponsors'
+                    return
+                }
+
+                try {
+                    payload.body = await encryptPost(payload)
+                } catch (err) {
+                    console.error('Cannot encrypt', err)
+                    onError(err)
+                    return
+                }
+            }
+
             let blocking = await checkAllowed(payload.author,
                 [],
                 null, editMode ? AllowTypes.postEdit : AllowTypes.post)

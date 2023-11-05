@@ -29,8 +29,8 @@ export function getAccountsBalances(names) {
     return api.getAccountsBalancesAsync(names)
 }
 
-export function getAssets(creator='', names=[], from='', limit=5000) {
-    return api.getAssetsAsync(creator, names, from, limit)
+export function getAssets(creator='', names=[], from='', limit=5000, sort='by_symbol_name', query={}) {
+    return api.getAssetsAsync(creator, names, from, limit, sort, query)
 }
 
 export function getAccountHistory(account, from, limit, filter_ops, select_ops = undefined) {
@@ -113,4 +113,20 @@ export function getWorkerRequestVotes(author, permlink, voter, limit) {
 
 export function getFollowing(follower, startFollowing, followType, limit) {
     return api.getFollowingAsync(follower, startFollowing, followType, limit)
+}
+
+export function getPaidSubscriptionOptions(query) {
+    return api.getPaidSubscriptionOptionsAsync(query)
+}
+
+export function getPaidSubscribers(query) {
+    return api.getPaidSubscribersAsync(query)
+}
+
+export function getPaidSubscribe(query) {
+    return api.getPaidSubscribeAsync(query)
+}
+
+export function getPaidSubscriptions(query) {
+    return api.getPaidSubscriptionsAsync(query)
 }

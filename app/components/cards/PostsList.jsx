@@ -197,6 +197,7 @@ class PostsList extends PureComponent {
             posts,
             showSpam,
             loading,
+            decrypting,
             category,
             content,
             account,
@@ -258,9 +259,9 @@ class PostsList extends PureComponent {
                     itemScope
                     itemType="http://schema.org/blogPosts"
                 >
-                    {renderSummary(postsInfo)}
+                    {!decrypting && renderSummary(postsInfo)}
                 </ul>
-                {loading && (
+                {(loading || decrypting) && (
                     <center>
                         <LoadingIndicator type="circle" />
                     </center>
@@ -310,6 +311,7 @@ export default connect(
             username,
             content: state.global.get('content'),
             next_from: state.global.get('next_from'),
+            decrypting: state.global.get('decrypting'),
             pathname: state.app.get('location').pathname,
         };
     },

@@ -8,6 +8,7 @@ import {authApiLogin, authApiLogout, authSession} from 'app/utils/AuthApiClient'
 import {notifyApiLogin, notifyApiLogout, notifySession, notificationUnsubscribe} from 'app/utils/NotifyApiClient';
 import {serverApiLogin, serverApiLogout} from 'app/utils/ServerApiClient';
 import {serverApiRecordEvent} from 'app/utils/ServerApiClient';
+import { fetchState } from 'app/redux/FetchDataSaga'
 import {loadFollows} from 'app/redux/FollowSaga'
 import { signData } from 'golos-lib-js/lib/auth'
 import {PrivateKey, Signature, hash} from 'golos-lib-js/lib/auth/ecc'
@@ -83,6 +84,24 @@ function* getAccountWatch() {
     yield takeEvery('user/GET_ACCOUNT', getAccountHandler);
 }
 
+function* refetchStateIfNeed() {
+    if (process.env.BROWSER) {
+        try {
+            const pathname = window.location.pathname
+            const parts = pathname.split('/')
+            // blog or post
+            if ((parts.length == 3 && !parts[0] && parts[1].startsWith('@') && parts[2] === 'feed')
+            || (parts.length == 3 && !parts[0] && parts[1].startsWith('@') && parts[2] === 'discussions')
+            || (parts.length == 2 && !parts[0] && parts[1].startsWith('@'))
+            || (parts.length == 4 && parts[2].startsWith('@'))) {
+                yield call(fetchState, { payload: {pathname}})
+            }
+        } catch (err) {
+            console.error('Refetch error', err)
+        }
+    }
+}
+
 /**
     @arg {object} action.username - Unless a WIF is provided, this is hashed with the password and key_type to create private keys.
     @arg {object} action.password - Password or WIF private key.  A WIF becomes the posting key, a password can create all three
@@ -91,6 +110,12 @@ function* getAccountWatch() {
 function* usernamePasswordLogin(action) {
   // Sets 'loading' while the login is taking place.  The key generation can take a while on slow computers.
     yield call(usernamePasswordLogin2, action)
+
+    const { payload: { refetchState } } = action
+    if (refetchState) {
+        yield refetchStateIfNeed()
+    }
+
     const current = yield select(state => state.user.get('current'))
     if (current) {
         const username = current.get('username')
@@ -353,7 +378,9 @@ function* changeAccount(action) {
         } catch (err) {}
     }
     const { payload: { username, password } } = action
-    yield put(user.actions.usernamePasswordLogin({username, password, saveLogin: true }))
+    yield put(user.actions.usernamePasswordLogin({
+        username, password, saveLogin: true, refetchState: true
+    }))
 }
 
 function* saveLogin_localStorage() {
@@ -415,20 +442,25 @@ function* saveLogin_localStorage() {
 function* logout() {
     yield put(user.actions.saveLoginConfirm(false)) // Just incase it is still showing
     if (process.env.BROWSER) {
+        localStorage.removeItem('guid')
+        authApiLogout()
+        notifyApiLogout()
+        serverApiLogout()
         const curName = session.load().currentName
         if (curName) {
             const newCurrent = {}
             session.logout(curName, newCurrent).save()
             if (newCurrent.name) {
                 const password = newCurrent.data.posting
-                yield put(user.actions.usernamePasswordLogin({ username: newCurrent.name, password, saveLogin: true }))
+                yield put(user.actions.usernamePasswordLogin({
+                    username: newCurrent.name, password,
+                    saveLogin: true, refetchState: true
+                }))
                 return
             }
+        } else {
+            yield refetchStateIfNeed()
         }
-        localStorage.removeItem('guid')
-        authApiLogout();
-        notifyApiLogout();
-        serverApiLogout();
     }
 }
 

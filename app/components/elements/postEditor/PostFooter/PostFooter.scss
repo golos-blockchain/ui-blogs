@@ -73,4 +73,26 @@
   &__button_hint-disabled:hover &__disabled-hint {
     opacity: 1;
   }
+
+  &__visible-hint {
+    .Hint__content {
+      min-width: auto !important;
+      padding-top: 15px !important;
+      padding-left: 0px !important;
+      padding-right: 0px !important;
+      padding-bottom: 0px !important;
+
+      .caption {
+        padding-left: 16px;
+        padding-right: 16px;
+        white-space: nowrap;
+        font-weight: bold;
+      }
+
+      .VerticalMenu {
+        padding-top: 10px;
+        width: 100%;
+      }
+    }
+  }
 }

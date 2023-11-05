@@ -58,6 +58,9 @@
   "apidex_service": {
     "host": "https://api-dex.golos.app"
   },
+  "golos_news": {
+    "account": "progolos"
+  },
   "forums": {
     "white_list": ["fm-golostalk", "fm-prizmtalk", "fm-graphenetalks"],
     "fm-golostalk": {"domain": "golostalk.com"},

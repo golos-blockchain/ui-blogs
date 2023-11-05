@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import tt from 'counterpart';
+import { Asset } from 'golos-lib-js/lib/utils'
+
 import user from 'app/redux/User';
 import transaction from 'app/redux/Transaction';
 import { repLog10, parsePayoutAmount } from 'app/utils/ParsersAndFormatters';
@@ -25,6 +27,7 @@ import CommentFormLoader from 'app/components/modules/CommentForm/loader';
 import { isBlocked } from 'app/utils/blacklist'
 import { getEditDraftPermLink } from 'app/utils/postForm';
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
+import { makeOid } from 'app/utils/sponsors'
 import PostSummaryThumb from 'app/components/elements/PostSummaryThumb';
 import { SEO_TITLE, CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config';
 
@@ -127,13 +130,14 @@ class PostFull extends React.Component {
     }
 
     shouldComponentUpdate(props, state) {
-        const { cont, post, prevPosts, username } = this.props;
+        const { cont, post, prevPosts, username, pso } = this.props;
 
         return (
             cont !== props.cont ||
             post !== props.post ||
             prevPosts.length !== props.prevPosts.length ||
             username !== props.username ||
+            pso !== props.pso ||
             this.state !== state
         );
     }
@@ -173,6 +177,18 @@ class PostFull extends React.Component {
         this.props.deletePost(content.get('author'), content.get('permlink'));
     };
 
+    becomeSponsor = async (e) => {
+        e.preventDefault()
+
+        const { username, pso } = this.props
+        this.props.becomeSponsor(username, pso.author, pso.cost, pso.tip_cost, () => {
+            this.setState({
+                hideSponsorBtn: true
+            })
+        }, (err) => {
+        })
+    }
+
     showPromotePost = () => {
         const postContent = this.props.cont.get(this.props.post);
 
@@ -198,7 +214,7 @@ class PostFull extends React.Component {
 
         const p = extractContent(immutableAccessor, postContent);
         const content = postContent.toJS();
-        const { author, permlink, parent_author, parent_permlink, root_author } = content;
+        const { author, permlink, parent_author, parent_permlink, root_author, encrypted } = content;
         const jsonMetadata = showReply ? null : p.json_metadata;
         let link = `/@${content.author}/${content.permlink}`;
 
@@ -221,6 +237,7 @@ class PostFull extends React.Component {
             category,
             title,
             body,
+            encrypted,
         };
 
         const APP_DOMAIN = $STM_Config.site_domain;
@@ -345,7 +362,7 @@ class PostFull extends React.Component {
     }
 
     _renderContent(postContent, content, jsonMetadata, authorRepLog10) {
-        const { username, post } = this.props;
+        const { username, post, pso } = this.props;
         const { author, permlink, category } = content;
 
         const url = `/${category}/@${author}/${permlink}`;
@@ -432,6 +449,18 @@ class PostFull extends React.Component {
             </span>,
         ];
 
+        if (pso && !this.state.hideSponsorBtn && username !== author) {
+            main.push(
+                <button
+                    key="b1"
+                    className="Promote__button float-right button hollow tiny"
+                    onClick={this.becomeSponsor}
+                >
+                    {tt('poststub.become_sponsor')}
+                </button>
+            )
+        }
+
         const showPromote =
             username &&
             postContent.get('last_payout') === '1970-01-01T00:00:00' &&
@@ -440,7 +469,7 @@ class PostFull extends React.Component {
         if (showPromote) {
             main.push(
                 <button
-                    key="b1"
+                    key="b2"
                     className="Promote__button float-right button hollow tiny"
                     onClick={this.showPromotePost}
                 >
@@ -561,10 +590,13 @@ export default connect(
         let prevPosts = state.global.get('prev_posts')
         prevPosts = prevPosts ? prevPosts.toJS() : []
 
+        const pso = state.global.get('pso')
+
         return {
             ...props,
             username,
-            prevPosts
+            prevPosts,
+            pso: pso ? pso.toJS() : null
         }
     },
 
@@ -586,6 +618,35 @@ export default connect(
                     confirm: tt('g.are_you_sure'),
                 })
             );
+        },
+        becomeSponsor(username, author, amount, from_tip, onSuccess, onError) {
+            let confirm = tt('poststub.for_sponsors2')
+            confirm += Asset(amount).floatString
+            if (from_tip) {
+                confirm += tt('poststub.for_sponsors3')
+            }
+            confirm += tt('poststub.for_sponsors4')
+            confirm += ' ' + tt('poststub.for_sponsors5')
+            confirm += ' ' + tt('g.are_you_sure')
+            dispatch(transaction.actions.broadcastOperation({
+                type: 'paid_subscription_transfer',
+                operation: {
+                    from: username,
+                    to: author,
+                    oid: makeOid(),
+                    amount,
+                    memo: '',
+                    from_tip,
+                },
+                confirm,
+                username,
+                successCallback: () => {
+                    onSuccess()
+                },
+                errorCallback: (err) => {
+                    onError(err)
+                }
+            }))
         },
         showPromotePost(author, permlink) {
             dispatch({

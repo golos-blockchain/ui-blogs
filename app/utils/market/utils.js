@@ -55,15 +55,26 @@ function normalizeAssets(assets) {
 }
 
 function getAssetMeta(asset) {
+    let sym
+    try {
+        sym = asset.supply && asset.supply.split(' ')[1]
+    } catch (err) {
+        console.warn(err)
+    }
+    let res = {}
     try {
         let obj = JSON.parse(asset.json_metadata)
-        if (typeof(obj) !== 'object' || !obj || Array.isArray(obj)) {
-            return {}
+        if (typeof(obj) === 'object' && obj && !Array.isArray(obj)) {
+            res = obj
         }
-        return obj
     } catch (err) {
-        return {}
     }
+    if (sym === 'GOLOS') {
+        res.image_url = '/images/golos.png'
+    } else if (sym === 'GBG') {
+        res.image_url = '/images/gold-golos.png'
+    }
+    return res
 }
 
 function getTradablesFor(assets, syms, onlyFirst = false) {

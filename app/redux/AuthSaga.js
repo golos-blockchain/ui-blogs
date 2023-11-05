@@ -93,10 +93,11 @@ function pubkeyThreshold({pubkeys, authority}) {
     return available
 }
 
-export function* findSigningKey({opType, username, password}) {
+export function* findSigningKey({opType, op, username, password}) {
     let authTypes
     const opInfo = broadcast._operations[opType]
-    if (opInfo && opInfo.roles[0] === 'posting') {
+    if (opInfo && opInfo.roles[0] === 'posting' &&
+        (opType !== 'paid_subscription_transfer' || op.from_tip)) {
         authTypes = 'posting, active'
     } else {
         authTypes = 'active, owner'

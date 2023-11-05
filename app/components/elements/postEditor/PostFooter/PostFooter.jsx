@@ -7,6 +7,7 @@ import TagsEditLine from 'app/components/elements/postEditor/TagsEditLine';
 import PostOptions from 'app/components/elements/postEditor/PostOptions/PostOptions';
 import Button from 'app/components/elements/common/Button';
 import Hint from 'app/components/elements/common/Hint';
+import VerticalMenu from 'app/components/elements/VerticalMenu'
 import { NSFW_TAG, ONLYBLOG_TAG, ONLYAPP_TAG } from 'app/utils/tags';
 import { VISIBLE_TYPES } from 'app/components/modules/PostForm/PostForm';
 import './PostFooter.scss';
@@ -17,11 +18,12 @@ export default class PostFooter extends PureComponent {
         tags: PropTypes.array,
         publishedLimited: PropTypes.bool,
         postDisabled: PropTypes.bool,
+        postEncrypted: PropTypes.bool,
         disabledHint: PropTypes.string,
         onPayoutTypeChange: PropTypes.func.isRequired,
         onCurationPercentChange: PropTypes.func.isRequired,
         onTagsChange: PropTypes.func.isRequired,
-        onPostClick: PropTypes.func.isRequired,
+        onPost: PropTypes.func.isRequired,
         onResetClick: PropTypes.func.isRequired,
         onCancelClick: PropTypes.func.isRequired,
     };
@@ -29,7 +31,13 @@ export default class PostFooter extends PureComponent {
     state = {
         temporaryErrorText: null,
         singleLine: true,
+        showVisibleOptions: false,
     };
+
+    constructor(props) {
+        super(props)
+        this._onAwayClickListen = false
+    }
 
     componentDidMount() {
         this._checkSingleLine();
@@ -42,6 +50,12 @@ export default class PostFooter extends PureComponent {
     componentWillUnmount() {
         clearInterval(this._resizeInterval);
         clearTimeout(this._temporaryErrorTimeout);
+
+        this._unmount = true
+
+        if (this._onAwayClickListen) {
+            window.removeEventListener('mousedown', this._onAwayClick)
+        }
     }
 
     onCategoryChange = (event) => {
@@ -52,6 +66,66 @@ export default class PostFooter extends PureComponent {
             [event.target.value, ...tags]);
     }
 
+    onPostClick = (e) => {
+        e.preventDefault()
+
+        const { editMode, postEncrypted } = this.props
+        if (editMode) {
+            this.props.onPost(postEncrypted ? VISIBLE_TYPES.ONLY_SPONSORS : VISIBLE_TYPES.ALL)
+            return
+        }
+
+        this.setState({
+            showVisibleOptions: !this.state.showVisibleOptions
+        },
+        () => {
+            const { showVisibleOptions } = this.state;
+
+            if (showVisibleOptions && !this._onAwayClickListen) {
+                window.addEventListener('mousedown', this._onAwayClick)
+                this._onAwayClickListen = true
+            }
+        })
+    }
+
+    _onAwayClick = e => {
+        if (!this._popupVisible || !this._popupVisible.contains(e.target)) {
+            setTimeout(() => {
+                if (!this._unmount) {
+                    this.setState({
+                        showVisibleOptions: false,
+                    });
+                }
+            }, 50);
+        }
+    };
+
+    _popupVisibleRef = el => {
+        this._popupVisible = el
+    }
+
+    _renderVisibleOptions = () => {
+        const onClick = (e) => {
+            e.preventDefault()
+            this.props.onPost(parseInt(e.target.parentNode.dataset.value))
+        }
+
+        const visibleItems = [
+            {link: '#', label: tt('post_editor.visible_option_all'), value: VISIBLE_TYPES.ALL, onClick },
+            {link: '#', label: tt('post_editor.visible_option_onlyblog'), value: VISIBLE_TYPES.ONLY_BLOG, onClick },
+            {link: '#', label: tt('post_editor.visible_option_onlysponsors'), value: VISIBLE_TYPES.ONLY_SPONSORS, onClick },
+        ]
+
+        return (
+            <Hint key='3' align='right' innerRef={this._popupVisibleRef} className='PostFooter__visible-hint'>
+                <span className='caption'>
+                    {tt('post_editor.set_visible_type')}
+                </span>
+                <VerticalMenu items={visibleItems} />
+            </Hint>
+        )
+    }
+
     render() {
         let {
             editMode,
@@ -60,7 +134,7 @@ export default class PostFooter extends PureComponent {
             postDisabled,
             disabledHint,
         } = this.props;
-        const { temporaryErrorText, singleLine } = this.state;
+        const { temporaryErrorText, singleLine, showVisibleOptions } = this.state;
 
         let category = "";
 
@@ -92,20 +166,12 @@ export default class PostFooter extends PureComponent {
             isMobile = window.matchMedia('screen and (max-width: 39.9375em)').matches;
         }
 
-        const visibleType = this.props.tags.includes(ONLYAPP_TAG) ?
-            VISIBLE_TYPES.ONLY_APP :
-            (this.props.tags.includes(ONLYBLOG_TAG) ?
-            VISIBLE_TYPES.ONLY_BLOG : VISIBLE_TYPES.ALL)
-
         const options = (<PostOptions
             nsfw={this.props.tags.includes(NSFW_TAG)}
-            visibleType={visibleType}
-            publishedLimited={this.props.publishedLimited}
             onNsfwClick={this._onNsfwClick}
             payoutType={this.props.payoutType}
             curationPercent={this.props.curationPercent}
             editMode={editMode}
-            onVisibleTypeChange={this._onVisibleTypeChange}
             onPayoutChange={this.props.onPayoutTypeChange}
             onCurationPercentChange={this.props.onCurationPercentChange}
         />)
@@ -140,11 +206,11 @@ export default class PostFooter extends PureComponent {
                     <Hint key="2" error align="right">
                         {temporaryErrorText}
                     </Hint>
-                ) : null}
+                ) : showVisibleOptions ? this._renderVisibleOptions() : null}
                 <Button
                     primary
                     disabled={postDisabled}
-                    onClick={this.props.onPostClick}
+                    onClick={this.onPostClick}
                     style={{'minWidth': '140px'}}
                 >
                     {editMode
@@ -236,17 +302,4 @@ export default class PostFooter extends PureComponent {
 
         this.props.onTagsChange(newTags);
     };
-
-    _onVisibleTypeChange = (visibleType) => {
-        const tags = this.props.tags
-        let newTags = tags.filter(t => t !== ONLYBLOG_TAG && t !== ONLYAPP_TAG)
-
-        if (visibleType === VISIBLE_TYPES.ONLY_BLOG) {
-            newTags = newTags.concat(ONLYBLOG_TAG)
-        } else if (visibleType === VISIBLE_TYPES.ONLY_APP) {
-            newTags = newTags.concat(ONLYAPP_TAG)
-        }
-
-        this.props.onTagsChange(newTags)
-    }
 }

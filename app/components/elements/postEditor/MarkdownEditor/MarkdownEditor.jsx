@@ -247,7 +247,10 @@ export default class MarkdownEditor extends PureComponent {
                 ) ||
                 lineContent.match(
                     /(?:^|\s)(?:https?:)?\/\/youtu\.be\/([A-Za-z0-9_-]{11})(?:\s|&|$)/
-                );
+                ) ||
+                lineContent.match(
+                    /(?:^|\s)(?:https?:)?\/\/(?:www\.)?youtube\.com\/shorts\/([A-Za-z0-9_-]{11})(?:\s|&|$)/
+                )
 
             if (match) {
                 this._addLineWidget(

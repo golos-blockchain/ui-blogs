@@ -3,6 +3,7 @@ import { Map } from 'immutable'
 import { api } from 'golos-lib-js'
 
 import { listVersions, getVersion } from 'app/utils/SearchClient'
+import { tryDecryptContents, } from 'app/utils/sponsors'
 import { fromJSGreedy } from 'app/utils/StateFunctions'
 
 export function* versionsWatches() {
@@ -82,6 +83,7 @@ export function* showVersion(action) {
         } else {
             try {
                 const post = yield api.getContentAsync(author, permlink, 0)
+                yield tryDecryptContents([post])
                 body = post.body
                 lastUpdate = post.last_update
             } catch (err) {
