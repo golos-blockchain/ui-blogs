@@ -731,6 +731,13 @@
     "ok": "Ok",
     "confirm": "Confirm"
   },
+  "gift_nft": {
+    "no_tokens": "You haven't any NFT-tokens yet. ",
+    "issue": "Issue",
+    "no_tokens2": " or ",
+    "buy": "buy",
+    "no_tokens3": " them."
+  },
   "header_jsx": {
     "home": "home",
     "created": "New",

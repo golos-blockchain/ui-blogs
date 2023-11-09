@@ -9,6 +9,7 @@ import LoadingIndicator from 'app/components/elements/LoadingIndicator'
 import g from 'app/redux/GlobalReducer'
 import transaction from 'app/redux/Transaction'
 import { getAssetMeta } from 'app/utils/market/utils'
+import { walletUrl } from 'app/utils/walletUtils'
 
 class GiftNFT extends React.Component {
     constructor(props) {
@@ -74,7 +75,7 @@ class GiftNFT extends React.Component {
                 </span>
             }
 
-            items.push(<tr key={count} title={tt('g.gift') + ' ' + data.title} className={count % 2 == 0 ? '' : 'zebra'} onClick={e => this.giftNFT(e, token_id)}>
+            items.push(<tr key={count} title={tt('g.gift') + ' ' + data.title + ' (#' + token.token_id + ')'} className={count % 2 == 0 ? '' : 'zebra'} onClick={e => this.giftNFT(e, token_id)}>
                 <td>
                     <NFTSmallIcon image={image} onClick={e => e.preventDefault()} />
                 </td>
@@ -89,8 +90,22 @@ class GiftNFT extends React.Component {
             ++count
         }
 
-        if (!items.length) {
+        if (!nft_tokens) {
             items = <LoadingIndicator type='circle' />
+        } else if (!items.length) {
+            items = <div style={{ marginBottom: '1rem' }}>
+                {tt('gift_nft.no_tokens')}
+                {currentUser && <span>
+                    <a href={walletUrl('/@' + currentUser.get('username') + '/nft-collections')} target='_blank' rel='noreferrer nofollow'>
+                        {tt('gift_nft.issue')}
+                    </a>
+                    {tt('gift_nft.no_tokens2')}
+                    <a href={walletUrl('/nft')} target='_blank' rel='noreferrer nofollow'>
+                        {tt('gift_nft.buy')}
+                    </a>
+                    {tt('gift_nft.no_tokens3')}
+                </span>}
+            </div>
         } else {
             items = <table><tbody>
                 {items}
