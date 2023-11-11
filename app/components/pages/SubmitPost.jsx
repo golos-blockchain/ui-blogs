@@ -1,7 +1,9 @@
 import React from 'react';
 import { browserHistory } from 'react-router';
-import PostFormLoader from 'app/components/modules/PostForm/loader';
+
 import ReplyEditor from 'app/components/elements/ReplyEditor';
+import PostFormLoader from 'app/components/modules/PostForm/loader'
+import { VISIBLE_TYPES } from 'app/components/modules/PostForm/PostForm'
 
 class SubmitPost extends React.PureComponent {
     constructor(props) {
@@ -35,8 +37,14 @@ class SubmitPost extends React.PureComponent {
         }
     }
 
-    _onSuccess = () => {
-        browserHistory.push('/created');
+    _onSuccess = (payload, editMode, visibleType) => {
+        if (visibleType === VISIBLE_TYPES.ONLY_SPONSORS) {
+            setTimeout(() => {
+                browserHistory.push('/@' + payload.author)
+            }, 1000)
+            return
+        }
+        browserHistory.push('/created')
     };
 }
 

@@ -657,7 +657,7 @@ class PostForm extends React.Component {
             data,
             editMode,
             visibleType,
-            () => {
+            (payload) => {
                 try {
                     if (editMode) {
                         sessionStorage.removeItem(EDIT_KEY);
@@ -667,11 +667,15 @@ class PostForm extends React.Component {
                 } catch (err) {}
 
                 if (!this._unmount) {
-                    this.setState({
-                        isPosting: false,
-                    });
+                    setTimeout(() => {
+                        if (!this._unmount) {
+                            this.setState({
+                                isPosting: false,
+                            })
+                        }
+                    }, 1000)
 
-                    this.props.onSuccess();
+                    this.props.onSuccess(payload, editMode, visibleType)
                 }
 
                 if (!editMode) {
@@ -835,7 +839,9 @@ export default connect(
                     confirm,
                     hideErrors: true,
                     errorCallback: onError,
-                    successCallback: onSuccess,
+                    successCallback: () => {
+                        onSuccess(payload)
+                    },
                 })
             );
         },
