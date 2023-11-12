@@ -38,7 +38,7 @@ class SubmitPost extends React.PureComponent {
     }
 
     _onSuccess = (payload, editMode, visibleType) => {
-        if (visibleType === VISIBLE_TYPES.ONLY_SPONSORS) {
+        if (visibleType !== VISIBLE_TYPES.ALL) {
             setTimeout(() => {
                 browserHistory.push('/@' + payload.author)
             }, 1000)
