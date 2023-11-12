@@ -71,7 +71,7 @@ class SponsorSubscription extends React.Component {
         const { username } = this.props
         this.setSubmitting(true)
         if (values.author) {
-            await this.props.updatePso(username, values.oid, values.cost, () => {
+            await this.props.updatePso(username, values.oid, values.cost, values.subscribers, () => {
                 this.setState({
                     saved: true,
                 })
@@ -175,7 +175,7 @@ class SponsorSubscription extends React.Component {
                     onSubmit={this._onSubmit}
                 >
                 {({
-                    handleSubmit, isValid, values, setFieldValue, handleChange,
+                    handleSubmit, isValid, values, dirty, setFieldValue, handleChange,
                 }) => {
                     const { symbol } = values.cost.asset
                     return (
@@ -196,7 +196,7 @@ class SponsorSubscription extends React.Component {
                     </div>
                     <div className='row' style={{ marginTop: '0.5rem' }}>
                         {pso.author ? <div className='column small-6'>
-                            <button type='submit' disabled={!isValid || submitting} className='button'>
+                            <button type='submit' disabled={!isValid || !dirty || submitting} className='button'>
                                 {tt('g.save')}
                             </button>
                             <button type='button' disabled={submitting} className='button hollow alert' onClick={this.deletePso}>
@@ -265,7 +265,7 @@ export default connect(
                 })
             )
         },
-        updatePso: async (author, oid, cost, successCallback, errorCallback) => {
+        updatePso: async (author, oid, cost, subscribers, successCallback, errorCallback) => {
             const operation = {
                 author,
                 oid,
@@ -275,9 +275,11 @@ export default connect(
                 executions: 4294967295,
                 extensions: []
             }
+            const confirm = tt('sponsors_jsx.are_you_sure_update')
             dispatch(
                 transaction.actions.broadcastOperation({
                     type: 'paid_subscription_update',
+                    confirm,
                     operation,
                     successCallback,
                     errorCallback
