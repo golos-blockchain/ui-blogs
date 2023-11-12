@@ -295,8 +295,11 @@ class Search extends React.Component {
                     title = 'RE: ' + title;
                     url += '#@' + author + '/' + permlink;
                 }
-                let body = hit.highlight && hit.highlight.body;
+                let body = hit.highlight && hit.highlight.body
                 body = body ? body[0].split('</em> <em>').join(' ') : truncate(hit.fields.body[0], {length: 250});
+                if (body.startsWith('{"t":"e",')) {
+                    body = tt('postsummary_jsx.for_sponsors')
+                }
 
                 if (this.state.author && author !== this.state.author) return null;
 

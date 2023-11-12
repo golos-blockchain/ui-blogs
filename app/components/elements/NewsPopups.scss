@@ -1,4 +1,4 @@
-.AppReminder {
+.NewsPopups {
     @include themify($themes) {
         background-color: themed('modalReminder') !important;
     }

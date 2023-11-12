@@ -31,6 +31,7 @@ import {authorNameAndRep} from 'app/utils/ComponentFormatters'
 import { addHighlight, unsubscribePost } from 'app/utils/NotifyApiClient'
 import { detransliterate } from 'app/utils/ParsersAndFormatters'
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl'
+import { EncryptedStates } from 'app/utils/sponsors'
 import { walletUrl } from 'app/utils/walletUtils'
 
 function isLeftClickEvent(event) {
@@ -83,7 +84,8 @@ class PostSummary extends React.Component {
                props.nsfwPref !== this.props.nsfwPref ||
                state.revealNsfw !== this.state.revealNsfw ||
                props.visited !== this.props.visited ||
-               props.gray !== this.props.gray
+               props.gray !== this.props.gray ||
+               props.encrypted !== this.props.encrypted
     }
 
     componentDidUpdate(prevProps) {
@@ -181,6 +183,9 @@ class PostSummary extends React.Component {
 
         const {gray, pictures, authorRepLog10, flagWeight, isNsfw, isOnlyblog, isOnlyapp, foreignApp} = content.get('stats', Map()).toJS()
 
+        const encrypted = content.get('encrypted')
+        const isOnlySponsors = !!encrypted
+
         if (hideSummary({
             author: content.get('author'), url: content.get('url'),
             app: content.get('app'),
@@ -263,9 +268,20 @@ class PostSummary extends React.Component {
 
         const nsfwStub = 'Not safe for work 18+'
 
+        let encStub
+        if (encrypted === EncryptedStates.wrong_format) {
+            encStub = tt('postsummary_jsx.wrong_format')
+        } else if (encrypted === EncryptedStates.unknown || encrypted === EncryptedStates.no_key) {
+            encStub = tt('postsummary_jsx.no_decrypt_key')
+        } else if (encrypted === EncryptedStates.no_sub) {
+            encStub = tt('postsummary_jsx.no_sub')
+        } else if (encrypted && encrypted !== EncryptedStates.decrypted) {
+            encStub = tt('postsummary_jsx.for_sponsors')
+        }
+
         let content_body = <div className={'PostSummary__body entry-content ' + filterClasses.join(' ')}>
             <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search, warn)}>
-                {stubText ? nsfwStub : desc}
+                {encStub || (stubText ? nsfwStub : desc)}
             </a>
         </div>;
 
@@ -285,7 +301,8 @@ class PostSummary extends React.Component {
                 {stubText ? nsfwStub : title_text}
             </a>
             {isOnlyblog && <span className="nsfw_post" title={tt('post_editor.onlyblog_hint')}>{tt('g.for_followers')}</span>}
-            {isOnlyapp && <span className="nsfw_post" title={tt('post_editor.visible_option_onlyapp_hint')}>{tt('g.only_app')}</span>}
+            {isOnlyapp && <span className="nsfw_post">{tt('g.only_app')}</span>}
+            {isOnlySponsors && <span className="nsfw_post" title={tt('post_editor.visible_option_onlysponsors')}>{tt('g.for_sponsors')}</span>}
             {foreignApp && <ForeignApp foreignApp={foreignApp} />}
             {warn && <span className="nsfw_post" title={tt('post_editor.nsfw_hint')}>{detransliterate(nsfwTitle)}</span>}
             {worker_post && <a target="_blank" href={worker_post}><span className="worker_post">{tt('workers.worker_post')}</span></a>}
@@ -407,16 +424,18 @@ export default connect(
         let pending_payout = 0;
         let total_payout = 0;
         let event_count = 0
+        let encrypted = 0
         let gray
         if (content) {
             pending_payout = content.get('pending_payout_value');
             total_payout = content.get('total_payout_value');
             event_count = content.get('event_count')
+            encrypted = content.get('encrypted')
             const stats = content.get('stats', Map()).toJS()
             gray = stats.gray
         }
         return {
-            post, content, gray, pending_payout, total_payout, event_count,
+            post, content, gray, pending_payout, total_payout, event_count, encrypted,
             username: state.user.getIn(['current', 'username']) || state.offchain.get('account')
         };
     },

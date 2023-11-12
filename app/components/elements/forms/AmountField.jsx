@@ -1,8 +1,12 @@
 import React from 'react'
-import { Field, ErrorMessage, } from 'formik'
+import { Field, } from 'formik'
 import { AssetEditor } from 'golos-lib-js/lib/utils'
 
 class AmountField extends React.Component {
+    static defaultProps = {
+        name: 'amount',
+    }
+
     _renderInput = ({ field, form }) => {
         const { value, ...rest } = field
         const { values, setFieldValue } = form
@@ -12,15 +16,16 @@ class AmountField extends React.Component {
     }
 
     onChange = (e, values, setFieldValue) => {
-        const newAmount = values.amount.withChange(e.target.value)
+        const { name } = this.props
+        const newAmount = values[name].withChange(e.target.value)
         if (newAmount.hasChange && newAmount.asset.amount >= 0) {
-            setFieldValue('amount', newAmount)
+            setFieldValue(name, newAmount)
         }
     }
 
     render() {
-        const { placeholder, } = this.props
-        return (<Field name='amount' type='text'
+        const { placeholder, name, } = this.props
+        return (<Field name={name} type='text'
             placeholder={placeholder}
             autoComplete='off' autoCorrect='off' spellCheck='false'>
                 {this._renderInput}

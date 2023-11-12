@@ -46,6 +46,9 @@ global.$STM_Config = {
     wallet_service: config.get('wallet_service'),
     messenger_service: config.get('messenger_service'),
     apidex_service: config.get('apidex_service'),
+    golos_news: config.has('golos_news') ? config.get('golos_news') : {
+        account: 'progolos'
+    },
     forums: config.get('forums'),
     blocked_users,
     blocked_posts,

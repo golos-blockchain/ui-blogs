@@ -6,6 +6,18 @@ import { contentStats, fromJSGreedy } from 'app/utils/StateFunctions';
 
 const emptyContentMap = Map(emptyContent);
 
+const upsertNftAssets = (state, nft_assets, start_token_id) => {
+    if (!start_token_id) {
+        state = state.set('nft_assets', fromJS(nft_assets))
+    } else {
+        state = state.update('nft_assets', data => {
+            data = data.merge(nft_assets)
+            return data
+        })
+    }
+    return state
+}
+
 export default createModule({
     name: 'global',
     initialState: Map({ status: {} }),
@@ -55,7 +67,14 @@ export default createModule({
                         );
                     }
                 }
-                let res = state.mergeDeep(payload);
+                let res = state.setIn(['sponsors', 'data'], List())
+                if (!payload.has('pso')) {
+                    res = res.delete('pso')
+                }
+                res = res.setIn(['sponsoreds', 'data'], List())
+                if (res.has('nft_tokens'))
+                    res = res.delete('nft_tokens')
+                res = res.mergeDeep(payload);
                 let con = res.get('content').withMutations(con => {
                     con.forEach((cc, key) => {
                         if (!payload.hasIn(['content', key, 'versions'])) {
@@ -184,6 +203,36 @@ export default createModule({
             action: 'RECEIVE_UIA_BALANCES',
             reducer: (state, { payload: { assets } }) => {
                 return state.set('assets', fromJS(assets))
+            },
+        },
+        {
+            action: 'FETCH_NFT_TOKENS',
+            reducer: state => state,
+        },
+        {
+            action: 'RECEIVE_NFT_TOKENS',
+            reducer: (state, { payload: { nft_tokens, start_token_id, next_from, nft_assets } }) => {
+                let new_state = state
+                if (!new_state.has('nft_tokens')) {
+                    new_state = new_state.set('nft_tokens', fromJS({
+                        data: nft_tokens,
+                        next_from: next_from
+                    }))
+                } else {
+                    new_state = new_state.update('nft_tokens', tokens => {
+                        tokens = tokens.update('data', data => {
+                            for (const token of nft_tokens) {
+                                data = data.push(fromJS(token))
+                            }
+                            return data
+                        })
+                        tokens = tokens.set('next_from', next_from)
+                        return tokens
+                    })
+                }
+                if (nft_assets)
+                    new_state = upsertNftAssets(new_state, nft_assets, start_token_id)
+                return new_state
             },
         },
         {
@@ -549,6 +598,14 @@ export default createModule({
         },
         {
             action: 'SHOW_VERSION',
+            reducer: state => state, // saga
+        },
+        {
+            action: 'FETCH_SPONSORS',
+            reducer: state => state, // saga
+        },
+        {
+            action: 'FETCH_SPONSOREDS',
             reducer: state => state, // saga
         },
     ],

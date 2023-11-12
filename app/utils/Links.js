@@ -30,7 +30,7 @@ export default {
     image: image(),
     imageFile: imageFile(),
     youTube: youTube(),
-    youTubeId: /(?:(?:youtube.com\/watch\?v=)|(?:youtu.be\/)|(?:youtube.com\/embed\/))([A-Za-z0-9_-]+)/i,
+    youTubeId: /(?:(?:youtube.com\/watch\?v=)|(?:youtu.be\/)|(?:youtube.com\/shorts\/)|(?:youtube.com\/embed\/))([A-Za-z0-9_-]+)/i,
     vimeoId: /(?:vimeo.com\/|player.vimeo.com\/video\/)([0-9]+)/,
     coubId: /(?:(?:https?:)?\/\/)?coub\.com\/view\/([A-Za-z0-9]+)/,
     rutubeId: /(?:(?:https?:)?\/\/)?rutube\.ru\/video\/([A-Za-z0-9]+)\/?/,

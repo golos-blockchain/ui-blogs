@@ -1,6 +1,7 @@
 import { call, put, select, fork, cancelled, takeLatest, takeEvery } from 'redux-saga/effects';
 import cookie from "react-cookie";
 import {config, api} from 'golos-lib-js';
+import { Asset } from 'golos-lib-js/lib/utils'
 
 import { getPinnedPosts, getMutedInNew } from 'app/utils/NormalizeProfile';
 import {loadFollows, fetchFollowCount} from 'app/redux/FollowSaga';
@@ -11,11 +12,13 @@ import GlobalReducer from './GlobalReducer';
 import constants from './constants';
 import session from 'app/utils/session'
 import { getFilterApps, } from 'app/utils/ContentAccess';
-import { reveseTag, getFilterTags } from 'app/utils/tags';
+import { reveseTag, getFilterTags, isNsfwMeta, nsfwTags } from 'app/utils/tags';
 import { PUBLIC_API, CATEGORIES, SELECT_TAGS_KEY, DEBT_TOKEN_SHORT, LIQUID_TICKER } from 'app/client_config';
+import { parseNFTImage, NFTImageStub } from 'app/utils/NFTUtils'
 import { getSubs, notifyGetViews, } from 'app/utils/NotifyApiClient'
 import { SearchRequest, searchData, stateSetVersion } from 'app/utils/SearchClient'
 import { hashPermlink, } from 'app/utils/StateFunctions'
+import { makeOid, tryDecryptContents, SPONSORS_PER_PAGE } from 'app/utils/sponsors'
 
 export function* fetchDataWatches () {
     yield fork(watchLocationChange);
@@ -26,6 +29,7 @@ export function* fetchDataWatches () {
     yield fork(watchFetchExchangeRates);
     yield fork(watchFetchVestingDelegations);
     yield fork(watchFetchUiaBalances);
+    yield fork(watchFetchNftTokens)
 }
 
 export function* watchGetContent() {
@@ -80,10 +84,15 @@ export function* fetchState(location_change_action) {
         const state = {}
         state.current_route = location
         state.content = {}
+        state.decrypting = false
         state.prev_posts = []
-        state.assets = {}
+        state.assets = {} // account balances
+        state.tokens = []
+        state.sponsors = { data: [] }
+        state.sponsoreds = { data: [] }
         state.minused_accounts = {}
         state.accounts = {}
+        state.confetti_nft_active = false
 
         const authorsForCheck = new Set() // if not blocked by current user
         const checkAuthor = (author) => authorsForCheck.add(author)
@@ -153,7 +162,10 @@ export function* fetchState(location_change_action) {
                                 }
                             }
                             if (ids.length) {
-                                const previews = yield call([api, api.getContentPreviewsAsync], ids, 500)
+                                const previews = yield call([api, api.getContentPreviewsAsync], ids, 500, 'false')
+
+                                yield tryDecryptContents(previews)
+
                                 for (const i in previews) {
                                     const { author, permlink } = previews[i]
                                     checkAuthor(author)
@@ -195,7 +207,10 @@ export function* fetchState(location_change_action) {
                             ids.push({ author, hashlink })
                         }
 
-                        const previews = yield call([api, api.getContentPreviewsAsync], ids, 10000)
+                        const previews = yield call([api, api.getContentPreviewsAsync], ids, 10000, 'false')
+
+                        yield tryDecryptContents(previews)
+
                         for (const i in previews) {
                             const { author, permlink } = previews[i]
                             const link = `${author}/${permlink}`
@@ -238,6 +253,36 @@ export function* fetchState(location_change_action) {
                         yield fork(listBlockings, uname)
                     break
 
+                    case 'sponsors':
+                        const oid = makeOid()
+                        state.pso = yield call([api, api.getPaidSubscriptionOptionsAsync], {
+                            author: uname,
+                            oid
+                        })
+                        if (!state.pso.author) {
+                            state.pso.oid = oid
+                        }
+                        const tokens = yield call([api, api.getAssetsAsync], '', [], '', 5000, 'by_marketed')
+                        state.tokens = tokens.filter(t => !t.allow_override_transfer)
+                        state.sponsors = {
+                            data: yield call([api, api.getPaidSubscribersAsync], {
+                                author: uname,
+                                oid,
+                                sort: 'by_date',
+                                from: '', limit: SPONSORS_PER_PAGE + 1
+                            })
+                        }
+                        state.sponsoreds = {
+                            data: yield call([api, api.getPaidSubscriptionsAsync], {
+                                subscriber: uname,
+                                select_oid: oid,
+                                start_author: '',
+                                sort: 'by_date',
+                                limit: SPONSORS_PER_PAGE + 1
+                            })
+                        }
+                    break
+
                     case 'blog':
                     default:
                         const blogEntries = yield call([api, api.getBlogEntriesAsync], uname, 0, 20, ['fm-'], {})
@@ -259,7 +304,10 @@ export function* fetchState(location_change_action) {
                             ids.push({ author, hashlink })
                         }
 
-                        const previews = yield call([api, api.getContentPreviewsAsync], ids, 10000)
+                        const previews = yield call([api, api.getContentPreviewsAsync], ids, 10000, 'false')
+
+                        yield tryDecryptContents(previews)
+
                         for (const i in previews) {
                             const { author, permlink } = previews[i]
 
@@ -296,6 +344,8 @@ export function* fetchState(location_change_action) {
                 state.content[curl].views = 0
             }
 
+            yield tryDecryptContents([state.content[curl]])
+
             state.content[curl].donate_list = [];
             if (state.content[curl].donates != '0.000 GOLOS') {
                 const donates = yield call([api, api.getDonatesAsync], false, {author: account, permlink: permlink}, '', '', 20, 0, true)
@@ -306,6 +356,17 @@ export function* fetchState(location_change_action) {
                 state.content[curl].donate_uia_list = yield call([api, api.getDonatesAsync], true, {author: account, permlink: permlink}, '', '', 20, 0, true)
             }
             state.content[curl].confetti_active = false
+
+            if (curUser) {
+                const ps = yield call([api, api.getPaidSubscribeAsync], {
+                    author: account,
+                    oid: makeOid(),
+                    subscriber: curUser
+                })
+                if (ps.subscription.author && !ps.subscribe.subscriber) {
+                    state.pso = ps.subscription
+                }
+            }
 
             yield put(GlobalReducer.actions.receiveState(state))
 
@@ -337,9 +398,10 @@ export function* fetchState(location_change_action) {
 
             yield applyEventHighlight(state.content, account, permlink, curUser)
 
+            const ppFilterTags = isNsfwMeta(state.content[curl].json_metadata) ? [] : nsfwTags()
             const filter_apps = getFilterApps()
             let args = { truncate_body: 128, select_categories: [category], filter_tag_masks: ['fm-'],
-                filter_tags: getFilterTags(),
+                filter_tags: [...getFilterTags(), ...ppFilterTags],
                 prefs: { ...prefs(curUser), filter_apps } };
             let prev_posts = yield call([api, api[PUBLIC_API.created]], {limit: 4, start_author: account, start_permlink: permlink, select_authors: [account], ...args});
             prev_posts = prev_posts.slice(1);
@@ -448,7 +510,7 @@ export function* fetchData(action) {
             start_author: author,
             start_permlink: permlink,
             filter_tag_masks: ['fm-'],
-            prefs: { ...prefs(curUser), filter_apps }
+            prefs: { ...prefs(curUser), filter_apps, filter_special: true }
         }
     ];
     if (category.length && (!category.startsWith('tag-') || category.length > 4)) {
@@ -567,8 +629,6 @@ export function* fetchData(action) {
     yield put({ type: 'FETCH_DATA_BEGIN' });
 
     try {
-        let posts = []
-
         let data = []
 
         if (!from) {
@@ -582,7 +642,7 @@ export function* fetchData(action) {
               // Add top 3 from promo to tranding and 1 to hot, created
               args[0].limit = order == 'trending' ? 3 : 1
               const promo_posts = yield call([api, api[PUBLIC_API.promoted]], ...args);
-              posts = posts.concat(promo_posts)
+              data = promo_posts.concat(data)
             }
         }
 
@@ -630,13 +690,11 @@ export function* fetchData(action) {
             }
         }
 
-        data.forEach(post => {
-          posts.push(post)
-        })
+        yield tryDecryptContents(data)
 
         yield put(
             GlobalReducer.actions.receiveData({
-                data: posts,
+                data,
                 order,
                 category,
                 author,
@@ -787,5 +845,55 @@ export function* fetchUiaBalances({ payload: { account } }) {
         }
     } catch (err) {
         console.error('fetchUiaBalances', err)
+    }
+}
+
+export function* watchFetchNftTokens() {
+    yield takeLatest('global/FETCH_NFT_TOKENS', fetchNftTokens)
+}
+
+export function* fetchNftTokens({ payload: { account, start_token_id } }) {
+    try {
+        const limit = 10
+
+        const nft_tokens = yield call([api, api.getNftTokensAsync], {
+            owner: account,
+            state: 'not_selling_only',
+            start_token_id,
+            limit: limit + 1
+        })
+
+        let next_from
+        if (nft_tokens.length > limit) {
+            next_from = nft_tokens.pop().token_id
+        }
+
+        const syms = new Set()
+
+        let nft_assets
+
+        try {
+            for (const no of nft_tokens) {
+                no.image = parseNFTImage(no.json_metadata) || NFTImageStub()
+
+                const price = Asset(no.last_buy_price)
+                syms.add(price.symbol)
+            }
+
+            nft_assets = {}
+            if (syms.size) {
+                const assets = yield call([api, api.getAssets], '', [...syms])
+                for (const a of assets) {
+                    const supply = Asset(a.supply)
+                    nft_assets[supply.symbol] = a
+                }
+            }
+        } catch (err) {
+            console.error(err)
+        }
+
+        yield put(GlobalReducer.actions.receiveNftTokens({nft_tokens, start_token_id, next_from, nft_assets}))
+    } catch (err) {
+        console.error('fetchNftTokens', err)
     }
 }

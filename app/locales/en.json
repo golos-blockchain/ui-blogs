@@ -83,6 +83,7 @@
     "back": "Back",
     "more_list": "More",
     "back_to_top": "Back to top",
+    "balance": "balance",
     "balances": "Balances",
     "bid": "Bid",
     "blog": "Blog",
@@ -91,6 +92,7 @@
     "buy_VESTING_TOKEN": "Buy %(VESTING_TOKEN)s",
     "buy_or_sell": "Buy or Sell",
     "cancel": "Cancel",
+    "cancel2": "Cancel",
     "cancel_all": "Cancel All",
     "change_password": "Change Password",
     "clear": "Clear",
@@ -103,6 +105,7 @@
     "continue": "continue",
     "convert": "Convert",
     "convert_assets": "Exchange",
+    "create": "Create",
     "date": "Date",
     "decrypt": "Decrypt",
     "delete": "Delete",
@@ -119,6 +122,7 @@
     "follow": "Follow",
     "for": " for ",
     "from": " from ",
+    "gift": "Gift",
     "gp": "GP",
     "here": "здесь",
     "hide": "Hide",
@@ -151,6 +155,7 @@
     "nothing_yet": "Nothing yet",
     "ok": "Ok",
     "older": "Older",
+    "on_by": "by",
     "or": "or",
     "order_placed": "Order placed",
     "password": "Password",
@@ -159,6 +164,7 @@
     "invites": "Invite checks",
     "assets": "UIA assets",
     "help_wallet": "Wallet functions",
+    "per_month": "per month",
     "phone": "phone",
     "post": "Post",    
     "posting": "Posting key",
@@ -168,6 +174,7 @@
     "promoted_title": "promoted",
     "promoted_post": "This post was promoted for ",
     "for_followers": "for followers",
+    "for_sponsors": "for sponsors",
     "only_app": "in application",
     "preview": "Preview",
     "previous": "Previous",
@@ -377,6 +384,19 @@
     "responses": "responses",
     "popular": "popular"
   },
+  "sponsorslist_jsx": {
+    "payment": "Payment",
+    "payment_hint": "Next payment, will be claimed automatically",
+    "no_sponsors": "You are sponsored by nobody.",
+    "no_sponsors2": " is sponsored by nobody.",
+    "no_sponsoreds":  "You sponsoring nobody.",
+    "no_sponsoreds2": " sponsoring nobody.",
+    "expired": "Expired",
+    "expired_hint": "There was not enough tokens on your balance. Please replenish your ",
+    "expired_hint2": "Next click Prolong button. First payment will be claimed now, and next - every month automatically.",
+    "expired_update": "Paused - author updated the cost",
+    "cancel_confirm": "Do you really want to cancel a sponsorship? Already claimed money will not be returned to you."
+  },
   "submit_a_story": {
     "title": "Title",
     "editor": "editor",
@@ -498,7 +518,13 @@
       "zero":  "No posts",
       "one": "1 post",
       "other": "%(count)s posts"
-    }
+    },
+    "sponsor_count": {
+      "zero": "No sponsors",
+      "one": "1 sponsor",
+      "other": "%(count)s sponsors"
+    },
+    "account_frozen": "Account is temporarily deactivated."
   },
   "plurals": {
     "reply_count": {
@@ -674,7 +700,16 @@
     "sign_up": "sign up",
     "onlyapp": "This post is available only in GOLOS Blogs desktop application.",
     "install": "Install application",
-    "login_to_see_comment": "Log in to see this comment."
+    "login_to_see_comment": "Log in to see this comment.",
+    "for_sponsors": "This post is available only for sponsors of ",
+    "for_sponsors2": "Cost is ",
+    "for_sponsors3": " (TIP-balance)",
+    "for_sponsors4": " per month.",
+    "for_sponsors5": "First payment will be claimed now, and next - automatically every month.",
+    "become_sponsor": "Become sponsor",
+    "sponsorship_expired": "Your sponsorship is expired. Please prolong it, to read posts by ",
+    "prolong_sponsorship": "Prolong",
+    "login_to_become_sponsor": "Login to become sponsor."
   },
   "postsummary_jsx": {
     "resteemed": "Reposted",
@@ -686,11 +721,22 @@
     "display_preferences": "display preferences",
     "create_an_account": "create an account",
     "to_save_your_preferences": "to save your preferences",
-    "mute_in_new": "Hide in New"
+    "mute_in_new": "Hide in New",
+    "for_sponsors": "Post is available only for author sponsors.",
+    "wrong_format": "Wrong post format, not supported by Golos Blogs.",
+    "no_decrypt_key": "Cannot decipher post due to an error.",
+    "no_sub": "Unavailable. Author deleted sponsor subscription."
   },
   "confirmtransactionform_jsx": {
     "ok": "Ok",
     "confirm": "Confirm"
+  },
+  "gift_nft": {
+    "no_tokens": "You haven't any NFT-tokens yet. ",
+    "issue": "Issue",
+    "no_tokens2": " or ",
+    "buy": "buy",
+    "no_tokens3": " them."
   },
   "header_jsx": {
     "home": "home",
@@ -823,6 +869,23 @@
     "profile_location": "Location",
     "profile_website": "Website"
   },
+  "sponsors_jsx": {
+    "title": "Sponsor subscription",
+    "not_yet": "You have no sponsor subscription.",
+    "not_yet_NAME": "%(NAME)s has no sponsor subscription.",
+    "create_it": "Create it",
+    "to_be_able_to_create_paid_posts": " to publish posts, which can be read only by users who will regularly sponsor you.",
+    "tip_cost": "Pay TIP-balance tokens",
+    "cost": "Amount of monthly payment (TIP-balance):",
+    "no_tip_for": "Unavailable for ",
+    "cannot_edit_tip_cost": "Cannot edit tip cost.",
+    "fill_cost": "Please fill the amount.",
+    "are_you_sure": "Are you sure you want to remove subscription?",
+    "are_you_sure_COUNT": "You have %(COUNT)s sponsor(-s). All of them will be automatically unsubscribed. Are you sure?",
+    "your_sponsors": "Sponsors ",
+    "sponsored_authors": "Sponsored authors",
+    "created": "Created"
+  },
   "transfer_jsx": {
     "amount_is_in_form": "Amount is in the form 99999.999",
     "insufficient_funds": "Insufficient funds",
@@ -854,7 +917,8 @@
     "balance": "Balance",
     "private_key_in_memo": "Do not write your private keys in this field!",
     "verified_exchange_no_memo": "You must include a memo for your exchange transfer, according to exchanger's rules.",
-    "verified_exchange_liquid_only": "You may exchange tokens from GOLOS balance only."
+    "verified_exchange_liquid_only": "You may exchange tokens from GOLOS balance only.",
+    "gift_nft": "Gift NFT"
   },
   "user_saga_js": {
     "image_upload": {
@@ -900,9 +964,7 @@
     "payout_option_0_hint": "Without payout from the publication pool",
     "visible_option_all": "Everyone",
     "visible_option_onlyblog": "Followers only",
-    "visible_option_onlyapp": "Application only",
-    "visible_option_onlyapp_hint": "Golos Blogs desktop application only",
-    "onlyapp_cannot_be_removed": "You are yet published post. Cannot make it available on web UI",
+    "visible_option_onlysponsors": "Sponsors only",
     "tags_input_placeholder": "Add tags",
     "convert_to_md_warning": "Converting to Markdown may cause some changes and markup loses. Are you sure?",
     "convert_to_html_warning": "Converting to HTML may cause some changes and markup loses. Are you sure?",

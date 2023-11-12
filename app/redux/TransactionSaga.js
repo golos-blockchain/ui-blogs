@@ -50,6 +50,8 @@ const hook = {
     accepted_withdraw_vesting,
     accepted_donate,
     accepted_worker_request_vote,
+    accepted_paid_subscription_transfer,
+    accepted_nft_transfer,
 }
 
 function* encryptMemoIfNeed(memoStr, to) {
@@ -199,7 +201,7 @@ function* broadcastOperation(
         if (!keys || keys.length === 0) {
             payload.keys = []
             // user may already be logged in, or just enterend a signing passowrd or wif
-            const signingKey = yield call(findSigningKey, {opType: type, username, password})
+            const signingKey = yield call(findSigningKey, {opType: type, op, username, password})
             if (signingKey)
                 payload.keys.push(signingKey)
             else {
@@ -207,6 +209,7 @@ function* broadcastOperation(
                     const opInfo = broadcast._operations[type]
                     let authType = opInfo && opInfo.roles[0]
                     if (authType === 'posting') authType = ''
+                    if (type === 'paid_subscription_transfer' && !op.from_tip) authType = 'active'
                     yield put(user.actions.showLogin({
                       operation: {type, operation: op, trx, username, successCallback, errorCallback, saveLogin: true},
                       loginDefault: { username, authType }
@@ -342,6 +345,58 @@ function* accepted_worker_request_vote({operation}) {
     const { voter, author, permlink} = operation;
     console.log('Worker request vote accepted on ', author, '/', permlink, 'by', voter);
     yield call(getWorkerRequest, {author, permlink, voter})
+}
+
+function* accepted_paid_subscription_transfer({operation}) {
+    const { from, to, __prolong } = operation
+    if (!__prolong) return
+
+    console.log('Paid subscription prolongation accepted:', from, to);
+
+    const state = yield select(state => state.global)
+    const interval = state.getIn(['pso', 'interval'])
+
+    const updater = data => {
+        const idx = data.findIndex(i => i.get('subscriber') === from)
+        if (idx !== -1) {
+            data = data.update(idx, psro => {
+                psro = psro.set('active', true)
+                const np = new Date()
+                np.setSeconds(np.getSeconds() + interval)
+                psro = psro.set('next_payment', np.toISOString())
+                return psro
+            })
+        }
+        return data
+    }
+
+    yield put(g.actions.update({
+        key: ['sponsors', 'data'],
+        notSet: List(),
+        updater,
+    }))
+
+    yield put(g.actions.update({
+        key: ['sponsoreds', 'data'],
+        notSet: List(),
+        updater,
+    }))
+}
+
+function* accepted_nft_transfer({operation}) {
+    yield put(g.actions.update({
+        key: ['confetti_nft_active'],
+        updater: data => {
+            return true
+        },
+    }))
+    yield new Promise(resolve => setTimeout(resolve, 250))
+    yield put(g.actions.update({
+        key: ['confetti_nft_active'],
+        updater: data => {
+            return false
+        },
+    }))
 }
 
 function* accepted_withdraw_vesting({operation}) {

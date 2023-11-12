@@ -5,6 +5,7 @@ import { api } from 'golos-lib-js'
 import constants from './constants'
 import g from 'app/redux/GlobalReducer'
 import { isHighlight, getEvents } from 'app/utils/NotifyApiClient'
+import { tryDecryptContents, } from 'app/utils/sponsors'
 
 export function* sharedWatches() {
     yield fork(watchTransactionErrors)
@@ -40,6 +41,7 @@ function* showTransactionErrorNotification() {
 
 export function* getContent({author, permlink, resolve, reject}) {
     const content = yield call([api, api.getContentAsync], author, permlink, constants.DEFAULT_VOTE_LIMIT);
+    yield tryDecryptContents([content])
     yield put(g.actions.receiveContent({content}))
     if (resolve && content) {
         resolve(content);

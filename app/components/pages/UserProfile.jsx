@@ -14,6 +14,7 @@ import UserKeys from 'app/components/elements/UserKeys';
 import Settings from 'app/components/modules/Settings';
 import ReputationHistory from 'app/components/modules/ReputationHistory'
 import Mentions from 'app/components/modules/Mentions'
+import Sponsors from 'app/components/modules/Sponsors'
 import UserList from 'app/components/elements/UserList';
 import Follow from 'app/components/elements/Follow';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
@@ -392,6 +393,11 @@ export default class UserProfile extends React.Component {
                     { isMyAccount && <div><MarkNotificationRead fields='mention' account={account.name} /></div> }
                 </div>
             );
+        } else if (section === 'sponsors') {
+            tab_content = <div>
+                <Sponsors account={account} current_user={current_user} />
+                <MarkNotificationRead fields='new_sponsor,sponsor_inactive' account={account.name} />
+            </div>
         }
 
         tab_content = <div className='row'>
@@ -437,7 +443,7 @@ export default class UserProfile extends React.Component {
                     <div className='UserProfile__filler' />
                     <div>
                         <a href={walletUrl(`/@${accountname}/transfers`)} target={walletTarget()} className={`${walletClass} UserProfile__menu-item`}>
-                            {tt('g.wallet')} {isMyAccount && <NotifiCounter fields='send,receive,fill_order' />}
+                            {tt('g.wallet')} {isMyAccount && <NotifiCounter fields='send,receive,fill_order,nft_receive' />}
                         </a>
                         <LinkWithDropdown
                             closeOnClickOutside
@@ -505,6 +511,9 @@ export default class UserProfile extends React.Component {
                                 <span><Link to={`/@${accountname}/followers`}>{tt('user_profile.follower_count', {count: followerCount})}</Link></span>
                                 <span><Link to={`/@${accountname}`}>{tt('user_profile.post_count', {count: account.post_count || 0})}</Link></span>
                                 <span><Link to={`/@${accountname}/followed`}>{tt('user_profile.followed_count', {count: followingCount})}</Link></span>
+                                <span className='sponsors_notify'><Link to={`/@${accountname}/sponsors`}>{tt('user_profile.sponsor_count', {count: account.sponsor_count || 0})}
+                                    {isMyAccount && <NotifiCounter fields='new_sponsor,sponsor_inactive' />}
+                                </Link></span>
                             </div>
                             <p className='UserProfile__info'>
                                 {location && <span><Icon name='location' /> {location}</span>}

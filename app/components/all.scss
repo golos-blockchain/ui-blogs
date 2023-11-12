@@ -39,7 +39,7 @@
 @import "./elements/VerticalMenu";
 @import "./elements/VotesAndComments";
 @import "./elements/Voting";
-@import "./elements/app/AppReminder";
+@import "./elements/NewsPopups";
 @import "./elements/common/YoutubePlayer/YoutubePlayer";
 @import "./elements/common/TelegramPlayer/TelegramPlayer";
 @import "./elements/common/Button/index";
@@ -50,6 +50,7 @@
 @import "./elements/common/DialogManager/index";
 @import "./elements/common/TooltipManager/index";
 @import "./elements/market/CMCWidget";
+@import "./elements/nft/NFTSmallIcon";
 @import "./elements/donate/Donate";
 @import "./elements/postEditor/MarkdownEditor/MarkdownEditor";
 @import "./elements/postEditor/MarkdownEditorToolbar/index";
@@ -68,11 +69,14 @@
 @import "./modules/BottomPanel";
 @import "./modules/ChangeAccount";
 @import "./modules/Footer";
+@import "./modules/GiftNFT";
 @import "./modules/Header";
 @import "./modules/LoginForm";
 @import "./modules/Settings";
 @import "./modules/SidePanel";
 @import "./modules/SignUp";
+@import "./modules/SponsorList";
+@import "./modules/SponsorSubscription";
 @import "./modules/BottomPanel";
 @import "./modules/TopRightMenu";
 @import "./modules/Modals";

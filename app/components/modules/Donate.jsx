@@ -110,6 +110,13 @@ class Donate extends React.Component {
         })
     }
 
+    showGiftNft = (e) => {
+        e.preventDefault()
+        const { opts, } = this.props
+        const { to, permlink, is_comment } = opts
+        this.props.showGiftNft(to, permlink, is_comment)
+    }
+
     render() {
         const { currentUser, currentAccount, opts, uias, sliderMax } = this.props
         const { sym } = opts
@@ -189,6 +196,9 @@ class Donate extends React.Component {
                 <button type='submit' disabled={disabled} className='button'>
                     {tt('g.donate_support')}
                 </button>
+                <button className='button hollow' onClick={this.showGiftNft}>
+                    {tt('transfer_jsx.gift_nft')}
+                </button>
             </span>}
 
             <FormikAgent opts={opts} setFieldValue={setFieldValue}
@@ -260,6 +270,10 @@ export default connect(
         },
         setDonateDefaults: (donateDefaults) => {
             dispatch(user.actions.setDonateDefaults(donateDefaults))
+        },
+        showGiftNft: (author, permlink, is_comment) => {
+            dispatch(user.actions.setGiftNftDefaults({ author, permlink, is_comment }))
+            dispatch(user.actions.showGiftNft())
         },
         dispatchSubmit: async ({
             to, amount, memo, isMemoEncrypted,
