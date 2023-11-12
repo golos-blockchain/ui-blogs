@@ -219,12 +219,13 @@ function* broadcastOperation(
             }
         }
         yield call(broadcastPayload, {payload})
-        let eventType = type.replace(/^([a-z])/, g => g.toUpperCase()).replace(/_([a-z])/g, g => g[1].toUpperCase());
-        if (eventType === 'Comment' && !op.parent_author) eventType = 'Post';
-        const page = eventType === 'Vote' ? `@${op.author}/${op.permlink}` : '';
-        serverApiRecordEvent(eventType, page);
     } catch(error) {
         console.error('TransactionSaga', error)
+        try {
+            serverApiRecordEvent('node_error/tx', JSON.stringify(operations) + '        |||        ' + error.toString())
+        } catch (err2) {
+            console.error('Cannot record tx error event:', err2)
+        }
         if(errorCallback) errorCallback(error.toString())
     }
 }
@@ -296,6 +297,12 @@ function* broadcastPayload({payload: {operations, keys, username, hideErrors, su
     } catch (error) {
         console.error('TransactionSaga\tbroadcast', error)
         // status: error
+
+        try {
+            serverApiRecordEvent('node_error/tx_broadcast', JSON.stringify(operations) + '        |||        ' + error.toString())
+        } catch (err2) {
+            console.error('Cannot record tx broadcast error event:', err2)
+        }
 
         yield put(tr.actions.error({operations, error, hideErrors, errorCallback}))
 

@@ -142,8 +142,6 @@ export default function transactionErrorReducer(
                 errorKey = errorStr = tt('chain_errors.only_vote_once_every');
             } else if (errorKey.includes('Missing Active Authority')) {
                 errorKey = errorStr = tt('chain_errors.missing_active_authority');
-            } else if (errorKey.includes('')) {
-                errorKey = errorStr = tt('g.invalid_amount');
             } else if (
                 errorKey.includes(
                     'Voting weight is too small, please accumulate more voting power or Golos Power'

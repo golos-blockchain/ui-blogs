@@ -11,7 +11,6 @@ import { repLog10, parsePayoutAmount } from 'app/utils/ParsersAndFormatters';
 import extractContent from 'app/utils/ExtractContent';
 import { immutableAccessor, objAccessor } from 'app/utils/Accessors';
 import { isPostVisited, visitPost } from 'app/utils/helpers';
-import { serverApiRecordEvent } from 'app/utils/ServerApiClient';
 import Icon from 'app/components/elements/Icon';
 import TimeVersions from 'app/components/elements/TimeVersions';
 import Voting from 'app/components/elements/Voting';
