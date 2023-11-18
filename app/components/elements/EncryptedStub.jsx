@@ -16,7 +16,7 @@ class EncryptedStub extends React.Component {
             {title}
             <LinkEx to={'/@' + author}>
                 {'@' + author}
-            </LinkEx>{'. '}
+            </LinkEx>
         </div>
     }
 
@@ -24,10 +24,10 @@ class EncryptedStub extends React.Component {
         if (!sub) return null
         sub = sub.toJS()
         return <div>
-            {tt('poststub.for_sponsors2')}
+            <br />{tt('poststub.for_sponsors2')}
             <b>{Asset(sub.cost).floatString}</b>
             {sub.tip_cost ? tt('poststub.for_sponsors3') : null}
-            {tt('poststub.for_sponsors4')}{' '}
+            {tt('poststub.for_sponsors4')}{' '}<br />
             {tt('poststub.for_sponsors5')}{' '}
         </div>
     }
