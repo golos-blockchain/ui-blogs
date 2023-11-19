@@ -40,6 +40,8 @@ export default {
             cb(null, [require('@pages/TagsIndex')]);
         } else if (route.page === 'MinusedAccounts') {
             cb(null, [require('@pages/MinusedAccounts')]);
+        } else if (route.page === 'Referrers') {
+            cb(null, [require('@pages/Referrers')])
         } else if (route.page === 'AppGotoURL') {
             cb(null, [require('@pages/app/AppGotoURL')]);
         } else if (route.page === 'AppSplash') {
