@@ -8,6 +8,7 @@ import {loadFollows, fetchFollowCount} from 'app/redux/FollowSaga';
 import { getBlockings, listBlockings } from 'app/redux/BlockingSaga'
 import { contentPrefs as prefs } from 'app/utils/Allowance'
 import { applyEventHighlight, getContent } from 'app/redux/SagaShared'
+import user from 'app/redux/User'
 import GlobalReducer from './GlobalReducer';
 import constants from './constants';
 import session from 'app/utils/session'
@@ -30,6 +31,8 @@ export function* fetchDataWatches () {
     yield fork(watchFetchVestingDelegations);
     yield fork(watchFetchUiaBalances);
     yield fork(watchFetchNftTokens)
+    yield fork(watchFetchReferrals)
+    yield fork(watchFetchReferrers)
 }
 
 export function* watchGetContent() {
@@ -283,6 +286,11 @@ export function* fetchState(location_change_action) {
                         }
                     break
 
+                    case 'referrals':
+                        state.referrals = { data: [] }
+                        state.props = yield call([api, api.getDynamicGlobalProperties])
+                    break
+
                     case 'blog':
                     default:
                         const blogEntries = yield call([api, api.getBlogEntriesAsync], uname, 0, 20, ['fm-'], {})
@@ -443,6 +451,9 @@ export function* fetchState(location_change_action) {
                     state.minused_accounts.push(operation);
                 }
             });
+        } else if (parts[0] === 'referrers') {
+            state.referrers = { data: [] }
+            state.props = yield call([api, api.getDynamicGlobalProperties])
         } else if (Object.keys(PUBLIC_API).includes(parts[0])) {
 
             yield call(fetchData, {payload: { order: parts[0], category : tag }})
@@ -895,5 +906,63 @@ export function* fetchNftTokens({ payload: { account, start_token_id } }) {
         yield put(GlobalReducer.actions.receiveNftTokens({nft_tokens, start_token_id, next_from, nft_assets}))
     } catch (err) {
         console.error('fetchNftTokens', err)
+    }
+}
+
+export function* watchFetchReferrals() {
+    yield takeLatest('global/FETCH_REFERRALS', fetchReferrals)
+}
+
+export function* fetchReferrals({ payload: { referrer, start_name, sort } }) {
+    try {
+        const limit = 20
+
+        const referrals = yield call([api, api.getReferralsAsync], {
+            referrer,
+            start_name,
+            limit: limit + 1,
+            sort: sort || 'by_joined',
+        })
+
+        const usernames = new Set()
+        for (const referral of referrals) {
+            usernames.add(referral.account)
+        }
+
+        yield put(user.actions.getAccount({ usernames: [...usernames], }))
+
+        let next_start_name
+        if (referrals.length > limit) {
+            next_start_name = referrals.pop().account
+        }
+
+        yield put(GlobalReducer.actions.receiveReferrals({ referrals, start_name, next_start_name }))
+    } catch (err) {
+        console.error('fetchReferrals', err)
+    }
+}
+
+export function* watchFetchReferrers() {
+    yield takeLatest('global/FETCH_REFERRERS', fetchReferrers)
+}
+
+export function* fetchReferrers({ payload: { start_name, sort } }) {
+    try {
+        const limit = 20
+
+        const referrers = yield call([api, api.getReferrersAsync], {
+            start_name,
+            limit: limit + 1,
+            sort: sort || 'by_referral_count',
+        })
+
+        let next_start_name
+        if (referrers.length > limit) {
+            next_start_name = referrers.pop().account
+        }
+
+        yield put(GlobalReducer.actions.receiveReferrers({ referrers, start_name, next_start_name }))
+    } catch (err) {
+        console.error('fetchReferrers', err)
     }
 }

@@ -72,6 +72,12 @@ export default createModule({
                     res = res.delete('pso')
                 }
                 res = res.setIn(['sponsoreds', 'data'], List())
+                if (!payload.has('referrals')) {
+                    res = res.delete('referrals')
+                }
+                if (!payload.has('referrers')) {
+                    res = res.delete('referrers')
+                }
                 if (res.has('nft_tokens'))
                     res = res.delete('nft_tokens')
                 res = res.mergeDeep(payload);
@@ -232,6 +238,64 @@ export default createModule({
                 }
                 if (nft_assets)
                     new_state = upsertNftAssets(new_state, nft_assets, start_token_id)
+                return new_state
+            },
+        },
+        {
+            action: 'FETCH_REFERRALS',
+            reducer: state => state,
+        },
+        {
+            action: 'RECEIVE_REFERRALS',
+            reducer: (state, { payload: { referrals, start_name, next_start_name } }) => {
+                let new_state = state
+                if (!start_name) {
+                    new_state = new_state.set('referrals', fromJS({
+                        data: referrals,
+                        next_start_name,
+                        loaded: true,
+                    }))
+                } else {
+                    new_state = new_state.update('referrals', refs => {
+                        refs = refs.update('data', data => {
+                            for (const referral of referrals) {
+                                data = data.push(fromJS(referral))
+                            }
+                            return data
+                        })
+                        refs = refs.set('next_start_name', next_start_name)
+                        return refs
+                    })
+                }
+                return new_state
+            },
+        },
+        {
+            action: 'FETCH_REFERRERS',
+            reducer: state => state,
+        },
+        {
+            action: 'RECEIVE_REFERRERS',
+            reducer: (state, { payload: { referrers, start_name, next_start_name } }) => {
+                let new_state = state
+                if (!start_name) {
+                    new_state = new_state.set('referrers', fromJS({
+                        data: referrers,
+                        next_start_name,
+                        loaded: true,
+                    }))
+                } else {
+                    new_state = new_state.update('referrers', refs => {
+                        refs = refs.update('data', data => {
+                            for (const referrer of referrers) {
+                                data = data.push(fromJS(referrer))
+                            }
+                            return data
+                        })
+                        refs = refs.set('next_start_name', next_start_name)
+                        return refs
+                    })
+                }
                 return new_state
             },
         },
