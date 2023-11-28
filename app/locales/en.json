@@ -882,6 +882,7 @@
     "fill_cost": "Please fill the amount.",
     "are_you_sure": "Are you sure you want to remove subscription?",
     "are_you_sure_COUNT": "You have %(COUNT)s sponsor(-s). All of them will be automatically unsubscribed. Are you sure?",
+    "are_you_sure_update": "Sponsorship will be stopped for all sponsors, and will be continued only after payment with new price. Are you sure?",
     "your_sponsors": "Sponsors ",
     "sponsored_authors": "Sponsored authors",
     "created": "Created"

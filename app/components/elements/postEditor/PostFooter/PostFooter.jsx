@@ -104,10 +104,11 @@ export default class PostFooter extends PureComponent {
         this._popupVisible = el
     }
 
-    _renderVisibleOptions = () => {
+    _renderVisibleOptions = (postDisabled) => {
         const onClick = (e) => {
             e.preventDefault()
-            this.props.onPost(parseInt(e.target.parentNode.dataset.value))
+            if (!postDisabled)
+                this.props.onPost(parseInt(e.target.parentNode.dataset.value))
         }
 
         const visibleItems = [
@@ -206,7 +207,7 @@ export default class PostFooter extends PureComponent {
                     <Hint key="2" error align="right">
                         {temporaryErrorText}
                     </Hint>
-                ) : showVisibleOptions ? this._renderVisibleOptions() : null}
+                ) : showVisibleOptions ? this._renderVisibleOptions(postDisabled) : null}
                 <Button
                     primary
                     disabled={postDisabled}
