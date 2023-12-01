@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
-import { markNotificationRead } from 'app/utils/NotifyApiClient';
+import { markNotificationReadWs } from 'app/utils/NotifyApiClient';
 
 class MarkNotificationRead extends React.Component {
 
@@ -20,7 +20,7 @@ class MarkNotificationRead extends React.Component {
         if (!this.interval) {
             const { account, update } = this.props;
             this.interval = setInterval(() => {
-                markNotificationRead(account, this.fields_array).then(nc => update(nc));
+                markNotificationReadWs(account, this.fields_array).then(nc => update(nc));
             }, interval);
         }
     }
@@ -31,7 +31,7 @@ class MarkNotificationRead extends React.Component {
         if (interval)
             this._activateInterval(interval);
         else
-            markNotificationRead(account, this.fields_array).then(nc => update(nc));
+            markNotificationReadWs(account, this.fields_array).then(nc => update(nc));
     }
 
     UNSAFE_componentWillReceiveProps(nextProps) {

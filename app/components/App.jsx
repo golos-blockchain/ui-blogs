@@ -27,6 +27,7 @@ import MiniHeader from '@modules/MiniHeader';
 import PageViewsCounter from '@elements/PageViewsCounter';
 import ChainFailure from 'app/components/elements/ChainFailure'
 import DialogManager from 'app/components/elements/common/DialogManager';
+import NotifyPolling from 'app/components/elements/NotifyPolling'
 import { init as initAnchorHelper } from 'app/utils/anchorHelper';
 import { authRegisterUrl, } from 'app/utils/AuthApiClient';
 import { APP_ICON, VEST_TICKER, } from 'app/client_config';
@@ -400,6 +401,7 @@ class App extends React.Component {
                 <PageViewsCounter hidden/>
                 <GlobalStyle />
                 {process.env.IS_APP ? <URLLoader /> : null}
+                <NotifyPolling />
             </div>
 
         );
