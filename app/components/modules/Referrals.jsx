@@ -24,6 +24,7 @@ class Referrals extends React.Component {
     }
 
     state = {
+        copied_addr: false,
     }
 
     componentDidMount() {
@@ -134,9 +135,9 @@ class Referrals extends React.Component {
                 <span style={{border: '1px solid lightgray', padding: '5px', borderRadius: '3px'}}>
                     <a target="_blank" href={refUrl}>{refUrl}</a>
                 </span>
-                <CopyToClipboard text={refUrl}>
+                <CopyToClipboard text={refUrl} onCopy={() => this.setState({copied_addr: true})}>
                     <span style={{cursor: 'pointer'}}>
-                        <Icon name="copy" size="2x" />
+                        <Icon name="copy" size="2x" /> {this.state.copied_addr ? <Icon name="copy_ok" /> : null}
                     </span>
                 </CopyToClipboard>
                 <span className='float-right'>&nbsp;&nbsp;</span>

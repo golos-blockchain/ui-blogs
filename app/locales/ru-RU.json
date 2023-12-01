@@ -1242,7 +1242,7 @@
     "to_save_click_button": "Чтобы сохранить настройки, нажмите кнопку \"Сохранить и перезапустить\" внизу окна."
   },
   "app_update": {
-    "notify_VERSION": "Доступна новая версия GOLOS Блогов - %(VERSION)s",
+    "notify_VERSION": "Доступна новая версия Golos Desktop - %(VERSION)s",
     "download": "Скачать"
   }
 }
