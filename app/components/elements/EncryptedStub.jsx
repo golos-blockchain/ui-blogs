@@ -56,10 +56,6 @@ class EncryptedStub extends React.Component {
             })
         }
 
-        if (this.state.submitting) {
-            return <LoadingIndicator type='circle' />
-        }
-
         const { err } = this.state
 
         return <div>
@@ -78,7 +74,12 @@ class EncryptedStub extends React.Component {
 
         const author = dis.get('author')
 
-        if (encrypted === EncryptedStates.no_sponsor) {
+        if (encrypted === EncryptedStates.no_auth) {
+            return (<div>
+                {this._renderAuthor(tt('poststub.for_sponsors'), author)}
+                {tt('poststub.login_to_become_sponsor')}
+            </div>)
+        } else if (encrypted === EncryptedStates.no_sponsor) {
             const sub = dis.get('encrypted_sub')
 
             if (!username) {
