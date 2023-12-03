@@ -739,7 +739,9 @@
     "become_sponsor": "Become sponsor",
     "sponsorship_expired": "Your sponsorship is expired. Please prolong it, to read posts by ",
     "prolong_sponsorship": "Prolong",
-    "login_to_become_sponsor": "Login to become sponsor."
+    "login_to_become_sponsor": "Login to become sponsor.",
+    "donate": "Donate",
+    "you_can_decrypt_just_this_post": "You can decrypt only this post by sending a donate with "
   },
   "postsummary_jsx": {
     "resteemed": "Reposted",
@@ -984,6 +986,8 @@
     "preview_mode": "Preview mode",
     "edit_mode": "Go back to edit mode",
     "payout_hint": "Payout method",
+    "lock_hint": "Make post paid",
+    "lock_hint2": "Paid for access - ",
     "nsfw_hint": "Mark for not safe for children",
     "onlyblog_hint": "Display only in the blog",
     "title_placeholder": "Enter the title",

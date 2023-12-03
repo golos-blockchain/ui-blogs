@@ -652,7 +652,9 @@
     "become_sponsor": "Стать спонсором",
     "sponsorship_expired": "Ваше спонсорство истекло. Продлите его, чтобы читать посты ",
     "prolong_sponsorship": "Продлить",
-    "login_to_become_sponsor": "Войдите, чтобы стать спонсором."
+    "login_to_become_sponsor": "Войдите, чтобы стать спонсором.",
+    "donate": "Отправить",
+    "you_can_decrypt_just_this_post": "Можно разблокировать только этот пост, отправив автору донат на сумму "
   },
   "postsummary_jsx": {
     "resteemed": "Репост",
@@ -1049,6 +1051,8 @@
     "preview_mode": "Режим предпросмотра",
     "edit_mode": "Вернуться в режим редактирования",
     "payout_hint": "Режим выплат",
+    "lock_hint": "Сделать пост платным",
+    "lock_hint2": "Плата за доступ - ",
     "nsfw_hint": "Отметка о контенте 18+",
     "onlyblog_hint": "Видно только подписчикам",
     "title_placeholder": "Введите заголовок",
