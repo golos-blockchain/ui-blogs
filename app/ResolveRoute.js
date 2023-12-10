@@ -1,9 +1,9 @@
 export const routeRegex = {
     PostsIndex: /^\/(@[\w\.\d-]+)\/feed\/?$/,
     UserProfile1: /^\/(@[\w\.\d-]+)\/?$/,
-    UserProfile2: /^\/(@[\w\.\d-]+)\/(blog|posts|comments|reputation|mentions|created|recent-replies|discussions|feed|followed|followers|sponsors|settings)\/??(?:&?[^=&]*=[^=&]*)*$/,
+    UserProfile2: /^\/(@[\w\.\d-]+)\/(blog|posts|comments|reputation|mentions|created|recent-replies|discussions|feed|followed|followers|sponsors|referrals|settings)\/??(?:&?[^=&]*=[^=&]*)*$/,
     UserProfile3: /^\/(@[\w\.\d-]+)\/[\w\.\d-]+/,
-    UserEndPoints: /^(blog|posts|comments|reputation|mentions|created|recent-replies|discussions|feed|followed|followers|sponsors|settings)$/,
+    UserEndPoints: /^(blog|posts|comments|reputation|mentions|created|recent-replies|discussions|feed|followed|followers|sponsors|referrals|settings)$/,
     CategoryFilters: /^\/(hot|responses|donates|forums|trending|promoted|allposts|allcomments|created|active)\/?$/ig,
     PostNoCategory: /^\/(@[\w\.\d-]+)\/([\w\d-]+)/,
     Post: /^\/([\w\d\-\/]+)\/(\@[\w\d\.-]+)\/([\w\d-]+)\/?($|\?)/,
@@ -43,6 +43,9 @@ export default function resolveRoute(path)
     }
     if (path === '/minused_accounts') {
         return {page: 'MinusedAccounts'};
+    }
+    if (path === '/referrers') {
+        return {page: 'Referrers'};
     }
     if (process.env.IS_APP) {
         if (path === '/__app_goto_url') {

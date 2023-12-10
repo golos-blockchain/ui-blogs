@@ -113,6 +113,8 @@ class Header extends React.Component {
             page_title = tt('header_jsx.change_account_password');
         } else if (route.page === 'MinusedAccounts') {
             page_title = tt('minused_accounts_jsx.title');
+        } else if (route.page === 'Referrers') {
+            page_title = tt('referrers_jsx.title');
         } else if (route.page === 'UserProfile') {
             user_name = route.params[0].slice(1);
             const acct_meta = this.props.account_meta.getIn([user_name]);
@@ -124,6 +126,12 @@ class Header extends React.Component {
             }
             if(route.params[1] === "followed"){
                 page_title = tt('header_jsx.people_followed_by') + " " + user_title;
+            }
+            if (route.params[1] === "sponsors"){
+                page_title = tt('sponsors_jsx.your_sponsors') + " " + user_title
+            }
+            if (route.params[1] === "referrals"){
+                page_title = tt('referrals_jsx.title') + " " + user_title
             }
             if(route.params[1] === "curation-rewards"){
                 page_title = tt('header_jsx.curation_rewards_by') + " " + user_title;

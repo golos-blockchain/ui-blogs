@@ -4,7 +4,7 @@
     "type": "git",
     "url": "https://github.com/golos-blockchain/ui-blogs.git"
   },
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Golos Blogs — децентрализованная платформа блогов, работающая на блокчейне Golos.",
   "main": "dist/electron/electron.js",
   "scripts": {
@@ -51,7 +51,7 @@
     "foundation-sites": "^6.4.3",
     "fs-extra": "^10.0.1",
     "git-rev-sync": "^3.0.2",
-    "golos-lib-js": "^0.9.56",
+    "golos-lib-js": "^0.9.61",
     "history": "^2.0.0-rc2",
     "immutable": "^3.8.2",
     "intl": "^1.2.5",
@@ -89,6 +89,7 @@
     "react": "^18.2.0",
     "react-addons-pure-render-mixin": "^15.6.3",
     "react-cookie": "1.0.4",
+    "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^18.2.0",
     "react-dom-confetti": "^0.1.3",
     "react-dropzone": "^4.2.12",

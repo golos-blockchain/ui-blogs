@@ -384,6 +384,31 @@
     "responses": "responses",
     "popular": "popular"
   },
+  "referrals_jsx": {
+    "title": "Referrals",
+    "joined": "Registration",
+    "last": "Last activity",
+    "vs": "Golos Power",
+    "posts": "Post count",
+    "rewards": "Rewards and donates for referrer",
+    "donates_uia": "Donates in UIA",
+    "desc": "During the year, 10%% of rewards of users (registered by your referral link or invite codes) will be arrive to your TIP-balance (donates) and Golos Power (author rewards).",
+    "name": "Name",
+    "inactive": "Referral ended",
+    "end_date": "Referral witl be end ",
+    "by_joined": "By joined",
+    "by_rewards": "By rewards"
+  },
+  "referrers_jsx": {
+    "button": "View top referrers",
+    "title": "Top referrers",
+    "referral_count": "Referral count",
+    "post_count": "Post count (by referrals)",
+    "vs": "Golos Power of referrals",
+    "by_referral_count": "By referral count",
+    "by_referral_vesting": "By referral Golos Power",
+    "by_referral_post_count": "By referral post count"
+  },
   "sponsorslist_jsx": {
     "payment": "Payment",
     "payment_hint": "Next payment, will be claimed automatically",
@@ -523,6 +548,11 @@
       "zero": "No sponsors",
       "one": "1 sponsor",
       "other": "%(count)s sponsors"
+    },
+    "referral_count": {
+      "zero": "No referrals",
+      "one": "1 referral",
+      "other": "%(count)s referrals"
     },
     "account_frozen": "Account is temporarily deactivated."
   },
@@ -1141,11 +1171,11 @@
     "wallet_service": "Wallet",
     "save_and_restart": "Save and restart",
     "cancel": "Cancel",
-    "node_error_NODE": "Не удалось подключиться к ноде %(NODE)s. Возможно, это проблемы с интернетом. Или попробуйте задать другую ноду GOLOS в меню Настройки.",
+    "node_error_NODE": "Failed to connect to node %(NODE)s. Perhaps it's a problem with the Internet. Or try setting another GOLOS node in the Settings menu.",
     "to_save_click_button": "To save settings, click \"Save and restart\" button at bottom of the window."
   },
   "app_update": {
-    "notify_VERSION": "Доступна новая версия GOLOS Блогов - %(VERSION)s",
+    "notify_VERSION": "New version is available Golos Desktop - %(VERSION)s",
     "download": "Download"
   }
 }

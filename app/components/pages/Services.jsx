@@ -74,6 +74,9 @@ class Services extends React.Component {
                                 <h4><a target="_blank" href="/@one-armed"><Icon name="new/monitor" /> однорукий бандит</a></h4>
                                 {tt('services.developer')} <a href="/@jackvote">@jackvote</a>
                                 <p>Классическая слот-машина "однорукий бандит" с тремя барабанами... <a href="/@one-armed/slot-mashina-tri-kita">{tt('g.more_hint')}</a> <Icon name="extlink" /></p>
+                                <h4><a target="_blank" href="/@golos.lotto"><Icon name="new/monitor" /> лото голос</a></h4>
+                                {tt('services.developer')} <a href="/@m0ssa99">@m0ssa99</a>
+                                <p>Голос Лото, ставки, билеты, джекпоты... <a href="/@m0ssa99/xe34shq4hfzffxx">{tt('g.more_hint')}</a> <Icon name="extlink" /></p>
                             </div>
                         </div>
                     </div>
