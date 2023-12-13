@@ -62,7 +62,9 @@ async function connectNotifyWs() {
             })
 
             notifyWs.addEventListener('message', (msg) => {
-                console.log('notifyWs message:', msg)
+                if (window._notifyDebug) {
+                    console.log('notifyWs message:', msg)
+                }
                 const data = JSON.parse(msg.data)
                 const id = data.id
                 const request = window.notifyWsReq.requests[id]
