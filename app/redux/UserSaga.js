@@ -318,7 +318,7 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
         let authorized = false;
         try {
             const res = yield authApiLogin(username, null);
-            if (!res.already_authorized) {
+            if (res.already_authorized !== username) {
                 console.log('login_challenge', res.login_challenge);
 
                 const challenge = {token: res.login_challenge};
