@@ -95,7 +95,11 @@ export default function transactionErrorReducer(
                 const err_lines = error.message.split('\n');
 
                 if (err_lines.length > 2) {
-                    errorKey = err_lines[1];
+                    if (error.message.includes('Title larger than size limit') && err_lines.length >= 4) {
+                        errorKey = err_lines[3]
+                    } else {
+                        errorKey = err_lines[1]
+                    }
                     const txt = errorKey.split(': ');
 
                     if (txt.length && txt[txt.length - 1].trim() !== '') {
@@ -126,6 +130,10 @@ export default function transactionErrorReducer(
                 errorKey.includes('You may only post once every 5 minutes')
             ) {
                 errorKey = errorStr = tt('chain_errors.only_post_once_every');
+            } else if (
+                errorKey.includes('Title larger than size limit')
+            ) {
+                errorKey = errorStr = tt('chain_errors.too_long_title')
             } else if (
                 errorKey.includes(
                     'Account exceeded maximum allowed bandwidth per vesting share'
