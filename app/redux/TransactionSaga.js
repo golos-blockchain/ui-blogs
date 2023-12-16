@@ -267,7 +267,7 @@ function* broadcastPayload({payload: {operations, keys, username, hideErrors, su
         yield new Promise((resolve, reject) => {
             broadcast.send({ extensions: [], operations }, keys, (err) => {
                 if(err) {
-                    console.error(err);
+                    console.error(err)
                     reject(err)
                 } else {
                     broadcastedEvent()
