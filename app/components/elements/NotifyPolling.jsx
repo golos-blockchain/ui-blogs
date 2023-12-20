@@ -43,7 +43,7 @@ class NotifyPolling extends React.Component {
 
                 break
             } catch (err) {
-                console.warn('counterSubscribeWs:', err, ', retry...')
+                console.warn('counterSubscribeWs:', err, username, ', retry...')
                 await delay(500)
             }
         }
