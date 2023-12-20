@@ -43,19 +43,30 @@ function saveSession(response) {
 }
 
 async function connectNotifyWs() {
-    if (!window.notifyWs) {
+    if (!window.notifyWs || window.notifyWs.readyState !== 1) {
         window.notifyWsReq = { id: 0, requests: {}, callbacks: {} }
+        if (window.notifyWs) {
+            window.notifyWs.close()
+        }
         await new Promise((resolve, reject) => {
             const notifyWs = new WebSocket($STM_Config.notify_service.host_ws)
             window.notifyWs = notifyWs
 
+            const timeout = setTimeout(() => {
+                if (notifyWs && !notifyWs.isOpen) {
+                    reject(new Error('Cannot connect Notify WS'))
+                }
+            }, 5000)
+
             notifyWs.addEventListener('open', () => {
                 notifyWs.isOpen = true
+                clearTimeout(timeout)
                 resolve()
             })
 
             notifyWs.addEventListener('сlose', () => {
                 if (!notifyWs.isOpen) {
+                    clearTimeout(timeout)
                     const err = new Error('notifyWs - cannot connect')
                     reject(err)
                 }
@@ -93,22 +104,28 @@ async function connectNotifyWs() {
 }
 
 async function notifyWsSend(api, args, callback = null, eventCallback = null) {
-    await connectNotifyWs()
-    const id = window.notifyWsReq.id++
-    let msg = {
-        api,
-        args,
-        id
+    try {
+        await connectNotifyWs()
+        const id = window.notifyWsReq.id++
+        let msg = {
+            api,
+            args,
+            id
+        }
+        msg = JSON.stringify(msg)
+        if (callback) {
+            window.notifyWsReq.requests[id] = { callback }
+        }
+        if (eventCallback) {
+            const { event, callback } = eventCallback
+            window.notifyWsReq.callbacks[event] = { callback }
+        }
+        window.notifyWs.send(msg)
+    } catch (err) {
+        if (callback) {
+            callback(err, null)
+        }
     }
-    msg = JSON.stringify(msg)
-    if (callback) {
-        window.notifyWsReq.requests[id] = { callback }
-    }
-    if (eventCallback) {
-        const { event, callback } = eventCallback
-        window.notifyWsReq.callbacks[event] = { callback }
-    }
-    window.notifyWs.send(msg)
 }
 
 export function notifyApiLogin(account, authSession) {
