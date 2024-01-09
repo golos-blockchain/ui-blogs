@@ -6,6 +6,7 @@ import Turndown from 'turndown';
 import cn from 'classnames';
 import tt from 'counterpart';
 import { api } from 'golos-lib-js'
+import { Asset } from 'golos-lib-js/lib/utils'
 
 import transaction from 'app/redux/Transaction';
 import HtmlReady, { getTags } from 'shared/HtmlReady';
@@ -96,6 +97,7 @@ class PostForm extends React.Component {
             postError: null,
             payoutType: PAYOUT_TYPES.PAY_100,
             curationPercent: DEFAULT_CURATION_PERCENT,
+            decryptFee: null,
             isPosting: false,
             uploadingCount: 0,
         };
@@ -149,6 +151,9 @@ class PostForm extends React.Component {
             state.tags = draft.tags;
             state.payoutType = draft.payoutType || PAYOUT_TYPES.PAY_50;
             state.curationPercent = draft.curationPercent || DEFAULT_CURATION_PERCENT;
+            if (draft.decryptFee) {
+                state.decryptFee = Asset(draft.decryptFee)
+            }
 
             if (state.editorId === EDITORS_TYPES.MARKDOWN_OLD) {
                 state.editorId = EDITORS_TYPES.MARKDOWN;
@@ -195,6 +200,7 @@ class PostForm extends React.Component {
 
         this.state.emptyBody = false;
         this.state.curationPercent = curationPercent;
+        this.state.decryptFee = editParams.decrypt_fee
 
         this.state.tags = tags;
     }
@@ -213,6 +219,7 @@ class PostForm extends React.Component {
             tags,
             payoutType,
             curationPercent,
+            decryptFee,
             isPreview,
             postError,
             uploadingCount,
@@ -288,6 +295,8 @@ class PostForm extends React.Component {
                             curationPercent={curationPercent}
                             onPayoutTypeChange={this._onPayoutTypeChange}
                             onCurationPercentChange={this._onCurationPercentChange}
+                            decryptFee={decryptFee}
+                            onDecryptFeeChange={this._onDecryptFeeChange}
                             postDisabled={
                                 Boolean(disallowPostCode) || isPosting
                             }
@@ -469,6 +478,10 @@ class PostForm extends React.Component {
         this.setState({ payoutType }, this._saveDraftLazy);
     };
 
+    _onDecryptFeeChange = fee => {
+        this.setState({ decryptFee: fee.clone() }, this._saveDraftLazy)
+    };
+
     _saveDraft = () => {
         const { editMode, editParams } = this.props;
         const {
@@ -479,6 +492,7 @@ class PostForm extends React.Component {
             tags,
             payoutType,
             curationPercent,
+            decryptFee,
         } = this.state;
 
         try {
@@ -498,6 +512,7 @@ class PostForm extends React.Component {
                 tags,
                 payoutType,
                 curationPercent,
+                decryptFee: decryptFee ? decryptFee.toString() : null
             };
 
             const json = JSON.stringify(save);
@@ -535,7 +550,7 @@ class PostForm extends React.Component {
         };
     }
 
-    _post = (visibleType) => {
+    _post = (visibleType, decryptFee) => {
         const { author, editMode } = this.props;
         const { title, tags, payoutType, curationPercent, editorId } = this.state;
         let error;
@@ -636,6 +651,8 @@ class PostForm extends React.Component {
             data.permlink = editParams.permlink;
             data.parent_permlink = editParams.parent_permlink;
             data.__config.originalBody = editParams.body;
+
+            data.__config.comment_options = {}
         } else {
             const commentOptions = {
                 curator_rewards_percent: curationPercent,
@@ -648,6 +665,10 @@ class PostForm extends React.Component {
             }
 
             data.__config.comment_options = commentOptions;
+        }
+
+        if (decryptFee) {
+            data.__config.comment_options.comment_decrypt_fee = decryptFee
         }
 
         this.setState({
@@ -799,7 +820,12 @@ export default connect(
     }),
     dispatch => ({
         async onPost(payload, editMode, visibleType, onSuccess, onError) {
-            if (visibleType === VISIBLE_TYPES.ONLY_SPONSORS) {
+            const onlySponsors = visibleType === VISIBLE_TYPES.ONLY_SPONSORS
+
+            const decryptFee = payload.__config.comment_options.comment_decrypt_fee
+            const hasDecryptFee = (decryptFee && decryptFee.amount > 0)
+
+            if (onlySponsors && !hasDecryptFee) {
                 let pso
                 try {
                     pso = await api.getPaidSubscriptionOptionsAsync({
@@ -815,7 +841,9 @@ export default connect(
                     window.location.href = '/@' + payload.author + '/sponsors'
                     return
                 }
+            }
 
+            if (onlySponsors || hasDecryptFee) {
                 try {
                     payload.body = await encryptPost(payload)
                 } catch (err) {

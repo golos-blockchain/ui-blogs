@@ -119,7 +119,7 @@ export async function tryDecryptContents(contents) {
     })
 
     const convertRes = (content, res) => {
-        const { body, err, sub, } = res
+        const { body, err, sub, decrypt_fee } = res
         if (body) {
             content.body = body
             content.encrypted = EncryptedStates.decrypted
@@ -135,8 +135,9 @@ export async function tryDecryptContents(contents) {
             content.encrypted = EncryptedStates.unknown
         }
         content.encrypted_sub = sub
+        content.encrypted_decrypt_fee = decrypt_fee
     }
-
+console.time('xxx')
     if (entries.length) {
         try {
             const { head_block_number, witness } = await golos.api.getDynamicGlobalPropertiesAsync()

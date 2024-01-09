@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { Link, browserHistory } from 'react-router'
 import {Map} from 'immutable'
 import tt from 'counterpart'
+import { Asset } from 'golos-lib-js/lib/utils'
 
 import { CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config'
 import Author from 'app/components/elements/Author'
@@ -274,7 +275,14 @@ class PostSummary extends React.Component {
         } else if (encrypted === EncryptedStates.unknown || encrypted === EncryptedStates.no_key) {
             encStub = tt('postsummary_jsx.no_decrypt_key')
         } else if (encrypted === EncryptedStates.no_sub) {
-            encStub = tt('postsummary_jsx.no_sub')
+            let decrypt_fee = content.get('decrypt_fee')
+            if (decrypt_fee) {
+                decrypt_fee = Asset(decrypt_fee)
+                if (decrypt_fee.amount > 0) {
+                    encStub = tt('postsummary_jsx.for_sponsors')
+                }
+            }
+            if (!encStub) encStub = tt('postsummary_jsx.no_sub')
         } else if (encrypted && encrypted !== EncryptedStates.decrypted) {
             encStub = tt('postsummary_jsx.for_sponsors')
         }

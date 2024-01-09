@@ -22,6 +22,7 @@ export default class PostFooter extends PureComponent {
         disabledHint: PropTypes.string,
         onPayoutTypeChange: PropTypes.func.isRequired,
         onCurationPercentChange: PropTypes.func.isRequired,
+        onDecryptFeeChange: PropTypes.func.isRequired,
         onTagsChange: PropTypes.func.isRequired,
         onPost: PropTypes.func.isRequired,
         onResetClick: PropTypes.func.isRequired,
@@ -71,7 +72,8 @@ export default class PostFooter extends PureComponent {
 
         const { editMode, postEncrypted } = this.props
         if (editMode) {
-            this.props.onPost(postEncrypted ? VISIBLE_TYPES.ONLY_SPONSORS : VISIBLE_TYPES.ALL)
+            this.props.onPost(postEncrypted ? VISIBLE_TYPES.ONLY_SPONSORS : VISIBLE_TYPES.ALL,
+                this.props.decryptFee)
             return
         }
 
@@ -105,15 +107,18 @@ export default class PostFooter extends PureComponent {
     }
 
     _renderVisibleOptions = (postDisabled) => {
+        const { decryptFee } = this.props
+
         const onClick = (e) => {
             e.preventDefault()
             if (!postDisabled)
-                this.props.onPost(parseInt(e.target.parentNode.dataset.value))
+                this.props.onPost(parseInt(e.target.parentNode.dataset.value),
+                    decryptFee)
         }
 
         const visibleItems = [
-            {link: '#', label: tt('post_editor.visible_option_all'), value: VISIBLE_TYPES.ALL, onClick },
-            {link: '#', label: tt('post_editor.visible_option_onlyblog'), value: VISIBLE_TYPES.ONLY_BLOG, onClick },
+            {disabled: decryptFee && decryptFee.amount > 0, link: '#', label: tt('post_editor.visible_option_all'), value: VISIBLE_TYPES.ALL, onClick },
+            {disabled: decryptFee && decryptFee.amount > 0, link: '#', label: tt('post_editor.visible_option_onlyblog'), value: VISIBLE_TYPES.ONLY_BLOG, onClick },
             {link: '#', label: tt('post_editor.visible_option_onlysponsors'), value: VISIBLE_TYPES.ONLY_SPONSORS, onClick },
         ]
 
@@ -175,6 +180,8 @@ export default class PostFooter extends PureComponent {
             editMode={editMode}
             onPayoutChange={this.props.onPayoutTypeChange}
             onCurationPercentChange={this.props.onCurationPercentChange}
+            decryptFee={this.props.decryptFee}
+            onDecryptFeeChange={this.props.onDecryptFeeChange}
         />)
 
         const buttons = (<div className="PostFooter__buttons" style={{ 'marginTop': isMobile ? '15px' : '0px' }}>
