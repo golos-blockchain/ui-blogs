@@ -4885,7 +4885,7 @@ formidable@^1.0.17:
 
 "formik@https://gitpkg.now.sh/golos-blockchain/formik/packages/formik?b697b6ef3f13c795bb862b35589fffde442ab465":
   version "2.2.9"
-  resolved "https://gitpkg.now.sh/golos-blockchain/formik/packages/formik?b697b6ef3f13c795bb862b35589fffde442ab465#1dfdbd4ea0331625cd063e826dbb86330fe9244c"
+  resolved "https://gitpkg.now.sh/golos-blockchain/formik/packages/formik?b697b6ef3f13c795bb862b35589fffde442ab465#a696d8404c7b8751188a426f347589fdc24f4ba7"
   dependencies:
     deepmerge "^2.1.1"
     hoist-non-react-statics "^3.3.0"
