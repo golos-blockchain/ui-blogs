@@ -5203,10 +5203,44 @@ globule@^1.0.0:
     lodash "^4.17.21"
     minimatch "~3.0.2"
 
+golos-dex-lib-js@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/golos-dex-lib-js/-/golos-dex-lib-js-1.0.2.tgz#e0fe5d29781da8d0830ccb6bcfa5386bc73a2c5d"
+  integrity sha512-wrTzbMdoXlarjFu15liuTdcZjHlPXbdGyMouvCVlMKVqcldUbvi5SMR5egtLBjMKZfmFnFxbFrv798ukGqqSUg==
+  dependencies:
+    golos-lib-js "^0.9.64"
+
 golos-lib-js@^0.9.64:
   version "0.9.64"
   resolved "https://registry.yarnpkg.com/golos-lib-js/-/golos-lib-js-0.9.64.tgz#a4b083e1734cee2ddef3f8ffaac32769028eeb4f"
   integrity sha512-kuBgnrngc/WCChZek4HjM01otQuRL+AXzT/DcGZSNjAIWUEF7wQqOqkYIVy4aiC5a5NM459KaHlPkfXRDfyvUw==
+  dependencies:
+    abort-controller "^3.0.0"
+    assert "^2.0.0"
+    bigi "^1.4.2"
+    browserify-aes "^1.0.6"
+    bs58 "^4.0.0"
+    buffer "^6.0.3"
+    bytebuffer "^5.0.1"
+    core-js "^3.17.3"
+    create-hash "^1.1.2"
+    create-hmac "^1.1.4"
+    cross-env "^5.0.0"
+    cross-fetch "^3.0.0"
+    debug "^2.6.8"
+    detect-node "^2.0.3"
+    ecurve "^1.0.5"
+    lodash "^4.17.21"
+    process "^0.11.10"
+    regenerator-runtime "^0.13.9"
+    secure-random "^1.1.1"
+    stream-browserify "^3.0.0"
+    ws "^8.2.3"
+
+golos-lib-js@^0.9.68:
+  version "0.9.68"
+  resolved "https://registry.yarnpkg.com/golos-lib-js/-/golos-lib-js-0.9.68.tgz#62f3c4a7755eacfbe6dc2f6ebc3111f2ff74e6dd"
+  integrity sha512-KoQMFHtINYdM0hhe9dKPpWXZLo3MkFXyRxY/zQq0kbBjAwJBU4P1WEMwmPS+MPujjizfvU6nerUOLI4Lj7ChFw==
   dependencies:
     abort-controller "^3.0.0"
     assert "^2.0.0"

@@ -1,10 +1,11 @@
 import React from 'react'
+import golos from 'golos-lib-js';
+import GolosDexApi from 'golos-dex-lib-js'
 
 import Icon from 'app/components/elements/Icon'
 import LoadingIndicator from 'app/components/elements/LoadingIndicator'
 import tt from 'counterpart'
 
-import { apidexGetPrices } from 'app/utils/ApidexApiClient'
 import { walletUrl } from 'app/utils/walletUtils'
 
 class CMCWidget extends React.Component {
@@ -27,7 +28,20 @@ class CMCWidget extends React.Component {
     }
 
     async componentDidMount() {
-        let res = await apidexGetPrices('GOLOS')
+        try {
+            new GolosDexApi(golos, {
+                host: $STM_Config.apidex_service.host
+            })
+        } catch (err) {
+            console.error('Cannot init GolosDexApi', err)
+            this.setState({
+                failed: true
+            })
+            return
+        }
+
+        const { dex } = golos.libs
+        let res = await dex.apidexGetPrices({ sym: 'GOLOS' })
         if (res.price_rub) {
             const price_change = this.getPriceChange(res)
             this.setState({
