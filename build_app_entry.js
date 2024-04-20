@@ -41,6 +41,7 @@ if (!cfg.url_domains.includes(cfg.site_domain)) {
 }
 copyKey('logo')
 copyKey('ws_connection_app')
+copyKey('ws_connection_exchange')
 copyKey('chain_id')
 copyKey('images')
 copyKey('wallet_service')
