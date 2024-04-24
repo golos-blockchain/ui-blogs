@@ -52,6 +52,7 @@ global.$STM_Config = {
     forums: config.get('forums'),
     blocked_users,
     blocked_posts,
+    authorization_required: config.has('authorization_required') && config.get('authorization_required'),
     ui_version: version || '1.0-unknown',
 };
 

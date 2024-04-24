@@ -34,6 +34,19 @@ export default createModule({
     initialState: defaultState,
     transformations: [
         {
+            action: 'REQUIRE_LOGIN',
+            reducer: (state, {payload}) => {
+                return state.merge({
+                    show_login_modal: true, 
+                    loginDefault: {
+                        unclosable: true,
+                        cancelIsRegister: true,
+                        blurring: true
+                    }
+                })
+            }
+        },
+        {
             action: 'SHOW_LOGIN',
             reducer: (state, {payload}) => {
                 // https://github.com/mboperator/redux-modules/issues/11
