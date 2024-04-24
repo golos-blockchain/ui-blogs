@@ -142,6 +142,9 @@ HTML {
     filter: none;
     -webkit-filter: none;
 }
+.blurring {
+  filter: blur(5px);
+}
 
 .App__announcement {
   .logo-icon {
@@ -194,4 +197,8 @@ HTML {
   .Feedback {
     display: none;
   }
+}
+
+.reveal-blurring {
+  backdrop-filter: blur(3px);
 }

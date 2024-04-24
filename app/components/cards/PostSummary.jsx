@@ -29,6 +29,7 @@ import { authRegisterUrl, } from 'app/utils/AuthApiClient'
 import { hideSummary } from 'app/utils/ContentAccess'
 import extractContent from 'app/utils/ExtractContent'
 import {authorNameAndRep} from 'app/utils/ComponentFormatters'
+import { randomString } from 'app/utils/helpers'
 import { addHighlight, unsubscribePost } from 'app/utils/NotifyApiClient'
 import { detransliterate } from 'app/utils/ParsersAndFormatters'
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl'
@@ -86,7 +87,8 @@ class PostSummary extends React.Component {
                state.revealNsfw !== this.state.revealNsfw ||
                props.visited !== this.props.visited ||
                props.gray !== this.props.gray ||
-               props.encrypted !== this.props.encrypted
+               props.encrypted !== this.props.encrypted ||
+               props.loginBlurring !== this.props.loginBlurring
     }
 
     componentDidUpdate(prevProps) {
@@ -150,7 +152,7 @@ class PostSummary extends React.Component {
         const {currentCategory, thumbSize, onClick} = this.props;
         const {post, content, pending_payout, total_payout, cashout_time, blockEye} = this.props;
         const {account} = this.props;
-        const {nsfwPref, username} = this.props
+        const {nsfwPref, username, loginBlurring} = this.props
         if (!content) return null;
 
         let reblogged_by;
@@ -223,6 +225,11 @@ class PostSummary extends React.Component {
         } else {
            title_link_url = p.link;
            comments_link = p.link + '#comments';
+        }
+
+        if (loginBlurring) {
+            title_text = randomString(title_text)
+            desc = randomString(desc)
         }
 
         if (title_link_url.includes('fm-') && $STM_Config.forums) {
@@ -362,6 +369,7 @@ class PostSummary extends React.Component {
         }
         const commentClasses = []
         if(gray) commentClasses.push('downvoted') // rephide
+        if (loginBlurring) commentClasses.push('blurring')
 
         total_search = total_search ? <span class="strike" style={{ fontSize: '1rem', paddingBottom: '1rem' }}>
                 {tt('g.and_more_search_posts_COUNT', { COUNT: total_search })}
@@ -442,9 +450,12 @@ export default connect(
             const stats = content.get('stats', Map()).toJS()
             gray = stats.gray
         }
+        const loginDefault = state.user.get('loginDefault')
+        const loginBlurring = loginDefault && loginDefault.get('blurring')
         return {
             post, content, gray, pending_payout, total_payout, event_count, encrypted,
-            username: state.user.getIn(['current', 'username']) || state.offchain.get('account')
+            username: state.user.getIn(['current', 'username']) || state.offchain.get('account'),
+            loginBlurring
         };
     },
 

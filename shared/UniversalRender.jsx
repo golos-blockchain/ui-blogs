@@ -11,7 +11,6 @@ import {
     match,
     applyRouterMiddleware
 } from 'react-router';
-import * as api from 'app/utils/APIWrapper'
 import { Provider } from 'react-redux';
 import RootRoute from 'app/RootRoute';
 import {createStore, applyMiddleware, compose} from 'redux';
@@ -19,6 +18,8 @@ import { browserHistory } from 'react-router';
 import { useScroll } from 'react-router-scroll';
 import createSagaMiddleware from 'redux-saga';
 import { syncHistoryWithStore } from 'react-router-redux';
+
+import * as api from 'app/utils/APIWrapper'
 import rootReducer from 'app/redux/RootReducer';
 import rootSaga from 'app/redux/RootSaga';
 import {component as NotFound} from 'app/components/pages/NotFound';
@@ -26,6 +27,7 @@ import extractMeta from 'app/utils/ExtractMeta';
 import Translator from 'app/Translator';
 import getState from 'app/utils/StateBuilder';
 import {routeRegex} from "app/ResolveRoute";
+import session from 'app/utils/session'
 import {contentStats} from 'app/utils/StateFunctions'
 import {APP_NAME, SEO_TITLE} from 'app/client_config';
 import constants from 'app/redux/constants';
@@ -80,6 +82,9 @@ export async function serverRender({
 
     if (process.env.BROWSER) {
         const store = createStore(rootReducer, initial_state, middleware);
+        if (!session.load().currentName && $STM_Config.authorization_required) {
+            store.dispatch({type: 'user/REQUIRE_LOGIN', payload: {}});
+        }
         // sagaMiddleware.run(PollDataSaga).done
         //     .then(() => console.log('PollDataSaga is finished'))
         //     .catch(err => console.log('PollDataSaga is finished with error', err));
@@ -116,7 +121,7 @@ export async function serverRender({
     }
 
     // below is only executed on the server
-    let serverStore, onchain;
+    let serverStore, onchain, noMeta;
     try {
         let url = location === '/' ? 'trending' : location;
         // Replace these URLs with /transfers for UserProfile to resolve data correctly
@@ -161,6 +166,10 @@ export async function serverRender({
 
         offchain.server_location = location;
         serverStore = createStore(rootReducer, { global: onchain, offchain});
+        if (!offchain.account && $STM_Config.authorization_required) {
+            noMeta = true
+            serverStore.dispatch({type: 'user/REQUIRE_LOGIN', payload: {}});
+        }
         serverStore.dispatch({type: '@@router/LOCATION_CHANGE', payload: {pathname: location}});
         // TODO: maybe use request to golosnotify to fetch counters?
         /*if (offchain.account) {
@@ -202,7 +211,7 @@ export async function serverRender({
                 </Translator>
             </Provider>
         );
-        meta = extractMeta(onchain, renderProps.params);
+        meta = noMeta ? [] : extractMeta(onchain, renderProps.params);
         status = 200;
     } catch (re) {
         console.error('Rendering error: ', re, re.stack);
@@ -221,6 +230,9 @@ export async function serverRender({
 
 export function clientRender(initialState) {
     const store = createStore(rootReducer, initialState, middleware);
+    if (!session.load().currentName && $STM_Config.authorization_required) {
+        store.dispatch({type: 'user/REQUIRE_LOGIN', payload: {}});
+    }
     sagaMiddleware.run(rootSaga)
 
     const history = syncHistoryWithStore(browserHistory, store);

@@ -1,3 +1,18 @@
+export function randomString(str) {
+    let res = ''
+    const abc = 'abcdefghijklmnopqrstuvwxz'
+    for (let i = 0; i < str.length; ++i) {
+        const c = str[i]
+        if (c === ' ') {
+            res += c
+            continue
+        }
+        const nc = abc[Math.floor(Math.random() * abc.length)]
+        res += nc
+    }
+    return res
+}
+
 export function encode(str) {
   let hash = 0, chr;
   if (str.length === 0) return hash;

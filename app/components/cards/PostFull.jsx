@@ -10,7 +10,7 @@ import transaction from 'app/redux/Transaction';
 import { repLog10, parsePayoutAmount } from 'app/utils/ParsersAndFormatters';
 import extractContent from 'app/utils/ExtractContent';
 import { immutableAccessor, objAccessor } from 'app/utils/Accessors';
-import { isPostVisited, visitPost } from 'app/utils/helpers';
+import { isPostVisited, visitPost, randomString } from 'app/utils/helpers';
 import Icon from 'app/components/elements/Icon';
 import TimeVersions from 'app/components/elements/TimeVersions';
 import Voting from 'app/components/elements/Voting';
@@ -129,7 +129,7 @@ class PostFull extends React.Component {
     }
 
     shouldComponentUpdate(props, state) {
-        const { cont, post, prevPosts, username, pso } = this.props;
+        const { cont, post, prevPosts, username, pso, loginBlurring } = this.props;
 
         return (
             cont !== props.cont ||
@@ -137,7 +137,8 @@ class PostFull extends React.Component {
             prevPosts.length !== props.prevPosts.length ||
             username !== props.username ||
             pso !== props.pso ||
-            this.state !== state
+            this.state !== state ||
+            props.loginBlurring !== loginBlurring
         );
     }
 
@@ -202,7 +203,7 @@ class PostFull extends React.Component {
     };
 
     render() {
-        const { username, post, cont } = this.props;
+        const { username, post, cont, loginBlurring } = this.props;
         const { showReply, showEdit } = this.state;
 
         const postContent = cont.get(post);
@@ -223,7 +224,7 @@ class PostFull extends React.Component {
             link = `/${category}${link}`;
         }
 
-        if (process.env.BROWSER && title) {
+        if (process.env.BROWSER && !loginBlurring && title) {
             document.title = title + ' | ' + SEO_TITLE;
         }
 
@@ -283,7 +284,7 @@ class PostFull extends React.Component {
 
         return (
             <article
-                className="PostFull hentry"
+                className={"PostFull hentry " + (loginBlurring ? 'blurring' : '')}
                 itemScope
                 itemType="http://schema.org/blogPost"
             >
@@ -362,7 +363,7 @@ class PostFull extends React.Component {
     }
 
     _renderContent(postContent, content, jsonMetadata, authorRepLog10) {
-        const { username, post, pso } = this.props;
+        const { username, post, pso, loginBlurring } = this.props;
         const { author, permlink, category } = content;
 
         const url = `/${category}/@${author}/${permlink}`;
@@ -399,15 +400,16 @@ class PostFull extends React.Component {
                 );
             }
 
+            const rt = loginBlurring ? randomString(content.root_title) : content.root_title
             postHeader = (
                 <div className="callout">
                     <h3 className="entry-title">
-                        {tt('g.re')}: {content.root_title}
+                        {tt('g.re')}: {rt}
                     </h3>
                     <h5>
                         {tt('g.you_are_viewing_a_single_comments_thread_from')}:
                     </h5>
-                    <p>{content.root_title}</p>
+                    <p>{rt}</p>
                     <ul>
                         <li>
                             <Link to={content.url}>
@@ -419,12 +421,15 @@ class PostFull extends React.Component {
                 </div>
             );
         } else {
+            const ct = loginBlurring ? randomString(content.title) : content.title
             postHeader = (
                 <h1 className="entry-title">
-                    {content.title}
+                    {ct}
                 </h1>
             );
         }
+
+        contentBody = loginBlurring ? randomString(contentBody) : contentBody
 
         const main = [
             <span key="content">
@@ -592,11 +597,15 @@ export default connect(
 
         const pso = state.global.get('pso')
 
+        const loginDefault = state.user.get('loginDefault')
+        const loginBlurring = loginDefault && loginDefault.get('blurring')
+
         return {
             ...props,
             username,
             prevPosts,
-            pso: pso ? pso.toJS() : null
+            pso: pso ? pso.toJS() : null,
+            loginBlurring
         }
     },
 
