@@ -33,6 +33,7 @@ import { authRegisterUrl, } from 'app/utils/AuthApiClient';
 import { APP_ICON, VEST_TICKER, } from 'app/client_config';
 import session from 'app/utils/session'
 import { loadGrayHideSettings } from 'app/utils/ContentAccess'
+import libInfo from 'app/JsLibHash.json'
 
 const GlobalStyle = createGlobalStyle`
     body {
@@ -109,6 +110,7 @@ class App extends React.Component {
     componentDidMount() {
         if (process.env.BROWSER) {
             console.log('ui-blogs version:', $STM_Config.ui_version);
+            console.log('golos-lib-js version:', libInfo.version, 'hash:', libInfo.hash)
         }
 
         const { nightmodeEnabled } = this.props;
