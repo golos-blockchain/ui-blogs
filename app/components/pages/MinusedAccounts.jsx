@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import golos from 'golos-lib-js';
 import tt from 'counterpart';
+
 import Icon from 'app/components/elements/Icon';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Tooltip from 'app/components/elements/Tooltip';
@@ -51,9 +52,9 @@ class MinusedAccounts extends React.Component {
     }
 
     render() {
-        let minused_accounts = this.props.minused_accounts.reverse();
+        const reversed = this.props.minused_accounts.reverse()
 
-        let history = minused_accounts.map((operation, index) => {
+        let history = reversed && reversed.map((operation, index) => {
             return this._renderHistoryRow(operation, index);
         });
 
@@ -70,11 +71,10 @@ class MinusedAccounts extends React.Component {
                         <tbody>
                             {history}
                         </tbody>
-                    </table>) : null}
+                    </table>) : <div className='callout'>
+                        {tt('minused_accounts_jsx.empty')}
+                    </div>}
                 </div>
-                {!history.length ? (<div className='callout'>
-                    {tt('minused_accounts_jsx.empty')}
-                </div>) : null}
             </div>
         </div>);
     }
