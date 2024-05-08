@@ -93,7 +93,7 @@ export function* fetchState(location_change_action) {
         state.tokens = []
         state.sponsors = { data: [] }
         state.sponsoreds = { data: [] }
-        state.minused_accounts = {}
+        state.minused_accounts = []
         state.accounts = {}
         state.confetti_nft_active = false
 
