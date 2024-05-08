@@ -190,6 +190,7 @@ class PostSummary extends React.Component {
 
         if (hideSummary({
             author: content.get('author'), url: content.get('url'),
+            author_reputation: content.get('author_reputation'),
             app: content.get('app'),
             currentCategory,
             isNsfw, isOnlyblog, isOnlyapp,

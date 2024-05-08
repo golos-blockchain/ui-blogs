@@ -1,5 +1,6 @@
 import { isBlocked } from 'app/utils/blacklist'
 import session from 'app/utils/session'
+import { repLog10 } from 'app/utils/ParsersAndFormatters'
 
 function hasLS() {
     return typeof(localStorage) !== 'undefined'
@@ -63,7 +64,7 @@ export function hideContent(net_rshares, author_rep) {
 
 // Hide from all post lists (Blog, Feed, and New/Popular/etc.)
 // and comment lists (/comments, /recent-replies)
-export function hideSummary({ author, url, app, currentCategory, isNsfw, isOnlyblog, isOnlyapp,
+export function hideSummary({ author, author_reputation, url, app, currentCategory, isNsfw, isOnlyblog, isOnlyapp,
         username, nsfwPref }) {
     const isNotAuthorized = !username
     const isMyPost = username === author
@@ -91,6 +92,13 @@ export function hideSummary({ author, url, app, currentCategory, isNsfw, isOnlyb
     const fapps = getFilterApps()
     if (isNotAuthorized && fapps.includes(app)) {
         return true
+    }
+
+    if (isNotAuthorized && author_reputation !== undefined) {
+        const author_rep = repLog10(author_reputation)
+        if (author_rep < 65 && currentCategory !== 'blog') {
+            return true
+        }
     }
 
     return false
