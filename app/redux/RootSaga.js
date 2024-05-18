@@ -7,11 +7,9 @@ import { pushNotificationWatches } from 'app/redux/services/PushNotificationSaga
 import { sponsorWatches } from 'app/redux/SponsorsSaga'
 import { transactionWatches } from 'app/redux/TransactionSaga';
 import { versionsWatches } from 'app/redux/VersionsSaga'
-import PollDataSaga from 'app/redux/PollDataSaga';
 
 
 export default function* rootSaga() {
-  yield fork(PollDataSaga);
   yield fork(userWatches);
   yield fork(fetchDataWatches)
   yield fork(sharedWatches)

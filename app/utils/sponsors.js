@@ -1,8 +1,10 @@
 import crypto from 'browserify-aes'
+import golos from 'golos-lib-js'
 import { hash } from 'golos-lib-js/lib/auth/ecc'
 import forIn from 'lodash/forIn'
 
 import { authSession, cryptostoreEncrypt, cryptostoreDecrypt } from 'app/utils/AuthApiClient'
+import session from 'app/utils/session'
 
 const ourOid = {
     app: 'golos-blog',
@@ -16,6 +18,21 @@ export const makeOid = () => {
 
 export async function encryptPost(commentOp) {
     const { author, body } = commentOp
+
+    if (!window._cryptostore) {
+        const res = await golos.api.encryptBodyAsync({ author, body })
+        console.log(res)
+        if (res.error) {
+            throw new Error(res.error)
+        }
+        let newBody = {}
+        newBody.t = 'e'
+        newBody.v = 2
+        newBody.c = res.encrypted
+        newBody = JSON.stringify(newBody)
+        return newBody
+    }
+
     let data
     try {
         data = await cryptostoreEncrypt()
@@ -55,6 +72,7 @@ export const EncryptedStates = {
     unknown: 6,
     wrong_format: 7,
     decrypted: 8,
+    no_auth: 9,
 }
 
 function isEncrypted(content) {
@@ -70,6 +88,7 @@ export function markEncryptedContent(content, state = null) {
 }
 
 export async function tryDecryptContents(contents) {
+    const entriesCS = []
     const entries = []
     forIn(contents, (content, i) => {
         if (isEncrypted(content)) {
@@ -81,43 +100,116 @@ export async function tryDecryptContents(contents) {
                 content.encrypted = EncryptedStates.wrong_format
                 return
             }
-            entries.push({
-                author: content.author, body: data.c, _i: i
-            })
+            if (data.v && data.v >= 2) {
+                entries.push({
+                    author: content.author,
+                    permlink: content.permlink,
+                    hashlink: content.hashlink,
+                    _i: i
+                })
+            } else {
+                entriesCS.push({
+                    author: content.author,
+                    permlink: content.permlink,
+                    hashlink: content.hashlink,
+                    body: data.c, _i: i
+                })
+            }
         }
     })
 
-    try {
-        const result = await cryptostoreDecrypt(entries, makeOid())
-        forIn(result.result, (res, i) => {
-            const content = contents[entries[i]._i]
+    const convertRes = (content, res) => {
+        const { body, err, sub, } = res
+        if (body) {
+            content.body = body
+            content.encrypted = EncryptedStates.decrypted
+        } else if (err === 'no_sponsor' || err === 'no_auth') {
+            content.encrypted = EncryptedStates.no_sponsor
+        } else if (err === 'no_sub') {
+            content.encrypted = EncryptedStates.no_sub
+        } else if (err === 'inactive') {
+            content.encrypted = EncryptedStates.inactive
+        } else if (err === 'no_key') {
+            content.encrypted = EncryptedStates.no_key
+        } else {
+            content.encrypted = EncryptedStates.unknown
+        }
+        content.encrypted_sub = sub
+    }
 
-            const { body, err, sub } = res
-            if (body) {
-                content.body = body
-                content.encrypted = EncryptedStates.decrypted
-            } else if (err === 'no_sponsor' || err === 'no_auth') {
-                content.encrypted = EncryptedStates.no_sponsor
-            } else if (err === 'no_sub') {
-                content.encrypted = EncryptedStates.no_sub
-            } else if (err === 'inactive') {
-                content.encrypted = EncryptedStates.inactive
-            } else if (err === 'no_key') {
-                content.encrypted = EncryptedStates.no_key
-            } else {
-                content.encrypted = EncryptedStates.unknown
-            }
-            content.encrypted_sub = sub
-        })
-    } catch (err) {
-        console.error('tryDecryptContents', err)
+    if (entries.length) {
         try {
-            forIn(entries, (entry, i) => {
-                const content = contents[entry._i]
-                content.encrypted = EncryptedStates.unknown
+            const { head_block_number, witness } = await golos.api.getDynamicGlobalPropertiesAsync()
+
+            const sess = session.load()
+            const accName = sess.currentName
+            const posting = sess.currentName && sess.accounts[sess.currentName].posting
+
+            if (!accName || !posting) {
+                try {
+                    forIn(entries, (entry, i) => {
+                        const content = contents[entry._i]
+                        content.encrypted = EncryptedStates.no_auth
+                    })
+                } catch (err) {
+                    console.error('tryDecryptContents - decryptComments', err)
+                }
+                return
+            }
+
+            const signed = golos.auth.signData(head_block_number.toString(), {
+                posting
+            })
+
+            const res = await golos.api.decryptCommentsAsync({
+                account: accName,
+                entries,
+                oid: ourOid,
+                signed_data:  {
+                    head_block_number,
+                    witness,
+                },
+                signature: signed.posting
+            })
+            if (res.error) {
+                throw new Error(res.error)
+            }
+            forIn(res.results, (res, i) => {
+                const content = contents[entries[i]._i]
+
+                convertRes(content, res)
             })
         } catch (err) {
-            console.error('tryDecryptContents', err)
+            console.error('tryDecryptContents - decryptComments', err)
+            try {
+                forIn(entries, (entry, i) => {
+                    const content = contents[entry._i]
+                    content.encrypted = EncryptedStates.unknown
+                })
+            } catch (err) {
+                console.error('tryDecryptContents - decryptComments', err)
+            }
+        }
+    }
+
+    if (entriesCS.length) {
+        try {
+            const result = await cryptostoreDecrypt(entriesCS, makeOid())
+            forIn(result.result, (res, i) => {
+                const content = contents[entriesCS[i]._i]
+
+                convertRes(content, res)
+            })
+        } catch (err) {
+            console.error('tryDecryptContents - cryptostore', err)
+            try {
+                forIn(entriesCS, (entry, i) => {
+                    const content = contents[entry._i]
+                    content.encrypted = EncryptedStates.unknown
+                })
+            } catch (err) {
+                console.error('tryDecryptContents - cryptostore', err)
+            }
         }
     }
 }

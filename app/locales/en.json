@@ -739,7 +739,9 @@
     "become_sponsor": "Become sponsor",
     "sponsorship_expired": "Your sponsorship is expired. Please prolong it, to read posts by ",
     "prolong_sponsorship": "Prolong",
-    "login_to_become_sponsor": "Login to become sponsor."
+    "login_to_become_sponsor": "Login to become sponsor.",
+    "donate": "Donate",
+    "you_can_decrypt_just_this_post": "You can decrypt only this post by sending a donate with "
   },
   "postsummary_jsx": {
     "resteemed": "Reposted",
@@ -971,6 +973,7 @@
   "chain_errors": {
     "only_comment_once_every": "You may only comment once every 20 seconds",
     "only_post_once_every": "You may only post once every 5 minutes",
+    "too_long_title": "Too long post title.",
     "exceeded_maximum_allowed_bandwidth": "Insufficient account bandwidth. Replenish the Golos Power or write to info@golos.id",
     "already_voted": "You have already voted in a similar way",
     "only_vote_once_every": "Can only vote once every 3 seconds",
@@ -984,6 +987,8 @@
     "preview_mode": "Preview mode",
     "edit_mode": "Go back to edit mode",
     "payout_hint": "Payout method",
+    "lock_hint": "Make post paid",
+    "lock_hint2": "Paid for access - ",
     "nsfw_hint": "Mark for not safe for children",
     "onlyblog_hint": "Display only in the blog",
     "title_placeholder": "Enter the title",

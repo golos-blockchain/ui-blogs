@@ -48,7 +48,8 @@
     "custom_client": "blogs"
   },
   "notify_service": {
-    "host": "https://devnotify.golos.app"
+    "host": "https://devnotify.golos.app",
+    "host_ws": "wss://devnotify.golos.app/ws"
   },
   "elastic_search": {
     "url": "https://devsearch.golos.today",

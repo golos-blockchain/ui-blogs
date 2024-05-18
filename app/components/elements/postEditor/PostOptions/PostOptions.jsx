@@ -6,6 +6,7 @@ import { isNil } from 'ramda';
 import { api } from 'golos-lib-js';
 import {connect} from 'react-redux';
 import styled from 'styled-components';
+
 import Slider from 'golos-ui/Slider';
 import Icon from 'app/components/elements/Icon';
 import Hint from 'app/components/elements/common/Hint';
@@ -65,7 +66,8 @@ class PostOptions extends React.PureComponent {
     }
 
     render() {
-      const { showCoinMenu, curatorPercent, minCurationPercent, maxCurationPercent } = this.state;
+        const { showCoinMenu, curatorPercent, minCurationPercent, maxCurationPercent } = this.state;
+
         return (
             <div className="PostOptions">
                 <span
