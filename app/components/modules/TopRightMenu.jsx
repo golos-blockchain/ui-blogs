@@ -157,7 +157,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
             {link: repliesLink, icon: 'new/answer', value: tt('g.replies'), addon: <NotifiCounter fields="comment_reply" />},
             {link: discussionsLink, icon: 'new/bell', value: tt('g.discussions'), addon: <NotifiCounter fields="subscriptions" />},
             {link: mentionsLink, icon: 'new/mention', value: tt('g.mentions'), addon: <NotifiCounter fields="mention" />},
-            {link: walletLink, target: walletTarget(), icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields="send,receive,fill_order,delegate_vs,nft_receive" />},
+            {link: walletLink, target: walletTarget(), icon: 'new/wallet', value: tt('g.wallet'), addon: <NotifiCounter fields="send,receive,fill_order,delegate_vs,nft_receive,nft_token_sold,nft_buy_offer" />},
             {link: donatesLink, target: walletTarget(), icon: 'hf/hf8', value: tt('g.rewards'), addon: <NotifiCounter fields="donate,donate_msgs" />},
             (messagesLink ?
                 {link: messagesLink, icon: 'new/envelope', value: tt('g.messages'), target: '_blank', addon: <NotifiCounter fields="message" />} :
@@ -199,7 +199,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
                                 </div>
                             </div>
                         </a>
-                        <div className="TopRightMenu__notificounter"><NotifiCounter fields="feed,subscriptions,send,receive,delegate_vs,donate,donate_msgs,message,fill_order,comment_reply,mention,new_sponsor,sponsor_inactive,nft_receive,referral" /></div>
+                        <div className="TopRightMenu__notificounter"><NotifiCounter fields="feed,subscriptions,send,receive,delegate_vs,donate,donate_msgs,message,fill_order,comment_reply,mention,new_sponsor,sponsor_inactive,nft_receive,nft_token_sold,nft_buy_offer,referral" /></div>
                     </li>}
                 </LinkWithDropdown>
                 {navAdditional}

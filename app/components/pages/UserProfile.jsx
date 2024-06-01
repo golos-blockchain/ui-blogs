@@ -449,7 +449,7 @@ export default class UserProfile extends React.Component {
                     <div className='UserProfile__filler' />
                     <div>
                         <a href={walletUrl(`/@${accountname}/transfers`)} target={walletTarget()} className={`${walletClass} UserProfile__menu-item`}>
-                            {tt('g.wallet')} {isMyAccount && <NotifiCounter fields='send,receive,fill_order,nft_receive' />}
+                            {tt('g.wallet')} {isMyAccount && <NotifiCounter fields='send,receive,fill_order,nft_receive,nft_token_sold,nft_buy_offer' />}
                         </a>
                         <LinkWithDropdown
                             closeOnClickOutside
