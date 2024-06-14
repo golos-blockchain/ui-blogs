@@ -15,6 +15,7 @@ const initialState = {
             ...appConfig,
             blocked_users: [],
             blocked_posts: [],
+            filter_apps: [],
             add_notify_site: {}
         },
         flash: {
