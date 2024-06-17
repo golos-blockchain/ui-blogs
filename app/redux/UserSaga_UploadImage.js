@@ -70,7 +70,27 @@ function* uploadImage(action) {
     }
 
     let postUrl = $STM_Config.images.upload_image
+
     let golosImages = false
+    const user = yield select(state => state.user)
+    const switchToGolosImages = async () => {
+        const username = user.getIn(['current', 'username']);
+        const postingKey = user.getIn([
+            'current',
+            'private_keys',
+            'posting_private',
+        ]);
+        if (!username || !postingKey) {
+            onError(tt('user_saga_js.image_upload.error.login_first'));
+            return;
+        }
+        const signatures = signData(data, {
+            posting: postingKey,
+        })
+        postUrl = new URL('/@' + username + '/' + signatures.posting, $STM_Config.images.img_proxy_prefix).toString();
+        golosImages = true
+    }
+
     if (file) {
         if (imageSizeLimit && file.size > imageSizeLimit) {
             onError(tt('user_saga_js.image_upload.error.image_size_is_too_large'));
@@ -94,24 +114,17 @@ function* uploadImage(action) {
                 console.error('image_proxy start_upload:', err)
             }
             if (recommended) {
-                const user = yield select(state => state.user);
-                const username = user.getIn(['current', 'username']);
-                const postingKey = user.getIn([
-                    'current',
-                    'private_keys',
-                    'posting_private',
-                ]);
-                if (!username || !postingKey) {
-                    onError(tt('user_saga_js.image_upload.error.login_first'));
-                    return;
-                }
-                const signatures = signData(data, {
-                    posting: postingKey,
-                })
-                postUrl = new URL('/@' + username + '/' + signatures.posting, $STM_Config.images.img_proxy_prefix).toString();
-                golosImages = true
+                yield switchToGolosImages()
             }
         }
+    }
+    const onImgurFail = async (imgurErr) => {
+        console.log('onImgurFail - switch to Golos Images..')
+        await switchToGolosImages()
+        console.log('onImgurFail - ok, sending..')
+        xhr.open('POST', postUrl);
+        formData.append('fallback', imgurErr)
+        xhr.send(formData)
     }
 
     /**
@@ -140,7 +153,7 @@ function* uploadImage(action) {
         xhr.setRequestHeader('Authorization', 'Client-ID ' + $STM_Config.images.client_id)
     }
 
-    xhr.onload = function() {
+    xhr.onload = async function() {
         let data;
 
         try {
@@ -167,37 +180,40 @@ function* uploadImage(action) {
 
             console.error('Cannot upload image:', xhr.responseText);
 
-            let repeat = false;
             if (!golosImages) {
                 if (xhr.responseText.includes('Invalid client')) {
                     ++imgurFailCounter;
                     if (imgurFailCounter < 5) {
-                        repeat = true;
                         setTimeout(() => {
                             xhr.open('POST', postUrl);
                             xhr.setRequestHeader('Authorization', 'Client-ID ' + $STM_Config.images.client_id)
                             xhr.send(formData);
                         }, 1000);
+                        return
                     }
                 }
-            }
-            if (!repeat) {
-                let err = xhr.responseText
-                if (golosImages) {
-                    if (data.error === 'too_low_account_golos_power') {
-                        const need = Asset(data.required)
-                        const add = need.minus(Asset(data.power))
-                        err = tt('user_saga_js.image_upload.error.low_golos_power_NEED_ADD',
-                        {
-                            NEED: need.floatString,
-                            ADD: add.floatString
-                        })
-                    } else if (data.error === 'too_low_account_reputation') {
-                        err = tt('user_saga_js.image_upload.error.low_reputation') + data.required
-                    }
+                if (!xhr.responseText.includes('file type invalid')
+                    && !xhr.responseText.includes('We don\'t support that file type!')) {
+                    await onImgurFail(xhr.responseText)
+                    return
                 }
-                onError(err)
             }
+
+            let err = xhr.responseText
+            if (golosImages) {
+                if (data.error === 'too_low_account_golos_power') {
+                    const need = Asset(data.required)
+                    const add = need.minus(Asset(data.power))
+                    err = tt('user_saga_js.image_upload.error.low_golos_power_NEED_ADD',
+                    {
+                        NEED: need.floatString,
+                        ADD: add.floatString
+                    })
+                } else if (data.error === 'too_low_account_reputation') {
+                    err = tt('user_saga_js.image_upload.error.low_reputation') + data.required
+                }
+            }
+            onError(err)
         } else {
             let result = {}
             if (!golosImages) {
