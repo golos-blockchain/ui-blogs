@@ -565,7 +565,7 @@ export default connect(
         uploadImage: (file, progress) => {
         dispatch({
           type: 'user/UPLOAD_IMAGE',
-          payload: {file, progress},
+          payload: {file, progress, imageSizeLimit: 1000*1000},
         })
       },
         changeLanguage: (language) => {

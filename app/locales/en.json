@@ -966,7 +966,9 @@
         "login_first": "Please logged in first ...",
         "login_with_posting_key": "Login with your posting key",
         "server_unavailable": "The server is unavailable",
-        "image_size_is_too_large": "Upload images up to 1 MB in size"
+        "image_size_is_too_large": "Upload images up to 1 MB in size",
+        "low_reputation": "Too low reputation. Need at least ",
+        "low_golos_power_NEED_ADD": "No Golos Power. Need %(NEED)s, add please %(ADD)s."
       }
     }
   },

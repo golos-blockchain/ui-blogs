@@ -193,12 +193,6 @@ export default connect((state, props) => {
         locale,
     };
 }, dispatch => ({
-  uploadImage: (file, progress) => {
-    dispatch({
-      type: 'user/UPLOAD_IMAGE',
-      payload: {file, progress},
-    })
-  },
   changeLanguage: (language) => {
     dispatch(user.actions.changeLanguage(language))
   },
