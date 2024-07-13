@@ -14,6 +14,7 @@
       { "address": "wss://api.aleksw.space/ws" },
       { "address": "wss://api-golos.blckchnd.com/ws" }
     ],
+    "ws_connection_exchange": "wss://api.golos.id/ws",
     "chain_id": "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12",
     "images": {
       "img_proxy_prefix": "https://images.golos.today",
@@ -29,7 +30,8 @@
       "custom_client": "blogs"
     },
     "notify_service": {
-      "host": "https://notify.golos.app"
+      "host": "https://notify.golos.app",
+      "host_ws": "wss://notify.golos.app/ws"
     },
     "messenger_service": {
       "host": "app://chat.golos.app"

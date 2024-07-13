@@ -4826,6 +4826,14 @@ flux-standard-action@^0.6.0:
   dependencies:
     lodash.isplainobject "^3.2.0"
 
+folder-hash@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/folder-hash/-/folder-hash-4.0.4.tgz#f5ffa14e9fc6f3213598f6a367207adf7d419edc"
+  integrity sha512-zEyYH+UsHEfJJcCRSf9ai5I4CTZwZ8ObONRuEI5hcEmJY5pS0FUWKruX9mMnYJrgC7MlPFDYnGsK1R+WFYjLlQ==
+  dependencies:
+    debug "^4.3.3"
+    minimatch "~5.1.2"
+
 for-each@^0.3.3:
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/for-each/-/for-each-0.3.3.tgz#69b447e88a0a5d32c3e7084f3f1710034b21376e"
@@ -5203,10 +5211,44 @@ globule@^1.0.0:
     lodash "^4.17.21"
     minimatch "~3.0.2"
 
+golos-dex-lib-js@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/golos-dex-lib-js/-/golos-dex-lib-js-1.0.2.tgz#e0fe5d29781da8d0830ccb6bcfa5386bc73a2c5d"
+  integrity sha512-wrTzbMdoXlarjFu15liuTdcZjHlPXbdGyMouvCVlMKVqcldUbvi5SMR5egtLBjMKZfmFnFxbFrv798ukGqqSUg==
+  dependencies:
+    golos-lib-js "^0.9.64"
+
 golos-lib-js@^0.9.64:
   version "0.9.64"
   resolved "https://registry.yarnpkg.com/golos-lib-js/-/golos-lib-js-0.9.64.tgz#a4b083e1734cee2ddef3f8ffaac32769028eeb4f"
   integrity sha512-kuBgnrngc/WCChZek4HjM01otQuRL+AXzT/DcGZSNjAIWUEF7wQqOqkYIVy4aiC5a5NM459KaHlPkfXRDfyvUw==
+  dependencies:
+    abort-controller "^3.0.0"
+    assert "^2.0.0"
+    bigi "^1.4.2"
+    browserify-aes "^1.0.6"
+    bs58 "^4.0.0"
+    buffer "^6.0.3"
+    bytebuffer "^5.0.1"
+    core-js "^3.17.3"
+    create-hash "^1.1.2"
+    create-hmac "^1.1.4"
+    cross-env "^5.0.0"
+    cross-fetch "^3.0.0"
+    debug "^2.6.8"
+    detect-node "^2.0.3"
+    ecurve "^1.0.5"
+    lodash "^4.17.21"
+    process "^0.11.10"
+    regenerator-runtime "^0.13.9"
+    secure-random "^1.1.1"
+    stream-browserify "^3.0.0"
+    ws "^8.2.3"
+
+golos-lib-js@^0.9.71:
+  version "0.9.71"
+  resolved "https://registry.yarnpkg.com/golos-lib-js/-/golos-lib-js-0.9.71.tgz#794bc6582a96f0e1a3bc4301e0c5dfac976a15bf"
+  integrity sha512-FkR7nuyMUXj+IT8ErTFhu6BsaEvPaLZAr72r5H+GUhqbD8q98tFfBURCKw0MGfiO9CEv0zdDG3daPTq2TThvxA==
   dependencies:
     abort-controller "^3.0.0"
     assert "^2.0.0"
@@ -7349,7 +7391,7 @@ minimatch@3.0.4, minimatch@^3.0.2, minimatch@^3.0.3, minimatch@^3.0.4:
   dependencies:
     brace-expansion "^1.1.7"
 
-minimatch@^5.0.1:
+minimatch@^5.0.1, minimatch@~5.1.2:
   version "5.1.6"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-5.1.6.tgz#1cfcb8cf5522ea69952cd2af95ae09477f122a96"
   integrity sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g==

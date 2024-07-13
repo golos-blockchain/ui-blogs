@@ -47,7 +47,7 @@ class Modals extends React.Component {
         this.shouldComponentUpdate = shouldComponentUpdate(this, 'Modals');
     }
 
-    onLoginBackdropClick = (e) => {
+    onLoginTryClose = (e) => {
         const { loginUnclosable } = this.props;
         if (loginUnclosable)
             throw new Error('Closing login modal is forbidden here');
@@ -56,6 +56,7 @@ class Modals extends React.Component {
     render() {
         const {
             show_login_modal,
+            loginBlurring,
             show_confirm_modal,
             show_donate_modal,
             show_gift_nft_modal,
@@ -84,9 +85,11 @@ class Modals extends React.Component {
             return n;
         }) : [];
 
+        const loginClass = loginBlurring ? 'reveal-blurring' : undefined
+
         return (
             <div>
-                {show_login_modal && <Reveal onBackdropClick={this.onLoginBackdropClick} onHide={hideLogin} show={show_login_modal}>
+                {show_login_modal && <Reveal overlayClassName={loginClass} onBackdropClick={this.onLoginTryClose} onEscapeKeyDown={this.onLoginTryClose} onHide={hideLogin} show={show_login_modal}>
                     <LoginForm onCancel={hideLogin} />
                 </Reveal>}
                 {show_confirm_modal && <Reveal onHide={hideConfirm} show={show_confirm_modal}>
@@ -129,9 +132,11 @@ export default connect(
     state => {
         const loginDefault = state.user.get('loginDefault');
         const loginUnclosable = loginDefault && loginDefault.get('unclosable');
+        const loginBlurring = loginDefault && loginDefault.get('blurring')
         return {
             show_login_modal: state.user.get('show_login_modal'),
             loginUnclosable,
+            loginBlurring,
             show_confirm_modal: state.transaction.get('show_confirm_modal'),
             show_donate_modal: state.user.get('show_donate_modal'),
             show_gift_nft_modal: state.user.get('show_gift_nft_modal'),
