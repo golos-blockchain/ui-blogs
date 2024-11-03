@@ -12,7 +12,7 @@ import { fetchState } from 'app/redux/FetchDataSaga'
 import {loadFollows} from 'app/redux/FollowSaga'
 import { signData } from 'golos-lib-js/lib/auth'
 import {PrivateKey, Signature, hash} from 'golos-lib-js/lib/auth/ecc'
-import {api} from 'golos-lib-js'
+import {api, config} from 'golos-lib-js'
 import g from 'app/redux/GlobalReducer'
 import React from 'react';
 import PushNotificationSaga from 'app/redux/services/PushNotificationSaga';
@@ -170,7 +170,14 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
 
     const isRole = (role, fn) => (!userProvidedRole || role === userProvidedRole ? fn() : undefined)
 
-    let account = yield call(getAccount, username)
+    let account
+    try {
+        account = yield call(getAccount, username)
+    } catch (err) {
+        console.error(err)
+        yield put(user.actions.loginError({ error: 'Node failure', node: config.get('websocket') }))
+        return
+    }
     if (!account) {
         yield put(user.actions.loginError({ error: 'Username does not exist' }))
         return

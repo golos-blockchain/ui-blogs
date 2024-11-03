@@ -5,6 +5,7 @@ import { api } from 'golos-lib-js'
 
 import CloseButton from 'react-foundation-components/lib/global/close-button'
 
+import Icon from '@elements/Icon';
 import user from 'app/redux/User'
 
 const APP_REMINDER_INTERVAL = 30*24*60*60*1000
@@ -94,8 +95,7 @@ class NewsPopups extends React.Component {
     }
 
     showAppReminder = () => {
-        if (process.env.IS_APP || typeof(localStorage) === 'undefined'
-            || location.pathname.startsWith('/submit')) {
+        if (process.env.IS_APP || typeof(localStorage) === 'undefined') {
             return false
         }
         const now = Date.now()
@@ -105,6 +105,10 @@ class NewsPopups extends React.Component {
     }
 
     render() {
+        if (process.env.BROWSER && location.pathname.startsWith('/submit')) {
+            return null
+        }
+
         const { news,hiddenNews } = this.state
 
         let appReminder = null
@@ -117,6 +121,8 @@ class NewsPopups extends React.Component {
                     }}
                 />
                 {tt('app_reminder.text')}
+                <Icon name='badge-new' size='1_25x' />
+                {tt('app_reminder.text2')}
             </span>
         }
 

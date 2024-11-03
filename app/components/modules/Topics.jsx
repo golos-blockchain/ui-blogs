@@ -2,11 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types'
 import { Link } from 'react-router';
 import { browserHistory } from 'react-router';
+import cookie from "react-cookie";
 import tt from 'counterpart';
+import capitalize from 'lodash/capitalize'
+
 import { detransliterate } from 'app/utils/ParsersAndFormatters';
 import { isCyrillicTag, processCyrillicTag } from 'app/utils/tags';
 import { SELECT_TAGS_KEY } from 'app/client_config';
-import cookie from "react-cookie";
 
 export default class Topics extends React.Component {
     static propTypes = {
@@ -119,10 +121,22 @@ export default class Topics extends React.Component {
         let isSelected = false
 
         if (compact) {
-            return <select className={cn} onChange={(e) => browserHistory.push(e.target.value)} value={currentValue}>
-                <option key={'*'} value={'/' + order}>{tt('g.topics')}...</option>
+            const homePath = '/' + order
+            return <select className={cn} onChange={(e) => {
+                const { value } = e.target
+                if (value === '_home') {
+                    e.preventDefault()
+                    browserHistory.push(homePath)
+                    return
+                }
+                browserHistory.push(value)
+            }} value={currentValue}>
+                <option key={'*'} value={homePath} hidden>{tt('g.topics')}...</option>
+                {(process.env.BROWSER && location.pathname !== homePath) ?
+                    <option key={'*'} value='_home'>&lt; {tt('g.all_posts')}...</option> : null}
                 {categories.map(cat => {
                     const link = order ? `/${order}/${cat}` : `/hot/${cat}`;
+                    cat = capitalize(cat)
                     return <option key={cat} value={link}>{cat}</option>
                 })}
             </select>;

@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 import tt from 'counterpart';
+
 import TagInput from 'app/components/elements/postEditor/TagInput';
 import TagsEditLine from 'app/components/elements/postEditor/TagsEditLine';
 import PostOptions from 'app/components/elements/postEditor/PostOptions/PostOptions';
@@ -20,6 +21,7 @@ export default class PostFooter extends PureComponent {
         postDisabled: PropTypes.bool,
         postEncrypted: PropTypes.bool,
         disabledHint: PropTypes.string,
+        isS: PropTypes.bool,
         onPayoutTypeChange: PropTypes.func.isRequired,
         onCurationPercentChange: PropTypes.func.isRequired,
         onDecryptFeeChange: PropTypes.func.isRequired,
@@ -139,6 +141,7 @@ export default class PostFooter extends PureComponent {
             categories,
             postDisabled,
             disabledHint,
+            isS,
         } = this.props;
         const { temporaryErrorText, singleLine, showVisibleOptions } = this.state;
 
@@ -238,8 +241,10 @@ export default class PostFooter extends PureComponent {
             >
                 <div className="PostFooter__line">
                     <div className="PostFooter__tags">
-                        {!editMode && <select className="PostFooter__category" value={category} onChange={this.onCategoryChange}>
-                            <option value="" disabled>{tt('category_selector_jsx.select_a_category')}</option>
+                        {!editMode && <select className={cn('PostFooter__category', {
+                            small: isS
+                        })} value={category} onChange={this.onCategoryChange}>
+                            <option value="" disabled>{isS ? tt('category_selector_jsx.select_a_category2') : tt('category_selector_jsx.select_a_category')}</option>
                             {
                                 categories.map((cat) => {
                                     return <option className="PostFooter__cat" key={cat} value={cat}>{cat}</option>;
@@ -256,7 +261,8 @@ export default class PostFooter extends PureComponent {
                                 onChange={onTagsChange}
                             />
                         ) : null}
-                        <TagInput tags={tagsNoCat} onChange={onTagsChange} />
+                        <TagInput tags={tagsNoCat} onChange={onTagsChange}
+                            isS={isS} />
                     </div>
                     {isMobile ? null : options}
                     {isMobile ? null : buttons}

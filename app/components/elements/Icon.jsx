@@ -30,6 +30,7 @@ const icons = new Map([
     ['printer', require('app/assets/icons/printer.svg')],
     ['search', require('app/assets/icons/search.svg')],
     ['menu', require('app/assets/icons/menu.svg')],
+    ['badge-new', require('app/assets/icons/badge-new-nobg.svg')],
     ['voter', require('app/assets/icons/voter.svg')],
     ['voters', require('app/assets/icons/voters.svg')],
     ['empty', require('app/assets/icons/empty.svg')],

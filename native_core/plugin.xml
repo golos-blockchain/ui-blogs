@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="gls-blogs-native-core" version="1.0.0">
+    <name>Golos Blogs Native Core</name>
+    <description>Provides notification service when activity is paused, as well as on boot received</description>
+    <license>Apache 2.0</license>
+    <keywords>cordova</keywords>
+    <platform name="android">
+        <framework src="com.squareup.okhttp3:okhttp:4.9.3" />
+
+        <config-file target="config.xml" parent="/*">
+            <preference name="GradlePluginKotlinEnabled" value="true" />
+            <feature name="CorePlugin">
+                <param name="android-package" value="gls.blogs.core.CorePlugin"/>
+            </feature>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+            <uses-permission android:name="android.permission.INTERNET"/>
+            <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+            <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest/application">
+            <service android:name=".core.NotifyService" android:enabled="true" android:permission="android.permission.BIND_JOB_SERVICE"/>
+            <receiver android:name=".core.BootReceiver" android:enabled="true"
+                android:exported="true">
+                <intent-filter>
+                    <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                </intent-filter>
+            </receiver>
+        </config-file>
+
+        <source-file src="src/android/ApiClient.kt" target-dir="java/gls/blogs/core" />
+        <source-file src="src/android/AppPrefs.kt" target-dir="java/gls/blogs/core" />
+        <source-file src="src/android/BootReceiver.kt" target-dir="java/gls/blogs/core" />
+        <source-file src="src/android/CorePlugin.kt" target-dir="java/gls/blogs/core" />
+        <source-file src="src/android/NotificationHelper.kt" target-dir="java/gls/blogs/core" />
+        <source-file src="src/android/NotifyApiClient.kt" target-dir="java/gls/blogs/core" />
+        <source-file src="src/android/NotifyService.kt" target-dir="java/gls/blogs/core" />
+        <source-file src="src/android/ServiceHelper.kt" target-dir="java/gls/blogs/core" />
+
+        <source-file src="res/ic_empty.xml" target-dir="res/drawable" />
+        <source-file src="res/notify.png" target-dir="res/drawable" />
+    </platform>
+</plugin>

@@ -15,6 +15,7 @@
     "tag_your_story": "Добавьте тэги, первый станет категорией.",
     "select_a_tag": "Выбрать тэг",
     "select_a_category": "Выберите категорию",
+    "select_a_category2": "Категория",
     "maximum_tag_length_is_24_characters": "Максимальная длина категории 24 знака",
     "use_only_lowercase_letters": "Используйте только символы нижнего регистра",
     "use_one_dash": "Используйте только одно тире",
@@ -129,6 +130,7 @@
     "active": "Активный ключ",
     "advanced": "Расширенные опции",
     "all_langs": "Показать всё",
+    "all_posts": "Все посты",
     "amount": "Количество",
     "and": "и",
     "are_you_sure": "Вы уверены?",
@@ -277,7 +279,7 @@
     "tag": "Тэг",
     "team": "Команда",
     "to": " к ",
-    "topics": "Темы",
+    "topics": "Категории",
     "transaction_history": "История транзакций",
     "transfer": "Передать ",
     "transfer2": "Перевод",
@@ -721,12 +723,18 @@
     "choose_preset_tips": "Выберите суммы для кнопок вознаграждений",
     "emission_donate_pct": "Процент от вашей суточной эмиссии токенов для вознаграждения",
     "notifications_settings": "Настройки уведомлений на сайте",
+    "notifications_settings2": "Настройки уведомлений",
     "notifications_transfer": "Перевод средств",
     "notifications_donate": "Вознаграждения (донаты)",
     "notifications_reply": "Ответ на комментарий или пост",
     "notifications_mention": "Упоминание @ника в посте или комментарии",
     "notifications_message": "Новое сообщение",
     "notifications_order": "Сработал ордер на бирже",
+    "notifications_bg": "Показывать уведомления в фоне",
+    "notifications_bg_title": "Показывать ли уведомления при свернутом приложении, выключенном экране",
+    "app_settings": "Настройки приложения",
+    "advanced_settings": "Выбор ноды и другие расширенные настройки...",
+    "open": "Открыть",
     "invalid_url": "Недопустимый URL-адрес",
     "invalid_ws": "wss://api-full.golos.id/ws",
     "invalid_ip_port": "Пример: 120.16.10.18:2001",
@@ -1222,22 +1230,30 @@
     "mention_comment": " упомянул вас в комментарии",
     "message": " написал вам сообщение"
   },
+  "login_app_reminder": {
+    "or_download_for": "...или скачайте для ",
+    "title": "Нажмите, чтобы скачать для "
+  },
   "app_download": {
     "title": "Скачать Golos Desktop",
-    "download_for": "Скачать для"
+    "download_for": "Скачать для",
+    "mobile": "Скачать Golos Блоги для"
   },
   "app_reminder": {
-    "text": "Установите десктоп-приложение для Windows или Linux и получайте информацию напрямую с блокчейна"
+    "text": "Установите приложение для Windows, Linux, Android",
+    "text2": "и получайте информацию напрямую с блокчейна"
   },
   "app_goto_url": {
     "goto": "Перейти",
     "wrong_domain_DOMAINS": "Похоже, эта ссылка не с GOLOS Блогов.\nДомены GOLOS Блогов: %(DOMAINS)s\nЭта ссылка будет открыта во внешнем браузере."
   },
   "app_settings": {
+    "mobile_title": "Настройки Блогов",
     "ws_connection_client": "Адрес ноды GOLOS",
     "img_proxy_prefix": "Использовать прокси для изображений",
     "auth_service": "Golos Auth & Registration Service (для уведомлений)",
     "notify_service": "Golos Notify Service (для уведомлений)",
+    "notify_service_ws": "Golos Notify Service WebSocket (для уведомлений)",
     "messenger_service": "Мессенджер",
     "elastic_search": "Поиск",
     "main_app": "При запуске открывать:",
@@ -1246,7 +1262,10 @@
     "save_and_restart": "Сохранить и перезапустить",
     "cancel": "Отмена",
     "node_error_NODE": "Не удалось подключиться к ноде %(NODE)s. Возможно, это проблемы с интернетом. Или попробуйте задать другую ноду GOLOS в меню Настройки.",
-    "to_save_click_button": "Чтобы сохранить настройки, нажмите кнопку \"Сохранить и перезапустить\" внизу окна."
+    "node_error_new_NODE": "Не удалось подключиться к ноде %(NODE)s. Возможно, это проблемы с интернетом (или с нодой).",
+    "node_error_new_NODE2": "Выбрать другую ноду",
+    "to_save_click_button": "Чтобы сохранить настройки, нажмите кнопку \"Сохранить и перезапустить\" внизу окна.",
+    "logs": "Логи"
   },
   "app_update": {
     "notify_VERSION": "Доступна новая версия GOLOS Блогов - %(VERSION)s",

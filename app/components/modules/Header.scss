@@ -145,6 +145,7 @@
   @media screen and (max-width: 39.9375em) {
       .shrink {
           padding: .3rem 1rem 0 1rem;
+          padding-left: 0px;
       }
   }
 }
@@ -152,6 +153,12 @@
 ul > li.Header__top-logo > a {
   padding: 0;
   transition: none;
+}
+
+.Header__top-logo.small {
+  img {
+    width: 35px;
+  }
 }
 
 .Header__sub-nav {
@@ -170,7 +177,13 @@ ul > li.Header__top-logo > a {
     line-height: 1rem;
     padding: 1.2rem 0 1.2rem 0;
     margin: 0 0 0 2rem;
-    }
+  }
+
+  @media screen and (max-width: 63.9375em) {
+      li {
+        margin: 0 0 0 1.3rem;
+      }
+  }
   // No margin adjustments for first child element in menu items
   li:first-child {
     margin: 0 0 0 0;
@@ -242,8 +255,18 @@ ul > li.Header__top-logo > a {
 .Header__sort-order-menu {
   margin-left: 10px;
 
+  &:not(.me) > a {
+    font-size: 1.2em !important;
+  }
+
   .VerticalMenu {
     left: 0;
+
+    li {
+      a {
+        padding: 0.6rem 0.6rem;
+      }
+    }
   }
 }
 

@@ -17,6 +17,7 @@ import URLLoader from 'app/components/elements/app/URLLoader';
 import TooltipManager from 'app/components/elements/common/TooltipManager';
 import user from 'app/redux/User';
 import g from 'app/redux/GlobalReducer';
+import PushNotificationSaga from 'app/redux/services/PushNotificationSaga'
 import { Link } from 'react-router';
 import resolveRoute from 'app/ResolveRoute';
 import Dialogs from '@modules/Dialogs';
@@ -27,12 +28,17 @@ import MiniHeader from '@modules/MiniHeader';
 import PageViewsCounter from '@elements/PageViewsCounter';
 import ChainFailure from 'app/components/elements/ChainFailure'
 import DialogManager from 'app/components/elements/common/DialogManager';
+import LoadingIndicator from 'app/components/elements/LoadingIndicator'
 import NotifyPolling from 'app/components/elements/NotifyPolling'
+import AppSettings, { openAppSettings } from 'app/components/pages/app/AppSettings'
 import { init as initAnchorHelper } from 'app/utils/anchorHelper';
 import { authRegisterUrl, } from 'app/utils/AuthApiClient';
+import { fixRouteIfApp, reloadLocation, } from 'app/utils/app/RoutingUtils'
+import { getShortcutIntent, onShortcutIntent } from 'app/utils/app/ShortcutUtils'
 import { APP_ICON, VEST_TICKER, } from 'app/client_config';
 import session from 'app/utils/session'
 import { loadGrayHideSettings } from 'app/utils/ContentAccess'
+import { withScreenSize } from 'app/utils/ScreenSize'
 import libInfo from 'app/JsLibHash.json'
 
 const GlobalStyle = createGlobalStyle`
@@ -79,7 +85,10 @@ class App extends React.Component {
             p.new_visitor !== n.new_visitor ||
             p.flash !== n.flash ||
             this.state !== nextState ||
-            p.nightmodeEnabled !== n.nightmodeEnabled
+            this.state.can_render !== nextState.can_render ||
+            p.nightmodeEnabled !== n.nightmodeEnabled ||
+            p.hideOrdersMe !== n.hideOrdersMe ||
+            p.hideOrders !== n.hideOrders
         );
     }
 
@@ -104,13 +113,52 @@ class App extends React.Component {
         super(props)
         if (process.env.BROWSER) {
             this.loadDownvotedPrefs()
+            if (window.location.hash === '#app-settings') {
+                this.appSettings = true
+            }
+            window.appMounted = true
         }
     }
 
-    componentDidMount() {
+    async checkShortcutIntent() {
+        try {
+            const intent = await getShortcutIntent()
+            const intentId = intent.extras['gls.blogs.id']
+            if (intent.extras['gls.blogs.hash'] === '#app-settings' && localStorage.getItem('processed_intent') !== intentId) {
+                this.appSettings = true
+                localStorage.setItem('processed_intent', intentId)
+            }
+        } catch (err) {
+            console.error('Cannot get shortcut intent', err)
+        }
+    }
+
+componentDidMount() {
         if (process.env.BROWSER) {
             console.log('ui-blogs version:', $STM_Config.ui_version);
             console.log('golos-lib-js version:', libInfo.version, 'hash:', libInfo.hash)
+        }
+
+        if (process.env.MOBILE_APP) {
+            (async () => {
+                await this.checkShortcutIntent()
+                onShortcutIntent(intent => {
+                    if (intent.extras['gls.blogs.hash'] === '#app-settings') {
+                        openAppSettings()
+                    }
+                })
+
+                fixRouteIfApp()
+
+                document.addEventListener('pause', this.onPause)
+                document.addEventListener('resume', this.onResume)
+
+                this.setState({
+                    can_render: true
+                })
+
+                this.stopService()
+            })()
         }
 
         const { nightmodeEnabled } = this.props;
@@ -164,6 +212,10 @@ class App extends React.Component {
         if (process.env.BROWSER) {
             window.removeEventListener('click', this.checkLeaveGolos);
         }
+        if (process.env.MOBILE_APP) {
+            document.addEventListener('pause', this.onPause)
+            document.addEventListener('resume', this.onResume)
+        }
     }
 
     componentDidUpdate(nextProps) {
@@ -171,6 +223,51 @@ class App extends React.Component {
         if (nextProps.location.pathname !== this.props.location.pathname) {
             this.setState({ showBanner: false, showCallout: false });
         }
+    }
+
+    componentDidCatch(err, info) {
+        const errStr = (err && err.toString()) ? err.toString() : JSON.stringify(err)
+        const infoStr = (info && info.componentStack) || JSON.stringify(info)
+        if (confirm(';( Ошибка рендеринга. Продолжить работу?\n\n' + errStr + '\n' + infoStr)) {
+            reloadLocation('/')
+            return
+        }
+        throw err
+    }
+
+    onPause = () => {
+        const { username } = this.props
+        const notifySess = localStorage.getItem('X-Session')
+        const notifyHost = $STM_Config.notify_service.host
+        if (username && notifySess) {
+            const settings = PushNotificationSaga.getScopePresets(username)
+            if (!settings.inBackground) {
+                console.warn('Notify - inBackground false, so do not starting service...')
+                return
+            }
+            if (!settings.bgPresets.length) {
+                console.warn('Notify - all background presets disabled, so do not starting service...')
+                return
+            }
+            const lastTake = 0
+            cordova.exec((winParam) => {
+                console.log('pause ok', winParam)
+            }, (err) => {
+                console.error('pause err', err)
+            }, 'CorePlugin', 'startService', [username, notifySess, settings.bgPresets.join(','), lastTake, notifyHost])
+        }
+    }
+
+    onResume = () => {
+        this.stopService()
+    }
+
+    stopService = () => {
+        cordova.exec((winParam) => {
+            console.log('resume ok', winParam)
+        }, (err) => {
+            console.error('resume err', err)
+        }, 'CorePlugin', 'stopService', [])
     }
 
     checkLogin = event => {
@@ -250,14 +347,26 @@ class App extends React.Component {
     }
 
     render() {
+        if (process.env.MOBILE_APP && !this.state.can_render) {
+            return <LoadingIndicator type='circle' />
+        }
+
         const {
             location,
             params,
             children,
             flash,
             new_visitor,
-            nightmodeEnabled
+            nightmodeEnabled,
+            loggedIn,
         } = this.props;
+        let {
+            hideOrders,
+            hideOrdersMe,
+        } = this.props;
+        if (loggedIn) {
+            hideOrders = hideOrdersMe
+        }
 
         const route = resolveRoute(location.pathname);
         const lp = false; //location.pathname === '/';
@@ -268,7 +377,7 @@ class App extends React.Component {
             (params_keys.length === 2 &&
                 params_keys[0] === 'order' &&
                 params_keys[1] === 'category');
-        const alert = this.props.error || flash.get('alert');
+        const f_alert = this.props.error || flash.get('alert');
         const warning = flash.get('warning');
         const success = flash.get('success');
         let callout = null;
@@ -276,7 +385,7 @@ class App extends React.Component {
         const notifyTitle = $STM_Config.add_notify_site.title;
         const showInfoBox = $STM_Config.add_notify_site.show && this.isShowInfoBox($STM_Config.add_notify_site);
 
-        if (this.state.showCallout && (alert || warning || success)) {
+        if (this.state.showCallout && (f_alert || warning || success)) {
             callout = (
                 <div className="App__announcement row">
                     <div className="column">
@@ -286,7 +395,7 @@ class App extends React.Component {
                                     this.setState({ showCallout: false })
                                 }
                             />
-                            <p>{alert || warning || success}</p>
+                            <p>{f_alert || warning || success}</p>
                         </div>
                     </div>
                 </div>
@@ -366,7 +475,7 @@ class App extends React.Component {
 
         const themeClass = nightmodeEnabled ? ' theme-dark' : ' theme-light';
 
-        const isApp = process.env.IS_APP && location.pathname.startsWith('/__app_')
+        const isApp = location.pathname.startsWith('/__app_') || this.appSettings
 
         const noHeader = isApp
         const noFooter = isApp || location.pathname.startsWith('/submit')
@@ -386,12 +495,13 @@ class App extends React.Component {
                 {noHeader ? null : (miniHeader ? <MiniHeader /> : <Header />)}
                 <div className={cn('App__content' +
                     (noHeader ? ' no-header' : ''), {
+                    'ho': hideOrders,
                     'App__content_hide-sub-menu': route.hideSubMenu,
                 })}>
                     {welcome_screen}
                     {callout}
                     <ChainFailure />
-                    {children}
+                    {this.appSettings ? <AppSettings.component /> : children}
                     {noFooter ? null : <Footer />}
                     <NewsPopups />
                     <ScrollButton />
@@ -417,21 +527,26 @@ App.propTypes = {
     loginUser: PropTypes.func.isRequired,
     logoutUser: PropTypes.func.isRequired,
     depositSteem: PropTypes.func.isRequired,
-    nightmodeEnabled: PropTypes.bool
+    nightmodeEnabled: PropTypes.bool,
+    loggedIn: PropTypes.bool
 };
 
 export default connect(
     state => {
         let nightmodeEnabled = process.env.BROWSER ? localStorage.getItem('nightmodeEnabled') == 'true' || false : false
 
+        const currentUser = state.user.get('current')
+
         return {
             error: state.app.get('error'),
             flash: state.offchain.get('flash'),
+            loggedIn: !!state.user.get('current'),
             new_visitor:
-                !state.user.get('current') &&
+                !currentUser &&
                 !state.offchain.get('account') &&
                 state.offchain.get('new_visit'),
-            nightmodeEnabled: nightmodeEnabled
+            nightmodeEnabled: nightmodeEnabled,
+            username: currentUser && currentUser.get('username'),
         };
     },
     dispatch => ({
@@ -451,4 +566,4 @@ export default connect(
             dispatch(g.actions.fetchExchangeRates());
         },
     })
-)(App);
+)(withScreenSize(App))

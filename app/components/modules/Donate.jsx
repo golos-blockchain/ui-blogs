@@ -18,6 +18,7 @@ import VoteSlider from 'app/components/elements/donate/VoteSlider'
 import { checkMemo } from 'app/utils/ParsersAndFormatters';
 import { accuEmissionPerDay } from 'app/utils/StateFunctions'
 import { checkAllowed, AllowTypes } from 'app/utils/Allowance'
+import { withScreenSize } from 'app/utils/ScreenSize'
 
 class Donate extends React.Component {
     constructor(props) {
@@ -118,7 +119,8 @@ class Donate extends React.Component {
     }
 
     render() {
-        const { currentUser, currentAccount, opts, uias, sliderMax } = this.props
+        const { currentUser, currentAccount, opts, uias, sliderMax,
+            isS } = this.props
         const { sym } = opts
         const { isMemoEncrypted } = this.state
 
@@ -139,35 +141,52 @@ class Donate extends React.Component {
                 disabled = !isValid ||
                     (!values.sliderPercent && !values.amount.asset.amount)
             }
+            let bAmount = <div className='input-group' style={{marginBottom: 5}}>
+                <AmountField
+                    placeholder={tt('transfer_jsx.donate_amount')}
+                />
+            </div>
+            let bPreset = <React.Fragment>
+                <PresetSelector
+                    username={currentUser.get('username')}
+                    amountStr={values.amount.amountStr}
+                    onChange={amountStr => this.onPresetChange(amountStr, values, setFieldValue)}
+                    />
+                <TipAssetList
+                    value={sym} uias={uias} currentAccount={currentAccount}
+                    currentBalance={this.balanceValue()}
+                    onChange={this.onTipAssetChanged}
+                    small={isS}
+                />
+            </React.Fragment>
             return (
         <Form>
             <Field name='sliderPercent' as={VoteSlider}
                 onChange={val => this.onSliderChange(val, values, setFieldValue)} />
 
-            <div className='row'>
+            {isS ? <div className='row'>
+                <div className='column small-3' style={{paddingTop: '1rem'}}>
+                    {tt('transfer_jsx.donate_amount')}
+                </div>
+                <div className='column small-9' style={{paddingTop: '0.55rem'}}>
+                    {bAmount}
+                </div>
+            </div> : <div className='row'>
                 <div className='column small-2' style={{paddingTop: '1rem'}}>
                     {tt('transfer_jsx.donate_amount')}
                 </div>
                 <div className='column small-2' style={{paddingTop: '0.55rem'}}>
-                    <div className='input-group' style={{marginBottom: 5}}>
-                        <AmountField
-                            placeholder={tt('transfer_jsx.donate_amount')}
-                        />
-                    </div>
+                    {bAmount}
                 </div>
                 <div className='column small-8' style={{paddingTop: '0.4rem'}}>
-                    <PresetSelector
-                    username={currentUser.get('username')}
-                    amountStr={values.amount.amountStr}
-                    onChange={amountStr => this.onPresetChange(amountStr, values, setFieldValue)}
-                    />
-                    <TipAssetList
-                        value={sym} uias={uias} currentAccount={currentAccount}
-                        currentBalance={this.balanceValue()}
-                        onChange={this.onTipAssetChanged}
-                    />
+                    {bPreset}
                 </div>
-            </div>
+            </div>}
+            {isS && <div className='row'>
+                <div className='column small-12' style={{paddingTop: '0.55rem'}}>
+                    {bPreset}
+                </div>
+            </div>}
             <div className='row'>
                 <div className='column small-12'>
                     <ErrorMessage name='amount' component='div' className='error' />
@@ -175,10 +194,10 @@ class Donate extends React.Component {
             </div>
 
             <div className='row' style={{ marginTop: '0.5rem', marginBottom: '0.5rem' }}>
-                <div className='column small-2' style={{paddingTop: '7px'}}>
+                <div className={'column small-' + (isS ? '3' : '2')} style={{paddingTop: '7px'}}>
                     {tt('transfer_jsx.memo')}
                 </div>
-                <div className='column small-10'>
+                <div className={'column small-' + (isS ? '9' : '10')}>
                     <Field name='memo' as={MemoInput} currentUser={currentUser}
                         compact={true}
                         isEncrypted={isMemoEncrypted}
@@ -345,4 +364,4 @@ export default connect(
             }))
         }
     })
-)(Donate)
+)(withScreenSize(Donate))
