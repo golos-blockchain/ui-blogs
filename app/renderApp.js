@@ -34,6 +34,9 @@ export default async function renderApp(initialState) {
         clientRender(initialState)
     } catch (error) {
         console.error(error)
+        if (process.env.MOBILE_APP) {
+            alert('renderApp ' + error.toString() + '\n' + JSON.stringify(error.stack))
+        }
         serverApiRecordEvent('client_error', error)
     }
 }

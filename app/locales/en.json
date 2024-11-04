@@ -1171,6 +1171,7 @@
     "img_proxy_prefix": "Use Proxy For Images",
     "auth_service": "Golos Auth & Registration Service (for notifications)",
     "notify_service": "Golos Notify Service (for notifications)",
+    "notify_service_ws": "Golos Notify Service WebSocket (for notifications)",
     "messenger_service": "Messenger",
     "elastic_search": "Search",
     "main_app": "When start app, open:",
@@ -1179,7 +1180,8 @@
     "save_and_restart": "Save and restart",
     "cancel": "Cancel",
     "node_error_NODE": "Не удалось подключиться к ноде %(NODE)s. Возможно, это проблемы с интернетом. Или попробуйте задать другую ноду GOLOS в меню Настройки.",
-    "to_save_click_button": "To save settings, click \"Save and restart\" button at bottom of the window."
+    "to_save_click_button": "To save settings, click \"Save and restart\" button at bottom of the window.",
+    "logs": "Logs"
   },
   "app_update": {
     "notify_VERSION": "Доступна новая версия GOLOS Блогов - %(VERSION)s",

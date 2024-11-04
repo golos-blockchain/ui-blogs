@@ -28,8 +28,11 @@ import PageViewsCounter from '@elements/PageViewsCounter';
 import ChainFailure from 'app/components/elements/ChainFailure'
 import DialogManager from 'app/components/elements/common/DialogManager';
 import NotifyPolling from 'app/components/elements/NotifyPolling'
+import AppSettings, { openAppSettings } from 'app/components/pages/app/AppSettings'
 import { init as initAnchorHelper } from 'app/utils/anchorHelper';
 import { authRegisterUrl, } from 'app/utils/AuthApiClient';
+import { fixRouteIfApp, } from 'app/utils/app/RoutingUtils'
+import { getShortcutIntent, onShortcutIntent } from 'app/utils/app/ShortcutUtils'
 import { APP_ICON, VEST_TICKER, } from 'app/client_config';
 import session from 'app/utils/session'
 import { loadGrayHideSettings } from 'app/utils/ContentAccess'
@@ -105,12 +108,47 @@ class App extends React.Component {
         if (process.env.BROWSER) {
             this.loadDownvotedPrefs()
         }
+        if (window.location.hash === '#app-settings') {
+            this.appSettings = true
+        }
     }
 
-    componentDidMount() {
+    async checkShortcutIntent() {
+        try {
+            const intent = await getShortcutIntent()
+            const intentId = intent.extras['gls.blogs.id']
+            if (intent.extras['gls.blogs.hash'] === '#app-settings' && localStorage.getItem('processed_intent') !== intentId) {
+                this.appSettings = true
+                localStorage.setItem('processed_intent', intentId)
+            }
+        } catch (err) {
+            console.error('Cannot get shortcut intent', err)
+        }
+    }
+
+componentDidMount() {
         if (process.env.BROWSER) {
             console.log('ui-blogs version:', $STM_Config.ui_version);
             console.log('golos-lib-js version:', libInfo.version, 'hash:', libInfo.hash)
+        }
+
+        if (process.env.MOBILE_APP) {
+            (async () => {
+                alert('csi')
+                await this.checkShortcutIntent()
+                alert('csi ok')
+                onShortcutIntent(intent => {
+                    if (intent.extras['gls.blogs.hash'] === '#app-settings') {
+                        openAppSettings()
+                    }
+                })
+
+                fixRouteIfApp()
+
+                this.setState({
+                    can_render: true
+                })
+            })()
         }
 
         const { nightmodeEnabled } = this.props;
@@ -250,6 +288,10 @@ class App extends React.Component {
     }
 
     render() {
+        if (process.env.MOBILE_APP && !this.state.can_render) {
+            return null
+        }
+
         const {
             location,
             params,
@@ -366,7 +408,7 @@ class App extends React.Component {
 
         const themeClass = nightmodeEnabled ? ' theme-dark' : ' theme-light';
 
-        const isApp = process.env.IS_APP && location.pathname.startsWith('/__app_')
+        const isApp = location.pathname.startsWith('/__app_') || this.appSettings
 
         const noHeader = isApp
         const noFooter = isApp || location.pathname.startsWith('/submit')
@@ -391,7 +433,7 @@ class App extends React.Component {
                     {welcome_screen}
                     {callout}
                     <ChainFailure />
-                    {children}
+                    {this.appSettings ? <AppSettings.component /> : children}
                     {noFooter ? null : <Footer />}
                     <NewsPopups />
                     <ScrollButton />
