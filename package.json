@@ -26,7 +26,7 @@
     "build:app-entry": "cross-env NODE_ENV=production NODE_CONFIG_ENV=production,desktop ./node_modules/@babel/node/bin/babel-node.js build_app_entry.js",
     "prebuild:mobile": "cross-env NODE_CONFIG_ENV=production,mobile node ./prebuild_mobile.js",
     "build:mobile": "npm run build-hash && cross-env NODE_ENV=production NODE_CONFIG_ENV=production,mobile ./node_modules/.bin/webpack --config ./webpack/prod-mobile.config.js",
-    "postbuild:mobile": "npm run build:app-entry dist && cross-env NODE_CONFIG_ENV=production,mobile node ./postbuild_mobile.js && cd cordova && cordova prepare && cordova run android"
+    "postbuild:mobile": "npm run build:app-entry dist _mobile && cross-env NODE_CONFIG_ENV=production,mobile node ./postbuild_mobile.js && cd cordova && cordova prepare && cordova run android"
   },
   "author": "Golos <info@golos.id>",
   "license": "MIT",
@@ -147,6 +147,7 @@
     "babel-loader": "^8.2.3",
     "babel-plugin-styled-components": "^1.5.1",
     "chai": "^4.1.2",
+    "cheerio": "1.0.0-rc.10",
     "co-mocha": "^1.2.2",
     "cordova-android": "^10.1.2",
     "cordova-config": "^0.7.0",
@@ -155,7 +156,7 @@
     "cordova-plugin-backbutton": "^0.3.0",
     "cordova-plugin-badge": "^0.8.9",
     "cordova-plugin-device": "^3.0.0",
-    "cordova-plugin-file": "^8.1.2",
+    "cordova-plugin-file": "^7.0.0",
     "cordova-plugin-native-logs": "^1.0.5",
     "cordova-plugin-splashscreen": "^6.0.2",
     "core-js": "^3.19.1",
@@ -177,7 +178,7 @@
     "svg-sprite-loader": "^4.3.0",
     "uglifyjs-webpack-plugin": "^1.2.5",
     "webpack-command": "^0.2.1",
-    "webpack-merge": "^5.10.0",
+    "webpack-merge": "5.2.0",
     "webpack-serve": "^1.0.4"
   },
   "optionalDependencies": {

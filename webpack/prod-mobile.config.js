@@ -31,7 +31,7 @@ module.exports = mergeWithCustomize({
         // vendor: ['react', 'react-dom', 'react-router']
     },
     output: {
-        path: path.resolve(__dirname, '../dist/electron/assets'),
+        path: path.resolve(__dirname, '../dist/assets'),
     },
     optimization: {
         minimizer: [
