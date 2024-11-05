@@ -27,6 +27,7 @@ import MiniHeader from '@modules/MiniHeader';
 import PageViewsCounter from '@elements/PageViewsCounter';
 import ChainFailure from 'app/components/elements/ChainFailure'
 import DialogManager from 'app/components/elements/common/DialogManager';
+import LoadingIndicator from 'app/components/elements/LoadingIndicator'
 import NotifyPolling from 'app/components/elements/NotifyPolling'
 import AppSettings, { openAppSettings } from 'app/components/pages/app/AppSettings'
 import { init as initAnchorHelper } from 'app/utils/anchorHelper';
@@ -82,6 +83,7 @@ class App extends React.Component {
             p.new_visitor !== n.new_visitor ||
             p.flash !== n.flash ||
             this.state !== nextState ||
+            this.state.can_render !== nextState.can_render ||
             p.nightmodeEnabled !== n.nightmodeEnabled
         );
     }
@@ -134,9 +136,7 @@ componentDidMount() {
 
         if (process.env.MOBILE_APP) {
             (async () => {
-                alert('csi')
                 await this.checkShortcutIntent()
-                alert('csi ok')
                 onShortcutIntent(intent => {
                     if (intent.extras['gls.blogs.hash'] === '#app-settings') {
                         openAppSettings()
@@ -209,6 +209,13 @@ componentDidMount() {
         if (nextProps.location.pathname !== this.props.location.pathname) {
             this.setState({ showBanner: false, showCallout: false });
         }
+    }
+
+    componentDidCatch(err, info) {
+        const errStr = (err && err.toString()) ? err.toString() : JSON.stringify(err)
+        const infoStr = (info && info.componentStack) || JSON.stringify(info)
+        alert(';( Ошибка рендеринга\n\n' + errStr + '\n' + infoStr)
+        throw err
     }
 
     checkLogin = event => {
@@ -289,7 +296,7 @@ componentDidMount() {
 
     render() {
         if (process.env.MOBILE_APP && !this.state.can_render) {
-            return null
+            return <LoadingIndicator type='circle' />
         }
 
         const {
@@ -310,7 +317,7 @@ componentDidMount() {
             (params_keys.length === 2 &&
                 params_keys[0] === 'order' &&
                 params_keys[1] === 'category');
-        const alert = this.props.error || flash.get('alert');
+        const f_alert = this.props.error || flash.get('alert');
         const warning = flash.get('warning');
         const success = flash.get('success');
         let callout = null;
@@ -318,7 +325,7 @@ componentDidMount() {
         const notifyTitle = $STM_Config.add_notify_site.title;
         const showInfoBox = $STM_Config.add_notify_site.show && this.isShowInfoBox($STM_Config.add_notify_site);
 
-        if (this.state.showCallout && (alert || warning || success)) {
+        if (this.state.showCallout && (f_alert || warning || success)) {
             callout = (
                 <div className="App__announcement row">
                     <div className="column">
@@ -328,7 +335,7 @@ componentDidMount() {
                                     this.setState({ showCallout: false })
                                 }
                             />
-                            <p>{alert || warning || success}</p>
+                            <p>{f_alert || warning || success}</p>
                         </div>
                     </div>
                 </div>

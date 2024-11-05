@@ -7,7 +7,7 @@
       { "address": "wss://api-golos.blckchnd.com/ws" }
     ],
     "ws_connection_exchange": "wss://apibeta.golos.today/ws",
-    "site_domain": "devwallet.golos.today",
+    "site_domain": "beta.golos.today",
     "logo": {
       "icon": "https://i.imgur.com/Q7GCdPf.png",
       "title": "https://i.imgur.com/36zv8We.png"
