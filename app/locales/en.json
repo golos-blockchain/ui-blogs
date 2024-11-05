@@ -1167,6 +1167,7 @@
     "wrong_domain_DOMAINS": "This address is not belong to GOLOS Blogs.\nGOLOS Blogs domains are: %(DOMAINS)s\nThis address will be opened in external browser."
   },
   "app_settings": {
+    "mobile_title": "Settings of Blogs",
     "ws_connection_client": "GOLOS node URL",
     "img_proxy_prefix": "Use Proxy For Images",
     "auth_service": "Golos Auth & Registration Service (for notifications)",

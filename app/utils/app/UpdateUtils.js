@@ -65,9 +65,7 @@ export async function checkUpdates(timeout = 2000) {
                         show: true,
                         id: v,
                         link,
-                        title: process.env.MOBILE_APP ?
-                            tt('app_update.notify_blogs_VERSION', { VERSION: v }) :
-                            tt('app_update.notify_VERSION', { VERSION: v }),
+                        title: tt('app_update.notify_VERSION', { VERSION: v }),
                         new_tab: true,
                     }
                 } else {

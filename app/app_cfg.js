@@ -1,6 +1,6 @@
 /* Only Mobile. Generated automatically. Do not edit. */
 module.exports = {
-    "app_version": "1.5.0",
+    "app_version": "1.0.0",
     "ws_connection_app": [
         {
             "address": "wss://apibeta.golos.today/ws"

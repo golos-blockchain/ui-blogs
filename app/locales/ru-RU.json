@@ -1234,6 +1234,7 @@
     "wrong_domain_DOMAINS": "Похоже, эта ссылка не с GOLOS Блогов.\nДомены GOLOS Блогов: %(DOMAINS)s\nЭта ссылка будет открыта во внешнем браузере."
   },
   "app_settings": {
+    "mobile_title": "Настройки Блогов",
     "ws_connection_client": "Адрес ноды GOLOS",
     "img_proxy_prefix": "Использовать прокси для изображений",
     "auth_service": "Golos Auth & Registration Service (для уведомлений)",

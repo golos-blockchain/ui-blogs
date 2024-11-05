@@ -31,6 +31,7 @@ if (process.env.MOBILE_APP) {
     if (cfg.images.use_img_proxy === undefined) {
         cfg.images.use_img_proxy = true
     }
+    cfg.app_version = defaultCfg.app_version
     appConfig = cfg
 } else {
     appConfig = window.appSettings.load()
