@@ -11,6 +11,7 @@ import HorizontalMenu from 'app/components/elements/HorizontalMenu';
 import normalizeProfile from 'app/utils/NormalizeProfile';
 import tt from 'counterpart';
 import {detransliterate, capitalizeFirstLetter} from 'app/utils/ParsersAndFormatters';
+import { withScreenSize } from 'app/utils/ScreenSize'
 import {APP_NAME_UP, APP_ICON, SEO_TITLE} from 'app/client_config';
 
 function sortOrderToLink(so, topic, account) {
@@ -191,6 +192,8 @@ class Header extends React.Component {
                 return {link: sortOrderToLink(so[0], topic_original_link, current_account_name), value: so[1], active};
             });
 
+        const { shortQuestion } = this.props
+
         return (
             <header className="Header noPrint">
                 <div className="Header__top header">
@@ -215,7 +218,8 @@ class Header extends React.Component {
                     <div className={'Header__sub-nav show-for-medium hide-for-small ' + (this.state.subheader_hidden ? ' hidden' : '')}>
                         <div className="row">
                             <div className="columns">
-                                <span className="question"><a target="_blank" rel="noopener noreferrer" href="https://golos.chatbro.com"><Icon name="new/telegram" />&nbsp;&nbsp;{tt('g.to_ask')}</a></span>
+                                <span className="question" title={shortQuestion && tt('g.to_ask')}>
+                                    <a target="_blank" rel="noopener noreferrer" href="https://golos.chatbro.com"><Icon name="new/telegram" />&nbsp;&nbsp;{!shortQuestion ? tt('g.to_ask') : '(?)'}</a></span>
                                 <HorizontalMenu items={sort_order_menu_horizontal} />
                             </div>
                         </div>
@@ -241,4 +245,4 @@ export default connect(
             account_meta: account_user,
         }
     }
-)(Header);
+)(withScreenSize(Header))

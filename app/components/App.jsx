@@ -109,9 +109,9 @@ class App extends React.Component {
         super(props)
         if (process.env.BROWSER) {
             this.loadDownvotedPrefs()
-        }
-        if (window.location.hash === '#app-settings') {
-            this.appSettings = true
+            if (window.location.hash === '#app-settings') {
+                this.appSettings = true
+            }
         }
     }
 

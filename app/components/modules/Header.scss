@@ -244,6 +244,12 @@ ul > li.Header__top-logo > a {
 
   .VerticalMenu {
     left: 0;
+
+    li {
+      a {
+        padding: 0.6rem 0.6rem;
+      }
+    }
   }
 }
 

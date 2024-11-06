@@ -50,7 +50,7 @@ module.exports = {
         "host_local": "https://devapi-dex.golos.app"
     },
     "app_updater": {
-        "host": "https://files.golos.app"
+        "host": "https://devfiles.golos.app"
     },
     "forums": {
         "white_list": [
