@@ -37,6 +37,7 @@ import { getShortcutIntent, onShortcutIntent } from 'app/utils/app/ShortcutUtils
 import { APP_ICON, VEST_TICKER, } from 'app/client_config';
 import session from 'app/utils/session'
 import { loadGrayHideSettings } from 'app/utils/ContentAccess'
+import { withScreenSize } from 'app/utils/ScreenSize'
 import libInfo from 'app/JsLibHash.json'
 
 const GlobalStyle = createGlobalStyle`
@@ -84,7 +85,9 @@ class App extends React.Component {
             p.flash !== n.flash ||
             this.state !== nextState ||
             this.state.can_render !== nextState.can_render ||
-            p.nightmodeEnabled !== n.nightmodeEnabled
+            p.nightmodeEnabled !== n.nightmodeEnabled ||
+            p.hideOrdersMe !== n.hideOrdersMe ||
+            p.hideOrders !== n.hideOrders
         );
     }
 
@@ -305,8 +308,16 @@ componentDidMount() {
             children,
             flash,
             new_visitor,
-            nightmodeEnabled
+            nightmodeEnabled,
+            loggedIn,
         } = this.props;
+        let {
+            hideOrders,
+            hideOrdersMe,
+        } = this.props;
+        if (loggedIn) {
+            hideOrders = hideOrdersMe
+        }
 
         const route = resolveRoute(location.pathname);
         const lp = false; //location.pathname === '/';
@@ -435,6 +446,7 @@ componentDidMount() {
                 {noHeader ? null : (miniHeader ? <MiniHeader /> : <Header />)}
                 <div className={cn('App__content' +
                     (noHeader ? ' no-header' : ''), {
+                    'ho': hideOrders,
                     'App__content_hide-sub-menu': route.hideSubMenu,
                 })}>
                     {welcome_screen}
@@ -466,7 +478,8 @@ App.propTypes = {
     loginUser: PropTypes.func.isRequired,
     logoutUser: PropTypes.func.isRequired,
     depositSteem: PropTypes.func.isRequired,
-    nightmodeEnabled: PropTypes.bool
+    nightmodeEnabled: PropTypes.bool,
+    loggedIn: PropTypes.bool
 };
 
 export default connect(
@@ -476,6 +489,7 @@ export default connect(
         return {
             error: state.app.get('error'),
             flash: state.offchain.get('flash'),
+            loggedIn: !!state.user.get('current'),
             new_visitor:
                 !state.user.get('current') &&
                 !state.offchain.get('account') &&
@@ -500,4 +514,4 @@ export default connect(
             dispatch(g.actions.fetchExchangeRates());
         },
     })
-)(App);
+)(withScreenSize(App))

@@ -55,24 +55,27 @@ const calculateEstimateOutput = ({ account, price_per_golos, savings_withdraws, 
   return Number(((total_steem * price_per_golos) + total_sbd).toFixed(2) );
 }
 
-function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops, username, showLogin, goChangeAccount, loggedIn, vertical, navigate, probablyLoggedIn, location, locationQueryParams, toggleNightmode}) {
+function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops, username, showLogin, goChangeAccount, loggedIn, vertical, navigate, probablyLoggedIn, location, locationQueryParams, toggleNightmode,
+    hideOrders, hideOrdersMe, }) {
+    if (loggedIn) {
+        hideOrders = hideOrdersMe
+    }
     const APP_NAME = tt('g.APP_NAME');
     const mcn = 'menu' + (vertical ? ' vertical show-for-small-only' : '');
     const mcl = vertical ? '' : ' sub-menu';
     const lcn = vertical ? '' : 'show-for-large';
-    const scn = vertical ? '' : 'show-for-medium';
     const nav = navigate || defaultNavigate;
     const topbutton = <li className={lcn + ' submit-story'}>
         <Link to='/services' className='button small topbutton'>
             <Icon name="new/monitor" size="0_95x" />{tt('g.topbutton')}
         </Link>
     </li>;
-    const submitStory = <li className={scn + ' submit-story'}>
+    const submitStory = (vertical || !hideOrders) && <li className={'submit-story'}>
         <a href="/submit" onClick={nav} className={'button small topbutton alert'}>
             <Icon name="new/add" size="0_95x" />{tt('g.submit_a_story')}
         </a>
     </li>;
-    const submitStoryPencil = <li className="hide-for-medium submit-story-pencil">
+    const submitStoryPencil = hideOrders && <li className="submit-story-pencil">
         <Link to="/submit" className="button small alert">
             <Icon name="new/add" size="0_95x" />
         </Link>
@@ -88,13 +91,13 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     const messagesLink = msgsHost() ? msgsLink() : '';
     const ordersLink = walletUrl(`/@${username}/filled-orders`)
 
-    const faqItem = <li className={scn}>
+    const faqItem = (vertical || !hideOrders) && <li>
         <Link to="/faq" title={tt('navigation.faq')}><Icon name="info_o" size="1_5x" />
         </Link>
       </li>
     ;
 
-    const searchItem = <li className={scn}>
+    const searchItem = (vertical || !hideOrders) && <li>
         <Link to="/search" title={tt('navigation.search')}><Icon name="new/search" size="1_25x" />
         </Link>
       </li>
@@ -112,15 +115,15 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     const registerUrl = authRegisterUrl() + (invite ? ('?invite=' + invite) : '');
 
     const additional_menu = []
-    if (!loggedIn) {
+    if (!loggedIn && hideOrders) {
         additional_menu.push(
-            { link: '/login.html', onClick: showLogin, value: tt('g.login'), className: 'show-for-small-only' },
+            { link: '/login.html', onClick: showLogin, value: tt('g.login') },
             { link: registerUrl,
                 onClick: (e) => {
                     e.preventDefault();
                     window.location.href = registerUrl;
                 },
-                value: tt('g.sign_up'), className: 'show-for-small-only' }
+                value: tt('g.sign_up') }
         )
     }
     additional_menu.push(
@@ -172,14 +175,14 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
 
         return (
             <ul className={mcn + mcl}>
-                <span className={scn}><LocaleSelect /></span>
+                {(vertical || !hideOrders) && <span><LocaleSelect /></span>}
                 {faqItem}
                 {searchItem}
-                <li className="delim show-for-medium" />
+                {!hideOrders && <li className="delim" />}
                 {topbutton}
                 {submitStory}
                 {!vertical && submitStoryPencil}
-                <li className="delim show-for-medium" />
+                {!hideOrders && <li className="delim" />}
                 <LinkWithDropdown
                     closeOnClickOutside
                     dropdownPosition="bottom"
@@ -213,10 +216,10 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
             {faqItem}
             {searchItem}
             <li className="delim show-for-medium" />
-            {!probablyLoggedIn && <li className={scn}>
+            {!probablyLoggedIn && (vertical || !hideOrders) && <li>
               <a href="/login.html" onClick={showLogin} className={!vertical && 'button small violet hollow'}>{tt('g.login')}</a>
             </li>}
-            {!probablyLoggedIn && <li className={scn}>
+            {!probablyLoggedIn && (vertical || !hideOrders) && <li>
               <a href={registerUrl} className={!vertical && 'button small alert'}>{tt('g.sign_up')}</a>
             </li>}
             {probablyLoggedIn && <li className={lcn}>

@@ -5,7 +5,9 @@ const isScreenS = () => {
     return res
 }
 
-const shortQuestion = '750px'
+const shortQuestion = '63.9375em'
+const hideOrders = '47.9375em'
+const hideOrdersMe = '52.9375em'
 
 const isSmaller = (val) => {
     const res = window.matchMedia('screen and (max-width: ' + val + ')').matches
@@ -35,15 +37,19 @@ export const withScreenSize = (WrappedComponent) => {
             this.setState({
                 _isSmall: isScreenS(),
                 _shortQuestion: isSmaller(shortQuestion),
+                _hideOrders: isSmaller(hideOrders),
+                _hideOrdersMe: isSmaller(hideOrdersMe),
             })
         }
 
         render() {
-            const { _shortQuestion } = this.state
+            const { _shortQuestion, _hideOrders, _hideOrdersMe } = this.state
             return (
                 <WrappedComponent
                     isS={this.state._isSmall}
                     shortQuestion={_shortQuestion}
+                    hideOrders={_hideOrders}
+                    hideOrdersMe={_hideOrdersMe}
                     {...this.props}
                 />
             )

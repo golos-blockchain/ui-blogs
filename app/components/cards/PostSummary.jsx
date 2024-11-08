@@ -34,6 +34,7 @@ import { addHighlight, unsubscribePost } from 'app/utils/NotifyApiClient'
 import { detransliterate } from 'app/utils/ParsersAndFormatters'
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl'
 import { EncryptedStates } from 'app/utils/sponsors'
+import { reloadLocation } from 'app/utils/app/RoutingUtils'
 import { walletUrl } from 'app/utils/walletUtils'
 
 function isLeftClickEvent(event) {
@@ -45,8 +46,13 @@ function isModifiedEvent(event) {
 }
 
 function navigate(e, onClick, post, url, isForum, isSearch, warn) {
-    if (isForum || isSearch)
+    if (isForum || isSearch) {
+        if (process.env.MOBILE_APP) {
+            e.preventDefault()
+            reloadLocation(url)
+        }
         return;
+    }
     if (warn) {
         e.preventDefault()
         return
