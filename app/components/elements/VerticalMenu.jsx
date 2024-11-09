@@ -4,6 +4,10 @@ import PropTypes from 'prop-types'
 import Icon from 'app/components/elements/Icon'
 import LinkEx from 'app/utils/LinkEx'
 
+const isSepar = (item) => {
+    return item && item.value === '-'
+}
+
 export default class VerticalMenu extends React.Component {
     static propTypes = {
         items: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -32,10 +36,21 @@ export default class VerticalMenu extends React.Component {
             {title && <li className="title">{title}</li>}
             {description && <li className="description">{description}</li>}
             {items.map((i, k) => {
+                const prev = items[k - 1]
+                const next = items[k + 1]
                 if(i.value === hideValue) return null
+                if (isSepar(i)) {
+                    return <hr key={i.key || Math.random()} />
+                }
                 const iconSize = i.iconSize || '1x'
                 const target = i.target
-                return <li data-disabled={!!i.disabled} data-link={i.link} data-value={i.value} key={i.key ? i.key : i.value} onClick={(i.link && !i.disabled) ? this.closeMenu : null}>
+                let className = ''
+                if (isSepar(prev)) {
+                    className += ' padd-top'
+                } else if (isSepar(next)) {
+                    className += ' padd-bottom'
+                }
+                return <li className={className} data-disabled={!!i.disabled} data-link={i.link} data-value={i.value} key={i.key ? i.key : i.value} onClick={(i.link && !i.disabled) ? this.closeMenu : null}>
                     {i.link ? <LinkEx to={!i.disabled && i.link} target={target} onClick={!i.disabled && i.onClick}>
                         {i.icon && <Icon name={i.icon} size={iconSize} />}{i.label ? i.label : i.value}
                         {i.data && <span>{i.data}</span>}
