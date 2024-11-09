@@ -1,5 +1,17 @@
 ul.PostsList__summaries {
   margin-left: 0;
+
+  .search-header {
+    font-size: 1rem;
+  }
+}
+/* Small only */
+@media screen and (max-width: 39.9375em) {
+  ul.PostsList__summaries {
+    .search-header {
+      font-size: 0.75rem;
+    }
+  }
 }
 
 .PostSummary {
