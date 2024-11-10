@@ -43,10 +43,6 @@ export function hrefClick(e) {
         } while (!href)
         if (!href) return
         e.preventDefault()
-        if (target === 'blank' || target === '_blank') {
-            window.open(href, '_blank')
-            return
-        }
         reloadLocation(href)
     }
 }
