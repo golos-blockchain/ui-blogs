@@ -41,7 +41,7 @@ module.exports = {
         "host_ws": "wss://devnotify.golos.app/ws"
     },
     "elastic_search": {
-        "url": "https://search.golos.today",
+        "url": "https://devsearch.golos.today",
         "login": "golosclient",
         "password": "golosclient"
     },

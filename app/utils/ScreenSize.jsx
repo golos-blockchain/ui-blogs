@@ -6,8 +6,8 @@ const isScreenS = () => {
 }
 
 const shortQuestion = '63.9375em'
-const hideOrders = '47.9375em'
-const hideOrdersMe = '52.9375em'
+const hideOrders = '45.9375em'
+const hideOrdersMe = '47.9375em'
 
 const hideMainMe = '800px'
 const hideRewardsMe = '440px'
