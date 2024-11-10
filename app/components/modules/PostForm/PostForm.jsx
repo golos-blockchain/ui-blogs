@@ -33,6 +33,7 @@ import {
 import { DRAFT_KEY, EDIT_KEY } from 'app/utils/postForm';
 import { checkAllowed, AllowTypes } from 'app/utils/Allowance'
 import { makeOid, encryptPost, } from 'app/utils/sponsors'
+import { withScreenSize } from 'app/utils/ScreenSize'
 
 const EDITORS_TYPES = {
     MARKDOWN: 1,
@@ -210,7 +211,8 @@ class PostForm extends React.Component {
     }
 
     render() {
-        const { editMode, editParams, categories } = this.props;
+        const { editMode, editParams, categories,
+            isS, } = this.props;
 
         const {
             editorId,
@@ -256,6 +258,7 @@ class PostForm extends React.Component {
                             ]}
                             activeId={editorId}
                             onChange={this._onEditorChange}
+                            isS={isS}
                         />
                         {isPreview ? null : (
                             <PostTitle
@@ -896,4 +899,4 @@ export default connect(
             });
         },
     })
-)(PostForm);
+)(withScreenSize(PostForm))

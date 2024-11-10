@@ -8,10 +8,16 @@ export default class EditorSwitcher extends PureComponent {
         items: PropTypes.array.isRequired,
         activeId: PropTypes.number,
         onChange: PropTypes.func.isRequired,
+        isS: PropTypes.bool,
     };
 
     render() {
-        const { items, activeId } = this.props;
+        const { items, activeId, isS } = this.props;
+
+        let fontSize
+        if (!isS) {
+            fontSize = '18px'
+        }
 
         return (
             <div className="EditorSwitcher">
@@ -21,6 +27,7 @@ export default class EditorSwitcher extends PureComponent {
                         className={cn('EditorSwitcher__item', {
                             EditorSwitcher__item_active: item.id === activeId,
                         })}
+                        style={{ fontSize }}
                         onClick={
                             item.id === activeId
                                 ? null
