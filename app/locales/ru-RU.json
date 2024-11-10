@@ -15,6 +15,7 @@
     "tag_your_story": "Добавьте тэги, первый станет категорией.",
     "select_a_tag": "Выбрать тэг",
     "select_a_category": "Выберите категорию",
+    "select_a_category2": "Категория",
     "maximum_tag_length_is_24_characters": "Максимальная длина категории 24 знака",
     "use_only_lowercase_letters": "Используйте только символы нижнего регистра",
     "use_one_dash": "Используйте только одно тире",

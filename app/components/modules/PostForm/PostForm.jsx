@@ -309,6 +309,7 @@ class PostForm extends React.Component {
                                     ? tt(disallowPostCode)
                                     : null
                             }
+                            isS={isS}
                             onPost={this._postSafe}
                             onResetClick={this._onResetClick}
                             onCancelClick={this._onCancelClick}

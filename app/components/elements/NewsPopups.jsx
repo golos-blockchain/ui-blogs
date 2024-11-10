@@ -94,8 +94,7 @@ class NewsPopups extends React.Component {
     }
 
     showAppReminder = () => {
-        if (process.env.IS_APP || typeof(localStorage) === 'undefined'
-            || location.pathname.startsWith('/submit')) {
+        if (process.env.IS_APP || typeof(localStorage) === 'undefined') {
             return false
         }
         const now = Date.now()
@@ -105,6 +104,10 @@ class NewsPopups extends React.Component {
     }
 
     render() {
+        if (process.env.BROWSER && location.pathname.startsWith('/submit')) {
+            return null
+        }
+
         const { news,hiddenNews } = this.state
 
         let appReminder = null

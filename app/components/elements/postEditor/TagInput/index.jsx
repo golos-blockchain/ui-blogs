@@ -12,6 +12,7 @@ export default class TagInput extends React.PureComponent {
         tags: PropTypes.array.isRequired,
         className: PropTypes.string,
         onChange: PropTypes.func.isRequired,
+        isS: PropTypes.bool,
     };
 
     constructor(props) {
@@ -31,10 +32,12 @@ export default class TagInput extends React.PureComponent {
     }
 
     render() {
-        const { className } = this.props;
+        const { className, isS } = this.props;
 
         return (
-            <div className={cn('TagInput', className)}>
+            <div className={cn('TagInput', className, {
+                small: isS
+            })}>
                 <input
                     className="TagInput__input"
                     value={this.state.value}
@@ -60,11 +63,12 @@ export default class TagInput extends React.PureComponent {
     }
 
     _renderErrorBlock() {
+        const { isS } = this.props
         const { inputError, temporaryHintText } = this.state;
 
         if (inputError) {
             return (
-                <Hint error align="left">
+                <Hint error align={isS ? 'right': "left"}>
                     {inputError}
                 </Hint>
             );
@@ -72,7 +76,7 @@ export default class TagInput extends React.PureComponent {
 
         if (temporaryHintText) {
             return (
-                <Hint info align="left">
+                <Hint info align={isS ? 'right': "left"}>
                     {temporaryHintText}
                 </Hint>
             );
