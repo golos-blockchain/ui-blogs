@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
 import ReactDOM from 'react-dom';
+import tt from 'counterpart';
+
 import transaction from 'app/redux/Transaction';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import * as api from 'app/utils/APIWrapper'
 import { DEBT_TOKEN_SHORT, DEBT_TICKER} from 'app/client_config';
 import { walletUrl } from 'app/utils/walletUtils'
-import tt from 'counterpart';
+import { withScreenSize } from 'app/utils/ScreenSize'
 
 class PromotePost extends Component {
 
@@ -95,7 +97,7 @@ class PromotePost extends Component {
         const DEBT_TOKEN = tt('token_names.DEBT_TOKEN')
 
         const {amount, loading, amountError, trxError, requiredAmount, alreadyInTop} = this.state;
-        const {currentAccount} = this.props;
+        const {currentAccount, isS} = this.props;
         const balanceValue = currentAccount.get('sbd_balance');
         const balance = balanceValue ? balanceValue.split(' ')[0] : 0.0;
         const submitDisabled = !amount;
@@ -112,7 +114,7 @@ class PromotePost extends Component {
                        </p>
                        <hr />
                        <div className="row">
-                           <div className="column small-4">
+                           <div className={"column small-" + (isS ? '8' : '4')}>
                                <label>{tt('g.amount')}</label>
                                <div className="input-group">
                                    <input className="input-group-field" type="text" placeholder={tt('g.amount')} value={amount} ref="amount" autoComplete="off" disabled={loading} onChange={this.amountChange} />
@@ -166,4 +168,4 @@ export default connect(
             }))
         }
     })
-)(PromotePost)
+)(withScreenSize(PromotePost))

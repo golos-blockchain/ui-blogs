@@ -6,6 +6,16 @@
         margin: 0 0 0 1rem;
     }
 }
+@media screen and (max-width: 39.9375em) {
+  .sub-menu {
+      li {
+          margin: 0 5px;
+      }
+      li:last-child {
+          margin: 0 0 0 0.5rem;
+      }
+  }
+}
 
 li.Header__profile {
   padding: 0;

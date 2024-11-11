@@ -145,6 +145,7 @@
   @media screen and (max-width: 39.9375em) {
       .shrink {
           padding: .3rem 1rem 0 1rem;
+          padding-left: 0px;
       }
   }
 }
@@ -152,6 +153,12 @@
 ul > li.Header__top-logo > a {
   padding: 0;
   transition: none;
+}
+
+.Header__top-logo.small {
+  img {
+    width: 35px;
+  }
 }
 
 .Header__sub-nav {
@@ -248,7 +255,7 @@ ul > li.Header__top-logo > a {
 .Header__sort-order-menu {
   margin-left: 10px;
 
-  > a {
+  &:not(.me) > a {
     font-size: 1.2em !important;
   }
 

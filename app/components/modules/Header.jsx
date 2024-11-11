@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router';
 import {connect} from 'react-redux';
 import tt from 'counterpart';
+import cn from 'classnames'
 
 import TopRightMenu from 'app/components/modules/TopRightMenu';
 import Icon from 'app/components/elements/Icon.jsx';
@@ -194,7 +195,7 @@ class Header extends React.Component {
                 return {link: sortOrderToLink(so[0], topic_original_link, current_account_name), value: so[1], active};
             });
 
-        let { shortQuestion, hideOrders, hideOrdersMe, } = this.props
+        let { shortQuestion, hideOrders, hideOrdersMe, isS } = this.props
         if (current_account_name) {
             hideOrders = hideOrdersMe
         }
@@ -205,13 +206,17 @@ class Header extends React.Component {
                     <div className="row align-middle">
                         <div className="columns">
                             <ul className="menu">
-                                <li className="Header__top-logo">
+                                <li className={cn("Header__top-logo", {
+                                    small: (isS && !!current_account_name)
+                                })}>
                                     <Link to={logo_link}><img src={$STM_Config.logo.icon} /></Link>
                                 </li>
                                 <li className="Header__top-steemit show-for-large noPrint">
                                     <Link to={logo_link}><img src={$STM_Config.logo.title} /></Link>
                                 </li>
-                                {selected_sort_order && hideOrders && <DropdownMenu className="Header__sort-order-menu" items={sort_order_menu} selected={selected_sort_order[1]} el="li" arrowCenter={true} />}
+                                {selected_sort_order && hideOrders && <DropdownMenu className={cn("Header__sort-order-menu", {
+                                    me: !!current_account_name
+                                })} items={sort_order_menu} selected={selected_sort_order[1]} el="li" arrowCenter={true} />}
                             </ul>
                         </div>
                         <div className="columns shrink">
