@@ -144,6 +144,7 @@ class MarkdownEditorToolbar extends React.PureComponent {
 
                 style.left = Math.round(left);
             }
+        //alert(JSON.stringify(rootPos) + ' ' + style.left)
         }
 
         const largeActions = [
@@ -307,6 +308,7 @@ class MarkdownEditorToolbar extends React.PureComponent {
                             className="MET__new-line-input"
                             autoFocus
                             placeholder={tt(action.placeholder)}
+                            enterkeyhint="enter"
                             onKeyDown={this._onInputKeyDown}
                         />
                     </div>
@@ -366,6 +368,9 @@ class MarkdownEditorToolbar extends React.PureComponent {
 
                 toolbarPosition.top = Math.round(bound.top);
                 toolbarPosition.left = Math.round(bound.left + bound.width / 2);
+            }
+            if (process.env.MOBILE_APP && !toolbarPosition.left) {
+                toolbarPosition.left = 0
             }
 
             newState.toolbarShow = true;

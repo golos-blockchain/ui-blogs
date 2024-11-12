@@ -34,6 +34,7 @@ import { DRAFT_KEY, EDIT_KEY } from 'app/utils/postForm';
 import { checkAllowed, AllowTypes } from 'app/utils/Allowance'
 import { makeOid, encryptPost, } from 'app/utils/sponsors'
 import { withScreenSize } from 'app/utils/ScreenSize'
+import { reloadLocation } from 'app/utils/app/RoutingUtils'
 
 const EDITORS_TYPES = {
     MARKDOWN: 1,
@@ -842,7 +843,7 @@ export default connect(
                     return
                 }
                 if (!pso.author) {
-                    window.location.href = '/@' + payload.author + '/sponsors'
+                    reloadLocation('/@' + payload.author + '/sponsors')
                     return
                 }
             }

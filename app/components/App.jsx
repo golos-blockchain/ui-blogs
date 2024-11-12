@@ -32,7 +32,7 @@ import NotifyPolling from 'app/components/elements/NotifyPolling'
 import AppSettings, { openAppSettings } from 'app/components/pages/app/AppSettings'
 import { init as initAnchorHelper } from 'app/utils/anchorHelper';
 import { authRegisterUrl, } from 'app/utils/AuthApiClient';
-import { fixRouteIfApp, } from 'app/utils/app/RoutingUtils'
+import { fixRouteIfApp, reloadLocation, } from 'app/utils/app/RoutingUtils'
 import { getShortcutIntent, onShortcutIntent } from 'app/utils/app/ShortcutUtils'
 import { APP_ICON, VEST_TICKER, } from 'app/client_config';
 import session from 'app/utils/session'
@@ -217,7 +217,10 @@ componentDidMount() {
     componentDidCatch(err, info) {
         const errStr = (err && err.toString()) ? err.toString() : JSON.stringify(err)
         const infoStr = (info && info.componentStack) || JSON.stringify(info)
-        alert(';( Ошибка рендеринга\n\n' + errStr + '\n' + infoStr)
+        if (confirm(';( Ошибка рендеринга. Продолжить работу?\n\n' + errStr + '\n' + infoStr)) {
+            reloadLocation('/')
+            return
+        }
         throw err
     }
 

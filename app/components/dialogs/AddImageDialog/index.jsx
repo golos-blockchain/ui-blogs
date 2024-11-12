@@ -14,9 +14,11 @@ export default class AddImageDialog extends React.PureComponent {
     };
 
     componentDidMount() {
-        const linkInput = document.getElementsByClassName('AddImageDialog__link-input')[0];
-        if (linkInput)
-            linkInput.focus();
+        if (!process.env.MOBILE_APP) {
+            const linkInput = document.getElementsByClassName('AddImageDialog__link-input')[0]
+            if (linkInput)
+                linkInput.focus()
+        }
     }
 
     render() {
@@ -49,6 +51,7 @@ export default class AddImageDialog extends React.PureComponent {
                         block
                         className="AddImageDialog__link-input"
                         placeholder="https://"
+                        enterkeyhint="enter"
                         onKeyDown={this._onInputKeyDown}
                     />
                 </div>
