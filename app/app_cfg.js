@@ -3,7 +3,7 @@ module.exports = {
     "app_version": "1.5.0",
     "ws_connection_app": [
         {
-            "address": "wss://apibeta.golos.today/ws"
+            "address": "wss://apibeta.golos.togday/ws"
         },
         {
             "address": "wss://api.golos.id/ws"

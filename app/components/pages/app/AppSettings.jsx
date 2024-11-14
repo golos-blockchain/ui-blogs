@@ -246,9 +246,13 @@ module.exports = {
 }
 
 module.exports.openAppSettings = function() {
+    if (!process.env.MOBILE_APP) {
+        window.location.href = '/__app_settings'
+        return
+    }
     const { pathname } = window.location
     window.location.href = '/#app-settings'
-    if (pathname === '/') {
+    if (pathname === '/' && window.appMounted) {
         window.location.reload() 
     }
 }

@@ -115,6 +115,7 @@ class App extends React.Component {
             if (window.location.hash === '#app-settings') {
                 this.appSettings = true
             }
+            window.appMounted = true
         }
     }
 

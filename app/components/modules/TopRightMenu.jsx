@@ -15,6 +15,7 @@ import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import NotifiCounter from 'app/components/elements/NotifiCounter';
 import { LIQUID_TICKER, DEBT_TICKER } from 'app/client_config';
 import LocalizedCurrency from 'app/components/elements/LocalizedCurrency';
+import { openAppSettings } from 'app/components/pages/app/AppSettings'
 import { vestsToSteem, toAsset } from 'app/utils/StateFunctions';
 import { authRegisterUrl, } from 'app/utils/AuthApiClient';
 import { msgsHost, msgsLink, } from 'app/utils/ExtLinkUtils';
@@ -137,6 +138,15 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
         { link: 'https://wiki.golos.id/', icon: 'new/wikipedia', value: tt("navigation.wiki"), target: 'blank' },
         { link: 'https://explorer.golos.id/', icon: 'cog', value: tt("navigation.explorer"), target: 'blank' } 
     );
+    if (!loggedIn && process.env.MOBILE_APP) {
+        const openSettings = (e) => {
+            e.preventDefault()
+            openAppSettings()
+        }
+        additional_menu.push(
+            { link: '#', onClick: openSettings, icon: 'new/setting', value: tt("g.settings"), } 
+        )
+    }
     const navAdditional = <LinkWithDropdown
         closeOnClickOutside
         dropdownPosition="bottom"

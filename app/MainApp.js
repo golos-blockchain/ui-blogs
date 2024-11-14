@@ -2,6 +2,7 @@ import renderApp from 'app/renderApp'
 import golos from 'golos-lib-js'
 import tt from 'counterpart'
 
+import { openAppSettings } from 'app/components/pages/app/AppSettings'
 import * as api from 'app/utils/APIWrapper'
 import getState from 'app/utils/StateBuilder'
 import { addShortcut } from 'app/utils/app/ShortcutUtils'
@@ -67,8 +68,17 @@ function closeSplash() {
     }
 }
 
+const isSettings = () => {
+    return window.location.hash === '#app-settings' ||
+        window.location.pathname === '/__app_settings'
+}
+
 function showNodeError() {
-    alert(tt('app_settings.node_error_NODE', { NODE: $STM_Config.ws_connection_client }))
+    if (isSettings()) return
+    if (confirm(tt('app_settings.node_error_new_NODE', { NODE: $STM_Config.ws_connection_client })
+        + ' ' + tt('app_settings.node_error_new_NODE2') + '?')) {
+        openAppSettings()
+    }
 }
 
 const showError = (err, label = '') => {
@@ -141,6 +151,10 @@ async function initState() {
 
         return onchain
     } catch (err) {
+        if (isSettings()) {
+            console.error(err)
+            return
+        }
         showError(err, 'initState')
     }
 }

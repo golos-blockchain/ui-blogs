@@ -1,9 +1,14 @@
 import React from 'react';
 import {connect} from 'react-redux'
+import cookie from "react-cookie";
+import Dropzone from 'react-dropzone'
+import ReactTooltip from 'react-tooltip'
 import user from 'app/redux/User';
 import g from 'app/redux/GlobalReducer';
 import tt from 'counterpart';
 import throttle from 'lodash/throttle'
+import {fromJS, Set, Map} from 'immutable'
+
 import transaction from 'app/redux/Transaction'
 import { getMetadataReliably } from 'app/utils/NormalizeProfile';
 import DoNotBother from 'app/components/elements/DoNotBother';
@@ -11,12 +16,11 @@ import Icon from 'app/components/elements/Icon';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator'
 import Userpic from 'app/components/elements/Userpic';
 import reactForm from 'app/utils/ReactForm'
-import {fromJS, Set, Map} from 'immutable'
 import UserList from 'app/components/elements/UserList';
 import ContentSettings from 'app/components/elements/settings/ContentSettings'
-import cookie from "react-cookie";
-import Dropzone from 'react-dropzone'
+import AppSettings, { openAppSettings } from 'app/components/pages/app/AppSettings'
 import { LANGUAGES, DEFAULT_LANGUAGE, LOCALE_COOKIE_KEY, USER_GENDER } from 'app/client_config'
+import { withScreenSize } from 'app/utils/ScreenSize'
 
 class Settings extends React.Component {
 
@@ -83,6 +87,11 @@ class Settings extends React.Component {
         }
         if (!notifyPresets) notifyPresets = {
             receive: true, donate: true, comment_reply: true, mention: true, message: true, fill_order: true,
+        }
+        if (process.env.MOBILE_APP) {
+            if (notifyPresets.in_background === undefined) {
+                notifyPresets.in_background = true
+            }
         }
         this.setState({notifyPresets})
     }
@@ -295,7 +304,7 @@ class Settings extends React.Component {
 
         const {profile_image, cover_image, name, about, gender, location, website, donatePresets, emissionDonatePct, notifyPresets, notifyPresetsTouched} = this.state
 
-        const {follow, block, account, isOwnAccount} = this.props
+        const {follow, block, account, isOwnAccount, isS} = this.props
         const following = follow && follow.getIn(['getFollowingAsync', account.name]);
         const ignores = isOwnAccount && block && block.getIn(['blocking', account.name, 'result'])
         const mutedInNew = isOwnAccount && props.mutedInNew;
@@ -473,7 +482,7 @@ class Settings extends React.Component {
                 <div className="row">
                     <div className="small-12 medium-8 large-6 columns Notification_presets">
                         <br /><br />
-                        <h3>{tt('settings_jsx.notifications_settings')}</h3>
+                        <h3>{isS ? tt('settings_jsx.notifications_settings2') : tt('settings_jsx.notifications_settings')}</h3>
                         <label>
                             <input type='checkbox' checked={!!notifyPresets.receive} data-type='receive' onChange={this.onNotifyPresetChange} />
                             <Icon name='notification/transfer' size='2x' />
@@ -504,6 +513,10 @@ class Settings extends React.Component {
                             <Icon name='notification/order' size='2x' />
                             <span>{tt('settings_jsx.notifications_order')}</span>
                         </label>
+                        {process.env.MOBILE_APP ? <label>
+                            <input type='checkbox' checked={!!notifyPresets.in_background} data-type='in_background' onChange={this.onNotifyPresetChange} />
+                            <span>{tt('settings_jsx.notifications_bg')}&nbsp;<span onClick={() => alert(tt('settings_jsx.notifications_bg_title'))}><Icon name="info_o" /></span></span>
+                        </label> : null}
                         <br />
                         <input
                             type="submit"
@@ -530,6 +543,22 @@ class Settings extends React.Component {
                     <div className="small-12 columns">
                         <br /><br />
                         <UserList title={tt('settings_jsx.muted_in_new_users')} account={account} users={mutedInNew} muteOnlyNew={true} />
+                    </div>
+                </div>}
+
+            {isOwnAccount && process.env.MOBILE_APP &&
+                <div className="row">
+                    <div className="small-12 medium-8 large-6 columns">
+                        <br />
+                        <h3>{tt('settings_jsx.app_settings')}</h3>
+                        {tt('settings_jsx.advanced_settings')}
+                        <button style={{ marginTop: '0.5rem' }}
+                            onClick={e => {
+                                openAppSettings()
+                            }}
+                            className="button hollow small"
+                        >{tt('settings_jsx.open')}
+                        </button>
                     </div>
                 </div>}
 
@@ -588,4 +617,4 @@ export default connect(
             });
         }
     })
-)(Settings)
+)(withScreenSize(Settings))

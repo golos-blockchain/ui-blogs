@@ -13,6 +13,7 @@ import tt from 'counterpart';
 import { APP_DOMAIN } from 'app/client_config';
 import { translateError } from 'app/utils/ParsersAndFormatters';
 import { authUrl, authRegisterUrl, } from 'app/utils/AuthApiClient';
+import { openAppSettings } from 'app/components/pages/app/AppSettings'
 
 class LoginForm extends Component {
 
@@ -155,7 +156,8 @@ class LoginForm extends Component {
         const authType = /^vote|comment/.test(opType) ? tt('loginform_jsx.posting') : tt('loginform_jsx.active_or_owner');
         const submitLabel = loginBroadcastOperation ? tt('g.sign_in') : tt('g.login');
         const cancelIsRegister = loginDefault && loginDefault.get('cancelIsRegister');
-        let error = password.touched && password.error ? password.error : this.props.login_error;
+        let loginError = this.props.login_error
+        let error = password.touched && password.error ? password.error : (loginError && loginError.get('error'))
         if (error === 'account_frozen') {
             error = <span>
                 {tt('loginform_jsx.account_frozen')}
@@ -178,6 +180,15 @@ class LoginForm extends Component {
               {tt('loginform_jsx.this_password_is_bound_to_your_account_active_key')}
               &nbsp;
               {tt('loginform_jsx.you_may_use_this_active_key_on_other_more')}
+            </span>
+        } else if (error === 'Node failure') {
+            const NODE = loginError && loginError.get('node')
+            error = <span>
+                {tt('app_settings.node_error_new_NODE', { NODE } )}&nbsp;
+                {process.env.MOBILE_APP ? <a href='#' onClick={e => {
+                    e.preventDefault()
+                    openAppSettings()                  
+                }}>{tt('app_settings.node_error_new_NODE2')}</a> : null}
             </span>
         }
         let message = null;
