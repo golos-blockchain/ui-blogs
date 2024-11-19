@@ -1164,11 +1164,18 @@
     "mention_comment": " mentioned you in their comment",
     "message": " sent you a private message"
   },
+  "login_app_reminder": {
+    "or_download_for": "...or download for ",
+    "title": "Click to download for "
+  },
   "app_download": {
-    "title": "Download Golos Desktop"
+    "title": "Download Golos Desktop",
+    "download_for": "Download for",
+    "mobile": "Download Golos Blogs for"
   },
   "app_reminder": {
-    "text": "Install desktop application for Windows or Linux to receive data directly from blockchain"
+    "text": "Install desktop application for Windows, Linux, Android",
+    "text2": "to receive data directly from blockchain"
   },
   "app_goto_url": {
     "goto": "Goto",

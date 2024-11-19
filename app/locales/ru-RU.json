@@ -1230,12 +1230,18 @@
     "mention_comment": " упомянул вас в комментарии",
     "message": " написал вам сообщение"
   },
+  "login_app_reminder": {
+    "or_download_for": "...или скачайте для ",
+    "title": "Нажмите, чтобы скачать для "
+  },
   "app_download": {
     "title": "Скачать Golos Desktop",
-    "download_for": "Скачать для"
+    "download_for": "Скачать для",
+    "mobile": "Скачать Golos Блоги для"
   },
   "app_reminder": {
-    "text": "Установите десктоп-приложение для Windows или Linux и получайте информацию напрямую с блокчейна"
+    "text": "Установите приложение для Windows, Linux, Android",
+    "text2": "и получайте информацию напрямую с блокчейна"
   },
   "app_goto_url": {
     "goto": "Перейти",
