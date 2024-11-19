@@ -5548,6 +5548,9 @@ globule@^1.0.0:
     lodash "^4.17.21"
     minimatch "~3.0.2"
 
+"gls-blogs-native-core@file:native_core":
+  version "1.0.0"
+
 golos-dex-lib-js@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/golos-dex-lib-js/-/golos-dex-lib-js-1.0.2.tgz#e0fe5d29781da8d0830ccb6bcfa5386bc73a2c5d"

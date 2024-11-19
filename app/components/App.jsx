@@ -17,6 +17,7 @@ import URLLoader from 'app/components/elements/app/URLLoader';
 import TooltipManager from 'app/components/elements/common/TooltipManager';
 import user from 'app/redux/User';
 import g from 'app/redux/GlobalReducer';
+import PushNotificationSaga from 'app/redux/services/PushNotificationSaga'
 import { Link } from 'react-router';
 import resolveRoute from 'app/ResolveRoute';
 import Dialogs from '@modules/Dialogs';
@@ -149,9 +150,14 @@ componentDidMount() {
 
                 fixRouteIfApp()
 
+                document.addEventListener('pause', this.onPause)
+                document.addEventListener('resume', this.onResume)
+
                 this.setState({
                     can_render: true
                 })
+
+                this.stopService()
             })()
         }
 
@@ -206,6 +212,10 @@ componentDidMount() {
         if (process.env.BROWSER) {
             window.removeEventListener('click', this.checkLeaveGolos);
         }
+        if (process.env.MOBILE_APP) {
+            document.addEventListener('pause', this.onPause)
+            document.addEventListener('resume', this.onResume)
+        }
     }
 
     componentDidUpdate(nextProps) {
@@ -223,6 +233,41 @@ componentDidMount() {
             return
         }
         throw err
+    }
+
+    onPause = () => {
+        const { username } = this.props
+        const notifySess = localStorage.getItem('X-Session')
+        const notifyHost = $STM_Config.notify_service.host
+        if (username && notifySess) {
+            const settings = PushNotificationSaga.getScopePresets(username)
+            if (!settings.inBackground) {
+                console.warn('Notify - inBackground false, so do not starting service...')
+                return
+            }
+            if (!settings.bgPresets.length) {
+                console.warn('Notify - all background presets disabled, so do not starting service...')
+                return
+            }
+            const lastTake = 0
+            cordova.exec((winParam) => {
+                console.log('pause ok', winParam)
+            }, (err) => {
+                console.error('pause err', err)
+            }, 'CorePlugin', 'startService', [username, notifySess, settings.bgPresets.join(','), lastTake, notifyHost])
+        }
+    }
+
+    onResume = () => {
+        this.stopService()
+    }
+
+    stopService = () => {
+        cordova.exec((winParam) => {
+            console.log('resume ok', winParam)
+        }, (err) => {
+            console.error('resume err', err)
+        }, 'CorePlugin', 'stopService', [])
     }
 
     checkLogin = event => {
@@ -490,15 +535,18 @@ export default connect(
     state => {
         let nightmodeEnabled = process.env.BROWSER ? localStorage.getItem('nightmodeEnabled') == 'true' || false : false
 
+        const currentUser = state.user.get('current')
+
         return {
             error: state.app.get('error'),
             flash: state.offchain.get('flash'),
             loggedIn: !!state.user.get('current'),
             new_visitor:
-                !state.user.get('current') &&
+                !currentUser &&
                 !state.offchain.get('account') &&
                 state.offchain.get('new_visit'),
-            nightmodeEnabled: nightmodeEnabled
+            nightmodeEnabled: nightmodeEnabled,
+            username: currentUser && currentUser.get('username'),
         };
     },
     dispatch => ({

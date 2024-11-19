@@ -16,6 +16,19 @@ function copyDir(dir) {
     fse.copySync(dir, distPath + '/' + dir)
 }
 
+function patchLocalPluginVersion(moduleName, dir) { // Patch plugin version to do not broke on cordova prepare
+    const coreVersion = JSON.parse(fs.readFileSync(dir + '/package.json')).version
+    console.log('    ' + moduleName, 'version:', coreVersion)
+
+    let json = JSON.parse(fs.readFileSync(distPath + '/package.json'))
+    if (!json.devDependencies[moduleName]) {
+        throw new Error(moduleName + ' dependency is not found in package.json/devDependencies')
+    }
+    json.devDependencies[moduleName] = coreVersion
+    json = JSON.stringify(json, null, 2)
+    fs.writeFileSync(distPath + '/package.json', json)
+}
+
 
 const distPath = 'cordova'
 const configFile = distPath + '/config.xml'
@@ -42,6 +55,14 @@ if (dirExists('dist')) {
     fs.rmSync(distPath + '/www', { recursive: true, force: true });
     fs.renameSync('dist', distPath + '/www')
 }
+
+console.log('--- Copying "native_core" folder to "' + distPath + '/native_core"')
+
+copyDir('native_core')
+
+console.log('--- Patching "native_core" version for correct installation')
+
+patchLocalPluginVersion('gls-blogs-native-core', 'native_core')
 
 console.log('--- Clearing cordova in order to update in on "cordova prepare"')
 
