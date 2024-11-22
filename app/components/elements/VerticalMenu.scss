@@ -24,6 +24,14 @@
     letter-spacing: 0.4px;
   }
 
+  > li.padd-top > a {
+    padding-top: 1rem;
+  }
+
+  > li.padd-bottom > a {
+    padding-bottom: 1rem;
+  }
+
   > li > a:hover {
     background-color: #f0f0f0;
   }
@@ -50,6 +58,12 @@
     font-size: 87.5%;
     text-align: center;
     border-bottom: 1px solid $light-gray;
+  }
+
+  > hr { 
+    width: 90%;
+    margin-top: 0px;
+    margin-bottom: 0px;
   }
 
   &_nav-profile {

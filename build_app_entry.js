@@ -29,6 +29,10 @@ if (destDir !== 'null') {
     fse.copySync('app/assets/images', destDir + '/images', { overwrite: true }) // for some direct links
 }
 
+if (cfgFile === '_mobile') {
+    process.exit(0)
+}
+
 let cfg = {}
 const copyKey = (key) => {
     cfg[key] = config.get('desktop.' + key)

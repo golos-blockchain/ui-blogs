@@ -1,0 +1,10 @@
+.MiniTopics_in-header {
+    float: left;
+    margin-right: 1rem;
+
+    > select {
+        border: none;
+        border-bottom: 1px solid $light-gray;
+        border-radius: 0;
+    }
+}

@@ -34,6 +34,7 @@ import { addHighlight, unsubscribePost } from 'app/utils/NotifyApiClient'
 import { detransliterate } from 'app/utils/ParsersAndFormatters'
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl'
 import { EncryptedStates } from 'app/utils/sponsors'
+import { reloadLocation } from 'app/utils/app/RoutingUtils'
 import { walletUrl } from 'app/utils/walletUtils'
 
 function isLeftClickEvent(event) {
@@ -45,8 +46,13 @@ function isModifiedEvent(event) {
 }
 
 function navigate(e, onClick, post, url, isForum, isSearch, warn) {
-    if (isForum || isSearch)
+    if (isForum || isSearch) {
+        if (process.env.MOBILE_APP) {
+            e.preventDefault()
+            reloadLocation(url)
+        }
         return;
+    }
     if (warn) {
         e.preventDefault()
         return
@@ -372,7 +378,7 @@ class PostSummary extends React.Component {
         if(gray) commentClasses.push('downvoted') // rephide
         if (loginBlurring) commentClasses.push('blurring')
 
-        total_search = total_search ? <span class="strike" style={{ fontSize: '1rem', paddingBottom: '1rem' }}>
+        total_search = total_search ? <span class="search-header strike" style={{ paddingBottom: '1rem' }}>
                 {tt('g.and_more_search_posts_COUNT', { COUNT: total_search })}
                 <a target="_blank" href="/search"><img className="float-center" src={require("app/assets/images/search.png")} width="400" /></a>
             </span> : null

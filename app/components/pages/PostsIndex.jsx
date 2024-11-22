@@ -2,21 +2,24 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
-import Topics from './Topics';
+import {Link} from 'react-router';
+import tt from 'counterpart';
+import Immutable from "immutable";
+import cookie from "react-cookie";
+import cn from 'classnames'
+
 import constants from 'app/redux/constants';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import PostsList from 'app/components/cards/PostsList';
 import {isFetchingOrRecentlyUpdated} from 'app/utils/StateFunctions';
-import {Link} from 'react-router';
 import MarkNotificationRead from 'app/components/elements/MarkNotificationRead';
-import tt from 'counterpart';
-import Immutable from "immutable";
 import Callout from 'app/components/elements/Callout'
 import CMCWidget from 'app/components/elements/market/CMCWidget'
+import Topics from 'app/components/modules/Topics'
 import { APP_NAME, SELECT_TAGS_KEY } from 'app/client_config';
-import cookie from "react-cookie";
 import transaction from 'app/redux/Transaction'
 import { getMetadataReliably } from 'app/utils/NormalizeProfile';
+import { withScreenSize } from 'app/utils/ScreenSize'
 
 class PostsIndex extends React.Component {
 
@@ -123,7 +126,7 @@ class PostsIndex extends React.Component {
     }
 
     render() {
-        let { loggedIn, categories, has_from_search } = this.props;
+        let { loggedIn, categories, has_from_search, hideOrders, hideOrdersMe, } = this.props;
         let {category, order = constants.DEFAULT_SORT_ORDER} = this.props.routeParams;
         let topics_order = order;
         let posts = [];
@@ -172,10 +175,14 @@ class PostsIndex extends React.Component {
           posts = posts.slice(slice_step)
         }
 
+        if (loggedIn) hideOrders = hideOrdersMe
+
         return (
             <div className={'PostsIndex row' + (fetching ? ' fetching' : '')}>
-                <div className="PostsIndex__left column small-collapse">
-                    <div className="PostsIndex__topics_compact show-for-small hide-for-medium">
+                <div className={cn("PostsIndex__left column small-collapse", {
+                    ho: hideOrders
+                })}>
+                    {hideOrders && <div className="PostsIndex__topics_compact">
                         <Topics
                             categories={categories}
                             order={topics_order}
@@ -184,7 +191,7 @@ class PostsIndex extends React.Component {
                             loadSelected={this.loadSelected}
                             compact
                         />
-                    </div>
+                    </div>}
                     { markNotificationRead }
                     {(promo_posts && promo_posts.size) ? <div>
                         <PostsList
@@ -271,5 +278,5 @@ module.exports = {
                 },
             };
         }
-    )(PostsIndex)
+    )(withScreenSize(PostsIndex))
 };

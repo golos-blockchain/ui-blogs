@@ -3,11 +3,7 @@ import golos from 'golos-lib-js';
 import { Link } from 'react-router';
 import { browserHistory } from 'react-router';
 import tt from 'counterpart';
-import Icon from 'app/components/elements/Icon';
-import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
-import remarkableStripper from 'app/utils/RemarkableStripper';
 import sanitize from 'sanitize-html';
-import { detransliterate } from 'app/utils/ParsersAndFormatters';
 import truncate from 'lodash/truncate';
 import Pagination from 'rc-pagination';
 import localeEn from 'rc-pagination/lib/locale/en_US';
@@ -15,6 +11,13 @@ import localeRu from 'rc-pagination/lib/locale/ru_RU';
 if (typeof(document) !== 'undefined') require('rc-pagination/assets/index.css');
 let Multiselect;
 if (typeof(document) !== 'undefined') Multiselect = require('multiselect-react-dropdown').Multiselect;
+
+import Icon from 'app/components/elements/Icon';
+import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
+import remarkableStripper from 'app/utils/RemarkableStripper';
+import { detransliterate } from 'app/utils/ParsersAndFormatters';
+import { hrefClick } from 'app/utils/app/RoutingUtils'
+import { withScreenSize } from 'app/utils/ScreenSize'
 
 class Search extends React.Component {
     constructor(props) {
@@ -273,7 +276,95 @@ class Search extends React.Component {
         });
     };
 
+    _renderWhereButton = () => {
+        const { isS } = this.props
+
+        let button = <React.Fragment>
+            <select onChange={this.handleWhereChange}>
+                <option value={tt('search.where_posts')}>{tt('search.where_posts')}</option>
+                <option value={tt('search.where_comments')}>{tt('search.where_comments')}</option>
+                <option value={tt('search.where_anywhere')}>{tt('search.where_anywhere')}</option>
+            </select>
+            &nbsp;&nbsp;
+            <input type="submit" className="button" style={{ verticalAlign: 'top' }} value={tt('g.search')} onClick={this.search} />
+        </React.Fragment>
+
+        if (isS) {
+            return <div style={{ marginTop: '10px' }}>
+                {button}
+            </div>
+        }
+
+        return button
+    }
+
+    _renderSettings = () => {
+        const { isS } = this.props
+
+        const dateFrom = <input type='date' value={this.state.dateFrom} onChange={this.handleDateFromChange} />
+        const dateSep = <React.Fragment>&nbsp;—&nbsp;</React.Fragment>
+        const dateTo = <input type='date' value={this.state.dateTo} onChange={this.handleDateToChange} />
+        const sep = <React.Fragment>&nbsp;&nbsp;</React.Fragment>
+        const dateAll = (this.state.dateFrom || this.state.dateTo) && <span className='button small hollow esearch-btn-alltime' title={tt('search.alltime')} onClick={this.handleDateClear}>
+            <Icon name="cross" size="0_95x" />
+        </span>
+
+        const selAuthor = Multiselect && <Multiselect
+            className='esearch-author'
+            options={this.state.authorLookup}
+            isObject={false}
+            selectionLimit="3"
+            emptyRecordMsg={tt('search.author')}
+            closeOnSelect='true'
+            closeIcon="cancel"
+            placeholder={tt('search.author')}
+            selectedValues={this.state.author ? [this.state.author] : undefined}
+            onSearch={this.handleAuthorLookup}
+            onSelect={this.handleAuthorSelect}
+            onRemove={this.handleAuthorRemove}
+            />
+        const selTags = Multiselect && <Multiselect
+            className='esearch-tags'
+            options={this.state.tagLookup}
+            displayValue='text'
+            selectionLimit="3"
+            emptyRecordMsg={tt('search.tags')}
+            closeOnSelect='true'
+            closeIcon="cancel"
+            placeholder={tt('search.tags')}
+            onSearch={this.handleTagLookup}
+            onSelect={this.handleTagSelect}
+            onRemove={this.handleTagRemove}
+            />
+        let sel = <React.Fragment>
+            {selAuthor}
+            {sep}
+            {isS ? sep : null}
+            {selTags}
+        </React.Fragment>
+        if (isS) {
+            sel = <div style={{ marginTop: '10px' }}>
+                {sel}
+            </div>
+        }
+
+        return <div className='esearch-settings'>
+            {dateFrom}
+            {dateSep}
+            {dateTo}
+            {isS ? null : sep}
+            {dateAll}
+            {isS ? null : sep}
+            {sel}
+        </div>
+    }
+
     render() {
+        const { isS } = this.props
+        let wordWrap
+        if (isS) {
+            wordWrap = 'break-word'
+        }
         let results = [];
         let totalPosts = 0;
         let display = null;
@@ -307,13 +398,13 @@ class Search extends React.Component {
                 body = sanitize(body, {allowedTags: ['em', 'img']});
 
                 return (<div className='golossearch-results'>
-                        <Link target="_blank" to={url}><h6 dangerouslySetInnerHTML={{__html: title}}></h6></Link>
+                        <Link target="_blank" to={url} onClick={hrefClick}><h6 dangerouslySetInnerHTML={{__html: title}}></h6></Link>
                         <span style={{color: 'rgb(180, 180, 180)'}}>
                             <TimeAgoWrapper date={hit.fields.created[0]} />
                             &nbsp;—&nbsp;@
                             {hit.fields.author[0]}
                         </span>
-                        <div dangerouslySetInnerHTML={{__html: body}}></div>
+                        <div style={{ wordWrap }} dangerouslySetInnerHTML={{__html: body}}></div>
                         <br/>
                     </div>);
             });
@@ -343,56 +434,14 @@ class Search extends React.Component {
               />
               </div>);
         }
+
         return (<div className="App-search">
-                <img className="float-center" src={require("app/assets/images/search.png")} width="500" />
+              {isS ? null : <img className="float-center" src={require("app/assets/images/search.png")} width="500" />}
               <div className='esearch-box'>
                   <input value={this.state.query} className='esearch-input' placeholder={tt('search.placeholder')} type='text' onKeyUp={this.search} onChange={this.onChange} />
-                    <select onChange={this.handleWhereChange}>
-                        <option value={tt('search.where_posts')}>{tt('search.where_posts')}</option>
-                        <option value={tt('search.where_comments')}>{tt('search.where_comments')}</option>
-                        <option value={tt('search.where_anywhere')}>{tt('search.where_anywhere')}</option>
-                    </select>
-                    &nbsp;&nbsp;
-                  <input type="submit" className="button" value={tt('g.search')} onClick={this.search} />
+                    {this._renderWhereButton()}
               </div>
-              <div className='esearch-settings'>
-                <input type='date' value={this.state.dateFrom} onChange={this.handleDateFromChange} />
-                &nbsp;—&nbsp;
-                <input type='date' value={this.state.dateTo} onChange={this.handleDateToChange} />
-                &nbsp;&nbsp;
-                {(this.state.dateFrom || this.state.dateTo) ? <span className='button small hollow esearch-btn-alltime' title={tt('search.alltime')} onClick={this.handleDateClear}>
-                    <Icon name="cross" size="0_95x" />
-                </span> : null}
-                &nbsp;&nbsp;
-                {Multiselect ? <Multiselect
-                    className='esearch-author'
-                    options={this.state.authorLookup}
-                    isObject={false}
-                    selectionLimit="3"
-                    emptyRecordMsg={tt('search.author')}
-                    closeOnSelect='true'
-                    closeIcon="cancel"
-                    placeholder={tt('search.author')}
-                    selectedValues={this.state.author ? [this.state.author] : undefined}
-                    onSearch={this.handleAuthorLookup}
-                    onSelect={this.handleAuthorSelect}
-                    onRemove={this.handleAuthorRemove}
-                    /> : null}
-                &nbsp;&nbsp;
-                {Multiselect ? <Multiselect
-                    className='esearch-tags'
-                    options={this.state.tagLookup}
-                    displayValue='text'
-                    selectionLimit="3"
-                    emptyRecordMsg={tt('search.tags')}
-                    closeOnSelect='true'
-                    closeIcon="cancel"
-                    placeholder={tt('search.tags')}
-                    onSearch={this.handleTagLookup}
-                    onSelect={this.handleTagSelect}
-                    onRemove={this.handleTagRemove}
-                    /> : null}
-              </div>
+              {this._renderSettings()}
               {display}
               <br/>
               <br/>
@@ -410,5 +459,5 @@ class Search extends React.Component {
 
 module.exports = {
     path: '/search(/:query)',
-    component: Search
+    component: withScreenSize(Search)
 };

@@ -8,6 +8,7 @@
   "description": "Golos Blogs — децентрализованная платформа блогов, работающая на блокчейне Golos.",
   "main": "dist/electron/electron.js",
   "scripts": {
+    "cordova": "cordova",
     "build-version": "./server/build-version.sh",
     "build-hash": "node check_integrity --save",
     "build": "npm run build-hash && NODE_ENV=production NODE_CONFIG_ENV=production,blacklist ./node_modules/.bin/webpack --config ./webpack/prod.config.js",
@@ -22,7 +23,10 @@
     "build-storybook": "build-storybook",
     "dev:app": "npm run build-hash && cross-env NODE_CONFIG_ENV=blacklist IS_APP=1 ./node_modules/@babel/node/bin/babel-node.js ./webpack/dev-server.js",
     "build:app": "npm run build-hash && cross-env NODE_ENV=production NODE_CONFIG_ENV=production,desktop ./node_modules/.bin/webpack --config ./webpack/prod-app.config.js",
-    "build:app-entry": "cross-env NODE_ENV=production NODE_CONFIG_ENV=production,desktop ./node_modules/@babel/node/bin/babel-node.js build_app_entry.js"
+    "build:app-entry": "cross-env NODE_ENV=production NODE_CONFIG_ENV=production,desktop ./node_modules/@babel/node/bin/babel-node.js build_app_entry.js",
+    "prebuild:mobile": "cross-env NODE_CONFIG_ENV=production,mobile node ./prebuild_mobile.js",
+    "build:mobile": "npm run build-hash && cross-env NODE_ENV=production NODE_CONFIG_ENV=production,mobile ./node_modules/.bin/webpack --config ./webpack/prod-mobile.config.js",
+    "postbuild:mobile": "npm run build:app-entry dist _mobile && cross-env NODE_CONFIG_ENV=production,mobile node ./postbuild_mobile.js && cd cordova && cordova prepare && cordova run android"
   },
   "author": "Golos <info@golos.id>",
   "license": "MIT",
@@ -138,11 +142,23 @@
     "@babel/plugin-transform-runtime": "^7.16.0",
     "@babel/preset-env": "^7.16.0",
     "@babel/preset-react": "^7.16.0",
+    "@red-mobile/cordova-plugin-shortcuts-android": "^1.0.1",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.3",
     "babel-plugin-styled-components": "^1.5.1",
     "chai": "^4.1.2",
+    "cheerio": "1.0.0-rc.10",
     "co-mocha": "^1.2.2",
+    "cordova-android": "^10.1.2",
+    "cordova-config": "^0.7.0",
+    "cordova-plugin-advanced-http": "^3.3.1",
+    "cordova-plugin-androidx-adapter": "^1.1.3",
+    "cordova-plugin-backbutton": "^0.3.0",
+    "cordova-plugin-badge": "^0.8.9",
+    "cordova-plugin-device": "^3.0.0",
+    "cordova-plugin-file": "^7.0.0",
+    "cordova-plugin-native-logs": "^1.0.5",
+    "cordova-plugin-splashscreen": "^6.0.2",
     "core-js": "^3.19.1",
     "cross-env": "^7.0.3",
     "eslint": "^4.9.0",
@@ -151,6 +167,7 @@
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.4.0",
     "folder-hash": "^4.0.4",
+    "gls-blogs-native-core": "file:native_core",
     "jsdom": "^21.0.0",
     "mini-css-extract-plugin": "^0.4.0",
     "mocha": "^5.2.0",
@@ -162,7 +179,7 @@
     "svg-sprite-loader": "^4.3.0",
     "uglifyjs-webpack-plugin": "^1.2.5",
     "webpack-command": "^0.2.1",
-    "webpack-merge": "^4.1.2",
+    "webpack-merge": "5.2.0",
     "webpack-serve": "^1.0.4"
   },
   "optionalDependencies": {
@@ -177,5 +194,23 @@
     "tabWidth": 4,
     "semi": true,
     "trailingComma": "es5"
+  },
+  "cordova": {
+    "platforms": [
+      "android"
+    ],
+    "plugins": {
+      "cordova-plugin-advanced-http": {
+        "ANDROIDBLACKLISTSECURESOCKETPROTOCOLS": "SSLv3,TLSv1"
+      },
+      "cordova-plugin-androidx-adapter": {},
+      "cordova-plugin-backbutton": {},
+      "cordova-plugin-native-logs": {},
+      "cordova-plugin-splashscreen": {},
+      "@red-mobile/cordova-plugin-shortcuts-android": {
+        "ANDROIDX_CORE_VERSION": "1.3.2"
+      },
+      "gls-blogs-native-core": {}
+    }
   }
 }

@@ -33,6 +33,8 @@ import {
 import { DRAFT_KEY, EDIT_KEY } from 'app/utils/postForm';
 import { checkAllowed, AllowTypes } from 'app/utils/Allowance'
 import { makeOid, encryptPost, } from 'app/utils/sponsors'
+import { withScreenSize } from 'app/utils/ScreenSize'
+import { reloadLocation } from 'app/utils/app/RoutingUtils'
 
 const EDITORS_TYPES = {
     MARKDOWN: 1,
@@ -210,7 +212,8 @@ class PostForm extends React.Component {
     }
 
     render() {
-        const { editMode, editParams, categories } = this.props;
+        const { editMode, editParams, categories,
+            isS, } = this.props;
 
         const {
             editorId,
@@ -256,6 +259,7 @@ class PostForm extends React.Component {
                             ]}
                             activeId={editorId}
                             onChange={this._onEditorChange}
+                            isS={isS}
                         />
                         {isPreview ? null : (
                             <PostTitle
@@ -306,6 +310,7 @@ class PostForm extends React.Component {
                                     ? tt(disallowPostCode)
                                     : null
                             }
+                            isS={isS}
                             onPost={this._postSafe}
                             onResetClick={this._onResetClick}
                             onCancelClick={this._onCancelClick}
@@ -838,7 +843,7 @@ export default connect(
                     return
                 }
                 if (!pso.author) {
-                    window.location.href = '/@' + payload.author + '/sponsors'
+                    reloadLocation('/@' + payload.author + '/sponsors')
                     return
                 }
             }
@@ -896,4 +901,4 @@ export default connect(
             });
         },
     })
-)(PostForm);
+)(withScreenSize(PostForm))

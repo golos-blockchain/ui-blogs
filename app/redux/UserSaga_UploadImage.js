@@ -55,7 +55,7 @@ function* uploadImage(action) {
     let data, dataBase64;
 
     if (file) {
-        const reader = new FileReader();
+        const reader = new (window.FileReader0 || FileReader)();
 
         data = yield new Promise(resolve => {
             reader.addEventListener('load', () => {
@@ -148,12 +148,33 @@ function* uploadImage(action) {
 
     const xhr = new XMLHttpRequest();
 
+    let tm
+    let connected
+    const clearTm = () => {
+        if (tm) clearTimeout(tm)
+    }
+    const resetTm = () => {
+        clearTm()
+        tm = setTimeout(() => {
+            onError(tt('user_saga_js.image_upload.error.upload_failed'))
+            xhr.abort()
+        }, connected ? 10000 : 5000)
+    }
+    resetTm()
+
     xhr.open('POST', postUrl);
     if (!golosImages) {
         xhr.setRequestHeader('Authorization', 'Client-ID ' + $STM_Config.images.client_id)
     }
 
+    xhr.onloadstart = function () {
+        connected = true
+        resetTm()
+    }
+
     xhr.onload = async function() {
+        clearTm()
+
         let data;
 
         try {
@@ -230,11 +251,13 @@ function* uploadImage(action) {
     };
 
     xhr.onerror = function(error) {
+        clearTm()
         onError(tt('user_saga_js.image_upload.error.server_unavailable'));
         console.error(error);
     };
 
     xhr.upload.onprogress = function(event) {
+        resetTm()
         if (event.lengthComputable) {
             const percent = Math.round((event.loaded / event.total) * 100);
 
