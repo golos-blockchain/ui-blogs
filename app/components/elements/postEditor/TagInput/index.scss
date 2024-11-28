@@ -4,6 +4,10 @@
   position: relative;
   display: block;
 
+  &.small {
+    margin-left: 0.5rem;
+  }
+
   &__input {
     width: 185px;
     height: $input-height;

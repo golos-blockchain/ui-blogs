@@ -11,6 +11,7 @@ class TipAssetList extends React.Component {
         currentAccount: PropTypes.object.isRequired,
         uias: PropTypes.object,
         onChange: PropTypes.func.isRequired,
+        small: PropTypes.bool,
     }
 
     onSelected = (e) => {
@@ -26,7 +27,7 @@ class TipAssetList extends React.Component {
     }
 
     render() {
-        const { currentAccount, currentBalance } = this.props
+        const { currentAccount, currentBalance, small } = this.props
         const golosBalance = Asset(currentAccount.get('tip_balance'))
         
         let tipBalanceValue = currentBalance && currentBalance.toString(0)
@@ -66,7 +67,7 @@ class TipAssetList extends React.Component {
             ' mini' : ''
 
         return (
-            <div className={'TipBalance' + size}>
+            <div className={'TipBalance' + size + (small ? ' small' : '')}>
             <b>{tt('token_names.TIP_TOKEN')}:</b><br/>
             {tipBalanceValue}
             </div>

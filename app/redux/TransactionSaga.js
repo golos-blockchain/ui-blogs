@@ -495,6 +495,7 @@ function* preBroadcast_comment({operation, username}) {
             allow_votes = true,
             allow_curation_rewards = true,
             curator_rewards_percent = null,
+            comment_decrypt_fee
         } = comment_options
 
         const extensions = [];
@@ -506,6 +507,10 @@ function* preBroadcast_comment({operation, username}) {
 
         if (curator_rewards_percent) {
             extensions.push([ 2, { percent: curator_rewards_percent }])
+        }
+
+        if (comment_decrypt_fee) {
+            extensions.push([ 3, { fee: comment_decrypt_fee.toString() }])
         }
 
         comment_op.push(

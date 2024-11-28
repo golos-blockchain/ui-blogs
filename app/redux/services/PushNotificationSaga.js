@@ -27,11 +27,26 @@ function getScopePresets(username) {
     if (presets.donate) {
         presets.donate_msgs = true
     }
-    return Object.keys(presets).filter(k => presets[k]);
+
+    let bgPresets = []
+    if (process.env.MOBILE_APP) {
+        const forApp = ['comment_reply', 'mention']
+        for (const p of forApp) {
+            if (presets[p]) bgPresets.push(p)
+        }
+        if (presets.in_background === undefined) {
+            presets.in_background = true
+        }
+    }
+    const inBackground = presets.in_background
+    delete presets.in_background
+    return { presets: Object.keys(presets).filter(k => presets[k]),
+        bgPresets,
+        inBackground }
 }
 
 export function* onUserLogin(action) {
-    let presets = getScopePresets(action.username).join(',');
+    let presets = getScopePresets(action.username).presets.join(',');
 
     if (!presets) {
         console.log('GNS: all scopes disabled, so will not subscribe');
@@ -72,7 +87,7 @@ export function* onUserLogin(action) {
                 removeTaskIds = yield notificationTake(action.username, removeTaskIds,
                     (type, op, timestamp, id, scope) => {
                         if (op._offchain) return;
-                        if (!getScopePresets(action.username).includes(scope)) {
+                        if (!getScopePresets(action.username).presets.includes(scope)) {
                             return;
                         }
                         if (scope === 'message') {
@@ -130,4 +145,5 @@ export function* pushNotificationWatches() {
 export default {
     onUserLogin,
     pushNotificationWatches,
+    getScopePresets,
 }

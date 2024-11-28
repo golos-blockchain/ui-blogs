@@ -7,7 +7,7 @@ function hasLS() {
 }
 
 export const getFilterApps = () => {
-    return ['freedom.blog']
+    return $STM_Config.filter_apps
 }
 
 export function loadNsfwSettings(username) {

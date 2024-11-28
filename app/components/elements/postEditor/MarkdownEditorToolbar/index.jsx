@@ -1,17 +1,20 @@
 import React from 'react';
 import cn from 'classnames';
 import tt from 'counterpart';
+
 import KEYS from 'app/utils/keyCodes';
 import Icon from 'app/components/elements/Icon';
 import DialogManager from 'app/components/elements/common/DialogManager';
 import AddImageDialog from '../../../dialogs/AddImageDialog';
 import LinkOptionsDialog from '../../../dialogs/LinkOptionsDialog';
 import plusSvg from 'app/assets/icons/editor-toolbar/plus.svg';
+import { withScreenSize } from 'app/utils/ScreenSize'
 
 const MAX_HEADING = 4;
 const TOOLBAR_OFFSET = 7;
 const TOOLBAR_WIDTH = 468;
 const TOOLBAR_COMMENT_WIDTH = 336;
+const TOOLBAR_SMALL_WIDTH = 300;
 const MIN_TIP_OFFSET = 29;
 
 const PLUS_ACTIONS = [
@@ -34,7 +37,7 @@ const PLUS_ACTIONS = [
     },
 ];
 
-export default class MarkdownEditorToolbar extends React.PureComponent {
+class MarkdownEditorToolbar extends React.PureComponent {
     constructor(props) {
         super(props);
 
@@ -79,12 +82,12 @@ export default class MarkdownEditorToolbar extends React.PureComponent {
     }
 
     render() {
-        const { commentMode } = this.props;
+        const { commentMode, isS, } = this.props;
         const { newLineHelper } = this.state;
 
         return (
             <div
-                className={cn('MET', { MET_comment: commentMode })}
+                className={cn('MET', { MET_comment: (commentMode || isS) })}
                 ref="root"
                 style={{ display: 'none' }}
             >
@@ -95,15 +98,17 @@ export default class MarkdownEditorToolbar extends React.PureComponent {
     }
 
     _renderToolbar() {
-        const { SM, commentMode } = this.props;
+        const { SM, commentMode, isS } = this.props;
         const { state, toolbarPosition, toolbarShow } = this.state;
         const { root } = this.refs;
 
         const editor = this._editor;
 
-        const toolbarWidth = commentMode
+        const toolbarWidth = isS
+            ? TOOLBAR_SMALL_WIDTH
+            : (commentMode
             ? TOOLBAR_COMMENT_WIDTH
-            : TOOLBAR_WIDTH;
+            : TOOLBAR_WIDTH)
 
         const style = {
             width: toolbarWidth,
@@ -139,9 +144,22 @@ export default class MarkdownEditorToolbar extends React.PureComponent {
 
                 style.left = Math.round(left);
             }
+        //alert(JSON.stringify(rootPos) + ' ' + style.left)
         }
 
-        const actions = [
+        const largeActions = [
+            {
+                icon: 'picture',
+                tooltip: tt('editor_toolbar.add_image'),
+                onClick: this._addImage,
+            },
+            {
+                icon: 'video',
+                tooltip: tt('editor_toolbar.add_video'),
+                onClick: this._drawVideo,
+            }
+        ]
+        let actions = [
             {
                 active: state.bold,
                 icon: 'bold',
@@ -192,17 +210,10 @@ export default class MarkdownEditorToolbar extends React.PureComponent {
                 tooltip: tt('editor_toolbar.add_link'),
                 onClick: this._draw,
             },
-            {
-                icon: 'picture',
-                tooltip: tt('editor_toolbar.add_image'),
-                onClick: this._addImage,
-            },
-            {
-                icon: 'video',
-                tooltip: tt('editor_toolbar.add_video'),
-                onClick: this._drawVideo,
-            },
-        ];
+        ]
+        if (!isS) {
+            actions = [...actions, ...largeActions]
+        }
 
         return (
             <div
@@ -228,6 +239,7 @@ export default class MarkdownEditorToolbar extends React.PureComponent {
                                 key={i}
                                 className={cn('MET__icon', {
                                     MET__icon_active: action.active,
+                                    //MET__icon_small: isS,
                                 })}
                                 name={`editor-toolbar/${action.icon}`}
                                 data-tooltip={action.tooltip}
@@ -296,6 +308,7 @@ export default class MarkdownEditorToolbar extends React.PureComponent {
                             className="MET__new-line-input"
                             autoFocus
                             placeholder={tt(action.placeholder)}
+                            enterkeyhint="enter"
                             onKeyDown={this._onInputKeyDown}
                         />
                     </div>
@@ -355,6 +368,9 @@ export default class MarkdownEditorToolbar extends React.PureComponent {
 
                 toolbarPosition.top = Math.round(bound.top);
                 toolbarPosition.left = Math.round(bound.left + bound.width / 2);
+            }
+            if (process.env.MOBILE_APP && !toolbarPosition.left) {
+                toolbarPosition.left = 0
             }
 
             newState.toolbarShow = true;
@@ -699,3 +715,5 @@ export default class MarkdownEditorToolbar extends React.PureComponent {
         }
     };
 }
+
+export default withScreenSize(MarkdownEditorToolbar)
