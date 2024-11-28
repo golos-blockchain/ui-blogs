@@ -23,7 +23,7 @@ class Services extends React.Component {
                             <div className='column large-3 medium-3 small-6'>
                                 <a target="_blank" href="https://wallet.golos.id"><Icon name='money' size='10x'/>
                                 <h5>Golos Wallet + DEX</h5></a>
-                                <p className='landing-services-block-icon-text'>Кошелек и торговля на <a target="_blank" href="https://wallet.golos.id/rating">внутренней бирже</a> и <a target="_blank" href="https://wallet.golos.id/convert/GOLOS/YMUSDT">обменнике</a>, веб-клиентах <a target="_blank" href="https://dex.golos.app/#/trade/GOLOS_YMUSDT">dex.golos.app</a> или <a target="_blank" href="https://gls.exchange/#/trade/GOLOS_YMUSDT">gls.exchange</a></p>
+                                <p className='landing-services-block-icon-text'>Кошелек и торговля на <a target="_blank" href="https://wallet.golos.id/rating">бирже</a>/<a target="_blank" href="https://wallet.golos.id/convert/GOLOS/YMUSDT">обменнике</a>, веб-клиентах <a target="_blank" href="https://dex.golos.app/#/trade/GOLOS_YMUSDT">dex.golos.app</a> или <a target="_blank" href="https://gls.exchange/#/trade/GOLOS_YMUSDT">gls.exchange</a>, витрина <a target="_blank" href="https://wallet.golos.id/nft">NFT-маркета</a></p>
                             </div>
                             <div className='column large-3 medium-3 small-6'>
                                 <a target="_blank" href="https://chat.golos.app"><Icon name='rocket' size='10x'/>
@@ -74,6 +74,9 @@ class Services extends React.Component {
                                 <h4><a target="_blank" href="/@one-armed"><Icon name="new/monitor" /> однорукий бандит</a></h4>
                                 {tt('services.developer')} <a href="/@jackvote">@jackvote</a>
                                 <p>Классическая слот-машина "однорукий бандит" с тремя барабанами... <a href="/@one-armed/slot-mashina-tri-kita">{tt('g.more_hint')}</a> <Icon name="extlink" /></p>
+                                <h4><a target="_blank" href="/@golos.lotto"><Icon name="new/monitor" /> лото голос</a></h4>
+                                {tt('services.developer')} <a href="/@m0ssa99">@m0ssa99</a>
+                                <p>Голос Лото, ставки, билеты, джекпоты... <a href="/@m0ssa99/xe34shq4hfzffxx">{tt('g.more_hint')}</a> <Icon name="extlink" /></p>
                             </div>
                         </div>
                     </div>

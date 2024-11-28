@@ -4,6 +4,7 @@
   "ws_connection_client": "wss://apibeta.golos.today/ws",
   "ws_connection_server": "wss://apibeta.golos.today/ws",
   "proxy_node": false,
+  "authorization_required": false,
   "helmet": {
     "directives": {
       "defaultSrc": "'self'",

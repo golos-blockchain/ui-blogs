@@ -215,7 +215,7 @@ class Donate extends React.Component {
                 <button type='submit' disabled={disabled} className='button'>
                     {tt('g.donate_support')}
                 </button>
-                <button className='button hollow' onClick={this.showGiftNft}>
+                <button className='button hollow float-right' onClick={this.showGiftNft}>
                     {tt('transfer_jsx.gift_nft')}
                 </button>
             </span>}

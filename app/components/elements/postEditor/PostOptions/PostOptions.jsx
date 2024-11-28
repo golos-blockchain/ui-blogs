@@ -74,6 +74,7 @@ class PostOptions extends React.PureComponent {
     }
 
     render() {
+
         const { editMode, decryptFee } = this.props
         const { showCoinMenu, showLockMenu, curatorPercent, minCurationPercent, maxCurationPercent, decryptFeeToSave } = this.state;
         const hasDecryptFee = (decryptFee && decryptFee.amount > 0)

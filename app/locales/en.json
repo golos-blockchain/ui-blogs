@@ -1202,7 +1202,7 @@
     "logs": "Logs"
   },
   "app_update": {
-    "notify_VERSION": "Доступна новая версия GOLOS Блогов - %(VERSION)s",
+    "notify_VERSION": "New version is available Golos Desktop - %(VERSION)s",
     "download": "Download"
   }
 }

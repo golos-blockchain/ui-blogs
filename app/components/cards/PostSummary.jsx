@@ -324,7 +324,7 @@ class PostSummary extends React.Component {
             </a>
             {isOnlyblog && <span className="nsfw_post" title={tt('post_editor.onlyblog_hint')}>{tt('g.for_followers')}</span>}
             {isOnlyapp && <span className="nsfw_post">{tt('g.only_app')}</span>}
-            {isOnlySponsors && <span className="nsfw_post" title={tt('post_editor.visible_option_onlysponsors')}>{tt('g.for_sponsors')}</span>}
+            {isOnlySponsors && <span className="worker_post" title={tt('post_editor.visible_option_onlysponsors')}>{tt('g.for_sponsors')}</span>}
             {foreignApp && <ForeignApp foreignApp={foreignApp} />}
             {warn && <span className="nsfw_post" title={tt('post_editor.nsfw_hint')}>{detransliterate(nsfwTitle)}</span>}
             {worker_post && <a target="_blank" href={worker_post}><span className="worker_post">{tt('workers.worker_post')}</span></a>}
