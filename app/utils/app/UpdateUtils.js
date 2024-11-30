@@ -42,7 +42,7 @@ export async function checkUpdates(timeout = 2000) {
         if (isDesktop) {
             path = 'desktop/' + ($STM_Config.platform === 'linux' ? 'linux' : 'windows')
         } else {
-            path = 'messenger/android'
+            path = 'blogs/android'
         }
         url = new URL(
             '/api/' + path, updaterHost()
