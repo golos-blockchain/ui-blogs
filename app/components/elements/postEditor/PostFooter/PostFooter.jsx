@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 import tt from 'counterpart';
+
 import TagInput from 'app/components/elements/postEditor/TagInput';
 import TagsEditLine from 'app/components/elements/postEditor/TagsEditLine';
 import PostOptions from 'app/components/elements/postEditor/PostOptions/PostOptions';
@@ -20,8 +21,10 @@ export default class PostFooter extends PureComponent {
         postDisabled: PropTypes.bool,
         postEncrypted: PropTypes.bool,
         disabledHint: PropTypes.string,
+        isS: PropTypes.bool,
         onPayoutTypeChange: PropTypes.func.isRequired,
         onCurationPercentChange: PropTypes.func.isRequired,
+        onDecryptFeeChange: PropTypes.func.isRequired,
         onTagsChange: PropTypes.func.isRequired,
         onPost: PropTypes.func.isRequired,
         onResetClick: PropTypes.func.isRequired,
@@ -71,7 +74,8 @@ export default class PostFooter extends PureComponent {
 
         const { editMode, postEncrypted } = this.props
         if (editMode) {
-            this.props.onPost(postEncrypted ? VISIBLE_TYPES.ONLY_SPONSORS : VISIBLE_TYPES.ALL)
+            this.props.onPost(postEncrypted ? VISIBLE_TYPES.ONLY_SPONSORS : VISIBLE_TYPES.ALL,
+                this.props.decryptFee)
             return
         }
 
@@ -105,15 +109,18 @@ export default class PostFooter extends PureComponent {
     }
 
     _renderVisibleOptions = (postDisabled) => {
+        const { decryptFee } = this.props
+
         const onClick = (e) => {
             e.preventDefault()
             if (!postDisabled)
-                this.props.onPost(parseInt(e.target.parentNode.dataset.value))
+                this.props.onPost(parseInt(e.target.parentNode.dataset.value),
+                    decryptFee)
         }
 
         const visibleItems = [
-            {link: '#', label: tt('post_editor.visible_option_all'), value: VISIBLE_TYPES.ALL, onClick },
-            {link: '#', label: tt('post_editor.visible_option_onlyblog'), value: VISIBLE_TYPES.ONLY_BLOG, onClick },
+            {disabled: decryptFee && decryptFee.amount > 0, link: '#', label: tt('post_editor.visible_option_all'), value: VISIBLE_TYPES.ALL, onClick },
+            {disabled: decryptFee && decryptFee.amount > 0, link: '#', label: tt('post_editor.visible_option_onlyblog'), value: VISIBLE_TYPES.ONLY_BLOG, onClick },
             {link: '#', label: tt('post_editor.visible_option_onlysponsors'), value: VISIBLE_TYPES.ONLY_SPONSORS, onClick },
         ]
 
@@ -134,6 +141,7 @@ export default class PostFooter extends PureComponent {
             categories,
             postDisabled,
             disabledHint,
+            isS,
         } = this.props;
         const { temporaryErrorText, singleLine, showVisibleOptions } = this.state;
 
@@ -175,6 +183,8 @@ export default class PostFooter extends PureComponent {
             editMode={editMode}
             onPayoutChange={this.props.onPayoutTypeChange}
             onCurationPercentChange={this.props.onCurationPercentChange}
+            decryptFee={this.props.decryptFee}
+            onDecryptFeeChange={this.props.onDecryptFeeChange}
         />)
 
         const buttons = (<div className="PostFooter__buttons" style={{ 'marginTop': isMobile ? '15px' : '0px' }}>
@@ -231,8 +241,10 @@ export default class PostFooter extends PureComponent {
             >
                 <div className="PostFooter__line">
                     <div className="PostFooter__tags">
-                        {!editMode && <select className="PostFooter__category" value={category} onChange={this.onCategoryChange}>
-                            <option value="" disabled>{tt('category_selector_jsx.select_a_category')}</option>
+                        {!editMode && <select className={cn('PostFooter__category', {
+                            small: isS
+                        })} value={category} onChange={this.onCategoryChange}>
+                            <option value="" disabled>{isS ? tt('category_selector_jsx.select_a_category2') : tt('category_selector_jsx.select_a_category')}</option>
                             {
                                 categories.map((cat) => {
                                     return <option className="PostFooter__cat" key={cat} value={cat}>{cat}</option>;
@@ -249,7 +261,8 @@ export default class PostFooter extends PureComponent {
                                 onChange={onTagsChange}
                             />
                         ) : null}
-                        <TagInput tags={tagsNoCat} onChange={onTagsChange} />
+                        <TagInput tags={tagsNoCat} onChange={onTagsChange}
+                            isS={isS} />
                     </div>
                     {isMobile ? null : options}
                     {isMobile ? null : buttons}

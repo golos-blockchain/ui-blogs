@@ -2,12 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 import tt from 'counterpart';
+
 import Button from 'app/components/elements/common/Button';
 import Hint from 'app/components/elements/common/Hint';
 import EmojiPicker from 'app/components/elements/EmojiPicker';
 import './index.scss';
+import { withScreenSize } from 'app/utils/ScreenSize'
 
-export default class CommentFooter extends React.PureComponent {
+class CommentFooter extends React.PureComponent {
     static propTypes = {
         editMode: PropTypes.bool,
         postDisabled: PropTypes.bool,
@@ -38,8 +40,10 @@ export default class CommentFooter extends React.PureComponent {
     };
 
     render() {
-        const { editMode, postDisabled } = this.props;
+        const { editMode, postDisabled, isS } = this.props;
         const { temporaryErrorText } = this.state;
+
+        const ePicker = <EmojiPicker onSelect={this.onEmojiSelect}/>
 
         return (
             <div
@@ -65,7 +69,7 @@ export default class CommentFooter extends React.PureComponent {
                                 {tt('g.cancel')}
                             </Button>
                         </div>
-                        <EmojiPicker onSelect={this.onEmojiSelect}/>
+                        {(!isS) && ePicker}
                     </div>
                 </div>
             </div>
@@ -86,3 +90,5 @@ export default class CommentFooter extends React.PureComponent {
         }, 5000);
     }
 }
+
+export default withScreenSize(CommentFooter)

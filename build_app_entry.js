@@ -5,11 +5,11 @@ const fse = require('fs-extra')
 const config = require('config')
 import ServerHTML from './server/server-html';
 
-const app_version = require('./package.json').version
+const blogs_version = require('./package.json').version
 
 let destDir, cfgFile
 const argv = process.argv
-if (argv.length !== 4) {
+if (argv.length < 4) {
     console.log('Usage is: babel-node build_app_entry.js /path/to/build/dest /path/to/config')
     process.exit(-1)
 }
@@ -29,11 +29,18 @@ if (destDir !== 'null') {
     fse.copySync('app/assets/images', destDir + '/images', { overwrite: true }) // for some direct links
 }
 
+if (cfgFile === '_mobile') {
+    process.exit(0)
+}
+
 let cfg = {}
 const copyKey = (key) => {
     cfg[key] = config.get('desktop.' + key)
 }
-cfg.app_version = app_version
+cfg.blogs_version = blogs_version
+if (argv[4]) cfg.app_version = argv[4]
+if (argv[5]) cfg.wallet_version = argv[5]
+if (argv[6]) cfg.msgs_version = argv[6]
 copyKey('site_domain')
 cfg.url_domains = [...config.get('desktop.another_domains')]
 if (!cfg.url_domains.includes(cfg.site_domain)) {

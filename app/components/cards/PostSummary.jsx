@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { Link, browserHistory } from 'react-router'
 import {Map} from 'immutable'
 import tt from 'counterpart'
+import { Asset } from 'golos-lib-js/lib/utils'
 
 import { CHANGE_IMAGE_PROXY_TO_STEEMIT_TIME } from 'app/client_config'
 import Author from 'app/components/elements/Author'
@@ -33,6 +34,7 @@ import { addHighlight, unsubscribePost } from 'app/utils/NotifyApiClient'
 import { detransliterate } from 'app/utils/ParsersAndFormatters'
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl'
 import { EncryptedStates } from 'app/utils/sponsors'
+import { reloadLocation } from 'app/utils/app/RoutingUtils'
 import { walletUrl } from 'app/utils/walletUtils'
 
 function isLeftClickEvent(event) {
@@ -44,8 +46,13 @@ function isModifiedEvent(event) {
 }
 
 function navigate(e, onClick, post, url, isForum, isSearch, warn) {
-    if (isForum || isSearch)
+    if (isForum || isSearch) {
+        if (process.env.MOBILE_APP) {
+            e.preventDefault()
+            reloadLocation(url)
+        }
         return;
+    }
     if (warn) {
         e.preventDefault()
         return
@@ -282,7 +289,14 @@ class PostSummary extends React.Component {
         } else if (encrypted === EncryptedStates.unknown || encrypted === EncryptedStates.no_key) {
             encStub = tt('postsummary_jsx.no_decrypt_key')
         } else if (encrypted === EncryptedStates.no_sub) {
-            encStub = tt('postsummary_jsx.no_sub')
+            let decrypt_fee = content.get('decrypt_fee')
+            if (decrypt_fee) {
+                decrypt_fee = Asset(decrypt_fee)
+                if (decrypt_fee.amount > 0) {
+                    encStub = tt('postsummary_jsx.for_sponsors')
+                }
+            }
+            if (!encStub) encStub = tt('postsummary_jsx.no_sub')
         } else if (encrypted && encrypted !== EncryptedStates.decrypted) {
             encStub = tt('postsummary_jsx.for_sponsors')
         }
@@ -364,7 +378,7 @@ class PostSummary extends React.Component {
         if(gray) commentClasses.push('downvoted') // rephide
         if (loginBlurring) commentClasses.push('blurring')
 
-        total_search = total_search ? <span class="strike" style={{ fontSize: '1rem', paddingBottom: '1rem' }}>
+        total_search = total_search ? <span class="search-header strike" style={{ paddingBottom: '1rem' }}>
                 {tt('g.and_more_search_posts_COUNT', { COUNT: total_search })}
                 <a target="_blank" href="/search"><img className="float-center" src={require("app/assets/images/search.png")} width="400" /></a>
             </span> : null

@@ -2,15 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types'
 import { Link } from 'react-router';
 import {connect} from 'react-redux';
+import tt from 'counterpart';
+import cn from 'classnames'
+
 import TopRightMenu from 'app/components/modules/TopRightMenu';
 import Icon from 'app/components/elements/Icon.jsx';
 import resolveRoute from 'app/ResolveRoute';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import HorizontalMenu from 'app/components/elements/HorizontalMenu';
+import MiniTopics from 'app/components/modules/MiniTopics'
 import normalizeProfile from 'app/utils/NormalizeProfile';
-import tt from 'counterpart';
 import {detransliterate, capitalizeFirstLetter} from 'app/utils/ParsersAndFormatters';
+import { withScreenSize } from 'app/utils/ScreenSize'
 import {APP_NAME_UP, APP_ICON, SEO_TITLE} from 'app/client_config';
 
 function sortOrderToLink(so, topic, account) {
@@ -191,19 +195,28 @@ class Header extends React.Component {
                 return {link: sortOrderToLink(so[0], topic_original_link, current_account_name), value: so[1], active};
             });
 
+        let { shortQuestion, hideOrders, hideOrdersMe, isS } = this.props
+        if (current_account_name) {
+            hideOrders = hideOrdersMe
+        }
+
         return (
             <header className="Header noPrint">
                 <div className="Header__top header">
                     <div className="row align-middle">
                         <div className="columns">
                             <ul className="menu">
-                                <li className="Header__top-logo">
+                                <li className={cn("Header__top-logo", {
+                                    small: (isS && !!current_account_name)
+                                })}>
                                     <Link to={logo_link}><img src={$STM_Config.logo.icon} /></Link>
                                 </li>
                                 <li className="Header__top-steemit show-for-large noPrint">
                                     <Link to={logo_link}><img src={$STM_Config.logo.title} /></Link>
                                 </li>
-                                {selected_sort_order && <DropdownMenu className="Header__sort-order-menu show-for-small-only" items={sort_order_menu} selected={selected_sort_order[1]} el="li" />}
+                                {selected_sort_order && hideOrders && <DropdownMenu className={cn("Header__sort-order-menu", {
+                                    me: !!current_account_name
+                                })} items={sort_order_menu} selected={selected_sort_order[1]} el="li" arrowCenter={true} />}
                             </ul>
                         </div>
                         <div className="columns shrink">
@@ -211,11 +224,14 @@ class Header extends React.Component {
                         </div>
                     </div>
                 </div>
-                {route.hideSubMenu ? null :
-                    <div className={'Header__sub-nav show-for-medium hide-for-small ' + (this.state.subheader_hidden ? ' hidden' : '')}>
+                {(route.hideSubMenu || hideOrders) ? null :
+                    <div className={'Header__sub-nav ' + (this.state.subheader_hidden ? ' hidden' : '')}>
                         <div className="row">
                             <div className="columns">
-                                <span className="question"><a target="_blank" rel="noopener noreferrer" href="https://golos.chatbro.com"><Icon name="new/telegram" />&nbsp;&nbsp;{tt('g.to_ask')}</a></span>
+                                <span className="question" title={shortQuestion && tt('g.to_ask')}>
+                                    <a target="_blank" rel="noopener noreferrer" href="https://golos.chatbro.com"><Icon name="new/telegram" />&nbsp;&nbsp;{!shortQuestion ? tt('g.to_ask') : '(?)'}</a></span>
+                                {shortQuestion ? <MiniTopics
+                                /> : null}
                                 <HorizontalMenu items={sort_order_menu_horizontal} />
                             </div>
                         </div>
@@ -241,4 +257,4 @@ export default connect(
             account_meta: account_user,
         }
     }
-)(Header);
+)(withScreenSize(Header))

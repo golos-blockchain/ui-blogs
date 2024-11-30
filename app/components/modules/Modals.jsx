@@ -17,6 +17,7 @@ import AppDownload from 'app/components/modules/app/AppDownload'
 import user from 'app/redux/User';
 import tr from 'app/redux/Transaction';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
+import { withScreenSize } from 'app/utils/ScreenSize'
 
 let keyIndex = 0;
 
@@ -75,6 +76,7 @@ class Modals extends React.Component {
             hideAppDownload,
             notifications,
             removeNotification,
+            isS,
         } = this.props;
 
         const notifications_array = notifications ? notifications.toArray().map(n => {
@@ -87,6 +89,13 @@ class Modals extends React.Component {
 
         const loginClass = loginBlurring ? 'reveal-blurring' : undefined
 
+        let width400
+        let width600
+        if (!isS) {
+            width400 = '400px'
+            width600 = '600px'
+        }
+
         return (
             <div>
                 {show_login_modal && <Reveal overlayClassName={loginClass} onBackdropClick={this.onLoginTryClose} onEscapeKeyDown={this.onLoginTryClose} onHide={hideLogin} show={show_login_modal}>
@@ -96,11 +105,11 @@ class Modals extends React.Component {
                     <CloseButton onClick={hideConfirm} />
                     <ConfirmTransactionForm onCancel={hideConfirm} />
                 </Reveal>}
-                {show_donate_modal && <Reveal onHide={hideDonate} show={show_donate_modal} revealStyle={{ width: '600px' }}>
+                {show_donate_modal && <Reveal onHide={hideDonate} show={show_donate_modal} revealStyle={{ width: width600 }}>
                     <CloseButton onClick={hideDonate} />
                     <Donate />
                 </Reveal>}
-                {show_gift_nft_modal && <Reveal onHide={hideGiftNFT} show={show_gift_nft_modal} revealStyle={{ width: '600px' }}>
+                {show_gift_nft_modal && <Reveal onHide={hideGiftNFT} show={show_gift_nft_modal} revealStyle={{ width: width600 }}>
                     <CloseButton onClick={hideGiftNFT} />
                     <GiftNFT onCancel={hideGiftNFT} />
                 </Reveal>}
@@ -108,7 +117,7 @@ class Modals extends React.Component {
                     <CloseButton onClick={hideSignUp} />
                     <SignUp />
                 </Reveal>}
-                {show_change_account_modal && <Reveal onHide={hideChangeAccount} show={show_change_account_modal} revealStyle={{ width: '400px' }}>
+                {show_change_account_modal && <Reveal onHide={hideChangeAccount} show={show_change_account_modal} revealStyle={{ width: width400 }}>
                     <CloseButton onClick={hideChangeAccount} />
                     <ChangeAccount />
                 </Reveal>}
@@ -190,4 +199,4 @@ export default connect(
         removeNotification: (key) => dispatch({type: 'REMOVE_NOTIFICATION', payload: {key}}),
 
     })
-)(Modals)
+)(withScreenSize(Modals))

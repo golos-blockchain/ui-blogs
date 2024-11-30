@@ -38,6 +38,7 @@ import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Userpic from 'app/components/elements/Userpic';
 import Callout from 'app/components/elements/Callout';
 import normalizeProfile, { getLastSeen } from 'app/utils/NormalizeProfile';
+import { withScreenSize } from 'app/utils/ScreenSize'
 
 export default class UserProfile extends React.Component {
     constructor(props) {
@@ -79,7 +80,11 @@ export default class UserProfile extends React.Component {
             np.location.pathname !== this.props.location.pathname ||
             np.routeParams.accountname !== this.props.routeParams.accountname ||
             np.follow_count !== this.props.follow_count ||
-            ns.repLoading !== this.state.repLoading
+            ns.repLoading !== this.state.repLoading ||
+            np.hideMainMe !== this.props.hideMainMe ||
+            np.hideMainFor !== this.props.hideMainFor ||
+            np.hideRewardsMe !== this.props.hideRewardsMe ||
+            np.hideRewardsFor !== this.props.hideRewardsFor
         )
     }
 
@@ -153,8 +158,9 @@ export default class UserProfile extends React.Component {
 
     render() {
         const {
-            props: {current_user, current_account, wifShown, global_status, follow},
-            onPrint
+            props: {current_user, current_account, wifShown, global_status, follow,
+            hideMainMe, hideRewardsMe, hideMainFor, hideRewardsFor,},
+            onPrint,
         } = this;
         let { accountname, section, id, action } = this.props.routeParams;
         // normalize account from cased params
@@ -428,6 +434,56 @@ export default class UserProfile extends React.Component {
           accountjoin = transferFromSteemToGolosDate;
         }
 
+        const hideMain = isMyAccount ? hideMainMe : hideMainFor
+        const hideRewards = isMyAccount ? hideRewardsMe : hideRewardsFor
+        let mentionCounter = isMyAccount && <NotifiCounter fields='mention' />
+        let disCounter = isMyAccount && <NotifiCounter fields='subscriptions' />
+        let walletCounter = isMyAccount && <NotifiCounter fields='send,receive,fill_order,nft_receive,nft_token_sold,nft_buy_offer' />
+
+        let kebab
+        let kebabNotify = ''
+        if (hideMain) {
+            let kebabMenu = [
+                { link: `/@${accountname}/mentions`, label: tt('g.mentions'), value: tt('g.mentions'), addon: mentionCounter }
+            ]
+            if (isMyAccount) {
+                kebabMenu.unshift({ link: `/@${accountname}/discussions`, label: tt('g.discussions'), value: tt('g.discussions'), addon: disCounter })
+                kebabMenu.push({ value: '-' })
+                kebabMenu.push({ link: `/@${accountname}/settings`, label: tt('g.settings'), value: tt('g.settings') })
+                kebabNotify += ',mention,subscriptions'
+            }
+            if (hideRewards) {
+                kebabMenu = [
+                    ...rewardsMenu,
+                    { value: '-' },
+                    ...kebabMenu,
+                ]
+                kebabNotify += ',donate,donate_msgs'
+            }
+            kebabMenu = [
+                { link: walletUrl(`/@${accountname}/transfers`), target: walletTarget(), label: tt('g.wallet'), value: tt('g.wallet'), addon: walletCounter },
+                { value: '-' },
+                ...kebabMenu,
+            ]
+            kebabNotify += ',send,receive,fill_order,nft_receive,nft_token_sold,nft_buy_offer'
+
+            if (kebabMenu.length) {
+                if (kebabMenu[kebabMenu.length - 1].value === '-') kebabMenu.pop()
+            }
+            if (kebabNotify[0] === ',') kebabNotify = kebabNotify.slice(1)
+            kebab = kebabMenu.length ? <LinkWithDropdown
+                closeOnClickOutside
+                dropdownPosition='bottom'
+                dropdownAlignment={this.state.linksAlign}
+                dropdownContent={<VerticalMenu items={kebabMenu} />}
+                >
+                <a className={`UserProfile__menu-item`}>
+                    <Icon name='new/more' />
+                    {(isMyAccount && kebabNotify) ? <NotifiCounter fields={kebabNotify} /> : null}
+                </a>
+            </LinkWithDropdown> : null
+        }
+
         const top_menu = <div className='row UserProfile__top-menu'>
             <div className='columns'>
                 <div className='UserProfile__menu menu' style={{flexWrap: 'wrap'}}>
@@ -440,18 +496,18 @@ export default class UserProfile extends React.Component {
                     <Link className='UserProfile__menu-item' to={`/@${accountname}/recent-replies`} activeClassName='active'>
                         {tt('g.replies')} {isMyAccount && <NotifiCounter fields='comment_reply' />}
                     </Link>
-                    {isMyAccount ? <Link className='UserProfile__menu-item' to={`/@${accountname}/discussions`} activeClassName='active'>
-                        {tt('g.discussions')} <NotifiCounter fields='subscriptions' />
+                    {(!hideMain && isMyAccount) ? <Link className='UserProfile__menu-item' to={`/@${accountname}/discussions`} activeClassName='active'>
+                        {tt('g.discussions')} {disCounter}
                     </Link> : null}
-                    <Link className='UserProfile__menu-item' to={`/@${accountname}/mentions`} activeClassName='active'>
-                        {tt('g.mentions')} {isMyAccount && <NotifiCounter fields='mention' />}
-                    </Link>
+                    {!hideMain && <Link className='UserProfile__menu-item' to={`/@${accountname}/mentions`} activeClassName='active'>
+                        {tt('g.mentions')} {mentionCounter}
+                    </Link>}
                     <div className='UserProfile__filler' />
                     <div>
-                        <a href={walletUrl(`/@${accountname}/transfers`)} target={walletTarget()} className={`${walletClass} UserProfile__menu-item`}>
-                            {tt('g.wallet')} {isMyAccount && <NotifiCounter fields='send,receive,fill_order,nft_receive' />}
-                        </a>
-                        <LinkWithDropdown
+                        {!hideMain && <a href={walletUrl(`/@${accountname}/transfers`)} target={walletTarget()} className={`${walletClass} UserProfile__menu-item`}>
+                            {tt('g.wallet')} {walletCounter}
+                        </a>}
+                        {!hideRewards && <LinkWithDropdown
                             closeOnClickOutside
                             dropdownPosition='bottom'
                             dropdownAlignment={this.state.linksAlign}
@@ -462,13 +518,14 @@ export default class UserProfile extends React.Component {
                                 {isMyAccount && <NotifiCounter fields='donate,donate_msgs' />}
                                 <Icon name='dropdown-center' />
                             </a>
-	                    </LinkWithDropdown>
+	                    </LinkWithDropdown>}
                         {isMyAccount && msgsHost() ? <a target='_blank' rel='noopener noreferrer' className='UserProfile__menu-item' href={msgsLink()} title={tt('g.messages')}>
                             <Icon name='new/envelope' /> <NotifiCounter fields='message' />
                         </a> : null}
-                        {isMyAccount ? <Link className='UserProfile__menu-item' to={`/@${accountname}/settings`} activeClassName='active' title={tt('g.settings')}>
+                        {(isMyAccount && !hideMain) ? <Link className='UserProfile__menu-item' to={`/@${accountname}/settings`} activeClassName='active' title={tt('g.settings')}>
                             <Icon name='new/setting' />
                         </Link> : null}
+                        {kebab}
                     </div>
                 </div>
             </div>
@@ -641,5 +698,5 @@ module.exports = {
             },
             requestData: (args) => dispatch({type: 'REQUEST_DATA', payload: args}),
         })
-    )(UserProfile)
+    )(withScreenSize(UserProfile))
 };

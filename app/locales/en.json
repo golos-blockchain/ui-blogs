@@ -69,6 +69,7 @@
     "age": "age",
     "approximately": "approximately",
     "all_langs": "All languages",
+    "all_posts": "All posts",
     "amount": "Amount",
     "and": "and",
     "at_least": "at least",
@@ -214,7 +215,7 @@
     "tag": "Tag",
     "team": "Team",
     "to": " to ",
-    "topics": "Topics",
+    "topics": "Categories",
     "transaction_history": "Transaction History",
     "transfer": "Transfer ",
     "transfer2": "Transfer",
@@ -306,7 +307,7 @@
     "show_more_low_value_posts": "Show more low value posts",
     "select_topic": "Select Topic",
     "tags_filter": "Filter",
-    "no_tags_selected": "No tags selected",
+    "no_tags_selected": "no categories selected",
     "filter": "Filter",
     "show_more_topics": "Go to tag rating",
     "personal_info_will_be_private": "Your personal information will be kept",
@@ -466,6 +467,7 @@
     "tag_your_story": "Tag (up to 5 tags), the first tag is your main category.",
     "select_a_tag": "Select tag",
     "select_a_category": "Select category",
+    "select_a_category2": "Category",
     "maximum_tag_length_is_24_characters": "Maximum tag length is 24 characters",
     "use_only_lowercase_letters": "Use only lowercase letters",
     "use_one_dash": "Use only one dash",
@@ -859,12 +861,18 @@
     "choose_preset_tips": "Choose the amounts for the reward buttons",
     "emission_donate_pct": "Donation percent of your daily token emission",
     "notifications_settings": "Notification settings",
+    "notifications_settings2": "Notification settings",
     "notifications_transfer": "Transfer notifications",
     "notifications_donate": "Donate notifications",
     "notifications_reply": "Reply notifications",
     "notifications_mention": "Mention notifications",
     "notifications_message": "Private message notifications",
     "notifications_order": "Market order filled",
+    "notifications_bg": "Show notifications in background",
+    "notifications_bg_title": "Show notification when app hidden, screen is off",
+    "app_settings": "App Settings",
+    "advanced_settings": "Select the blockchain node, and another advanced settings...",
+    "open": "Open",
     "invalid_url": "Invalid URL",
     "name_is_too_long": "Name is too long",
     "name_must_not_begin_with": "Name must not begin with @",
@@ -966,7 +974,9 @@
         "login_first": "Please logged in first ...",
         "login_with_posting_key": "Login with your posting key",
         "server_unavailable": "The server is unavailable",
-        "image_size_is_too_large": "Upload images up to 1 MB in size"
+        "image_size_is_too_large": "Upload images up to 1 MB in size",
+        "low_reputation": "Too low reputation. Need at least ",
+        "low_golos_power_NEED_ADD": "No Golos Power. Need %(NEED)s, add please %(ADD)s."
       }
     }
   },
@@ -1154,21 +1164,30 @@
     "mention_comment": " mentioned you in their comment",
     "message": " sent you a private message"
   },
+  "login_app_reminder": {
+    "or_download_for": "...or download for ",
+    "title": "Click to download for "
+  },
   "app_download": {
-    "title": "Download Golos Desktop"
+    "title": "Download Golos Desktop",
+    "download_for": "Download for",
+    "mobile": "Download Golos Blogs for"
   },
   "app_reminder": {
-    "text": "Install desktop application for Windows or Linux to receive data directly from blockchain"
+    "text": "Install desktop application for Windows, Linux, Android",
+    "text2": "to receive data directly from blockchain"
   },
   "app_goto_url": {
     "goto": "Goto",
     "wrong_domain_DOMAINS": "This address is not belong to GOLOS Blogs.\nGOLOS Blogs domains are: %(DOMAINS)s\nThis address will be opened in external browser."
   },
   "app_settings": {
+    "mobile_title": "Settings of Blogs",
     "ws_connection_client": "GOLOS node URL",
     "img_proxy_prefix": "Use Proxy For Images",
     "auth_service": "Golos Auth & Registration Service (for notifications)",
     "notify_service": "Golos Notify Service (for notifications)",
+    "notify_service_ws": "Golos Notify Service WebSocket (for notifications)",
     "messenger_service": "Messenger",
     "elastic_search": "Search",
     "main_app": "When start app, open:",
@@ -1176,8 +1195,11 @@
     "wallet_service": "Wallet",
     "save_and_restart": "Save and restart",
     "cancel": "Cancel",
-    "node_error_NODE": "Failed to connect to node %(NODE)s. Perhaps it's a problem with the Internet. Or try setting another GOLOS node in the Settings menu.",
-    "to_save_click_button": "To save settings, click \"Save and restart\" button at bottom of the window."
+    "node_error_NODE": "Не удалось подключиться к ноде %(NODE)s. Возможно, это проблемы с интернетом. Или попробуйте задать другую ноду GOLOS в меню Настройки.",
+    "node_error_new_NODE": "Не удалось подключиться к ноде %(NODE)s. Возможно, это проблемы с интернетом (или с нодой).",
+    "node_error_new_NODE2": "Выбрать другую ноду",
+    "to_save_click_button": "To save settings, click \"Save and restart\" button at bottom of the window.",
+    "logs": "Logs"
   },
   "app_update": {
     "notify_VERSION": "New version is available Golos Desktop - %(VERSION)s",

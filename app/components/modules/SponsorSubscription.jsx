@@ -9,6 +9,7 @@ import AmountAssetField from 'app/components/elements/forms/AmountAssetField'
 import LoadingIndicator from 'app/components/elements/LoadingIndicator'
 import transaction from 'app/redux/Transaction'
 import session from 'app/utils/session'
+import { withScreenSize } from 'app/utils/ScreenSize'
 
 class SponsorSubscription extends React.Component {
     constructor(props) {
@@ -130,7 +131,7 @@ class SponsorSubscription extends React.Component {
     render() {
         const { pso, creating, submitting } = this.state
 
-        let { account, username } = this.props
+        let { account, username, isS } = this.props
         if (!username && process.env.BROWSER) {
             username = session.load().currentName
         }
@@ -178,13 +179,14 @@ class SponsorSubscription extends React.Component {
                     handleSubmit, isValid, values, dirty, setFieldValue, handleChange,
                 }) => {
                     const { symbol } = values.cost.asset
+                    const clsColumn = 'column small-' + (isS ? '10' : '6')
                     return (
                 <Form>
                     <div>
                         {tt('sponsors_jsx.cost')}
                     </div>
                     <div className='row'>
-                        <div className='column small-6'>
+                        <div className={clsColumn}>
                             <div className='input-group' style={{marginBottom: 5}}>
                                 <AmountField name='cost' />
                                 <span className="input-group-label" style={{paddingLeft: 0, paddingRight: 0}}>
@@ -195,7 +197,7 @@ class SponsorSubscription extends React.Component {
                         </div>
                     </div>
                     <div className='row' style={{ marginTop: '0.5rem' }}>
-                        {pso.author ? <div className='column small-6'>
+                        {pso.author ? <div className={clsColumn}>
                             <button type='submit' disabled={!isValid || !dirty || submitting} className='button'>
                                 {tt('g.save')}
                             </button>
@@ -205,7 +207,7 @@ class SponsorSubscription extends React.Component {
                             {this._renderSubmittingIndicator()}
                             {this.state.saved ? <small className="success uppercase saved">{tt('g.saved') + '!'}</small> : null}
                             {this.state.created ? <small className="success uppercase saved">{tt('sponsors_jsx.created') + '!'}</small> : null}
-                        </div> : <div className='column small-6'>
+                        </div> : <div className={clsColumn}>
                             <button type='submit' disabled={!isValid || submitting} className='button'>
                                 {tt('g.create')}
                             </button>
@@ -312,4 +314,4 @@ export default connect(
             dispatch({type: 'FETCH_STATE', payload: {pathname}})
         }
     })
-)(SponsorSubscription)
+)(withScreenSize(SponsorSubscription))

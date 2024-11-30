@@ -14,10 +14,14 @@
 }
 
 .PostsIndex__topics_compact {
-  float: right;
-  width: 15rem;
   position: relative;
   top: -0.8rem;
+
+  padding: 0 0.5rem;
+  float: none;
+  width: auto;
+  margin-top: 1.5rem;
+
   > select {
     border: none;
     border-bottom: 1px solid $medium-gray;
@@ -68,17 +72,9 @@
         color: gray;
 }
 
-/* Small only */
-@media screen and (max-width: 39.9375em) {
-  .PostsIndex__left {
-    padding: 0;
-  }
-  .PostsIndex__topics_compact {
-    padding: 0 0.5rem;
-    float: none;
-    width: auto;
-    margin-top: 1.5rem;
-  }
+/* hideOrders */
+.PostsIndex__left.ho {
+  padding: 0;
 }
 
 /* Medium and up */

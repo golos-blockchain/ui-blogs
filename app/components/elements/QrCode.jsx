@@ -9,8 +9,12 @@ export default class ReactQR extends Component {
   }
 
   render() {
-    var pngBuffer = qrImage.imageSync(this.props.text, { type: 'png', margin: 1 })
-    var dataURI = 'data:image/png;base64,' + pngBuffer.toString('base64')
+    let opts = { type: 'png', margin: 1 }
+    if (this.props.size) {
+      opts.size = this.props.size
+    }
+    let pngBuffer = qrImage.imageSync(this.props.text, opts)
+    let dataURI = 'data:image/png;base64,' + pngBuffer.toString('base64')
     return (
       <img className='react-qr' src={dataURI} />
     )
