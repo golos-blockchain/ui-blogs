@@ -6,7 +6,7 @@ class LeavePage extends Component {
         this.props.router.goBack()
     }
 
-    leaveOut = target => () => {
+    leaveOut = target => {
         if (process.env.IS_APP) {
             window.open(target, '_blank')
             window.close()
@@ -36,7 +36,7 @@ class LeavePage extends Component {
                             Помните, что ключи вашего аккаунта на <a href="/">Golos Блоги</a> не могут быть восстановлены, а доступ к ним позволит завладеть вашими средствами.
                         </p>
                         <p className="text-center medium-text-left">
-                            <Button onClick={this.leaveOut(targetPage)} round>
+                            <Button onClick={e => this.leaveOut(targetPage)} round>
                                 Перейти по ссылке
                             </Button>
                         </p>
