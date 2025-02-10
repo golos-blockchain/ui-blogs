@@ -228,9 +228,12 @@ class AppSettings extends React.Component {
                                 {MOBILE_APP ? null :<button type='button' className='button hollow float-right' onClick={this._onClose}>
                                     {tt('app_settings.cancel')}
                                 </button>}
-                                {MOBILE_APP ? <a href='#' className='float-right' onClick={this.showLogs}>
-                                    {tt('app_settings.logs')}
-                                </a> : null}
+                                {MOBILE_APP ? <span className='float-right'>
+                                    {tt('app_settings.version') + ' ' + $STM_Config.app_version}
+                                    <a href='#' style={{ marginLeft: '5px' }} onClick={this.showLogs}>
+                                        {tt('app_settings.logs')}
+                                    </a>
+                                </span> : null}
                             </div>
                         </div>
                     </div>
