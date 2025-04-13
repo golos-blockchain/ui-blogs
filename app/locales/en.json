@@ -1199,7 +1199,8 @@
     "node_error_new_NODE": "Не удалось подключиться к ноде %(NODE)s. Возможно, это проблемы с интернетом (или с нодой).",
     "node_error_new_NODE2": "Выбрать другую ноду",
     "to_save_click_button": "To save settings, click \"Save and restart\" button at bottom of the window.",
-    "logs": "Logs"
+    "logs": "Logs",
+    "version": "Blogs Version"
   },
   "app_update": {
     "notify_VERSION": "New version is available Golos Desktop - %(VERSION)s",

@@ -1,6 +1,6 @@
 /* Only Mobile. Generated automatically. Do not edit. */
 module.exports = {
-    "app_version": "1.5.0",
+    "app_version": "1.6.0",
     "ws_connection_app": [
         {
             "address": "wss://apibeta.golos.today/ws"
@@ -41,7 +41,7 @@ module.exports = {
         "host_ws": "wss://devnotify.golos.app/ws"
     },
     "elastic_search": {
-        "url": "https://search.golos.today",
+        "url": "https://devsearch.golos.today",
         "login": "golosclient",
         "password": "golosclient"
     },
@@ -50,7 +50,7 @@ module.exports = {
         "host_local": "https://devapi-dex.golos.app"
     },
     "app_updater": {
-        "host": "https://devfiles.golos.app"
+        "host": "https://files.golos.app"
     },
     "forums": {
         "white_list": [
