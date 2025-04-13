@@ -63,3 +63,26 @@ export function fixRouteIfApp() {
     }
     return true
 }
+
+//... and this is temporary (not correct) fix of clicking back button 
+//after such reloads.
+//it protects from "navigation leakage" in this case, but makes "back" behaviour not exactly crrect
+export function backRouteFix(e) {
+    if (!process.env.MOBILE_APP) return
+    let { referrer } = document // very bad idea
+    if (referrer) {
+        try {
+            referrer = new URL(referrer).pathname
+        } catch (err) {
+            referrer = null
+        }
+        if (referrer && referrer !== '/') {
+            reloadLocation('/')
+            e.preventDefault()
+            return
+        }
+    }
+    window.history.back()
+    // and it cannot detect "can't go back and should exit app"
+}
+

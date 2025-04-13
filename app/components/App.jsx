@@ -33,7 +33,7 @@ import NotifyPolling from 'app/components/elements/NotifyPolling'
 import AppSettings, { openAppSettings } from 'app/components/pages/app/AppSettings'
 import { init as initAnchorHelper } from 'app/utils/anchorHelper';
 import { authRegisterUrl, } from 'app/utils/AuthApiClient';
-import { fixRouteIfApp, reloadLocation, } from 'app/utils/app/RoutingUtils'
+import { fixRouteIfApp, reloadLocation, backRouteFix, } from 'app/utils/app/RoutingUtils'
 import { getShortcutIntent, onShortcutIntent } from 'app/utils/app/ShortcutUtils'
 import { APP_ICON, VEST_TICKER, } from 'app/client_config';
 import session from 'app/utils/session'
@@ -133,7 +133,7 @@ class App extends React.Component {
         }
     }
 
-componentDidMount() {
+    componentDidMount() {
         if (process.env.BROWSER) {
             console.log('ui-blogs version:', $STM_Config.ui_version);
             console.log('golos-lib-js version:', libInfo.version, 'hash:', libInfo.hash)
@@ -159,6 +159,10 @@ componentDidMount() {
 
                 this.stopService()
             })()
+
+            document.addEventListener('backbutton', e => {
+              backRouteFix(e)
+            })
         }
 
         const { nightmodeEnabled } = this.props;
@@ -292,7 +296,12 @@ componentDidMount() {
             e.stopPropagation();
             e.preventDefault();
 
-            const win = window.open(`/leave_page?${a.href}`, '_blank');
+            const leavePage = `/leave_page?${a.href}`
+            if (process.env.MOBILE_APP) {
+                reloadLocation(leavePage)
+                return
+            }
+            const win = window.open(leavePage, '_blank');
             win.focus();
         }
     };
