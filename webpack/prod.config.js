@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const { merge } = require('webpack-merge')
 const baseConfig = require('./base.config');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const Webpack_isomorphic_tools_plugin = require('webpack-isomorphic-tools/plugin');
@@ -52,8 +52,7 @@ module.exports = merge(baseConfig, {
     },
     optimization: {
         minimizer: [
-            // in production mode webpack 4 use own uglify
-            new UglifyJsPlugin({
+            new TerserPlugin({
                 cache: true,
                 parallel: true,
                 sourceMap: false,
