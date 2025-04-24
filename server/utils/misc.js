@@ -29,17 +29,6 @@ function rateLimitReq(ctx, req, limit, suffix) {
     return result;
 }
 
-function checkCSRF(ctx, csrf) {
-    try { ctx.assertCSRF(csrf); } catch (e) {
-        ctx.status = 403;
-        ctx.body = 'invalid csrf token';
-        console.log('-- invalid csrf token -->', ctx.request.method, ctx.request.url, ctx.session.uid);
-        return false;
-    }
-    return true;
-}
-
 module.exports = {
     rateLimitReq,
-    checkCSRF
-};
+}
