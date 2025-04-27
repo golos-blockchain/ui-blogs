@@ -19,6 +19,24 @@ export default function useGeneralApi(app) {
         ctx.body = {status: 200, statusText: 'OK'}
     })
 
+    router.get('/test-node', async (ctx) => {
+        ctx.status = 200
+        ctx.statusText = 'OK'
+        const { n } = ctx.query
+        if (!n) {
+            ctx.body = {status: 200, statusText: 'Nothing to test'}
+            return
+        }
+        try {
+            const gn = new api.Golos()
+            gn.setWebSocket(n)
+            const gprops = await gn.getDynamicGlobalPropertiesAsync()
+            ctx.body = {status: 200, n, gprops}
+        } catch (err) {
+            ctx.body = {status: 200, n, err: ((err && err.message) || 'unknown')}
+        }
+    })
+
     router.get('/gls-supply', async (ctx) => {
         const data = await api.getDynamicGlobalPropertiesAsync()
 
