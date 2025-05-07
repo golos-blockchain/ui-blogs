@@ -56,7 +56,6 @@
     "fs-extra": "^10.0.1",
     "git-rev-sync": "^3.0.2",
     "golos-dex-lib-js": "^1.0.2",
-    "golos-lib-js": "^0.9.71",
     "helmet": "^8.1.0",
     "history": "^2.0.0-rc2",
     "immutable": "^3.8.2",
@@ -109,16 +108,13 @@
     "redux-modules": "0.0.5",
     "redux-saga": "^0.16.0",
     "remarkable": "2.0.1",
-    "sanitize-html": "^2.5.3",
     "secure-random": "^1.1.1",
     "simple-jsonrpc-js": "^1.2.0",
     "slick-carousel": "^1.8.1",
     "speakingurl": "^9.0.0",
     "string-to-stream": "^1.1.1",
     "style-loader": "0.18.2",
-    "styled-components": "^4.4.1",
     "svg-inline-loader": "0.8.0",
-    "turndown": "^4.0.2",
     "whatwg-fetch": "^0.11.1"
   },
   "devDependencies": {
@@ -143,8 +139,6 @@
     "eslint-plugin-react": "^7.4.0",
     "folder-hash": "^4.0.4",
     "gls-blogs-native-core": "file:native_core",
-    "jsdom": "^21.0.0",
-    "mocha": "^5.2.0",
     "node-watch": "^0.7.1",
     "sinon": "^1.17.7"
   },
