@@ -194,6 +194,7 @@ if (env === 'production') {
         reportOnly: false,
     };
     helmetConfig.directives.reportUri = '/api/v1/csp_violation';
+    //helmetConfig.directives.upgradeInsecureRequests = null;
     app.use(helmet.contentSecurityPolicy(helmetConfig));
 } else {
     app.use(helmet({
