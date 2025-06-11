@@ -2,7 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
-import {Link} from 'react-router';
+import { Link } from 'react-router-dom'
 import tt from 'counterpart';
 import Immutable from "immutable";
 import cookie from "react-cookie";
@@ -251,7 +251,7 @@ class PostsIndex extends React.Component {
 }
 
 module.exports = {
-    path: ':order(/:category)',
+    path: '/:order{/:category}',
     component: connect(
         (state) => {
             return {

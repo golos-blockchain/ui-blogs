@@ -9,7 +9,6 @@ import tt from 'counterpart';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
 import { createGlobalStyle } from 'styled-components'
 
-import AppPropTypes from 'app/utils/AppPropTypes';
 import Header from 'app/components/modules/Header';
 import Footer from 'app/components/modules/Footer';
 import NewsPopups from 'app/components/elements/NewsPopups'
@@ -18,7 +17,8 @@ import TooltipManager from 'app/components/elements/common/TooltipManager';
 import user from 'app/redux/User';
 import g from 'app/redux/GlobalReducer';
 import PushNotificationSaga from 'app/redux/services/PushNotificationSaga'
-import { Link } from 'react-router';
+import { Outlet } from 'react-router';
+import { Link } from 'react-router-dom';
 import resolveRoute from 'app/ResolveRoute';
 import Dialogs from '@modules/Dialogs';
 import Modals from '@modules/Modals';
@@ -38,6 +38,7 @@ import { getShortcutIntent, onShortcutIntent } from 'app/utils/app/ShortcutUtils
 import { APP_ICON, VEST_TICKER, } from 'app/client_config';
 import session from 'app/utils/session'
 import { loadGrayHideSettings } from 'app/utils/ContentAccess'
+import { withRouter } from 'app/utils/routing'
 import { withScreenSize } from 'app/utils/ScreenSize'
 import libInfo from 'app/JsLibHash.json'
 
@@ -224,7 +225,8 @@ class App extends React.Component {
 
     componentDidUpdate(nextProps) {
         // setTimeout(() => this.setState({showCallout: false}), 15000);
-        if (nextProps.location.pathname !== this.props.location.pathname) {
+        if (nextProps.location &&
+            nextProps.location.pathname !== this.props.location.pathname) {
             this.setState({ showBanner: false, showCallout: false });
         }
     }
@@ -361,14 +363,15 @@ class App extends React.Component {
         }
 
         const {
-            location,
-            params,
-            children,
             flash,
             new_visitor,
             nightmodeEnabled,
             loggedIn,
         } = this.props;
+        const {
+            location,
+            params,
+        } = this.props.router;
         let {
             hideOrders,
             hideOrdersMe,
@@ -377,7 +380,7 @@ class App extends React.Component {
             hideOrders = hideOrdersMe
         }
 
-        const route = resolveRoute(location.pathname);
+        //const route = resolveRoute(location.pathname);
         const lp = false; //location.pathname === '/';
         let miniHeader = false;
         const params_keys = Object.keys(params);
@@ -434,7 +437,8 @@ class App extends React.Component {
             );
         }
 
-        let invite = location.query.invite;
+        const query = new URLSearchParams(location.search);
+        let invite = query.get('invite');
         if (process.env.BROWSER) {
             if (invite) {
                 localStorage.setItem('invite', invite);
@@ -505,12 +509,12 @@ class App extends React.Component {
                 <div className={cn('App__content' +
                     (noHeader ? ' no-header' : ''), {
                     'ho': hideOrders,
-                    'App__content_hide-sub-menu': route.hideSubMenu,
+                    //'App__content_hide-sub-menu': route.hideSubMenu,
                 })}>
                     {welcome_screen}
                     {callout}
                     <ChainFailure />
-                    {this.appSettings ? <AppSettings.component /> : children}
+                    {this.appSettings ? <AppSettings.component /> : <Outlet />}
                     {noFooter ? null : <Footer />}
                     <NewsPopups />
                     <ScrollButton />
@@ -531,7 +535,6 @@ class App extends React.Component {
 
 App.propTypes = {
     error: PropTypes.string,
-    children: AppPropTypes.Children,
     location: PropTypes.object,
     loginUser: PropTypes.func.isRequired,
     logoutUser: PropTypes.func.isRequired,
@@ -575,4 +578,4 @@ export default connect(
             dispatch(g.actions.fetchExchangeRates());
         },
     })
-)(withScreenSize(App))
+)(withRouter(withScreenSize(App)))

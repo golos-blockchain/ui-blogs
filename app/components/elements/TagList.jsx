@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
 import { detransliterate } from 'app/utils/ParsersAndFormatters';
 

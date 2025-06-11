@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 function userLink(name) {
     return <Link key={name} to={'/@'+name}>{name}</Link>
