@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import Icon from 'app/components/elements/Icon.jsx';
 import { APP_NAME, APP_ICON } from 'app/client_config';
 
