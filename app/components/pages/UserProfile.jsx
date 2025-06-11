@@ -1,6 +1,6 @@
 /* eslint react/prop-types: 0 */
 import React from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import {connect} from 'react-redux';
 import { browserHistory } from 'react-router';
 import golos from 'golos-lib-js';
@@ -162,7 +162,7 @@ export default class UserProfile extends React.Component {
             hideMainMe, hideRewardsMe, hideMainFor, hideRewardsFor,},
             onPrint,
         } = this;
-        let { accountname, section, id, action } = this.props.routeParams;
+        let { accountname, section, id, action } = this.props.routeParams        
         // normalize account from cased params
         accountname = accountname.toLowerCase();
         const username = current_user ? current_user.get('username') : null
@@ -622,7 +622,7 @@ export default class UserProfile extends React.Component {
 }
 
 module.exports = {
-    path: '@:accountname(/:section)(/:id)(/:action)',
+    path: '/@:accountname{/:section}{/:id}{/:action}',
     component: connect(
         state => {
             const wifShown = state.global.get('UserKeys_wifShown')

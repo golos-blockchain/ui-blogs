@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect, } from 'react-redux';
 import tt from 'counterpart';
 import { memo, } from 'golos-lib-js';
-import { Link, } from 'react-router';
+import { Link, } from 'react-router-dom';
 import links from 'app/utils/Links';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
 import { validate_account_name, } from 'app/utils/ChainValidation'

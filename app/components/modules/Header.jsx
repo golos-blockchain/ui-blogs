@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import { Link } from 'react-router';
+import { Link } from "react-router-dom";
 import {connect} from 'react-redux';
 import tt from 'counterpart';
 import cn from 'classnames'
@@ -249,10 +249,8 @@ export default connect(
         const current_user = state.user.get('current');
         const account_user = state.global.get('accounts');
         const current_account_name = current_user ? current_user.get('username') : state.offchain.get('account');
-        const { routing: {locationBeforeTransitions: { query }}} = state;
         return {
-            location: state.app.get('location'),
-            locationQueryParams: query,
+            location: window.location, //state.app.get('location'),
             current_account_name,
             account_meta: account_user,
         }
