@@ -135,7 +135,7 @@ const clean = (value) => value == null || value === '' || /null|undefined/.test(
 
 function* usernamePasswordLogin2({payload: {username, password, saveLogin,
         operationType, highSecurityLogin, afterLoginRedirectToWelcome
-}}) {
+}}) { try {
     // login, using saved password
     let autopost, memoWif, login_owner_pubkey, login_wif_owner_pubkey
     if (!username && !password) {
@@ -247,9 +247,7 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     if (authority.get('posting') !== 'full')
         private_keys = private_keys.remove('posting_private')
 
-    const pathname = yield select(state => state.global.get('pathname'))
-
-    if((!highSecurityLogin || authority.get('active') !== 'full') && !pathname.endsWith('/permissions'))
+    if (!highSecurityLogin || authority.get('active') !== 'full')
         private_keys = private_keys.remove('active_private')
 
     const owner_pubkey = account.getIn(['owner', 'key_auths', 0, 0])
@@ -393,7 +391,11 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     }
     clearTimeout(loginTm);
     if (afterLoginRedirectToWelcome) browserHistory.push('/welcome');
-}
+} catch (err) {
+    console.error('Login:', err);
+    alert((err?.toString) ? (err.toString() + '\n' + JSON.stringify(err.stack)) : err);
+    throw err;
+}}
 
 function* changeAccount(action) {
     const { currentName } = session.load()
