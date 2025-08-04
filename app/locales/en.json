@@ -978,7 +978,8 @@
         "low_reputation": "Too low reputation. Need at least ",
         "low_golos_power_NEED_ADD": "No Golos Power. Need %(NEED)s, add please %(ADD)s."
       }
-    }
+    },
+    "too_slow_login": "Login is slower than usually.\nMaybe it is better to use another device or another network (e.g. Wi-Fi instead of 4G, or vice-versa)."
   },
   "chain_errors": {
     "only_comment_once_every": "You may only comment once every 20 seconds",

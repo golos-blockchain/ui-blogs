@@ -99,6 +99,7 @@ export async function serverRender({
         const history = syncHistoryWithStore(browserHistory, store);
         // const scrollHistory = useScroll(() => history)();
 
+        window._reduxStore = store;
         window.store = {
             getState: () => {debugger}
         }

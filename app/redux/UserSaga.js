@@ -312,6 +312,28 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     if (!autopost && saveLogin && !operationType)
         yield put(user.actions.saveLogin());
 
+    const loginTm = setTimeout(async () => {
+        const message = tt('user_saga_js.too_slow_login')
+        if (window._reduxStore) {
+            const now = Date.now();
+            const lbnKey = 'last_bad_item';
+            const lastBadNet = parseInt(localStorage.getItem(lbnKey) || 0);
+            if (now - lastBadNet >= 10*60*1000) {
+                localStorage.setItem(lbnKey, now);
+                window._reduxStore.dispatch({
+                    type: 'ADD_NOTIFICATION',
+                    payload: {
+                        key: 'bad_net_' + Date.now(),
+                        message,
+                        dismissAfter: 5000
+                    }
+                })
+            }
+        } else if (!afterLoginRedirectToWelcome) {
+            alert(message)
+        }
+    }, afterLoginRedirectToWelcome ? 3000 : 10000)
+
     let alreadyAuthorized = false;
     try {
         const res = yield notifyApiLogin(username, localStorage.getItem('X-Auth-Session'));
@@ -369,6 +391,7 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
         // Does not need to be fatal
         console.error('Server Login Error', error);
     }
+    clearTimeout(loginTm);
     if (afterLoginRedirectToWelcome) browserHistory.push('/welcome');
 }
 
