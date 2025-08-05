@@ -38,6 +38,7 @@ import { getShortcutIntent, onShortcutIntent } from 'app/utils/app/ShortcutUtils
 import { APP_ICON, VEST_TICKER, } from 'app/client_config';
 import session from 'app/utils/session'
 import { loadGrayHideSettings } from 'app/utils/ContentAccess'
+import LocationWatch from 'app/utils/LocationWatch'
 import { withRouter } from 'app/utils/routing'
 import { withScreenSize } from 'app/utils/ScreenSize'
 import libInfo from 'app/JsLibHash.json'
@@ -527,6 +528,7 @@ class App extends React.Component {
                 <GlobalStyle />
                 {process.env.IS_APP ? <URLLoader /> : null}
                 <NotifyPolling />
+                <LocationWatch />
             </div>
 
         );
