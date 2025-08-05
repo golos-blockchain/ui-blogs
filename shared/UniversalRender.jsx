@@ -17,9 +17,14 @@ import RootRoute2 from 'app/RootRoute2';
 import {createStore, applyMiddleware, compose} from 'redux';
 import { browserHistory } from 'react-router';
 import {
-  createBrowserRouter,
-  RouterProvider,
+    createBrowserRouter,
+    RouterProvider,
 } from "react-router-dom";
+import {
+    createStaticHandler,
+    createStaticRouter,
+    StaticRouterProvider
+} from "react-router-dom/server";
 import { useScroll } from 'react-router-scroll';
 import createSagaMiddleware from 'redux-saga';
 import { syncHistoryWithStore } from 'react-router-redux';
@@ -59,8 +64,11 @@ const onRouterError = (error) => {
     console.error('onRouterError', error);
 };
 
+const handler = createStaticHandler(RootRoute2)
+
 export async function serverRender({
     location,
+    absoluteUrl,
     offchain,
     ErrorPage,
 }) {
@@ -98,7 +106,6 @@ export async function serverRender({
 
         const history = syncHistoryWithStore(browserHistory, store);
         // const scrollHistory = useScroll(() => history)();
-
         window._reduxStore = store;
         window.store = {
             getState: () => {debugger}
@@ -210,6 +217,11 @@ export async function serverRender({
         }
     }
 
+    const fetchReq = new Request(absoluteUrl); 
+    const context = await handler.query(fetchReq);
+
+    const router = createStaticRouter(handler.dataRoutes, context);
+
     let app, status, meta;
     try {
         /*app = renderToString(
@@ -222,7 +234,7 @@ export async function serverRender({
         app = renderToString(
             <Provider store={serverStore}>
                 <Translator>
-                    <b>123</b>
+                    <StaticRouterProvider router={router} context={context} />
                 </Translator>
             </Provider>
         );
@@ -255,6 +267,7 @@ export function clientRender(initialState) {
     window.store = {
         getState: () => { debugger }
     }
+    window._reduxStore = store;
     // Bump transaction (for live UI testing).. Put 0 in now (no effect),
     // to enable browser's autocomplete and help prevent typos.
     window.bump = parseInt(localStorage.getItem('bump') || 0);

@@ -15,6 +15,10 @@ import {
 
 const DB_RECONNECT_TIMEOUT = process.env.NODE_ENV === 'development' ? 1000 * 60 * 60 : 1000 * 60 * 10;
 
+const getAbsoluteUrl = (ctx) => {
+    return ctx.request.href;
+};
+
 async function appRender(ctx) {
     const store = {};
     try {
@@ -35,7 +39,8 @@ async function appRender(ctx) {
             select_tags
         };
 
-        const start = new Date()
+        const absoluteUrl = getAbsoluteUrl(ctx);
+
         const {
           body,
           title,
@@ -43,6 +48,7 @@ async function appRender(ctx) {
           meta
         } = await serverRender({
           location: ctx.request.url,
+          absoluteUrl,
           store,
           offchain,
           ErrorPage,

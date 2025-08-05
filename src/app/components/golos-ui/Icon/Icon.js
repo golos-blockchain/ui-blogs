@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 if (process.env.BROWSER) {
-    const files = require.context('!svg-sprite-loader!./assets', false, /.*\.svg$/);
-    files.keys().forEach(files);
+    //const files = require.context('!svg-sprite-loader!./assets', false, /.*\.svg$/);
+    //files.keys().forEach(files);
 }
 
 const Icon = ({ name, size, height, width, ...props }) => {

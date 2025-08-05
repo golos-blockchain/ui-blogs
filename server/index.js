@@ -57,10 +57,10 @@ global.$STM_Config = {
     ui_version: version || '1.0-unknown',
 };
 
-const WebpackIsomorphicTools = require('webpack-isomorphic-tools');
-global.webpackIsomorphicTools = new WebpackIsomorphicTools(require('../webpack/webpack-isotools-config'));
+//const WebpackIsomorphicTools = require('webpack-isomorphic-tools');
+//global.webpackIsomorphicTools = new WebpackIsomorphicTools(require('../webpack/webpack-isotools-config'));
 
-global.webpackIsomorphicTools.server(ROOT, () => {
+//global.webpackIsomorphicTools.server(ROOT, () => {
     golos.config.set('websocket', config.get('ws_connection_server'))
     golos.config.set('chain_id', config.get('chain_id'))
 
@@ -70,4 +70,4 @@ global.webpackIsomorphicTools.server(ROOT, () => {
         console.error(error);
         process.exit(1);
     }
-});
+//});

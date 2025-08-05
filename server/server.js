@@ -230,7 +230,7 @@ if (env !== 'test') {
         // clear require() cache if in development mode
         // (makes asset hot reloading work)
         if (process.env.NODE_ENV !== 'production') {
-            webpackIsomorphicTools.refresh()
+            //webpackIsomorphicTools.refresh()
         }
 
         await appRender(ctx);
