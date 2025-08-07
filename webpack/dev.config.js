@@ -1,14 +1,17 @@
+const path = require('path')
+
 const webpack = require('webpack');
 const { merge } = require('webpack-merge')
 const git = require('git-rev-sync');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const baseConfig = require('./base.config');
+const ExportAssetsPlugin = require('./plugins/ExportAssetsPlugin');
 const StartServerPlugin = require('./plugins/StartServerPlugin');
 
-const Webpack_isomorphic_tools_plugin = require('webpack-isomorphic-tools/plugin');
-const webpack_isomorphic_tools_plugin = new Webpack_isomorphic_tools_plugin(
-    require('./webpack-isotools-config')
-);
+//const Webpack_isomorphic_tools_plugin = require('webpack-isomorphic-tools/plugin');
+//const webpack_isomorphic_tools_plugin = new Webpack_isomorphic_tools_plugin(
+//    require('./webpack-isotools-config')
+//);
 
 const WEBPACK_PORT = process.env.PORT ? parseInt(process.env.PORT) + 1 : 8081;
 
@@ -29,10 +32,13 @@ module.exports = merge(baseConfig, {
                 TYPED_ARRAY_SUPPORT: JSON.stringify(false),
             },
         }),
-        webpack_isomorphic_tools_plugin.development(),
+        //webpack_isomorphic_tools_plugin.development(),
         new MiniCssExtractPlugin({
             filename: '[name].css',
             chunkFilename: '[id].css',
+        }),
+        new ExportAssetsPlugin({
+            development: true
         }),
         new StartServerPlugin(),
     ],
@@ -46,11 +52,13 @@ module.exports = merge(baseConfig, {
                     {
                         loader: 'postcss-loader',
                         options: {
-                            plugins: () => [
-                                require('autoprefixer')({
-                                    browsers: ['> 1%', 'last 2 versions'],
-                                }),
-                            ],
+                            postcssOptions: {
+                                plugins: [
+                                    require('autoprefixer')({
+                                        overrideBrowserslist: ['> 1%', 'last 2 versions'],
+                                    })
+                                ]
+                            },
                             sourceMap: true,
                         },
                     },
@@ -59,15 +67,15 @@ module.exports = merge(baseConfig, {
             },
         ],
     },
-    serve: {
-        port: WEBPACK_PORT,
-        hot: {
-            port: 8090,
-            logLevel: 'warn',
+    devServer: {
+        static: {
+            directory: path.join(__dirname, 'assets'),
         },
-        dev: {
-            publicPath: '/assets/',
-            logLevel: 'warn',
+        compress: true,
+        port: WEBPACK_PORT,
+        hot: true,
+        client: {
+            overlay: false,
         },
     },
 });
