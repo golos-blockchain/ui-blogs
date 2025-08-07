@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom';
 import {connect} from 'react-redux';
-import { browserHistory } from 'react-router';
 import { numberWithCommas } from 'app/utils/StateFunctions';
 import tt from 'counterpart';
 import { detransliterate } from 'app/utils/ParsersAndFormatters';
@@ -119,7 +118,7 @@ export default class TagsIndex extends React.Component {
 }
 
 module.exports = {
-    path: 'tags(/:order)',
+    path: '/tags{/:order}',
     component: connect(state => ({
         tagsAll: state.global.get('tags')
     }))(TagsIndex)

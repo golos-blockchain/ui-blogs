@@ -195,7 +195,7 @@ if (env === 'production') {
     };
     helmetConfig.directives.reportUri = '/api/v1/csp_violation';
     //helmetConfig.directives.upgradeInsecureRequests = null;
-    app.use(helmet.contentSecurityPolicy(helmetConfig));
+    //app.use(helmet.contentSecurityPolicy(helmetConfig));
 } else {
     app.use(helmet({
         contentSecurityPolicy: false
@@ -221,7 +221,7 @@ if (env === 'development') {
     });
     app.use(mount('/assets', proxy));
 } else {
-    app.use(mount('/assets', staticCache(path.join(__dirname, '../dist'), cacheOpts)));
+    app.use(mount('/assets', staticCache(path.join(__dirname, '../build-client'), cacheOpts)));
 }
 
 if (env !== 'test') {

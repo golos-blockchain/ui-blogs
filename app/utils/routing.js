@@ -1,22 +1,56 @@
 import React from 'react';
 import {
-  useLocation,
-  useNavigate,
-  useParams,
+    useLocation,
+    useNavigate,
+    useParams,
 } from 'react-router-dom';
 
 export function withRouter(Component) {
-  function ComponentWithRouterProp(props) {
-    let location = useLocation();
-    let navigate = useNavigate();
-    let params = useParams();
-    return (
-      <Component
-        {...props}
-        router={{ location, navigate, params }}
-      />
-    );
-  }
+    function ComponentWithRouterProp(props) {
+        let location = useLocation();
+        let navigate = useNavigate();
+        let params = useParams();
+        return (
+            <Component
+              {...props}
+              router={{ location, navigate, params }}
+            />
+        );
+    }
 
-  return ComponentWithRouterProp;
+    return ComponentWithRouterProp;
 }
+
+class NavigateHelperIn extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+
+    componentDidMount() {
+        window._NH = this;
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.redirect !== this.state.redirect) {
+            this.props.router.navigate(this.state.redirect, this.state.opts);
+        }
+    }
+
+    navigate(redirect, opts) {
+        this.setState({
+            redirect,
+            opts,
+        });
+    }
+
+    render() {
+        return null;
+    }
+}
+
+export let NavigateHelper = withRouter(NavigateHelperIn);
+
+export const navigateOutside = (redirect, opts) => {
+    window._NH.navigate(redirect, opts);
+};

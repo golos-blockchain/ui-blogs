@@ -1,11 +1,12 @@
-import React from 'react';
+import React from 'react'
 import PropTypes from 'prop-types'
-import { browserHistory } from 'react-router';
-import Icon from 'app/components/elements/Icon.jsx';
-import VerticalMenu from './VerticalMenu';
-import {findParent} from 'app/utils/DomUtils';
 
-export default class DropdownMenu extends React.Component {
+import Icon from 'app/components/elements/Icon'
+import VerticalMenu from 'app/components/elements/VerticalMenu'
+import { findParent } from 'app/utils/DomUtils'
+import { withRouter } from 'app/utils/routing'
+
+class DropdownMenu extends React.Component {
     static propTypes = {
         items: PropTypes.arrayOf(PropTypes.object).isRequired,
         selected: PropTypes.string,
@@ -59,7 +60,7 @@ export default class DropdownMenu extends React.Component {
         this.setState({show: false});
         if (a.host !== window.location.host) return;
         e.preventDefault();
-        browserHistory.push(a.pathname + a.search);
+        this.props.router.navigate(a.pathname + a.search)
     };
 
     getSelectedLabel = (items, selected) => {
@@ -85,3 +86,4 @@ export default class DropdownMenu extends React.Component {
     }
 }
 
+export default withRouter(DropdownMenu);

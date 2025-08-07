@@ -12,12 +12,11 @@ import {
     applyRouterMiddleware
 } from 'react-router';
 import { Provider } from 'react-redux';
-import RootRoute from 'app/RootRoute';
-import RootRoute2 from 'app/RootRoute2';
+import RootRoute from 'app/RootRoute'
+import router from 'app/router'
 import {createStore, applyMiddleware, compose} from 'redux';
 import { browserHistory } from 'react-router';
 import {
-    createBrowserRouter,
     RouterProvider,
 } from "react-router-dom";
 import {
@@ -64,7 +63,7 @@ const onRouterError = (error) => {
     console.error('onRouterError', error);
 };
 
-const handler = createStaticHandler(RootRoute2)
+const handler = createStaticHandler(RootRoute)
 
 export async function serverRender({
     location,
@@ -286,14 +285,15 @@ export function clientRender(initialState) {
             ? React.StrictMode
             : React.Fragment;
 
-    const router = createBrowserRouter(RootRoute2);
-
                     // <Router
                     //     routes={RootRoute}
                     //     history={history}
                     //     onError={onRouterError}
                     //     render={applyRouterMiddleware(scroll)}
                     // />
+
+    window._router = router;
+
     return render(
         <Wrapper>
             <Provider store={store}>

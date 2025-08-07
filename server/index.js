@@ -1,3 +1,4 @@
+import process from 'node:process';
 import config from 'config';
 import * as golos from 'golos-lib-js';
 const version = require('./version');
@@ -61,6 +62,9 @@ global.$STM_Config = {
 //global.webpackIsomorphicTools = new WebpackIsomorphicTools(require('../webpack/webpack-isotools-config'));
 
 //global.webpackIsomorphicTools.server(ROOT, () => {
+export default function startServer(parameters) {
+    global.uwParams = parameters;
+
     golos.config.set('websocket', config.get('ws_connection_server'))
     golos.config.set('chain_id', config.get('chain_id'))
 
@@ -70,4 +74,6 @@ global.$STM_Config = {
         console.error(error);
         process.exit(1);
     }
+}
+
 //});

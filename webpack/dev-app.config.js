@@ -5,11 +5,6 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const baseConfig = require('./base.config');
 const StartServerPlugin = require('./plugins/StartServerPlugin');
 
-const Webpack_isomorphic_tools_plugin = require('webpack-isomorphic-tools/plugin');
-const webpack_isomorphic_tools_plugin = new Webpack_isomorphic_tools_plugin(
-    require('./webpack-isotools-config')
-);
-
 const WEBPACK_PORT = process.env.PORT ? parseInt(process.env.PORT) + 1 : 4011
 
 module.exports = merge(baseConfig, {
@@ -30,7 +25,6 @@ module.exports = merge(baseConfig, {
                 TYPED_ARRAY_SUPPORT: JSON.stringify(false),
             },
         }),
-        webpack_isomorphic_tools_plugin.development(),
         new MiniCssExtractPlugin({
             filename: '[name].css',
             chunkFilename: '[id].css',

@@ -1,3 +1,4 @@
+import fs from 'fs';
 import React from 'react';
 import { renderToNodeStream } from 'react-dom/server';
 import golos from 'golos-lib-js';
@@ -18,6 +19,8 @@ const DB_RECONNECT_TIMEOUT = process.env.NODE_ENV === 'development' ? 1000 * 60 
 const getAbsoluteUrl = (ctx) => {
     return ctx.request.href;
 };
+
+let assets;
 
 async function appRender(ctx) {
     const store = {};
@@ -54,13 +57,11 @@ async function appRender(ctx) {
           ErrorPage,
         });
 
-        // Assets name are found in `webpack-stats` file
-        const assets_filename = process.env.NODE_ENV === 'production' ? 'tmp/webpack-isotools-assets-prod.json' : 'tmp/webpack-isotools-assets-dev.json';
-        const assets = require(assets_filename);
-
-        // Don't cache assets name on dev
-        if (process.env.NODE_ENV === 'development') {
-            delete require.cache[require.resolve(assets_filename)];
+        //let assets = global.uwParams.chunks();
+        if (!assets) {
+            const assets_filename = process.env.NODE_ENV === 'production' ? 'tmp/assets.json' : 'tmp/assets-dev.json'
+            assets = fs.readFileSync(assets_filename, 'utf-8');
+            assets = JSON.parse(assets);
         }
 
         const analytics = {

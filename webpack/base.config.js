@@ -1,6 +1,7 @@
 const path = require('path');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-// const SpriteLoaderPlugin = require('svg-sprite-loader/plugin');
+const webpack = require('webpack')
+
 const alias = require('./alias');
 
 module.exports = {
@@ -10,9 +11,9 @@ module.exports = {
         // vendor: ['react', 'react-dom', 'react-router']
     },
     output: {
-        path: path.resolve(__dirname, '../dist'),
-        filename: '[name].[hash].js',
-        chunkFilename: '[id].[hash].js',
+        path: path.resolve(__dirname, '../build-client'),
+        filename: '[name].[chunkhash].js',
+        chunkFilename: '[id].[chunkhash].js',
         publicPath: '/assets/',
     },
     module: {
@@ -23,43 +24,31 @@ module.exports = {
                 use: 'babel-loader',
             },
             {
-                test: /\.(jpe?g|png|gif)/,
-                loader: 'url-loader',
-                options: {
-                    limit: 4096,
-                },
-            },
-            // {
-            //     test: /\.svg$/,
-            //     exclude: /node_modules/,
-            //     use: [
-            //         {
-            //             loader: 'svg-sprite-loader',
-            //         },
-            //     ],
-            // },
-            {
                 test: /\.svg$/,
-                use: [
-                    {
-                        loader: 'svg-inline-loader',
-                        options: {
-                            removeTags: true,
-                            removingTags: ['title', 'desc'],
-                            removeSVGTagAttrs: true,
-                        },
-                    }
-                ],
+                type: 'asset/source'
+            },
+            {
+                test: /\.(jpe?g|png|gif)/,
+                type: 'asset'
             },
             {
                 test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
-                loader: 'file-loader',
-                options: {
-                    name: '[name].[ext]',
+                type: 'asset/resource',
+                generator: {
+                    filename: '[name][ext]',
                     outputPath: 'fonts/',
-                },
+                }
             },
-            { test: /\.md/, use: 'raw-loader' },
+            {
+                test: /\.md/,
+                type: 'asset/resource'
+            },
+            /*{
+                test: /\.m?js$/,
+                resolve: {
+                    fullySpecified: false,
+                }
+            },*/
         ],
     },
     plugins: [
@@ -67,7 +56,10 @@ module.exports = {
             format: 'Build [:bar] :percent (:elapsed seconds)',
             clear: false,
         }),
-        // new SpriteLoaderPlugin(),
+        new webpack.ProvidePlugin({
+            process: 'process/browser',
+            Buffer: ['buffer', 'Buffer'],
+        }),
     ],
     optimization: {
         splitChunks: {
@@ -90,5 +82,9 @@ module.exports = {
         modules: [path.resolve(__dirname, '..'), 'node_modules'],
         extensions: ['.js', '.json', '.jsx', '.css', '.scss'],
         alias,
+        fallback: {
+            "zlib": require.resolve("browserify-zlib"),
+            "stream": require.resolve("stream-browserify")
+        }
     },
 };

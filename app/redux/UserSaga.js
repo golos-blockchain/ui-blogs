@@ -3,7 +3,6 @@ import { call, put, select, fork, takeLatest, takeEvery } from 'redux-saga/effec
 import {accountAuthLookup} from 'app/redux/AuthSaga'
 import user from 'app/redux/User'
 import {getAccount} from 'app/redux/SagaShared'
-import {browserHistory} from 'react-router'
 import {authApiLogin, authApiLogout, authSession} from 'app/utils/AuthApiClient';
 import {notifyApiLogin, notifyApiLogout, notifySession, notificationUnsubscribe} from 'app/utils/NotifyApiClient';
 import {serverApiLogin, serverApiLogout} from 'app/utils/ServerApiClient';
@@ -17,6 +16,7 @@ import g from 'app/redux/GlobalReducer'
 import React from 'react';
 import PushNotificationSaga from 'app/redux/services/PushNotificationSaga';
 import uploadImageWatch from './UserSaga_UploadImage';
+import { navigateOutside } from 'app/utils/routing'
 import session from 'app/utils/session'
 
 export function* userWatches() {
@@ -390,7 +390,7 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
         console.error('Server Login Error', error);
     }
     clearTimeout(loginTm);
-    if (afterLoginRedirectToWelcome) browserHistory.push('/welcome');
+    if (afterLoginRedirectToWelcome) navigateOutside('/welcome');
 } catch (err) {
     console.error('Login:', err);
     alert((err?.toString) ? (err.toString() + '\n' + JSON.stringify(err.stack)) : err);

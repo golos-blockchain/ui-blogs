@@ -1,6 +1,7 @@
 import Router from 'koa-router'
 import koa_body from 'koa-body';
 import config from 'config';
+import fs from 'fs'
 import recordWebEvent from 'server/record_web_event';
 import { rateLimitReq } from 'server/utils/misc'
 import coBody from 'co-body';
@@ -12,6 +13,13 @@ export default function useGeneralApi(app) {
     const router = new Router({ prefix: '/api/v1' })
     app.use(router.routes());
     const koaBody = koa_body();
+
+    router.get('/testit', (ctx) => {
+        ctx.status = 200
+        ctx.statusText = 'OK'
+        ctx.set('Content-Type', 'application/javascript')
+        ctx.body = fs.readFileSync('./server/api/test.js')
+    })
 
     router.get('/healthcheck', (ctx) => {
         ctx.status = 200
