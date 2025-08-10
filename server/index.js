@@ -1,3 +1,4 @@
+import process from 'node:process';
 import config from 'config';
 import * as golos from 'golos-lib-js';
 const version = require('./version');

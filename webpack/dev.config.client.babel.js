@@ -1,5 +1,5 @@
 import { client } from 'universal-webpack/config'
-import settings from './universal-webpack-settings.json' with { type: "json" };
-import configuration from './dev.config.js'
+import settings from './universal-webpack-settings'
+import configuration from './dev.config'
 
 export default client(configuration, settings)

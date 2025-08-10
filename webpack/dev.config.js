@@ -6,7 +6,7 @@ const git = require('git-rev-sync');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const baseConfig = require('./base.config');
 const ExportAssetsPlugin = require('./plugins/ExportAssetsPlugin');
-const StartServerPlugin = require('./plugins/StartServerPlugin');
+//const StartServerPlugin = require('./plugins/StartServerPlugin');
 
 //const Webpack_isomorphic_tools_plugin = require('webpack-isomorphic-tools/plugin');
 //const webpack_isomorphic_tools_plugin = new Webpack_isomorphic_tools_plugin(
@@ -24,13 +24,13 @@ module.exports = merge(baseConfig, {
     plugins: [
         new webpack.DefinePlugin({
             'process.env': {
-                BROWSER: JSON.stringify(true),
+                BROWSER: JSON.stringify(false),
                 NODE_ENV: JSON.stringify('development'),
                 VERSION: JSON.stringify(git.long()),
             },
-            global: {
-                TYPED_ARRAY_SUPPORT: JSON.stringify(false),
-            },
+            //global: {
+            //    TYPED_ARRAY_SUPPORT: JSON.stringify(false),
+            //},
         }),
         //webpack_isomorphic_tools_plugin.development(),
         new MiniCssExtractPlugin({
@@ -40,7 +40,7 @@ module.exports = merge(baseConfig, {
         new ExportAssetsPlugin({
             development: true
         }),
-        new StartServerPlugin(),
+        //new StartServerPlugin(),
     ],
     module: {
         rules: [
