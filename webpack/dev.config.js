@@ -15,6 +15,10 @@ const ExportAssetsPlugin = require('./plugins/ExportAssetsPlugin');
 
 const WEBPACK_PORT = process.env.PORT ? parseInt(process.env.PORT) + 1 : 8081;
 
+console.log('-----------------------------------------------------------------')
+console.log(process.env.BROWSER)
+console.log('-----------------------------------------------------------------')
+
 module.exports = merge(baseConfig, {
     mode: 'development',
     devtool: 'source-map',
@@ -24,7 +28,7 @@ module.exports = merge(baseConfig, {
     plugins: [
         new webpack.DefinePlugin({
             'process.env': {
-                BROWSER: JSON.stringify(false),
+                BROWSER: JSON.stringify(process.env.BROWSER),
                 NODE_ENV: JSON.stringify('development'),
                 VERSION: JSON.stringify(git.long()),
             },
