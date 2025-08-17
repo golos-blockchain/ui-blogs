@@ -24,6 +24,8 @@ router.get('/', (ctx) => {
 })
 
 export default function startServer(parameters) {
+    console.log('parameters is', parameters)
+    console.log('chunks are', parameters.chunks())
     const port = 8080
     console.log('Server started', port);
     app.listen(port);

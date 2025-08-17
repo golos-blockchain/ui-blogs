@@ -54,14 +54,7 @@ async function appRender(ctx) {
           ErrorPage,
         });
 
-        // Assets name are found in `webpack-stats` file
-        const assets_filename = process.env.NODE_ENV === 'production' ? 'tmp/webpack-isotools-assets-prod.json' : 'tmp/webpack-isotools-assets-dev.json';
-        const assets = require(assets_filename);
-
-        // Don't cache assets name on dev
-        if (process.env.NODE_ENV === 'development') {
-            delete require.cache[require.resolve(assets_filename)];
-        }
+        const assets = global.uwParams.chunks();
 
         const analytics = {
             google_analytics_id: $STM_Config.google_analytics_id,

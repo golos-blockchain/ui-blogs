@@ -63,6 +63,8 @@ global.$STM_Config = {
 
 //global.webpackIsomorphicTools.server(ROOT, () => {
 export default function startServer(parameters) {
+    global.uwParams = parameters;
+
     golos.config.set('websocket', config.get('ws_connection_server'))
     golos.config.set('chain_id', config.get('chain_id'))
 
