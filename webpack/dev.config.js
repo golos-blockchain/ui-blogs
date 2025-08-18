@@ -31,7 +31,7 @@ module.exports = merge(baseConfig, {
             'process.env': {
                 BROWSER: JSON.stringify(process.env.BROWSER),
                 NODE_ENV: JSON.stringify('development'),
-                VERSION: JSON.stringify(git.long()),
+                VERSION,
             },
             //global: {
             //    TYPED_ARRAY_SUPPORT: JSON.stringify(false),
