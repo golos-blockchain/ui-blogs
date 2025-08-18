@@ -15,9 +15,10 @@ const ExportAssetsPlugin = require('./plugins/ExportAssetsPlugin');
 
 const WEBPACK_PORT = process.env.PORT ? parseInt(process.env.PORT) + 1 : 8081;
 
-console.log('-----------------------------------------------------------------')
-console.log(process.env.BROWSER)
-console.log('-----------------------------------------------------------------')
+let VERSION = 'dev'
+try {
+    VERSION = JSON.stringify(git.long())
+} catch (err) {}
 
 module.exports = merge(baseConfig, {
     mode: 'development',

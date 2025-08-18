@@ -528,7 +528,7 @@ class App extends React.Component {
                 <GlobalStyle />
                 {process.env.IS_APP ? <URLLoader /> : null}
                 <NotifyPolling />
-                <LocationWatch />
+                {process.env.BROWSER ? <LocationWatch /> : null}
             </div>
 
         );

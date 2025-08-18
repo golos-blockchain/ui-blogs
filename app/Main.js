@@ -2,6 +2,11 @@ import Iso from 'iso'
 
 import renderApp from 'app/renderApp'
 
+if (process.env.BROWSER){
+    alert('I AM CLIENT' + Iso)
+} else {
+    console.log('I AM SERVE');
+}
 if (!window.Intl) {
     require.ensure(
         ['intl/dist/Intl'],
@@ -13,5 +18,5 @@ if (!window.Intl) {
         'IntlBundle'
     )
 } else {
-    Iso.bootstrap(renderApp)
+    Iso.bootstrap(renderApp);
 }

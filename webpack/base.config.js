@@ -11,7 +11,7 @@ module.exports = {
         // vendor: ['react', 'react-dom', 'react-router']
     },
     output: {
-        path: path.resolve(__dirname, '../dist'),
+        path: path.resolve(__dirname, '../build-client'),
         filename: '[name].[chunkhash].js',
         chunkFilename: '[id].[chunkhash].js',
         publicPath: '/assets/',
@@ -63,18 +63,9 @@ module.exports = {
     ],
     optimization: {
         splitChunks: {
-            chunks: 'all',
             cacheGroups: {
-                defaultVendors: {
-                    test: /node_modules/,
-                    enforce: true,
-                },
-                // styles: {
-                //     name: 'styles',
-                //     test: /\.css$/,
-                //     chunks: 'all',
-                //     enforce: true,
-                // },
+                default: false,
+                vendors: false,
             },
         },
     },

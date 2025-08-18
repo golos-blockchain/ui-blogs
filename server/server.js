@@ -221,7 +221,7 @@ if (env === 'development') {
     });
     app.use(mount('/assets', proxy));
 } else {
-    app.use(mount('/assets', staticCache(path.join(__dirname, '../dist'), cacheOpts)));
+    app.use(mount('/assets', staticCache(path.join(__dirname, '../build-client'), cacheOpts)));
 }
 
 if (env !== 'test') {
