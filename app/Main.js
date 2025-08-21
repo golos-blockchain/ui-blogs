@@ -3,10 +3,11 @@ import Iso from 'iso'
 import renderApp from 'app/renderApp'
 
 if (process.env.BROWSER){
-    alert('I AM CLIENT' + Iso)
+    console.log('Client JS loaded')
 } else {
-    console.log('I AM SERVE');
+    console.log('Server JS loaded')
 }
+
 if (!window.Intl) {
     require.ensure(
         ['intl/dist/Intl'],

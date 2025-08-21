@@ -1,17 +1,16 @@
 import React from 'react';
-import {
-  useLocation,
-} from 'react-router-dom';
-const {
-  match,
-} = require("path-to-regexp");
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+const { match } = require("path-to-regexp");
 
 import App from 'app/components/App';
 import PostsIndex from '@pages/PostsIndex';
 import resolveRoute from './ResolveRoute';
 
 const renderPage = (Page) => {
-    let location = useLocation();
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [ searchParams, setSearchParams ] = useSearchParams();
+
     let params = {}
     if (Page.path) {
         const { path } = Page;
@@ -35,7 +34,7 @@ const renderPage = (Page) => {
     if (Page.component) {
         Page = Page.component
     }
-    return <Page routeParams={params} location={location} />
+    return <Page routeParams={params} location={location} navigate={navigate} searchParams={searchParams} />
 };
 
 export default [{

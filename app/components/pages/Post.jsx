@@ -274,8 +274,9 @@ class Post extends React.Component {
         let replies = dis.get('replies').toJS();
 
         let sort_order = this.state.highlight ? 'new' : 'trending';
-        if( this.props.location && this.props.location.query.sort )
-           sort_order = this.props.location.query.sort;
+        const { searchParams } = this.props
+        if (searchParams)
+           sort_order = searchParams.get('sort') || sort_order
 
         const commentLimit = 100;
         if (global['process'] !== undefined && replies.length > commentLimit) {
