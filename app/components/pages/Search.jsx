@@ -458,6 +458,6 @@ class Search extends React.Component {
 
 
 module.exports = {
-    path: '/search(/:query)',
+    path: '/search{/:query}',
     component: withScreenSize(Search)
 };

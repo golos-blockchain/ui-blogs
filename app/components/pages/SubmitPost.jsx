@@ -49,6 +49,6 @@ class SubmitPost extends React.PureComponent {
 }
 
 module.exports = {
-    path: 'submit',
+    path: '/submit',
     component: SubmitPost,
 };

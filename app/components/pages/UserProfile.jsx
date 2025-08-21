@@ -2,7 +2,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {connect} from 'react-redux';
-import { browserHistory } from 'react-router';
 import golos from 'golos-lib-js';
 import tt from 'counterpart';
 import { LinkWithDropdown } from 'react-foundation-components/lib/global/dropdown'
