@@ -28,7 +28,10 @@ const defaultNavigate = (e) => {
         e.preventDefault();
     }
     const a = e.target.nodeName.toLowerCase() === 'a' ? e.target : e.target.parentNode;
-    browserHistory.push(a.pathname + a.search + a.hash);
+    alert(window._router)
+    alert(window._router.navigate)
+    window._router.navigate('/annemarie');
+    //browserHistory.push(a.pathname + a.search + a.hash);
 };
 
 const calculateEstimateOutput = ({ account, price_per_golos, savings_withdraws, globalprops }) => {

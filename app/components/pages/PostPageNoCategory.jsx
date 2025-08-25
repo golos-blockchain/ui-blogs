@@ -25,7 +25,7 @@ class PostWrapper extends React.Component {
                 .then(content => {
                     if (content) {
                         const redirect = `/${content.category}/@${post}` + location.search
-                        this.setState({ redirect })
+                        window._NH.navigate(redirect, { replace: true })
                     }
                 })
                 .catch(() => {
@@ -36,19 +36,12 @@ class PostWrapper extends React.Component {
             this.setState({ loading: false })
         } else {
             const redirect = `/${dis.get('category')}/@${post}` + location.search
-            this.setState({ redirect })
+            window._NH.navigate(redirect, { replace: true })
         }
     }
 
     shouldComponentUpdate(np, ns) {
-        return ns.loading !== this.state.loading ||
-            ns.redirect !== this.state.redirect
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        if (this.state.redirect !== prevState.redirect) {
-            this.props.navigate(this.state.redirect, { replace: true });
-        }
+        return ns.loading !== this.state.loading
     }
 
     render() {

@@ -3,6 +3,7 @@ import RootRoute from 'app/RootRoute'
 
 let router
 if (process.env.BROWSER) {
+    console.log('creating', RootRoute)
     router = createBrowserRouter(RootRoute)
 }
 

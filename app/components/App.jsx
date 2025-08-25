@@ -39,7 +39,7 @@ import { APP_ICON, VEST_TICKER, } from 'app/client_config';
 import session from 'app/utils/session'
 import { loadGrayHideSettings } from 'app/utils/ContentAccess'
 import LocationWatch from 'app/utils/LocationWatch'
-import { withRouter } from 'app/utils/routing'
+import { withRouter, NavigateHelper } from 'app/utils/routing'
 import { withScreenSize } from 'app/utils/ScreenSize'
 import libInfo from 'app/JsLibHash.json'
 
@@ -505,6 +505,7 @@ class App extends React.Component {
                 }
                 onMouseMove={this.onEntropyEvent}
             >
+                {process.env.BROWSER ? <NavigateHelper /> : null}
                 {process.env.BROWSER ? <Toaster position='bottom-left' /> : null}
                 {noHeader ? null : (miniHeader ? <MiniHeader /> : <Header />)}
                 <div className={cn('App__content' +
