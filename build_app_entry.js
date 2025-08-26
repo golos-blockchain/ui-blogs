@@ -17,7 +17,7 @@ destDir = argv[2]
 cfgFile = argv[3]
 
 if (destDir !== 'null') {
-    const assets_filename = process.env.NODE_ENV === 'production' ? './tmp/webpack-isotools-assets-prod.json' : './tmp/webpack-isotools-assets-dev.json';
+    const assets_filename = process.env.NODE_ENV === 'production' ? './tmp/assets.json' : './tmp/assets-dev.json';
     const assets = require(assets_filename);
 
     const props = { body: '', assets, title: '', relativeSrc: false };

@@ -69,6 +69,23 @@ module.exports = {
             },
         },
     },
+    /*optimization: {
+        splitChunks: {
+            chunks: 'all',
+            cacheGroups: {
+                vendors: {
+                    test: /node_modules/,
+                    enforce: true,
+                },
+                // styles: {
+                //     name: 'styles',
+                //     test: /\.css$/,
+                //     chunks: 'all',
+                //     enforce: true,
+                // },
+            },
+        },
+    },*/
     resolve: {
         modules: [path.resolve(__dirname, '..'), 'node_modules'],
         extensions: ['.js', '.json', '.jsx', '.css', '.scss'],
