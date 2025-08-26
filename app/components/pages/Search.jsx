@@ -1,7 +1,6 @@
 import React from 'react';
 import golos from 'golos-lib-js';
 import { Link } from 'react-router-dom';
-import { browserHistory } from 'react-router';
 import tt from 'counterpart';
 import sanitize from 'sanitize-html';
 import truncate from 'lodash/truncate';
@@ -192,7 +191,7 @@ class Search extends React.Component {
         if (e.type === 'keyup' && e.keyCode != 13) {
             return;
         }
-        browserHistory.push('/search/' + this.state.query);
+        this.props.navigate('/search/' + this.state.query);
         this.fetchSearch(1);
     };
 

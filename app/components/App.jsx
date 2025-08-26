@@ -321,7 +321,7 @@ class App extends React.Component {
     //     const a = e.target.nodeName.toLowerCase() === 'a' ? e.target : e.target.parentNode;
     //     if (a.host !== window.location.host) return;
     //     e.preventDefault();
-    //     browserHistory.push(a.pathname + a.search + a.hash);
+    //     router.navigate(a.pathname + a.search + a.hash);
     // };
 
     onEntropyEvent(e) {

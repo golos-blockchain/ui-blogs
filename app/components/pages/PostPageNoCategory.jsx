@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import LoadingIndicator from 'app/components/elements/LoadingIndicator'
+import { navigateOutside } from 'app/utils/routing'
 
 class PostWrapper extends React.Component {
     constructor() {
@@ -25,7 +26,7 @@ class PostWrapper extends React.Component {
                 .then(content => {
                     if (content) {
                         const redirect = `/${content.category}/@${post}` + location.search
-                        window._NH.navigate(redirect, { replace: true })
+                        navigateOutside(redirect, { replace: true })
                     }
                 })
                 .catch(() => {
@@ -36,7 +37,7 @@ class PostWrapper extends React.Component {
             this.setState({ loading: false })
         } else {
             const redirect = `/${dis.get('category')}/@${post}` + location.search
-            window._NH.navigate(redirect, { replace: true })
+            navigateOutside(redirect, { replace: true })
         }
     }
 

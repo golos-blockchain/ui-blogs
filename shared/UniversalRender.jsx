@@ -291,6 +291,9 @@ export function clientRender(initialState) {
                     //     onError={onRouterError}
                     //     render={applyRouterMiddleware(scroll)}
                     // />
+
+    window._router = router;
+
     return render(
         <Wrapper>
             <Provider store={store}>

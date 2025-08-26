@@ -1,9 +1,9 @@
 import React from 'react';
-import { browserHistory } from 'react-router';
 
 import ReplyEditor from 'app/components/elements/ReplyEditor';
 import PostFormLoader from 'app/components/modules/PostForm/loader'
 import { VISIBLE_TYPES } from 'app/components/modules/PostForm/PostForm'
+import { withRouter } from 'app/utils/routing';
 
 class SubmitPost extends React.PureComponent {
     constructor(props) {
@@ -38,17 +38,18 @@ class SubmitPost extends React.PureComponent {
     }
 
     _onSuccess = (payload, editMode, visibleType) => {
+        const { router } = this.props;
         if (visibleType !== VISIBLE_TYPES.ALL) {
             setTimeout(() => {
-                browserHistory.push('/@' + payload.author)
+                router.navigate('/@' + payload.author)
             }, 1000)
             return
         }
-        browserHistory.push('/created')
+        router.navigate('/created')
     };
 }
 
 module.exports = {
     path: '/submit',
-    component: SubmitPost,
+    component: withRouter(SubmitPost),
 };

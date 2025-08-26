@@ -50,3 +50,7 @@ class NavigateHelperIn extends React.Component {
 }
 
 export let NavigateHelper = withRouter(NavigateHelperIn);
+
+export const navigateOutside = (redirect, opts) => {
+    window._NH.navigate(redirect, opts);
+};
