@@ -1,9 +1,10 @@
 const webpack = require('webpack');
 const { mergeWithCustomize, unique } = require('webpack-merge')
 const path = require('path');
-let prodConfig = require('./prod.config');
-const ExportAssetsPlugin = require('./plugins/ExportAssetsPlugin');
 const TerserPlugin = require('terser-webpack-plugin')
+
+let prodConfig = require('./prod.config')
+const ExportAssetsPlugin = require('./plugins/ExportAssetsPlugin')
 
 delete prodConfig.entry
 delete prodConfig.optimization.minimizer
