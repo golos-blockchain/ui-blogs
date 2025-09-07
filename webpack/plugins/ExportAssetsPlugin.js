@@ -5,6 +5,10 @@ module.exports = class ExportAssetsPlugin {
     }
 
     apply(compiler) {
+        if (!process.env.BROWSER) {
+            console.log('WARNING: Not exporting assets because it is server build...');
+            return;
+        }
         console.log("Exporting assets...")
         compiler.hooks.afterEmit.tap('ExportAssetsPlugin', (compilation) => {
             /*for (let a of compilation.getAssets()) {

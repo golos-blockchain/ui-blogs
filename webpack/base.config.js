@@ -63,14 +63,6 @@ module.exports = {
     ],
     optimization: {
         splitChunks: {
-            cacheGroups: {
-                default: false,
-                vendors: false,
-            },
-        },
-    },
-    /*optimization: {
-        splitChunks: {
             chunks: 'all',
             cacheGroups: {
                 vendors: {
@@ -85,7 +77,7 @@ module.exports = {
                 // },
             },
         },
-    },*/
+    },
     resolve: {
         modules: [path.resolve(__dirname, '..'), 'node_modules'],
         extensions: ['.js', '.json', '.jsx', '.css', '.scss'],

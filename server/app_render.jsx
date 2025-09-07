@@ -1,3 +1,4 @@
+import fs from 'fs';
 import React from 'react';
 import { renderToNodeStream } from 'react-dom/server';
 import golos from 'golos-lib-js';
@@ -18,6 +19,8 @@ const DB_RECONNECT_TIMEOUT = process.env.NODE_ENV === 'development' ? 1000 * 60 
 const getAbsoluteUrl = (ctx) => {
     return ctx.request.href;
 };
+
+let assets;
 
 async function appRender(ctx) {
     const store = {};
@@ -54,7 +57,12 @@ async function appRender(ctx) {
           ErrorPage,
         });
 
-        const assets = global.uwParams.chunks();
+        //let assets = global.uwParams.chunks();
+        if (!assets) {
+            const assets_filename = process.env.NODE_ENV === 'production' ? 'tmp/assets.json' : 'tmp/assets-dev.json'
+            assets = fs.readFileSync(assets_filename, 'utf-8');
+            assets = JSON.parse(assets);
+        }
 
         const analytics = {
             google_analytics_id: $STM_Config.google_analytics_id,
