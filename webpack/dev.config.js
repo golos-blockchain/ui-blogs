@@ -47,7 +47,7 @@ module.exports = merge(baseConfig, {
                 test: /\.(sa|sc|c)ss$/,
                 use: [
                     'style-loader',
-                    { loader: 'css-loader', options: { sourceMap: true } },
+                    { loader: 'css-loader', options: { sourceMap: true, url: false } },
                     {
                         loader: 'postcss-loader',
                         options: {
