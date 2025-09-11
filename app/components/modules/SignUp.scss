@@ -16,13 +16,13 @@
 .SignUp--reddit-button {
   background-color: #ef4623;
   &:hover {
-    background-color: scale-color(#ef4623, -6%);
+    background-color: scale-color(#ef4623, $lightness: -6%);
   }
 }
 
 .SignUp--fb-button {
   background-color: #3b5998;
   &:hover {
-    background-color: scale-color(#3b5998, -6%);
+    background-color: scale-color(#3b5998, $lightness: -6%);
   }
 }
