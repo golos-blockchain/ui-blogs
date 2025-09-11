@@ -215,10 +215,12 @@ if (env === 'development') {
         : 8081;
     const proxyhost = `http://127.0.0.1:${webpack_dev_port}`;
     console.log('proxying to webpack dev server at ' + proxyhost);
-    const proxy = require('koa-proxy')({
-        host: proxyhost,
-        map: filePath => 'assets/' + filePath
-    });
+    const proxy = require('koa-proxies')('*', {
+        target: proxyhost,
+        rewrite: (path) => {
+            return '/assets/' + path
+        }
+    })
     app.use(mount('/assets', proxy));
 } else {
     app.use(mount('/assets', staticCache(path.join(__dirname, '../build-client'), cacheOpts)));
