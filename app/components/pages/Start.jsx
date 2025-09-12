@@ -170,6 +170,6 @@ class Start extends React.Component {
 }
 
 module.exports = {
-    path: 'start',
+    path: '/start',
     component: Start,
 };
