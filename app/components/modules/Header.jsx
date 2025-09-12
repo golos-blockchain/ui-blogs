@@ -249,8 +249,9 @@ export default connect(
         const current_user = state.user.get('current');
         const account_user = state.global.get('accounts');
         const current_account_name = current_user ? current_user.get('username') : state.offchain.get('account');
+        const location = state.app.get('location')
         return {
-            location: typeof(window) !== 'undefined' ? window.location : state.app.get('location'),
+            location: location ? location.toJS() : {},
             current_account_name,
             account_meta: account_user,
         }

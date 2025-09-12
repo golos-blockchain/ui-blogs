@@ -83,7 +83,7 @@ class App extends React.Component {
         const p = this.props;
         const n = nextProps;
         return (
-            p.location !== n.location ||
+            p.router.location !== n.router.location ||
             p.new_visitor !== n.new_visitor ||
             p.flash !== n.flash ||
             this.state !== nextState ||
@@ -226,8 +226,8 @@ class App extends React.Component {
 
     componentDidUpdate(nextProps) {
         // setTimeout(() => this.setState({showCallout: false}), 15000);
-        if (nextProps.location &&
-            nextProps.location.pathname !== this.props.location.pathname) {
+        if (nextProps.router.location &&
+            nextProps.router.location.pathname !== this.props.router.location.pathname) {
             this.setState({ showBanner: false, showCallout: false });
         }
     }
@@ -381,8 +381,8 @@ class App extends React.Component {
             hideOrders = hideOrdersMe
         }
 
-        //const route = resolveRoute(location.pathname);
-        const lp = false; //location.pathname === '/';
+        const route = resolveRoute(location.pathname);
+        const lp = location.pathname === '/';
         let miniHeader = false;
         const params_keys = Object.keys(params);
         const ip =
@@ -511,7 +511,7 @@ class App extends React.Component {
                 <div className={cn('App__content' +
                     (noHeader ? ' no-header' : ''), {
                     'ho': hideOrders,
-                    //'App__content_hide-sub-menu': route.hideSubMenu,
+                    'App__content_hide-sub-menu': route.hideSubMenu,
                 })}>
                     {welcome_screen}
                     {callout}
