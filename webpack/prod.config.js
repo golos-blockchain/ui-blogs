@@ -50,11 +50,7 @@ module.exports = merge(baseConfig, {
     },
     optimization: {
         minimizer: [
-            new TerserPlugin({
-                cache: true,
-                parallel: true,
-                sourceMap: false,
-            }),
+            new TerserPlugin(),
             /*new OptimizeCSSAssetsPlugin({
                 cssProcessorOptions: {
                     safe: true,

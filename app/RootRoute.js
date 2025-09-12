@@ -6,11 +6,8 @@ import App from 'app/components/App';
 import PostsIndex from '@pages/PostsIndex';
 import resolveRoute from './ResolveRoute';
 
-const renderPage = (Page) => {
-    const location = useLocation();
-    const navigate = useNavigate();
-    const [ searchParams, setSearchParams ] = useSearchParams();
-
+const renderPage = (rouProps, Page) => {
+    const { location, navigate, searchParams } = rouProps;
     let params = {}
     if (Page.path) {
         const { path } = Page;
@@ -26,7 +23,7 @@ const renderPage = (Page) => {
             }
             const result = matcher(location.pathname)
             if (!result) {
-                return renderPage(require('@pages/NotFound'))
+                return renderPage(rouProps, require('@pages/NotFound'))
             }
             params = result.params
         }
@@ -43,63 +40,67 @@ export default [{
     children: [{
         path: '*',
         Component: () => {
-            let location = useLocation();
+            const location = useLocation();
+            const navigate = useNavigate();
+            const [ searchParams, setSearchParams ] = useSearchParams();
+            const rouProps = { location, navigate, searchParams, setSearchParams };
+
             const route = resolveRoute(location.pathname);
             if (route.page === 'Welcome') {
                 const Page = process.env.BROWSER
                             ? require('@pages/WelcomeLoader').default
                             : require('@pages/Welcome').default
-                return renderPage(Page)
+                return renderPage(rouProps, Page)
             } else if (route.page === 'Start') {
-                return renderPage(require('@pages/Start'))
+                return renderPage(rouProps, require('@pages/Start'))
             } else if (route.page === 'Services') {
-                return renderPage(require('@pages/Services'))
+                return renderPage(rouProps, require('@pages/Services'))
             } else if (route.page === 'Faq') {
-                return renderPage(process.env.BROWSER
+                return renderPage(rouProps, process.env.BROWSER
                     ? require('@pages/FaqLoader').default
                     : require('@pages/Faq').default,
                 )
             } else if (route.page === 'Login') {
-                return renderPage(require('@pages/Login'))
+                return renderPage(rouProps, require('@pages/Login'))
             } else if (
                 route.page === 'XSSTest' &&
                 process.env.NODE_ENV === 'development'
             ) {
-                return renderPage(require('@pages/XSS'))
+                return renderPage(rouProps, require('@pages/XSS'))
             } else if (route.page === 'Tags') {
-                return renderPage(require('@pages/TagsIndex'))
+                return renderPage(rouProps, require('@pages/TagsIndex'))
             } else if (route.page === 'MinusedAccounts') {
-                return renderPage(require('@pages/MinusedAccounts'))
+                return renderPage(rouProps, require('@pages/MinusedAccounts'))
             } else if (route.page === 'Referrers') {
-                return renderPage(require('@pages/Referrers'))
+                return renderPage(rouProps, require('@pages/Referrers'))
             } else if (route.page === 'AppGotoURL') {
-                return renderPage(require('@pages/app/AppGotoURL'))
+                return renderPage(rouProps, require('@pages/app/AppGotoURL'))
             } else if (route.page === 'AppSplash') {
-                return renderPage(require('@pages/app/AppSplash'))
+                return renderPage(rouProps, require('@pages/app/AppSplash'))
             } else if (route.page === 'AppSettings') {
-                return renderPage(require('@pages/app/AppSettings'))
+                return renderPage(rouProps, require('@pages/app/AppSettings'))
             } else if (route.page === 'AppUpdate') {
-                return renderPage(require('@pages/app/AppUpdate'))
+                return renderPage(rouProps, require('@pages/app/AppUpdate'))
             } else if (route.page === 'LeavePage') {
-                return renderPage(require('@pages/LeavePage'))
+                return renderPage(rouProps, require('@pages/LeavePage'))
             } else if (route.page === 'Search') {
-                return renderPage(require('@pages/Search'))
+                return renderPage(rouProps, require('@pages/Search'))
             } else if (route.page === 'SubmitPost') {
                 if (process.env.BROWSER)
-                    return renderPage(require('@pages/SubmitPost'))
+                    return renderPage(rouProps, require('@pages/SubmitPost'))
                 else
-                    return renderPage(require('@pages/SubmitPostServerRender'))
+                    return renderPage(rouProps, require('@pages/SubmitPostServerRender'))
             } else if (route.page === 'UserProfile') {
-                return renderPage(require('@pages/UserProfile'))
+                return renderPage(rouProps, require('@pages/UserProfile'))
             } else if (route.page === 'Post') {
-                return renderPage(require('@pages/PostPage'))
+                return renderPage(rouProps, require('@pages/PostPage'))
             } else if (route.page === 'PostNoCategory') {
-                return renderPage(require('@pages/PostPageNoCategory'))
+                return renderPage(rouProps, require('@pages/PostPageNoCategory'))
             } else if (route.page === 'PostsIndex') {
-                return renderPage(PostsIndex)
+                return renderPage(rouProps, PostsIndex)
             } else {
                 // TODO: process.env.BROWSER ? null : Error(404)
-                return renderPage(require('@pages/NotFound'))
+                return renderPage(rouProps, require('@pages/NotFound'))
             }
         }
     }]
