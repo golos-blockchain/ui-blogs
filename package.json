@@ -29,10 +29,10 @@
     "dev:app-client": "cross-env PORT=4011 BROWSER=true IS_APP=1 webpack-dev-server --config ./webpack/uni/dev.config.client.babel.js",
     "dev:app-server": "cross-env PORT=4011 webpack --watch --config ./webpack/uni/dev.config.server.babel.js",
     "dev:app": "cross-env PORT=4011 IS_APP=1 NODE_CONFIG_ENV=blacklist nodemon ./server/start-server --watch ./build/server",
-    "build:app": "npm run build-hash && cross-env NODE_ENV=production NODE_CONFIG_ENV=production,desktop ./node_modules/.bin/webpack --config ./webpack/prod-app.config.js",
+    "build:app": "npm run build-hash && cross-env BROWSER=true NODE_ENV=production NODE_CONFIG_ENV=production,desktop ./node_modules/.bin/webpack --config ./webpack/prod-app.config.js",
     "build:app-entry": "cross-env NODE_ENV=production NODE_CONFIG_ENV=production,desktop ./node_modules/@babel/node/bin/babel-node.js build_app_entry.js",
     "prebuild:mobile": "cross-env NODE_CONFIG_ENV=production,mobile node ./prebuild_mobile.js",
-    "build:mobile": "npm run build-hash && cross-env NODE_ENV=production NODE_CONFIG_ENV=production,mobile ./node_modules/.bin/webpack --config ./webpack/prod-mobile.config.js",
+    "build:mobile": "npm run build-hash && cross-env BROWSER=true NODE_ENV=production NODE_CONFIG_ENV=production,mobile ./node_modules/.bin/webpack --config ./webpack/prod-mobile.config.js",
     "postbuild:mobile": "npm run build:app-entry dist _mobile && cross-env NODE_CONFIG_ENV=production,mobile node ./postbuild_mobile.js && cd cordova && cordova prepare && cordova run android"
   },
   "author": "Golos <info@golos.id>",

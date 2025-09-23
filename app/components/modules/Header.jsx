@@ -88,7 +88,7 @@ class Header extends React.Component {
             if (sort_order === 'home') {
                 page_title = tt('header_jsx.home')
                 const account_name = route.params[1];
-                if (current_account_name && account_name.indexOf(current_account_name) === 1)
+                if (current_account_name && account_name && account_name.indexOf(current_account_name) === 1)
                     home_account = true;
             } else {
                 const type = tt('g.posts');
