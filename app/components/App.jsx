@@ -491,8 +491,9 @@ class App extends React.Component {
 
         const isApp = location.pathname.startsWith('/__app_') || this.appSettings
 
+        const isSubmit = location.pathname.startsWith('/submit')
         const noHeader = isApp
-        const noFooter = isApp || location.pathname.startsWith('/submit')
+        const noFooter = isApp || isSubmit
 
         return (
             <div
@@ -518,7 +519,7 @@ class App extends React.Component {
                     <ChainFailure />
                     {this.appSettings ? <AppSettings.component /> : <Outlet />}
                     {noFooter ? null : <Footer />}
-                    <NewsPopups />
+                    {isSubmit ? null : <NewsPopups />}
                     <ScrollButton />
                 </div>
                 <Dialogs />

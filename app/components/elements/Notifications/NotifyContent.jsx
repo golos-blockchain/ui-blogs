@@ -55,7 +55,7 @@ const transfer = (t, scope, type, op) => {
         <div className='NotificationContent__container'>
             <div className='NotificationContent__container_left'>
                 <span className='NotificationContent__icon'>
-                    <Icon name={icon} size='2x' />
+                    <Icon name={icon} size='2x' noNewLine={true} />
                 </span>
             </div>
             <div className='NotificationContent__container_center'>
@@ -102,7 +102,7 @@ const comment = (t, scope, type, op) => {
         <div className='NotificationContent__container'>
             <div className='NotificationContent__container_left'>
                 <span className='NotificationContent__icon'>
-                    <Icon name={icon} size='2x' />
+                    <Icon name={icon} size='2x' noNewLine={true} />
                 </span>
             </div>
             <div className='NotificationContent__container_center'>
@@ -130,7 +130,7 @@ const message = (t, scope, type, op) => {
         <div className='NotificationContent__container'>
             <div className='NotificationContent__container_left'>
                 <span className='NotificationContent__icon'>
-                    <Icon name={icon} size='2x' />
+                    <Icon name={icon} size='2x' noNewLine={true} />
                 </span>
             </div>
             <div className='NotificationContent__container_center'>
@@ -165,7 +165,7 @@ const fillOrder = (t, scope, type, op) => {
         <div className='NotificationContent__container'>
             <div className='NotificationContent__container_left'>
                 <span className='NotificationContent__icon'>
-                    <Icon name={icon} size='2x' />
+                    <Icon name={icon} size='2x' noNewLine={true} />
                 </span>
             </div>
             <div className='NotificationContent__container_center'>
