@@ -1205,6 +1205,7 @@
   },
   "app_update": {
     "notify_VERSION": "New version is available Golos Desktop - %(VERSION)s",
+    "notify_mobile_VERSION": "New version is available Golos Blogs - %(VERSION)s",
     "download": "Download"
   }
 }

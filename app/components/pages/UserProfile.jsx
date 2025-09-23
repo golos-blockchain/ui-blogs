@@ -473,7 +473,7 @@ export default class UserProfile extends React.Component {
             kebab = kebabMenu.length ? <LinkWithDropdown
                 closeOnClickOutside
                 dropdownPosition='bottom'
-                dropdownAlignment={this.state.linksAlign}
+                dropdownAlignment='right'
                 dropdownContent={<VerticalMenu items={kebabMenu} />}
                 >
                 <a className={`UserProfile__menu-item`}>
@@ -509,7 +509,7 @@ export default class UserProfile extends React.Component {
                         {!hideRewards && <LinkWithDropdown
                             closeOnClickOutside
                             dropdownPosition='bottom'
-                            dropdownAlignment={this.state.linksAlign}
+                            dropdownAlignment='right'
                             dropdownContent={<VerticalMenu items={rewardsMenu} />}
                         	>
                             <a className={`${rewardsClass} UserProfile__menu-item`} ref={this._onLinkRef}>

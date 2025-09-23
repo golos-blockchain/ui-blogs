@@ -1271,6 +1271,7 @@
   },
   "app_update": {
     "notify_VERSION": "Доступна новая версия Golos Desktop - %(VERSION)s",
+    "notify_mobile_VERSION": "Доступна новая версия Golos Blogs - %(VERSION)s",
     "download": "Скачать"
   }
 }
