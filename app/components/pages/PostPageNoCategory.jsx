@@ -1,7 +1,8 @@
-import React from 'react';
-import LoadingIndicator from 'app/components/elements/LoadingIndicator';
-import { browserHistory } from 'react-router';
-import { connect } from 'react-redux';
+import React from 'react'
+import { connect } from 'react-redux'
+
+import LoadingIndicator from 'app/components/elements/LoadingIndicator'
+import { navigateOutside } from 'app/utils/routing'
 
 class PostWrapper extends React.Component {
     constructor() {
@@ -12,35 +13,36 @@ class PostWrapper extends React.Component {
         };
     }
 
-    UNSAFE_componentWillMount() {
-        const route_params = this.props.routeParams;
-        const post = route_params.username + '/' + route_params.slug;
-        const dis = this.props.content.get(post);
+    componentDidMount() {
+        const { location, routeParams } = this.props
+        const post = routeParams.username + '/' + routeParams.slug
+        const dis = this.props.content.get(post)
         if (!dis) {
             this.props
                 .getContent({
-                    author: route_params.username,
-                    permlink: route_params.slug,
+                    author: routeParams.username,
+                    permlink: routeParams.slug,
                 })
                 .then(content => {
                     if (content) {
-                        browserHistory.replace(`/${content.category}/@${post}` + browserHistory.getCurrentLocation().search);
+                        const redirect = `/${content.category}/@${post}` + location.search
+                        navigateOutside(redirect, { replace: true })
                     }
                 })
                 .catch(() => {
-                    this.setState({ loading: false });
+                    this.setState({ loading: false })
                 });
         } else if (dis.get('id') === '0.0.0') {
             // non-existing post
-            this.setState({ loading: false });
+            this.setState({ loading: false })
         } else {
-            if (browserHistory)
-                browserHistory.replace(`/${dis.get('category')}/@${post}` + browserHistory.getCurrentLocation().search);
+            const redirect = `/${dis.get('category')}/@${post}` + location.search
+            navigateOutside(redirect, { replace: true })
         }
     }
 
     shouldComponentUpdate(np, ns) {
-        return ns.loading !== this.state.loading;
+        return ns.loading !== this.state.loading
     }
 
     render() {
@@ -58,7 +60,7 @@ class PostWrapper extends React.Component {
                     </div>
                 )}
             </div>
-        );
+        )
     }
 }
 
@@ -66,7 +68,7 @@ const StoreWrapped = connect(
     state => {
         return {
             content: state.global.get('content'),
-        };
+        }
     },
     dispatch => ({
         getContent: payload =>
@@ -77,9 +79,9 @@ const StoreWrapped = connect(
                 });
             }),
     })
-)(PostWrapper);
+)(PostWrapper)
 
 module.exports = {
     path: '/@:username/:slug',
     component: StoreWrapped,
-};
+}

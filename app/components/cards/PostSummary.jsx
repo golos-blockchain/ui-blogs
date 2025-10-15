@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { FormattedPlural } from 'react-intl'
 import { connect } from 'react-redux'
-import { Link, browserHistory } from 'react-router'
+import { Link } from 'react-router-dom'
 import {Map} from 'immutable'
 import tt from 'counterpart'
 import { Asset } from 'golos-lib-js/lib/utils'
@@ -33,6 +33,7 @@ import { randomString } from 'app/utils/helpers'
 import { addHighlight, unsubscribePost } from 'app/utils/NotifyApiClient'
 import { detransliterate } from 'app/utils/ParsersAndFormatters'
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl'
+import { withRouter } from 'app/utils/routing'
 import { EncryptedStates } from 'app/utils/sponsors'
 import { reloadLocation } from 'app/utils/app/RoutingUtils'
 import { walletUrl } from 'app/utils/walletUtils'
@@ -45,7 +46,7 @@ function isModifiedEvent(event) {
     return !!(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey)
 }
 
-function navigate(e, onClick, post, url, isForum, isSearch, warn) {
+function navigate(e, router, onClick, post, url, isForum, isSearch, warn) {
     if (isForum || isSearch) {
         if (process.env.MOBILE_APP) {
             e.preventDefault()
@@ -60,7 +61,7 @@ function navigate(e, onClick, post, url, isForum, isSearch, warn) {
     if (isModifiedEvent(e) || !isLeftClickEvent(e)) return;
     e.preventDefault()
     if (onClick) onClick(post, url);
-    else browserHistory.push(url);
+    else router.navigate(url);
 }
 
 class PostSummary extends React.Component {
@@ -155,7 +156,7 @@ class PostSummary extends React.Component {
     }
 
     render() {
-        const {currentCategory, thumbSize, onClick} = this.props;
+        const {currentCategory, thumbSize, onClick, router} = this.props;
         const {post, content, pending_payout, total_payout, cashout_time, blockEye} = this.props;
         const {account} = this.props;
         const {nsfwPref, username, loginBlurring} = this.props
@@ -302,7 +303,7 @@ class PostSummary extends React.Component {
         }
 
         let content_body = <div className={'PostSummary__body entry-content ' + filterClasses.join(' ')}>
-            <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search, warn)}>
+            <a href={title_link_url} target={link_target} onClick={e => navigate(e, router, onClick, post, title_link_url, is_forum, from_search, warn)}>
                 {encStub || (stubText ? nsfwStub : desc)}
             </a>
         </div>;
@@ -319,7 +320,7 @@ class PostSummary extends React.Component {
         const visitedClassName = this.props.visited ? 'PostSummary__post-visited ' : ''
 
         let content_title = <React.Fragment>
-            <a className={visitedClassName + ' ' + filterClasses.join(' ')} href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search, warn)}>
+            <a className={visitedClassName + ' ' + filterClasses.join(' ')} href={title_link_url} target={link_target} onClick={e => navigate(e, router, onClick, post, title_link_url, is_forum, from_search, warn)}>
                 {stubText ? nsfwStub : title_text}
             </a>
             {isOnlyblog && <span className="nsfw_post" title={tt('post_editor.onlyblog_hint')}>{tt('g.for_followers')}</span>}
@@ -333,7 +334,7 @@ class PostSummary extends React.Component {
 
         // author and category
         let author_category = <span className="vcard">
-            <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search, warn)}><TimeAgoWrapper date={is_forum ? p.active : p.created} className="updated" /></a>
+            <a href={title_link_url} target={link_target} onClick={e => navigate(e, router, onClick, post, title_link_url, is_forum, from_search, warn)}><TimeAgoWrapper date={is_forum ? p.active : p.created} className="updated" /></a>
             {' '}
             {blockEye && <MuteAuthorInNew author={p.author} />}
             <Author author={p.author} authorRepLog10={authorRepLog10} follow={false} mute={false} />
@@ -372,7 +373,7 @@ class PostSummary extends React.Component {
               src={url}
               href={title_link_url}
               target={link_target}
-              onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search, warn)} />
+              onClick={e => navigate(e, router, onClick, post, title_link_url, is_forum, from_search, warn)} />
         }
         const commentClasses = []
         if(gray) commentClasses.push('downvoted') // rephide
@@ -394,7 +395,7 @@ class PostSummary extends React.Component {
             if (eventCount) {
                 const commFew = tt('comment_jsx.N_comments_2', { N: eventCount })
                 const commMany = tt('comment_jsx.N_comments', { N: eventCount })
-                newReplies = <a href={title_link_url} target={link_target} onClick={e => navigate(e, onClick, post, title_link_url, is_forum, from_search, warn)}>
+                newReplies = <a href={title_link_url} target={link_target} onClick={e => navigate(e, router, onClick, post, title_link_url, is_forum, from_search, warn)}>
                         <span className='PostSummary__replies'>{'+'}<FormattedPlural value={eventCount}
                                 one={tt('comment_jsx.1_comment')}
                                 few={commFew}
@@ -496,4 +497,4 @@ export default connect(
             dispatch(user.actions.showLogin())
         },
     })
-)(PostSummary)
+)(withRouter(PostSummary))

@@ -1041,7 +1041,8 @@
         "low_reputation": "Не хватает репутации. Нужно не менее ",
         "low_golos_power_NEED_ADD": "Не хватает Силы Голоса. Нужно %(NEED)s, добавьте еще %(ADD)s."
       }
-    }
+    },
+    "too_slow_login": "Вход выполняется дольше обычного.\nВозможно, вам стоит попробовать другое устройство или другой интернет (например, Wi-Fi вместо мобильной сети)."
   },
   "chain_errors": {
     "only_comment_once_every": "Комментировать можно не чаще, чем раз в 20 секунд",
@@ -1270,6 +1271,7 @@
   },
   "app_update": {
     "notify_VERSION": "Доступна новая версия Golos Desktop - %(VERSION)s",
+    "notify_mobile_VERSION": "Доступна новая версия Golos Blogs - %(VERSION)s",
     "download": "Скачать"
   }
 }

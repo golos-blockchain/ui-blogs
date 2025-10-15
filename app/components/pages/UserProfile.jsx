@@ -1,8 +1,7 @@
 /* eslint react/prop-types: 0 */
 import React from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import {connect} from 'react-redux';
-import { browserHistory } from 'react-router';
 import golos from 'golos-lib-js';
 import tt from 'counterpart';
 import { LinkWithDropdown } from 'react-foundation-components/lib/global/dropdown'
@@ -162,7 +161,7 @@ export default class UserProfile extends React.Component {
             hideMainMe, hideRewardsMe, hideMainFor, hideRewardsFor,},
             onPrint,
         } = this;
-        let { accountname, section, id, action } = this.props.routeParams;
+        let { accountname, section, id, action } = this.props.routeParams        
         // normalize account from cased params
         accountname = accountname.toLowerCase();
         const username = current_user ? current_user.get('username') : null
@@ -474,7 +473,7 @@ export default class UserProfile extends React.Component {
             kebab = kebabMenu.length ? <LinkWithDropdown
                 closeOnClickOutside
                 dropdownPosition='bottom'
-                dropdownAlignment={this.state.linksAlign}
+                dropdownAlignment='right'
                 dropdownContent={<VerticalMenu items={kebabMenu} />}
                 >
                 <a className={`UserProfile__menu-item`}>
@@ -510,7 +509,7 @@ export default class UserProfile extends React.Component {
                         {!hideRewards && <LinkWithDropdown
                             closeOnClickOutside
                             dropdownPosition='bottom'
-                            dropdownAlignment={this.state.linksAlign}
+                            dropdownAlignment='right'
                             dropdownContent={<VerticalMenu items={rewardsMenu} />}
                         	>
                             <a className={`${rewardsClass} UserProfile__menu-item`} ref={this._onLinkRef}>
@@ -622,7 +621,7 @@ export default class UserProfile extends React.Component {
 }
 
 module.exports = {
-    path: '@:accountname(/:section)(/:id)(/:action)',
+    path: '/@:accountname{/:section}{/:id}{/:action}',
     component: connect(
         state => {
             const wifShown = state.global.get('UserKeys_wifShown')

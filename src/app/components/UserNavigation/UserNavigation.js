@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import tt from 'counterpart';
 
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom'
 
 import { TabLink } from 'golos-ui/Tab';
 import Icon from 'golos-ui/Icon';

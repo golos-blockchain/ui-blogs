@@ -125,6 +125,6 @@ class Services extends React.Component {
 }
 
 module.exports = {
-    path: 'services',
+    path: '/services',
     component: Services,
 };

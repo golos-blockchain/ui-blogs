@@ -1,4 +1,4 @@
-import { browserHistory, } from 'react-router'
+import { navigateOutside } from 'app/utils/routing'
 
 export function reloadLocation(href) {
     if (href && href[0] === '#') {
@@ -58,7 +58,7 @@ export function fixRouteIfApp() {
     if (hash && hash[1] === '/') {
         hash = hash.slice(1)
         if (!hash) hash = '/'
-        browserHistory.push(hash)
+        navigateOutside(hash)
         return false
     }
     return true

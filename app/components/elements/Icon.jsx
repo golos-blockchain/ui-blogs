@@ -181,7 +181,7 @@ export default class Icon extends React.PureComponent {
     };
 
     render() {
-        const { name, size, className } = this.props;
+        const { name, size, className, noNewLine } = this.props;
         let classes = 'Icon ' + name;
         let style;
 
@@ -198,13 +198,19 @@ export default class Icon extends React.PureComponent {
         delete passProps.name;
         delete passProps.size;
         delete passProps.className;
+        delete passProps.noNewLine;
+
+        let svg = icons.get(name);
+        if (noNewLine) {
+            svg = svg.replace(/\n/g, ''); // or we can use svgo-loader for such optimization
+        }
 
         return (
             <span
                 {...passProps}
                 className={classes}
                 style={style}
-                dangerouslySetInnerHTML={{ __html: icons.get(name) }}
+                dangerouslySetInnerHTML={{ __html: svg }}
             />
         );
     }

@@ -1,4 +1,4 @@
-import koa_router from 'koa-router';
+import Router from 'koa-router'
 import React from 'react';
 import {routeRegex} from "app/ResolveRoute";
 import {api} from 'golos-lib-js';
@@ -6,15 +6,15 @@ import {api} from 'golos-lib-js';
 const DEFAULT_VOTE_LIMIT = 10000
 
 export default function usePostJson(app) {
-    const router = koa_router();
+    const router = new Router()
     app.use(router.routes());
 
-    router.get(routeRegex.PostJson, function *() {
+    router.get(routeRegex.PostJson, async (ctx) => {
         // validate and build post details in JSON
-        const author = this.url.match(/(\@[\w\d\.-]+)/)[0].replace('@', '');
-        const permalink = this.url.match(/(\@[\w\d\.-]+)\/?([\w\d-]+)/)[2];
+        const author = ctx.url.match(/(\@[\w\d\.-]+)/)[0].replace('@', '');
+        const permalink = ctx.url.match(/(\@[\w\d\.-]+)\/?([\w\d-]+)/)[2];
         let status = "";
-        let post = yield api.getContentAsync(author, permalink, DEFAULT_VOTE_LIMIT);
+        let post = await api.getContentAsync(author, permalink, DEFAULT_VOTE_LIMIT);
 
         if (post.author) {
             status = "200";
@@ -29,6 +29,6 @@ export default function usePostJson(app) {
             status = "404";
         }
         // return response and status code
-        this.body = {post, status};
+        ctx.body = {post, status};
     });
 }

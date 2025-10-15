@@ -12,9 +12,18 @@ import {
     applyRouterMiddleware
 } from 'react-router';
 import { Provider } from 'react-redux';
-import RootRoute from 'app/RootRoute';
+import RootRoute from 'app/RootRoute'
+import router from 'app/router'
 import {createStore, applyMiddleware, compose} from 'redux';
 import { browserHistory } from 'react-router';
+import {
+    RouterProvider,
+} from "react-router-dom";
+import {
+    createStaticHandler,
+    createStaticRouter,
+    StaticRouterProvider
+} from "react-router-dom/server";
 import { useScroll } from 'react-router-scroll';
 import createSagaMiddleware from 'redux-saga';
 import { syncHistoryWithStore } from 'react-router-redux';
@@ -54,17 +63,22 @@ const onRouterError = (error) => {
     console.error('onRouterError', error);
 };
 
+const handler = createStaticHandler(RootRoute)
+
 export async function serverRender({
     location,
+    absoluteUrl,
     offchain,
     ErrorPage,
 }) {
-    let error, redirect, renderProps;
+    /*let error, redirect, renderProps;
 
     try {
         [error, redirect, renderProps] = await runRouter(location, RootRoute);
     } catch (e) {
-        console.error('Routing error:', e.toString(), location);
+        console.error('Routing error:',
+            process.env.NODE_ENV === 'development' ? e : e.toString(),
+            location);
         return {
             title: 'Routing error - ' + APP_NAME,
             statusCode: 500,
@@ -78,7 +92,7 @@ export async function serverRender({
             statusCode: 404,
             body: renderToString(<NotFound />)
         };
-    }
+    }*/
 
     if (process.env.BROWSER) {
         const store = createStore(rootReducer, initial_state, middleware);
@@ -91,7 +105,7 @@ export async function serverRender({
 
         const history = syncHistoryWithStore(browserHistory, store);
         // const scrollHistory = useScroll(() => history)();
-
+        window._reduxStore = store;
         window.store = {
             getState: () => {debugger}
         }
@@ -202,16 +216,28 @@ export async function serverRender({
         }
     }
 
+    const fetchReq = new Request(absoluteUrl); 
+    const context = await handler.query(fetchReq);
+
+    const router = createStaticRouter(handler.dataRoutes, context);
+
     let app, status, meta;
     try {
+        /*app = renderToString(
+            <Provider store={serverStore}>
+                <Translator>
+                    <RouterContext />
+                </Translator>
+            </Provider>
+        );*/
         app = renderToString(
             <Provider store={serverStore}>
                 <Translator>
-                    <RouterContext { ...renderProps } />
+                    <StaticRouterProvider router={router} context={context} />
                 </Translator>
             </Provider>
         );
-        meta = noMeta ? [] : extractMeta(onchain, renderProps.params);
+        meta = [];//noMeta ? [] : extractMeta(onchain, renderProps.params);
         status = 200;
     } catch (re) {
         console.error('Rendering error: ', re, re.stack);
@@ -235,11 +261,12 @@ export function clientRender(initialState) {
     }
     sagaMiddleware.run(rootSaga)
 
-    const history = syncHistoryWithStore(browserHistory, store);
+    //const history = syncHistoryWithStore(browserHistory, store);
 
     window.store = {
         getState: () => { debugger }
     }
+    window._reduxStore = store;
     // Bump transaction (for live UI testing).. Put 0 in now (no effect),
     // to enable browser's autocomplete and help prevent typos.
     window.bump = parseInt(localStorage.getItem('bump') || 0);
@@ -258,16 +285,20 @@ export function clientRender(initialState) {
             ? React.StrictMode
             : React.Fragment;
 
+                    // <Router
+                    //     routes={RootRoute}
+                    //     history={history}
+                    //     onError={onRouterError}
+                    //     render={applyRouterMiddleware(scroll)}
+                    // />
+
+    window._router = router;
+
     return render(
         <Wrapper>
             <Provider store={store}>
                 <Translator>
-                    <Router
-                        routes={RootRoute}
-                        history={history}
-                        onError={onRouterError}
-                        render={applyRouterMiddleware(scroll)}
-                    />
+                    <RouterProvider router={router} />
                 </Translator>
             </Provider>
         </Wrapper>,
