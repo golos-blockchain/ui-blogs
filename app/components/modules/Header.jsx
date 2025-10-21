@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import { Link } from 'react-router';
+import { Link } from "react-router-dom";
 import {connect} from 'react-redux';
 import tt from 'counterpart';
 import cn from 'classnames'
@@ -88,7 +88,7 @@ class Header extends React.Component {
             if (sort_order === 'home') {
                 page_title = tt('header_jsx.home')
                 const account_name = route.params[1];
-                if (current_account_name && account_name.indexOf(current_account_name) === 1)
+                if (current_account_name && account_name && account_name.indexOf(current_account_name) === 1)
                     home_account = true;
             } else {
                 const type = tt('g.posts');
@@ -249,10 +249,9 @@ export default connect(
         const current_user = state.user.get('current');
         const account_user = state.global.get('accounts');
         const current_account_name = current_user ? current_user.get('username') : state.offchain.get('account');
-        const { routing: {locationBeforeTransitions: { query }}} = state;
+        const location = state.app.get('location')
         return {
-            location: state.app.get('location'),
-            locationQueryParams: query,
+            location: location ? location.toJS() : {},
             current_account_name,
             account_meta: account_user,
         }

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom'
 import Icon from '../golos-ui/Icon/Icon';
 import PropTypes from 'prop-types';
 

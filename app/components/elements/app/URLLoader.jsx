@@ -1,5 +1,5 @@
 import React from 'react'
-import { browserHistory } from 'react-router'
+import { navigateOutside } from 'app/utils/routing'
 
 class URLLoader extends React.Component {
     componentDidMount() {
@@ -9,7 +9,7 @@ class URLLoader extends React.Component {
         window.appNavigation.onRouter((url) => {
             try {
                 let parsed = new URL(url)
-                browserHistory.push(parsed.pathname + parsed.search + parsed.hash)
+                navigateOutside(parsed.pathname + parsed.search + parsed.hash)
             } catch (error) {
                 console.error(error)
             }

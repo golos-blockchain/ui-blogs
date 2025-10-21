@@ -1,4 +1,4 @@
-FROM node:18.18.0 as build
+FROM node:20.19.0 as build
 
 WORKDIR /var/app
 COPY . /var/app
@@ -6,7 +6,7 @@ ENV NODE_OPTIONS --openssl-legacy-provider
 RUN yarn install
 RUN yarn build-version && export NODE_OPTIONS=--openssl-legacy-provider && yarn build
 
-FROM node:18.18.0-alpine
+FROM node:20.19.0-alpine
 
 WORKDIR /var/app
 

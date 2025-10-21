@@ -8,7 +8,7 @@ git clone https://github.com/golos-blockchain/ui-blogs
 
 ### Подготовка к сборке приложения
 
-Для сборки требуется **Linux** (например, Ubuntu 18 - 20).
+Для сборки требуется **Linux** достаточно **актуальной** версии (например, **Ubuntu 20** или новее).
 
 Кроме того, **для работы Android Studio** нужно установить окружение рабочего стола. Инструкция, как это сделать на VPS:
 
@@ -31,10 +31,9 @@ vncserver :1
 
 ### Сборка приложения
 
-1. Если у вас Linux современных версий (например **Ubuntu 20** или выше) - установите **Node.js 18** ([Windows](https://nodejs.org/dist/v18.20.5/node-v18.20.5-x64.msi), [Linux](https://github.com/nodesource/distributions/blob/master/README.md)).  
-   Если у вас **Ubuntu 18** или иной старый Linux - установите **[Node.js 16](https://github.com/nodesource/distributions/blob/master/OLD_README.md#using-ubuntu-3)**.  
+1. Установите **Node.js 20** ([Windows](https://nodejs.org/dist/v20.19.4/node-v20.19.4-x64.msi), [Linux](https://github.com/nodesource/distributions/blob/master/README.md)). 
 
-2. Установите Android Studio. 
+2. Установите Android Studio (рекомендуется версия Narwhal 2025.1.1, на момент выхода данной инструкции она последняя). 
 
 3. Запустите Android Studio. Установите все, что будет предложено при установке.
 

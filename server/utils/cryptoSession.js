@@ -1,7 +1,7 @@
 'use strict'
 
 const sodium = require('libsodium-wrappers')
-const session = require('koa-session')
+import session from 'koa-session'
 
 module.exports = function(app, opts) {
   opts = opts || {}
@@ -23,7 +23,7 @@ module.exports = function(app, opts) {
   opts.encode = encode
   opts.decode = decode
 
-  app.use(session(app, opts))
+  app.use(session(opts, app))
 
   function encode(body) {
     try {

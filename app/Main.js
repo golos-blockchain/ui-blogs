@@ -2,6 +2,12 @@ import Iso from 'iso'
 
 import renderApp from 'app/renderApp'
 
+if (process.env.BROWSER){
+    console.log('Client JS loaded')
+} else {
+    console.log('Server JS loaded')
+}
+
 if (!window.Intl) {
     require.ensure(
         ['intl/dist/Intl'],
@@ -13,5 +19,5 @@ if (!window.Intl) {
         'IntlBundle'
     )
 } else {
-    Iso.bootstrap(renderApp)
+    Iso.bootstrap(renderApp);
 }

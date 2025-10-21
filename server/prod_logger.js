@@ -3,24 +3,24 @@ var bytes = require('bytes');
 module.exports = prod_logger;
 
 function prod_logger() {
-    return function *logger(next) {
+    return async function logger(ctx, next) {
         // request
         var start = new Date;
-        var asset = this.originalUrl.indexOf('/assets/') === 0
-            || this.originalUrl.indexOf('/images/') === 0
-            || this.originalUrl.indexOf('/favicon.ico') === 0;
+        var asset = ctx.originalUrl.indexOf('/assets/') === 0
+            || ctx.originalUrl.indexOf('/images/') === 0
+            || ctx.originalUrl.indexOf('/favicon.ico') === 0;
         if (!asset) {
-            var uid = this.session.uid ? this.session.uid + ' ' : '' 
-            console.log(`[reqid ${this.request.header['x-request-id']}] ${uid}${this.method} ${this.originalUrl}`);
+            var uid = ctx.session.uid ? ctx.session.uid + ' ' : '' 
+            console.log(`[reqid ${ctx.request.header['x-request-id']}] ${uid}${ctx.method} ${ctx.originalUrl}`);
         }
         try {
-            yield next;
+            await next()
         } catch (err) {
-            log(this, start, null, err, false);
+            log(ctx, start, null, err, false);
             throw err;
         }
-        var length = this.response.length;
-        log(this, start, length, null, asset);
+        var length = ctx.response.length;
+        log(ctx, start, length, null, asset);
     }
 }
 

@@ -2,30 +2,26 @@ const webpack = require('webpack');
 const { merge } = require('webpack-merge')
 const baseConfig = require('./base.config');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-
-const Webpack_isomorphic_tools_plugin = require('webpack-isomorphic-tools/plugin');
-const webpack_isomorphic_tools_plugin = new Webpack_isomorphic_tools_plugin(
-    require('./webpack-isotools-config')
-);
+const TerserPlugin = require('terser-webpack-plugin')
+//const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const ExportAssetsPlugin = require('./plugins/ExportAssetsPlugin')
 
 module.exports = merge(baseConfig, {
     mode: 'production',
     plugins: [
         new webpack.DefinePlugin({
             'process.env': {
-                BROWSER: JSON.stringify(true),
+                BROWSER: JSON.stringify(process.env.BROWSER),
                 NODE_ENV: JSON.stringify('production'),
             },
-            global: {
-                TYPED_ARRAY_SUPPORT: JSON.stringify(false),
-            },
+            // global: {
+            //     TYPED_ARRAY_SUPPORT: JSON.stringify(false),
+            // },
         }),
-        webpack_isomorphic_tools_plugin,
+        new ExportAssetsPlugin(),
         new MiniCssExtractPlugin({
-            filename: '[name].[hash].css',
-            chunkFilename: '[id].[hash].css',
+            filename: '[name].[chunkhash].css',
+            chunkFilename: '[id].[chunkhash].css',
         }),
     ],
     module: {
@@ -34,15 +30,17 @@ module.exports = merge(baseConfig, {
                 test: /\.(sa|sc|c)ss$/,
                 use: [
                     MiniCssExtractPlugin.loader,
-                    'css-loader',
+                    { loader: 'css-loader', options: { url: false } },
                     {
                         loader: 'postcss-loader',
                         options: {
-                            plugins: () => [
-                                require('autoprefixer')({
-                                    browsers: ['> 1%', 'last 2 versions'],
-                                }),
-                            ],
+                            postcssOptions: {
+                                plugins: [
+                                    require('autoprefixer')({
+                                        overrideBrowserslist: ['> 1%', 'last 2 versions'],
+                                    })
+                                ]
+                            },
                         },
                     },
                     'sass-loader',
@@ -52,17 +50,12 @@ module.exports = merge(baseConfig, {
     },
     optimization: {
         minimizer: [
-            // in production mode webpack 4 use own uglify
-            new UglifyJsPlugin({
-                cache: true,
-                parallel: true,
-                sourceMap: false,
-            }),
-            new OptimizeCSSAssetsPlugin({
+            new TerserPlugin(),
+            /*new OptimizeCSSAssetsPlugin({
                 cssProcessorOptions: {
                     safe: true,
                 }
-            }),
+            }),*/
         ],
     },
 });

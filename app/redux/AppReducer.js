@@ -5,7 +5,7 @@ const defaultState = Map({
     requests: {},
     loading: false,
     error: '',
-    location: {},
+    location: Map({}),
     notifications: null,
     ignoredLoadingRequestCount: 0,
     notificounters: Map({
@@ -26,7 +26,7 @@ const defaultState = Map({
 
 export default function reducer(state = defaultState, action) {
     if (action.type === '@@router/LOCATION_CHANGE') {
-        return state.set('location', {pathname: action.payload.pathname});
+        return state.set('location', Map({pathname: action.payload.pathname}));
     }
     if (action.type === 'CHAIN_API_ERROR') {
         //return state.set('error', action.error).set('loading', false);

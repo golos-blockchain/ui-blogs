@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import { Link } from 'react-router';
-import { browserHistory } from 'react-router';
+import { Link } from 'react-router-dom';
 import cookie from "react-cookie";
 import tt from 'counterpart';
 import capitalize from 'lodash/capitalize'
@@ -9,8 +8,9 @@ import capitalize from 'lodash/capitalize'
 import { detransliterate } from 'app/utils/ParsersAndFormatters';
 import { isCyrillicTag, processCyrillicTag } from 'app/utils/tags';
 import { SELECT_TAGS_KEY } from 'app/client_config';
+import { withRouter } from 'app/utils/routing'
 
-export default class Topics extends React.Component {
+class Topics extends React.Component {
     static propTypes = {
         categories: PropTypes.object.isRequired,
         user: PropTypes.string,
@@ -122,14 +122,15 @@ export default class Topics extends React.Component {
 
         if (compact) {
             const homePath = '/' + order
+            const { router } = this.props
             return <select className={cn} onChange={(e) => {
                 const { value } = e.target
                 if (value === '_home') {
                     e.preventDefault()
-                    browserHistory.push(homePath)
+                    router.navigate(homePath)
                     return
                 }
-                browserHistory.push(value)
+                router.navigate(value)
             }} value={currentValue}>
                 <option key={'*'} value={homePath} hidden>{tt('g.topics')}...</option>
                 {(process.env.BROWSER && location.pathname !== homePath) ?
@@ -176,3 +177,4 @@ export default class Topics extends React.Component {
     }
 }
 
+export default withRouter(Topics);
