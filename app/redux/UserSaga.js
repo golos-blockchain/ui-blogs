@@ -3,7 +3,6 @@ import { call, put, select, fork, takeLatest, takeEvery } from 'redux-saga/effec
 import {accountAuthLookup} from 'app/redux/AuthSaga'
 import user from 'app/redux/User'
 import {getAccount} from 'app/redux/SagaShared'
-import {browserHistory} from 'react-router'
 import {authApiLogin, authApiLogout, authSession} from 'app/utils/AuthApiClient';
 import {notifyApiLogin, notifyApiLogout, notifySession, notificationUnsubscribe} from 'app/utils/NotifyApiClient';
 import {serverApiLogin, serverApiLogout} from 'app/utils/ServerApiClient';
@@ -17,6 +16,7 @@ import g from 'app/redux/GlobalReducer'
 import React from 'react';
 import PushNotificationSaga from 'app/redux/services/PushNotificationSaga';
 import uploadImageWatch from './UserSaga_UploadImage';
+import { navigateOutside } from 'app/utils/routing'
 import session from 'app/utils/session'
 
 export function* userWatches() {
@@ -135,7 +135,7 @@ const clean = (value) => value == null || value === '' || /null|undefined/.test(
 
 function* usernamePasswordLogin2({payload: {username, password, saveLogin,
         operationType, highSecurityLogin, afterLoginRedirectToWelcome
-}}) {
+}}) { try {
     // login, using saved password
     let autopost, memoWif, login_owner_pubkey, login_wif_owner_pubkey
     if (!username && !password) {
@@ -247,9 +247,7 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     if (authority.get('posting') !== 'full')
         private_keys = private_keys.remove('posting_private')
 
-    const pathname = yield select(state => state.global.get('pathname'))
-
-    if((!highSecurityLogin || authority.get('active') !== 'full') && !pathname.endsWith('/permissions'))
+    if (!highSecurityLogin || authority.get('active') !== 'full')
         private_keys = private_keys.remove('active_private')
 
     const owner_pubkey = account.getIn(['owner', 'key_auths', 0, 0])
@@ -312,6 +310,28 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     if (!autopost && saveLogin && !operationType)
         yield put(user.actions.saveLogin());
 
+    const loginTm = setTimeout(async () => {
+        const message = tt('user_saga_js.too_slow_login')
+        if (window._reduxStore) {
+            const now = Date.now();
+            const lbnKey = 'last_bad_item';
+            const lastBadNet = parseInt(localStorage.getItem(lbnKey) || 0);
+            if (now - lastBadNet >= 10*60*1000) {
+                localStorage.setItem(lbnKey, now);
+                window._reduxStore.dispatch({
+                    type: 'ADD_NOTIFICATION',
+                    payload: {
+                        key: 'bad_net_' + Date.now(),
+                        message,
+                        dismissAfter: 5000
+                    }
+                })
+            }
+        } else if (!afterLoginRedirectToWelcome) {
+            alert(message)
+        }
+    }, afterLoginRedirectToWelcome ? 3000 : 10000)
+
     let alreadyAuthorized = false;
     try {
         const res = yield notifyApiLogin(username, localStorage.getItem('X-Auth-Session'));
@@ -369,8 +389,13 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
         // Does not need to be fatal
         console.error('Server Login Error', error);
     }
-    if (afterLoginRedirectToWelcome) browserHistory.push('/welcome');
-}
+    clearTimeout(loginTm);
+    if (afterLoginRedirectToWelcome) navigateOutside('/welcome');
+} catch (err) {
+    console.error('Login:', err);
+    alert((err?.toString) ? (err.toString() + '\n' + JSON.stringify(err.stack)) : err);
+    throw err;
+}}
 
 function* changeAccount(action) {
     const { currentName } = session.load()

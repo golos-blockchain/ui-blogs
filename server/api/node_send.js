@@ -1,4 +1,4 @@
-import koaRouter from 'koa-router'
+import Router from 'koa-router'
 import koa_body from 'koa-body';
 import golos from 'golos-lib-js'
 import JsonRPC from 'simple-jsonrpc-js'
@@ -8,22 +8,22 @@ import JsonRPC from 'simple-jsonrpc-js'
 function useNodeSendApi(app) {
     const koaBody = koa_body();
 
-    const router = koaRouter({prefix: '/api/v1/node_send'})
+    const router = new Router({ prefix: '/api/v1/node_send' })
     app.use(router.routes())
 
     const INVALID_REQUEST = -32600
 
-    // router.options('/', koaBody, function * () {
-    //     this.set('Access-Control-Allow-Origin', '*')
-    //     this.set('Access-Control-Allow-Headers', 'Content-Type')
+    // router.options('/', koaBody, (ctx) => {
+    //     ctx.set('Access-Control-Allow-Origin', '*')
+    //     ctx.set('Access-Control-Allow-Headers', 'Content-Type')
 
-    //     this.body = ''
+    //     ctx.body = ''
     // })
 
-    router.post('/', koaBody, function * () {
-        this.set('Content-Type', 'application/json')
-        // this.set('Access-Control-Allow-Origin', '*')
-        // this.set('Access-Control-Allow-Headers', 'Content-Type')
+    router.post('/', koaBody, async (ctx) => {
+        ctx.set('Content-Type', 'application/json')
+        // ctx.set('Access-Control-Allow-Origin', '*')
+        // ctx.set('Access-Control-Allow-Headers', 'Content-Type')
 
         let jrpc = new JsonRPC()
 
@@ -59,16 +59,16 @@ function useNodeSendApi(app) {
         })
 
         jrpc.toStream = (message) => {
-            this.body = message
+            ctx.body = message
         }
 
-        let str = this.request.body
+        let str = ctx.request.body
         if (typeof(str) !== 'string') {
             str = JSON.stringify(str)
         }
 
         try {
-            yield jrpc.messageHandler(str)
+            await jrpc.messageHandler(str)
         } catch (err) {}
     })
 }

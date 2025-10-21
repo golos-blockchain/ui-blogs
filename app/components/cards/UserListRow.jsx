@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import Follow from 'app/components/elements/Follow';
 
 class UserListRow extends React.Component {

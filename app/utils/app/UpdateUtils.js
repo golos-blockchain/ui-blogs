@@ -65,7 +65,8 @@ export async function checkUpdates(timeout = 2000) {
                         show: true,
                         id: v,
                         link,
-                        title: tt('app_update.notify_VERSION', { VERSION: v }),
+                        title: tt(isDesktop ? 'app_update.notify_VERSION' : 'app_update.notify_mobile_VERSION',
+                            { VERSION: v }),
                         new_tab: true,
                     }
                 } else {

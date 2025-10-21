@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import {connect} from 'react-redux';
-import { browserHistory } from 'react-router';
 import tt from 'counterpart';
 import { LinkWithDropdown } from 'react-foundation-components/lib/global/dropdown';
 
@@ -19,16 +18,17 @@ import { openAppSettings } from 'app/components/pages/app/AppSettings'
 import { vestsToSteem, toAsset } from 'app/utils/StateFunctions';
 import { authRegisterUrl, } from 'app/utils/AuthApiClient';
 import { msgsHost, msgsLink, } from 'app/utils/ExtLinkUtils';
+import { withRouter } from 'app/utils/routing'
 import { walletUrl, walletTarget } from 'app/utils/walletUtils'
 
-const defaultNavigate = (e) => {
+const defaultNavigate = (e, router) => {
     if (e.metaKey || e.ctrlKey) {
         // prevent breaking anchor tags
     } else {
         e.preventDefault();
     }
     const a = e.target.nodeName.toLowerCase() === 'a' ? e.target : e.target.parentNode;
-    browserHistory.push(a.pathname + a.search + a.hash);
+    router.navigate(a.pathname + a.search + a.hash);
 };
 
 const calculateEstimateOutput = ({ account, price_per_golos, savings_withdraws, globalprops }) => {
@@ -57,7 +57,7 @@ const calculateEstimateOutput = ({ account, price_per_golos, savings_withdraws, 
 }
 
 function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops, username, showLogin, goChangeAccount, loggedIn, vertical, navigate, probablyLoggedIn, location, locationQueryParams, toggleNightmode,
-    hideOrders, hideOrdersMe, }) {
+    hideOrders, hideOrdersMe, router, }) {
     if (loggedIn) {
         hideOrders = hideOrdersMe
     }
@@ -65,7 +65,9 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
     const mcn = 'menu' + (vertical ? ' vertical show-for-small-only' : '');
     const mcl = vertical ? '' : ' sub-menu';
     const lcn = vertical ? '' : 'show-for-large';
-    const nav = navigate || defaultNavigate;
+    const nav = navigate || ((e) => {
+        defaultNavigate(e, router);
+    });
     const topbutton = <li className={lcn + ' submit-story'}>
         <Link to='/services' className='button small topbutton'>
             <Icon name="new/monitor" size="0_95x" />{tt('g.topbutton')}
@@ -297,4 +299,4 @@ export default connect(
             dispatch(user.actions.showChangeAccount())
         },
     })
-)(TopRightMenu);
+)(withRouter(TopRightMenu));

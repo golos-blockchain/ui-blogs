@@ -1,9 +1,12 @@
 const webpack = require('webpack');
 const { mergeWithCustomize, unique } = require('webpack-merge')
 const path = require('path');
-let prodConfig = require('./prod.config');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin')
 
+let prodConfig = require('./prod.config')
+const ExportAssetsPlugin = require('./plugins/ExportAssetsPlugin')
+
+delete prodConfig.entry
 delete prodConfig.optimization.minimizer
 
 module.exports = mergeWithCustomize({
@@ -25,6 +28,7 @@ module.exports = mergeWithCustomize({
                 TYPED_ARRAY_SUPPORT: JSON.stringify(false),
             },
         }),
+        new ExportAssetsPlugin(),
     ],
     entry: {
         app: [ './app/MainApp.js' ],
@@ -34,12 +38,9 @@ module.exports = mergeWithCustomize({
         path: path.resolve(__dirname, '../dist/assets'),
     },
     optimization: {
+        minimize: false,
         minimizer: [
-            new OptimizeCSSAssetsPlugin({
-                cssProcessorOptions: {
-                    safe: true,
-                }
-            }),
+            new TerserPlugin(),
         ],
     },
 });

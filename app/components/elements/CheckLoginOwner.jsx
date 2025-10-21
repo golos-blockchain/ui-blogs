@@ -3,7 +3,6 @@ import React from 'react'
 import Reveal from 'react-foundation-components/lib/global/reveal';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
-import {browserHistory} from 'react-router';
 import tt from 'counterpart';
 
 class CheckLoginOwner extends React.Component {

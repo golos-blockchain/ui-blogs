@@ -2,20 +2,31 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-if (process.env.BROWSER) {
-    const files = require.context('!svg-sprite-loader!./assets', false, /.*\.svg$/);
-    files.keys().forEach(files);
-}
+const icons = new Map();
+const files = require.context('./assets', true, /.*\.svg$/);
+files.keys().forEach(f => {
+    const name = f.replace(/^\.\/(.*)\.svg$/, '$1');
+    icons.set(name, files(f));
+})
 
 const Icon = ({ name, size, height, width, ...props }) => {
     if (!props) props = {};
-    props.height = size || height;
-    props.width = size || width;
+    height = size || height;
+    width = size || width;
+
+    let html = icons.get(name) || '';
+    let sizes = '';
+    if (height) {
+        sizes += ' height="' + height + '" ';
+    }
+    if (width) {
+        sizes += ' width="' + width + '" ';
+    }
+    html = html.replace('<svg ', '<svg ' + sizes);
 
     return (
-        <svg { ...props }>
-            <use xlinkHref={`#${name}`} />
-        </svg>
+        <span { ...props } dangerouslySetInnerHTML={{ __html: html }}>
+        </span>
     );
 };
 
@@ -31,6 +42,10 @@ Icon.defaultProps = {
     width: '24px',
 }
 
-const StyledIcon = styled(Icon)``;
+const StyledIcon = styled(Icon)`
+    svg {
+        vertical-align: middle;
+    }
+`;
 
 export default StyledIcon;

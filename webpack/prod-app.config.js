@@ -1,12 +1,21 @@
 const webpack = require('webpack');
-const { merge } = require('webpack-merge')
+const { mergeWithCustomize, unique } = require('webpack-merge')
 const path = require('path');
-let prodConfig = require('./prod.config');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin')
 
+let prodConfig = require('./prod.config');
+const ExportAssetsPlugin = require('./plugins/ExportAssetsPlugin')
+
+delete prodConfig.entry
 delete prodConfig.optimization.minimizer
 
-module.exports = merge(prodConfig, {
+module.exports = mergeWithCustomize({
+    customizeArray: unique(
+        'plugins',
+        ['DefinePlugin'],
+        (plugin) => plugin.constructor && plugin.constructor.name,
+    ),
+})(prodConfig, {
     plugins: [
         new webpack.DefinePlugin({
             'process.env': {
@@ -18,6 +27,7 @@ module.exports = merge(prodConfig, {
                 TYPED_ARRAY_SUPPORT: JSON.stringify(false),
             },
         }),
+        new ExportAssetsPlugin(),
     ],
     entry: {
         app: [ './app/MainApp.js' ],
@@ -27,12 +37,9 @@ module.exports = merge(prodConfig, {
         path: path.resolve(__dirname, '../dist/electron/assets'),
     },
     optimization: {
+        minimize: false,
         minimizer: [
-            new OptimizeCSSAssetsPlugin({
-                cssProcessorOptions: {
-                    safe: true,
-                }
-            }),
+            new TerserPlugin(),
         ],
     },
 });

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom'
 import Slider from 'react-slick';
 import styled from 'styled-components';
 import Userpic from 'app/components/elements/Userpic';

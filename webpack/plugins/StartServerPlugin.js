@@ -20,7 +20,7 @@ const startServer = () => {
     // merge env for the new process
     const env = {...process.env, NODE_ENV: 'development', BABEL_ENV: 'server'};
     // start the server procress
-    server = cp.fork(KOA_PATH, {env});
+    server = cp.fork('./node_modules/@babel/node/bin/babel-node', [KOA_PATH], {env})
     // when server is `online`
     server.once('message', (message) => {
         if (message.match(/^online$/)) {

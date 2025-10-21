@@ -7,6 +7,7 @@ export default function ServerHTML({ body, assets, locale, title, meta, analytic
     const fixSrc = (src) => {
         if (!relativeSrc) return src
         if (src[0] === '/') return src.substring(1)
+            
     }
     return (
         <html>

@@ -1,9 +1,9 @@
 import React from 'react'
 import {connect} from 'react-redux';
-import { withRouter } from 'react-router'
 
 import constants from 'app/redux/constants';
 import Topics from 'app/components/modules/Topics'
+import { withRouter } from 'app/utils/routing'
 
 class MiniTopics extends React.Component {
     loadSelected = (keys) => {

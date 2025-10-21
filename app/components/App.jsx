@@ -9,7 +9,6 @@ import tt from 'counterpart';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
 import { createGlobalStyle } from 'styled-components'
 
-import AppPropTypes from 'app/utils/AppPropTypes';
 import Header from 'app/components/modules/Header';
 import Footer from 'app/components/modules/Footer';
 import NewsPopups from 'app/components/elements/NewsPopups'
@@ -18,7 +17,8 @@ import TooltipManager from 'app/components/elements/common/TooltipManager';
 import user from 'app/redux/User';
 import g from 'app/redux/GlobalReducer';
 import PushNotificationSaga from 'app/redux/services/PushNotificationSaga'
-import { Link } from 'react-router';
+import { Outlet } from 'react-router';
+import { Link } from 'react-router-dom';
 import resolveRoute from 'app/ResolveRoute';
 import Dialogs from '@modules/Dialogs';
 import Modals from '@modules/Modals';
@@ -38,6 +38,8 @@ import { getShortcutIntent, onShortcutIntent } from 'app/utils/app/ShortcutUtils
 import { APP_ICON, VEST_TICKER, } from 'app/client_config';
 import session from 'app/utils/session'
 import { loadGrayHideSettings } from 'app/utils/ContentAccess'
+import LocationWatch from 'app/utils/LocationWatch'
+import { withRouter, NavigateHelper } from 'app/utils/routing'
 import { withScreenSize } from 'app/utils/ScreenSize'
 import libInfo from 'app/JsLibHash.json'
 
@@ -81,7 +83,7 @@ class App extends React.Component {
         const p = this.props;
         const n = nextProps;
         return (
-            p.location !== n.location ||
+            p.router.location !== n.router.location ||
             p.new_visitor !== n.new_visitor ||
             p.flash !== n.flash ||
             this.state !== nextState ||
@@ -224,7 +226,8 @@ class App extends React.Component {
 
     componentDidUpdate(nextProps) {
         // setTimeout(() => this.setState({showCallout: false}), 15000);
-        if (nextProps.location.pathname !== this.props.location.pathname) {
+        if (nextProps.router.location &&
+            nextProps.router.location.pathname !== this.props.router.location.pathname) {
             this.setState({ showBanner: false, showCallout: false });
         }
     }
@@ -318,7 +321,7 @@ class App extends React.Component {
     //     const a = e.target.nodeName.toLowerCase() === 'a' ? e.target : e.target.parentNode;
     //     if (a.host !== window.location.host) return;
     //     e.preventDefault();
-    //     browserHistory.push(a.pathname + a.search + a.hash);
+    //     router.navigate(a.pathname + a.search + a.hash);
     // };
 
     onEntropyEvent(e) {
@@ -361,14 +364,15 @@ class App extends React.Component {
         }
 
         const {
-            location,
-            params,
-            children,
             flash,
             new_visitor,
             nightmodeEnabled,
             loggedIn,
         } = this.props;
+        const {
+            location,
+            params,
+        } = this.props.router;
         let {
             hideOrders,
             hideOrdersMe,
@@ -378,7 +382,7 @@ class App extends React.Component {
         }
 
         const route = resolveRoute(location.pathname);
-        const lp = false; //location.pathname === '/';
+        const lp = location.pathname === '/';
         let miniHeader = false;
         const params_keys = Object.keys(params);
         const ip =
@@ -434,7 +438,8 @@ class App extends React.Component {
             );
         }
 
-        let invite = location.query.invite;
+        const query = new URLSearchParams(location.search);
+        let invite = query.get('invite');
         if (process.env.BROWSER) {
             if (invite) {
                 localStorage.setItem('invite', invite);
@@ -486,8 +491,9 @@ class App extends React.Component {
 
         const isApp = location.pathname.startsWith('/__app_') || this.appSettings
 
+        const isSubmit = location.pathname.startsWith('/submit')
         const noHeader = isApp
-        const noFooter = isApp || location.pathname.startsWith('/submit')
+        const noFooter = isApp || isSubmit
 
         return (
             <div
@@ -500,6 +506,7 @@ class App extends React.Component {
                 }
                 onMouseMove={this.onEntropyEvent}
             >
+                {process.env.BROWSER ? <NavigateHelper /> : null}
                 {process.env.BROWSER ? <Toaster position='bottom-left' /> : null}
                 {noHeader ? null : (miniHeader ? <MiniHeader /> : <Header />)}
                 <div className={cn('App__content' +
@@ -510,9 +517,9 @@ class App extends React.Component {
                     {welcome_screen}
                     {callout}
                     <ChainFailure />
-                    {this.appSettings ? <AppSettings.component /> : children}
+                    {this.appSettings ? <AppSettings.component /> : <Outlet />}
                     {noFooter ? null : <Footer />}
-                    <NewsPopups />
+                    {isSubmit ? null : <NewsPopups />}
                     <ScrollButton />
                 </div>
                 <Dialogs />
@@ -523,6 +530,7 @@ class App extends React.Component {
                 <GlobalStyle />
                 {process.env.IS_APP ? <URLLoader /> : null}
                 <NotifyPolling />
+                {process.env.BROWSER ? <LocationWatch /> : null}
             </div>
 
         );
@@ -531,7 +539,6 @@ class App extends React.Component {
 
 App.propTypes = {
     error: PropTypes.string,
-    children: AppPropTypes.Children,
     location: PropTypes.object,
     loginUser: PropTypes.func.isRequired,
     logoutUser: PropTypes.func.isRequired,
@@ -575,4 +582,4 @@ export default connect(
             dispatch(g.actions.fetchExchangeRates());
         },
     })
-)(withScreenSize(App))
+)(withRouter(withScreenSize(App)))
