@@ -306,13 +306,15 @@ export default connect(
             ? current.get('username')
             : state.offchain.get('account');
 
+        const pathname = state.app.get('location')?.toJS().pathname;
+
         return {
             ...props,
             username,
             content: state.global.get('content'),
             next_from: state.global.get('next_from'),
             decrypting: state.global.get('decrypting'),
-            pathname: state.app.get('location').pathname,
+            pathname,
         };
     },
     {
