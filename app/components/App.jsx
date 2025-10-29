@@ -155,6 +155,12 @@ class App extends React.Component {
                 document.addEventListener('pause', this.onPause)
                 document.addEventListener('resume', this.onResume)
 
+                cordova.exec((winParam) => {
+                    console.log('initNativeCore ok', winParam)
+                }, (err) => {
+                    console.error('initNativeCore err', err)
+                }, 'CorePlugin', 'initNativeCore', [])
+
                 this.setState({
                     can_render: true
                 })
