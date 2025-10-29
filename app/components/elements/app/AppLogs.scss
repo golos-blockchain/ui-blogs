@@ -1,0 +1,20 @@
+.AppLogs {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 100;
+    width: 100%;
+    min-height: 100%;
+    background-color: white;
+    padding: 10px;
+
+    .line {
+        white-space: nowrap;
+        &.err {
+            color: red;
+        }
+        &.warning {
+            color: darkgoldenrod;
+        }
+    }
+}

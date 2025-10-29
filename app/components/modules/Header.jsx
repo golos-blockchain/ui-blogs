@@ -200,6 +200,8 @@ class Header extends React.Component {
             hideOrders = hideOrdersMe
         }
 
+        //return null;
+
         return (
             <header className="Header noPrint">
                 <div className="Header__top header">

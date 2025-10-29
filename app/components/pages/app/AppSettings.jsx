@@ -3,8 +3,38 @@ import tt from 'counterpart'
 import { Formik, Field } from 'formik'
 
 import Icon from 'app/components/elements/Icon'
+import AppLogs from 'app/components/elements/app/AppLogs'
+
+const mockLogs = () => {
+    // mock for tests
+    if (typeof(NativeLogs) === 'undefined') {
+        window.NativeLogs = {
+            getLog: (limit, some, callback) => {
+                let logs = '';
+                for (let i = 0; i < limit; ++i) {
+                    const level = ((i % 10 === 0) ? 'E' : 'W');
+                    let line = 'Log line #' + i;
+                    if (i % 4 === 0) {
+                        for (let j = 0; j < 5; ++j) {
+                            line = (line + ' ' + line);
+                        }
+                    }
+                    if (i % 3 === 0) {
+                        line = '      ' + line;
+                    }
+
+                    line = '10-07 20:32:02.522 6440 6440 ' + level + ' ' + line;
+                    logs += line + '\n';
+                }
+                callback(logs);
+            }
+        }
+    }
+};
 
 class AppSettings extends React.Component {
+    state = {};
+
     _onSubmit = (data) => {
         let cfg = { ...$STM_Config }
         if (data.custom_address) {
@@ -65,13 +95,13 @@ class AppSettings extends React.Component {
         this.makeInitialValues()
     }
 
-    showLogs = (e) => {
-        e.preventDefault()
+    showLogs = (limit = 200) => {
+        mockLogs();
         NativeLogs.getLog(
-            200,
+            limit,
             false,
             logs => {
-                alert(logs)
+                this.setState({ logs, logLimit: limit });
             }
         )
     }
@@ -113,6 +143,7 @@ class AppSettings extends React.Component {
 
     render() {
         const { MOBILE_APP } = process.env
+        const { logs, logLimit } = this.state
         return <div>
             <h1 style={{marginLeft: '0.5rem', marginTop: '1rem'}}>
                 {MOBILE_APP ? <a href='/' style={{ marginRight: '0.5rem' }} onClick={this._onClose}>
@@ -230,7 +261,10 @@ class AppSettings extends React.Component {
                                 </button>}
                                 {MOBILE_APP ? <span className='float-right'>
                                     {tt('app_settings.version') + ' ' + $STM_Config.app_version}
-                                    <a href='#' style={{ marginLeft: '5px' }} onClick={this.showLogs}>
+                                    <a href='#' style={{ marginLeft: '5px' }} onClick={e => {
+                                        e.preventDefault();
+                                        this.showLogs();
+                                    }}>
                                         {tt('app_settings.logs')}
                                     </a>
                                 </span> : null}
@@ -239,6 +273,11 @@ class AppSettings extends React.Component {
                     </div>
                 </form>
             )}</Formik>
+            {logs && <AppLogs logs={logs} logLimit={logLimit} showLogs={this.showLogs} hideMe={() => {
+                this.setState({
+                    logs: null
+                });
+            }} />}
         </div>
     }
 }

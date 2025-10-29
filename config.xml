@@ -14,23 +14,7 @@
         <icon src="res/icon-xxhdpi.png" density="xxhdpi" />
         <icon src="res/icon-xxxhdpi.png" density="xxxhdpi" />
 
-        <splash src="res/screen/android/splash-ldpi.png" density="ldpi" />
-        <splash src="res/screen/android/splash-mdpi.png" density="mdpi" />
-        <splash src="res/screen/android/splash-hdpi.png" density="hdpi" />
-        <splash src="res/screen/android/splash-xhdpi.png" density="xhdpi" />
-        <splash src="res/screen/android/splash-xxhdpi.png" density="xxhdpi" />
-        <splash src="res/screen/android/splash-xxxhdpi.png" density="xxxhdpi" />
-
-        <splash src="res/screen/android/land/splash-land-ldpi.png" density="land-ldpi" />
-        <splash src="res/screen/android/land/splash-land-mdpi.png" density="land-mdpi" />
-        <splash src="res/screen/android/land/splash-land-hdpi.png" density="land-hdpi" />
-        <splash src="res/screen/android/land/splash-land-xhdpi.png" density="land-xhdpi" />
-        <splash src="res/screen/android/land/splash-land-xxhdpi.png" density="land-xxhdpi" />
-        <splash src="res/screen/android/land/splash-land-xxxhdpi.png" density="land-xxxhdpi" />
-
-        <preference name="SplashMaintainAspectRatio" value="true" />
-        <preference name="AutoHideSplashScreen" value="false" />
-        <preference name="SplashScreenSpinnerColor" value="#37a5ff" />
+        <preference name="AndroidWindowSplashScreenAnimatedIcon" value="res/icon-splash.png" />
 
         <resource-file src="res/blg_setting.png" target="app/src/main/res/drawable/blg_setting.png" />
     </platform>

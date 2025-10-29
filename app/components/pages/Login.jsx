@@ -22,6 +22,6 @@ class Login extends React.Component {
 }
 
 module.exports = {
-    path: 'login.html',
+    path: '/login.html',
     component: Login
 };
