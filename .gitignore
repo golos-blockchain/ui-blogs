@@ -4,6 +4,8 @@ coverage
 node_modules
 *.log
 dist
+build-client
+build-server
 vendor/*
 tmp/*
 app/assets/static/*.js

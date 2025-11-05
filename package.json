@@ -205,7 +205,6 @@
       "cordova-plugin-androidx-adapter": {},
       "cordova-plugin-backbutton": {},
       "cordova-plugin-native-logs": {},
-      "cordova-plugin-splashscreen": {},
       "@red-mobile/cordova-plugin-shortcuts-android": {
         "ANDROIDX_CORE_VERSION": "1.3.2"
       },
