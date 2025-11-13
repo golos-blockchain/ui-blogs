@@ -12,9 +12,10 @@
     "ws_connection_app": [
       { "address": "wss://api.golos.id/ws" },
       { "address": "wss://api.aleksw.space/ws" },
+      { "address": "wss://golos.lexai.top/ws" },
       { "address": "wss://api-golos.blckchnd.com/ws" }
     ],
-    "ws_connection_exchange": "wss://api.golos.id/ws",
+    "ws_connection_exchange": "wss://api-full.golos.id/ws",
     "chain_id": "782a3039b478c839e4cb0c941ff4eaeb7df40bdd68bd441afd444b9da763de12",
     "images": {
       "img_proxy_prefix": "https://images.golos.today",
@@ -57,9 +58,7 @@
       "RUDEX": true,
       "PRIZM": true,
       "DOGECOIN": true,
-      "YMZEC": true,
-      "YMWMZ": true,
-      "YMBTC": true
+      "YMWMZ": true
     },
     "main_app": "blogs"
   }
