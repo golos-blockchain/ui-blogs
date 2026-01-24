@@ -9,6 +9,8 @@ const requestBase = () => ({
     }
 })
 
+const FIREBASE_APP = 'blogs_android'
+
 const notifyAvailable = () => {
     return process.env.BROWSER && typeof($STM_Config) !== 'undefined'
         && $STM_Config.notify_service && $STM_Config.notify_service.host;
@@ -295,6 +297,44 @@ export async function notificationUnsubscribe(account, sidKey = '__subscriber_id
     }
 }
 
+export async function firebaseRegisterWs(account, token, scopes = 'message') {
+    if (!notifyWsAvailable()) throw new Error('No notify_service host_ws in config')
+    const xSession = notifySession()
+    return await new Promise(async (resolve, reject) => {
+        await notifyWsSend('firebase/register', {
+            account,
+            'X-Session': xSession,
+            app: FIREBASE_APP,
+            token,
+            scopes,
+        }, (err, res) => {
+            if (err) {
+                reject(err)
+                return
+            }
+            resolve(res)
+        })
+    })
+}
+
+export async function firebaseUnregisterWs(account, token) {
+    if (!notifyWsAvailable()) throw new Error('No notify_service host_ws in config')
+    const xSession = notifySession()
+    return await new Promise(async (resolve, reject) => {
+        await notifyWsSend('firebase/unregister', {
+            account,
+            'X-Session': xSession,
+            token,
+        }, (err, res) => {
+            if (err) {
+                reject(err)
+                return
+            }
+            resolve(res)
+        })
+    })
+}
+
 export async function notificationTake(account, removeTaskIds, forEach, sidKey = '__subscriber_id') {
     if (!notifyAvailable()) return;
     let url = notifyUrl(`/take/@${account}/${window[sidKey]}`);
@@ -502,5 +542,7 @@ if (process.env.BROWSER) {
     window.markNotificationRead = markNotificationRead;
     window.notificationSubscribe = notificationSubscribe;
     window.notificationUnsubscribe = notificationUnsubscribe;
+    window.firebaseRegisterWs = firebaseRegisterWs;
+    window.firebaseUnregisterWs = firebaseUnregisterWs;
     window.notificationTake = notificationTake;
 }

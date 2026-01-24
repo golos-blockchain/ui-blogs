@@ -135,8 +135,8 @@ export default connect(
             }
         },
         logoutAll: () => {
-            session.clear()
             dispatch(user.actions.logout())
+            session.clear()
         },
         showAddAccount: () => {
             dispatch(user.actions.hideChangeAccount())

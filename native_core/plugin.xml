@@ -5,6 +5,7 @@
     <description>Provides notification service when activity is paused, as well as on boot received</description>
     <license>Apache 2.0</license>
     <keywords>cordova</keywords>
+    <hook type="after_prepare" src="hooks/after_prepare/copy-google-services.js" />
     <platform name="android">
         <framework src="com.squareup.okhttp3:okhttp:4.9.3" />
 
@@ -43,5 +44,8 @@
 
         <source-file src="res/ic_empty.xml" target-dir="res/drawable" />
         <source-file src="res/notify.png" target-dir="res/drawable" />
+
+        <framework src="firebase-bom.gradle" custom="true" type="gradleReference" />
+        <framework src="com.google.firebase:firebase-messaging" type="gradle" />
     </platform>
 </plugin>
