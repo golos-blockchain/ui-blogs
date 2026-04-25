@@ -37,3 +37,6 @@ scripts/yarn.lock
 
 package-lock.json
 data
+
+git-deps
+git-install-lock

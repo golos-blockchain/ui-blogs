@@ -4535,9 +4535,8 @@ formidable@^2.0.1:
     once "^1.4.0"
     qs "^6.11.0"
 
-"formik@https://gitpkg.now.sh/golos-blockchain/formik/packages/formik?b697b6ef3f13c795bb862b35589fffde442ab465":
+formik@./git-deps/formik/packages/formik:
   version "2.2.9"
-  resolved "https://gitpkg.now.sh/golos-blockchain/formik/packages/formik?b697b6ef3f13c795bb862b35589fffde442ab465#a696d8404c7b8751188a426f347589fdc24f4ba7"
   dependencies:
     deepmerge "^2.1.1"
     hoist-non-react-statics "^3.3.0"
@@ -7222,9 +7221,8 @@ react-fast-compare@^2.0.1:
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
   integrity sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
 
-"react-foundation-components@git+https://github.com/golos-blockchain/react-foundation-components.git#79301cf4cadec01468ee7aadb37fa8141ffd8324":
+react-foundation-components@./git-deps/react-foundation-components:
   version "0.14.0"
-  resolved "git+https://github.com/golos-blockchain/react-foundation-components.git#79301cf4cadec01468ee7aadb37fa8141ffd8324"
   dependencies:
     babel-runtime "^6.25.0"
     classnames "^2.2.5"

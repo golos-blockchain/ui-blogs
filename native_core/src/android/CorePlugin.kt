@@ -12,6 +12,8 @@ import org.json.JSONException
 import org.json.JSONObject
 import android.widget.Toast
 
+import com.google.firebase.messaging.FirebaseMessaging
+
 class CorePlugin : CordovaPlugin() {
     companion object {
         private const val TAG = "GLS/CorePlugin"
@@ -44,7 +46,24 @@ class CorePlugin : CordovaPlugin() {
             callbackContext.success()
         } else if (action.equals("logout")) {
             ServiceHelper.clearPrefs(ctx)
+        } else if (action.equals("fcmGetToken")) {
+            Log.w(TAG, "fcmGetToken");
+            getToken(callbackContext)
+            return true
         }
         return false
+    }
+
+    private fun getToken(callbackContext: CallbackContext?) {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                callbackContext?.error("Failed to get token")
+                return@addOnCompleteListener
+            }
+            Log.e(TAG, "Fetching FCM registration token ok");
+            val token = task.result
+            callbackContext?.success(token)
+        }
     }
 }
