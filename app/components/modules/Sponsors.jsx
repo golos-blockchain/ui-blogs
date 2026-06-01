@@ -25,10 +25,10 @@ class Sponsors extends React.Component {
 
         let { sponsors, sponsoreds, account, current_user } = this.props
 
-        sponsors = sponsors.toJS()
-        sponsoreds = sponsoreds.toJS()
+        sponsors = sponsors || { data: [] }
+        sponsoreds = sponsoreds || { data: [] }
 
-        const username = current_user && current_user.get('username')
+        const username = current_user && current_user.username
 
         const isMyAccount = account && account.name == username
 
@@ -51,9 +51,9 @@ class Sponsors extends React.Component {
 
 export default connect(
     state => {
-        const pso = state.global.get('pso')
-        const sponsors = state.global.get('sponsors')
-        const sponsoreds = state.global.get('sponsoreds')
+        const pso = state.global.pso
+        const sponsors = state.global.sponsors
+        const sponsoreds = state.global.sponsoreds
 
         return {
             pso,

@@ -44,16 +44,16 @@ class Referrals extends React.Component {
     render() {
         const { referrals, account } = this.props
 
-        const props = this.props.props ? this.props.props.toJS() : {}
+        const props = this.props.props || {}
 
-        if (!referrals || !referrals.get('loaded')){
+        if (!referrals || !referrals.loaded){
             return <div style={{ paddingBottom: '1rem' }}>
                 <h3>{tt('referrals_jsx.title')}</h3>
                 <LoadingIndicator type='circle' />
             </div>
         }
 
-        let refs = referrals.get('data').toJS()
+        let refs = referrals.data || []
 
         let count = 0
 
@@ -61,8 +61,7 @@ class Referrals extends React.Component {
             ++count
 
             const { accounts } = this.props
-            let acc = accounts.get(ref.account)
-            if (acc) acc = acc.toJS()
+            let acc = accounts && accounts[ref.account]
 
             let lastSeen
             if (acc) {
@@ -107,7 +106,7 @@ class Referrals extends React.Component {
             refUrl = 'https://' + $STM_Config.site_domain + '/welcome?invite=' + account.name
         }
 
-        const next_start_name = referrals.get('next_start_name')
+        const next_start_name = referrals.next_start_name
 
         const sortItems = [
             { link: '#', onClick: e => {
@@ -174,9 +173,9 @@ class Referrals extends React.Component {
 
 export default connect(
     state => {
-        const referrals = state.global.get('referrals')
-        const accounts = state.global.get('accounts')
-        const props = state.global.get('props')
+        const referrals = state.global.referrals
+        const accounts = state.global.accounts
+        const props = state.global.props
 
         return {
             referrals,

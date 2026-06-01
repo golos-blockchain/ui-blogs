@@ -7,9 +7,10 @@ import { Asset } from 'golos-lib-js/lib/utils'
 
 import user from 'app/redux/User';
 import transaction from 'app/redux/Transaction';
+import g from 'app/redux/GlobalReducer';
 import { repLog10, parsePayoutAmount } from 'app/utils/ParsersAndFormatters';
 import extractContent from 'app/utils/ExtractContent';
-import { immutableAccessor, objAccessor } from 'app/utils/Accessors';
+import { objAccessor } from 'app/utils/Accessors';
 import { isPostVisited, visitPost, randomString } from 'app/utils/helpers';
 import Icon from 'app/components/elements/Icon';
 import TimeVersions from 'app/components/elements/TimeVersions';
@@ -112,9 +113,9 @@ class PostFull extends React.Component {
 
                 if (showEditor.type === 'edit') {
                     const permLink = getEditDraftPermLink();
-                    const content = this.props.cont.get(this.props.post);
+                    const content = this.props.cont[this.props.post];
 
-                    if (permLink === content.get('permlink')) {
+                    if (permLink === content.permlink) {
                         this.state.showEdit = true;
                     }
                 } else if (showEditor.type === 'reply') {
@@ -173,8 +174,8 @@ class PostFull extends React.Component {
     };
 
     onDeletePost = () => {
-        const content = this.props.cont.get(this.props.post);
-        this.props.deletePost(content.get('author'), content.get('permlink'));
+        const content = this.props.cont[this.props.post];
+        this.props.deletePost(content.author, content.permlink);
     };
 
     becomeSponsor = async (e) => {
@@ -190,14 +191,14 @@ class PostFull extends React.Component {
     }
 
     showPromotePost = () => {
-        const postContent = this.props.cont.get(this.props.post);
+        const postContent = this.props.cont[this.props.post];
 
         if (!postContent) {
             return;
         }
 
-        const author = postContent.get('author');
-        const permlink = postContent.get('permlink');
+        const author = postContent.author;
+        const permlink = postContent.permlink;
 
         this.props.showPromotePost(author, permlink);
     };
@@ -206,14 +207,14 @@ class PostFull extends React.Component {
         const { username, post, cont, loginBlurring } = this.props;
         const { showReply, showEdit } = this.state;
 
-        const postContent = cont.get(post);
+        const postContent = cont[post];
 
         if (!postContent) {
             return null;
         }
 
-        const p = extractContent(immutableAccessor, postContent);
-        const content = postContent.toJS();
+        const p = extractContent(objAccessor, postContent);
+        const content = postContent;
         const { author, permlink, parent_author, parent_permlink, root_author, encrypted, decrypt_fee } = content;
         const jsonMetadata = showReply ? null : p.json_metadata;
         let link = `/@${content.author}/${content.permlink}`;
@@ -468,8 +469,8 @@ class PostFull extends React.Component {
 
         const showPromote =
             username &&
-            postContent.get('last_payout') === '1970-01-01T00:00:00' &&
-            postContent.get('depth') == 0; // TODO: audit after HF17. #1259
+            postContent.last_payout === '1970-01-01T00:00:00' &&
+            postContent.depth == 0; // TODO: audit after HF17. #1259
 
         if (showPromote) {
             main.push(
@@ -494,16 +495,16 @@ class PostFull extends React.Component {
         const { author, permlink } = content;
 
         const _isPaidout =
-            postContent.get('cashout_time') === '1969-12-31T23:59:59';
+            postContent.cashout_time === '1969-12-31T23:59:59';
 
-        const showReplyOption = postContent.get('depth') < 255;
+        const showReplyOption = postContent.depth < 255;
         const showEditOption = username === author;
         const showDeleteOption =
             username === author && content.stats.allowDelete && !_isPaidout;
 
         // check if post was created before view-count tracking began (2016-12-03)
         const isPreViewCount =
-            Date.parse(postContent.get('created')) < 1480723200000;
+            Date.parse(postContent.created) < 1480723200000;
 
         return (
             <div className="PostFull__footer row">
@@ -590,21 +591,20 @@ function saveOnShow(formId, type) {
 
 export default connect(
     (state, props) => {
-        const username = state.user.getIn(['current', 'username'])
+        const username = state.user.current && state.user.current.username
 
-        let prevPosts = state.global.get('prev_posts')
-        prevPosts = prevPosts ? prevPosts.toJS() : []
+        let prevPosts = state.global.prev_posts || []
 
-        const pso = state.global.get('pso')
+        const pso = state.global.pso
 
-        const loginDefault = state.user.get('loginDefault')
-        const loginBlurring = loginDefault && loginDefault.get('blurring')
+        const loginDefault = state.user.loginDefault
+        const loginBlurring = loginDefault && loginDefault.blurring
 
         return {
             ...props,
             username,
             prevPosts,
-            pso: pso ? pso.toJS() : null,
+            pso: pso || null,
             loginBlurring
         }
     },
@@ -658,10 +658,7 @@ export default connect(
             }))
         },
         showPromotePost(author, permlink) {
-            dispatch({
-                type: 'global/SHOW_DIALOG',
-                payload: { name: 'promotePost', params: { author, permlink } },
-            });
+            dispatch(g.actions.showDialog({ name: 'promotePost', params: { author, permlink } }));
         },
     })
 )(PostFull);

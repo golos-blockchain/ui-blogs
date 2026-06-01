@@ -8,6 +8,7 @@ import { LinkWithDropdown } from 'react-foundation-components/lib/global/dropdow
 
 import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
+import app from 'app/redux/AppReducer';
 import Icon from 'app/components/elements/Icon'
 import UserKeys from 'app/components/elements/UserKeys';
 import Settings from 'app/components/modules/Settings';
@@ -60,17 +61,17 @@ export default class UserProfile extends React.Component {
 
         const account = np.routeParams.accountname.toLowerCase();
         if (follow) {
-            followersLoading = follow.getIn(['getFollowersAsync', account, 'blog_loading'], false);
-            followingLoading = follow.getIn(['getFollowingAsync', account, 'blog_loading'], false);
+            followersLoading = !!(follow.getFollowersAsync && follow.getFollowersAsync[account] && follow.getFollowersAsync[account].blog_loading);
+            followingLoading = !!(follow.getFollowingAsync && follow.getFollowingAsync[account] && follow.getFollowingAsync[account].blog_loading);
         }
         if (np.follow) {
-            npFollowersLoading = np.follow.getIn(['getFollowersAsync', account, 'blog_loading'], false);
-            npFollowingLoading = np.follow.getIn(['getFollowingAsync', account, 'blog_loading'], false);
+            npFollowersLoading = !!(np.follow.getFollowersAsync && np.follow.getFollowersAsync[account] && np.follow.getFollowersAsync[account].blog_loading);
+            npFollowingLoading = !!(np.follow.getFollowingAsync && np.follow.getFollowingAsync[account] && np.follow.getFollowingAsync[account].blog_loading);
         }
 
         return (
             np.current_user !== this.props.current_user ||
-            np.accounts.get(account) !== this.props.accounts.get(account) ||
+            np.accounts[account] !== this.props.accounts[account] ||
             np.wifShown !== this.props.wifShown ||
             np.global_status !== this.props.global_status ||
             ((npFollowersLoading !== followersLoading) && !npFollowersLoading) ||
@@ -107,12 +108,12 @@ export default class UserProfile extends React.Component {
 
     voteRep = (weight) => {
         let { accountname } = this.props.routeParams;
-        let rep = this.props.accounts.get(accountname).get('reputation');
+        let rep = this.props.accounts[accountname].reputation;
         this.setState({
             repLoading: true,
         }, () => {
             const { current_user, } = this.props;
-            const username = current_user ? current_user.get('username') : null;
+            const username = current_user ? current_user.username : null;
             this.props.voteRep({
                 voter: username, 
                 author: accountname,
@@ -123,7 +124,7 @@ export default class UserProfile extends React.Component {
                         this.props.reloadAccounts([accountname, username]);
                         setTimeout(() => {
                             const now = Date.now();
-                            const newRep = this.props.accounts.get(accountname).get('reputation');
+                            const newRep = this.props.accounts[accountname].reputation;
                             if (newRep === rep && now - refreshStart < 5000) {
                                 refresh();
                                 return;
@@ -164,23 +165,22 @@ export default class UserProfile extends React.Component {
         let { accountname, section, id, action } = this.props.routeParams        
         // normalize account from cased params
         accountname = accountname.toLowerCase();
-        const username = current_user ? current_user.get('username') : null
-        // const gprops = this.props.global.getIn( ['props'] ).toJS();
+        const username = current_user ? current_user.username : null
         if( !section ) section = 'blog';
 
         // @user/'posts' is deprecated in favor of 'comments' as of oct-2016 (#443)
         if( section == 'posts' ) section = 'comments';
 
-        // const isMyAccount = current_user ? current_user.get('username') === accountname : false;
+        // const isMyAccount = current_user ? current_user.username === accountname : false;
 
         // Loading status
-        const status = global_status ? global_status.getIn([section, 'by_author']) : null;
+        const status = global_status && global_status[section] ? global_status[section].by_author : null;
         const fetching = (status && status.fetching) || this.props.loading;
 
         let account
-        let accountImm = this.props.accounts.get(accountname);
-        if( accountImm ) {
-            account = accountImm.toJS();
+        let accountObj = this.props.accounts[accountname];
+        if( accountObj ) {
+            account = accountObj;
         } else if (fetching) {
             return <div className='UserProfile loader'>
                 <div className='UserProfile__center'><LoadingIndicator type='circle' size='40px' /></div>
@@ -190,8 +190,8 @@ export default class UserProfile extends React.Component {
                 <div className='UserProfile__center'>{tt('user_profile.unknown_account')}</div>
             </div>
         }
-        const followers = follow && follow.getIn(['getFollowersAsync', accountname]);
-        const following = follow && follow.getIn(['getFollowingAsync', accountname]);
+        const followers = follow && follow.getFollowersAsync && follow.getFollowersAsync[accountname];
+        const following = follow && follow.getFollowingAsync && follow.getFollowingAsync[accountname];
 
         // instantiate following items
         let totalCounts = this.props.follow_count;
@@ -199,9 +199,8 @@ export default class UserProfile extends React.Component {
         let followingCount = 0;
 
         if (totalCounts && accountname) {
-            totalCounts = totalCounts.get(accountname);
+            totalCounts = totalCounts[accountname];
             if (totalCounts) {
-                totalCounts    = totalCounts.toJS();
                 followerCount  = totalCounts.follower_count;
                 followingCount = totalCounts.following_count;
             }
@@ -219,7 +218,7 @@ export default class UserProfile extends React.Component {
         let downvoteRep = this.downvoteRep;
 
         if (current_account && typeof(BigInt) !== 'undefined') { // Safari < 14
-            const current_rep = BigInt(current_account.get('reputation'));
+            const current_rep = BigInt(current_account.reputation);
             if (current_rep < 0) {
                 cannotUpvote = tt('reputation_panel_jsx.cannot_vote_neg_rep');
                 cannotDownvote = cannotUpvote;
@@ -246,7 +245,7 @@ export default class UserProfile extends React.Component {
             </span>);
         }
 
-        let { levelUrl, levelTitle, levelName } = getGameLevel(accountImm, this.props.gprops)
+        let { levelUrl, levelTitle, levelName } = getGameLevel(accountObj, this.props.gprops)
         let level = null
         if (levelUrl) {
             level = (<img className="GameLevel" src={levelUrl} title={levelTitle} alt={levelName} />)
@@ -254,26 +253,26 @@ export default class UserProfile extends React.Component {
 
         let tab_content = null;
 
-        // const global_status = this.props.global.get('status');
+        // const global_status = this.props.global.status;
 
         let rewardsClass = '', walletClass = '';
         if( section === 'followers' ) {
-            if (followers && followers.has('blog_result')) {
+            if (followers && followers.blog_result) {
                 tab_content = <div>
                     <UserList
                         title={tt('user_profile.followers')}
                         account={account}
-                        users={followers.get('blog_result')} />
+                        users={followers.blog_result} />
                     { isMyAccount && <div><MarkNotificationRead fields='send,receive' account={account.name} /></div>}
                     </div>
             }
         }
         else if( section === 'followed' ) {
-            if (following && following.has('blog_result')) {
+            if (following && following.blog_result) {
                 tab_content = <UserList
                     title={tt('user_profile.followed')}
                     account={account}
-                    users={following.get('blog_result')}
+                    users={following.blog_result}
                     />
             }
         }
@@ -283,8 +282,8 @@ export default class UserProfile extends React.Component {
         else if( section === 'comments') {
            if( account.comments )
            {
-                let posts = accountImm.get('posts') || accountImm.get('comments');
-                if (!fetching && (posts && !posts.size)) {
+                let posts = accountObj.posts || accountObj.comments;
+                if (!fetching && (posts && !posts.length)) {
                     tab_content = <Callout>{tt('user_profile.user_hasnt_made_any_posts_yet', {name: accountname})}</Callout>;
                 } else {
                   tab_content = (
@@ -305,7 +304,7 @@ export default class UserProfile extends React.Component {
            }
         } else if(!section || section === 'blog') {
             if (account.blog) {
-                let posts = accountImm.get('blog');
+                let posts = accountObj.blog;
                 const emptyText = isMyAccount ? <div>
                     {tt('submit_a_story.you_hasnt_started_bloggin_yet')}<br /><br />
                     <Link to='/submit'>{tt('g.submit_a_story')}</Link><br />
@@ -313,7 +312,7 @@ export default class UserProfile extends React.Component {
                 </div>:
                     tt('user_profile.user_hasnt_started_bloggin_yet', {name: accountname});
 
-                if (!fetching && (posts && !posts.size)) {
+                if (!fetching && (posts && !posts.length)) {
                     tab_content = <Callout>{emptyText}</Callout>;
                 } else {
                     tab_content = (
@@ -333,8 +332,8 @@ export default class UserProfile extends React.Component {
         }
         else if( (section === 'recent-replies')) {
             if (account.recent_replies) {
-                let posts = accountImm.get('recent_replies');
-                if (!fetching && (posts && !posts.size)) {
+                let posts = accountObj.recent_replies;
+                if (!fetching && (posts && !posts.length)) {
                     tab_content = <Callout>{tt('user_profile.user_hasnt_had_any_replies_yet', {name: accountname}) + '.'}</Callout>;
                 } else {
                     tab_content = (
@@ -356,8 +355,8 @@ export default class UserProfile extends React.Component {
         }
         else if( (section === 'discussions')) {
             if (account.discussions) {
-                let posts = accountImm.get('discussions');
-                if (posts && !posts.size) {
+                let posts = accountObj.discussions;
+                if (posts && !posts.length) {
                     tab_content = <Callout>{tt('user_profile.user_hasnt_followed_anything', {name: accountname}) + '.'}</Callout>
                 } else {
                     tab_content = (
@@ -624,22 +623,22 @@ module.exports = {
     path: '/@:accountname{/:section}{/:id}{/:action}',
     component: connect(
         state => {
-            const wifShown = state.global.get('UserKeys_wifShown')
-            const current_user = state.user.get('current')
-            const current_account = current_user && state.global.getIn(['accounts', current_user.get('username')])
-            const gprops = state.global.get('props')
+            const wifShown = state.global.UserKeys_wifShown
+            const current_user = state.user.current
+            const current_account = current_user && state.global.accounts && state.global.accounts[current_user.username]
+            const gprops = state.global.props
 
             return {
-                discussions: state.global.get('discussion_idx'),
+                discussions: state.global.discussion_idx,
                 current_user,
                 current_account,
                 gprops,
                 wifShown,
-                loading: state.app.get('loading'),
-                global_status: state.global.get('status'),
-                accounts: state.global.get('accounts'),
-                follow: state.global.get('follow'),
-                follow_count: state.global.get('follow_count')
+                loading: state.app.loading,
+                global_status: state.global.status,
+                accounts: state.global.accounts || {},
+                follow: state.global.follow,
+                follow_count: state.global.follow_count
             };
         },
         dispatch => ({
@@ -650,13 +649,10 @@ module.exports = {
                     blocking = await checkAllowed(voter, [],
                         null, AllowTypes.voteRep)
                     if (blocking.error) {
-                        dispatch({
-                            type: 'ADD_NOTIFICATION',
-                            payload: {
+                        dispatch(app.actions.addNotification({
                                 message: blocking.error,
                                 dismissAfter: 5000,
-                            },
-                        })
+                        }))
                         return
                     }
                 }

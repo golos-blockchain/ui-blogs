@@ -56,7 +56,7 @@ class CommentImpl extends PureComponent {
     }
 
     UNSAFE_componentWillMount() {
-        const content = this.props.cont.get(this.props.content);
+        const content = this.props.cont[this.props.content];
 
         if (content) {
             this._checkHide(content)
@@ -77,11 +77,11 @@ class CommentImpl extends PureComponent {
     }
 
     UNSAFE_componentWillReceiveProps(np) {
-        const content = np.cont.get(np.content);
+        const content = np.cont[np.content];
 
         if (content) {
             this._checkHide(content)
-            const sub_event = content.get('sub_event')
+            const sub_event = content.sub_event
             if (sub_event && !this.state.highlight && !this.wasHighlighted) {
                 this.setState({ highlight: true })
                 this.wasHighlighted = true
@@ -97,9 +97,7 @@ class CommentImpl extends PureComponent {
     _checkHide(content) {
         let hide = hideSubtree(this.props.cont, this.props.content)
 
-        // console.log('CON', content.toJS())
-
-        if (content.get('bad')) {
+        if (content.bad) {
             hide = true
         }
 
@@ -113,7 +111,7 @@ class CommentImpl extends PureComponent {
 
         this.setState({
             hide,
-            hideBody: hide || content.getIn(['stats', 'gray']),
+            hideBody: hide || (content.stats && content.stats.gray),
         });
     }
 
@@ -123,13 +121,13 @@ class CommentImpl extends PureComponent {
 
     render() {
         const { cont } = this.props;
-        const dis = cont.get(this.props.content);
+        const dis = cont[this.props.content];
 
         if (!dis) {
             return <div>{tt('g.loading')}...</div>;
         }
 
-        const comment = dis.toJS();
+        const comment = dis;
 
         if (!comment.stats) {
             console.error('Comment -- missing stats object');
@@ -394,9 +392,9 @@ class CommentImpl extends PureComponent {
     };
 
     onDeletePost = () => {
-        const content = this.props.cont.get(this.props.content);
+        const content = this.props.cont[this.props.content];
 
-        this.props.deletePost(content.get('author'), content.get('permlink'));
+        this.props.deletePost(content.author, content.permlink);
     };
 
     toggleCollapsed = () => {
@@ -443,8 +441,7 @@ const Comment = connect(
     (state, props) => {
         const { cont, content, } = props;
 
-        const username = state.user.getIn(['current', 'username']);
-        const dis = cont.get(content);
+        const username = state.user.current && state.user.current.username;
 
         return {
             ...props,
@@ -468,15 +465,15 @@ const Comment = connect(
 
 // returns true if the comment has a 'hide' flag AND has no descendants w/ positive payout
 function hideSubtree(cont, c) {
-    return cont.getIn([c, 'stats', 'hide']) && !hasPositivePayout(cont, c);
+    return cont[c] && cont[c].stats && cont[c].stats.hide && !hasPositivePayout(cont, c);
 }
 
 function hasPositivePayout(cont, c) {
-    const post = cont.get(c);
+    const post = cont[c];
 
     return (
-        post.getIn(['stats', 'hasPendingPayout']) ||
-        post.get('replies').find(reply => hasPositivePayout(cont, reply))
+        (post.stats && post.stats.hasPendingPayout) ||
+        (post.replies || []).find(reply => hasPositivePayout(cont, reply))
     );
 }
 

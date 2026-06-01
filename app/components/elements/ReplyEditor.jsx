@@ -11,7 +11,7 @@ import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import Tooltip from 'app/components/elements/Tooltip';
 import HtmlReady from 'shared/HtmlReady';
 import g from 'app/redux/GlobalReducer';
-import { Set } from 'immutable';
+import user from 'app/redux/User';
 import { Remarkable } from 'remarkable';
 import Dropzone from 'react-dropzone';
 import { LinkWithDropdown } from 'react-foundation-components/lib/global/dropdown';
@@ -812,7 +812,7 @@ export default formId =>
     connect(
         // mapStateToProps
         (state, ownProps) => {
-            const username = state.user.getIn(['current', 'username']);
+            const username = state.user.current && state.user.current.username;
             const fields = ['body', 'autoVote:checked'];
             const { type, parent_author, jsonMetadata } = ownProps;
             const isEdit = type === 'edit';
@@ -829,7 +829,7 @@ export default formId =>
                 const detags = jsonMetadata.tags.map(tag =>
                     detransliterate(tag)
                 );
-                category = Set([detransliterate(category), ...detags]).join(
+                category = [...new Set([detransliterate(category), ...detags])].join(
                     ' '
                 );
             }
@@ -859,10 +859,7 @@ export default formId =>
                 );
             },
             uploadImage: (file, progress) => {
-                dispatch({
-                    type: 'user/UPLOAD_IMAGE',
-                    payload: { file, progress, },
-                });
+                dispatch(user.actions.uploadImage({ file, progress }));
             },
             reply: replyAction(dispatch, remarkable),
         })

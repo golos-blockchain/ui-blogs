@@ -15,6 +15,7 @@ import ChangeAccount from 'app/components/modules/ChangeAccount'
 import AddAccount from 'app/components/modules/AddAccount'
 import AppDownload from 'app/components/modules/app/AppDownload'
 import user from 'app/redux/User';
+import app from 'app/redux/AppReducer';
 import tr from 'app/redux/Transaction';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import { withScreenSize } from 'app/utils/ScreenSize'
@@ -139,23 +140,23 @@ class Modals extends React.Component {
 
 export default connect(
     state => {
-        const loginDefault = state.user.get('loginDefault');
-        const loginUnclosable = loginDefault && loginDefault.get('unclosable');
-        const loginBlurring = loginDefault && loginDefault.get('blurring')
+        const loginDefault = state.user.loginDefault;
+        const loginUnclosable = loginDefault && loginDefault.unclosable;
+        const loginBlurring = loginDefault && loginDefault.blurring
         return {
-            show_login_modal: state.user.get('show_login_modal'),
+            show_login_modal: state.user.show_login_modal,
             loginUnclosable,
             loginBlurring,
-            show_confirm_modal: state.transaction.get('show_confirm_modal'),
-            show_donate_modal: state.user.get('show_donate_modal'),
-            show_gift_nft_modal: state.user.get('show_gift_nft_modal'),
-            show_promote_post_modal: state.user.get('show_promote_post_modal'),
-            show_signup_modal: state.user.get('show_signup_modal'),
-            show_change_account_modal: state.user.get('show_change_account_modal'),
-            show_add_account_modal: state.user.get('show_add_account_modal'),
-            show_app_download_modal: state.user.get('show_app_download_modal'),
-            notifications: state.app.get('notifications'),
-            confetti_nft_active: state.global.get('confetti_nft_active')
+            show_confirm_modal: state.transaction.show_confirm_modal,
+            show_donate_modal: state.user.show_donate_modal,
+            show_gift_nft_modal: state.user.show_gift_nft_modal,
+            show_promote_post_modal: state.user.show_promote_post_modal,
+            show_signup_modal: state.user.show_signup_modal,
+            show_change_account_modal: state.user.show_change_account_modal,
+            show_add_account_modal: state.user.show_add_account_modal,
+            show_app_download_modal: state.user.show_app_download_modal,
+            notifications: state.app.notifications,
+            confetti_nft_active: state.global.confetti_nft_active
         }
     },
     dispatch => ({
@@ -195,8 +196,7 @@ export default connect(
             if (e) e.preventDefault()
             dispatch(user.actions.hideAppDownload())
         },
-        // example: addNotification: ({key, message}) => dispatch({type: 'ADD_NOTIFICATION', payload: {key, message}}),
-        removeNotification: (key) => dispatch({type: 'REMOVE_NOTIFICATION', payload: {key}}),
+        removeNotification: (key) => dispatch(app.actions.removeNotification({key})),
 
     })
 )(withScreenSize(Modals))

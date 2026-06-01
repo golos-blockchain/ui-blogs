@@ -10,6 +10,7 @@ import { contentPrefs as prefs } from 'app/utils/Allowance'
 import { applyEventHighlight, getContent } from 'app/redux/SagaShared'
 import user from 'app/redux/User'
 import GlobalReducer from './GlobalReducer';
+import app from './AppReducer';
 import constants from './constants';
 import session from 'app/utils/session'
 import { getFilterApps, } from 'app/utils/ContentAccess';
@@ -68,7 +69,7 @@ export function* fetchState(location_change_action) {
 
     // `ignore_fetch` case should only trigger on initial page load. No need to call
     // fetchState immediately after loading fresh state from the server. Details: #593
-    const server_location = yield select(state => state.offchain.get('server_location'))
+    const server_location = yield select(state => state.offchain.server_location)
     //const ignore_fetch = (pathname === server_location && is_initial_state)
     is_initial_state = false
     //if(ignore_fetch) return
@@ -77,7 +78,7 @@ export function* fetchState(location_change_action) {
     url = url.split('?')[0]
     if (url === '/') url = 'trending'
 
-    yield put({type: 'FETCH_DATA_BEGIN'})
+    yield put(app.actions.fetchDataBegin())
     try {
         if (!url || typeof url !== 'string' || !url.length || url === '/') url = 'trending'
         if (url[0] === '/') url = url.substr(1)
@@ -477,14 +478,14 @@ export function* fetchState(location_change_action) {
         }
 
         yield put(GlobalReducer.actions.receiveState(state))
-        yield put({type: 'FETCH_DATA_END'})
+        yield put(app.actions.fetchDataEnd())
     } catch (error) {
         console.error('~~ Saga fetchState error ~~>', url, error);
-        yield put({type: 'global/FETCHING_STATE', payload: false});
-        yield put({type: 'global/CHAIN_API_ERROR', error: error.message});
+        yield put(GlobalReducer.actions.fetchingState(false));
+        yield put(app.actions.chainApiError(error.message));
 
         if (!(yield cancelled())) {
-            yield put({type: 'FETCH_DATA_END'})
+            yield put(app.actions.fetchDataEnd())
         }
     }
 }
@@ -573,7 +574,7 @@ export function* fetchData(action) {
         args[0].filter_authors = mutedInNew;
     }
 
-    yield put({ type: 'global/FETCHING_DATA', payload: { order, category } });
+    yield put(GlobalReducer.actions.fetchingData({ order, category }));
 
     if (order === 'trending') {
         call_name = PUBLIC_API.trending;
@@ -637,7 +638,7 @@ export function* fetchData(action) {
     } else {
         call_name = PUBLIC_API.active;
     }
-    yield put({ type: 'FETCH_DATA_BEGIN' });
+    yield put(app.actions.fetchDataBegin());
 
     try {
         let data = []
@@ -718,19 +719,19 @@ export function* fetchData(action) {
         );
 
 
-        yield put({ type: 'FETCH_DATA_END' });
+        yield put(app.actions.fetchDataEnd());
     } catch (error) {
         console.error('~~ Saga fetchData error ~~>', call_name, args, error);
-        yield put({ type: 'global/CHAIN_API_ERROR', error: error.message });
+        yield put(app.actions.chainApiError(error.message));
 
         if (!(yield cancelled())) {
-            yield put({ type: 'FETCH_DATA_END' });
+            yield put(app.actions.fetchDataEnd());
         }
     }
 }
 
 export function* watchFetchJsonRequests() {
-    yield takeEvery('global/FETCH_JSON', fetchJson);
+    yield takeEvery(GlobalReducer.actions.fetchJson.type, fetchJson);
 }
 
 /**
@@ -748,21 +749,21 @@ function* fetchJson({payload: {id, url, body, successCallback, skipLoading = fal
             },
             body: body ? JSON.stringify(body) : undefined
         }
-        yield put({type: 'global/FETCHING_JSON', payload: true});
+        yield put(GlobalReducer.actions.fetchingJson(true));
         let result = yield skipLoading ? fetch(url, payload) : call(fetch, url, payload)
         result = yield result.json()
         if (successCallback) result = successCallback(result)
-        yield put({type: 'global/FETCHING_JSON', payload: false});
+        yield put(GlobalReducer.actions.fetchingJson(false));
         yield put(GlobalReducer.actions.fetchJsonResult({id, result}))
     } catch(error) {
         console.error('fetchJson', error)
-        yield put({type: 'global/FETCHING_JSON', payload: false});
+        yield put(GlobalReducer.actions.fetchingJson(false));
         yield put(GlobalReducer.actions.fetchJsonResult({id, error}))
     }
 }
 
 export function* watchFetchExchangeRates() {
-    yield takeEvery('global/FETCH_EXCHANGE_RATES', fetchExchangeRates);
+    yield takeEvery(GlobalReducer.actions.fetchExchangeRates.type, fetchExchangeRates);
 }
 
 export function* fetchExchangeRates() {
@@ -787,7 +788,7 @@ export function* fetchExchangeRates() {
     // xchange rates are outdated or not exists
     console.log('xChange rates are outdated or not exists, fetching...')
 
-    yield put({type: 'global/FETCHING_JSON', payload: true});
+    yield put(GlobalReducer.actions.fetchingJson(true));
 
     let result = yield call(fetch, '/api/v1/rates/');
     result = yield result.json();
@@ -795,7 +796,7 @@ export function* fetchExchangeRates() {
     if (result.error) {
       console.log('~~ Saga fetchExchangeRates error ~~>', '[0] The result is undefined.');
       storeExchangeValues();
-      yield put({type: 'global/FETCHING_XCHANGE', payload: false});
+      yield put(GlobalReducer.actions.fetchingXchange(false));
       return;
     }
     if (
@@ -811,13 +812,13 @@ export function* fetchExchangeRates() {
       console.log('~~ Saga fetchExchangeRates error ~~>', 'The result is undefined.');
       storeExchangeValues();
     }
-    yield put({type: 'global/FETCHING_XCHANGE', payload: false});
+    yield put(GlobalReducer.actions.fetchingXchange(false));
   }
   catch(error) {
     // set default values
     storeExchangeValues();
     console.error('~~ Saga fetchExchangeRates error ~~>', error);
-    yield put({type: 'global/FETCHING_XCHANGE', payload: false});
+    yield put(GlobalReducer.actions.fetchingXchange(false));
   }
 }
 
@@ -829,7 +830,7 @@ function storeExchangeValues(created, gold, pair, picked) {
 }
 
 export function* watchFetchVestingDelegations() {
-    yield takeLatest('global/FETCH_VESTING_DELEGATIONS', fetchVestingDelegations)
+    yield takeLatest(GlobalReducer.actions.fetchVestingDelegations.type, fetchVestingDelegations)
 }
 
 export function* fetchVestingDelegations({ payload: { account, type } }) {
@@ -844,7 +845,7 @@ export function* fetchVestingDelegations({ payload: { account, type } }) {
 }
 
 export function* watchFetchUiaBalances() {
-    yield takeLatest('global/FETCH_UIA_BALANCES', fetchUiaBalances)
+    yield takeLatest(GlobalReducer.actions.fetchUiaBalances.type, fetchUiaBalances)
 }
 
 export function* fetchUiaBalances({ payload: { account } }) {
@@ -860,7 +861,7 @@ export function* fetchUiaBalances({ payload: { account } }) {
 }
 
 export function* watchFetchNftTokens() {
-    yield takeLatest('global/FETCH_NFT_TOKENS', fetchNftTokens)
+    yield takeLatest(GlobalReducer.actions.fetchNftTokens.type, fetchNftTokens)
 }
 
 export function* fetchNftTokens({ payload: { account, start_token_id } }) {
@@ -910,7 +911,7 @@ export function* fetchNftTokens({ payload: { account, start_token_id } }) {
 }
 
 export function* watchFetchReferrals() {
-    yield takeLatest('global/FETCH_REFERRALS', fetchReferrals)
+    yield takeLatest(GlobalReducer.actions.fetchReferrals.type, fetchReferrals)
 }
 
 export function* fetchReferrals({ payload: { referrer, start_name, sort } }) {
@@ -943,7 +944,7 @@ export function* fetchReferrals({ payload: { referrer, start_name, sort } }) {
 }
 
 export function* watchFetchReferrers() {
-    yield takeLatest('global/FETCH_REFERRERS', fetchReferrers)
+    yield takeLatest(GlobalReducer.actions.fetchReferrers.type, fetchReferrers)
 }
 
 export function* fetchReferrers({ payload: { start_name, sort } }) {

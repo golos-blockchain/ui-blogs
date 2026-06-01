@@ -41,8 +41,8 @@ class MiniTopics extends React.Component {
 module.exports = withRouter(connect(
     (state) => {
         return {
-            categories: state.global.get('tag_idx'),
-            loggedIn: !!state.user.get('current'),
+            categories: state.global.tag_idx,
+            loggedIn: !!state.user.current,
         };
     },
     (dispatch) => {

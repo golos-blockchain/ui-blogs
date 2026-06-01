@@ -24,7 +24,7 @@ class Mentions extends Component {
 
         let account = op[1].author;
         const { current_user, } = this.props;
-        let isMyAccount = current_user && current_user.get('username') === op[1].mentioned;
+        let isMyAccount = current_user && current_user.username === op[1].mentioned;
 
         let link = '';
         let linkTitle = '';

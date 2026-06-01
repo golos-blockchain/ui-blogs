@@ -1,7 +1,7 @@
-import {fromJS, Set, List} from 'immutable'
 import { call, put, select, fork, takeLatest, takeEvery } from 'redux-saga/effects';
 import {accountAuthLookup} from 'app/redux/AuthSaga'
 import user from 'app/redux/User'
+import app from 'app/redux/AppReducer'
 import {getAccount} from 'app/redux/SagaShared'
 import {authApiLogin, authApiLogout, authSession} from 'app/utils/AuthApiClient';
 import {notifyApiLogin, notifyApiLogout, notifySession, notificationUnsubscribe} from 'app/utils/NotifyApiClient';
@@ -34,31 +34,31 @@ export function* userWatches() {
 
 
 function* lookupPreviousOwnerAuthorityWatch() {
-    yield takeLatest('user/lookupPreviousOwnerAuthority', lookupPreviousOwnerAuthority);
+    yield takeLatest(user.actions.lookupPreviousOwnerAuthority.type, lookupPreviousOwnerAuthority);
 }
 function* loginWatch() {
-    yield takeLatest('user/USERNAME_PASSWORD_LOGIN', usernamePasswordLogin);
+    yield takeLatest(user.actions.usernamePasswordLogin.type, usernamePasswordLogin);
 }
 function* changeAccountWatch() {
-    yield takeLatest('user/CHANGE_ACCOUNT', changeAccount)
+    yield takeLatest(user.actions.changeAccount.type, changeAccount)
 }
 function* saveLoginWatch() {
-    yield takeLatest('user/SAVE_LOGIN', saveLogin_localStorage);
+    yield takeLatest(user.actions.saveLogin.type, saveLogin_localStorage);
 }
 function* logoutWatch() {
-    yield takeLatest('user/LOGOUT', logout);
+    yield takeLatest(user.actions.logout.type, logout);
 }
 
 function* loginErrorWatch() {
-    yield takeLatest('user/LOGIN_ERROR', loginError);
+    yield takeLatest(user.actions.loginError.type, loginError);
 }
 
 function* watchLoadSavingsWithdraw() {
-    yield takeLatest('user/LOAD_SAVINGS_WITHDRAW', loadSavingsWithdraw);
+    yield takeLatest(user.actions.loadSavingsWithdraw.type, loadSavingsWithdraw);
 }
 
 function* loadSavingsWithdraw() {
-    const username = yield select(state => state.user.getIn(['current', 'username']))
+    const username = yield select(state => state.user.current && state.user.current.username)
     const to = yield call([api, api.getSavingsWithdrawToAsync], username)
     const fro = yield call([api, api.getSavingsWithdrawFromAsync], username)
 
@@ -66,8 +66,8 @@ function* loadSavingsWithdraw() {
     for(const v of to) m[v.id] = v
     for(const v of fro) m[v.id] = v
 
-    const withdraws = List(fromJS(m).values())
-        .sort((a, b) => strCmp(a.get('complete'), b.get('complete')))
+    const withdraws = Object.values(m)
+        .sort((a, b) => strCmp(a.complete, b.complete))
 
     yield put(user.actions.set({
         key: 'savings_withdraws',
@@ -78,10 +78,10 @@ function* loadSavingsWithdraw() {
 const strCmp = (a, b) => a > b ? 1 : a < b ? -1 : 0
 
 // function* getCurrentAccountWatch() {
-//     // yield takeLatest('user/SHOW_TRANSFER', getCurrentAccount);
+//     // yield takeLatest(user.actions.showTransfer.type, getCurrentAccount);
 // }
 function* getAccountWatch() {
-    yield takeEvery('user/GET_ACCOUNT', getAccountHandler);
+    yield takeEvery(user.actions.getAccount.type, getAccountHandler);
 }
 
 function* refetchStateIfNeed() {
@@ -111,14 +111,14 @@ function* usernamePasswordLogin(action) {
   // Sets 'loading' while the login is taking place.  The key generation can take a while on slow computers.
     yield call(usernamePasswordLogin2, action)
 
-    const { payload: { refetchState } } = action
+    const { payload: { refetchState } = {} } = action
     if (refetchState) {
         yield refetchStateIfNeed()
     }
 
-    const current = yield select(state => state.user.get('current'))
+    const current = yield select(state => state.user.current)
     if (current) {
-        const username = current.get('username')
+        const username = current.username
         yield fork(loadFollows, "getFollowingAsync", username, 'blog')
         if (process.env.BROWSER) {
             const { onUserLogin } = PushNotificationSaga
@@ -135,7 +135,7 @@ const clean = (value) => value == null || value === '' || /null|undefined/.test(
 
 function* usernamePasswordLogin2({payload: {username, password, saveLogin,
         operationType, highSecurityLogin, afterLoginRedirectToWelcome
-}}) { try {
+} = {} }) { try {
     // login, using saved password
     let autopost, memoWif, login_owner_pubkey, login_wif_owner_pubkey
     if (!username && !password) {
@@ -153,7 +153,7 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     }
     // no saved password
     if (!username || !password) {
-        const offchain_account = yield select(state => state.offchain.get('account'))
+        const offchain_account = yield select(state => state.offchain.account)
         if (offchain_account) {
             notifyApiLogout();
             authApiLogout();
@@ -182,9 +182,9 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
         yield put(user.actions.loginError({ error: 'Username does not exist' }))
         return
     }
-    if (account.get('frozen')) {
+    if (account.frozen) {
         account = yield call(getAccount, username, true)
-        if (account.get('frozen')) {
+        if (account.frozen) {
             yield put(user.actions.loginError({ error: 'account_frozen' }))
             return
         }
@@ -194,37 +194,37 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
     try {
         const private_key = PrivateKey.fromWif(password)
         login_wif_owner_pubkey = private_key.toPublicKey().toString()
-        private_keys = fromJS({
+        private_keys = {
             posting_private: isRole('posting', () => private_key),
             active_private: isRole('active', () => private_key),
             memo_private: private_key,
-        })
+        }
     } catch (e) {
         // Password (non wif)
         login_owner_pubkey = PrivateKey.fromSeed(username + 'owner' + password).toPublicKey().toString()
-        private_keys = fromJS({
+        private_keys = {
             posting_private: isRole('posting', () => PrivateKey.fromSeed(username + 'posting' + password)),
             active_private: isRole('active', () => PrivateKey.fromSeed(username + 'active' + password)),
             memo_private: PrivateKey.fromSeed(username + 'memo' + password),
-        })
+        }
     }
     if (memoWif)
-        private_keys = private_keys.set('memo_private', PrivateKey.fromWif(memoWif))
+        private_keys.memo_private = PrivateKey.fromWif(memoWif)
 
     yield call(accountAuthLookup, {payload: {account, private_keys, highSecurityLogin, login_owner_pubkey}})
-    let authority = yield select(state => state.user.getIn(['authority', username]))
-    const hasActiveAuth = authority.get('active') === 'full'
+    let authority = yield select(state => state.user.authority && state.user.authority[username])
+    const hasActiveAuth = authority.active === 'full'
     // Forbid loging in with active key
     if(!operationType && !highSecurityLogin) {
-        const accountName = account.get('name')
-        authority = authority.set('active', 'none')
+        const accountName = account.name
+        authority = { ...authority, active: 'none' }
         yield put(user.actions.setAuthority({accountName, auth: authority}))
     }
-    const fullAuths = authority.reduce((r, auth, type) => (auth === 'full' ? r.add(type) : r), Set())
-    if (!fullAuths.size) {
+    const fullAuths = Object.keys(authority).filter(type => authority[type] === 'full')
+    if (!fullAuths.length) {
         session.logout(username)
-        const owner_pub_key = account.getIn(['owner', 'key_auths', 0, 0]);
-        // const pub_keys = yield select(state => state.user.get('pub_keys_used'))
+        const owner_pub_key = account.owner && account.owner.key_auths && account.owner.key_auths[0] && account.owner.key_auths[0][0];
+        // const pub_keys = yield select(state => state.user.pub_keys_used)
         // serverApiRecordEvent('login_attempt', JSON.stringify({name: username, ...pub_keys, cur_owner: owner_pub_key}))
         // FIXME pls parameterize opaque things like this into a constants file
         // code like this requires way too much historical knowledge to
@@ -244,21 +244,21 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
         }
         return
     }
-    if (authority.get('posting') !== 'full')
-        private_keys = private_keys.remove('posting_private')
+    if (authority.posting !== 'full')
+        delete private_keys.posting_private
 
-    if (!highSecurityLogin || authority.get('active') !== 'full')
-        private_keys = private_keys.remove('active_private')
+    if (!highSecurityLogin || authority.active !== 'full')
+        delete private_keys.active_private
 
-    const owner_pubkey = account.getIn(['owner', 'key_auths', 0, 0])
-    const active_pubkey = account.getIn(['active', 'key_auths', 0, 0])
-    const posting_pubkey = account.getIn(['posting', 'key_auths', 0, 0])
+    const owner_pubkey = account.owner && account.owner.key_auths && account.owner.key_auths[0] && account.owner.key_auths[0][0]
+    const active_pubkey = account.active && account.active.key_auths && account.active.key_auths[0] && account.active.key_auths[0][0]
+    const posting_pubkey = account.posting && account.posting.key_auths && account.posting.key_auths[0] && account.posting.key_auths[0][0]
 
-    if (private_keys.get('memo_private') &&
-        account.get('memo_key') !== private_keys.get('memo_private').toPublicKey().toString()
+    if (private_keys.memo_private &&
+        account.memo_key !== private_keys.memo_private.toPublicKey().toString()
     )
         // provided password did not yield memo key
-        private_keys = private_keys.remove('memo_private')
+        delete private_keys.memo_private
 
     if(!highSecurityLogin) {
         if(
@@ -270,8 +270,8 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
             return
         }
     }
-    const memo_pubkey = private_keys.has('memo_private') ?
-        private_keys.get('memo_private').toPublicKey().toString() : null
+    const memo_pubkey = private_keys.memo_private ?
+        private_keys.memo_private.toPublicKey().toString() : null
 
     /*if(
         memo_pubkey === owner_pubkey ||
@@ -289,9 +289,9 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
                 username,
                 private_keys,
                 login_owner_pubkey,
-                vesting_shares: account.get('vesting_shares'),
-                received_vesting_shares: account.get('received_vesting_shares'),
-                delegated_vesting_shares: account.get('delegated_vesting_shares')
+                vesting_shares: account.vesting_shares,
+                received_vesting_shares: account.received_vesting_shares,
+                delegated_vesting_shares: account.delegated_vesting_shares
             })
         )
     } else {
@@ -299,14 +299,14 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
             user.actions.setUser({
                 username,
                 operationType,
-                vesting_shares: account.get('vesting_shares'),
-                received_vesting_shares: account.get('received_vesting_shares'),
-                delegated_vesting_shares: account.get('delegated_vesting_shares')
+                vesting_shares: account.vesting_shares,
+                received_vesting_shares: account.received_vesting_shares,
+                delegated_vesting_shares: account.delegated_vesting_shares
             })
         )
     }
 
-    const memoAuth = private_keys.get('memo_private') && private_keys.get('memo_private').toWif() === password;
+    const memoAuth = private_keys.memo_private && private_keys.memo_private.toWif() === password;
     if (!autopost && saveLogin && !operationType)
         yield put(user.actions.saveLogin());
 
@@ -318,14 +318,13 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
             const lastBadNet = parseInt(localStorage.getItem(lbnKey) || 0);
             if (now - lastBadNet >= 10*60*1000) {
                 localStorage.setItem(lbnKey, now);
-                window._reduxStore.dispatch({
-                    type: 'ADD_NOTIFICATION',
-                    payload: {
+                window._reduxStore.dispatch(
+                    app.actions.addNotification({
                         key: 'bad_net_' + Date.now(),
                         message,
                         dismissAfter: 5000
-                    }
-                })
+                    })
+                )
             }
         } else if (!afterLoginRedirectToWelcome) {
             alert(message)
@@ -350,7 +349,7 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
 
                 const challenge = {token: res.login_challenge};
                 const signatures = signData(JSON.stringify(challenge, null, 0), {
-                    posting: private_keys.get('posting_private'),
+                    posting: private_keys.posting_private,
                 });
                 const res2 = yield authApiLogin(username, signatures);
                 if (res2.guid) {
@@ -377,11 +376,11 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
             } catch(error) {
                 // Does not need to be fatal
                 console.error('Notify Login Error', error);
-            }
+        }
     }
     try {
         const offchainData = yield select(state => state.offchain)
-        const serverAccount = offchainData.get('account')
+        const serverAccount = offchainData.account
         if (!serverAccount) {
             serverApiLogin(username);
         }
@@ -421,9 +420,9 @@ function* saveLogin_localStorage() {
         return
     }
     const [username, private_keys, login_owner_pubkey] = yield select(state => ([
-        state.user.getIn(['current', 'username']),
-        state.user.getIn(['current', 'private_keys']),
-        state.user.getIn(['current', 'login_owner_pubkey']),
+        state.user.current && state.user.current.username,
+        state.user.current && state.user.current.private_keys,
+        state.user.current && state.user.current.login_owner_pubkey,
     ]))
     if (!username) {
         session.clear()
@@ -431,13 +430,13 @@ function* saveLogin_localStorage() {
         return
     }
     // Save the lowest security key
-    const posting_private = private_keys.get('posting_private')
+    const posting_private = private_keys.posting_private
     if (!posting_private) {
         session.logout(username)
         console.error('No posting key to save?')
         return
     }
-    const account = yield select(state => state.global.getIn(['accounts', username]))
+    const account = yield select(state => state.global.accounts && state.global.accounts[username])
     if(!account) {
         session.logout(username)
         console.error('Missing global.accounts[' + username + ']')
@@ -445,12 +444,12 @@ function* saveLogin_localStorage() {
     }
     const postingPubkey = posting_private.toPublicKey().toString()
     try {
-        account.getIn(['active', 'key_auths']).forEach(auth => {
-            if(auth.get(0) === postingPubkey)
+        account.active.key_auths.forEach(auth => {
+            if(auth[0] === postingPubkey)
                 throw 'Login will not be saved, posting key is the same as active key'
         })
-        account.getIn(['owner', 'key_auths']).forEach(auth => {
-            if(auth.get(0) === postingPubkey)
+        account.owner.key_auths.forEach(auth => {
+            if(auth[0] === postingPubkey)
                 throw 'Login will not be saved, posting key is the same as owner key'
         })
     } catch(e) {
@@ -458,7 +457,7 @@ function* saveLogin_localStorage() {
         console.error(e)
         return
     }
-    const memoKey = private_keys.get('memo_private')
+    const memoKey = private_keys.memo_private
     try {
         session.load()
             .addKey(username, 'posting', posting_private)
@@ -505,46 +504,47 @@ function* loginError({payload: {/*error*/}}) {
     If the owner key was changed after the login owner key, this function will find the next owner key history record after the change and store it under user.previous_owner_authority.
 */
 function* lookupPreviousOwnerAuthority({payload: {}}) {
-    const current = yield select(state => state.user.get('current'))
+    const current = yield select(state => state.user.current)
     if(!current) return
 
-    const login_owner_pubkey = current.get('login_owner_pubkey')
+    const login_owner_pubkey = current.login_owner_pubkey
     if(!login_owner_pubkey) return
 
-    const username = current.get('username')
-    const key_auths = yield select(state => state.global.getIn(['accounts', username, 'owner', 'key_auths']))
-    if (key_auths && key_auths.find(key => key.get(0) === login_owner_pubkey)) {
+    const username = current.username
+    const key_auths = yield select(state => state.global.accounts &&
+        state.global.accounts[username] &&
+        state.global.accounts[username].owner &&
+        state.global.accounts[username].owner.key_auths)
+    if (key_auths && key_auths.find(key => key[0] === login_owner_pubkey)) {
         // console.log('UserSaga ---> Login matches current account owner');
         return
     }
     // Owner history since this index was installed July 14
-    let owner_history = fromJS(yield call([api, api.getOwnerHistoryAsync], username))
-    if(owner_history.count() === 0) return
+    let owner_history = yield call([api, api.getOwnerHistoryAsync], username)
+    if(owner_history.length === 0) return
     owner_history = owner_history.sort((b, a) => {//sort decending
-        const aa = a.get('last_valid_time')
-        const bb = b.get('last_valid_time')
+        const aa = a.last_valid_time
+        const bb = b.last_valid_time
         return aa < bb ? -1 : aa > bb ? 1 : 0
     })
-    // console.log('UserSaga ---> owner_history', owner_history.toJS())
     const previous_owner_authority = owner_history.find(o => {
-        const auth = o.get('previous_owner_authority')
-        const weight_threshold = auth.get('weight_threshold')
-        const key3 = auth.get('key_auths').find(key2 => key2.get(0) === login_owner_pubkey && key2.get(1) >= weight_threshold)
+        const auth = o.previous_owner_authority
+        const weight_threshold = auth.weight_threshold
+        const key3 = auth.key_auths.find(key2 => key2[0] === login_owner_pubkey && key2[1] >= weight_threshold)
         return key3 ? auth : null
     })
     if(!previous_owner_authority) {
         console.log('UserSaga ---> Login owner does not match owner history');
         return
     }
-    // console.log('UserSage ---> previous_owner_authority', previous_owner_authority.toJS())
     yield put(user.actions.setUser({previous_owner_authority}))
 }
 
 function* getAccountHandler({ payload: { usernames, resolve, reject }}) {
     if (!usernames) {
-        const current = yield select(state => state.user.get('current'))
+        const current = yield select(state => state.user.current)
         if (!current) return
-        usernames = [current.get('username')]
+        usernames = [current.username]
     }
 
     const accounts = yield call([api, api.getAccountsAsync], usernames)

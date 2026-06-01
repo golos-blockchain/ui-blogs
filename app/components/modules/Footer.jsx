@@ -161,11 +161,11 @@ class Footer extends React.Component {
 }
 
 export default connect(state => {
-    const feedPrice = state.global.get('feed_price');
+    const feedPrice = state.global.feed_price;
     let pricePerGolos = undefined;
 
-    if (feedPrice && feedPrice.has('base') && feedPrice.has('quote')) {
-        const { base, quote } = feedPrice.toJS();
+    if (feedPrice && feedPrice.base && feedPrice.quote) {
+        const { base, quote } = feedPrice;
         if (/ GBG$/.test(base) && / GOLOS$/.test(quote))
             pricePerGolos =
                 parseFloat(base.split(' ')[0]) /

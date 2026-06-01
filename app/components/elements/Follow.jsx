@@ -4,7 +4,6 @@ import {connect} from 'react-redux';
 import LoadingIndicator from 'app/components/elements/LoadingIndicator';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import transaction from 'app/redux/Transaction';
-import {Set, Map} from 'immutable'
 import tt from 'counterpart';
 import user from 'app/redux/User';
 import { getMetadataReliably, getMutedInNew } from 'app/utils/NormalizeProfile';
@@ -145,29 +144,30 @@ export default class Follow extends React.Component {
     }
 }
 
-const emptyMap = Map();
-const emptySet = Set();
-
 module.exports = connect(
     (state, ownProps) => {
         let {follower} = ownProps;
-        const current_user = state.user.get('current');
+        const current_user = state.user.current;
         if(!follower) {
-            follower = current_user ? current_user.get('username') : null
+            follower = current_user ? current_user.username : null
         }
 
-        const account = state.global.getIn(['accounts', follower])
-        let metaData = account ? getMetadataReliably(account.get('json_metadata')) : {}
-        metaData.mutedInNew = account ? getMutedInNew(account.toJS(), true) : [];
+        const account = state.global.accounts && state.global.accounts[follower]
+        let metaData = account ? getMetadataReliably(account.json_metadata) : {}
+        metaData.mutedInNew = account ? getMutedInNew(account, true) : [];
 
         const {following} = ownProps;
-        const f = state.global.getIn(['follow', 'getFollowingAsync', follower], emptyMap);
-        const loading = f.get('blog_loading', false)
+        const f = state.global.follow &&
+            state.global.follow.getFollowingAsync &&
+            state.global.follow.getFollowingAsync[follower] || {};
+        const loading = f.blog_loading || false
         const isFollowing =
-            f.get('blog_result', emptySet).contains(following)
+            (f.blog_result || []).includes(following)
 
-        const b = state.global.getIn(['block', 'blocking', follower], emptyMap);
-        const isBlocking = b.get('result', emptySet).contains(following)
+        const b = state.global.block &&
+            state.global.block.blocking &&
+            state.global.block.blocking[follower] || {};
+        const isBlocking = (b.result || []).includes(following)
 
         return {
             follower,

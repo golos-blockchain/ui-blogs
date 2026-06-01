@@ -1,10 +1,9 @@
 import { fork, put, takeLatest } from 'redux-saga/effects'
-import { Map } from 'immutable'
 import { api } from 'golos-lib-js'
 
 import { listVersions, getVersion } from 'app/utils/SearchClient'
 import { tryDecryptContents, } from 'app/utils/sponsors'
-import { fromJSGreedy } from 'app/utils/StateFunctions'
+import g from 'app/redux/GlobalReducer'
 
 export function* versionsWatches() {
     yield fork(watchFetchVersions)
@@ -12,22 +11,24 @@ export function* versionsWatches() {
 }
 
 export function* watchFetchVersions() {
-    yield takeLatest('global/FETCH_VERSIONS', fetchVersions);
+    yield takeLatest(g.actions.fetchVersions.type, fetchVersions);
 }
 
 export function* watchShowVersion() {
-    yield takeLatest('global/SHOW_VERSION', showVersion);
+    yield takeLatest(g.actions.showVersion.type, showVersion);
 }
 
 function* setLoading(key, loading) {
-    yield put({
-        type: 'global/UPDATE',
-        payload: {
+    yield put(g.actions.update({
             key: ['content'],
-            notSet: Map(),
-            updater: m => m.setIn([key, 'versions', 'loading'], loading)
-        }
-    })
+            notSet: {},
+            updater: m => {
+                m[key] = m[key] || {}
+                m[key].versions = m[key].versions || {}
+                m[key].versions.loading = loading
+                return m
+            }
+    }))
 }
 
 export function* fetchVersions(action) {
@@ -53,18 +54,17 @@ export function* fetchVersions(action) {
             latest: true
         })
 
-        yield put({
-            type: 'global/UPDATE',
-            payload: {
+        yield put(g.actions.update({
                 key: ['content'],
-                notSet: Map(),
+                notSet: {},
                 updater: m => {
-                    m = m.setIn([key, 'versions', 'loading'], false)
-                    m = m.setIn([key, 'versions', 'items'], fromJSGreedy(items))
+                    m[key] = m[key] || {}
+                    m[key].versions = m[key].versions || {}
+                    m[key].versions.loading = false
+                    m[key].versions.items = items
                     return m
                 }
-            }
-        })
+        }))
     } catch (err) {
         console.error('fetchVersions', err)
     }
@@ -95,19 +95,18 @@ export function* showVersion(action) {
             return
         }
 
-        yield put({
-            type: 'global/UPDATE',
-            payload: {
+        yield put(g.actions.update({
                 key: ['content'],
-                notSet: Map(),
+                notSet: {},
                 updater: m => {
-                    m = m.setIn([key, 'body'], body)
-                    m = m.setIn([key, 'last_update'], lastUpdate)
-                    m = m.setIn([key, 'versions', 'current'], v)
+                    m[key] = m[key] || {}
+                    m[key].body = body
+                    m[key].last_update = lastUpdate
+                    m[key].versions = m[key].versions || {}
+                    m[key].versions.current = v
                     return m
                 }
-            }
-        })
+        }))
     } catch (err) {
         console.error('showVersion', err)
     }

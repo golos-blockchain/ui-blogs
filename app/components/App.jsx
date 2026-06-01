@@ -396,9 +396,9 @@ class App extends React.Component {
             (params_keys.length === 2 &&
                 params_keys[0] === 'order' &&
                 params_keys[1] === 'category');
-        const f_alert = this.props.error || flash.get('alert');
-        const warning = flash.get('warning');
-        const success = flash.get('success');
+        const f_alert = this.props.error || (flash && flash.alert);
+        const warning = flash && flash.warning;
+        const success = flash && flash.success;
         let callout = null;
         const notifyLink = $STM_Config.add_notify_site.link;
         const notifyTitle = $STM_Config.add_notify_site.title;
@@ -557,23 +557,23 @@ export default connect(
     state => {
         let nightmodeEnabled = process.env.BROWSER ? localStorage.getItem('nightmodeEnabled') == 'true' || false : false
 
-        const currentUser = state.user.get('current')
+        const currentUser = state.user.current
 
         return {
-            error: state.app.get('error'),
-            flash: state.offchain.get('flash'),
-            loggedIn: !!state.user.get('current'),
+            error: state.app.error,
+            flash: state.offchain.flash,
+            loggedIn: !!state.user.current,
             new_visitor:
                 !currentUser &&
-                !state.offchain.get('account') &&
-                state.offchain.get('new_visit'),
+                !state.offchain.account &&
+                state.offchain.new_visit,
             nightmodeEnabled: nightmodeEnabled,
-            username: currentUser && currentUser.get('username'),
+            username: currentUser && currentUser.username,
         };
     },
     dispatch => ({
         loginUser: () => {
-            dispatch(user.actions.usernamePasswordLogin())
+            dispatch(user.actions.usernamePasswordLogin({}))
         },
         logoutUser: () => dispatch(user.actions.logout()),
         depositSteem: () => {

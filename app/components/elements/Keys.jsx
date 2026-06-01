@@ -1,7 +1,6 @@
 /* eslint react/prop-types: 0 */
 import React, {Component} from 'react'
 import PropTypes from 'prop-types'
-import {Map, List} from 'immutable'
 import {connect} from 'react-redux'
 import user from 'app/redux/User'
 import g from 'app/redux/GlobalReducer'
@@ -11,7 +10,7 @@ import tt from 'counterpart';
 class Keys extends Component {
     static propTypes = {
         // HTML
-        account: PropTypes.object.isRequired, // immutable Map
+        account: PropTypes.object.isRequired,
         authType: PropTypes.oneOf(['posting', 'active', 'owner', 'memo']),
     }
     constructor() {
@@ -27,7 +26,7 @@ class Keys extends Component {
     }
     showChangePassword = (pubkey) => {
         const {account, authType} = this.props
-        this.props.showChangePassword(account.get('name'), authType, pubkey)
+        this.props.showChangePassword(account.name, authType, pubkey)
     }
     render() {
         const {
@@ -35,11 +34,11 @@ class Keys extends Component {
         } = this
         let pubkeys
         if (authType === 'memo') {
-            pubkeys = List([account.get('memo_key')])
+            pubkeys = [account.memo_key]
         } else {
-            const authority = account.get(authType)
-            const authorities = authority.get('key_auths')
-            pubkeys = authorities.map(a => a.get(0))
+            const authority = account[authType]
+            const authorities = authority.key_auths
+            pubkeys = authorities.map(a => a[0])
         }
         const rowClass = 'hoverBackground'
         let idx = 0
@@ -49,8 +48,8 @@ class Keys extends Component {
                     <div className="column small-12">
                         <span className={rowClass}>
                             <ShowKey pubkey={pubkey}
-                                privateKey={privateKeys.get(authType + '_private')}
-                                cmpProps={{className: rowClass}} authType={authType} accountName={account.get('name')}
+                                privateKey={privateKeys[authType + '_private']}
+                                cmpProps={{className: rowClass}} authType={authType} accountName={account.name}
                                 onKey={onKey}>
                                 {/*<span onClick={() => this.showChangePassword(pubkey)}>&nbsp;{edit}</span>*/}
                             </ShowKey>
@@ -72,24 +71,24 @@ class Keys extends Component {
     }
 }
 
-const emptyMap = Map()
+const emptyKeys = {}
 
 export default connect(
     (state, ownProps) => {
         const {account} = ownProps
-        const accountName = account.get('name')
-        const current = state.user.get('current')
-        const username = current && current.get('username')
+        const accountName = account.name
+        const current = state.user.current
+        const username = current && current.username
         const isMyAccount = username === accountName
-        const authLogin = isMyAccount ? {username, password: current.get('password')} : null
+        const authLogin = isMyAccount ? {username, password: current.password} : null
         let privateKeys
         if (current)
-            privateKeys = current.get('private_keys') // not bound to one account
+            privateKeys = current.private_keys // not bound to one account
 
         if(!privateKeys)
-            privateKeys = emptyMap
+            privateKeys = emptyKeys
 
-        const auth = state.user.getIn(['authority', accountName])
+        const auth = state.user.authority && state.user.authority[accountName]
         return {...ownProps, auth, authLogin, privateKeys}
     },
     dispatch => ({

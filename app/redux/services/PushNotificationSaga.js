@@ -1,6 +1,7 @@
 import {take, call, put, select, fork, cancel, takeLatest} from 'redux-saga/effects';
 import {SagaCancellationException} from 'redux-saga';
 import user from 'app/redux/User';
+import app from 'app/redux/AppReducer';
 import { showToast, showCustomToast } from 'app/components/elements/Notifications/ToastUtils'
 import NotifyContent from 'app/components/elements/Notifications/NotifyContent';
 import { notificationSubscribe, notificationUnsubscribe, notificationTake } from 'app/utils/NotifyApiClient';
@@ -106,14 +107,11 @@ export function* onUserLogin(action) {
             continue;
         }
         for (let task of tasks) {
-            yield put({
-                type: 'ADD_NOTIFICATION',
-                payload: {
+            yield put(app.actions.addNotification({
                     message: (t) => NotifyContent(t, task),
                     custom: true,
                     dismissAfter: 10000,
-                }
-            });
+            }));
         }
     }
 }
@@ -135,7 +133,7 @@ function* onAddNotification(action) {
 }
 
 function* addNotificationWatch() {
-    yield takeLatest('ADD_NOTIFICATION', onAddNotification)
+    yield takeLatest(app.actions.addNotification.type, onAddNotification)
 }
 
 export function* pushNotificationWatches() {

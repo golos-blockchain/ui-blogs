@@ -145,9 +145,9 @@ class LocalizedCurrency extends React.Component {
 
 export default connect(
   (state, ownProps) => {
-    const current_account = state.user.get('current')
-    const vesting_shares = current_account ? current_account.get('vesting_shares') : 0.0;
-    const fetching = state.global.get('fetchingXchange');
+    const current_account = state.user.current
+    const vesting_shares = current_account ? current_account.vesting_shares : 0.0;
+    const fetching = state.global.fetchingXchange;
     return {
       ...ownProps,
       fetching,

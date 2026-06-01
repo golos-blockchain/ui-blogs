@@ -96,8 +96,8 @@ class Topics extends React.Component {
         if (!this.props.categories)
             return
 
-        let categories = this.props.categories.get('categories');
-        if (!(expanded) || compact) categories = categories.take(50);
+        let categories = (this.props.categories && this.props.categories.categories) || [];
+        if (!(expanded) || compact) categories = categories.slice(0, 50);
         categories = categories.map(cat => {
             if (/^(u\w{4}){6,}/.test(cat)) return null;
             return cat ? cat : null;

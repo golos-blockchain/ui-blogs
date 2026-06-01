@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 // import g from 'app/redux/GlobalReducer'
 // import transaction from 'app/redux/Transaction'
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
-// import {Map} from 'immutable'
 
 // const {string, object} = PropTypes
 
@@ -56,7 +55,7 @@ import {connect} from 'react-redux'
 
 export default connect(
     (state, ownProps) => {
-        // const username = state.user.getIn(['current', 'username'])
+        // const username = state.user.current && state.user.current.username
         return {
             ...ownProps,
             // username,
@@ -65,7 +64,7 @@ export default connect(
     // dispatch => ({
     //     dispatchAction: (abc) => {
     //         dispatch({
-    //             type: 'user/TYPE',
+    //             user.actions.example(payload)
     //             payload: {abc},
     //         })
     //     },

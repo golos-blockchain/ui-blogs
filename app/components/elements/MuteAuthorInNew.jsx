@@ -5,6 +5,7 @@ import { getMetadataReliably, getMutedInNew } from 'app/utils/NormalizeProfile'
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
 import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
+import app from 'app/redux/AppReducer';
 import Icon from 'app/components/elements/Icon';
 import tt from 'counterpart';
 
@@ -29,7 +30,7 @@ export default class MuteAuthorInNew extends React.Component {
 
       if (!this.props.current_user) return;
 
-      const current_user = this.props.current_user.toJS()
+      const current_user = this.props.current_user
       let mutedInNew = getMutedInNew(current_user)
 
       let metadata = getMetadataReliably(current_user.json_metadata);
@@ -64,9 +65,7 @@ export default class MuteAuthorInNew extends React.Component {
         if (!current_user) return null;
         if (!author) return null;
 
-        //const isFirstTime = !current_user.toJS().json_metadata.includes('mutedInNew');
-      
-        let mutedInNew = getMutedInNew(current_user.toJS());
+        let mutedInNew = getMutedInNew(current_user);
 
         const loading = this.state.loading ? ' loading' : ''
         return (
@@ -76,9 +75,9 @@ export default class MuteAuthorInNew extends React.Component {
 }
 module.exports = connect(
     (state, ownProps) => {
-        const current_user = state.user.getIn(['current', 'username'])
+        const current_user = state.user.current && state.user.current.username
 
-        return {...ownProps, current_user: state.global.get('accounts').get(current_user) || null}
+        return {...ownProps, current_user: (state.global.accounts && state.global.accounts[current_user]) || null}
     },
 
     dispatch => ({
@@ -99,14 +98,11 @@ module.exports = connect(
         },
 
         notify: (message, dismiss = 3000) => {
-            dispatch({
-                type: 'ADD_NOTIFICATION',
-                payload: {
+            dispatch(app.actions.addNotification({
                     key: 'settings_' + Date.now(),
                     message,
                     dismissAfter: dismiss,
-                },
-            });
+            }));
         }
     })
 )(MuteAuthorInNew)

@@ -9,6 +9,7 @@ import { proxifyImageUrlWithStrip } from 'app/utils/ProxifyUrl';
 import normalizeProfile from 'app/utils/NormalizeProfile';
 
 import user from 'app/redux/User';
+import app from 'app/redux/AppReducer';
 import transaction from 'app/redux/Transaction';
 
 import Dropzone from 'react-dropzone';
@@ -260,8 +261,8 @@ class UserHeader extends Component {
 export default connect(
     // mapStateToProps
     (state, { account }) => {
-        const current_user = state.user.get('current');
-        const userName = current_user ? current_user.get('username') : '';
+        const current_user = state.user.current;
+        const userName = current_user ? current_user.username : '';
 
         let metaData = account
             ? o2j.ifStringParseJSON(account.json_metadata)
@@ -274,16 +275,13 @@ export default connect(
             metaData,
             isOwner: userName == account.name,
             profile,
-            follow: state.global.get('follow'),
+            follow: state.global.follow,
         };
     },
     // mapDispatchToProps
     dispatch => ({
         uploadImage: (file, progress) => {
-            dispatch({
-                type: 'user/UPLOAD_IMAGE',
-                payload: { file, progress },
-            });
+            dispatch(user.actions.uploadImage({ file, progress }));
         },
         updateAccount: ({ successCallback, errorCallback, ...operation }) => {
             dispatch(
@@ -299,14 +297,11 @@ export default connect(
             );
         },
         notify: (message, dismiss = 3000) => {
-            dispatch({
-                type: 'ADD_NOTIFICATION',
-                payload: {
+            dispatch(app.actions.addNotification({
                     key: 'settings_' + Date.now(),
                     message,
                     dismissAfter: dismiss,
-                },
-            });
+            }));
         },
     })
 )(UserHeader);

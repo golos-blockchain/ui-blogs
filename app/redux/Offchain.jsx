@@ -1,12 +1,18 @@
-import Immutable from 'immutable';
+import { createSlice } from '@reduxjs/toolkit';
 
-const defaultState = Immutable.fromJS({user: {}});
+import user from './User';
 
-export default function reducer(state = defaultState, action) {
-    if (action.type === 'user/SAVE_LOGIN_CONFIRM') {
-        if (!action.payload) {
-            state = state.set('account', null);
-        }
-    }
-    return state;
-}
+const offchainSlice = createSlice({
+    name: 'offchain',
+    initialState: { user: {} },
+    reducers: {},
+    extraReducers: builder => {
+        builder.addCase(user.actions.saveLoginConfirm, (state, action) => {
+            if (!action.payload) {
+                state.account = null;
+            }
+        });
+    },
+});
+
+export default offchainSlice.reducer;

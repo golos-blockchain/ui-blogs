@@ -106,11 +106,11 @@ class UserKeys extends Component {
 export default connect(
     (state, ownProps) => {
         const {account} = ownProps
-        const accountName = account.get('name')
-        const current = state.user.get('current')
-        const username = current && current.get('username')
+        const accountName = account.name
+        const current = state.user.current
+        const username = current && current.username
         const isMyAccount = username === accountName
-        const wifShown = state.global.get('UserKeys_wifShown')
+        const wifShown = state.global.UserKeys_wifShown
         return {...ownProps, isMyAccount, wifShown, accountName}
     },
     dispatch => ({

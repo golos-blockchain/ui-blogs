@@ -98,7 +98,7 @@ class PromotePost extends Component {
 
         const {amount, loading, amountError, trxError, requiredAmount, alreadyInTop} = this.state;
         const {currentAccount, isS} = this.props;
-        const balanceValue = currentAccount.get('sbd_balance');
+        const balanceValue = currentAccount.sbd_balance;
         const balance = balanceValue ? balanceValue.split(' ')[0] : 0.0;
         const submitDisabled = !amount;
         let url = walletUrl(`/convert`)
@@ -139,16 +139,16 @@ class PromotePost extends Component {
 
 export default connect(
     (state, ownProps) => {
-        const currentUser = state.user.getIn(['current']);
-        const currentAccount = state.global.getIn(['accounts', currentUser.get('username')]);
-        const post = state.global.get('content').get(ownProps.author + '/' + ownProps.permlink);
-        return {...ownProps, currentAccount, currentUser, promoted: post.get('promoted')}
+        const currentUser = state.user.current;
+        const currentAccount = state.global.accounts && state.global.accounts[currentUser.username];
+        const post = state.global.content && state.global.content[ownProps.author + '/' + ownProps.permlink];
+        return {...ownProps, currentAccount, currentUser, promoted: post.promoted}
     },
 
     // mapDispatchToProps
     dispatch => ({
         dispatchSubmit: ({amount, asset, author, permlink, currentUser, onClose, errorCallback}) => {
-            const username = currentUser.get('username')
+            const username = currentUser.username
             const successCallback = () => {
                 dispatch({type: 'FETCH_STATE', payload: {pathname: `@${username}/transfers`}}) // refresh transfer history
                 onClose()

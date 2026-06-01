@@ -39,7 +39,7 @@ class SignUp extends React.Component {
 export default connect(
     state => {
         return {
-            serverBusy: state.offchain.get('serverBusy')
+            serverBusy: state.offchain.serverBusy
         };
     }
 )(SignUp);

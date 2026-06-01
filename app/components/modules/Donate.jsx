@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Formik, Form, Field, ErrorMessage, } from 'formik'
-import { Map } from 'immutable'
 import { Asset, AssetEditor } from 'golos-lib-js/lib/utils'
 import tt from 'counterpart'
 
@@ -34,7 +33,7 @@ class Donate extends React.Component {
     }
 
     componentDidMount() {
-        if (!this.props.uias.size) {
+        if (!Object.keys(this.props.uias || {}).length) {
             this.props.fetchUIABalances(this.props.currentUser)
         }
     }
@@ -45,10 +44,10 @@ class Donate extends React.Component {
         const { sym } = opts
         if (sym === 'GOLOS') {
             if (currentAccount) {
-                res = Asset(currentAccount.get('tip_balance'))
+                res = Asset(currentAccount.tip_balance)
             }
         } else {
-            const uias = this.props.uias && this.props.uias.toJS()
+            const uias = this.props.uias
             if (uias) {
                 res = Asset(uias[sym].tip_balance)
             }
@@ -148,7 +147,7 @@ class Donate extends React.Component {
             </div>
             let bPreset = <React.Fragment>
                 <PresetSelector
-                    username={currentUser.get('username')}
+                    username={currentUser.username}
                     amountStr={values.amount.amountStr}
                     onChange={amountStr => this.onPresetChange(amountStr, values, setFieldValue)}
                     />
@@ -236,26 +235,26 @@ class Donate extends React.Component {
 
 export default connect(
     (state, ownProps) => {
-        const opts = state.user.get('donate_defaults', Map()).toJS()
+        const opts = state.user.donate_defaults || {}
 
-        const currentUser = state.user.getIn(['current'])
-        const currentAccount = currentUser && state.global.getIn(['accounts', currentUser.get('username')])
+        const currentUser = state.user.current
+        const currentAccount = currentUser && state.global.accounts && state.global.accounts[currentUser.username]
 
-        let uias = state.global.get('assets')
+        let uias = state.global.assets || {}
         let uia 
         if (uias) {
-            uia = uias.get(opts.sym)
+            uia = uias[opts.sym]
         }
 
         let sliderMax = null
         if (!uia) {
-            const gprops = state.global.get('props')
+            const gprops = state.global.props
             const emission = accuEmissionPerDay(currentAccount, gprops)
 
             sliderMax = Asset(0, 3, 'GOLOS')
             sliderMax.amountFloat = emission.toString()
 
-            const username = currentUser.get('username')
+            const username = currentUser.username
             let emissionDonatePct = localStorage.getItem('donate.emissionpct-' + username)
             emissionDonatePct = emissionDonatePct ? parseFloat(emissionDonatePct) : 10
 
@@ -265,12 +264,12 @@ export default connect(
                 sliderMax.amount = 1000
             }
 
-            const balance = Asset(currentAccount.get('tip_balance'))
+            const balance = Asset(currentAccount.tip_balance)
             if (sliderMax.gt(balance)) {
                 sliderMax = balance
             }
         } else {
-            sliderMax = Asset(uia.get('tip_balance'))
+            sliderMax = Asset(uia.tip_balance)
         }
 
         return { ...ownProps,
@@ -284,7 +283,7 @@ export default connect(
     dispatch => ({
         fetchUIABalances: (currentUser) => {
             if (!currentUser) return
-            const account = currentUser.get('username')
+            const account = currentUser.username
             dispatch(g.actions.fetchUiaBalances({ account }))
         },
         setDonateDefaults: (donateDefaults) => {
@@ -298,7 +297,7 @@ export default connect(
             to, amount, memo, isMemoEncrypted,
             permlink, is_comment, vote, myVote, voteAllowType, currentUser, errorCallback
         }) => {
-            const username = currentUser.get('username')
+            const username = currentUser.username
 
             let operation = {
                 from: username, to, amount: amount.toString()

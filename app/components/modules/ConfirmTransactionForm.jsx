@@ -43,19 +43,21 @@ class ConfirmTransactionForm extends Component {
     }
 }
 const typeName = confirmBroadcastOperation => {
-    const title = confirmBroadcastOperation.getIn(['operation', '__config', 'title'])
+    const title = confirmBroadcastOperation.operation &&
+        confirmBroadcastOperation.operation.__config &&
+        confirmBroadcastOperation.operation.__config.title
     if(title) return title
-    const type = confirmBroadcastOperation.get('type')
+    const type = confirmBroadcastOperation.type
     return tt('confirmtransactionform_jsx.confirm') + ' ' + (type.split('_').map(n => n.charAt(0).toUpperCase() + n.substring(1))).join(' ')
 }
 
 export default connect(
     // mapStateToProps
     (state) => {
-        const confirmBroadcastOperation = state.transaction.get('confirmBroadcastOperation')
-        const confirmErrorCallback = state.transaction.get('confirmErrorCallback')
-        const confirm = state.transaction.get('confirm')
-        const warning = state.transaction.get('warning')
+        const confirmBroadcastOperation = state.transaction.confirmBroadcastOperation
+        const confirmErrorCallback = state.transaction.confirmErrorCallback
+        const confirm = state.transaction.confirm
+        const warning = state.transaction.warning
         return {
             confirmBroadcastOperation,
             confirmErrorCallback,
@@ -67,7 +69,7 @@ export default connect(
     dispatch => ({
         okClick: (confirmBroadcastOperation) => {
             dispatch(transaction.actions.hideConfirm())
-            dispatch(transaction.actions.broadcastOperation({...(confirmBroadcastOperation.toJS())}))
+            dispatch(transaction.actions.broadcastOperation({...confirmBroadcastOperation}))
         }
     })
 )(ConfirmTransactionForm)

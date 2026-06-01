@@ -4,7 +4,6 @@ import {connect} from 'react-redux';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
 import Reveal from 'react-foundation-components/lib/global/reveal';
 import g from 'app/redux/GlobalReducer';
-import {Map, List} from 'immutable';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import QrReader from 'app/components/elements/QrReader';
 import SuggestPassword from 'app/components/elements/SuggestPassword';
@@ -29,7 +28,7 @@ class Dialogs extends React.Component {
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         const {active_dialogs, hide} = nextProps
-        active_dialogs.forEach((v, k) => {
+        Object.keys(active_dialogs).forEach(k => {
             if(!this['hide_' + k])
                 this['hide_' + k] = () => hide(k)
         })
@@ -38,11 +37,11 @@ class Dialogs extends React.Component {
     render() {
         const {active_dialogs} = this.props
         let idx = 0
-        const dialogs = active_dialogs.reduce((r, v, k) => {
+        const dialogs = Object.entries(active_dialogs).reduce((r, [k, v]) => {
             const cmp = k === 'qr_reader' ? <span key={idx++} >
                 <Reveal onHide={this['hide_' + k]} show revealStyle={{width: '355px'}} >
                     <CloseButton onClick={this['hide_' + k]} />
-                    <QrReader onClose={this['hide_' + k]} {...v.get('params').toJS()} />
+                    <QrReader onClose={this['hide_' + k]} {...v.params} />
                 </Reveal>
             </span>:
             k === 'suggestPassword' ? <span key={idx++} >
@@ -54,37 +53,36 @@ class Dialogs extends React.Component {
             k === 'changePassword' ? <span key={idx++} >
                 <Reveal onHide={this['hide_' + k]} show>
                     <CloseButton onClick={this['hide_' + k]} />
-                    <ChangePassword onClose={this['hide_' + k]} {...v.get('params').toJS()} />
+                    <ChangePassword onClose={this['hide_' + k]} {...v.params} />
                 </Reveal>
             </span>:
             k === 'promotePost' ? <span key={idx++} >
                 <Reveal onHide={this['hide_' + k]} show>
                     <CloseButton onClick={this['hide_' + k]} />
-                    <PromotePost onClose={this['hide_' + k]} {...v.get('params').toJS()} />
+                    <PromotePost onClose={this['hide_' + k]} {...v.params} />
                 </Reveal>
             </span>:
             k === 'qr_key' ? <span key={idx++} >
                 <Reveal onHide={this['hide_' + k]} show>
                     <CloseButton onClick={this['hide_' + k]} />
-                    <QrKeyView onClose={this['hide_' + k]} {...v.get('params').toJS()} />
+                    <QrKeyView onClose={this['hide_' + k]} {...v.params} />
                 </Reveal>
            </span>:
             null
-            return cmp ? r.push(cmp) : r
-        }, List())
+            if (cmp) r.push(cmp)
+            return r
+        }, [])
         return <div>
-            {dialogs.toJS()}
+            {dialogs}
             <CheckLoginOwner />
         </div>
     }
 }
 
-const emptyMap = Map()
-
 export default connect(
     state => {
         return {
-            active_dialogs: state.global.get('active_dialogs') || emptyMap,
+            active_dialogs: state.global.active_dialogs || {},
         }
     },
     dispatch => ({

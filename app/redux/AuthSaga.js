@@ -1,5 +1,4 @@
 import { fork, call, put, select, takeEvery } from 'redux-saga/effects';
-import {Set, Map, fromJS, List} from 'immutable'
 import user from 'app/redux/User'
 import {getAccount} from 'app/redux/SagaShared'
 import {PrivateKey} from 'golos-lib-js/lib/auth/ecc';
@@ -10,42 +9,40 @@ export function* authWatches() {
 }
 
 function* watchForAuth() {
-    yield takeEvery('user/ACCOUNT_AUTH_LOOKUP', accountAuthLookup);
+    yield takeEvery(user.actions.accountAuthLookup.type, accountAuthLookup);
 }
 
 export function* accountAuthLookup({payload: {account, private_keys, login_owner_pubkey}}) {
-    account = fromJS(account)
-    private_keys = fromJS(private_keys)
     // console.log('accountAuthLookup', account.name)
     const stateUser = yield select(state => state.user)
     let keys
     if (private_keys)
         keys = private_keys
     else
-        keys = stateUser.getIn(['current', 'private_keys'])
+        keys = stateUser.current && stateUser.current.private_keys
 
-    if (!keys || !keys.has('posting_private')) return
+    if (!keys || !keys.posting_private) return
     const toPub = k => k ? k.toPublicKey().toString() : '-'
-    const posting = keys.get('posting_private')
-    const active = keys.get('active_private')
-    const memo = keys.get('memo_private')
+    const posting = keys.posting_private
+    const active = keys.active_private
+    const memo = keys.memo_private
     const auth = {
         posting: posting ? yield authorityLookup(
-            {pubkeys: Set([toPub(posting)]), authority: account.get('posting'), authType: 'posting'}) : 'none',
+            {pubkeys: new Set([toPub(posting)]), authority: account.posting, authType: 'posting'}) : 'none',
         active: active ? yield authorityLookup(
-            {pubkeys: Set([toPub(active)]), authority: account.get('active'), authType: 'active'}) : 'none',
+            {pubkeys: new Set([toPub(active)]), authority: account.active, authType: 'active'}) : 'none',
         owner: 'none',
-        memo: account.get('memo_key') === toPub(memo) ? 'full' : 'none'
+        memo: account.memo_key === toPub(memo) ? 'full' : 'none'
     }
-    const accountName = account.get('name')
+    const accountName = account.name
     const pub_keys_used = {posting: toPub(posting), active: toPub(active), owner: login_owner_pubkey};
     yield put(user.actions.setAuthority({accountName, auth, pub_keys_used}))
 }
 
 /**
     @arg {object} data
-    @arg {object} data.authority Immutable Map blockchain authority
-    @arg {object} data.pubkeys Immutable Set public key strings
+    @arg {object} data.authority blockchain authority
+    @arg {object} data.pubkeys Set public key strings
     @return {string} full, partial, none
 */
 function* authorityLookup({pubkeys, authority, authType}) {
@@ -54,26 +51,26 @@ function* authorityLookup({pubkeys, authority, authType}) {
 
 function* authStr({pubkeys, authority, authType, recurse = 1}) {
     const t = yield call(threshold, {pubkeys, authority, authType, recurse})
-    const r = authority.get('weight_threshold')
+    const r = authority.weight_threshold
     return t >= r ? 'full' : t > 0 ? 'partial' : 'none'
 }
 
 export function* threshold({pubkeys, authority, authType, recurse = 1}) {
     if (!pubkeys.size) return 0
     let t = pubkeyThreshold({pubkeys, authority})
-    const account_auths = authority.get('account_auths')
-    const aaNames = account_auths.map(v => v.get(0), List())
-    if (aaNames.size) {
+    const account_auths = authority.account_auths || []
+    const aaNames = account_auths.map(v => v[0])
+    if (aaNames.length) {
         const aaAccounts = yield api.getAccountsAsync(aaNames)
-        const aaThreshes = account_auths.map(v => v.get(1), List())
-        for (let i = 0; i < aaAccounts.size; i++) {
-            const aaAccount = aaAccounts.get(i)
-            t += pubkeyThreshold({authority: aaAccount.get(authType), pubkeys})
+        const aaThreshes = account_auths.map(v => v[1])
+        for (let i = 0; i < aaAccounts.length; i++) {
+            const aaAccount = aaAccounts[i]
+            t += pubkeyThreshold({authority: aaAccount[authType], pubkeys})
             if (recurse <= 2) {
                 const auth = yield call(authStr,
-                    {authority: aaAccount, pubkeys, recurse: ++recurse})
+                    {authority: aaAccount[authType], pubkeys, recurse: ++recurse})
                 if (auth === 'full') {
-                    const aaThresh = aaThreshes.get(i)
+                    const aaThresh = aaThreshes[i]
                     t += aaThresh
                 }
             }
@@ -84,10 +81,10 @@ export function* threshold({pubkeys, authority, authType, recurse = 1}) {
 
 function pubkeyThreshold({pubkeys, authority}) {
     let available = 0
-    const key_auths = authority.get('key_auths')
+    const key_auths = authority.key_auths || []
     key_auths.forEach(k => {
-        if (pubkeys.has(k.get(0))) {
-            available += k.get(1)
+        if (pubkeys.has(k[0])) {
+            available += k[1]
         }
     })
     return available
@@ -104,8 +101,8 @@ export function* findSigningKey({opType, op, username, password}) {
     }
     authTypes = authTypes.split(', ')
 
-    const currentUser = yield select(state => state.user.get('current'))
-    const currentUsername = currentUser && currentUser.get('username')
+    const currentUser = yield select(state => state.user.current)
+    const currentUsername = currentUser && currentUser.username
 
     username = username || currentUsername
 
@@ -116,12 +113,12 @@ export function* findSigningKey({opType, op, username, password}) {
         username = username.split('/')[0]
     }
 
-    const private_keys = currentUsername === username ? currentUser.get('private_keys') : Map()
+    const private_keys = currentUsername === username ? currentUser.private_keys : {}
 
     const account = yield call(getAccount, username);
     if (!account) throw new Error('Account not found')
 
-    if (account.get('frozen')) {
+    if (account.frozen) {
         throw new Error('Account is frozen: ' + username)
     }
 
@@ -135,12 +132,12 @@ export function* findSigningKey({opType, op, username, password}) {
             }
         } else {
             if(private_keys)
-                private_key = private_keys.get(authType + '_private')
+                private_key = private_keys[authType + '_private']
         }
         if (private_key) {
             const pubkey = private_key.toPublicKey().toString()
-            const pubkeys = Set([pubkey])
-            const authority = account.get(authType)
+            const pubkeys = new Set([pubkey])
+            const authority = account[authType]
             const auth = yield call(authorityLookup, {pubkeys, authority, authType})
             if (auth === 'full') return private_key
         }

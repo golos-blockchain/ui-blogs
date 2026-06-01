@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import { counterSubscribeWs, getNotificationsWs } from 'app/utils/NotifyApiClient'
+import app from 'app/redux/AppReducer'
 
 const delay = async (msec) => await new Promise(resolve => setTimeout(resolve, msec))
 
@@ -76,13 +77,13 @@ class NotifyPolling extends React.Component {
 
 export default connect(
     (state, ownProps) => {
-        const current = state.user.get('current')
-        const username = current && current.get('username')
+        const current = state.user.current
+        const username = current && current.username
         return { username }
     },
     dispatch => ({
         update: (payload) => {
-            dispatch({type: 'UPDATE_NOTIFICOUNTERS', payload})
+            dispatch(app.actions.updateNotificounters(payload))
         },
     })
 )(NotifyPolling)

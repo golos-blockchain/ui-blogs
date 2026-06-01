@@ -1,9 +1,10 @@
-import { fromJS } from 'immutable'
 import { fork, call, put, select, takeEvery } from 'redux-saga/effects'
 import { api } from 'golos-lib-js'
 
 import constants from './constants'
 import g from 'app/redux/GlobalReducer'
+import app from 'app/redux/AppReducer'
+import tr from 'app/redux/Transaction'
 import { isHighlight, getEvents } from 'app/utils/NotifyApiClient'
 import { tryDecryptContents, } from 'app/utils/sponsors'
 
@@ -12,11 +13,10 @@ export function* sharedWatches() {
 }   
 
 export function* getAccount(username, force = false) {
-    let account = yield select(state => state.global.get('accounts').get(username))
+    let account = yield select(state => state.global.accounts && state.global.accounts[username])
     if (force || !account) {
         [account] = yield call([api, api.getAccountsAsync], [username])
         if(account) {
-            account = fromJS(account)
             yield put(g.actions.receiveAccount({account}))
         }
     }
@@ -24,17 +24,17 @@ export function* getAccount(username, force = false) {
 }
 
 export function* watchTransactionErrors() {
-    yield takeEvery('transaction/ERROR', showTransactionErrorNotification);
+    yield takeEvery(tr.actions.error.type, showTransactionErrorNotification);
 }
 
 function* showTransactionErrorNotification() {
-    const errors = yield select(state => state.transaction.get('errors'));
+    const errors = yield select(state => state.transaction.errors);
 
     if (errors) {
-        for (const [key, message] of errors) {
+        for (const [key, message] of Object.entries(errors)) {
             if (message !== 'Duplicate transaction check failed')
-                yield put({ type: 'ADD_NOTIFICATION', payload: { key, message } });
-            yield put({ type: 'transaction/DELETE_ERROR', payload: { key } });
+                yield put(app.actions.addNotification({ key, message }));
+            yield put(tr.actions.deleteError({ key }));
         }
     }
 }

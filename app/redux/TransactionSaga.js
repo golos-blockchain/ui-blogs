@@ -1,10 +1,10 @@
 import { fork, call, put, select, takeEvery } from 'redux-saga/effects';
-import {fromJS, Set, Map, List} from 'immutable'
 import {getAccount, getContent, getWorkerRequest} from 'app/redux/SagaShared'
 import {findSigningKey} from 'app/redux/AuthSaga'
 import g from 'app/redux/GlobalReducer'
 import user from 'app/redux/User'
 import tr from 'app/redux/Transaction'
+import app from 'app/redux/AppReducer'
 import getSlug from 'speakingurl'
 import {DEBT_TICKER} from 'app/client_config'
 import {serverApiRecordEvent} from 'app/utils/ServerApiClient'
@@ -21,13 +21,13 @@ export function* transactionWatches() {
 }
 
 export function* watchForBroadcast() {
-    yield takeEvery('transaction/BROADCAST_OPERATION', broadcastOperation);
+    yield takeEvery(tr.actions.broadcastOperation.type, broadcastOperation);
 }
 export function* watchForUpdateAuthorities() {
-    yield takeEvery('transaction/UPDATE_AUTHORITIES', updateAuthorities);
+    yield takeEvery(tr.actions.updateAuthorities.type, updateAuthorities);
 }
 export function* watchForUpdateMeta() {
-    yield takeEvery('transaction/UPDATE_META', updateMeta);
+    yield takeEvery(tr.actions.updateMeta.type, updateMeta);
 }
 
 const hook = {
@@ -58,12 +58,14 @@ function* encryptMemoIfNeed(memoStr, to) {
     memoStr = toStringUtf8(memoStr);
     memoStr = memoStr.trim();
     const memo_private = yield select(
-        state => state.user.getIn(['current', 'private_keys', 'memo_private'])
+        state => state.user.current &&
+            state.user.current.private_keys &&
+            state.user.current.private_keys.memo_private
     );
     if(!memo_private) throw new Error('Unable to encrypt memo, missing memo private key');
     const account = yield call(getAccount, to);
     if(!account) throw new Error(`Unknown to account ${to}`);
-    const memo_key = account.get('memo_key');
+    const memo_key = account.memo_key;
     memoStr = '# ' + memoStr;
     memoStr = memo.encode(memo_private, memo_key, memoStr);
     return memoStr;
@@ -111,16 +113,18 @@ function* preBroadcast_custom_json({operation}) {
                 const {follower, following, what: [action]} = json[1]
                 yield put(g.actions.update({
                     key: ['follow', 'getFollowingAsync', follower],
-                    notSet: Map(),
+                    notSet: {},
                     updater: m => {
-                        //m = m.asMutable()
+                        m.blog_result = m.blog_result || []
                         if(action == null) {
-                            m = m.update('blog_result', Set(), r => r.delete(following))
+                            m.blog_result = m.blog_result.filter(i => i !== following)
                         } else if(action === 'blog') {
-                            m = m.update('blog_result', Set(), r => r.add(following))
+                            if (!m.blog_result.includes(following)) {
+                                m.blog_result.push(following)
+                            }
                         }
-                        m = m.set('blog_count', m.get('blog_result', Set()).size)
-                        return m//.asImmutable()
+                        m.blog_count = m.blog_result.length
+                        return m
                     }
                 }))
             }
@@ -141,32 +145,28 @@ function* preBroadcast_account_setup({operation}) {
                         operation.account, 'blog_result']
                 yield put(g.actions.update({
                     key,
-                    notSet: Map(),
+                    notSet: [],
                     updater: m => {
-                        m = m.delete(block_setting.account)
-                        return m
+                        return m.filter(i => i !== block_setting.account)
                     }
                 }))
             }
 
-            yield put({
-                type: 'global/UPDATE',
-                payload: {
+            yield put(g.actions.update({
                     key: ['block', 'blocking', operation.account],
-                    notSet: Map(),
+                    notSet: {},
                     updater: m => {
-                        m = m.update('result', Set(), res => {
-                            if (block_setting.block) {
-                                res = res.add(block_setting.account)
-                            } else {
-                                res = res.delete(block_setting.account)
+                        m.result = m.result || []
+                        if (block_setting.block) {
+                            if (!m.result.includes(block_setting.account)) {
+                                m.result.push(block_setting.account)
                             }
-                            return res
-                        })
+                        } else {
+                            m.result = m.result.filter(i => i !== block_setting.account)
+                        }
                         return m
                     }
-                }
-            })
+            }))
         }
     }
     return operation
@@ -231,7 +231,7 @@ function* broadcastOperation(
 }
 
 function* broadcastPayload({payload: {operations, keys, username, hideErrors, successCallback, errorCallback}}) {
-    for (const [type] of operations) // see also transaction/ERROR
+    for (const [type] of operations) // see also tr.actions.error
         yield put(tr.actions.remove({key: ['TransactionError', type]}))
 
     {
@@ -286,11 +286,11 @@ function* broadcastPayload({payload: {operations, keys, username, hideErrors, su
             }
             const config = operation.__config
             if (config && config.successMessage) {
-                yield put({type: 'ADD_NOTIFICATION', payload: {
+                yield put(app.actions.addNotification({
                     key: "trx_" + Date.now(),
                     message: config.successMessage,
                     dismissAfter: 5000
-                }})
+                }))
             }
         }
         if (successCallback) try { successCallback() } catch (error) { console.error(error) }
@@ -361,31 +361,31 @@ function* accepted_paid_subscription_transfer({operation}) {
     console.log('Paid subscription prolongation accepted:', from, to);
 
     const state = yield select(state => state.global)
-    const interval = state.getIn(['pso', 'interval'])
+    const interval = state.pso && state.pso.interval
 
     const updater = data => {
-        const idx = data.findIndex(i => i.get('subscriber') === from)
+        const idx = data.findIndex(i => i.subscriber === from)
         if (idx !== -1) {
-            data = data.update(idx, psro => {
-                psro = psro.set('active', true)
-                const np = new Date()
-                np.setSeconds(np.getSeconds() + interval)
-                psro = psro.set('next_payment', np.toISOString())
-                return psro
-            })
+            const np = new Date()
+            np.setSeconds(np.getSeconds() + interval)
+            data[idx] = {
+                ...data[idx],
+                active: true,
+                next_payment: np.toISOString(),
+            }
         }
         return data
     }
 
     yield put(g.actions.update({
         key: ['sponsors', 'data'],
-        notSet: List(),
+        notSet: [],
         updater,
     }))
 
     yield put(g.actions.update({
         key: ['sponsoreds', 'data'],
-        notSet: List(),
+        notSet: [],
         updater,
     }))
 }
@@ -408,13 +408,11 @@ function* accepted_nft_transfer({operation}) {
 
 function* accepted_withdraw_vesting({operation}) {
     let [account] = yield call([api, api.getAccountsAsync], [operation.account])
-    account = fromJS(account)
     yield put(g.actions.receiveAccount({account}))
 }
 
 function* accepted_account_update({operation}) {
     let [account] = yield call([api, api.getAccountsAsync], [operation.account])
-    account = fromJS(account)
     yield put(g.actions.receiveAccount({account}))
 
     // bug, fork, etc.. the folowing would be mis-leading
@@ -432,10 +430,10 @@ function* accepted_account_update({operation}) {
 // TODO remove soon, this was replaced by the UserKeys edit running usernamePasswordLogin (on dialog close)
 // function* error_account_update({operation}) {
 //     const {account} = operation
-//     const stateUser = yield select(state => state.user)
-//     const username = stateUser.getIn(['current', 'username'])
+    //     const stateUser = yield select(state => state.user)
+    //     const username = stateUser.current && stateUser.current.username
 //     if (username === account) {
-//         const pending_private_key = stateUser.getIn(['current', 'pending_private_key'])
+    //         const pending_private_key = stateUser.current && stateUser.current.pending_private_key
 //         if (pending_private_key) {
 //             // remove pending key
 //             const update = { pending_private_key: undefined }
@@ -690,9 +688,10 @@ function* updateAuthorities({payload: {accountName, signingKey, auths, twofa, on
         if (authType === 'memo') {
             account.memo_key = newAuthPubkey
         } else {
-            authority = fromJS(account[authType]).toJS()
-            authority.key_auths = []
-            authority.key_auths.push([newAuthPubkey, authority.weight_threshold])
+            authority = {
+                ...account[authType],
+                key_auths: [[newAuthPubkey, account[authType].weight_threshold]],
+            }
             // const key_auths = authority.key_auths
             // let found
             // for (let i = 0; i < key_auths.length; i++) {
@@ -709,11 +708,10 @@ function* updateAuthorities({payload: {accountName, signingKey, auths, twofa, on
 
             // Add twofaAccount with full authority
             // if(twofa && authType === 'owner') {
-            //     let account_auths = fromJS(authority.account_auths)
-            //     if(!account_auths.find(v => v.get(0) === twofaAccount)) {
-            //         account_auths = account_auths.push(fromJS([twofaAccount, authority.weight_threshold]))
+            //     authority.account_auths = authority.account_auths || []
+            //     if(!authority.account_auths.find(v => v[0] === twofaAccount)) {
+            //         authority.account_auths.push([twofaAccount, authority.weight_threshold])
             //     }
-            //     authority.account_auths = account_auths.toJS()
             // }
         }
         ops2[authType] = authority ? authority : account[authType]

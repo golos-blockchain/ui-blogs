@@ -9,6 +9,8 @@ import { api } from 'golos-lib-js'
 import { Asset } from 'golos-lib-js/lib/utils'
 
 import transaction from 'app/redux/Transaction';
+import user from 'app/redux/User';
+import app from 'app/redux/AppReducer';
 import HtmlReady, { getTags } from 'shared/HtmlReady';
 import DialogManager from 'app/components/elements/common/DialogManager';
 import Icon from 'app/components/elements/Icon';
@@ -293,7 +295,7 @@ class PostForm extends React.Component {
                             editMode={editMode}
                             errorText={postError}
                             tags={tags}
-                            categories={categories.get('categories').toJS()}
+                            categories={(categories && categories.categories) || []}
                             onTagsChange={this._onTagsChange}
                             payoutType={payoutType}
                             curationPercent={curationPercent}
@@ -820,8 +822,8 @@ function markdownToHtmlEditorState(markdown) {
 
 export default connect(
     state => ({
-        author: state.user.getIn(['current', 'username']),
-        categories: state.global.get('tag_idx'),
+        author: state.user.current && state.user.current.username,
+        categories: state.global.tag_idx,
     }),
     dispatch => ({
         async onPost(payload, editMode, visibleType, onSuccess, onError) {
@@ -880,25 +882,19 @@ export default connect(
             );
         },
         uploadImage({ file, progress }) {
-            dispatch({
-                type: 'user/UPLOAD_IMAGE',
-                payload: {
+            dispatch(user.actions.uploadImage({
                     file,
                     progress: data => {
                         if (data && data.error) {
-                            dispatch({
-                                type: 'ADD_NOTIFICATION',
-                                payload: {
+                            dispatch(app.actions.addNotification({
                                     message: data.error,
                                     dismissAfter: 5000,
-                                },
-                            });
+                            }));
                         }
 
                         progress(data);
                     },
-                },
-            });
+            }));
         },
     })
 )(withScreenSize(PostForm))

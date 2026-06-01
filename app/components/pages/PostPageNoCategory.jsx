@@ -16,7 +16,7 @@ class PostWrapper extends React.Component {
     componentDidMount() {
         const { location, routeParams } = this.props
         const post = routeParams.username + '/' + routeParams.slug
-        const dis = this.props.content.get(post)
+        const dis = this.props.content[post]
         if (!dis) {
             this.props
                 .getContent({
@@ -32,11 +32,11 @@ class PostWrapper extends React.Component {
                 .catch(() => {
                     this.setState({ loading: false })
                 });
-        } else if (dis.get('id') === '0.0.0') {
+        } else if (dis.id === '0.0.0') {
             // non-existing post
             this.setState({ loading: false })
         } else {
-            const redirect = `/${dis.get('category')}/@${post}` + location.search
+            const redirect = `/${dis.category}/@${post}` + location.search
             navigateOutside(redirect, { replace: true })
         }
     }
@@ -67,7 +67,7 @@ class PostWrapper extends React.Component {
 const StoreWrapped = connect(
     state => {
         return {
-            content: state.global.get('content'),
+            content: state.global.content || {},
         }
     },
     dispatch => ({

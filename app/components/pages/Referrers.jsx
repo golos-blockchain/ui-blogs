@@ -35,9 +35,9 @@ class Referrers extends React.Component {
     render() {
         const { referrers } = this.props
 
-        const props = this.props.props ? this.props.props.toJS() : {}
+        const props = this.props.props || {}
 
-        if (!referrers || !referrers.get('loaded')){
+        if (!referrers || !referrers.loaded){
             return <div className='column' style={{marginTop: '3.5rem'}}>
                 <div className='row'>
                     <div style={{ paddingBottom: '1rem' }}>
@@ -48,7 +48,7 @@ class Referrers extends React.Component {
             </div>
         }
 
-        let refs = referrers.get('data').toJS()
+        let refs = referrers.data || []
 
         let count = 0
 
@@ -82,7 +82,7 @@ class Referrers extends React.Component {
             </tr>
         })
 
-        const next_start_name = referrers.get('next_start_name')
+        const next_start_name = referrers.next_start_name
 
         const sortItems = [
             { link: '#', onClick: e => {
@@ -141,8 +141,8 @@ module.exports = {
     path: '/referrers',
     component: connect(
 	    state => {
-	        const referrers = state.global.get('referrers')
-            const props = state.global.get('props')
+	        const referrers = state.global.referrers
+            const props = state.global.props
 
 	        return {
 	            referrers,

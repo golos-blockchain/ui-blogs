@@ -92,7 +92,7 @@ class Author extends React.Component {
         if(!(follow || mute) || username === author)
             return author_link;
 
-        const {name, gender, about} = this.props.account ? normalizeProfile(this.props.account.toJS()) : {};
+        const {name, gender, about} = this.props.account ? normalizeProfile(this.props.account) : {};
 
         let genderIcon;
         if (gender && gender != 'undefined')
@@ -153,9 +153,9 @@ import {connect} from 'react-redux'
 export default connect(
     (state, ownProps) => {
         const {author, follow, mute, authorRepLog10} = ownProps;
-        const username = state.user.getIn(['current', 'username']);
-        const account = state.global.getIn(['accounts', author]);
-        const gprops = state.global.get('props')
+        const username = state.user.current && state.user.current.username;
+        const account = state.global.accounts && state.global.accounts[author];
+        const gprops = state.global.props
         return {
             author, follow, mute, authorRepLog10,
             username,

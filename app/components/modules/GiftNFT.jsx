@@ -1,6 +1,5 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Map } from 'immutable'
 import tt from 'counterpart'
 import { Asset } from 'golos-lib-js/lib/utils'
 
@@ -45,10 +44,10 @@ class GiftNFT extends React.Component {
     render() {
         const { nft_tokens, nft_assets, currentUser } = this.props
 
-        const tokens = nft_tokens ? nft_tokens.toJS().data : []
-        const assets = nft_assets ? nft_assets.toJS() : null
+        const tokens = nft_tokens ? nft_tokens.data : []
+        const assets = nft_assets || null
 
-        const next_from = nft_tokens && nft_tokens.get('next_from')
+        const next_from = nft_tokens && nft_tokens.next_from
 
         let items = []
         let count = 0
@@ -96,7 +95,7 @@ class GiftNFT extends React.Component {
             items = <div style={{ marginBottom: '1rem' }}>
                 {tt('gift_nft.no_tokens')}
                 {currentUser && <span>
-                    <a href={walletUrl('/@' + currentUser.get('username') + '/nft-collections')} target='_blank' rel='noreferrer nofollow'>
+                    <a href={walletUrl('/@' + currentUser.username + '/nft-collections')} target='_blank' rel='noreferrer nofollow'>
                         {tt('gift_nft.issue')}
                     </a>
                     {tt('gift_nft.no_tokens2')}
@@ -139,27 +138,27 @@ class GiftNFT extends React.Component {
 
 export default connect(
     (state, ownProps) => {
-        const opts = state.user.get('gift_nft_defaults', Map()).toJS()
+        const opts = state.user.gift_nft_defaults || {}
 
-        const currentUser = state.user.getIn(['current'])
-        const currentAccount = currentUser && state.global.getIn(['accounts', currentUser.get('username')])
+        const currentUser = state.user.current
+        const currentAccount = currentUser && state.global.accounts && state.global.accounts[currentUser.username]
 
         return { ...ownProps,
             currentUser,
             currentAccount,
             opts,
-            nft_tokens: state.global.get('nft_tokens'),
-            nft_assets: state.global.get('nft_assets'),
+            nft_tokens: state.global.nft_tokens,
+            nft_assets: state.global.nft_assets,
         }
     },
     dispatch => ({
         fetchNFTTokens: (currentUser, start_token_id = 0) => {
             if (!currentUser) return
-            const account = currentUser.get('username')
+            const account = currentUser.username
             dispatch(g.actions.fetchNftTokens({ account, start_token_id }))
         },
         giftNFT: (currentUser, token_id, to, permlink, is_comment, successCallback, errorCallback) => {
-            const username = currentUser.get('username')
+            const username = currentUser.username
             const operation = {
                 from: username,
                 to,

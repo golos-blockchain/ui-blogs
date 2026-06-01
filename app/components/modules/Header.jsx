@@ -121,8 +121,8 @@ class Header extends React.Component {
             page_title = tt('referrers_jsx.title');
         } else if (route.page === 'UserProfile') {
             user_name = route.params[0].slice(1);
-            const acct_meta = this.props.account_meta.getIn([user_name]);
-            const name = acct_meta ? normalizeProfile(acct_meta.toJS()).name : null;
+            const acct_meta = this.props.account_meta[user_name];
+            const name = acct_meta ? normalizeProfile(acct_meta).name : null;
             const user_title = name ? `${name} (@${user_name})` : user_name;
             page_title = user_title;
             if(route.params[1] === "followers"){
@@ -248,12 +248,12 @@ export {Header as _Header_};
 
 export default connect(
     state => {
-        const current_user = state.user.get('current');
-        const account_user = state.global.get('accounts');
-        const current_account_name = current_user ? current_user.get('username') : state.offchain.get('account');
-        const location = state.app.get('location')
+        const current_user = state.user.current;
+        const account_user = state.global.accounts || {};
+        const current_account_name = current_user ? current_user.username : state.offchain.account;
+        const location = state.app.location
         return {
-            location: location ? location.toJS() : {},
+            location: location || {},
             current_account_name,
             account_meta: account_user,
         }

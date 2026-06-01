@@ -181,7 +181,7 @@ class LocaleSelect extends PureComponent {
 }
 
 export default connect((state, props) => {
-    let locale = state.user.get('locale')
+    let locale = state.user.locale
 
     if (process.env.BROWSER) {
         const l = cookie.load(LOCALE_COOKIE_KEY)

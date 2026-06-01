@@ -46,7 +46,7 @@ class LoginForm extends Component {
         this.onCancel = (e) => {
             if(e.preventDefault) e.preventDefault()
             const {onCancel, loginBroadcastOperation} = this.props;
-            const errorCallback = loginBroadcastOperation && loginBroadcastOperation.get('errorCallback');
+            const errorCallback = loginBroadcastOperation && loginBroadcastOperation.errorCallback;
             if (errorCallback) errorCallback('Canceled');
             if (onCancel) onCancel()
         };
@@ -139,26 +139,26 @@ class LoginForm extends Component {
         const {submitting, valid, handleSubmit} = this.state.login;
         const {usernameOnChange, onCancel, /*qrReader*/} = this;
         const disabled = submitting || !valid;
-        const opType = loginBroadcastOperation ? loginBroadcastOperation.get('type') : null;
+        const opType = loginBroadcastOperation ? loginBroadcastOperation.type : null;
         let postType = "";
         let isMemo = false;
         if (opType === "vote") {
             postType = tt('loginform_jsx.login_to_vote')
-        } else if (opType === "custom_json" && loginBroadcastOperation.getIn(['operation', 'id']) === "follow") {
+        } else if (opType === "custom_json" && loginBroadcastOperation.operation && loginBroadcastOperation.operation.id === "follow") {
             postType = 'Login to Follow Users'
         } else if (loginBroadcastOperation) {
             // check for post or comment in operation
-            postType = loginBroadcastOperation.getIn(['operation', 'title']) ? tt('loginform_jsx.login_to_post') : tt('loginform_jsx.login_to_comment');
-        } else if (loginDefault && loginDefault.get('authType') === 'memo') {
+            postType = loginBroadcastOperation.operation && loginBroadcastOperation.operation.title ? tt('loginform_jsx.login_to_post') : tt('loginform_jsx.login_to_comment');
+        } else if (loginDefault && loginDefault.authType === 'memo') {
             isMemo = true;
             postType = tt('loginform_jsx.login_to_message');
         }
         const title = postType ? postType : tt('g.login');
         const authType = /^vote|comment/.test(opType) ? tt('loginform_jsx.posting') : tt('loginform_jsx.active_or_owner');
         const submitLabel = loginBroadcastOperation ? tt('g.sign_in') : tt('g.login');
-        const cancelIsRegister = loginDefault && loginDefault.get('cancelIsRegister');
+        const cancelIsRegister = loginDefault && loginDefault.cancelIsRegister;
         let loginError = this.props.login_error
-        let error = password.touched && password.error ? password.error : (loginError && loginError.get('error'))
+        let error = password.touched && password.error ? password.error : (loginError && loginError.error)
         if (error === 'account_frozen') {
             error = <span>
                 {tt('loginform_jsx.account_frozen')}
@@ -183,7 +183,7 @@ class LoginForm extends Component {
               {tt('loginform_jsx.you_may_use_this_active_key_on_other_more')}
             </span>
         } else if (error === 'Node failure') {
-            const NODE = loginError && loginError.get('node')
+            const NODE = loginError && loginError.node
             error = <span>
                 {tt('app_settings.node_error_new_NODE', { NODE } )}&nbsp;
                 {process.env.MOBILE_APP ? <a href='#' onClick={e => {
@@ -242,7 +242,7 @@ class LoginForm extends Component {
                     <button type="submit" disabled={submitting || disabled} className="button" onClick={this.SignIn}>
                         {submitLabel}
                     </button>
-                    {!cancelIsRegister && this.props.onCancel && (!isMemo || !loginDefault.get('unclosable')) && <button type="button float-right" disabled={submitting} className="button hollow" onClick={onCancel}>
+                    {!cancelIsRegister && this.props.onCancel && (!isMemo || !loginDefault.unclosable) && <button type="button float-right" disabled={submitting} className="button hollow" onClick={onCancel}>
                         {tt('g.cancel')}
                     </button>}
                     {cancelIsRegister && !isMemo && <a href={authRegisterUrl()} target='_blank' type="button float-right" disabled={submitting} className="button hollow" onClick={this.checkRegisterEnabled}>
@@ -307,21 +307,21 @@ export default connect(
 
     // mapStateToProps
     (state) => {
-        const login_error = state.user.get('login_error')
-        const currentUser = state.user.get('current')
-        const loginBroadcastOperation = state.user.get('loginBroadcastOperation')
+        const login_error = state.user.login_error
+        const currentUser = state.user.current
+        const loginBroadcastOperation = state.user.loginBroadcastOperation
 
         const initialValues = {
             saveLogin: saveLoginDefault,
         }
 
         // The username input has a value prop, so it should not use initialValues
-        let initialUsername = currentUser && currentUser.has('username') ? currentUser.get('username') : urlAccountName()
+        let initialUsername = currentUser && currentUser.username ? currentUser.username : urlAccountName()
         //fixme - redesign (code duplication with USaga, UProfile)
 
-        const loginDefault = state.user.get('loginDefault')
+        const loginDefault = state.user.loginDefault
         if(loginDefault) {
-            const {username, authType} = loginDefault.toJS()
+            const {username, authType} = loginDefault
             if(username && authType) initialValues.username = username + '/' + authType
         } else if (initialUsername) {
             initialValues.username = initialUsername;
@@ -346,7 +346,7 @@ export default connect(
             const {password, saveLogin} = data
             const username = data.username.trim().toLowerCase()
             if (loginBroadcastOperation) {
-                const {type, operation, trx, successCallback, errorCallback} = loginBroadcastOperation.toJS()
+                const {type, operation, trx, successCallback, errorCallback} = loginBroadcastOperation
                 dispatch(transaction.actions.broadcastOperation({type, operation, trx, username, password, successCallback, errorCallback}))
                 // Avoid saveLogin, this could be a user-provided content page and the login might be an active key.  Security will reject that...
                 dispatch(user.actions.usernamePasswordLogin({username, password, saveLogin: true, afterLoginRedirectToWelcome, operationType: type}))

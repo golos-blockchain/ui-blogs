@@ -1,4 +1,3 @@
-import { Set } from 'immutable';
 import sanitize from 'sanitize-html';
 import sanitizeConfig, { allowedTags } from '../../utils/SanitizeConfig';
 import transaction from '../../redux/Transaction';
@@ -26,7 +25,7 @@ export const replyAction = (dispatch, remarkable) => ({
     errorCallback,
     startLoadingIndicator,
 }) => {
-    const username = state.user.getIn(['current', 'username']);
+    const username = state.user.current && state.user.current.username;
 
     if (category) {
         category = category
@@ -88,7 +87,7 @@ export const replyAction = (dispatch, remarkable) => ({
         return;
     }
 
-    const formCategories = Set(
+    const formCategories = (
         category
             ? category
                   .trim()
@@ -100,18 +99,18 @@ export const replyAction = (dispatch, remarkable) => ({
     const rootCategory =
         originalPost && originalPost.category
             ? originalPost.category
-            : formCategories.first();
+            : formCategories[0];
 
-    let allCategories = Set([...formCategories.toJS(), ...rtags.hashtags]);
+    let allCategories = new Set([...formCategories, ...rtags.hashtags]);
 
     if (/^[-a-z\d]+$/.test(rootCategory)) {
-        allCategories = allCategories.add(rootCategory);
+        allCategories.add(rootCategory);
     }
 
     // merge
     const meta = isEdit ? jsonMetadata : {};
     if (allCategories.size) {
-        meta.tags = allCategories.toJS();
+        meta.tags = [...allCategories];
     } else {
         delete meta.tags;
     }

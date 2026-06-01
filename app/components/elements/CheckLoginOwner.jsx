@@ -4,6 +4,7 @@ import Reveal from 'react-foundation-components/lib/global/reveal';
 import CloseButton from 'react-foundation-components/lib/global/close-button';
 import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import tt from 'counterpart';
+import user from 'app/redux/User';
 
 class CheckLoginOwner extends React.Component {
     constructor() {
@@ -17,7 +18,7 @@ class CheckLoginOwner extends React.Component {
 
         const {previous_owner_authority} = nextProps
         if(previous_owner_authority && this.props.previous_owner_authority !== previous_owner_authority) {
-            const last_valid_time = previous_owner_authority.get('last_valid_time')
+            const last_valid_time = previous_owner_authority.last_valid_time
             // has this been shown already?
             if(localStorage[this.getKey(nextProps)] !== last_valid_time) {
                 let last_valid_date
@@ -39,7 +40,7 @@ class CheckLoginOwner extends React.Component {
     }
     getKey = (props = this.props) => {
         const {previous_owner_authority} = props
-        const username = previous_owner_authority.get('account')
+        const username = previous_owner_authority.account
         const key = `${username}_previous_owner_authority_last_valid_time`
         return key
     }
@@ -79,9 +80,9 @@ import {connect} from 'react-redux'
 export default connect(
     // mapStateToProps
     (state, ownProps) => {
-        const current = state.user.get('current')
-        const login_owner_pubkey = current && current.get('login_owner_pubkey')
-        const previous_owner_authority = current && current.get('previous_owner_authority')
+        const current = state.user.current
+        const login_owner_pubkey = current && current.login_owner_pubkey
+        const previous_owner_authority = current && current.previous_owner_authority
         return {
             ...ownProps,
             login_owner_pubkey,
@@ -91,7 +92,7 @@ export default connect(
     // mapDispatchToProps
     dispatch => ({
         lookupPreviousOwnerAuthority: () => {
-            dispatch({type: 'user/lookupPreviousOwnerAuthority', payload: {}})
+            dispatch(user.actions.lookupPreviousOwnerAuthority({}))
         },
     })
 )(CheckLoginOwner)
