@@ -84,7 +84,7 @@
     "koa-static-cache": "^5.1.4",
     "libsodium-wrappers": "0.4.8",
     "lightbox-react": "^0.3.8",
-    "lodash": "^4.17.21",
+    "lodash": "^4.18.1",
     "mini-css-extract-plugin": "^2.9.3",
     "multiselect-react-dropdown": "^1.6.7",
     "multistream": "^2.1.1",
