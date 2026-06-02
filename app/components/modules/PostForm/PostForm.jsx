@@ -34,6 +34,7 @@ import {
 } from 'app/utils/tags';
 import { DRAFT_KEY, EDIT_KEY } from 'app/utils/postForm';
 import { checkAllowed, AllowTypes } from 'app/utils/Allowance'
+import { addNotification } from 'app/utils/NotificationService';
 import { makeOid, encryptPost, } from 'app/utils/sponsors'
 import { withScreenSize } from 'app/utils/ScreenSize'
 import { reloadLocation } from 'app/utils/app/RoutingUtils'
@@ -886,10 +887,11 @@ export default connect(
                     file,
                     progress: data => {
                         if (data && data.error) {
-                            dispatch(app.actions.addNotification({
-                                    message: data.error,
-                                    dismissAfter: 5000,
-                            }));
+                            addNotification({
+                                type: 'error',
+                                message: data.error,
+                                dismissAfter: 5000,
+                            });
                         }
 
                         progress(data);

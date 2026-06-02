@@ -7,6 +7,7 @@ import tr from 'app/redux/Transaction'
 import app from 'app/redux/AppReducer'
 import getSlug from 'speakingurl'
 import {DEBT_TICKER} from 'app/client_config'
+import { addNotification } from 'app/utils/NotificationService';
 import {serverApiRecordEvent} from 'app/utils/ServerApiClient'
 import {PrivateKey, PublicKey} from 'golos-lib-js/lib/auth/ecc'
 import {api, broadcast, auth, memo} from 'golos-lib-js'
@@ -286,11 +287,12 @@ function* broadcastPayload({payload: {operations, keys, username, hideErrors, su
             }
             const config = operation.__config
             if (config && config.successMessage) {
-                yield put(app.actions.addNotification({
+                addNotification({
+                    type: 'success',
                     key: "trx_" + Date.now(),
                     message: config.successMessage,
                     dismissAfter: 5000
-                }))
+                });
             }
         }
         if (successCallback) try { successCallback() } catch (error) { console.error(error) }

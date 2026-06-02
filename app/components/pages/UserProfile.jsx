@@ -38,6 +38,7 @@ import TimeAgoWrapper from 'app/components/elements/TimeAgoWrapper';
 import Userpic from 'app/components/elements/Userpic';
 import Callout from 'app/components/elements/Callout';
 import normalizeProfile, { getLastSeen } from 'app/utils/NormalizeProfile';
+import { addNotification } from 'app/utils/NotificationService';
 import { withScreenSize } from 'app/utils/ScreenSize'
 
 export default class UserProfile extends React.Component {
@@ -649,10 +650,11 @@ module.exports = {
                     blocking = await checkAllowed(voter, [],
                         null, AllowTypes.voteRep)
                     if (blocking.error) {
-                        dispatch(app.actions.addNotification({
-                                message: blocking.error,
-                                dismissAfter: 5000,
-                        }))
+                        addNotification({
+                            type: 'error',
+                            message: blocking.error,
+                            dismissAfter: 5000,
+                        });
                         return
                     }
                 }

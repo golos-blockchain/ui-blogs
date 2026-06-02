@@ -73,3 +73,7 @@ export const withScreenSize = (WrappedComponent) => {
 
     return ScreenSize
 }
+
+export {
+    isScreenS
+};

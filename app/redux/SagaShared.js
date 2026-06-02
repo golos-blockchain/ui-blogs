@@ -5,6 +5,7 @@ import constants from './constants'
 import g from 'app/redux/GlobalReducer'
 import app from 'app/redux/AppReducer'
 import tr from 'app/redux/Transaction'
+import { addNotification } from 'app/utils/NotificationService';
 import { isHighlight, getEvents } from 'app/utils/NotifyApiClient'
 import { tryDecryptContents, } from 'app/utils/sponsors'
 
@@ -33,7 +34,7 @@ function* showTransactionErrorNotification() {
     if (errors) {
         for (const [key, message] of Object.entries(errors)) {
             if (message !== 'Duplicate transaction check failed')
-                yield put(app.actions.addNotification({ key, message }));
+                addNotification({ key, message, type: 'error' });
             yield put(tr.actions.deleteError({ key }));
         }
     }

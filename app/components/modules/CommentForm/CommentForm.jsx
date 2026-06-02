@@ -15,6 +15,7 @@ import CommentFooter from 'app/components/elements/postEditor/CommentFooter';
 import MarkdownViewer, {
     getRemarkable,
 } from 'app/components/cards/MarkdownViewer';
+import { addNotification } from 'app/utils/NotificationService';
 import { checkPostHtml } from 'app/utils/validator';
 import { checkAllowed, AllowTypes } from 'app/utils/Allowance'
 import './CommentForm.scss';
@@ -388,10 +389,11 @@ export default connect(
                     file,
                     progress: data => {
                         if (data && data.error) {
-                            dispatch(app.actions.addNotification({
-                                    message: data.error,
-                                    dismissAfter: 5000,
-                            }));
+                            addNotification({
+                                type: 'error',
+                                message: data.error,
+                                dismissAfter: 5000,
+                            });
                         }
 
                         progress(data);

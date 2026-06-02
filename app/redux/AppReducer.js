@@ -5,7 +5,6 @@ const initialState = {
     loading: false,
     error: '',
     location: {},
-    notifications: null,
     ignoredLoadingRequestCount: 0,
     notificounters: {
         total: 0,
@@ -35,18 +34,6 @@ const appSlice = createSlice({
         },
         fetchDataEnd(state) {
             state.loading = false;
-        },
-        addNotification() {
-            // Side effects are handled by PushNotificationSaga.
-        },
-        removeNotification(state, { payload: { key } }) {
-            if (Array.isArray(state.notifications)) {
-                state.notifications = state.notifications.filter(
-                    notification => notification.key !== key
-                );
-            } else if (state.notifications) {
-                delete state.notifications[key];
-            }
         },
         updateNotificounters(state, { payload }) {
             if (!payload) return;

@@ -20,6 +20,7 @@ import UserList from 'app/components/elements/UserList';
 import ContentSettings from 'app/components/elements/settings/ContentSettings'
 import AppSettings, { openAppSettings } from 'app/components/pages/app/AppSettings'
 import { LANGUAGES, DEFAULT_LANGUAGE, LOCALE_COOKIE_KEY, USER_GENDER } from 'app/client_config'
+import { addNotification } from 'app/utils/NotificationService';
 import { withScreenSize } from 'app/utils/ScreenSize'
 
 class Settings extends React.Component {
@@ -195,7 +196,7 @@ class Settings extends React.Component {
     }
 
     notify = () => {
-        this.props.notify(tt('g.saved'))
+        this.props.notify(tt('g.saved'), 3000, 'success')
     }
 
     notifyThrottled = throttle(this.notify, 2000)
@@ -606,12 +607,13 @@ export default connect(
             const options = {type: 'account_metadata', operation, successCallback: success, errorCallback}
             dispatch(transaction.actions.broadcastOperation(options))
         },
-        notify: (message, dismiss = 3000) => {
-            dispatch(app.actions.addNotification({
+        notify: (message, dismiss = 3000, type = 'error') => {
+            addNotification({
+                type,
                 key: "settings_" + Date.now(),
                 message,
                 dismissAfter: dismiss
-            }));
+            });
         }
     })
 )(withScreenSize(Settings))

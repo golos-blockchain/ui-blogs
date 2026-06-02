@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
 import { getMetadataReliably, getPinnedPosts } from 'app/utils/NormalizeProfile'
+import { addNotification } from 'app/utils/NotificationService';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
 import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
@@ -49,6 +50,7 @@ export default class PinPost extends React.Component {
       metadata.pinnedPosts = pinnedPosts;
 
       this.setState({ loading: true, })
+      notify(tt('g.saving'), 3000, 'loading');
       updateAccount({
           json_metadata: JSON.stringify(metadata),
           account: account.name,
@@ -63,7 +65,7 @@ export default class PinPost extends React.Component {
               this.setState({ active: !this.state.active, loading: false, });
 
               //this.props.pinned(this.props.author + '/' + this.props.permlink);
-              notify(tt('g.saved') + '!', 10000);
+              notify(tt('g.saved') + '!', 10000, 'success');
           },
       });
     }
@@ -122,12 +124,13 @@ module.exports = connect(
             );
         },
 
-        notify: (message, dismiss = 3000) => {
-            dispatch(app.actions.addNotification({
-                    key: 'settings_' + Date.now(),
-                    message,
-                    dismissAfter: dismiss,
-            }));
+        notify: (message, dismiss = 3000, type = 'error') => {
+            addNotification({
+                type,
+                key: 'pin_post',
+                message,
+                dismissAfter: dismiss,
+            });
         },
     })
 )(PinPost)

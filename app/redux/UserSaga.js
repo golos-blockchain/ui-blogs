@@ -1,4 +1,5 @@
 import { call, put, select, fork, takeLatest, takeEvery } from 'redux-saga/effects';
+import tt from 'counterpart';
 import {accountAuthLookup} from 'app/redux/AuthSaga'
 import user from 'app/redux/User'
 import app from 'app/redux/AppReducer'
@@ -16,6 +17,7 @@ import g from 'app/redux/GlobalReducer'
 import React from 'react';
 import PushNotificationSaga from 'app/redux/services/PushNotificationSaga';
 import uploadImageWatch from './UserSaga_UploadImage';
+import { addNotification } from 'app/utils/NotificationService';
 import { navigateOutside } from 'app/utils/routing'
 import session from 'app/utils/session'
 
@@ -318,13 +320,12 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
             const lastBadNet = parseInt(localStorage.getItem(lbnKey) || 0);
             if (now - lastBadNet >= 10*60*1000) {
                 localStorage.setItem(lbnKey, now);
-                window._reduxStore.dispatch(
-                    app.actions.addNotification({
-                        key: 'bad_net_' + Date.now(),
-                        message,
-                        dismissAfter: 5000
-                    })
-                )
+                addNotification({
+                    type: 'error',
+                    key: 'bad_net_' + Date.now(),
+                    message,
+                    dismissAfter: 5000
+                });
             }
         } else if (!afterLoginRedirectToWelcome) {
             alert(message)
@@ -540,7 +541,7 @@ function* lookupPreviousOwnerAuthority({payload: {}}) {
     yield put(user.actions.setUser({previous_owner_authority}))
 }
 
-function* getAccountHandler({ payload: { usernames, resolve, reject }}) {
+function* getAccountHandler({ payload: { usernames, resolve, reject } = {} }) {
     if (!usernames) {
         const current = yield select(state => state.user.current)
         if (!current) return

@@ -40,8 +40,6 @@ class Modals extends React.Component {
         hideDonate: PropTypes.func.isRequired,
         hidePromotePost: PropTypes.func.isRequired,
         hideAppDownload: PropTypes.func.isRequired,
-        notifications: PropTypes.object,
-        removeNotification: PropTypes.func,
     };
 
     constructor() {
@@ -75,18 +73,8 @@ class Modals extends React.Component {
             hideChangeAccount,
             hideAddAccount,
             hideAppDownload,
-            notifications,
-            removeNotification,
             isS,
         } = this.props;
-
-        const notifications_array = notifications ? notifications.toArray().map(n => {
-            if (!n.key) {
-                n.key = ++keyIndex;
-            }
-            n.onClick = () => removeNotification(n.key);
-            return n;
-        }) : [];
 
         const loginClass = loginBlurring ? 'reveal-blurring' : undefined
 
@@ -155,7 +143,6 @@ export default connect(
             show_change_account_modal: state.user.show_change_account_modal,
             show_add_account_modal: state.user.show_add_account_modal,
             show_app_download_modal: state.user.show_app_download_modal,
-            notifications: state.app.notifications,
             confetti_nft_active: state.global.confetti_nft_active
         }
     },
@@ -196,7 +183,5 @@ export default connect(
             if (e) e.preventDefault()
             dispatch(user.actions.hideAppDownload())
         },
-        removeNotification: (key) => dispatch(app.actions.removeNotification({key})),
-
     })
 )(withScreenSize(Modals))

@@ -9,6 +9,7 @@ import tt from 'counterpart';
 import transaction from 'app/redux/Transaction'
 import app from 'app/redux/AppReducer'
 import LoadingIndicator from 'app/components/elements/LoadingIndicator'
+import { addNotification } from 'app/utils/NotificationService';
 import {validate_account_name} from 'app/utils/ChainValidation'
 import { APP_NAME } from 'app/client_config';
 
@@ -307,11 +308,11 @@ export default connect(
             }))
         },
         notify: (message) => {
-            dispatch(app.actions.addNotification({
+            addNotification({
                 key: 'chpwd_' + Date.now(),
                 message,
                 dismissAfter: 5000
-            }));
+            });
         },
     })
 )(ChangePassword)

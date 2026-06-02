@@ -12,6 +12,7 @@ import { Asset } from 'golos-lib-js/lib/utils'
 
 import { checkAllowed, AllowTypes } from 'app/utils/Allowance'
 import Icon from 'app/components/elements/Icon';
+import { addNotification } from 'app/utils/NotificationService';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
 import OldPagedDropdownMenu from 'app/components/elements/OldPagedDropdownMenu';
@@ -314,10 +315,11 @@ export default connect(
             const blocking = await checkAllowed(username, [],
                 null, allowType)
             if (blocking.error) {
-                dispatch(app.actions.addNotification({
-                        message: blocking.error,
-                        dismissAfter: 5000,
-                }))
+                addNotification({
+                    type: 'error',
+                    message: blocking.error,
+                    dismissAfter: 5000,
+                });
                 return
             }
             const confirm = () => {

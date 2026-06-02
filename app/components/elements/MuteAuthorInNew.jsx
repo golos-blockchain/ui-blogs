@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
 import { getMetadataReliably, getMutedInNew } from 'app/utils/NormalizeProfile'
+import { addNotification } from 'app/utils/NotificationService';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
 import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
@@ -97,12 +98,13 @@ module.exports = connect(
             );
         },
 
-        notify: (message, dismiss = 3000) => {
-            dispatch(app.actions.addNotification({
-                    key: 'settings_' + Date.now(),
-                    message,
-                    dismissAfter: dismiss,
-            }));
+        notify: (message, dismiss = 3000, type = 'error') => {
+            addNotification({
+                type,
+                key: 'settings_' + Date.now(),
+                message,
+                dismissAfter: dismiss,
+            });
         }
     })
 )(MuteAuthorInNew)
