@@ -5,6 +5,7 @@ COPY . /var/app
 ENV NODE_OPTIONS --openssl-legacy-provider
 RUN yarn install
 RUN yarn build-version && export NODE_OPTIONS=--openssl-legacy-provider && yarn build
+RUN node git-install.js -c
 
 FROM node:20.19.0-alpine
 

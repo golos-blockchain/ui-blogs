@@ -8,6 +8,7 @@
   "description": "Golos Blogs — децентрализованная платформа блогов, работающая на блокчейне Golos.",
   "main": "dist/electron/electron.js",
   "scripts": {
+    "preinstall": "node git-install.js",
     "build-version": "./server/build-version.sh",
     "build-hash": "node check_integrity --save",
     "build": "npm run build-hash && npm run build:client && npm run build:server",
@@ -36,6 +37,10 @@
   },
   "author": "Golos <info@golos.id>",
   "license": "MIT",
+  "gitDependencies": {
+    "formik": "https://github.com/golos-blockchain/formik/tree/master/packages/formik#b697b6ef3f13c795bb862b35589fffde442ab465",
+    "react-foundation-components": "https://github.com/golos-blockchain/react-foundation-components#79301cf4cadec01468ee7aadb37fa8141ffd8324"
+  },
   "dependencies": {
     "@appigram/react-rangeslider": "2.2.5",
     "@formatjs/intl-utils": "^3.8.4",
@@ -60,7 +65,7 @@
     "diff-match-patch": "^1.0.0",
     "easymde": "^2.18.0",
     "emoji-picker-element": "^1.3.3",
-    "formik": "https://gitpkg.now.sh/golos-blockchain/formik/packages/formik?b697b6ef3f13c795bb862b35589fffde442ab465",
+    "formik": "./git-deps/formik/packages/formik",
     "fs-extra": "^10.0.1",
     "git-rev-sync": "^3.0.2",
     "golos-dex-lib-js": "^1.0.5",
@@ -101,7 +106,7 @@
     "react-dom": "^18.2.0",
     "react-dom-confetti": "^0.1.3",
     "react-dropzone": "^4.2.12",
-    "react-foundation-components": "git+https://github.com/golos-blockchain/react-foundation-components.git#79301cf4cadec01468ee7aadb37fa8141ffd8324",
+    "react-foundation-components": "./git-deps/react-foundation-components",
     "react-hot-toast": "^2.4.0",
     "react-intl": "^6.2.5",
     "react-is": "^18.2.0",
