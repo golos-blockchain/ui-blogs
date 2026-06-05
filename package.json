@@ -69,7 +69,7 @@
     "fs-extra": "^10.0.1",
     "git-rev-sync": "^3.0.2",
     "golos-dex-lib-js": "^1.0.5",
-    "golos-lib-js": "^0.9.80",
+    "golos-lib-js": "^0.9.83",
     "helmet": "^8.1.0",
     "history": "^2.0.0-rc2",
     "intl": "^1.2.5",

@@ -4244,7 +4244,7 @@ eventemitter3@^4.0.0:
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
   integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
 
-events@^3.2.0:
+events@^3.2.0, events@^3.3.0:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/events/-/events-3.3.0.tgz#31a95ad0a924e2d2c419a813aeb2c4e878ea7400"
   integrity sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==
@@ -4804,6 +4804,33 @@ golos-lib-js@^0.9.80:
     debug "^2.6.8"
     detect-node "^2.0.3"
     ecurve "^1.0.5"
+    lodash "^4.17.21"
+    process "^0.11.10"
+    regenerator-runtime "^0.14.1"
+    secure-random "^1.1.1"
+    stream-browserify "^3.0.0"
+    ws "^8.18.1"
+
+golos-lib-js@^0.9.83:
+  version "0.9.83"
+  resolved "https://registry.yarnpkg.com/golos-lib-js/-/golos-lib-js-0.9.83.tgz#59436992754975d683cec7cf8f2c8aff5ac7fa53"
+  integrity sha512-ZKSJrD92kmUFnuXNe3qSEE/Dlq4chl9ziNy9SFaUSOt6zpOV+Fj5sNTxLVNnWQfVn1Az7pjPqYFDjQS2bR1rJQ==
+  dependencies:
+    abort-controller "^3.0.0"
+    assert "^2.0.0"
+    bigi "^1.4.2"
+    browserify-aes "^1.0.6"
+    bs58 "^6.0.0"
+    buffer "^6.0.3"
+    bytebuffer "^5.0.1"
+    core-js "^3.41.0"
+    create-hash "^1.1.2"
+    create-hmac "^1.1.4"
+    cross-fetch "^4.1.0"
+    debug "^2.6.8"
+    detect-node "^2.0.3"
+    ecurve "^1.0.5"
+    events "^3.3.0"
     lodash "^4.17.21"
     process "^0.11.10"
     regenerator-runtime "^0.14.1"
