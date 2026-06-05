@@ -1,4 +1,3 @@
-import { fromJS, Map } from 'immutable';
 import tt from 'counterpart';
 
 export default function transactionErrorReducer(
@@ -55,7 +54,7 @@ export default function transactionErrorReducer(
                 } else if (
                     errorStr.includes(
                         'Account does not have sufficient Golos Power for withdraw.'
-                    ) 
+                    )
                 ) {
                     errorKey = tt(
                         'chain_errors.account_does_not_have_sufficient_power_for_withdraw'
@@ -64,13 +63,15 @@ export default function transactionErrorReducer(
                 break;
         }
 
-        let handled = false
+        let handled = false;
         if (errorStr.includes('You are blocked by user')) {
-            errorKey = errorStr = tt('chain_errors.user_blocked_user')
-            handled = true
-        } else if (errorStr.includes('You cannot follow because you are blocked by user')) {
-            errorKey = errorStr = tt('chain_errors.user_blocked_user_no_tip')
-            handled = true
+            errorKey = errorStr = tt('chain_errors.user_blocked_user');
+            handled = true;
+        } else if (
+            errorStr.includes('You cannot follow because you are blocked by user')
+        ) {
+            errorKey = errorStr = tt('chain_errors.user_blocked_user_no_tip');
+            handled = true;
         }
 
         if (handled) {
@@ -78,15 +79,19 @@ export default function transactionErrorReducer(
                 setTimeout(() => errorCallback(errorKey));
             }
 
-            return state;
+            return;
         }
 
-        if (state.hasIn(['TransactionError', type + '_listener'])) {
+        if (
+            state.TransactionError &&
+            state.TransactionError[`${type}_listener`]
+        ) {
             if (!hideErrors) {
-                state = state.setIn(
-                    ['TransactionError', type],
-                    fromJS({ key: errorKey, exception: errorStr })
-                );
+                if (!state.TransactionError) state.TransactionError = {};
+                state.TransactionError[type] = {
+                    key: errorKey,
+                    exception: errorStr,
+                };
             }
         } else {
             if (error.message) {
@@ -95,10 +100,13 @@ export default function transactionErrorReducer(
                 const err_lines = error.message.split('\n');
 
                 if (err_lines.length > 2) {
-                    if (error.message.includes('Title larger than size limit') && err_lines.length >= 4) {
-                        errorKey = err_lines[3]
+                    if (
+                        error.message.includes('Title larger than size limit') &&
+                        err_lines.length >= 4
+                    ) {
+                        errorKey = err_lines[3];
                     } else {
-                        errorKey = err_lines[1]
+                        errorKey = err_lines[1];
                     }
                     const txt = errorKey.split(': ');
 
@@ -123,17 +131,13 @@ export default function transactionErrorReducer(
             } else if (
                 errorKey.includes('You may only comment once every 20 seconds')
             ) {
-                errorKey = errorStr = tt(
-                    'chain_errors.only_comment_once_every'
-                );
+                errorKey = errorStr = tt('chain_errors.only_comment_once_every');
             } else if (
                 errorKey.includes('You may only post once every 5 minutes')
             ) {
                 errorKey = errorStr = tt('chain_errors.only_post_once_every');
-            } else if (
-                errorKey.includes('Title larger than size limit')
-            ) {
-                errorKey = errorStr = tt('chain_errors.too_long_title')
+            } else if (errorKey.includes('Title larger than size limit')) {
+                errorKey = errorStr = tt('chain_errors.too_long_title');
             } else if (
                 errorKey.includes(
                     'Account exceeded maximum allowed bandwidth per vesting share'
@@ -155,21 +159,18 @@ export default function transactionErrorReducer(
                     'Voting weight is too small, please accumulate more voting power or Golos Power'
                 )
             ) {
-                errorKey = errorStr = tt('chain_errors.voting_weight_is_too_small');
+                errorKey = errorStr = tt(
+                    'chain_errors.voting_weight_is_too_small'
+                );
             }
 
             if (errorStr.includes('Node is stopped, so cannot broadcast.')) {
-                errorKey = errorStr = tt('chain_failure_jsx.title')
+                errorKey = errorStr = tt('chain_failure_jsx.title');
             }
 
             if (!hideErrors) {
-                state = state.update('errors', errors => {
-                    if (errors) {
-                        return errors.set(errorKey, errorStr);
-                    } else {
-                        return Map({ [errorKey]: errorStr });
-                    }
-                });
+                if (!state.errors) state.errors = {};
+                state.errors[errorKey] = errorStr;
             }
         }
     }
@@ -177,6 +178,4 @@ export default function transactionErrorReducer(
     if (errorCallback) {
         setTimeout(() => errorCallback(errorKey));
     }
-
-    return state;
 }

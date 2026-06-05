@@ -1,14 +1,12 @@
-import {Map, OrderedMap} from 'immutable';
-import tt from 'counterpart';
+import { createSlice } from '@reduxjs/toolkit';
 
-const defaultState = Map({
+const initialState = {
     requests: {},
     loading: false,
     error: '',
-    location: Map({}),
-    notifications: null,
+    location: {},
     ignoredLoadingRequestCount: 0,
-    notificounters: Map({
+    notificounters: {
         total: 0,
         feed: 0,
         reward: 0,
@@ -20,38 +18,39 @@ const defaultState = Map({
         account_update: 0,
         message: 0,
         receive: 0,
-        donate: 0
-    })
+        donate: 0,
+    },
+};
+
+const appSlice = createSlice({
+    name: 'app',
+    initialState,
+    reducers: {
+        chainApiError(state, action) {
+            state.error = action.error || action.payload;
+        },
+        fetchDataBegin(state) {
+            state.loading = true;
+        },
+        fetchDataEnd(state) {
+            state.loading = false;
+        },
+        updateNotificounters(state, { payload }) {
+            if (!payload) return;
+
+            const counters = { ...payload };
+            if (counters.follow > 0) {
+                counters.total -= counters.follow;
+                counters.follow = 0;
+            }
+            state.notificounters = counters;
+        },
+    },
+    extraReducers: builder => {
+        builder.addCase('@@router/LOCATION_CHANGE', (state, action) => {
+            state.location = { pathname: action.payload.pathname };
+        });
+    },
 });
 
-export default function reducer(state = defaultState, action) {
-    if (action.type === '@@router/LOCATION_CHANGE') {
-        return state.set('location', Map({pathname: action.payload.pathname}));
-    }
-    if (action.type === 'CHAIN_API_ERROR') {
-        //return state.set('error', action.error).set('loading', false);
-        return state.set('error', action.error);
-    }
-    if (action.type === 'FETCH_DATA_BEGIN') {
-        return state.set('loading', true);
-    }
-    if (action.type === 'FETCH_DATA_END') {
-        return state.set('loading', false);
-    }
-    let res = state;
-    if (action.type === 'ADD_NOTIFICATION') {
-        // saga
-    }
-    if (action.type === 'REMOVE_NOTIFICATION') {
-        res = res.update('notifications', s => s.delete(action.payload.key));
-    }
-    if (action.type === 'UPDATE_NOTIFICOUNTERS' && action.payload) {
-        const nc = action.payload;
-        if (nc.follow > 0) {
-            nc.total -= nc.follow;
-            nc.follow = 0;
-        }
-        res = res.set('notificounters', Map(nc));
-    }
-    return res;
-}
+export default appSlice;

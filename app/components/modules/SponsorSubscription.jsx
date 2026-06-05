@@ -29,8 +29,8 @@ class SponsorSubscription extends React.Component {
 
     initForm = async () => {
         if ((!this.state.pso && this.props.pso)
-            || (this.state.pso && this.state.pso.author !== this.props.pso.get('author'))) {
-            const pso = this.props.pso.toJS()
+            || (this.state.pso && this.state.pso.author !== this.props.pso.author)) {
+            const pso = { ...this.props.pso }
             pso.cost = await AssetEditor(pso.cost)
             this.setState({
                 pso
@@ -162,7 +162,7 @@ class SponsorSubscription extends React.Component {
         if (creating || pso.author) {
             const assets = {}
             assets['GOLOS'] = { supply: Asset(0, 3, 'GOLOS') }
-            for (const asset of this.props.tokens) {
+            for (const asset of this.props.tokens || []) {
                 asset.supply = asset.supply.symbol ? asset.supply : Asset(asset.supply)
                 assets[asset.supply.symbol] = asset
             }
@@ -234,16 +234,16 @@ class SponsorSubscription extends React.Component {
 
 export default connect(
     state => {
-        const current_user = state.user.get('current')
-        const username = current_user ? current_user.get('username') : null
-        const pso = state.global.get('pso')
-        const tokens = state.global.get('tokens')
+        const current_user = state.user.current
+        const username = current_user ? current_user.username : null
+        const pso = state.global.pso
+        const tokens = state.global.tokens
 
         return {
             current_user,
             username,
             pso,
-            tokens: tokens ? tokens.toJS() : {},
+            tokens: Array.isArray(tokens) ? tokens : Object.values(tokens || {}),
         };
     },
     dispatch => ({

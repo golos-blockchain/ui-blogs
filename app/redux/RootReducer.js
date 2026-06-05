@@ -1,59 +1,55 @@
-import {Map, fromJS} from 'immutable';
-import { combineReducers, __DO_NOT_USE__ActionTypes as ActionTypes } from 'redux';
-import {routerReducer} from 'react-router-redux';
-import appReducer from './AppReducer';
-import globalReducerModule from './GlobalReducer';
+import { combineReducers } from '@reduxjs/toolkit';
+import { routerReducer } from 'react-router-redux';
+
+import app from './AppReducer';
+import global from './GlobalReducer';
 import user from './User';
 import transaction from './Transaction';
 import offchain from './Offchain';
-import {contentStats, fromJSGreedy} from 'app/utils/StateFunctions'
+import { contentStats } from 'app/utils/StateFunctions';
+
+function isInitAction(action) {
+    return action.type === '@@INIT' || action.type.startsWith('@@redux/INIT');
+}
+
+function normalizeGlobalState(state) {
+    if (!state || !state.content) return state;
+
+    const content = {};
+    let changed = false;
+
+    Object.keys(state.content).forEach(key => {
+        const item = state.content[key];
+        if (item && !item.stats) {
+            content[key] = {
+                ...item,
+                stats: contentStats(item),
+            };
+            changed = true;
+        } else {
+            content[key] = item;
+        }
+    });
+
+    return changed ? { ...state, content } : state;
+}
 
 function initReducer(reducer, type) {
     return (state, action) => {
-        if(!state) return reducer(state, action);
-
-        // @@redux/INIT server and client init
-        if (action.type === ActionTypes.INIT || action.type === '@@INIT') {
-            if(!(state instanceof Map)) {
-                state = fromJS(state);
-            }
-            if(type === 'global') {
-                const content = state.get('content').withMutations(c => {
-                    c.forEach((cc, key) => {
-                        if(!c.getIn([key, 'stats'])) {
-                            // This may have already been set in UniversalRender; if so, then
-                            //   active_votes were cleared from server response. In this case it
-                            //   is important to not try to recalculate the stats. (#1040)
-                            c.setIn([key, 'stats'], fromJS(contentStats(cc)))
-                        }
-                    })
-                });
-                state = state.set('content', content);
-            }
-            return state;
-        }
-
-        if (action.type === '@@router/LOCATION_CHANGE' && type === 'global') {
-            state = state.set('pathname', action.payload.pathname)
-            // console.log(action.type, type, action, state.toJS())
+        if (state && type === 'global' && isInitAction(action)) {
+            state = normalizeGlobalState(state);
         }
 
         return reducer(state, action);
-    }
+    };
 }
 
 export default combineReducers({
-    global: initReducer(globalReducerModule.reducer, 'global'),
+    global: initReducer(global.reducer, 'global'),
     offchain: initReducer(offchain),
     user: initReducer(user.reducer),
     transaction: initReducer(transaction.reducer),
     discussion: initReducer((state = {}) => state),
     routing: initReducer(routerReducer),
-    app: initReducer(appReducer),
+    app: initReducer(app.reducer),
 });
-
-/*
-let now
-    benchStart: initReducer((state = {}, action) => {console.log('>> action.type', action.type); now = Date.now(); return state}),
-    benchEnd: initReducer((state = {}, action) => {console.log('<< action.type', action.type, (Date.now() - now), 'ms'); return state}),
-*/

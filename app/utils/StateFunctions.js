@@ -1,6 +1,5 @@
 import assert from 'assert';
 import ByteBuffer, { Long } from 'bytebuffer';
-import {Map, Seq, fromJS} from 'immutable';
 import { Signature, hash } from 'golos-lib-js/lib/auth/ecc/index'
 
 import { VEST_TICKER, LIQUID_TICKER } from 'app/client_config'
@@ -26,8 +25,8 @@ export const toAsset = (value) => {
 export function vestsToSp(state, vesting_shares) {
     const {global} = state
     const vests = assetFloat(vesting_shares, VEST_TICKER)
-    const total_vests = assetFloat(global.getIn(['props', 'total_vesting_shares']), VEST_TICKER)
-    const total_vest_steem = assetFloat(global.getIn(['props', 'total_vesting_fund_steem']), LIQUID_TICKER)
+    const total_vests = assetFloat(global.props.total_vesting_shares, VEST_TICKER)
+    const total_vest_steem = assetFloat(global.props.total_vesting_fund_steem, LIQUID_TICKER)
     const vesting_steemf = total_vest_steem * (vests / total_vests);
     const steem_power = vesting_steemf.toFixed(3)
     return steem_power
@@ -62,7 +61,9 @@ export function assetFloat(str, asset) {
 }
 
 export function isFetchingOrRecentlyUpdated(global_status, order, category) {
-    const status = global_status ? global_status.getIn([category || '', order]) : null;
+    const status = global_status && global_status[category || '']
+        ? global_status[category || ''][order]
+        : null;
     if (!status) return false;
     if (status.fetching) return true;
     if (status.lastFetch) {
@@ -73,20 +74,20 @@ export function isFetchingOrRecentlyUpdated(global_status, order, category) {
 
 export function contentStats0(content) {
     if(!content) return {}
-    if(!(content instanceof Map)) content = fromJS(content);
 
     let net_rshares_adj = Long.ZERO
     let neg_rshares = Long.ZERO
     let total_votes = 0;
     let up_votes = 0;
 
-    content.get('active_votes').forEach((v) => {
-        const sign = Math.sign(v.get('percent'))
+    const activeVotes = content.active_votes || [];
+    activeVotes.forEach((v) => {
+        const sign = Math.sign(v.percent)
         if(sign === 0) return;
         total_votes += 1
         if(sign > 0) up_votes += 1
 
-        const rshares = String(v.get('rshares'))
+        const rshares = String(v.rshares)
 
         // For flag weight: count total neg rshares
         if(sign < 0) {
@@ -94,7 +95,7 @@ export function contentStats0(content) {
         }
 
         // For graying: sum up total rshares from voters with non-neg reputation.
-        if(String(v.get('reputation')).substring(0, 1) !== '-') {
+        if(String(v.reputation).substring(0, 1) !== '-') {
             // And also ignore tiny downvotes (9 digits or less)
             if(!(rshares.substring(0, 1) === '-' && rshares.length < 11)) {
                 net_rshares_adj = net_rshares_adj.add(rshares)
@@ -106,22 +107,22 @@ export function contentStats0(content) {
     // creates a cheap log10, stake-based flag weight
     const flagWeight = Math.max(String(neg_rshares.div(2)).length - 11, 0)
 
-    if (content.get('from_search')) {
-        net_rshares_adj = Long.fromString(String(content.get('net_rshares')))
+    if (content.from_search) {
+        net_rshares_adj = Long.fromString(String(content.net_rshares))
     }
 
     // post must have non-trivial negative rshares to be grayed out
 
-    const hasPositiveRshares = Long.fromString(String(content.get('net_rshares'))).gt(Long.ZERO)
-    const allowDelete = !hasPositiveRshares && content.get('children') === 0
-    const authorRepLog10 = repLog10(content.get('author_reputation'))
+    const hasPositiveRshares = Long.fromString(String(content.net_rshares)).gt(Long.ZERO)
+    const allowDelete = !hasPositiveRshares && content.children === 0
+    const authorRepLog10 = repLog10(content.author_reputation)
 
     const gray = grayContent(net_rshares_adj, authorRepLog10)
     const hide = hideContent(net_rshares_adj, authorRepLog10)
     const pictures = !gray
 
     // Combine tags+category to check nsfw status
-    const json = content.get('json_metadata')
+    const json = content.json_metadata
     let jObj
     let tags = []
     try {
@@ -135,7 +136,7 @@ export function contentStats0(content) {
     } catch(e) {
         tags = []
     }
-    tags.push(content.get('category'))
+    tags.push(content.category)
     
     tags = filterTags(tags)
 
@@ -145,10 +146,10 @@ export function contentStats0(content) {
     const isOnlyapp = tags.filter(tag => tag && tag.match(/^onlyapp/i)).length > 0;
 
     let foreignApp
-    if (content.get('app') && jObj && getFilterApps().includes(content.get('app'))) {
+    if (content.app && jObj && getFilterApps().includes(content.app)) {
         foreignApp = {}
         foreignApp.domain = jObj.app.split('/')[0]
-        foreignApp.url = 'https://' + foreignApp.domain + content.get('url')
+        foreignApp.url = 'https://' + foreignApp.domain + content.url
         try {
             new URL(foreignApp.url)
         } catch (err) {
@@ -185,16 +186,9 @@ export function filterTags(tags) {
     return tags.filter(tag => typeof tag === 'string')
 }
 
-export function fromJSGreedy(js) {
-  return typeof js !== 'object' || js === null ? js :
-    Array.isArray(js) ?
-      Seq(js).map(fromJSGreedy).toList() :
-      Seq(js).map(fromJSGreedy).toMap();
-}
-
 export function accuEmissionPerDay(accountObj, gpropsObj) {
-    const acc = accountObj.toJS ? accountObj.toJS() : accountObj
-    const gprops = gpropsObj.toJS ? gpropsObj.toJS() : gpropsObj
+    const acc = accountObj
+    const gprops = gpropsObj
     let vs = toAsset(acc.vesting_shares).amount
         - toAsset(acc.emission_delegated_vesting_shares).amount
         + toAsset(acc.emission_received_vesting_shares).amount 

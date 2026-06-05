@@ -1,676 +1,542 @@
-import { Map, Set, List, fromJS, Iterable } from 'immutable';
-import createModule from 'redux-modules';
+import { createSlice } from '@reduxjs/toolkit';
+import cloneDeep from 'lodash/cloneDeep';
+import getPath from 'lodash/get';
+import mergeWith from 'lodash/mergeWith';
+import setPath from 'lodash/set';
+import unset from 'lodash/unset';
+
 import { emptyContent } from 'app/redux/EmptyState';
 import constants from './constants';
-import { contentStats, fromJSGreedy } from 'app/utils/StateFunctions';
+import { contentStats } from 'app/utils/StateFunctions';
 
-const emptyContentMap = Map(emptyContent);
+const arrayReplace = (objValue, srcValue) =>
+    Array.isArray(srcValue) ? srcValue : undefined;
 
-const upsertNftAssets = (state, nft_assets, start_token_id) => {
-    if (!start_token_id) {
-        state = state.set('nft_assets', fromJS(nft_assets))
-    } else {
-        state = state.update('nft_assets', data => {
-            data = data.merge(nft_assets)
-            return data
-        })
+const cloneEmptyContent = () => cloneDeep(emptyContent);
+
+const mergePlain = (target, ...sources) =>
+    mergeWith(target, ...sources, arrayReplace);
+
+const postKey = ({ author, permlink }) => `${author}/${permlink}`;
+
+function ensureObjectAt(state, key, fallback = {}) {
+    const current = getPath(state, key);
+    if (current === undefined || current === null) {
+        setPath(state, key, cloneDeep(fallback));
+        return getPath(state, key);
     }
-    return state
+    return current;
 }
 
-export default createModule({
+function ensureArrayAt(state, key) {
+    const current = getPath(state, key);
+    if (!Array.isArray(current)) {
+        setPath(state, key, []);
+        return getPath(state, key);
+    }
+    return current;
+}
+
+function updateAtPath(state, key, notSet, updater) {
+    const path = Array.isArray(key) ? key : [key];
+    const current = path.length ? getPath(state, path) : state;
+    const source = current === undefined ? cloneDeep(notSet) : current;
+    const next = updater(source);
+
+    if (!path.length) {
+        if (next && next !== state) {
+            Object.keys(state).forEach(stateKey => delete state[stateKey]);
+            Object.assign(state, next);
+        }
+        return;
+    }
+
+    setPath(state, path, next === undefined ? source : next);
+}
+
+function upsertNftAssets(state, nft_assets, start_token_id) {
+    if (!start_token_id) {
+        state.nft_assets = nft_assets;
+    } else {
+        state.nft_assets = mergePlain(state.nft_assets || {}, nft_assets);
+    }
+}
+
+const globalSlice = createSlice({
     name: 'global',
-    initialState: Map({ status: {} }),
-    transformations: [
-        {
-            action: 'SET_COLLAPSED',
-            reducer: (state, action) =>
-                state.updateIn(['content', action.payload.post], value =>
-                    value.merge(Map({ collapsed: action.payload.collapsed }))
-                ),
+    initialState: { status: {} },
+    reducers: {
+        setCollapsed(state, action) {
+            const content = ensureObjectAt(state, [
+                'content',
+                action.payload.post,
+            ]);
+            content.collapsed = action.payload.collapsed;
         },
-        {
-            action: 'FETCHING_STATE',
-            reducer: (state, { payload: fetching }) =>
-                state.mergeDeep({ fetching }),
+        fetchingState(state, { payload: fetching }) {
+            state.fetching = fetching;
         },
-        {
-            action: 'FETCHING_JSON',
-            reducer: (state, { payload: fetchingJson }) =>
-                state.mergeDeep({ fetchingJson }),
+        fetchingJson(state, { payload: fetchingJson }) {
+            state.fetchingJson = fetchingJson;
         },
-        {
-            action: 'FETCHING_XCHANGE',
-            reducer: (state, { payload: fetchingXchange }) =>
-                state.mergeDeep({ fetchingXchange }),
+        fetchingXchange(state, { payload: fetchingXchange }) {
+            state.fetchingXchange = fetchingXchange;
         },
-        {
-            action: 'RECEIVE_STATE',
-            reducer: (state, action) => {
-                let payload = fromJS(action.payload);
-                if (payload.has('content')) {
-                    const content = payload.get('content').withMutations(c => {
-                        c.forEach((cc, key) => {
-                            cc = emptyContentMap.mergeDeep(cc);
-                            const stats = fromJS(contentStats(cc));
-                            c.setIn([key, 'stats'], stats);
-                        });
-                    });
-                    payload = payload.set('content', content);
+        receiveState(state, action) {
+            const payload = cloneDeep(action.payload || {});
+            if (payload.content) {
+                Object.keys(payload.content).forEach(key => {
+                    const content = mergePlain(
+                        cloneEmptyContent(),
+                        payload.content[key]
+                    );
+                    content.stats = contentStats(content);
+                    payload.content[key] = content;
+                });
+            }
 
-                    // TODO reserved words used in account names, find correct solution
-                    if (!Map.isMap(payload.get('accounts'))) {
-                        const accounts = payload.get('accounts');
-                        payload = payload.set(
-                            'accounts',
-                            fromJSGreedy(accounts)
-                        );
-                    }
-                }
-                let res = state.setIn(['sponsors', 'data'], List())
-                if (!payload.has('pso')) {
-                    res = res.delete('pso')
-                }
-                res = res.setIn(['sponsoreds', 'data'], List())
-                if (!payload.has('referrals')) {
-                    res = res.delete('referrals')
-                }
-                if (!payload.has('referrers')) {
-                    res = res.delete('referrers')
-                }
-                if (res.has('nft_tokens'))
-                    res = res.delete('nft_tokens')
-                res = res.mergeDeep(payload);
-                let con = res.get('content').withMutations(con => {
-                    con.forEach((cc, key) => {
-                        if (!payload.hasIn(['content', key, 'versions'])) {
-                            con.deleteIn([key, 'versions'])
-                        }
-                    })
-                })
-                res = res.set('content', con)
-                return res
-            },
-        },
-        {
-            action: 'RECEIVE_ACCOUNT',
-            reducer: (state, { payload: { account } }) => {
-                account = fromJS(account, (key, value) => {
-                    if (key === 'witness_votes') {
-                        return value.toSet();
-                    } else {
-                        return Iterable.isIndexed(value)
-                            ? value.toList()
-                            : value.toOrderedMap();
+            state.sponsors = state.sponsors || {};
+            state.sponsors.data = [];
+            if (!Object.prototype.hasOwnProperty.call(payload, 'pso')) {
+                delete state.pso;
+            }
+
+            state.sponsoreds = state.sponsoreds || {};
+            state.sponsoreds.data = [];
+            if (!Object.prototype.hasOwnProperty.call(payload, 'referrals')) {
+                delete state.referrals;
+            }
+            if (!Object.prototype.hasOwnProperty.call(payload, 'referrers')) {
+                delete state.referrers;
+            }
+            delete state.nft_tokens;
+
+            mergePlain(state, payload);
+
+            if (state.content && payload.content) {
+                Object.keys(state.content).forEach(key => {
+                    if (
+                        !getPath(payload, ['content', key, 'versions']) &&
+                        state.content[key]
+                    ) {
+                        delete state.content[key].versions;
                     }
                 });
-                // Merging accounts: A get_state will provide a very full account but a get_accounts will provide a smaller version
-                return state.updateIn(
-                    ['accounts', account.get('name')],
-                    Map(),
-                    a => a.mergeDeep(account)
-                );
-            },
-        },
-        {
-            action: 'RECEIVE_COMMENT',
-            reducer: (state, { payload: op }) => {
-                const {
-                    author,
-                    permlink,
-                    parent_author = '',
-                    parent_permlink = '',
-                    title = '',
-                    body,
-                } = op;
-                const key = author + '/' + permlink;
-
-                let updatedState = state.updateIn(
-                    ['content', key],
-                    Map(emptyContent),
-                    r =>
-                        r.merge({
-                            author,
-                            permlink,
-                            parent_author,
-                            parent_permlink,
-                            title: title.toString('utf-8'),
-                            body: body.toString('utf-8'),
-                        })
-                );
-
-                if (parent_author !== '' && parent_permlink !== '') {
-                    const parent_key = parent_author + '/' + parent_permlink;
-
-                    updatedState = updatedState.updateIn(
-                        ['content', parent_key, 'replies'],
-                        List(),
-                        r => r.insert(0, key)
-                    );
-
-                    const children = updatedState.getIn(
-                        ['content', parent_key, 'replies'],
-                        List()
-                    ).size;
-
-                    updatedState = updatedState.updateIn(
-                        ['content', parent_key, 'children'],
-                        () => children
-                    );
-                }
-                return updatedState;
-            },
-        },
-        {
-            action: 'RECEIVE_CONTENT',
-            reducer: (state, { payload: { content } }) => {
-                content = fromJS(content);
-                const key =
-                    content.get('author') + '/' + content.get('permlink');
-
-                return state.updateIn(['content', key], Map(), c => {
-                    c = emptyContentMap.mergeDeep(c);
-                    c = c.delete('active_votes');
-                    c = c.mergeDeep(content);
-                    c = c.set('stats', fromJS(contentStats(c)));
-                    return c;
-                });
-            },
-        },
-        {
-            action: 'MARK_SUB_READ',
-            reducer: (state, { payload: { author, permlink } }) => {
-                const key = author + '/' + permlink
-                return state.updateIn(['content', key], Map(), c => {
-                    c = c.set('highlighted', false)
-                    c = c.set('event_count', 0)
-                    return c
-                })
             }
         },
-        {
-            action: 'RECEIVE_WORKER_REQUEST',
-            reducer: (state, { payload: { wr } }) => {
-                wr = fromJS(wr);
-                const post = wr.get('post');
-                const url = post.get('author') + '/' + post.get('permlink');
-                return state.updateIn(['worker_requests', url], Map(), w => {
-                    w = w.delete('votes');
-                    w = w.mergeDeep(wr);
-                    return w;
-                });
-            },
+        receiveAccount(state, { payload: { account } }) {
+            if (!account) return;
+            state.accounts = state.accounts || {};
+            state.accounts[account.name] = mergePlain(
+                {},
+                state.accounts[account.name] || {},
+                cloneDeep(account)
+            );
         },
-        {
-            action: 'FETCH_UIA_BALANCES',
-            reducer: state => state,
-        },
-        {
-            action: 'RECEIVE_UIA_BALANCES',
-            reducer: (state, { payload: { assets } }) => {
-                return state.set('assets', fromJS(assets))
-            },
-        },
-        {
-            action: 'FETCH_NFT_TOKENS',
-            reducer: state => state,
-        },
-        {
-            action: 'RECEIVE_NFT_TOKENS',
-            reducer: (state, { payload: { nft_tokens, start_token_id, next_from, nft_assets } }) => {
-                let new_state = state
-                if (!new_state.has('nft_tokens')) {
-                    new_state = new_state.set('nft_tokens', fromJS({
-                        data: nft_tokens,
-                        next_from: next_from
-                    }))
-                } else {
-                    new_state = new_state.update('nft_tokens', tokens => {
-                        tokens = tokens.update('data', data => {
-                            for (const token of nft_tokens) {
-                                data = data.push(fromJS(token))
-                            }
-                            return data
-                        })
-                        tokens = tokens.set('next_from', next_from)
-                        return tokens
-                    })
-                }
-                if (nft_assets)
-                    new_state = upsertNftAssets(new_state, nft_assets, start_token_id)
-                return new_state
-            },
-        },
-        {
-            action: 'FETCH_REFERRALS',
-            reducer: state => state,
-        },
-        {
-            action: 'RECEIVE_REFERRALS',
-            reducer: (state, { payload: { referrals, start_name, next_start_name } }) => {
-                let new_state = state
-                if (!start_name) {
-                    new_state = new_state.set('referrals', fromJS({
-                        data: referrals,
-                        next_start_name,
-                        loaded: true,
-                    }))
-                } else {
-                    new_state = new_state.update('referrals', refs => {
-                        refs = refs.update('data', data => {
-                            for (const referral of referrals) {
-                                data = data.push(fromJS(referral))
-                            }
-                            return data
-                        })
-                        refs = refs.set('next_start_name', next_start_name)
-                        return refs
-                    })
-                }
-                return new_state
-            },
-        },
-        {
-            action: 'FETCH_REFERRERS',
-            reducer: state => state,
-        },
-        {
-            action: 'RECEIVE_REFERRERS',
-            reducer: (state, { payload: { referrers, start_name, next_start_name } }) => {
-                let new_state = state
-                if (!start_name) {
-                    new_state = new_state.set('referrers', fromJS({
-                        data: referrers,
-                        next_start_name,
-                        loaded: true,
-                    }))
-                } else {
-                    new_state = new_state.update('referrers', refs => {
-                        refs = refs.update('data', data => {
-                            for (const referrer of referrers) {
-                                data = data.push(fromJS(referrer))
-                            }
-                            return data
-                        })
-                        refs = refs.set('next_start_name', next_start_name)
-                        return refs
-                    })
-                }
-                return new_state
-            },
-        },
-        {
-            action: 'LINK_REPLY',
-            reducer: (state, { payload: op }) => {
-                const {
-                    author,
-                    permlink,
-                    parent_author = '',
-                    parent_permlink = '',
-                } = op;
+        receiveComment(state, { payload: op }) {
+            const {
+                author,
+                permlink,
+                parent_author = '',
+                parent_permlink = '',
+                title = '',
+                body,
+            } = op;
+            const key = `${author}/${permlink}`;
+            const content = ensureObjectAt(state, ['content', key], cloneEmptyContent());
 
-                if (parent_author === '' || parent_permlink === '') {
-                    return state;
-                }
+            Object.assign(content, {
+                author,
+                permlink,
+                parent_author,
+                parent_permlink,
+                title: title.toString('utf-8'),
+                body: body.toString('utf-8'),
+            });
 
-                const key = author + '/' + permlink;
-                const parent_key = parent_author + '/' + parent_permlink;
-                // Add key if not exist
-                let updatedState = state.updateIn(
-                    ['content', parent_key, 'replies'],
-                    List(),
-                    l => (l.findIndex(i => i === key) === -1 ? l.push(key) : l)
-                );
-
-                const children = updatedState.getIn(
-                    ['content', parent_key, 'replies'],
-                    List()
-                ).size;
-
-                updatedState = updatedState.updateIn(
+            if (parent_author !== '' && parent_permlink !== '') {
+                const parent_key = `${parent_author}/${parent_permlink}`;
+                const replies = ensureArrayAt(state, [
+                    'content',
+                    parent_key,
+                    'replies',
+                ]);
+                replies.unshift(key);
+                setPath(
+                    state,
                     ['content', parent_key, 'children'],
-                    () => children
+                    replies.length
                 );
-
-                return updatedState;
-            },
+            }
         },
-        {
-            action: 'UPDATE_ACCOUNT_WITNESS_VOTE',
-            reducer: (state, { payload: { account, witness, approve } }) =>
-                state.updateIn(
-                    ['accounts', account, 'witness_votes'],
-                    Set(),
-                    votes =>
-                        approve
-                            ? Set(votes).add(witness)
-                            : Set(votes).remove(witness)
-                ),
+        receiveContent(state, { payload: { content } }) {
+            const key = postKey(content);
+            const nextContent = mergePlain(
+                cloneEmptyContent(),
+                cloneDeep(state.content && state.content[key] ? state.content[key] : {})
+            );
+            delete nextContent.active_votes;
+            mergePlain(nextContent, cloneDeep(content));
+            nextContent.stats = contentStats(nextContent);
+            setPath(state, ['content', key], nextContent);
         },
-        {
-            action: 'UPDATE_ACCOUNT_WITNESS_PROXY',
-            reducer: (state, { payload: { account, proxy } }) =>
-                state.setIn(['accounts', account, 'proxy'], proxy),
+        markSubRead(state, { payload: { author, permlink } }) {
+            const key = `${author}/${permlink}`;
+            const content = ensureObjectAt(state, ['content', key], {});
+            content.highlighted = false;
+            content.event_count = 0;
         },
-        {
-            action: 'DELETE_CONTENT',
-            reducer: (state, { payload: { author, permlink } }) => {
-                const key = author + '/' + permlink;
-                const content = state.getIn(['content', key]);
-                const parentAuthor = content.get('parent_author') || '';
-                const parentPermlink = content.get('parent_permlink') || '';
-                let updatedState = state.deleteIn(['content', key]);
+        receiveWorkerRequest(state, { payload: { wr } }) {
+            const url = postKey(wr.post);
+            const request = cloneDeep(wr);
+            delete request.votes;
+            state.worker_requests = state.worker_requests || {};
+            state.worker_requests[url] = mergePlain(
+                {},
+                state.worker_requests[url] || {},
+                request
+            );
+        },
+        fetchUiaBalances() {
+            // Saga-only action.
+        },
+        receiveUiaBalances(state, { payload: { assets } }) {
+            state.assets = assets;
+        },
+        fetchNftTokens() {
+            // Saga-only action.
+        },
+        receiveNftTokens(
+            state,
+            { payload: { nft_tokens, start_token_id, next_from, nft_assets } }
+        ) {
+            if (!state.nft_tokens) {
+                state.nft_tokens = {
+                    data: nft_tokens,
+                    next_from,
+                };
+            } else {
+                state.nft_tokens.data = state.nft_tokens.data || [];
+                state.nft_tokens.data.push(...nft_tokens);
+                state.nft_tokens.next_from = next_from;
+            }
+            if (nft_assets) {
+                upsertNftAssets(state, nft_assets, start_token_id);
+            }
+        },
+        fetchReferrals() {
+            // Saga-only action.
+        },
+        receiveReferrals(
+            state,
+            { payload: { referrals, start_name, next_start_name } }
+        ) {
+            if (!start_name) {
+                state.referrals = {
+                    data: referrals,
+                    next_start_name,
+                    loaded: true,
+                };
+            } else {
+                state.referrals = state.referrals || { data: [] };
+                state.referrals.data = state.referrals.data || [];
+                state.referrals.data.push(...referrals);
+                state.referrals.next_start_name = next_start_name;
+            }
+        },
+        fetchReferrers() {
+            // Saga-only action.
+        },
+        receiveReferrers(
+            state,
+            { payload: { referrers, start_name, next_start_name } }
+        ) {
+            if (!start_name) {
+                state.referrers = {
+                    data: referrers,
+                    next_start_name,
+                    loaded: true,
+                };
+            } else {
+                state.referrers = state.referrers || { data: [] };
+                state.referrers.data = state.referrers.data || [];
+                state.referrers.data.push(...referrers);
+                state.referrers.next_start_name = next_start_name;
+            }
+        },
+        linkReply(state, { payload: op }) {
+            const {
+                author,
+                permlink,
+                parent_author = '',
+                parent_permlink = '',
+            } = op;
 
-                if (parentAuthor !== '' && parentPermlink !== '') {
-                    const parent_key = parentAuthor + '/' + parentPermlink;
+            if (parent_author === '' || parent_permlink === '') return;
 
-                    updatedState = updatedState.updateIn(
+            const key = `${author}/${permlink}`;
+            const parent_key = `${parent_author}/${parent_permlink}`;
+            const replies = ensureArrayAt(state, [
+                'content',
+                parent_key,
+                'replies',
+            ]);
+            if (!replies.includes(key)) replies.push(key);
+            setPath(state, ['content', parent_key, 'children'], replies.length);
+        },
+        updateAccountWitnessVote(
+            state,
+            { payload: { account, witness, approve } }
+        ) {
+            const votes = ensureArrayAt(state, [
+                'accounts',
+                account,
+                'witness_votes',
+            ]);
+            const idx = votes.indexOf(witness);
+            if (approve && idx === -1) {
+                votes.push(witness);
+            } else if (!approve && idx !== -1) {
+                votes.splice(idx, 1);
+            }
+        },
+        updateAccountWitnessProxy(state, { payload: { account, proxy } }) {
+            setPath(state, ['accounts', account, 'proxy'], proxy);
+        },
+        deleteContent(state, { payload: { author, permlink } }) {
+            const key = `${author}/${permlink}`;
+            const content = getPath(state, ['content', key]);
+            const parentAuthor = (content && content.parent_author) || '';
+            const parentPermlink = (content && content.parent_permlink) || '';
+            unset(state, ['content', key]);
+
+            if (parentAuthor !== '' && parentPermlink !== '') {
+                const parent_key = `${parentAuthor}/${parentPermlink}`;
+                const replies = getPath(state, [
+                    'content',
+                    parent_key,
+                    'replies',
+                ]);
+                if (Array.isArray(replies)) {
+                    setPath(
+                        state,
                         ['content', parent_key, 'replies'],
-                        List(),
-                        r => r.filter(i => i !== key)
+                        replies.filter(item => item !== key)
                     );
                 }
-
-                return updatedState;
-            },
+            }
         },
-        {
-            action: 'VOTED',
-            reducer: (
-                state,
-                { payload: { username, author, permlink, weight } }
-            ) =>
-                state.updateIn(
-                    ['content', author + '/' + permlink, 'active_votes'],
-                    List(),
-                    activeVotes =>
-                        activeVotes.withMutations(activeVotes => {
-                            const vote = Map({
-                                voter: username,
-                                percent: weight,
-                            });
-                            const idx = activeVotes.findIndex(
-                                v => v.get('voter') === username
-                            );
+        voted(state, { payload: { username, author, permlink, weight } }) {
+            const votes = ensureArrayAt(state, [
+                'content',
+                `${author}/${permlink}`,
+                'active_votes',
+            ]);
+            const vote = { voter: username, percent: weight };
+            const idx = votes.findIndex(v => v.voter === username);
 
-                            if (idx === -1) {
-                                activeVotes.push(vote);
-                            } else {
-                                activeVotes.set(idx, vote);
-                            }
-                        })
-                ),
+            if (idx === -1) {
+                votes.push(vote);
+            } else {
+                votes[idx] = vote;
+            }
         },
-        {
-            action: 'DONATED',
-            reducer: (
-                state,
-                { payload: { username, author, permlink, amount } }
-            ) => {
-                let new_state = state;
-                new_state = new_state.setIn(
-                    ['content', author + '/' + permlink, 'confetti_active'],
-                    true);
-                const donateListKey = amount.endsWith('GOLOS') ? 'donate_list' : 'donate_uia_list';
-                new_state = new_state.updateIn(
-                    ['content', author + '/' + permlink, donateListKey],
-                    List(),
-                    donateList =>
-                        donateList.withMutations(donateList => {
-                            const idx = donateList.findIndex(
-                                v => v.get('from') === username && v.get('amount').split(' ')[1] === amount.split(' ')[1]
-                            );
+        donated(state, { payload: { username, author, permlink, amount } }) {
+            const contentPath = ['content', `${author}/${permlink}`];
+            setPath(state, [...contentPath, 'confetti_active'], true);
+            const donateListKey = amount.endsWith('GOLOS')
+                ? 'donate_list'
+                : 'donate_uia_list';
+            const donateList = ensureArrayAt(state, [
+                ...contentPath,
+                donateListKey,
+            ]);
+            const idx = donateList.findIndex(
+                v =>
+                    v.from === username &&
+                    v.amount.split(' ')[1] === amount.split(' ')[1]
+            );
 
-                            if (idx === -1) {
-                                const donate = Map({
-                                    from: username,
-                                    amount,
-                                });
-                                donateList.push(donate);
-                            } else {
-                                const oldAmount = parseInt(donateList.get(idx).toJS().amount.split(".")[0]);
-                                const newAmount = parseInt(amount.split(".")[0]);
-                                const donate = Map({
-                                    from: username,
-                                    amount: (oldAmount + newAmount).toString() + ".000 " + amount.split(" ")[1],
-                                });
-                                donateList.set(idx, donate);
-                            }
-                        })
+            if (idx === -1) {
+                donateList.push({ from: username, amount });
+            } else {
+                const oldAmount = parseInt(
+                    donateList[idx].amount.split('.')[0],
+                    10
                 );
-                return new_state;
-            },
+                const newAmount = parseInt(amount.split('.')[0], 10);
+                donateList[idx] = {
+                    from: username,
+                    amount:
+                        (oldAmount + newAmount).toString() +
+                        '.000 ' +
+                        amount.split(' ')[1],
+                };
+            }
         },
-        {
-            action: 'FETCHING_DATA',
-            reducer: (state, { payload: { order, category } }) =>
-                state.updateIn(['status', category || '', order], () => ({
-                    fetching: true,
-                })),
+        fetchingData(state, { payload: { order, category } }) {
+            setPath(state, ['status', category || '', order], {
+                fetching: true,
+            });
         },
-        {
-            action: 'RECEIVE_DATA',
-            reducer: (state, { payload }) => {
-                const {
-                    data,
-                    order,
-                    category,
-                    permlink: startPermLink,
-                    accountname,
-                    has_from_search,
-                    next_from,
-                } = payload;
-                let newState = state;
+        receiveData(state, { payload }) {
+            const {
+                data,
+                order,
+                category,
+                permlink: startPermLink,
+                accountname,
+                has_from_search,
+                next_from,
+            } = payload;
 
-                let dataPath;
+            const dataPath =
+                order === 'by_author' ||
+                order === 'by_feed' ||
+                order === 'by_comments' ||
+                order === 'by_replies'
+                    ? ['accounts', accountname, category]
+                    : ['discussion_idx', category || '', order];
 
-                if (
-                    order === 'by_author' ||
-                    order === 'by_feed' ||
-                    order === 'by_comments' ||
-                    order === 'by_replies'
-                ) {
-                    dataPath = ['accounts', accountname, category];
-                } else {
-                    dataPath = ['discussion_idx', category || '', order];
-                }
+            const links = [];
+            data.forEach(v => {
+                const link = `${v.author}/${v.permlink}`;
+                if (!links.includes(link)) links.push(link);
+            });
 
-                newState = newState.updateIn(dataPath, List(), posts => {
-                    const links = [];
-                    data.map(v => {
-                      let link = `${v.author}/${v.permlink}`
-                      if (!links.includes(link)) links.push(link)
-                    })
-
-                    if (startPermLink) {
-                        return posts.withMutations(posts => {
-                            for (let id of links.filter(id => !posts.includes(id))) {
-                                posts.push(id);
-                            }
-                        });
-                    } else {
-                        return fromJS(links);
-                    }
+            if (startPermLink) {
+                const posts = ensureArrayAt(state, dataPath);
+                links.forEach(id => {
+                    if (!posts.includes(id)) posts.push(id);
                 });
-
-                newState = newState.updateIn(['content'], content =>
-                    content.withMutations(content => {
-                        for (let value of data) {
-                            content.set(
-                                `${value.author}/${value.permlink}`,
-                                fromJS({
-                                    ...value,
-                                    stats: contentStats(value),
-                                })
-                            );
-                        }
-                    })
-                );
-
-                newState = newState.updateIn(
-                    ['status', category || '', order],
-                    () => {
-                        if (data.length < constants.FETCH_DATA_BATCH_SIZE) {
-                            return { fetching: false, lastFetch: Date.now() };
-                        } else {
-                            return { fetching: false };
-                        }
-                    }
-                );
-
-                newState = newState.set('has_from_search', has_from_search)
-                    .set('next_from', next_from)
-
-                return newState;
-            },
-        },
-        {
-            action: 'RECEIVE_RECENT_POSTS',
-            reducer: (state, { payload: { data } }) => {
-                let newState = state.updateIn(
-                    ['discussion_idx', '', 'created'],
-                    List(),
-                    posts =>
-                        posts.withMutations(posts => {
-                            for (let { author, permlink } of data) {
-                                const entry = `${author}/${permlink}`;
-
-                                if (!posts.includes(entry)) {
-                                    posts.unshift(entry);
-                                }
-                            }
-                        })
-                );
-
-                newState = newState.updateIn(['content'], content =>
-                    content.withMutations(map => {
-                        for (let value of data) {
-                            const key = `${value.author}/${value.permlink}`;
-
-                            if (!map.has(key)) {
-                                map.set(
-                                    key,
-                                    fromJS({
-                                        ...value,
-                                        stats: contentStats(value),
-                                    })
-                                );
-                            }
-                        }
-                    })
-                );
-
-                return newState;
-            },
-        },
-        {
-            action: 'UNSUBSCRIBE_POST',
-            reducer: (state, { payload: { account, author, permlink } }) => {
-                const link = `${author}/${permlink}`
-                const newState = state.updateIn(['accounts', account, 'discussions'], data => {
-                    data = data.filter(v => v !== link)
-                    return data
-                })
-                return newState
+            } else {
+                setPath(state, dataPath, links);
             }
-        },
-        {
-            action: 'REQUEST_META',
-            reducer: (state, { payload: { id, link } }) =>
-                state.setIn(['metaLinkData', id], Map({ link })),
-        },
-        {
-            action: 'RECEIVE_META',
-            reducer: (state, { payload: { id, meta } }) =>
-                state.updateIn(['metaLinkData', id], data => data.merge(meta)),
-        },
-        {
-            action: 'SET',
-            reducer: (state, { payload: { key, value } }) => {
-                return state.setIn(Array.isArray(key) ? key : [key], fromJS(value));
-            },
-        },
-        {
-            action: 'REMOVE',
-            reducer: (state, { payload: { key } }) => {
-                return state.removeIn(Array.isArray(key) ? key : [key]);
-            },
-        },
-        {
-            action: 'UPDATE',
-            reducer: (state, { payload: { key, notSet = Map(), updater } }) => {
-                // key = Array.isArray(key) ? key : [key] // TODO enable and test
-                return state.updateIn(key, notSet, updater)
-            }
-        },
-        {
-            action: 'SET_META_DATA',
-            reducer: (state, { payload: { id, meta } }) =>
-                state.setIn(['metaLinkData', id], fromJS(meta)),
-        },
-        {
-            action: 'CLEAR_META',
-            reducer: (state, { payload: { id } }) =>
-                state.deleteIn(['metaLinkData', id]),
-        },
-        {
-            action: 'CLEAR_META_ELEMENT',
-            reducer: (state, { payload: { formId, element } }) =>
-                state.updateIn(['metaLinkData', formId], data =>
-                    data.remove(element)
-                ),
-        },
-        {
-            action: 'FETCH_JSON',
-            reducer: state => state,
-        },
-        {
-            action: 'FETCH_EXCHANGE_RATES',
-            reducer: state => state,
-        },
-        {
-            action: 'FETCH_JSON_RESULT',
-            reducer: (state, { payload: { id, result, error } }) =>
-                state.set(id, fromJS({ result, error })),
-        },
-        {
-            action: 'SHOW_DIALOG',
-            reducer: (state, { payload: { name, params = {} } }) =>
-                state.update('active_dialogs', Map(), d =>
-                    d.set(name, fromJS({ params }))
-                ),
-        },
-        {
-            action: 'HIDE_DIALOG',
-            reducer: (state, { payload: { name } }) =>
-                state.update('active_dialogs', d => d.delete(name)),
-        },
-        {
-            action: 'RECEIVE_ACCOUNT_VESTING_DELEGATIONS',
-            reducer: (
+
+            state.content = state.content || {};
+            data.forEach(value => {
+                state.content[`${value.author}/${value.permlink}`] = {
+                    ...value,
+                    stats: contentStats(value),
+                };
+            });
+
+            setPath(
                 state,
-                { payload: { account, type, vesting_delegations } }
-            ) =>
-                state.setIn(
-                    ['accounts', account, `${type}_vesting`],
-                    fromJS(vesting_delegations)
-                ),
+                ['status', category || '', order],
+                data.length < constants.FETCH_DATA_BATCH_SIZE
+                    ? { fetching: false, lastFetch: Date.now() }
+                    : { fetching: false }
+            );
+
+            state.has_from_search = has_from_search;
+            state.next_from = next_from;
         },
-        {
-            action: 'FETCH_VERSIONS',
-            reducer: state => state, // saga
+        receiveRecentPosts(state, { payload: { data } }) {
+            const posts = ensureArrayAt(state, [
+                'discussion_idx',
+                '',
+                'created',
+            ]);
+            data.forEach(({ author, permlink }) => {
+                const entry = `${author}/${permlink}`;
+                if (!posts.includes(entry)) posts.unshift(entry);
+            });
+
+            state.content = state.content || {};
+            data.forEach(value => {
+                const key = `${value.author}/${value.permlink}`;
+                if (!state.content[key]) {
+                    state.content[key] = {
+                        ...value,
+                        stats: contentStats(value),
+                    };
+                }
+            });
         },
-        {
-            action: 'SHOW_VERSION',
-            reducer: state => state, // saga
+        unsubscribePost(state, { payload: { account, author, permlink } }) {
+            const link = `${author}/${permlink}`;
+            const data = getPath(state, ['accounts', account, 'discussions']);
+            if (Array.isArray(data)) {
+                setPath(
+                    state,
+                    ['accounts', account, 'discussions'],
+                    data.filter(v => v !== link)
+                );
+            }
         },
-        {
-            action: 'FETCH_SPONSORS',
-            reducer: state => state, // saga
+        requestMeta(state, { payload: { id, link } }) {
+            setPath(state, ['metaLinkData', id], { link });
         },
-        {
-            action: 'FETCH_SPONSOREDS',
-            reducer: state => state, // saga
+        receiveMeta(state, { payload: { id, meta } }) {
+            const data = ensureObjectAt(state, ['metaLinkData', id], {});
+            Object.assign(data, meta);
         },
-    ],
+        set(state, { payload: { key, value } }) {
+            setPath(state, Array.isArray(key) ? key : [key], value);
+        },
+        remove(state, { payload: { key } }) {
+            unset(state, Array.isArray(key) ? key : [key]);
+        },
+        update(state, { payload: { key, notSet = {}, updater } }) {
+            updateAtPath(state, key, notSet, updater);
+        },
+        setMetaData(state, { payload: { id, meta } }) {
+            setPath(state, ['metaLinkData', id], meta);
+        },
+        clearMeta(state, { payload: { id } }) {
+            unset(state, ['metaLinkData', id]);
+        },
+        clearMetaElement(state, { payload: { formId, element } }) {
+            unset(state, ['metaLinkData', formId, element]);
+        },
+        fetchJson() {
+            // Saga-only action.
+        },
+        fetchExchangeRates() {
+            // Saga-only action.
+        },
+        fetchJsonResult(state, { payload: { id, result, error } }) {
+            state[id] = { result, error };
+        },
+        showDialog(state, { payload: { name, params = {} } }) {
+            state.active_dialogs = state.active_dialogs || {};
+            state.active_dialogs[name] = { params };
+        },
+        hideDialog(state, { payload: { name } }) {
+            if (state.active_dialogs) delete state.active_dialogs[name];
+        },
+        receiveAccountVestingDelegations(
+            state,
+            { payload: { account, type, vesting_delegations } }
+        ) {
+            setPath(
+                state,
+                ['accounts', account, `${type}_vesting`],
+                vesting_delegations
+            );
+        },
+        fetchVestingDelegations() {
+            // Saga-only action.
+        },
+        fetchVersions() {
+            // Saga-only action.
+        },
+        showVersion() {
+            // Saga-only action.
+        },
+        fetchSponsors() {
+            // Saga-only action.
+        },
+        fetchSponsoreds() {
+            // Saga-only action.
+        },
+    },
+    extraReducers: builder => {
+        builder.addCase('@@router/LOCATION_CHANGE', (state, action) => {
+            state.pathname = action.payload.pathname;
+        });
+    },
 });
+
+export default globalSlice;

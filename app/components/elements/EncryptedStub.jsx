@@ -23,7 +23,6 @@ class EncryptedStub extends React.Component {
 
     _renderSub = (sub) => {
         if (!sub) return null
-        sub = sub.toJS()
         return <div>
             <br />{tt('poststub.for_sponsors2')}
             <b>{Asset(sub.cost).floatString}</b>
@@ -40,8 +39,8 @@ class EncryptedStub extends React.Component {
             e.preventDefault()
 
             const { dis, username } = this.props
-            const author = dis.get('author')
-            const sub = dis.get('encrypted_sub').toJS()
+            const author = dis.author
+            const sub = dis.encrypted_sub
             const { cost, tip_cost } = sub
 
             this.setState({ submitting: true, err: null })
@@ -79,8 +78,8 @@ class EncryptedStub extends React.Component {
 
         const { dis, username, } = this.props
 
-        const author = dis.get('author')
-        const permlink = dis.get('permlink')
+        const author = dis.author
+        const permlink = dis.permlink
 
         this.setState({ submitting: true, err: null })
 
@@ -123,8 +122,8 @@ class EncryptedStub extends React.Component {
 
         const { dis, } = this.props
 
-        const author = dis.get('author')
-        const permlink = dis.get('permlink')
+        const author = dis.author
+        const permlink = dis.permlink
 
         this.props.deletePost(author, permlink)
     }
@@ -132,7 +131,7 @@ class EncryptedStub extends React.Component {
     render() {
         const { dis, encrypted, username } = this.props
 
-        const author = dis.get('author')
+        const author = dis.author
 
         const isMy = author === username
 
@@ -148,8 +147,8 @@ class EncryptedStub extends React.Component {
                     {tt('poststub.login_to_become_sponsor')}
             </div>)
         } else if (encrypted === EncryptedStates.no_sponsor) {
-            const sub = dis.get('encrypted_sub')
-            const encrypted_decrypt_fee = dis.get('encrypted_decrypt_fee')
+            const sub = dis.encrypted_sub
+            const encrypted_decrypt_fee = dis.encrypted_decrypt_fee
 
             return (<div>
                 {this._renderAuthor(tt('poststub.for_sponsors'), author)}
@@ -158,8 +157,8 @@ class EncryptedStub extends React.Component {
                 {this._renderDonate(encrypted_decrypt_fee, isMy)}
             </div>)
         } else if (encrypted === EncryptedStates.inactive) {
-            const sub = dis.get('encrypted_sub')
-            const encrypted_decrypt_fee = dis.get('encrypted_decrypt_fee')
+            const sub = dis.encrypted_sub
+            const encrypted_decrypt_fee = dis.encrypted_decrypt_fee
 
             return (<div>
                 {this._renderAuthor(tt('poststub.sponsorship_expired'), author)}
@@ -170,7 +169,7 @@ class EncryptedStub extends React.Component {
         } else if (encrypted === EncryptedStates.no_key) {
             return <div>{tt('postsummary_jsx.no_decrypt_key')}{btn}</div>
         } else if (encrypted === EncryptedStates.no_sub) {
-            const encrypted_decrypt_fee = dis.get('encrypted_decrypt_fee')
+            const encrypted_decrypt_fee = dis.encrypted_decrypt_fee
 
             const donateWay = this._renderDonate(encrypted_decrypt_fee, isMy)
 
@@ -186,8 +185,8 @@ class EncryptedStub extends React.Component {
 
 export default connect(
     (state, ownProps) => {
-        const current_user = state.user.get('current')
-        const username = current_user ? current_user.get('username') : null
+        const current_user = state.user.current
+        const username = current_user ? current_user.username : null
 
         return {
             username

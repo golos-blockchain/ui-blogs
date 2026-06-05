@@ -26,7 +26,7 @@ class ChainFailure extends React.Component {
 export default connect(
     (state, ownProps) => {
         return {
-            chain_failure: state.global.get('chain_failure'),
+            chain_failure: state.global.chain_failure,
         }
     },
     dispatch => ({

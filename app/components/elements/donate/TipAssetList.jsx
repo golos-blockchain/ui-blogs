@@ -28,7 +28,7 @@ class TipAssetList extends React.Component {
 
     render() {
         const { currentAccount, currentBalance, small } = this.props
-        const golosBalance = Asset(currentAccount.get('tip_balance'))
+        const golosBalance = Asset(currentAccount.tip_balance)
         
         let tipBalanceValue = currentBalance && currentBalance.toString(0)
 
@@ -39,7 +39,7 @@ class TipAssetList extends React.Component {
             onClick: this.onSelected
         })
 
-        const uias = this.props.uias && this.props.uias.toJS()
+        const uias = this.props.uias
         if (uias) {
             for (const [sym, obj] of Object.entries(uias)) {
                 const balance = Asset(obj.tip_balance)
@@ -62,8 +62,9 @@ class TipAssetList extends React.Component {
                     selected={value} el='span' items={myAssets} />)
         }
 
-        const size = tipBalanceValue.length > 16 ?
-            ' micro' : tipBalanceValue.length > 13 ?
+        const balanceTextLength = typeof tipBalanceValue === 'string' ? tipBalanceValue.length : 0
+        const size = balanceTextLength > 16 ?
+            ' micro' : balanceTextLength > 13 ?
             ' mini' : ''
 
         return (

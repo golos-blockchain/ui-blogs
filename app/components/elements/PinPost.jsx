@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
 import { getMetadataReliably, getPinnedPosts } from 'app/utils/NormalizeProfile'
+import { addNotification } from 'app/utils/NotificationService';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
 import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
+import app from 'app/redux/AppReducer';
 import Icon from 'app/components/elements/Icon';
 import tt from 'counterpart';
 
@@ -31,9 +33,9 @@ export default class PinPost extends React.Component {
       e.preventDefault()
       const { permlink, current_user, author, updateAccount, notify } = this.props
 
-      if (!current_user || author !== current_user.get('name')) return;
+      if (!current_user || author !== current_user.name) return;
 
-      const account = this.props.account.toJS()
+      const account = this.props.account
       let pinnedPosts = getPinnedPosts(account, true)
       const link = author + '/' + permlink
 
@@ -48,6 +50,7 @@ export default class PinPost extends React.Component {
       metadata.pinnedPosts = pinnedPosts;
 
       this.setState({ loading: true, })
+      notify(tt('g.saving'), 3000, 'loading');
       updateAccount({
           json_metadata: JSON.stringify(metadata),
           account: account.name,
@@ -62,7 +65,7 @@ export default class PinPost extends React.Component {
               this.setState({ active: !this.state.active, loading: false, });
 
               //this.props.pinned(this.props.author + '/' + this.props.permlink);
-              notify(tt('g.saved') + '!', 10000);
+              notify(tt('g.saved') + '!', 10000, 'success');
           },
       });
     }
@@ -73,7 +76,7 @@ export default class PinPost extends React.Component {
         if(!author || !account) return null;
 
         if(account) {
-          const pinnedPosts = getPinnedPosts(account.toJS(), true)
+          const pinnedPosts = getPinnedPosts(account, true)
 
           const link = author + '/' + permlink
 
@@ -82,7 +85,7 @@ export default class PinPost extends React.Component {
 
         if (!current_user && !this.state.active) return null;
 
-        if (!this.state.active && author !== current_user.get('name')) return null;
+        if (!this.state.active && author !== current_user.name) return null;
 
         const state = this.state.active ? 'active' : 'inactive'
 
@@ -98,10 +101,11 @@ export default class PinPost extends React.Component {
 }
 module.exports = connect(
     (state, ownProps) => {
-        const current_user = state.user.getIn(['current', 'username'])
-        const account = state.global.get('accounts').get(ownProps.author) || null
+        const current_user = state.user.current && state.user.current.username
+        const accounts = state.global.accounts || {}
+        const account = accounts[ownProps.author] || null
 
-        return {...ownProps, account, current_user: state.global.get('accounts').get(current_user) || null}
+        return {...ownProps, account, current_user: accounts[current_user] || null}
     },
 
     dispatch => ({
@@ -120,14 +124,12 @@ module.exports = connect(
             );
         },
 
-        notify: (message, dismiss = 3000) => {
-            dispatch({
-                type: 'ADD_NOTIFICATION',
-                payload: {
-                    key: 'settings_' + Date.now(),
-                    message,
-                    dismissAfter: dismiss,
-                },
+        notify: (message, dismiss = 3000, type = 'error') => {
+            addNotification({
+                type,
+                key: 'pin_post',
+                message,
+                dismissAfter: dismiss,
             });
         },
     })

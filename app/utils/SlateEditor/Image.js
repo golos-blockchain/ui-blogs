@@ -1,15 +1,13 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import { proxifyImageUrl } from 'app/utils/ProxifyUrl';
+import user from 'app/redux/User';
 
 export default connect(
     (state, ownProps) => ownProps,
     dispatch => ({
         uploadImage: (file, dataUrl, filename, progress) => {
-            dispatch({
-                type: 'user/UPLOAD_IMAGE',
-                payload: {file, dataUrl, filename, progress},
-            })
+            dispatch(user.actions.uploadImage({file, dataUrl, filename, progress}))
         },
     })
 )(

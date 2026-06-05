@@ -52,7 +52,7 @@ class MinusedAccounts extends React.Component {
     }
 
     render() {
-        const reversed = this.props.minused_accounts.reverse()
+        const reversed = [...this.props.minused_accounts].reverse()
 
         let history = reversed && reversed.map((operation, index) => {
             return this._renderHistoryRow(operation, index);
@@ -84,10 +84,10 @@ module.exports = {
     path: '/minused_accounts',
     component: connect(
         state => {
-            const minused_accounts = state.global.get('minused_accounts')
+            const minused_accounts = state.global.minused_accounts
 
             return {
-                minused_accounts: minused_accounts ? minused_accounts.toJS() : [],
+                minused_accounts: minused_accounts || [],
             };
         })(MinusedAccounts)
 };

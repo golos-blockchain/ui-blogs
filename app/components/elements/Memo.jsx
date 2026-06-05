@@ -130,17 +130,17 @@ class Memo extends React.Component {
 
 export default connect(
     (state, ownProps) => {
-        const currentUser = state.user.get('current')
-        const myAccount = currentUser && ownProps.username === currentUser.get('username')
+        const currentUser = state.user.current
+        const myAccount = currentUser && ownProps.username === currentUser.username
         const memo_private = myAccount && currentUser ?
-            currentUser.getIn(['private_keys', 'memo_private']) : null
+            currentUser.private_keys && currentUser.private_keys.memo_private : null
         return { ...ownProps, memo_private, myAccount, currentUser, };
     },
     dispatch => ({
         loginMemo: (currentUser) => {
             if (!currentUser) return;
             dispatch(user.actions.showLogin({
-                loginDefault: { username: currentUser.get('username'), authType: 'memo', unclosable: false }
+                loginDefault: { username: currentUser.username, authType: 'memo', unclosable: false }
             }));
         },
     }),

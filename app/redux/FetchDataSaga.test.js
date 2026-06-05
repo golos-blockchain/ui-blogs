@@ -27,7 +27,7 @@ describe('sagas', () => {
             callResult.CALL.args
         ).to.be.eql(expectedCallResult.CALL.args);
 
-        const expectedPutResult = put({type: 'global/RECEIVE_STATE', payload: undefined});
+        const expectedPutResult = put(GlobalReducer.actions.receiveState(undefined));
         const putResult = generator.next().value;
         expect(
             putResult
@@ -38,7 +38,7 @@ describe('sagas', () => {
         const generator = fetchState(action);
         expect(generator.next().value).to.be.ok();
         const result = generator.throw({message: 'test error'}).value;
-        const expectedPutResult = put({type: 'global/CHAIN_API_ERROR', error: 'test error'});
+        const expectedPutResult = put(app.actions.chainApiError('test error'));
         expect(
             result
         ).to.be.eql(expectedPutResult);

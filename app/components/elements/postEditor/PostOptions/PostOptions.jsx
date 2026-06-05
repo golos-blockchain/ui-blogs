@@ -2,7 +2,6 @@ import React, { createRef } from 'react';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
 import tt from 'counterpart';
-import { isNil } from 'ramda';
 import { api } from 'golos-lib-js';
 import { Asset, AssetEditor } from 'golos-lib-js/lib/utils'
 import {connect} from 'react-redux';

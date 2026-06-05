@@ -3,11 +3,12 @@ import { select, takeEvery } from 'redux-saga/effects';
 import { signData } from 'golos-lib-js/lib/auth'
 import { Signature, hash } from 'golos-lib-js/lib/auth/ecc/index';
 import { Asset, fetchEx } from 'golos-lib-js/lib/utils'
+import userSlice from 'app/redux/User';
 
 const MAX_UPLOAD_IMAGE_SIZE = 1;
 
 export default function* uploadImageWatch() {
-    yield takeEvery('user/UPLOAD_IMAGE', uploadImage);
+    yield takeEvery(userSlice.actions.uploadImage.type, uploadImage);
 }
 
 const ERRORS_MATCH = [
@@ -74,12 +75,10 @@ function* uploadImage(action) {
     let golosImages = false
     const user = yield select(state => state.user)
     const switchToGolosImages = async () => {
-        const username = user.getIn(['current', 'username']);
-        const postingKey = user.getIn([
-            'current',
-            'private_keys',
-            'posting_private',
-        ]);
+        const username = user.current && user.current.username;
+        const postingKey = user.current &&
+            user.current.private_keys &&
+            user.current.private_keys.posting_private;
         if (!username || !postingKey) {
             onError(tt('user_saga_js.image_upload.error.login_first'));
             return;

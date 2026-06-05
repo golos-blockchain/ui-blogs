@@ -50,7 +50,7 @@ class MemoInput extends React.Component {
         let memo = inputProps.value
         if (!isEncrypted) {
             const memoPrivate = currentUser ?
-                currentUser.getIn(['private_keys', 'memo_private']) : null
+                currentUser.private_keys && currentUser.private_keys.memo_private : null
             if (!memoPrivate) {
                 if (currentUser && (!this.autoToggleEncrypt || !autoCall)) {
                     loginMemo(currentUser)
@@ -127,7 +127,7 @@ export default connect(
         loginMemo: (currentUser) => {
             if (!currentUser) return;
             dispatch(user.actions.showLogin({
-                loginDefault: { username: currentUser.get('username'), authType: 'memo', unclosable: false }
+                loginDefault: { username: currentUser.username, authType: 'memo', unclosable: false }
             }))
         },
     })

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
 import transaction from 'app/redux/Transaction'
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
-import {Map} from 'immutable'
 
 const {func, string} = PropTypes
 
@@ -53,8 +52,8 @@ export default connect(
     // mapStateToProps
     (state, ownProps) => {
         const {opType} = ownProps
-        const error = state.transaction.getIn(['TransactionError', opType]) || Map()
-        const {key, exception} = error.toJS()
+        const error = (state.transaction.TransactionError && state.transaction.TransactionError[opType]) || {}
+        const {key, exception} = error
         return {
             ...ownProps,
             errorKey: key, exception,

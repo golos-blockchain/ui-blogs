@@ -3,6 +3,7 @@
   //background: limegreen;
   display: flex;
   flex-direction: row;
+  padding: 12px;
 }
 //
 .NotificationContent__container_left {
@@ -16,6 +17,7 @@
   display: flex;
   align-items: center;
   //justify-content: space-around;
+  margin-left: 10px;
 }
 //
 .NotificationContent__container_center_top {
@@ -93,5 +95,9 @@
   line-height: 1.14 !important;
   letter-spacing: normal !important;
   text-align: left !important;
-  margin-left: 18px !important;
+}
+.theme-dark {
+  .NotificationContent__action_source {
+    color: #fff !important;
+  }
 }

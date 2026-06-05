@@ -106,7 +106,7 @@ export function hideSummary({ author, author_reputation, url, app, currentCatego
 
 // When post opened
 export function hidePost({ dis, isOnlyapp, isOnlyblog, username, following }) {
-    if (username && username === dis.get('author')) {
+    if (username && username === dis.author) {
         return false
     }
     if (isOnlyapp && !process.env.IS_APP) {
@@ -116,13 +116,13 @@ export function hidePost({ dis, isOnlyapp, isOnlyblog, username, following }) {
         if (!following && (!hasLS() || session.load().currentName)) {
             return 'loading'
         } else if (!following || 
-            (!following.includes(dis.get('author')) &&
-                !following.includes(dis.get('root_author')))) {
+            (!following.includes(dis.author) &&
+                !following.includes(dis.root_author))) {
             return 'onlyblog'
         }
     }
     const fapps = getFilterApps()
-    if (!username && fapps.includes(dis.get('app'))) {
+    if (!username && fapps.includes(dis.app)) {
         if (!hasLS() || session.load().currentName) {
             return 'loading'
         }
@@ -133,7 +133,7 @@ export function hidePost({ dis, isOnlyapp, isOnlyblog, username, following }) {
 
 export function hideComment({ dis, username }) {
     const fapps = getFilterApps()
-    if (!username && fapps.includes(dis.get('app'))) {
+    if (!username && fapps.includes(dis.app)) {
         return 'onlyauth'
     }
     return false

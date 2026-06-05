@@ -11,6 +11,7 @@ import { findParent } from 'app/utils/DomUtils';
 import Icon from 'app/components/elements/Icon';
 import { isPostVisited, getVisitedPosts, visitPost } from 'app/utils/helpers';
 import KEYS from 'app/utils/keyCodes';
+import user from 'app/redux/User';
 
 function topPosition(domElt) {
     if (!domElt) {
@@ -21,7 +22,7 @@ function topPosition(domElt) {
 
 class PostsList extends PureComponent {
     static propTypes = {
-        posts: PropTypes.object.isRequired,
+        posts: PropTypes.array.isRequired,
         loading: PropTypes.bool.isRequired,
         category: PropTypes.string,
         loadMore: PropTypes.func,
@@ -158,8 +159,8 @@ class PostsList extends PureComponent {
         ) {
             const { loadMore, posts, category, next_from } = this.props;
 
-            if (loadMore && posts && posts.size) {
-                loadMore(posts.last(), category, next_from);
+            if (loadMore && posts && posts.length) {
+                loadMore(posts[posts.length - 1], category, next_from);
             }
         }
 
@@ -210,16 +211,16 @@ class PostsList extends PureComponent {
         let aiPosts = [];
 
         // Remove dublicates from posts
-        [...new Set(posts.toJS())].forEach(item => {
+        [...new Set(posts)].forEach(item => {
             if (showPost) {
                 aiPosts.push(item);
             }
-            const cont = content.get(item);
+            const cont = content[item];
             if (!cont) {
                 console.error('PostsList --> Missing cont key', item);
                 return;
             }
-            const hide = cont.getIn(['stats', 'hide']);
+            const hide = cont.stats && cont.stats.hide;
 
             if (!hide || showSpam) {
                 postsInfo.push({ item, ignore: false });
@@ -301,19 +302,19 @@ class PostsList extends PureComponent {
 
 export default connect(
     (state, props) => {
-        const current = state.user.get('current');
+        const current = state.user.current;
         const username = current
-            ? current.get('username')
-            : state.offchain.get('account');
+            ? current.username
+            : state.offchain.account;
 
-        const pathname = state.app.get('location')?.toJS().pathname;
+        const pathname = state.app.location && state.app.location.pathname;
 
         return {
             ...props,
             username,
-            content: state.global.get('content'),
-            next_from: state.global.get('next_from'),
-            decrypting: state.global.get('decrypting'),
+            content: state.global.content || {},
+            next_from: state.global.next_from,
+            decrypting: state.global.decrypting,
             pathname,
         };
     },
@@ -322,8 +323,6 @@ export default connect(
             type: 'FETCH_STATE',
             payload: { pathname },
         }),
-        removeHighSecurityKeys: () => ({
-            type: 'user/REMOVE_HIGH_SECURITY_KEYS',
-        }),
+        removeHighSecurityKeys: () => user.actions.removeHighSecurityKeys(),
     }
 )(PostsList);

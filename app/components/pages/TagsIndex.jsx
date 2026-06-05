@@ -32,10 +32,10 @@ export default class TagsIndex extends React.Component {
 
     compareTags = (a, b, type) => {
         switch(type) {
-            case 'name': return a.get('name').localeCompare(b.get('name'));
-            case 'posts': return parseInt(a.get('top_posts')) <=  parseInt(b.get('top_posts')) ? 1 : -1;
-            case 'comments': return parseInt(a.get('comments')) <=  parseInt(b.get('comments')) ? 1 : -1;
-            case 'payouts': return parseInt(a.get('total_payouts')) <=  parseInt(b.get('total_payouts')) ? 1 : -1;
+            case 'name': return a.name.localeCompare(b.name);
+            case 'posts': return parseInt(a.top_posts) <=  parseInt(b.top_posts) ? 1 : -1;
+            case 'comments': return parseInt(a.comments) <=  parseInt(b.comments) ? 1 : -1;
+            case 'payouts': return parseInt(a.total_payouts) <=  parseInt(b.total_payouts) ? 1 : -1;
         }
     }
 
@@ -54,16 +54,16 @@ export default class TagsIndex extends React.Component {
     render() {
         const {tagsAll} = this.props;
         const { state: { order, selected }, onSelectTag } = this;
-        let tags = tagsAll;
+        let tags = Object.values(tagsAll || {});
         let isSelected = false
 
         const rows = tags.filter(
             // there is a blank tag present, as well as some starting with #. filter them out.
-            tag => /^[a-z]/.test(tag.get('name'))
+            tag => /^[a-z]/.test(tag.name)
         ).sort((a,b) => {
             return this.compareTags(a, b, order)
         }).map(tag => {
-            let name = tag.get('name');
+            let name = tag.name;
             const link = `/trending/tag-${name}`;
 
             if (/[а-яёґєії]/.test(name)) {
@@ -72,16 +72,16 @@ export default class TagsIndex extends React.Component {
             if (/^(u\w{4}){6,}/.test(name)) return null;
             isSelected = selected.indexOf(name) !== -1
 
-            return (<tr key={tag.get('name')}>
+            return (<tr key={tag.name}>
                 <td className={isSelected ? 'isSelected' : ''}>
                     <a className="action" onClick={() => onSelectTag(name)}>{isSelected ? '×' : '+'}</a>
                     <Link to={link} activeClassName="active">{detransliterate(name)}</Link>
                 </td>
-                <td>{numberWithCommas(tag.get('top_posts').toString())}</td>
-                <td>{numberWithCommas(tag.get('comments').toString())}</td>
-                <td>{numberWithCommas(tag.get('total_payouts'))}</td>
+                <td>{numberWithCommas(tag.top_posts.toString())}</td>
+                <td>{numberWithCommas(tag.comments.toString())}</td>
+                <td>{numberWithCommas(tag.total_payouts)}</td>
             </tr>);
-        }).toArray();
+        });
 
         const cols = [
             ['name', tt('g.tag')],
@@ -120,6 +120,6 @@ export default class TagsIndex extends React.Component {
 module.exports = {
     path: '/tags{/:order}',
     component: connect(state => ({
-        tagsAll: state.global.get('tags')
+        tagsAll: state.global.tags
     }))(TagsIndex)
 };

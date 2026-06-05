@@ -1,81 +1,49 @@
-import { fromJS } from 'immutable';
-import createModule from 'redux-modules';
+import { createSlice } from '@reduxjs/toolkit';
+import setPath from 'lodash/set';
+import unset from 'lodash/unset';
 
 import transactionErrorReducer from './Transaction_Error';
 
-export default createModule({
+const transactionSlice = createSlice({
     name: 'transaction',
-    initialState: fromJS({
+    initialState: {
         operations: [],
         status: { key: '', error: false, busy: false },
         errors: null,
-    }),
-    transformations: [
-        {
-            action: 'CONFIRM_OPERATION',
-            reducer: (state, { payload }) => {
-                const operation = fromJS(payload.operation);
-                const confirm = payload.confirm;
-                const warning = payload.warning;
-                return state.merge({
-                    show_confirm_modal: true,
-                    confirmBroadcastOperation: operation,
-                    confirmErrorCallback: payload.errorCallback,
-                    confirm,
-                    warning,
-                });
-            },
+    },
+    reducers: {
+        confirmOperation(state, { payload }) {
+            state.show_confirm_modal = true;
+            state.confirmBroadcastOperation = payload.operation;
+            state.confirmErrorCallback = payload.errorCallback;
+            state.confirm = payload.confirm;
+            state.warning = payload.warning;
         },
-        {
-            action: 'HIDE_CONFIRM',
-            reducer: state =>
-                state.merge({
-                    show_confirm_modal: false,
-                    confirmBroadcastOperation: undefined,
-                    confirm: undefined,
-                }),
+        hideConfirm(state) {
+            state.show_confirm_modal = false;
+            state.confirmBroadcastOperation = undefined;
+            state.confirm = undefined;
         },
-        {
-            // An error will end up in QUEUE
-            action: 'BROADCAST_OPERATION',
-            reducer: state => {
-                //, {payload: {type, operation, keys}}
-                return state;
-            },
+        broadcastOperation() {
+            // Saga-only action.
         },
-        {
-            // An error will end up in QUEUE
-            action: 'UPDATE_AUTHORITIES',
-            reducer: state => state,
+        updateAuthorities() {
+            // Saga-only action.
         },
-        {
-            // An error will end up in QUEUE
-            action: 'UPDATE_META',
-            reducer: state => state,
+        updateMeta() {
+            // Saga-only action.
         },
-        {
-            action: 'ERROR',
-            reducer: transactionErrorReducer,
+        error: transactionErrorReducer,
+        deleteError(state, { payload: { key } }) {
+            if (state.errors) delete state.errors[key];
         },
-        {
-            action: 'DELETE_ERROR',
-            reducer: (state, { payload: { key } }) => {
-                return state.deleteIn(['errors', key]);
-            },
+        set(state, { payload: { key, value } }) {
+            setPath(state, Array.isArray(key) ? key : [key], value);
         },
-        {
-            action: 'SET',
-            reducer: (state, { payload: { key, value } }) => {
-                key = Array.isArray(key) ? key : [key];
-                return state.setIn(key, fromJS(value));
-            },
+        remove(state, { payload: { key } }) {
+            unset(state, Array.isArray(key) ? key : [key]);
         },
-        {
-            action: 'REMOVE',
-            reducer: (state, { payload: { key } }) => {
-                key = Array.isArray(key) ? key : [key];
-                return state.removeIn(key);
-            },
-        },
-    ],
+    },
 });
+
+export default transactionSlice;

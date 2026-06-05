@@ -33,10 +33,9 @@ class UserList extends React.Component {
         let user_list = users.map(user =>
             <UserListRow account={account} user={user} key={idx++} muteOnlyNew={muteOnlyNew} />
         )
-        user_list = user_list.toArray();
 
         let currentIndex = -1;
-        const usersLength = users.size;
+        const usersLength = users.length;
         const limitedIndex = Math.min(historyIndex, usersLength - PER_PAGE);
         user_list = user_list.reverse().filter(() => {
             currentIndex++;

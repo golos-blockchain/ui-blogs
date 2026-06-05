@@ -364,6 +364,20 @@ class App extends React.Component {
         localStorage.setItem('infobox', JSON.stringify(infoBox));
     }
 
+    _renderToaster = () => {
+        if (!process.env.BROWSER) return null;
+        return <Toaster
+            position='bottom-left' 
+            containerStyle={{
+                bottom: 30,
+                left: 30,
+            }}
+            toastOptions={{
+                className: 'gls-toast'
+            }}
+        />;
+    }
+
     render() {
         if (process.env.MOBILE_APP && !this.state.can_render) {
             return <LoadingIndicator type='circle' />
@@ -396,9 +410,9 @@ class App extends React.Component {
             (params_keys.length === 2 &&
                 params_keys[0] === 'order' &&
                 params_keys[1] === 'category');
-        const f_alert = this.props.error || flash.get('alert');
-        const warning = flash.get('warning');
-        const success = flash.get('success');
+        const f_alert = this.props.error || (flash && flash.alert);
+        const warning = flash && flash.warning;
+        const success = flash && flash.success;
         let callout = null;
         const notifyLink = $STM_Config.add_notify_site.link;
         const notifyTitle = $STM_Config.add_notify_site.title;
@@ -513,7 +527,7 @@ class App extends React.Component {
                 onMouseMove={this.onEntropyEvent}
             >
                 {process.env.BROWSER ? <NavigateHelper /> : null}
-                {process.env.BROWSER ? <Toaster position='bottom-left' /> : null}
+                {this._renderToaster()}
                 {noHeader ? null : (miniHeader ? <MiniHeader /> : <Header />)}
                 <div className={cn('App__content' +
                     (noHeader ? ' no-header' : ''), {
@@ -557,23 +571,23 @@ export default connect(
     state => {
         let nightmodeEnabled = process.env.BROWSER ? localStorage.getItem('nightmodeEnabled') == 'true' || false : false
 
-        const currentUser = state.user.get('current')
+        const currentUser = state.user.current
 
         return {
-            error: state.app.get('error'),
-            flash: state.offchain.get('flash'),
-            loggedIn: !!state.user.get('current'),
+            error: state.app.error,
+            flash: state.offchain.flash,
+            loggedIn: !!state.user.current,
             new_visitor:
                 !currentUser &&
-                !state.offchain.get('account') &&
-                state.offchain.get('new_visit'),
+                !state.offchain.account &&
+                state.offchain.new_visit,
             nightmodeEnabled: nightmodeEnabled,
-            username: currentUser && currentUser.get('username'),
+            username: currentUser && currentUser.username,
         };
     },
     dispatch => ({
         loginUser: () => {
-            dispatch(user.actions.usernamePasswordLogin())
+            dispatch(user.actions.usernamePasswordLogin({}))
         },
         logoutUser: () => dispatch(user.actions.logout()),
         depositSteem: () => {

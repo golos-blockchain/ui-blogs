@@ -4,10 +4,10 @@ import cookie from "react-cookie";
 import Dropzone from 'react-dropzone'
 import ReactTooltip from 'react-tooltip'
 import user from 'app/redux/User';
+import app from 'app/redux/AppReducer';
 import g from 'app/redux/GlobalReducer';
 import tt from 'counterpart';
 import throttle from 'lodash/throttle'
-import {fromJS, Set, Map} from 'immutable'
 
 import transaction from 'app/redux/Transaction'
 import { getMetadataReliably } from 'app/utils/NormalizeProfile';
@@ -20,6 +20,7 @@ import UserList from 'app/components/elements/UserList';
 import ContentSettings from 'app/components/elements/settings/ContentSettings'
 import AppSettings, { openAppSettings } from 'app/components/pages/app/AppSettings'
 import { LANGUAGES, DEFAULT_LANGUAGE, LOCALE_COOKIE_KEY, USER_GENDER } from 'app/client_config'
+import { addNotification } from 'app/utils/NotificationService';
 import { withScreenSize } from 'app/utils/ScreenSize'
 
 class Settings extends React.Component {
@@ -195,7 +196,7 @@ class Settings extends React.Component {
     }
 
     notify = () => {
-        this.props.notify(tt('g.saved'))
+        this.props.notify(tt('g.saved'), 3000, 'success')
     }
 
     notifyThrottled = throttle(this.notify, 2000)
@@ -305,8 +306,8 @@ class Settings extends React.Component {
         const {profile_image, cover_image, name, about, gender, location, website, donatePresets, emissionDonatePct, notifyPresets, notifyPresetsTouched} = this.state
 
         const {follow, block, account, isOwnAccount, isS} = this.props
-        const following = follow && follow.getIn(['getFollowingAsync', account.name]);
-        const ignores = isOwnAccount && block && block.getIn(['blocking', account.name, 'result'])
+        const following = follow && follow.getFollowingAsync && follow.getFollowingAsync[account.name];
+        const ignores = isOwnAccount && block && block.blocking && block.blocking[account.name] && block.blocking[account.name].result
         const mutedInNew = isOwnAccount && props.mutedInNew;
         const {pImageUploading, cImageUploading} = this.state;
 
@@ -530,7 +531,7 @@ class Settings extends React.Component {
 
             <DoNotBother account={account} />
 
-            {ignores && ignores.size > 0 &&
+            {ignores && ignores.length > 0 &&
                 <div className="row">
                     <div className="small-12 columns">
                         <br /><br />
@@ -538,7 +539,7 @@ class Settings extends React.Component {
                     </div>
                 </div>}
 
-            {mutedInNew && mutedInNew.size > 0 &&
+            {mutedInNew && mutedInNew.length > 0 &&
                 <div className="row">
                     <div className="small-12 columns">
                         <br /><br />
@@ -570,12 +571,12 @@ export default connect(
     // mapStateToProps
     (state, ownProps) => {
         const {accountname} = ownProps.routeParams
-        const account = state.global.getIn(['accounts', accountname]).toJS()
-        const current_user = state.user.get('current')
-        const username = current_user ? current_user.get('username') : ''
+        const account = state.global.accounts && state.global.accounts[accountname]
+        const current_user = state.user.current
+        const username = current_user ? current_user.username : ''
         let metaData = account ? getMetadataReliably(account.json_metadata) : {}
         const profile = metaData && metaData.profile ? metaData.profile : {}
-        const mutedInNew = metaData && metaData.mutedInNew ? Set(metaData.mutedInNew) : Set([])
+        const mutedInNew = metaData && metaData.mutedInNew ? metaData.mutedInNew : []
 
         return {
             account,
@@ -584,18 +585,15 @@ export default connect(
             isOwnAccount: username == accountname,
             profile,
             mutedInNew,
-            block: state.global.get('block'),
-            follow: state.global.get('follow'),
+            block: state.global.block,
+            follow: state.global.follow,
             ...ownProps
         }
     },
     // mapDispatchToProps
     dispatch => ({
         uploadImage: (file, progress) => {
-        dispatch({
-          type: 'user/UPLOAD_IMAGE',
-          payload: {file, progress, imageSizeLimit: 1000*1000},
-        })
+        dispatch(user.actions.uploadImage({file, progress, imageSizeLimit: 1000*1000}))
       },
         changeLanguage: (language) => {
             dispatch(user.actions.changeLanguage(language))
@@ -609,11 +607,12 @@ export default connect(
             const options = {type: 'account_metadata', operation, successCallback: success, errorCallback}
             dispatch(transaction.actions.broadcastOperation(options))
         },
-        notify: (message, dismiss = 3000) => {
-            dispatch({type: 'ADD_NOTIFICATION', payload: {
+        notify: (message, dismiss = 3000, type = 'error') => {
+            addNotification({
+                type,
                 key: "settings_" + Date.now(),
                 message,
-                dismissAfter: dismiss}
+                dismissAfter: dismiss
             });
         }
     })

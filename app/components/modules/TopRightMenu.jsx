@@ -37,21 +37,21 @@ const calculateEstimateOutput = ({ account, price_per_golos, savings_withdraws, 
   // Sum savings withrawals
   if (savings_withdraws) {
     savings_withdraws.forEach(withdraw => {
-      const [amount, asset] = withdraw.get('amount').split(' ');
+      const [amount, asset] = withdraw.amount.split(' ');
     })
   }
 
   const total_sbd = 0 
-    + parseFloat(toAsset(account.get('sbd_balance')).amount)
-    + parseFloat(toAsset(account.get('market_sbd_balance')).amount)
-    + parseFloat(toAsset(account.get('savings_sbd_balance')).amount)
+    + parseFloat(toAsset(account.sbd_balance).amount)
+    + parseFloat(toAsset(account.market_sbd_balance).amount)
+    + parseFloat(toAsset(account.savings_sbd_balance).amount)
 
   const total_steem = 0
-    + parseFloat(toAsset(account.get('balance')).amount)
-    + parseFloat(toAsset(account.get('savings_balance')).amount)
-    + parseFloat(toAsset(account.get('tip_balance')).amount)
-    + parseFloat(toAsset(account.get('market_balance')).amount)
-    + parseFloat(vestsToSteem(account.get('vesting_shares'), globalprops.toJS()))
+    + parseFloat(toAsset(account.balance).amount)
+    + parseFloat(toAsset(account.savings_balance).amount)
+    + parseFloat(toAsset(account.tip_balance).amount)
+    + parseFloat(toAsset(account.market_balance).amount)
+    + parseFloat(vestsToSteem(account.vesting_shares, globalprops))
 
   return Number(((total_steem * price_per_golos) + total_sbd).toFixed(2) );
 }
@@ -183,7 +183,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
                 {link: '#', onClick: showLogin, value: tt('g.login')}
         ];
 
-        const voting_power_percent = account.get('voting_power') / 100
+        const voting_power_percent = account.voting_power / 100
 
         return (
             <ul className={mcn + mcl}>
@@ -203,7 +203,7 @@ function TopRightMenu({account, savings_withdraws, price_per_golos, globalprops,
                 >
                     {!vertical && <li className={'Header__profile'}>
                         <a href={accountLink} title={username} onClick={e => e.preventDefault()}>
-                            <Userpic account={username} showProgress={true} votingPower={account.get('voting_power')} progressClass="hide-for-large" />
+                            <Userpic account={username} showProgress={true} votingPower={account.voting_power} progressClass="hide-for-large" />
                             <div className={'NavProfile show-for-large'}>
                                 <div className={'NavProfile__name'}>{username}</div>
                                 <div className={'NavProfile__golos'}>
@@ -258,22 +258,22 @@ export default connect(
             return {
                 username: null,
                 loggedIn: false,
-                probablyLoggedIn: !!state.offchain.get('account')
+                probablyLoggedIn: !!state.offchain.account
             }
         }
-        const username = state.user.getIn(['current', 'username']);
-        const account  = state.global.getIn(['accounts', username]);
+        const username = state.user.current && state.user.current.username;
+        const account  = state.global.accounts && state.global.accounts[username];
         const loggedIn = !!username;
 
-        const savings_withdraws = state.user.get('savings_withdraws');
+        const savings_withdraws = state.user.savings_withdraws;
         let price_per_golos = undefined;
-        const feed_price = state.global.get('feed_price');
-        if(feed_price && feed_price.has('base') && feed_price.has('quote')) {
-            const {base, quote} = feed_price.toJS()
+        const feed_price = state.global.feed_price;
+        if(feed_price && feed_price.base && feed_price.quote) {
+            const {base, quote} = feed_price
             if(/ GBG$/.test(base) && / GOLOS$/.test(quote))
                 price_per_golos = parseFloat(base.split(' ')[0]) / parseFloat(quote.split(' ')[0])
         }
-        const globalprops = state.global.get('props');
+        const globalprops = state.global.props;
 
         return {
             account,

@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { Set, Map } from 'immutable';
 import tt from 'counterpart';
 
 import user from 'app/redux/User';
@@ -111,27 +110,23 @@ export default class Follow extends Component {
     }
 }
 
-const emptyMap = Map();
-const emptySet = Set();
-
 module.exports = connect(
     (state, ownProps) => {
         let { follower } = ownProps;
         if (!follower) {
-            const current_user = state.user.get('current');
-            follower = current_user ? current_user.get('username') : null;
+            const current_user = state.user.current;
+            follower = current_user ? current_user.username : null;
         }
 
         const { following } = ownProps;
-        const follow = state.global.getIn(
-            ['follow', 'getFollowingAsync', follower],
-            emptyMap
-        );
+        const follow = state.global.follow &&
+            state.global.follow.getFollowingAsync &&
+            state.global.follow.getFollowingAsync[follower] || {};
         const loading =
-            follow.get('blog_loading', false) || follow.get('ignore_loading', false);
-        const followingWhat = follow.get('blog_result', emptySet).contains(following)
+            follow.blog_loading || follow.ignore_loading || false;
+        const followingWhat = (follow.blog_result || []).includes(following)
             ? 'blog'
-            : follow.get('ignore_result', emptySet).contains(following)
+            : (follow.ignore_result || []).includes(following)
                 ? 'ignore'
                 : null;
 

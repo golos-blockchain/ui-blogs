@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { FormattedPlural } from 'react-intl'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import {Map} from 'immutable'
 import tt from 'counterpart'
 import { Asset } from 'golos-lib-js/lib/utils'
 
@@ -24,7 +23,7 @@ import Voting from 'app/components/elements/Voting'
 import g from 'app/redux/GlobalReducer'
 import transaction from 'app/redux/Transaction'
 import user from 'app/redux/User'
-import {immutableAccessor} from 'app/utils/Accessors'
+import {objAccessor} from 'app/utils/Accessors'
 import { authRegisterUrl, } from 'app/utils/AuthApiClient'
 import { hideSummary } from 'app/utils/ContentAccess'
 import extractContent from 'app/utils/ExtractContent'
@@ -121,7 +120,7 @@ class PostSummary extends React.Component {
     }
 
     onDeleteReblog = (account, post) => {
-        this.props.deleteReblog(account, post.get('author'), post.get('permlink'),
+        this.props.deleteReblog(account, post.author, post.permlink,
             () => {
                 window.location.reload()
             }, (err) => {
@@ -135,8 +134,8 @@ class PostSummary extends React.Component {
 
         if (!username) return
 
-        const author = content.get('author')
-        const permlink = content.get('permlink')
+        const author = content.author
+        const permlink = content.permlink
 
         try {
             await unsubscribePost(username, author, permlink)
@@ -150,8 +149,8 @@ class PostSummary extends React.Component {
 
     isNsfwWarn = () => {
         const { content, nsfwPref, username } = this.props
-        const { isNsfw, } = content.get('stats', Map()).toJS()
-        const myPost = username === content.get('author')
+        const { isNsfw, } = content.stats || {}
+        const myPost = username === content.author
         return (isNsfw && nsfwPref === 'warn' && !myPost && !this.state.revealNsfw)
     }
 
@@ -163,11 +162,11 @@ class PostSummary extends React.Component {
         if (!content) return null;
 
         let reblogged_by;
-        if(content.get('reblogged_by') && content.get('reblogged_by').size > 0) {
-            reblogged_by = content.get('reblogged_by').toJS()
-        } else if(content.get('first_reblogged_by')) {
+        if(content.reblogged_by && content.reblogged_by.length > 0) {
+            reblogged_by = content.reblogged_by
+        } else if(content.first_reblogged_by) {
             // TODO: this case is backwards-compat for 0.16.1. remove after upgrading.
-            reblogged_by = [content.get('first_reblogged_by')]
+            reblogged_by = [content.first_reblogged_by]
         }
 
         if(reblogged_by) {
@@ -178,7 +177,7 @@ class PostSummary extends React.Component {
 
         const myAccount = account === username
 
-        if(account && account != content.get('author')) {
+        if(account && account != content.author) {
           reblogged_by = <div className="PostSummary__reblogged_by">
                              <Icon name="reblog" /> {tt('postsummary_jsx.resteemed')}
                              {myAccount ? <Icon
@@ -191,15 +190,15 @@ class PostSummary extends React.Component {
                          </div>
         }
 
-        const {gray, pictures, authorRepLog10, flagWeight, isNsfw, isOnlyblog, isOnlyapp, foreignApp} = content.get('stats', Map()).toJS()
+        const {gray, pictures, authorRepLog10, flagWeight, isNsfw, isOnlyblog, isOnlyapp, foreignApp} = content.stats || {}
 
-        const encrypted = content.get('encrypted')
+        const encrypted = content.encrypted
         const isOnlySponsors = !!encrypted
 
         if (hideSummary({
-            author: content.get('author'), url: content.get('url'),
-            author_reputation: content.get('author_reputation'),
-            app: content.get('app'),
+            author: content.author, url: content.url,
+            author_reputation: content.author_reputation,
+            app: content.app,
             currentCategory,
             isNsfw, isOnlyblog, isOnlyapp,
             username, nsfwPref
@@ -207,7 +206,7 @@ class PostSummary extends React.Component {
             return null
         }
 
-        const p = extractContent(immutableAccessor, content);
+        const p = extractContent(objAccessor, content);
         const nsfwTags = ['nsfw', 'ru--mat', '18+']
         let nsfwTitle = nsfwTags[0]
         let currentNsfw = []
@@ -223,11 +222,11 @@ class PostSummary extends React.Component {
         let title_text = p.title;
         let comments_link;
         let is_comment = false;
-        const promoted_post = content.get('promoted') >= '1.000 GBG';
+        const promoted_post = content.promoted >= '1.000 GBG';
 
-        if( content.get( 'parent_author') !== "" ) {
-           title_text = tt('g.re') + ": " + content.get('root_title');
-           title_link_url = content.get( 'url' );
+        if( content.parent_author !== "" ) {
+           title_text = tt('g.re') + ": " + content.root_title;
+           title_link_url = content.url;
            comments_link = title_link_url;
            is_comment = true;
         } else {
@@ -251,9 +250,9 @@ class PostSummary extends React.Component {
                     parts[1] = parts[1].replace(_id + '-', '');
                     title_link_url = 'http://' + parts.join('/');
 
-                    const last_reply = content.get('last_reply');
+                    const last_reply = content.last_reply;
                     if (last_reply) {
-                        title_link_url += '#@' + last_reply.get('author') + '/' + last_reply.get('permlink');
+                        title_link_url += '#@' + last_reply.author + '/' + last_reply.permlink;
                     }
 
                     comments_link = title_link_url;
@@ -262,7 +261,7 @@ class PostSummary extends React.Component {
             }
         }
 
-        let from_search = content.get('from_search')
+        let from_search = content.from_search
 
         if (username && !is_forum)
             title_link_url += "?invite=" + username;
@@ -271,7 +270,7 @@ class PostSummary extends React.Component {
 
         let highlight
         if (currentCategory === 'discussions') {
-            highlight = { author: content.get('author'), permlink: content.get('permlink') }
+            highlight = { author: content.author, permlink: content.permlink }
             title_link_url = addHighlight(title_link_url)
             comments_link = addHighlight(comments_link)
         }
@@ -290,7 +289,7 @@ class PostSummary extends React.Component {
         } else if (encrypted === EncryptedStates.unknown || encrypted === EncryptedStates.no_key) {
             encStub = tt('postsummary_jsx.no_decrypt_key')
         } else if (encrypted === EncryptedStates.no_sub) {
-            let decrypt_fee = content.get('decrypt_fee')
+            let decrypt_fee = content.decrypt_fee
             if (decrypt_fee) {
                 decrypt_fee = Asset(decrypt_fee)
                 if (decrypt_fee.amount > 0) {
@@ -308,14 +307,14 @@ class PostSummary extends React.Component {
             </a>
         </div>;
 
-        const promosumm = tt('g.promoted_post') + content.get('promoted');
+        const promosumm = tt('g.promoted_post') + content.promoted;
 
-        let worker_post = content.get('has_worker_request')
+        let worker_post = content.has_worker_request
         if (worker_post) {
-            worker_post = walletUrl() + 'workers/created/@' + content.get('author') + '/' + content.get('permlink')
+            worker_post = walletUrl() + 'workers/created/@' + content.author + '/' + content.permlink
         }
 
-        let total_search = content.get('total_search')
+        let total_search = content.total_search
 
         const visitedClassName = this.props.visited ? 'PostSummary__post-visited ' : ''
 
@@ -384,14 +383,14 @@ class PostSummary extends React.Component {
                 <a target="_blank" href="/search"><img className="float-center" src={require("app/assets/images/search.png")} width="400" /></a>
             </span> : null
 
-        if (content.get('force_hide')) {
+        if (content.force_hide) {
             return total_search
         }
 
         let newReplies = null
         let unsubscribe = null
         if (currentCategory === 'discussions') {
-            const eventCount = content.get('event_count')
+            const eventCount = content.event_count
             if (eventCount) {
                 const commFew = tt('comment_jsx.N_comments_2', { N: eventCount })
                 const commMany = tt('comment_jsx.N_comments', { N: eventCount })
@@ -444,25 +443,25 @@ class PostSummary extends React.Component {
 export default connect(
     (state, props) => {
         const {post} = props;
-        const content = state.global.get('content').get(post);
+        const content = state.global.content && state.global.content[post];
         let pending_payout = 0;
         let total_payout = 0;
         let event_count = 0
         let encrypted = 0
         let gray
         if (content) {
-            pending_payout = content.get('pending_payout_value');
-            total_payout = content.get('total_payout_value');
-            event_count = content.get('event_count')
-            encrypted = content.get('encrypted')
-            const stats = content.get('stats', Map()).toJS()
+            pending_payout = content.pending_payout_value;
+            total_payout = content.total_payout_value;
+            event_count = content.event_count
+            encrypted = content.encrypted
+            const stats = content.stats || {}
             gray = stats.gray
         }
-        const loginDefault = state.user.get('loginDefault')
-        const loginBlurring = loginDefault && loginDefault.get('blurring')
+        const loginDefault = state.user.loginDefault
+        const loginBlurring = loginDefault && loginDefault.blurring
         return {
             post, content, gray, pending_payout, total_payout, event_count, encrypted,
-            username: state.user.getIn(['current', 'username']) || state.offchain.get('account'),
+            username: (state.user.current && state.user.current.username) || state.offchain.account,
             loginBlurring
         };
     },

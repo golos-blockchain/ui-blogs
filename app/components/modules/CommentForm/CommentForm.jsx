@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import cn from 'classnames';
 import tt from 'counterpart';
 import transaction from 'app/redux/Transaction';
+import user from 'app/redux/User';
+import app from 'app/redux/AppReducer';
 import { getTags } from 'shared/HtmlReady';
 import DialogManager from 'app/components/elements/common/DialogManager';
 import Icon from 'app/components/elements/Icon';
@@ -13,6 +15,7 @@ import CommentFooter from 'app/components/elements/postEditor/CommentFooter';
 import MarkdownViewer, {
     getRemarkable,
 } from 'app/components/cards/MarkdownViewer';
+import { addNotification } from 'app/utils/NotificationService';
 import { checkPostHtml } from 'app/utils/validator';
 import { checkAllowed, AllowTypes } from 'app/utils/Allowance'
 import './CommentForm.scss';
@@ -358,7 +361,7 @@ class CommentForm extends React.Component {
 
 export default connect(
     state => ({
-        author: state.user.getIn(['current', 'username']),
+        author: state.user.current && state.user.current.username,
     }),
     dispatch => ({
         async onPost(payload, editMode, onSuccess, onError) {
@@ -382,25 +385,20 @@ export default connect(
             );
         },
         uploadImage({ file, progress }) {
-            dispatch({
-                type: 'user/UPLOAD_IMAGE',
-                payload: {
+            dispatch(user.actions.uploadImage({
                     file,
                     progress: data => {
                         if (data && data.error) {
-                            dispatch({
-                                type: 'ADD_NOTIFICATION',
-                                payload: {
-                                    message: data.error,
-                                    dismissAfter: 5000,
-                                },
+                            addNotification({
+                                type: 'error',
+                                message: data.error,
+                                dismissAfter: 5000,
                             });
                         }
 
                         progress(data);
                     },
-                },
-            });
+            }));
         },
     })
 )(CommentForm);

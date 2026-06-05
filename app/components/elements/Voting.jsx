@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux';
 import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
+import app from 'app/redux/AppReducer';
 import Slider from '@appigram/react-rangeslider';
 import Confetti from 'react-dom-confetti'
 import CloseButton from 'react-foundation-components/lib/global/close-button'
@@ -11,6 +12,7 @@ import { Asset } from 'golos-lib-js/lib/utils'
 
 import { checkAllowed, AllowTypes } from 'app/utils/Allowance'
 import Icon from 'app/components/elements/Icon';
+import { addNotification } from 'app/utils/NotificationService';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import DropdownMenu from 'app/components/elements/DropdownMenu';
 import OldPagedDropdownMenu from 'app/components/elements/OldPagedDropdownMenu';
@@ -55,7 +57,7 @@ class Voting extends React.Component {
 
         this.getAllowType = () => {
             const { post_obj } = this.props
-            const cashoutTime = post_obj.get('cashout_time')
+            const cashoutTime = post_obj.cashout_time
             return (!cashoutTime || cashoutTime.startsWith('19')) ?
                 AllowTypes.voteArchived : AllowTypes.vote
         }
@@ -123,9 +125,9 @@ class Voting extends React.Component {
 
     _checkMyVote(username, active_votes) {
         if (username && active_votes) {
-            const vote = active_votes.find(el => el.get('voter') === username);
+            const vote = active_votes.find(el => el.voter === username);
             // weight warning, the API may send a string or a number (when zero)
-            if(vote) this.setState({myVote: parseInt(vote.get('percent') || 0, 10)})
+            if(vote) this.setState({myVote: parseInt(vote.percent || 0, 10)})
         }
     }
 
@@ -173,18 +175,17 @@ class Voting extends React.Component {
                 </span>
         }
 
-        const total_votes = post_obj.get('from_search') ?
-            post_obj.get('net_votes') :
-            post_obj.getIn(['stats', 'total_votes'])
+        const total_votes = post_obj.from_search ?
+            post_obj.net_votes :
+            post_obj.stats.total_votes
 
         const up = <Icon name={votingUpActive ? 'empty' : 'chevron-up-circle'} />;
         const classUp = 'Voting__button Voting__button-up' + (myVote > 0 ? ' Voting__button--upvoted' : '') + (votingUpActive ? ' votingUp' : '');
         
         let donateItems = [];
         let donateUiaItems = [];
-        let donates = post_obj.get('donate_list');
+        let donates = post_obj.donate_list;
         if (showList && donates !== undefined) {
-            donates = donates.toJS();
             let i = 0;
             donates.forEach((donate) => {
                 const amount = donate.amount.split(".")[0] + " GOLOS";
@@ -193,9 +194,8 @@ class Voting extends React.Component {
             });
         }
 
-        let donates_uia = post_obj.get('donate_uia_list');
+        let donates_uia = post_obj.donate_uia_list;
         if (showList && donates_uia !== undefined) {
-            donates_uia = donates_uia.toJS();
             let i = 0;
             donates_uia.forEach((donate) => {
                 const amount = donate.amount.split(".")[0] + " " + donate.amount.split(" ")[1];
@@ -204,18 +204,18 @@ class Voting extends React.Component {
             });
         }
 
-        let reward = post_obj.get('mode') === 'archived' ?
-            post_obj.get('author_payout_in_golos') :
-            post_obj.get('pending_author_payout_in_golos');
+        let reward = post_obj.mode === 'archived' ?
+            post_obj.author_payout_in_golos :
+            post_obj.pending_author_payout_in_golos;
         reward = Asset(reward);
 
-        const non_payout = post_obj.get('max_accepted_payout') === '0.000 GBG';
+        const non_payout = post_obj.max_accepted_payout === '0.000 GBG';
 
         let donateTitle = undefined;
         if (donateItems.length)
             donateTitle = non_payout ? tt('voting_jsx.payouts_declined') : tt('g.pool_payout_short') + reward;
 
-        let donateSum = Asset(post_obj.get('donates'))
+        let donateSum = Asset(post_obj.donates)
         if (reward.amount !== 0) 
             donateSum = Asset(donateSum.amount + reward.amount, 3, 'GOLOS');
 
@@ -226,11 +226,11 @@ class Voting extends React.Component {
             </span>
         </DropdownMenu>;
 
-        let donatesUiaSum = post_obj.get('donates_uia');
+        let donatesUiaSum = post_obj.donates_uia;
         let donatesUiaEl = null;
         if (donatesUiaSum > 0) donatesUiaEl = <DropdownMenu className="Voting__donates_list" el="div" items={donateUiaItems}>
             <span className="Voting__donates_uia_sum" title={tt('g.uia_rewards')}>
-                +&nbsp;{post_obj.get('donates_uia').toString() + " UIA"}
+                +&nbsp;{post_obj.donates_uia.toString() + " UIA"}
                 {donateUiaItems.length > 0 && <Icon name="dropdown-arrow" />}
             </span>
         </DropdownMenu>;
@@ -238,7 +238,7 @@ class Voting extends React.Component {
         let voters_list = null;
         let voters = [];    
         if (showList && total_votes > 0 && active_votes) {
-            const avotes = active_votes.toJS();
+            const avotes = [...active_votes];
             avotes.sort((a, b) => Math.abs(parseInt(a.rshares)) > Math.abs(parseInt(b.rshares)) ? -1 : 1)
             let has_more_votes = false;
             for( let v = voteListPage*MAX_VOTES_DISPLAY; v < avotes.length; ++v ) {
@@ -262,7 +262,7 @@ class Voting extends React.Component {
 
         return (
             <span className="Voting">
-                <Confetti config={CONFETTI_CONFIG} active={post_obj.get('confetti_active')}/>
+                <Confetti config={CONFETTI_CONFIG} active={post_obj.confetti_active}/>
                 <span className="Voting__inner">
                     <span className={classUp}>
                         {votingUpActive ? up : <a href="#" onClick={this.voteUp} title={tt(myVote > 0 ? 'g.remove_vote' : 'g.upvote')}>{up}</a>}
@@ -279,18 +279,18 @@ class Voting extends React.Component {
 
 export default connect(
     (state, ownProps) => {
-        const post = state.global.getIn(['content', ownProps.post])
+        const post = state.global.content && state.global.content[ownProps.post]
         if (!post) return ownProps
-        const author = post.get('author')
-        const permlink = post.get('permlink')
-        const active_votes = post.get('active_votes')
-        const is_comment = post.get('parent_author') !== ''
+        const author = post.author
+        const permlink = post.permlink
+        const active_votes = post.active_votes
+        const is_comment = post.parent_author !== ''
 
-        const current_account = state.user.get('current')
+        const current_account = state.user.current
         const username = current_account
-            ? current_account.get('username')
+            ? current_account.username
             : null;
-        const voting = state.global.get(`transaction_vote_active_${author}_${permlink}`)
+        const voting = state.global[`transaction_vote_active_${author}_${permlink}`]
 
         return {
             post: ownProps.post,
@@ -315,13 +315,11 @@ export default connect(
             const blocking = await checkAllowed(username, [],
                 null, allowType)
             if (blocking.error) {
-                dispatch({
-                    type: 'ADD_NOTIFICATION',
-                    payload: {
-                        message: blocking.error,
-                        dismissAfter: 5000,
-                    },
-                })
+                addNotification({
+                    type: 'error',
+                    message: blocking.error,
+                    dismissAfter: 5000,
+                });
                 return
             }
             const confirm = () => {

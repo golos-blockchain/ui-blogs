@@ -1,10 +1,11 @@
 import {take, call, put, select, fork, cancel, takeLatest} from 'redux-saga/effects';
 import {SagaCancellationException} from 'redux-saga';
 import user from 'app/redux/User';
-import { showToast, showCustomToast } from 'app/components/elements/Notifications/ToastUtils'
+import app from 'app/redux/AppReducer';
 import NotifyContent from 'app/components/elements/Notifications/NotifyContent';
 import { notificationSubscribe, notificationUnsubscribe, notificationTake } from 'app/utils/NotifyApiClient';
 import session from 'app/utils/session'
+import { addNotification } from 'app/utils/NotificationService';
 
 const wait = ms => (
     new Promise(resolve => {
@@ -106,44 +107,16 @@ export function* onUserLogin(action) {
             continue;
         }
         for (let task of tasks) {
-            yield put({
-                type: 'ADD_NOTIFICATION',
-                payload: {
-                    message: (t) => NotifyContent(t, task),
-                    custom: true,
-                    dismissAfter: 10000,
-                }
+            addNotification({
+                message: (t) => NotifyContent(t, task),
+                custom: true,
+                dismissAfter: 10000,
             });
         }
     }
 }
 
-function* onAddNotification(action) {
-    const { payload } = action
-    const opts = {
-        dismissAfter: payload.dismissAfter,
-        action: payload.action
-    }
-    if (payload.key) {
-        opts.id = payload.key
-    }
-    if (payload.custom) {
-        showCustomToast(payload.message, opts)
-    } else {
-        showToast(payload.message, opts)
-    }
-}
-
-function* addNotificationWatch() {
-    yield takeLatest('ADD_NOTIFICATION', onAddNotification)
-}
-
-export function* pushNotificationWatches() {
-    yield fork(addNotificationWatch)
-}
-
 export default {
     onUserLogin,
-    pushNotificationWatches,
     getScopePresets,
 }

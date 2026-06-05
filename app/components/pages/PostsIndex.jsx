@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import {connect} from 'react-redux';
 import { Link } from 'react-router-dom'
 import tt from 'counterpart';
-import Immutable from "immutable";
 import cookie from "react-cookie";
 import cn from 'classnames'
 
@@ -55,14 +54,14 @@ class PostsIndex extends React.Component {
     getPosts(order, category) {
         let select_tags = cookie.load(SELECT_TAGS_KEY);
         select_tags = typeof select_tags === 'object' ? select_tags.sort().join('/') : '';
-        const topic_discussions = this.props.discussions.get(category || select_tags);
+        const topic_discussions = this.props.discussions[category || select_tags];
         if (!topic_discussions) return null;
-        return topic_discussions.get(order);
+        return topic_discussions[order];
     }
 
     updateSubscribe = (onSuccess) => {
         const { accounts, username, } = this.props;
-        const account = accounts.get(username) ? accounts.get(username).toJS() : {};
+        const account = accounts[username] || {};
         let metaData = account ? getMetadataReliably(account.json_metadata) : {};
         if (!metaData.profile)
             metaData.profile = {};
@@ -139,7 +138,7 @@ class PostsIndex extends React.Component {
             const account_name = order.slice(1);
             order = 'by_feed';
             topics_order = loggedIn ? 'created' : 'trending';
-            posts = this.props.accounts.getIn([account_name, 'feed']);
+            posts = this.props.accounts[account_name] && this.props.accounts[account_name].feed;
             const isMyAccount = this.props.username === account_name;
             if (isMyAccount) {
                 emptyText = <div>
@@ -155,21 +154,23 @@ class PostsIndex extends React.Component {
             }
         } else {
             posts = this.getPosts(order, category);
-            if (posts && posts.size === 0) {
+            if (posts && posts.length === 0) {
                 emptyText = <div>{tt('g.no_topics_by_order_found', {order: (category ? ` #` + category : '')})}</div>;
             }
         }
 
-        const status = this.props.status ? this.props.status.getIn([category || '', order]) : null;
+        const status = this.props.status && this.props.status[category || '']
+            ? this.props.status[category || ''][order]
+            : null;
         const fetching = (status && status.fetching) || this.props.loading || this.props.fetching || false;
         const {showSpam} = this.state;
-        const account = this.props.username && this.props.accounts.get(this.props.username) || null
-        const json_metadata = account ? account.toJS().json_metadata : {}
+        const account = this.props.username && this.props.accounts[this.props.username] || null
+        const json_metadata = account ? account.json_metadata : {}
         const metaData = account ? getMetadataReliably(json_metadata) : {}
         const active_user = this.props.username || ''
 
         let promo_posts = []
-        if (!has_from_search && ['created', 'responses', 'donates', 'trending'].includes(order) && posts && posts.size) {
+        if (!has_from_search && ['created', 'responses', 'donates', 'trending'].includes(order) && posts && posts.length) {
           const slice_step = order == 'trending' ? 3 : 1
           promo_posts = posts.slice(0, slice_step)
           posts = posts.slice(slice_step)
@@ -193,18 +194,18 @@ class PostsIndex extends React.Component {
                         />
                     </div>}
                     { markNotificationRead }
-                    {(promo_posts && promo_posts.size) ? <div>
+                    {(promo_posts && promo_posts.length) ? <div>
                         <PostsList
-                            posts={promo_posts ? promo_posts : Immutable.List()}
+                            posts={promo_posts || []}
                             loading={false}
                             showSpam={showSpam}
                             />
                         <hr style={{ borderColor: 'goldenrod' }}></hr>
                       </div> : null }
-                    { (!fetching && (posts && !posts.size)) ? <Callout>{emptyText}</Callout> :
+                    { (!fetching && (posts && !posts.length)) ? <Callout>{emptyText}</Callout> :
                         <PostsList
                             ref={this.listRef}
-                            posts={posts ? posts : Immutable.List()}
+                            posts={posts || []}
                             loading={fetching}
                             category={category}
                             loadMore={this.loadMore}
@@ -255,15 +256,15 @@ module.exports = {
     component: connect(
         (state) => {
             return {
-                discussions: state.global.get('discussion_idx'),
-                status: state.global.get('status'),
-                has_from_search: state.global.get('has_from_search'),
-                loading: state.app.get('loading'),
-                accounts: state.global.get('accounts'),
-                loggedIn: !!state.user.get('current'),
-                username: state.user.getIn(['current', 'username']) || state.offchain.get('account'),
-                fetching: state.global.get('fetching'),
-                categories: state.global.get('tag_idx'),
+                discussions: state.global.discussion_idx || {},
+                status: state.global.status,
+                has_from_search: state.global.has_from_search,
+                loading: state.app.loading,
+                accounts: state.global.accounts || {},
+                loggedIn: !!state.user.current,
+                username: (state.user.current && state.user.current.username) || state.offchain.account,
+                fetching: state.global.fetching,
+                categories: state.global.tag_idx,
             };
         },
         (dispatch) => {

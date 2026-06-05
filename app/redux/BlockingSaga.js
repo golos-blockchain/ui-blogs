@@ -1,25 +1,18 @@
-import {fromJS, Map, Set} from 'immutable'
-import { put, call, } from 'redux-saga/effects'
+import { put, call } from 'redux-saga/effects'
 import { api } from 'golos-lib-js'
 
+import g from 'app/redux/GlobalReducer'
+
 function* putResults(account, arr) {
-    yield put({
-        type: 'global/UPDATE',
-        payload: {
-            key: ['block', 'blocking', account],
-            notSet: Map(),
-            updater: m => {
-                m = m.set('loading', false)
-                m = m.update('result', Set(), res => {
-                    for (const acc of arr) {
-                        res = res.add(acc)
-                    }
-                    return res
-                })
-                return m
-            }
+    yield put(g.actions.update({
+        key: ['block', 'blocking', account],
+        notSet: {},
+        updater: m => {
+            m.loading = false
+            m.result = [...new Set([...(m.result || []), ...arr])]
+            return m
         }
-    })
+    }))
 }
 
 function* listBlockingsLoop(account, from = '', list = []) {
@@ -47,14 +40,14 @@ function* listBlockingsLoop(account, from = '', list = []) {
 
 export function* listBlockings(account) {
     try {
-        yield put({
-            type: 'global/UPDATE',
-            payload: {
-                key: ['block', 'blocking', account],
-                notSet: Map(),
-                updater: m => m.set('loading', true)
+        yield put(g.actions.update({
+            key: ['block', 'blocking', account],
+            notSet: {},
+            updater: m => {
+                m.loading = true
+                return m
             }
-        })
+        }))
 
         yield call(listBlockingsLoop, account)
     } catch (err) {
@@ -65,14 +58,14 @@ export function* listBlockings(account) {
 
 export function* getBlockings(account, namesToCheck) {
     try {
-        yield put({
-            type: 'global/UPDATE',
-            payload: {
-                key: ['block', 'blocking', account],
-                notSet: Map(),
-                updater: m => m.set('loading', true)
+        yield put(g.actions.update({
+            key: ['block', 'blocking', account],
+            notSet: {},
+            updater: m => {
+                m.loading = true
+                return m
             }
-        })
+        }))
 
         let lst = []
         const rels = yield api.getAccountRelationsAsync({

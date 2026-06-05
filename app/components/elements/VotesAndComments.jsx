@@ -58,12 +58,12 @@ class VotesAndComments extends React.Component {
 
 export default connect(
     (state, props) => {
-        const post = state.global.getIn(['content', props.post]);
+        const post = state.global.content && state.global.content[props.post];
         if (!post) return props;
         return {
             ...props,
-            votes: post.get('net_votes'),
-            comments: post.get('children')
+            votes: post.net_votes,
+            comments: post.children
         };
     }
 )(VotesAndComments);

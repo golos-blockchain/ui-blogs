@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import {connect} from 'react-redux'
-import {Set} from 'immutable'
 import tt from 'counterpart'
 import { Asset } from 'golos-lib-js/lib/utils'
 
@@ -51,8 +50,8 @@ class Post extends React.Component {
                 return
             }
 
-            const author = dis.get('author')
-            const permlink = dis.get('permlink')
+            const author = dis.author
+            const permlink = dis.permlink
 
             const account = session.load().currentName
             if (account) {
@@ -91,18 +90,18 @@ class Post extends React.Component {
         if (!dis) {
             return null
         }
-        const replies = dis.get('replies').toJS()
-        const loaded = replies.length || !dis.get('children')
+        const replies = dis.replies || []
+        const loaded = replies.length || !dis.children
         if (loaded) {
-            const author = dis.get('author')
-            const permlink = dis.get('permlink')
+            const author = dis.author
+            const permlink = dis.permlink
 
             const highlight = isHighlight()
             if (!this.state.highlight)
                 this.setState({ highlight })
 
             if (highlight) {
-                if (!dis.get('highlighted')) {
+                if (!dis.highlighted) {
                     return null
                 }
                 markCommentsRead(curUser, author, permlink)
@@ -188,7 +187,7 @@ class Post extends React.Component {
         }
         const children = <p>
             {tt('poststub.onlyblog')}
-            <Follow following={dis.get('root_author') || dis.get('author')} showMute={false} />
+            <Follow following={dis.root_author || dis.author} showMute={false} />
         </p>
         return this._renderStub(children)
     }
@@ -207,14 +206,14 @@ class Post extends React.Component {
         e.preventDefault()
         try {
             const { current_user, } = this.props
-            const account = current_user && current_user.get('username')
+            const account = current_user && current_user.username
             if (!account) return
             if (this.state.subscribed) {
-                await unsubscribePost(account, dis.get('author'), dis.get('permlink'))
+                await unsubscribePost(account, dis.author, dis.permlink)
                 this.setState({subscribed: false})
                 return
             }
-            await subscribePost(account, dis.get('author'), dis.get('permlink'))
+            await subscribePost(account, dis.author, dis.permlink)
             this.setState({subscribed: true})
         } catch (err) {
             alert(err.message || err)
@@ -227,7 +226,7 @@ class Post extends React.Component {
             post = routeParams.username + '/' + routeParams.slug
         }
         postGetter(post)
-        const dis = content.get(post)
+        const dis = content[post]
         return dis
     }
 
@@ -241,22 +240,22 @@ class Post extends React.Component {
         if (!dis) return null;
 
         if (process.env.BROWSER) {
-            const author = dis.get('author')
-            const permlink = dis.get('permlink')
+            const author = dis.author
+            const permlink = dis.permlink
             const highlight = isHighlight()
-            if (highlight && !dis.get('highlighted') && !this.readen) {
+            if (highlight && !dis.highlighted && !this.readen) {
                 return this._renderLoadingStub()
             }
         }
 
-        const encrypted = dis.get('encrypted')
+        const encrypted = dis.encrypted
         if (encrypted === EncryptedStates.loading) {
             return this._renderLoadingStub(tt('poststub'))
         } else if (encrypted && encrypted !== EncryptedStates.decrypted) {
             return this._renderStub(<EncryptedStub dis={dis} encrypted={encrypted} />)
         }
 
-        const stats = dis.get('stats').toJS()
+        const stats = dis.stats || {}
 
         if(!showAnyway) {
             const {gray} = stats
@@ -271,7 +270,7 @@ class Post extends React.Component {
             }
         }
 
-        let replies = dis.get('replies').toJS();
+        let replies = dis.replies || [];
 
         let sort_order = this.state.highlight ? 'new' : 'trending';
         const { searchParams } = this.props
@@ -286,8 +285,8 @@ class Post extends React.Component {
 
         sortComments( content, replies, sort_order );
         const keep = a => {
-            const c = content.get(a);
-            const hide = c.getIn(['stats', 'hide'])
+            const c = content[a];
+            const hide = c && c.stats && c.stats.hide
             return !hide
         }
         const positiveComments = replies.filter(a => keep(a))
@@ -319,7 +318,7 @@ class Post extends React.Component {
         let sort_menu = [];
         let sort_label;
 
-        let selflink = `/${dis.get('category')}/@${post}`;
+        let selflink = `/${dis.category}/@${post}`;
         for( let o = 0; o < sort_orders.length; ++o ){
             if(sort_orders[o] == sort_order) sort_label = sort_labels[o];
             sort_menu.push({
@@ -328,13 +327,13 @@ class Post extends React.Component {
                 link: selflink + '?sort=' + sort_orders[o] + '#comments'
             });
         }
-        let emptyPost = dis.get('created') === '1970-01-01T00:00:00' && dis.get('body') === ''
+        let emptyPost = dis.created === '1970-01-01T00:00:00' && dis.body === ''
 
         const hp = hidePost({
             dis,
             isOnlyapp: stats.isOnlyapp,
             isOnlyblog: stats.isOnlyblog,
-            username: current_user && current_user.get('username'),
+            username: current_user && current_user.username,
             following
         })
         if (hp === 'onlyapp') {
@@ -387,7 +386,7 @@ class Post extends React.Component {
                 <div id="comments" className="Post_comments row hfeed">
                     <div className="column large-12">
                         <div className="Post_comments__content" ref={this.commentsRef}>
-                            {(!replies.length && dis.get('children')) ? (
+                            {(!replies.length && dis.children) ? (
                                 <center>
                                     <LoadingIndicator type="circle" size="25px" />
                                 </center>
@@ -404,7 +403,7 @@ class Post extends React.Component {
                             </div>
                             {positiveComments}
                             {negativeGroup}
-                            {(dis.get('children') > 10) && !subscribed && current_user ?
+                            {(dis.children > 10) && !subscribed && current_user ?
                             (<div className='Post__comments_subscribe golos-btn btn-secondary btn-round' align='center' onClick={e => this.subscribe(e, dis)}>
                                 <Icon name='new/bell' />
                                 <span>
@@ -438,26 +437,26 @@ class Post extends React.Component {
     }
 }
 
-const emptySet = Set()
-
 export default connect((state, props) => {
-    const current_user = state.user.get('current')
+    const current_user = state.user.current
 
     let { post } = props;
     if (!post) {
         const route_params = props.routeParams;
         post = route_params.username + '/' + route_params.slug;
     }
-    const dis = state.global.get('content').get(post);
+    const dis = state.global.content && state.global.content[post];
 
     let following = null
     if (current_user) {
-        const key = ['follow', 'getFollowingAsync', current_user.get('username'), 'blog_result']
-        following = state.global.getIn(key, null)
+        following = state.global.follow &&
+            state.global.follow.getFollowingAsync &&
+            state.global.follow.getFollowingAsync[current_user.username] &&
+            state.global.follow.getFollowingAsync[current_user.username].blog_result
     }
 
     return {
-        content: state.global.get('content'),
+        content: state.global.content || {},
         current_user,
         following,
     }
