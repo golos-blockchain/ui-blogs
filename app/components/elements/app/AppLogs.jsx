@@ -4,6 +4,11 @@ import tt from 'counterpart'
 import CloseButton from 'react-foundation-components/lib/global/close-button';
 
 class AppLogs extends React.Component {
+    componentDidCatch(error, info) {
+        alert(error?.toString())
+        console.error(error, info)
+    }
+
     render() {
         const { logs, logLimit, showLogs, hideMe } = this.props;
         const lines = logs.split('\n');
@@ -29,9 +34,10 @@ class AppLogs extends React.Component {
                     {line}
                 </div>
             })}
-            {logLimit !== 1000 ? <button className='button hollow'
+            {logLimit < 1000 ? <button className='button hollow'
                 onClick={e => {
-                    showLogs(1000);
+                    const many = !confirm(tt('app_settings.logs_large'))
+                    showLogs(many);
                 }}>
                 {tt('g.load_more')}
             </button>

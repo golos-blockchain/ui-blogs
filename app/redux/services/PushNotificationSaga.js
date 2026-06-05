@@ -3,7 +3,9 @@ import {SagaCancellationException} from 'redux-saga';
 import user from 'app/redux/User';
 import app from 'app/redux/AppReducer';
 import NotifyContent from 'app/components/elements/Notifications/NotifyContent';
-import { notificationSubscribe, notificationUnsubscribe, notificationTake } from 'app/utils/NotifyApiClient';
+import { notificationSubscribe, notificationUnsubscribe, notificationTake
+    firebaseRegisterWs, firebaseUnregisterWs,
+} from 'app/utils/NotifyApiClient';
 import session from 'app/utils/session'
 import { addNotification } from 'app/utils/NotificationService';
 
@@ -46,6 +48,62 @@ function getScopePresets(username) {
         inBackground }
 }
 
+async function fcmGetToken() {
+    return new Promise((resolve, reject) => {
+        cordova.exec((winParam) => {
+            console.log('fcmGetToken:', winParam)
+            resolve(winParam)
+        }, (err) => {
+            console.error('fcmGetToken err', err)
+            reject(err)
+        }, 'CorePlugin', 'fcmGetToken', [])
+    })
+}
+
+function showError(err) {
+    addNotification({
+        type: 'error',
+        key: 'err_' + Date.now(),
+        message: err,
+        dismissAfter: 3000,
+    });
+}
+
+function* registerFCM(username, scopes) {
+    let token
+    try {
+        token = yield fcmGetToken()
+    } catch (err) {
+        showError('Ошибка уведомлений Firebase: ' + (err?.message))
+        return
+    }
+    let reg
+    try {
+        reg = yield firebaseRegisterWs(username, token, scopes)
+        window._fcmToken = token
+        window._fcmAcc = username
+    } catch (err) {
+        showError('Ошибка уведомлений: ' + (err?.message))
+        return
+    }
+    console.log('GNS-Firebase - registered:', reg)
+}
+
+function* unregisterFCM(username) {
+    if (window._fcmToken && window._fcmAcc === username) {
+        let unreg
+        try {
+            unreg = yield firebaseUnregisterWs(username, window._fcmToken)
+            window._fcmToken = null
+            window._fcmAcc = null
+        } catch (err) {
+        }
+        if (unreg) {
+            console.log('Firebase logout:', unreg)
+        }
+    }
+}
+
 export function* onUserLogin(action) {
     let presets = getScopePresets(action.username).presets.join(',');
 
@@ -56,7 +114,11 @@ export function* onUserLogin(action) {
 
     let removeTaskIds = null;
     while (true) {
-        if (session.load().currentName !== action.username) {
+        const currentName = session.load().currentName
+        if (process.env.MOBILE_APP && currentName && window._fcmAcc !== currentName) {
+            yield registerFCM(currentName, presets)
+        }
+        if (currentName !== action.username) {
             console.log('PushNotificationSaga stopped due to logout of', action.username)
             return
         }
@@ -119,4 +181,5 @@ export function* onUserLogin(action) {
 export default {
     onUserLogin,
     getScopePresets,
+    unregisterFCM,
 }

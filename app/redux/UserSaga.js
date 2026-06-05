@@ -158,6 +158,7 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
         const offchain_account = yield select(state => state.offchain.account)
         if (offchain_account) {
             notifyApiLogout();
+            window._fcmAcc = null;
             authApiLogout();
             serverApiLogout()
         }
@@ -404,6 +405,12 @@ function* changeAccount(action) {
             yield notificationUnsubscribe(currentName, '__notify_id')
         } catch (err) {}
         try {
+            if (process.env.MOBILE_APP) {
+                yield PushNotificationSaga.unregisterFCM(currentName)
+            }
+        } catch (err) {
+        }
+        try {
             notifyApiLogout()
             authApiLogout()
             serverApiLogout()
@@ -476,9 +483,17 @@ function* logout() {
     if (process.env.BROWSER) {
         localStorage.removeItem('guid')
         authApiLogout()
+        const curName = session.load().currentName
+        if (curName) {
+            try {
+                if (process.env.MOBILE_APP) {
+                    yield PushNotificationSaga.unregisterFCM(curName)
+                }
+            } catch (err) {
+            }
+        }
         notifyApiLogout()
         serverApiLogout()
-        const curName = session.load().currentName
         if (curName) {
             const newCurrent = {}
             session.logout(curName, newCurrent).save()
@@ -498,6 +513,7 @@ function* logout() {
 
 function* loginError({payload: {/*error*/}}) {
     notifyApiLogout();
+    window._fcmAcc = null;
     serverApiLogout();
 }
 

@@ -17,5 +17,12 @@
         <preference name="AndroidWindowSplashScreenAnimatedIcon" value="res/icon-splash.png" />
 
         <resource-file src="res/blg_setting.png" target="app/src/main/res/drawable/blg_setting.png" />
+
+        <preference name="GradlePluginGoogleServicesEnabled" value="true" />
+
+       <!--  <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application" xmlns:android="http://schemas.android.com/apk/res/android">
+            <application android:usesCleartextTraffic="true" />
+        </edit-config> -->
     </platform>
+    <!-- <preference name="scheme" value="http" /> -->
 </widget>
