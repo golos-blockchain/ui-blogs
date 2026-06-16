@@ -21,7 +21,7 @@ class UserListRow extends React.Component {
 import {connect} from 'react-redux'
 export default connect(
     (state, ownProps) => {
-        const loggedIn = state.user.hasIn(['current', 'username'])
+        const loggedIn = state.user.current && state.user.current.username
         return {
             ...ownProps,
             loggedIn

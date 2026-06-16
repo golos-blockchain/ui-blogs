@@ -3,7 +3,7 @@ import {SagaCancellationException} from 'redux-saga';
 import user from 'app/redux/User';
 import app from 'app/redux/AppReducer';
 import NotifyContent from 'app/components/elements/Notifications/NotifyContent';
-import { notificationSubscribe, notificationUnsubscribe, notificationTake
+import { notificationSubscribe, notificationUnsubscribe, notificationTake,
     firebaseRegisterWs, firebaseUnregisterWs,
 } from 'app/utils/NotifyApiClient';
 import session from 'app/utils/session'
