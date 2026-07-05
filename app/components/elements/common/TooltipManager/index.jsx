@@ -1,128 +1,125 @@
-import React from 'react';
-import cn from 'classnames';
-import debounce from 'lodash/debounce';
+import React, { useState, useEffect, useRef, useCallback } from 'react'
+import cn from 'classnames'
+import debounce from 'lodash/debounce'
 
-const RAISE_TIME = 350;
-let key = 0;
+const RAISE_TIME = 350
+let key = 0
 
-export default class TooltipManager extends React.PureComponent {
-    state = {};
+const TooltipManager = () => {
+    const [tooltip, setTooltip] = useState(null)
+    const hoverElementRef = useRef(null)
+    const hoverTextRef = useRef(null)
+    const elementBoundRef = useRef(null)
+    const timeoutRef = useRef(null)
+    const checkIntervalRef = useRef(null)
 
-    componentDidMount() {
-        document.addEventListener('mousemove', this._onMouseMove, true);
-        document.addEventListener('resize', this._resetTooltips);
-        document.addEventListener('mousedown', this._resetTooltips, true);
-        document.addEventListener('keydown', this._resetTooltips, true);
-        window.addEventListener('scroll', this._resetTooltips);
-    }
+    const resetTooltips = useCallback(() => {
+        hoverElementRef.current = null
+        hoverTextRef.current = null
+        elementBoundRef.current = null
 
-    componentWillUnmount() {
-        document.removeEventListener('mousemove', this._onMouseMove, true);
-        document.removeEventListener('resize', this._resetTooltips);
-        document.removeEventListener('mousedown', this._resetTooltips, true);
-        document.removeEventListener('keydown', this._resetTooltips, true);
-        window.removeEventListener('scroll', this._resetTooltips);
+        onMouseMove.cancel()
+        clearTimeout(timeoutRef.current)
 
-        this._resetTooltips();
-    }
-
-    render() {
-        const { tooltip } = this.state;
-
-        return (
-            <div>
-                {tooltip ? (
-                    <div
-                        key={tooltip.key}
-                        className={cn('Tooltip', tooltip.addClass)}
-                        style={tooltip.style}
-                    >
-                        {tooltip.text}
-                    </div>
-                ) : null}
-            </div>
-        );
-    }
-
-    _onMouseMove = debounce(e => {
-        const tooltip = e.target.closest('[data-tooltip]');
-        const text = tooltip ? tooltip.dataset.tooltip.trim() : null;
-
-        if (tooltip && text === this._hoverText) {
-            this._hoverElement = tooltip;
-            return;
+        if (tooltip) {
+            hideTooltip()
         }
+    }, [tooltip])
 
-        this._resetTooltips();
+    const hideTooltip = useCallback(() => {
+        clearInterval(checkIntervalRef.current)
+        setTooltip(null)
+    }, [])
 
-        if (tooltip && text) {
-            this._hoverElement = tooltip;
-            this._hoverText = text;
+    const showTooltip = useCallback(() => {
+        const element = hoverElementRef.current
+        const bound = element.getBoundingClientRect()
 
-            this._timeout = setTimeout(() => {
-                this._showTooltip();
-            }, RAISE_TIME);
-        }
-    }, 50);
+        elementBoundRef.current = bound
 
-    _showTooltip() {
-        const element = this._hoverElement;
-        const bound = element.getBoundingClientRect();
-
-        this._elementBound = bound;
-
-        this.setState({
-            tooltip: {
-                key: ++key,
-                text: this._hoverText,
-                addClass:
-                    bound.left < 100
-                        ? 'Tooltip_left'
-                        : bound.right > window.innerWidth - 100
-                            ? 'Tooltip_right'
-                            : null,
-                style: {
-                    top: Math.round(bound.top + window.scrollY),
-                    left: Math.round(bound.left + bound.width / 2),
-                },
+        setTooltip({
+            key: ++key,
+            text: hoverTextRef.current,
+            addClass: bound.left < 100
+                ? 'Tooltip_left'
+                : bound.right > window.innerWidth - 100
+                    ? 'Tooltip_right'
+                    : null,
+            style: {
+                top: Math.round(bound.top + window.scrollY),
+                left: Math.round(bound.left + bound.width / 2),
             },
-        });
+        })
 
-        this._checkInterval = setInterval(this._checkElement, 500);
-    }
+        checkIntervalRef.current = setInterval(checkElement, 500)
+    }, [])
 
-    _checkElement = () => {
-        if (!this._hoverElement.isConnected) {
-            this._resetTooltips();
-            return;
+    const checkElement = useCallback(() => {
+        if (!hoverElementRef.current.isConnected) {
+            resetTooltips()
+            return
         }
 
-        const b = this._elementBound;
-        const bound = this._hoverElement.getBoundingClientRect();
+        const b = elementBoundRef.current
+        const bound = hoverElementRef.current.getBoundingClientRect()
 
         if (b.top !== bound.top || b.left !== bound.left) {
-            this._resetTooltips();
+            resetTooltips()
         }
-    };
+    }, [resetTooltips])
 
-    _resetTooltips = () => {
-        this._hoverElement = null;
-        this._hoverText = null;
-        this._elementBound = null;
+    const onMouseMove = useCallback(debounce((e) => {
+        const tooltipEl = e.target.closest('[data-tooltip]')
+        const text = tooltipEl ? tooltipEl.dataset.tooltip.trim() : null
 
-        this._onMouseMove.cancel();
-        clearTimeout(this._timeout);
-
-        if (this.state.tooltip) {
-            this._hideTooltip();
+        if (tooltipEl && text === hoverTextRef.current) {
+            hoverElementRef.current = tooltipEl
+            return
         }
-    };
 
-    _hideTooltip() {
-        clearInterval(this._checkInterval);
+        resetTooltips()
 
-        this.setState({
-            tooltip: null,
-        });
-    }
+        if (tooltipEl && text) {
+            hoverElementRef.current = tooltipEl
+            hoverTextRef.current = text
+
+            timeoutRef.current = setTimeout(() => {
+                showTooltip()
+            }, RAISE_TIME)
+        }
+    }, 50), [resetTooltips, showTooltip])
+
+    useEffect(() => {
+        document.addEventListener('mousemove', onMouseMove, true)
+        document.addEventListener('resize', resetTooltips)
+        document.addEventListener('mousedown', resetTooltips, true)
+        document.addEventListener('keydown', resetTooltips, true)
+        window.addEventListener('scroll', resetTooltips)
+
+        return () => {
+            document.removeEventListener('mousemove', onMouseMove, true)
+            document.removeEventListener('resize', resetTooltips)
+            document.removeEventListener('mousedown', resetTooltips, true)
+            document.removeEventListener('keydown', resetTooltips, true)
+            window.removeEventListener('scroll', resetTooltips)
+
+            resetTooltips()
+        }
+    }, [onMouseMove, resetTooltips])
+
+    return (
+        <div>
+            {tooltip ? (
+                <div
+                    key={tooltip.key}
+                    className={cn('Tooltip', tooltip.addClass)}
+                    style={tooltip.style}
+                >
+                    {tooltip.text}
+                </div>
+            ) : null}
+        </div>
+    )
 }
+
+export default TooltipManager
