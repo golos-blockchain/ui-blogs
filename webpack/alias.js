@@ -6,6 +6,7 @@ function resolvePath(...rest) {
 
 module.exports = {
     react: path.join(__dirname, '../node_modules', 'react'),
+    'react-dom': path.join(__dirname, '../node_modules', 'react-dom'),
     src: path.join(__dirname, '..', 'src'),
     app: path.join(__dirname, '..', 'app'),
     assets: resolvePath('assets'),
