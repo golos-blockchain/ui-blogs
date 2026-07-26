@@ -685,12 +685,6 @@
     "the_private_key_or_password_should_be_kept_offline": "The private key or password for the owner key should be kept offline as much as possible.",
     "the_memo_key_is_used_to_create_and_read_memos": "The memo key is used to create and read memos."
   },
-  "suggestpassword_jsx": {
-    "APP_NAME_cannot_recover_passwords_keep_this_page_in_a_secure_location": "%(APP_NAME)s cannot recover passwords. Keep this page in a secure location, such as a fireproof safe or safety deposit box.",
-    "APP_NAME_password_backup": "%(APP_NAME)s Password Backup",
-    "APP_NAME_password_backup_required": "%(APP_NAME)s Password Backup (required)",
-    "after_printing_write_down_your_user_name": "After printing, write down your user name"
-  },
   "time_versions_jsx": {
     "rev": "rev.",
     "version_NUM": "(rev. %(NUM)s)"

@@ -2,17 +2,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types'
 import {PrivateKey, PublicKey} from 'golos-lib-js/lib/auth/ecc'
+import tt from 'counterpart'
+
 import transaction from 'app/redux/Transaction'
 import g from 'app/redux/GlobalReducer'
 import user from 'app/redux/User'
-import {validate_account_name} from 'app/utils/ChainValidation';
-import runTests from 'app/utils/BrowserTests';
+import {validate_account_name} from 'app/utils/ChainValidation'
+import runTests from 'app/utils/BrowserTests'
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
 import reactForm from 'app/utils/ReactForm'
-import tt from 'counterpart';
-import { APP_DOMAIN } from 'app/client_config';
-import { translateError } from 'app/utils/ParsersAndFormatters';
-import { authUrl, authRegisterUrl, } from 'app/utils/AuthApiClient';
+import { APP_DOMAIN } from 'app/client_config'
+import { translateError } from 'app/utils/ParsersAndFormatters'
+import { authUrl, authRegisterUrl, } from 'app/utils/AuthApiClient'
+import { walletUrl, } from 'app/utils/walletUtils'
 import LoginAppReminder from 'app/components/elements/app/LoginAppReminder'
 import { openAppSettings } from 'app/components/pages/app/AppSettings'
 
@@ -104,11 +106,6 @@ class LoginForm extends Component {
         saveLogin.props.onChange(saveLoginDefault); // change UI
     };
 
-    showChangePassword = () => {
-        const {username, password} = this.state;
-        this.props.showChangePassword(username.value, password.value)
-    };
-
     checkRegisterEnabled = (e) => {
         if (e.currentTarget.hasAttribute('disabled'))
             e.preventDefault();
@@ -172,7 +169,7 @@ class LoginForm extends Component {
                 {tt('loginform_jsx.this_password_is_bound_to_your_account_owner_key')}
                 &nbsp;
                 {tt('loginform_jsx.however_you_can_use_it_to')}
-                <a onClick={this.showChangePassword}>{tt('loginform_jsx.update_your_password')}</a>
+                <a href={walletUrl(`/?dialog=change-password&name=${username.value}`)} target='_blank' rel='noreferrer noopener'}>{tt('loginform_jsx.update_your_password')}</a>
                 &nbsp;
                 {tt('loginform_jsx.to_obtain_a_more_secure_set_of_keys')}
             </span>
@@ -358,11 +355,6 @@ export default connect(
         clearError: () => { if (hasError) dispatch(user.actions.loginError({error: null})) },
         qrReader: (dataCallback) => {
             dispatch(g.actions.showDialog({name: 'qr_reader', params: {handleScan: dataCallback}}));
-        },
-        showChangePassword: (username, defaultPassword) => {
-            dispatch(user.actions.closeLogin())
-            dispatch(g.actions.remove({key: 'changePassword'}))
-            dispatch(g.actions.showDialog({name: 'changePassword', params: {username, defaultPassword}}))
         },
     })
 )(LoginForm)
