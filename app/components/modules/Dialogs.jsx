@@ -6,7 +6,6 @@ import Reveal from 'react-foundation-components/lib/global/reveal';
 import g from 'app/redux/GlobalReducer';
 import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
 import QrReader from 'app/components/elements/QrReader';
-import SuggestPassword from 'app/components/elements/SuggestPassword';
 import CheckLoginOwner from 'app/components/elements/CheckLoginOwner';
 import QrKeyView from 'app/components/elements/QrKeyView';
 import PromotePost from 'app/components/modules/PromotePost';
@@ -41,12 +40,6 @@ class Dialogs extends React.Component {
                 <Reveal onHide={this['hide_' + k]} show revealStyle={{width: '355px'}} >
                     <CloseButton onClick={this['hide_' + k]} />
                     <QrReader onClose={this['hide_' + k]} {...v.params} />
-                </Reveal>
-            </span>:
-            k === 'suggestPassword' ? <span key={idx++} >
-                <Reveal onHide={this['hide_' + k]} show size="medium">
-                    <CloseButton onClick={this['hide_' + k]} />
-                    <SuggestPassword onClose={this['hide_' + k]} />
                 </Reveal>
             </span>:
             k === 'promotePost' ? <span key={idx++} >

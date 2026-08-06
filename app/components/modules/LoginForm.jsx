@@ -169,7 +169,7 @@ class LoginForm extends Component {
                 {tt('loginform_jsx.this_password_is_bound_to_your_account_owner_key')}
                 &nbsp;
                 {tt('loginform_jsx.however_you_can_use_it_to')}
-                <a href={walletUrl(`/?dialog=change-password&name=${username.value}`)} target='_blank' rel='noreferrer noopener'}>{tt('loginform_jsx.update_your_password')}</a>
+                <a href={walletUrl(`/?dialog=change-password&name=${username.value}`)} target='_blank' rel='noreferrer noopener'>{tt('loginform_jsx.update_your_password')}</a>
                 &nbsp;
                 {tt('loginform_jsx.to_obtain_a_more_secure_set_of_keys')}
             </span>
