@@ -1,3 +1,4 @@
+@use 'sass:math';
 
 .RadioButton {
 
@@ -42,7 +43,7 @@
   }
 
   &__input:focus + &__svg-wrapper {
-    border-radius: $dot-size / 2;
+    border-radius: math.div($dot-size, 2);
     background: rgba(0,120,196, 0.1);
   }
 

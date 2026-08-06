@@ -1,12 +1,13 @@
+@use 'sass:math';
+
 @mixin hoverUnderline() {
   &:hover {
     text-decoration: underline;
   }
 }
 
-
 @function calculateRem($size) {
-  $remSize: $size / 16px;
+  $remSize: math.div($size, 16px);
   @return $remSize * 1rem;
 }
 

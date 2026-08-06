@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 @import "../../../extends";
 
 .MET {
@@ -12,7 +14,7 @@
     top: -9999px;
     height: $toolbar_height;
     padding: 0 16px;
-    border-radius: $toolbar_height / 2;
+    border-radius: math.div($toolbar_height, 2);
     align-items: center;
     background: #fff;
     box-shadow: -1px 1px 14px 0 rgba(0,0,0, 0.15);
@@ -30,7 +32,7 @@
 
   &_comment &__toolbar {
     height: $toolbar_comment_height;
-    border-radius: $toolbar_comment_height / 2;
+    border-radius: math.div($toolbar_comment_height, 2);
   }
 
   &__toolbar-tip {
