@@ -1,3 +1,5 @@
+@use '@styles/themes' as t;
+
 .Comment {
   position: relative;
   clear: both;
@@ -37,8 +39,8 @@
 }
 
 .Comment .highlighted {
-  @include themify($themes) {
-    background: themed('highlighted');
+  @include t.themify(t.$themes) using ($theme) {
+    background: t.themed('highlighted', $theme);
   }
 }
 
@@ -69,11 +71,11 @@
 }
 
 .Comment__header-user {
-  @include themify($themes) {
-    color: themed('textColorPrimary');
+  @include t.themify(t.$themes) using ($theme) {
+    color: t.themed('textColorPrimary', $theme);
 
     a {
-      color: themed('textColorPrimary');
+      color: t.themed('textColorPrimary', $theme);
       @include hoverUnderline;
     }
   }

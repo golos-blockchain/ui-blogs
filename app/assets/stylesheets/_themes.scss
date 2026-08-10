@@ -1,130 +1,135 @@
 @use 'sass:map';
 
+@use '@styles/foundation-settings' as fs;
+@use '@styles/layout' as lay;
+@use '@styles/mixins' as mixins;
+@use '@styles/variables' as v;
+
 $themes: (
   original: (
-    colorAccent: $color-blue,
-    colorAccentHover: $color-blue-original-light,
-    colorAccentReverse: $color-blue-original-light,
-    colorWhite: $color-white,
-    backgroundColor: $color-background-off-white,
-    backgroundColorEmphasis: $color-background-almost-white,
-    backgroundColorOpaque: $color-background-off-white,
+    colorAccent: v.$color-blue,
+    colorAccentHover: v.$color-blue-original-light,
+    colorAccentReverse: v.$color-blue-original-light,
+    colorWhite: v.$color-white,
+    backgroundColor: v.$color-background-off-white,
+    backgroundColorEmphasis: v.$color-background-almost-white,
+    backgroundColorOpaque: v.$color-background-off-white,
     backgroundTransparent: transparent,
-    zebra: $gray95,
+    zebra: fs.$gray95,
     highlighted: #FFD,
-    moduleBackgroundColor: $color-white,
-    menuBackgroundColor: $color-background-dark,
-    summaryBackgroundColor: $color-white,
-    moduleMediumBackgroundColor: $color-white,
-    navBackgroundColor: $color-white,
+    moduleBackgroundColor: v.$color-white,
+    menuBackgroundColor: v.$color-background-dark,
+    summaryBackgroundColor: v.$color-white,
+    moduleMediumBackgroundColor: v.$color-white,
+    navBackgroundColor: v.$color-white,
     highlightBackgroundColor: #f3faf0,
     tableRowEvenBackgroundColor: #f4f4f4,
-    border: 1px solid $color-border-light,
-    borderLight: 1px solid $color-border-light-lightest,
-    borderDark: 1px solid $color-text-gray,
-    borderAccent: 1px solid $color-blue,
-    borderDotted: 1px dotted $color-border-light,
+    border: 1px solid v.$color-border-light,
+    borderLight: 1px solid v.$color-border-light-lightest,
+    borderDark: 1px solid v.$color-text-gray,
+    borderAccent: 1px solid v.$color-blue,
+    borderDotted: 1px dotted v.$color-border-light,
     borderTransparent: transparent,
     iconColorSecondary: #cacaca,
-    textColorPrimary: $color-text-dark,
-    textColorSecondary: $color-text-gray,
-    textColorAccent: $color-text-blue,
-    textColorAccentHover: $color-blue-original-dark,
-    textColorError: $color-text-red,
-    contentBorderAccent: $color-transparent,
-    buttonBackground: $color-blue-original-dark,
-    buttonBackgroundHover: $color-blue-original-light,
-    buttonText: $color-text-white,
+    textColorPrimary: v.$color-text-dark,
+    textColorSecondary: v.$color-text-gray,
+    textColorAccent: v.$color-text-blue,
+    textColorAccentHover: v.$color-blue-original-dark,
+    textColorError: v.$color-text-red,
+    contentBorderAccent: v.$color-transparent,
+    buttonBackground: v.$color-blue-original-dark,
+    buttonBackgroundHover: v.$color-blue-original-light,
+    buttonText: v.$color-text-white,
     buttonTextShadow: 0 1px 0 rgba(0,0,0,0.20),
-    buttonTextHover: $color-text-white,
-    buttonBoxShadow: $color-transparent,
-    modalBackgroundColor: $color-background-almost-white,
-    modalTextColorPrimary: $color-text-dark,
+    buttonTextHover: v.$color-text-white,
+    buttonBoxShadow: v.$color-transparent,
+    modalBackgroundColor: v.$color-background-almost-white,
+    modalTextColorPrimary: v.$color-text-dark,
   ),
   light: (
-    colorAccent: $color-teal,
-    colorAccentHover: $color-teal-dark,
-    colorAccentReverse: $color-blue-black,
-    colorWhite: $color-white,
-    backgroundColor: $color-background-off-white,
-    backgroundColorEmphasis: $color-background-almost-white,
-    backgroundColorOpaque: $color-background-off-white,
+    colorAccent: v.$color-teal,
+    colorAccentHover: v.$color-teal-dark,
+    colorAccentReverse: v.$color-blue-black,
+    colorWhite: v.$color-white,
+    backgroundColor: v.$color-background-off-white,
+    backgroundColorEmphasis: v.$color-background-almost-white,
+    backgroundColorOpaque: v.$color-background-off-white,
     backgroundTransparent: transparent,
-    moduleBackgroundColor: $color-white,
-    menuBackgroundColor: $color-background-dark,
-    summaryBackgroundColor: $color-white,
-    zebra: $gray95,
+    moduleBackgroundColor: v.$color-white,
+    menuBackgroundColor: v.$color-background-dark,
+    summaryBackgroundColor: v.$color-white,
+    zebra: fs.$gray95,
     highlighted: #FFD,
-    moduleMediumBackgroundColor: $color-transparent,
-    navBackgroundColor: $color-white,
+    moduleMediumBackgroundColor: v.$color-transparent,
+    navBackgroundColor: v.$color-white,
     highlightBackgroundColor: #f3faf0,
     tableRowEvenBackgroundColor: #f4f4f4,
-    border: 1px solid $light-gray,
-    borderLight: 1px solid $color-border-light-lightest,
-    borderDark: 1px solid $color-text-gray,
-    borderAccent: 1px solid $color-teal,
-    borderDotted: 1px dotted $color-border-light,
+    border: 1px solid fs.$light-gray,
+    borderLight: 1px solid v.$color-border-light-lightest,
+    borderDark: 1px solid v.$color-text-gray,
+    borderAccent: 1px solid v.$color-teal,
+    borderDotted: 1px dotted v.$color-border-light,
     borderTransparent: transparent,
     iconColorSecondary: #cacaca,
-    textColorPrimary: $color-text-dark,
-    textColorSecondary: $color-text-gray,
-    textColorAccent: $color-text-teal,
-    textColorAccentHover: $color-teal,
-    textColorError: $color-text-red,
-    contentBorderAccent: $color-teal,
-    buttonBackground: $color-white,
-    buttonBackgroundHover: $color-teal,
-    buttonText: $color-text-white,
+    textColorPrimary: v.$color-text-dark,
+    textColorSecondary: v.$color-text-gray,
+    textColorAccent: v.$color-text-teal,
+    textColorAccentHover: v.$color-teal,
+    textColorError: v.$color-text-red,
+    contentBorderAccent: v.$color-teal,
+    buttonBackground: v.$color-white,
+    buttonBackgroundHover: v.$color-teal,
+    buttonText: v.$color-text-white,
     buttonTextShadow: 0 1px 0 rgba(0,0,0,0.20),
-    buttonTextHover: $color-white,
-    buttonBoxShadow: $color-teal,
-    buttonBoxShadowHover: $color-blue-black,
-    modalBackgroundColor: $color-white,
-    modalTextColorPrimary: $color-text-dark,
+    buttonTextHover: v.$color-white,
+    buttonBoxShadow: v.$color-teal,
+    buttonBoxShadowHover: v.$color-blue-black,
+    modalBackgroundColor: v.$color-white,
+    modalTextColorPrimary: v.$color-text-dark,
     modalReminder: #d0edff,
   ),
   dark: (
-    colorAccent: $color-teal,
-    colorAccentHover: $color-teal,
-    colorAccentReverse: $color-white,
-    colorWhite: $color-white,
-    backgroundColor: $color-background-dark,
-    backgroundColorEmphasis: $color-background-super-dark,
-    backgroundColorOpaque: $color-blue-dark,
-    moduleBackgroundColor: $color-background-dark,
+    colorAccent: v.$color-teal,
+    colorAccentHover: v.$color-teal,
+    colorAccentReverse: v.$color-white,
+    colorWhite: v.$color-white,
+    backgroundColor: v.$color-background-dark,
+    backgroundColorEmphasis: v.$color-background-super-dark,
+    backgroundColorOpaque: v.$color-blue-dark,
+    moduleBackgroundColor: v.$color-background-dark,
     backgroundTransparent: transparent,
-    menuBackgroundColor: $color-blue-dark,
-    summaryBackgroundColor: $black-gray,
-    moduleMediumBackgroundColor: $color-background-dark,
-    navBackgroundColor: $color-background-dark,
-    highlightBackgroundColor: $color-blue-black-darkest,
-    zebra: $black-gray,
-    highlighted: $black-gray,
+    menuBackgroundColor: v.$color-blue-dark,
+    summaryBackgroundColor: fs.$black-gray,
+    moduleMediumBackgroundColor: v.$color-background-dark,
+    navBackgroundColor: v.$color-background-dark,
+    highlightBackgroundColor: v.$color-blue-black-darkest,
+    zebra: fs.$black-gray,
+    highlighted: fs.$black-gray,
     tableRowEvenBackgroundColor: #212C33,
-    border: 1px solid $color-border-dark,
-    borderLight: 1px solid $color-border-dark-lightest,
-    textColorPrimaryborderDark: 1px solid $color-text-gray-light,
-    borderAccent: 1px solid $color-teal,
-    borderDotted: 1px dotted $color-border-dark,
+    border: 1px solid v.$color-border-dark,
+    borderLight: 1px solid v.$color-border-dark-lightest,
+    textColorPrimaryborderDark: 1px solid v.$color-text-gray-light,
+    borderAccent: 1px solid v.$color-teal,
+    borderDotted: 1px dotted v.$color-border-dark,
     borderTransparent: transparent,
-    iconColorSecondary: $color-text-gray-light,
-    textColorPrimary: $color-text-white,
-    textColorSecondary: $color-text-gray-light,
-    textColorAccent: $color-teal,
-    textColorAccentHover: $color-teal-light,
-    textColorError: $color-text-red,
-    contentBorderAccent: $color-teal,
-    buttonBackground: $color-blue-black,
-    buttonBackgroundHover: $color-teal,
-    buttonText: $color-blue-dark,
+    iconColorSecondary: v.$color-text-gray-light,
+    textColorPrimary: v.$color-text-white,
+    textColorSecondary: v.$color-text-gray-light,
+    textColorAccent: v.$color-teal,
+    textColorAccentHover: v.$color-teal-light,
+    textColorError: v.$color-text-red,
+    contentBorderAccent: v.$color-teal,
+    buttonBackground: v.$color-blue-black,
+    buttonBackgroundHover: v.$color-teal,
+    buttonText: v.$color-blue-dark,
     buttonTextShadow: 0 1px 0 rgba(0,0,0,0),
-    buttonTextHover: $color-white,
-    buttonBoxShadow: $color-teal,
-    buttonBoxShadowHover: $color-white,
+    buttonTextHover: v.$color-white,
+    buttonBoxShadow: v.$color-teal,
+    buttonBoxShadowHover: v.$color-white,
     inputPriceWarning: rgba(255, 153, 0, 0.83),
-    modalBackgroundColor: $color-white,
-    modalTextColorPrimary: $color-text-dark,
-    modalReminder: $color-blue-dark,
+    modalBackgroundColor: v.$color-white,
+    modalTextColorPrimary: v.$color-text-dark,
+    modalReminder: v.$color-blue-dark,
   ),
 );
 
@@ -134,55 +139,50 @@ $themes: (
 @mixin themify($themes) {
   @each $theme, $map in $themes {
     .theme-#{$theme} & {
-      $theme-map: () ;
-      @each $key, $submap in $map {
-        $value: map.get(map.get($themes, $theme), '#{$key}');
-        $theme-map: map.merge($theme-map, ($key: $value)) ;
-      }
-      @content;
+      @content($map);
     }
   }
 }
 
-@function themed($key) {
-  @return map.get($theme-map, $key);
+@function themed($key, $map) {
+  @return map.get($map, $key);
 }
 
 
   .theme-original {
-    background-color: $white;
-    color: $color-text-dark;
-    @include MQ(M) {
-      background-color: $color-background-off-white;
+    background-color: fs.$white;
+    color: v.$color-text-dark;
+    @include lay.MQ(M) {
+      background-color: v.$color-background-off-white;
     }
   }
   .theme-light {
-    background-color: $white;
-    color: $color-text-dark;
-    @include MQ(M) {
-      background-color: $color-background-off-white;
+    background-color: fs.$white;
+    color: v.$color-text-dark;
+    @include lay.MQ(M) {
+      background-color: v.$color-background-off-white;
     }
 
     thead, tbody, tfoot {
-        background-color: $color-background-off-white;
+        background-color: v.$color-background-off-white;
     }
   }
   .theme-dark {
-    background-color: $color-background-dark !important;
-    color: $color-text-white;
+    background-color: v.$color-background-dark !important;
+    color: v.$color-text-white;
 
     thead, tbody, tfoot {
         border: none;
-        background-color: $color-background-dark !important;
-        color: $color-text-white;
+        background-color: v.$color-background-dark !important;
+        color: v.$color-text-white;
     }
 
     tbody tr:nth-child(even) {
-        background-color: $black-gray;
+        background-color: fs.$black-gray;
     }
 
     .highcharts-background {
-        fill: $color-background-dark;
+        fill: v.$color-background-dark;
     }
 
     .MarkdownEditor_comment .CodeMirror {
@@ -191,13 +191,13 @@ $themes: (
 
     .VerticalMenu {
        li > a:hover {
-        color: $color-background-dark !important;
+        color: v.$color-background-dark !important;
       }
     }
 
     .UserProfile__banner {
         > div.column {
-            background: $color-background-dark;
+            background: v.$color-background-dark;
             background-size: cover;
             background-repeat: no-repeat;
             background-position: 50% 50%;
@@ -237,11 +237,11 @@ $themes: (
     }
 
     .msgs-compose-input {
-        color: $color-text-white !important;
+        color: v.$color-text-white !important;
     }
 
     .msgs-compose-input::placeholder {
-        color: $color-text-white !important;
+        color: v.$color-text-white !important;
     }
 
     .conversation-list-item.selected {
@@ -249,20 +249,20 @@ $themes: (
     }
 
     .msgs-message .timestamp {
-        color: $color-text-white;
+        color: v.$color-text-white;
     }
 
     .msgs-message:not(.mine) .bubble-container:not(.selected) .bubble {
-        color: $color-background-dark;
+        color: v.$color-background-dark;
     }
 
     .conversation-search-input {
         background: #373737 !important;
-        color: $color-text-white !important;
+        color: v.$color-text-white !important;
     }
 
     .conversation-search-input::placeholder {
-        color: $color-text-white !important;
+        color: v.$color-text-white !important;
     }
   }
 
@@ -273,47 +273,47 @@ $themes: (
   text-decoration: none;
   transition: 0.2s all ease-in-out;
   &--primary {
-    @include themify($themes) {
-        color: themed('textColorPrimary');
+    @include themify($themes) using ($theme) {
+        color: themed('textColorPrimary', $theme);
     }
     &:visited, &:active {
-      @include themify($themes) {
-          color: themed('textColorPrimary');
+      @include themify($themes) using ($theme) {
+          color: themed('textColorPrimary', $theme);
       }
     }
     &:hover, &:focus {
-      @include themify($themes) {
-          color: themed('textColorAccent');
+      @include themify($themes) using ($theme) {
+          color: themed('textColorAccent', $theme);
       }
     }
   }
   &--secondary {
-    @include themify($themes) {
-        color: themed('textColorSecondary');
+    @include themify($themes) using ($theme) {
+        color: themed('textColorSecondary', $theme);
     }
     &:visited, &:active {
-      @include themify($themes) {
-          color: themed('textColorSecondary');
+      @include themify($themes) using ($theme) {
+          color: themed('textColorSecondary', $theme);
       }
     }
     &:hover, &:focus {
-      @include themify($themes) {
-          color: themed('textColorAccent');
+      @include themify($themes) using ($theme) {
+          color: themed('textColorAccent', $theme);
       }
     }
   }
   &--accent {
-    @include themify($themes) {
-        color: themed('textColorAccent');
+    @include themify($themes) using ($theme) {
+        color: themed('textColorAccent', $theme);
     }
     &:visited, &:active {
-      @include themify($themes) {
-          color: themed('textColorAccent');
+      @include themify($themes) using ($theme) {
+          color: themed('textColorAccent', $theme);
       }
     }
     &:hover, &:focus {
-      @include themify($themes) {
-          color: themed('textColorAccentHover');
+      @include themify($themes) using ($theme) {
+          color: themed('textColorAccentHover', $theme);
       }
     }
   }
@@ -323,14 +323,14 @@ $themes: (
   background-color: transparent;
   transition: 0.2s all ease-in-out;
   box-shadow: 0px 0px 0px 0 rgba(0,0,0,0);
-  @include themify($themes) {
-    border: themed('borderAccent');
-    color: themed('textColorAccent');
+  @include themify($themes) using ($theme) {
+    border: themed('borderAccent', $theme);
+    color: themed('textColorAccent', $theme);
   }
   &:hover {
-    @include themify($themes) {
-      border: themed('borderDark');
-      color: themed('textColorPrimary');
+    @include themify($themes) using ($theme) {
+      border: themed('borderDark', $theme);
+      color: themed('textColorPrimary', $theme);
     }
   }
 }
@@ -342,27 +342,27 @@ $themes: (
   text-transform: capitalize;
   border-radius: 0;
   text-decoration: none;
-  @include font-size(18px);
-  @include themify($themes) {
-    background-color: themed('buttonBackground');
-    box-shadow: 0px 0px 0px 0 rgba(0,0,0,0), 2px 2px 0px 0px themed('buttonBoxShadow');
-    color: themed('buttonText');
+  @include mixins.font-size(18px);
+  @include themify($themes) using ($theme) {
+    background-color: themed('buttonBackground', $theme);
+    box-shadow: 0px 0px 0px 0 rgba(0,0,0,0), 2px 2px 0px 0px themed('buttonBoxShadow', $theme);
+    color: themed('buttonText', $theme);
   }
   &:hover, &:focus {
-    @include themify($themes) {
-      background-color: themed('buttonBackgroundHover');
-      box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.1), 4px 4px 0 0 themed('buttonBoxShadowHover');
-      color: themed('buttonTextHover');
-      text-shadow: themed('buttonTextShadow');
+    @include themify($themes) using ($theme) {
+      background-color: themed('buttonBackgroundHover', $theme);
+      box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.1), 4px 4px 0 0 themed('buttonBoxShadowHover', $theme);
+      color: themed('buttonTextHover', $theme);
+      text-shadow: themed('buttonTextShadow', $theme);
     }
   }
   &:visited, &:active {
-    @include themify($themes) {
-      color: themed('buttonText');
+    @include themify($themes) using ($theme) {
+      color: themed('buttonText', $theme);
     }
     &:hover, &:focus {
-      @include themify($themes) {
-        color: themed('buttonTextHover');
+      @include themify($themes) using ($theme) {
+        color: themed('buttonTextHover', $theme);
       }
     }
   }
@@ -378,19 +378,19 @@ $themes: (
 
 .e-btn {
   &--black {
-    background-color: $color-blue-black;
-    box-shadow: 0px 0px 0px 0 rgba(0,0,0,0), 5px 5px 0 0 $color-teal;
-    color: $color-white;
+    background-color: v.$color-blue-black;
+    box-shadow: 0px 0px 0px 0 rgba(0,0,0,0), 5px 5px 0 0 v.$color-teal;
+    color: v.$color-white;
     &:hover, &:focus {
-      background-color: $color-teal;
-      box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.1), 7px 7px 0 0 $color-blue-black;
-      color: $color-white;
+      background-color: v.$color-teal;
+      box-shadow: 2px 2px 2px 0 rgba(0,0,0,0.1), 7px 7px 0 0 v.$color-blue-black;
+      color: v.$color-white;
       text-shadow: 0 1px 0 rgba(0,0,0,0.20);
     }
     &:visited, &:active {
-      background-color: $color-blue-black;
-      box-shadow: 0px 0px 0px 0 rgba(0,0,0,0), 5px 5px 0 0 $color-teal;
-      color: $color-white;
+      background-color: v.$color-blue-black;
+      box-shadow: 0px 0px 0px 0 rgba(0,0,0,0), 5px 5px 0 0 v.$color-teal;
+      color: v.$color-white;
     }
     &.disabled, &[disabled] {
       opacity: 0.25;
@@ -398,28 +398,28 @@ $themes: (
       box-shadow: 0px 0px 0px 0 rgba(0,0,0,0);
       &:hover, &:focus {
         box-shadow: 0px 0px 0px 0 rgba(0,0,0,0);
-        background-color: $color-blue-black;
-        color: $color-white;
+        background-color: v.$color-blue-black;
+        color: v.$color-white;
       }
     }
     &.hollow {
       background-color: transparent;
       box-shadow: 0px 0px 0px 0 rgba(0,0,0,0);
-      color: $color-text-gray;
+      color: v.$color-text-gray;
       font-weight: normal;
       transition: 0.2s all ease-in-out;
       border: transparent;
       &:hover, &:focus {
         background-color: transparent;
         box-shadow: 0px 0px 0px 0 rgba(0,0,0,0);
-        color: $color-blue-dark;
+        color: v.$color-blue-dark;
         font-weight: normal;
         text-shadow: 0 1px 0 rgba(0,0,0,0.0);
       }
       &:visited, &:active {
         background-color: transparent;
         box-shadow: 0px 0px 0px 0 rgba(0,0,0,0);
-        color: $color-text-gray;
+        color: v.$color-text-gray;
         font-weight: normal;
       }
     }
@@ -430,32 +430,32 @@ $themes: (
 .theme-dark {
   .button.hollow {
     &:hover, &:focus {
-      border-color: $color-teal;
-      color: $color-teal;
-      outline-color: $color-teal;
+      border-color: v.$color-teal;
+      color: v.$color-teal;
+      outline-color: v.$color-teal;
     }
   }
 }
 
 .reveal, .dropdown-pane {
-  @include themify($themes) {
-    background-color: themed('summaryBackgroundColor');
+  @include themify($themes) using ($theme) {
+    background-color: themed('summaryBackgroundColor', $theme);
 
-    color: themed('textColorPrimary');
+    color: themed('textColorPrimary', $theme);
 
   }
 }
 
 label {
-  @include themify($themes) {
-    color: themed('textColorSecondary');
+  @include themify($themes) using ($theme) {
+    color: themed('textColorSecondary', $theme);
   }
 }
 
 .dropdown-pane li:hover {
-  @include themify($themes) {
+  @include themify($themes) using ($theme) {
       a {
-        color: themed('textColorSecondary');
+        color: themed('textColorSecondary', $theme);
       }
   }
 }

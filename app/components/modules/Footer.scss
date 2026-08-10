@@ -1,3 +1,5 @@
+@use '@styles/themes' as t;
+
 .Footer {
   border-top: 1px solid $light-gray;
   overflow: hidden;
@@ -6,8 +8,8 @@
 		display: block;
         margin-bottom: 25px;
 
-        @include themify($themes) {
-            color: themed('textColorPrimary');
+        @include t.themify(t.$themes) using ($theme) {
+            color: t.themed('textColorPrimary', $theme);
         }
 
         font-size: 18px;
@@ -18,16 +20,16 @@
 	}
 	ul { margin-left: 0; }
 	li {
-        @include themify($themes) {
-            color: themed('textColorPrimary');
+        @include t.themify(t.$themes) using ($theme) {
+            color: t.themed('textColorPrimary', $theme);
         }
 
         list-style-type: none;
         margin: 6px 0;
 
 		a { 
-          @include themify($themes) {
-              color: themed('textColorPrimary');
+          @include t.themify(t.$themes) using ($theme) {
+              color: t.themed('textColorPrimary', $theme);
           }
 
           font-size: 18px;
@@ -60,8 +62,8 @@
 			.Icon {
 				margin-right: 20px;
 
-                @include themify($themes) {
-                    fill: themed('textColorPrimary');
+                @include t.themify(t.$themes) using ($theme) {
+                    fill: t.themed('textColorPrimary', $theme);
                 }
 			}
 
@@ -88,8 +90,8 @@
 
 	}
 	.Footer__description {
-        @include themify($themes) {
-          color: themed('textColorPrimary');
+        @include t.themify(t.$themes) using ($theme) {
+          color: t.themed('textColorPrimary', $theme);
         }
 
         font-size: 18px;

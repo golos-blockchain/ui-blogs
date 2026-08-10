@@ -1,3 +1,5 @@
+@use '@styles/themes' as t;
+
 .PostsList__post_overlay {
   position: fixed;
   top: 0;
@@ -50,11 +52,11 @@
 .PostsList__post_container {
   position: relative;
 
-  @include themify($themes) {
-    background-color: themed('summaryBackgroundColor');
+  @include t.themify(t.$themes) using ($theme) {
+    background-color: t.themed('summaryBackgroundColor', $theme);
 
     .PostFull {
-      background-color: themed('summaryBackgroundColor');
+      background-color: t.themed('summaryBackgroundColor', $theme);
     }
   }
 

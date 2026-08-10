@@ -1,3 +1,5 @@
+@use '@styles/themes' as t;
+
 HTML {
   height: 100%;
 }
@@ -20,9 +22,9 @@ HTML {
         margin-top: 0;
     }
     .callout {
-      @include themify($themes) {
-        color: themed('textColorPrimary');
-        background-color: themed('backgroundColor');
+      @include t.themify(t.$themes) using ($theme) {
+        color: t.themed('textColorPrimary', $theme);
+        background-color: t.themed('backgroundColor', $theme);
       }
 
       margin-top: 0.75rem;
@@ -123,8 +125,8 @@ HTML {
     -webkit-filter: grayscale(1); // image
     filter: gray; // image grayscale
     .Comment__header-user {
-      @include themify($themes) {
-        color: themed('textColorPrimary');
+      @include t.themify(t.$themes) using ($theme) {
+        color: t.themed('textColorPrimary', $theme);
       }
     }
 }

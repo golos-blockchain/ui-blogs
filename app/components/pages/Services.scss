@@ -1,3 +1,5 @@
+@use '@styles/themes' as t;
+
   .landing-services{
     font-family: 'Open Sans', sans-serif;
     font-style: normal;
@@ -145,15 +147,15 @@
   }
   
   .landing-services-block:nth-child(2n+1) {
-    @include themify($themes) {
-        color: themed('textColorPrimary');
-        background-color: themed('backgroundColor');
+    @include t.themify(t.$themes) using ($theme) {
+        color: t.themed('textColorPrimary', $theme);
+        background-color: t.themed('backgroundColor', $theme);
     }
   }
   .landing-services-block:nth-child(2n+2) {
-    @include themify($themes) {
-        color: themed('textColorPrimary');
-        background-color: themed('zebra');
+    @include t.themify(t.$themes) using ($theme) {
+        color: t.themed('textColorPrimary', $theme);
+        background-color: t.themed('zebra', $theme);
     }
   }
 .new {

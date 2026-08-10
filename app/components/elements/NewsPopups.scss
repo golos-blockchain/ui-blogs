@@ -1,6 +1,8 @@
+@use '@styles/themes' as t;
+
 .NewsPopups {
-    @include themify($themes) {
-        background-color: themed('modalReminder') !important;
+    @include t.themify(t.$themes) using ($theme) {
+        background-color: t.themed('modalReminder', $theme) !important;
     }
     color: #333;
     border-radius: 5px;

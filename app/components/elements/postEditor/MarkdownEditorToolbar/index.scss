@@ -1,3 +1,5 @@
+@use '@styles/themes' as t;
+
 @use 'sass:math';
 
 @import "../../../extends";
@@ -180,8 +182,8 @@
     cursor: pointer;
     transition: color 0.1s;
 
-    @include themify($themes) {
-      color: themed('textColorSecondary');
+    @include t.themify(t.$themes) using ($theme) {
+      color: t.themed('textColorSecondary', $theme);
     }
 
     &:hover {

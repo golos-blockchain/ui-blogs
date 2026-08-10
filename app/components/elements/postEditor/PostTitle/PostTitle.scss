@@ -1,3 +1,5 @@
+@use '@styles/themes' as t;
+
 
 .PostTitle {
   position: relative;
@@ -11,8 +13,8 @@
     font-size: 32px;
     font-family: 'Source Serif Pro', serif;
 
-    @include themify($themes) {
-      color: themed('textColorSecondary');
+    @include t.themify(t.$themes) using ($theme) {
+      color: t.themed('textColorSecondary', $theme);
     }
 
     outline: none !important;

@@ -1,3 +1,5 @@
+@use '@styles/themes' as t;
+
 .sub-menu {
     li {
         margin: 0 15px;
@@ -38,8 +40,8 @@ li.Header__profile {
   }
 
   .NavProfile__name {
-    @include themify($themes) {
-        color: themed('textColorPrimary');
+    @include t.themify(t.$themes) using ($theme) {
+        color: t.themed('textColorPrimary', $theme);
     }
 
     font-size: 0.85rem;
@@ -47,8 +49,8 @@ li.Header__profile {
   }
 
   .NavProfile__golos {
-    @include themify($themes) {
-        color: themed('textColorPrimary');
+    @include t.themify(t.$themes) using ($theme) {
+        color: t.themed('textColorPrimary', $theme);
     }
 
     font-weight: 500;
