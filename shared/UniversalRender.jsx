@@ -31,6 +31,7 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import * as api from 'app/utils/APIWrapper'
 import rootReducer from 'app/redux/RootReducer';
 import rootSaga from 'app/redux/RootSaga';
+import user from 'app/redux/User';
 import {component as NotFound} from 'app/components/pages/NotFound';
 import extractMeta from 'app/utils/ExtractMeta';
 import Translator from 'app/Translator';
@@ -97,7 +98,7 @@ export async function serverRender({
     if (process.env.BROWSER) {
         const store = createStore(rootReducer, initial_state, middleware);
         if (!session.load().currentName && $STM_Config.authorization_required) {
-            store.dispatch({type: 'user/REQUIRE_LOGIN', payload: {}});
+            store.dispatch(user.actions.requireLogin({}));
         }
         // sagaMiddleware.run(PollDataSaga).done
         //     .then(() => console.log('PollDataSaga is finished'))
@@ -182,7 +183,7 @@ export async function serverRender({
         serverStore = createStore(rootReducer, { global: onchain, offchain});
         if (!offchain.account && $STM_Config.authorization_required) {
             noMeta = true
-            serverStore.dispatch({type: 'user/REQUIRE_LOGIN', payload: {}});
+            serverStore.dispatch(user.actions.requireLogin({}));
         }
         serverStore.dispatch({type: '@@router/LOCATION_CHANGE', payload: {pathname: location}});
         // TODO: maybe use request to golosnotify to fetch counters?
@@ -257,7 +258,7 @@ export async function serverRender({
 export function clientRender(initialState) {
     const store = createStore(rootReducer, initialState, middleware);
     if (!session.load().currentName && $STM_Config.authorization_required) {
-        store.dispatch({type: 'user/REQUIRE_LOGIN', payload: {}});
+        store.dispatch(user.actions.requireLogin({}));
     }
     sagaMiddleware.run(rootSaga)
 

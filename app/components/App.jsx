@@ -119,6 +119,12 @@ class App extends React.Component {
                 this.appSettings = true
             }
             window.appMounted = true
+
+            window.IS_MOBILE =
+                /android|iphone/i.test(navigator.userAgent) ||
+                window.innerWidth < 765;
+
+            window.INIT_TIMESSTAMP = Date.now();
         }
     }
 
@@ -179,18 +185,19 @@ class App extends React.Component {
             })
         }
 
-        const { nightmodeEnabled } = this.props;
-        this.toggleBodyNightmode(nightmodeEnabled);
-
         if (process.env.BROWSER) {
+            const { nightmodeEnabled } = this.props;
+            this.toggleBodyNightmode(nightmodeEnabled);
+
             localStorage.removeItem('autopost') // July 14 '16 compromise, renamed to autopost2
         }
 
+        this.props.syncNightmode();
         this.props.loginUser();
         this.props.loadExchangeRates();
 
-        window.addEventListener('storage', this.checkLogin);
         if (process.env.BROWSER) {
+            window.addEventListener('storage', this.checkLogin);
             window.addEventListener('click', this.checkLeaveGolos);
         }
         // setTimeout(() => this.setState({showCallout: false}), 15000);
@@ -201,27 +208,13 @@ class App extends React.Component {
     }
 
     toggleBodyNightmode(nightmodeEnabled) {
+        if (!process.env.BROWSER) return;
         if (nightmodeEnabled) {
             document.body.classList.remove('theme-light');
             document.body.classList.add('theme-dark');
         } else {
             document.body.classList.remove('theme-dark');
             document.body.classList.add('theme-light');
-        }
-    }
-
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        const { nightmodeEnabled } = nextProps;
-        this.toggleBodyNightmode(nightmodeEnabled);
-    }
-
-    UNSAFE_componentWillMount() {
-        if (process.env.BROWSER) {
-            window.IS_MOBILE =
-                /android|iphone/i.test(navigator.userAgent) ||
-                window.innerWidth < 765;
-
-            window.INIT_TIMESSTAMP = Date.now();
         }
     }
 
@@ -236,10 +229,17 @@ class App extends React.Component {
         }
     }
 
-    componentDidUpdate(nextProps) {
+    componentDidUpdate(prevProps) {
+        this.props.syncNightmode();
+
+        if (process.env.BROWSER) {
+            const { nightmodeEnabled } = this.props;
+            this.toggleBodyNightmode(nightmodeEnabled);
+        }
+
         // setTimeout(() => this.setState({showCallout: false}), 15000);
-        if (nextProps.router.location &&
-            nextProps.router.location.pathname !== this.props.router.location.pathname) {
+        if (prevProps.router.location &&
+            prevProps.router.location.pathname !== this.props.router.location.pathname) {
             this.setState({ showBanner: false, showCallout: false });
         }
     }
@@ -577,8 +577,6 @@ App.propTypes = {
 
 export default connect(
     state => {
-        let nightmodeEnabled = process.env.BROWSER ? localStorage.getItem('nightmodeEnabled') == 'true' || false : false
-
         const currentUser = state.user.current
 
         return {
@@ -589,13 +587,16 @@ export default connect(
                 !currentUser &&
                 !state.offchain.account &&
                 state.offchain.new_visit,
-            nightmodeEnabled: nightmodeEnabled,
+            nightmodeEnabled: state.user.nightmodeEnabled,
             username: currentUser && currentUser.username,
         };
     },
     dispatch => ({
         loginUser: () => {
             dispatch(user.actions.usernamePasswordLogin({}))
+        },
+        syncNightmode: () => {
+            dispatch(user.actions.syncNightmode())
         },
         logoutUser: () => dispatch(user.actions.logout()),
         depositSteem: () => {
