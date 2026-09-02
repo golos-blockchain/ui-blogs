@@ -78,43 +78,52 @@ class Modals extends React.Component {
 
         const loginClass = loginBlurring ? 'reveal-blurring' : undefined
 
+        let modalStyle = {
+        };
+
         let width400
         let width600
         if (!isS) {
             width400 = '400px'
             width600 = '600px'
+
+            modalStyle = {
+                borderRadius: '8px',
+                boxShadow: '0 0 19px 3px rgba(0,0,0, 0.2)',
+                ...modalStyle,
+            }
         }
 
         return (
             <div>
-                {show_login_modal && <Reveal overlayClassName={loginClass} onBackdropClick={this.onLoginTryClose} onEscapeKeyDown={this.onLoginTryClose} onHide={hideLogin} show={show_login_modal}>
+                {show_login_modal && <Reveal overlayClassName={loginClass} onBackdropClick={this.onLoginTryClose} onEscapeKeyDown={this.onLoginTryClose} onHide={hideLogin} show={show_login_modal} revealStyle={{ ...modalStyle }}>
                     <LoginForm onCancel={hideLogin} />
                 </Reveal>}
-                {show_confirm_modal && <Reveal onHide={hideConfirm} show={show_confirm_modal}>
+                {show_confirm_modal && <Reveal onHide={hideConfirm} show={show_confirm_modal} revealStyle={{ ...modalStyle }}>
                     <CloseButton onClick={hideConfirm} />
                     <ConfirmTransactionForm onCancel={hideConfirm} />
                 </Reveal>}
-                {show_donate_modal && <Reveal onHide={hideDonate} show={show_donate_modal} revealStyle={{ width: width600 }}>
+                {show_donate_modal && <Reveal onHide={hideDonate} show={show_donate_modal} revealStyle={{ ...modalStyle, width: width600 }}>
                     <CloseButton onClick={hideDonate} />
                     <Donate />
                 </Reveal>}
-                {show_gift_nft_modal && <Reveal onHide={hideGiftNFT} show={show_gift_nft_modal} revealStyle={{ width: width600 }}>
+                {show_gift_nft_modal && <Reveal onHide={hideGiftNFT} show={show_gift_nft_modal} revealStyle={{ ...modalStyle, width: width600 }}>
                     <CloseButton onClick={hideGiftNFT} />
                     <GiftNFT onCancel={hideGiftNFT} />
                 </Reveal>}
-                {show_signup_modal && <Reveal onHide={hideSignUp} show={show_signup_modal}>
+                {show_signup_modal && <Reveal onHide={hideSignUp} show={show_signup_modal} revealStyle={{ ...modalStyle }}>
                     <CloseButton onClick={hideSignUp} />
                     <SignUp />
                 </Reveal>}
-                {show_change_account_modal && <Reveal onHide={hideChangeAccount} show={show_change_account_modal} revealStyle={{ width: width400 }}>
+                {show_change_account_modal && <Reveal onHide={hideChangeAccount} show={show_change_account_modal} revealStyle={{ ...modalStyle, width: width400 }}>
                     <CloseButton onClick={hideChangeAccount} />
                     <ChangeAccount />
                 </Reveal>}
-                {show_add_account_modal && <Reveal onHide={hideAddAccount} show={show_add_account_modal}>
+                {show_add_account_modal && <Reveal onHide={hideAddAccount} show={show_add_account_modal} revealStyle={{ ...modalStyle }}>
                     <CloseButton onClick={hideAddAccount} />
                     <AddAccount />
                 </Reveal>}
-                {show_app_download_modal && <Reveal onHide={hideAppDownload} show={show_app_download_modal}>
+                {show_app_download_modal && <Reveal onHide={hideAppDownload} show={show_app_download_modal} revealStyle={{ ...modalStyle }}>
                     <CloseButton onClick={hideAppDownload} />
                     <AppDownload />
                 </Reveal>}
