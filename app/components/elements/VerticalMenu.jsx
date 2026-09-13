@@ -10,7 +10,10 @@ const isSepar = (item) => {
 
 const VerticalMenu = ({ items, title, description, className, innerRef, hideValue }) => {
     const closeMenu = (e) => {
+        // If this was not a left click, or if CTRL or CMD were held, do not close the menu.
         if (e.button !== 0 || e.ctrlKey || e.metaKey) return
+
+        // Simulate clicking of document body which will close any open menus
         document.body.click()
     }
 
@@ -41,6 +44,7 @@ const VerticalMenu = ({ items, title, description, className, innerRef, hideValu
                         data-value={i.value} 
                         key={i.key ? i.key : i.value} 
                         onClick={(i.link && !i.disabled) ? closeMenu : null}
+                        style={i.style}
                     >
                         {i.link ? (
                             <LinkEx to={!i.disabled && i.link} target={target} onClick={!i.disabled && i.onClick}>
