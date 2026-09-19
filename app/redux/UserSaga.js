@@ -224,7 +224,7 @@ function* usernamePasswordLogin2({payload: {username, password, saveLogin,
         yield put(user.actions.setAuthority({accountName, auth: authority}))
     }
     const fullAuths = Object.keys(authority).filter(type => authority[type] === 'full')
-    if (!fullAuths.length) {
+    if (authority.posting !== 'full') {
         session.logout(username)
         const owner_pub_key = account.owner && account.owner.key_auths && account.owner.key_auths[0] && account.owner.key_auths[0][0];
         // const pub_keys = yield select(state => state.user.pub_keys_used)

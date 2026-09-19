@@ -1,3 +1,5 @@
+@use '@styles/themes' as t;
+
 .TagInput {
   $input-height: 40px;
 
@@ -34,8 +36,8 @@
     line-height: $input-height - 2px;
     cursor: pointer;
 
-    @include themify($themes) {
-      color: themed('textColorSecondary');
+    @include t.themify(t.$themes) using ($theme) {
+      color: t.themed('textColorSecondary', $theme);
     }
   }
 }

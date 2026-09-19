@@ -1,3 +1,5 @@
+@use '@styles/themes' as t;
+
 .Header {
   position: fixed;
   top: 0;
@@ -5,9 +7,9 @@
   width: 100%;
   z-index: 100;
   backface-visibility: hidden;
-  @include themify($themes) {
-    background-color: themed('summaryBackgroundColor');
-    border-bottom: themed('border');
+  @include t.themify(t.$themes) using ($theme) {
+    background-color: t.themed('summaryBackgroundColor', $theme);
+    border-bottom: t.themed('border', $theme);
   }
 
   h3 {
@@ -46,9 +48,9 @@
 }
 
 .Header__top {
-  @include themify($themes) {
-    background-color: themed('navBackgroundColor');
-    border-bottom: themed('border');
+  @include t.themify(t.$themes) using ($theme) {
+    background-color: t.themed('navBackgroundColor', $theme);
+    border-bottom: t.themed('border', $theme);
   }
 
   .row {
@@ -78,8 +80,8 @@
       font-size: 1.1rem;
 
       .Icon {
-        @include themify($themes) {
-          fill: themed('textColorPrimary');
+        @include t.themify(t.$themes) using ($theme) {
+          fill: t.themed('textColorPrimary', $theme);
         }
       }
 
@@ -165,8 +167,8 @@ ul > li.Header__top-logo > a {
   position: relative;
   padding: 0;
 
-  @include themify($themes) {
-    background-color: themed('summaryBackgroundColor');
+  @include t.themify(t.$themes) using ($theme) {
+    background-color: t.themed('summaryBackgroundColor', $theme);
   }
 
   transition: all .3s;
@@ -190,8 +192,8 @@ ul > li.Header__top-logo > a {
   }
 
   li > a {
-    @include themify($themes) {
-      color: themed('textColorSecondary');
+    @include t.themify(t.$themes) using ($theme) {
+      color: t.themed('textColorSecondary', $theme);
     }
 
     font-size: 1rem;
@@ -207,8 +209,8 @@ ul > li.Header__top-logo > a {
   }
 
   li.active a {
-    @include themify($themes) {
-      color: themed('textColorPrimary');
+    @include t.themify(t.$themes) using ($theme) {
+      color: t.themed('textColorPrimary', $theme);
     }
   }
 }

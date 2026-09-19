@@ -190,7 +190,21 @@ class SponsorSubscription extends React.Component {
                             <div className='input-group' style={{marginBottom: 5}}>
                                 <AmountField name='cost' />
                                 <span className="input-group-label" style={{paddingLeft: 0, paddingRight: 0}}>
-                                    <AmountAssetField amountField='cost' setFieldValue={setFieldValue} values={values} assets={assets} />
+                                    <AmountAssetField amountField='cost' setFieldValue={setFieldValue} values={values} assets={assets}
+                                        onChange={
+                                            asset => {
+                                                if (!values.author) { // if not edit mode
+                                                    if (asset.allow_override_transfer || asset.symbol === 'GBG') {
+                                                        if (values.tip_cost)
+                                                            setFieldValue('tip_cost', false)
+                                                        setFieldValue('disable_tip', true)
+                                                    } else {
+                                                        setFieldValue('disable_tip', false)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    />
                                 </span>
                             </div>
                             <ErrorMessage name='cost' component='div' className='error' />

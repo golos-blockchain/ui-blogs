@@ -1,3 +1,5 @@
+@use '@styles/themes' as t;
+
 
 .EditorSwitcher {
   display: flex;
@@ -22,9 +24,8 @@
     &_active {
       font-weight: 500;
 
-      @include themify($themes) {
-        color: themed('textColorPrimary')
-      }
+      @include t.themify(t.$themes) using ($theme) {
+        color: t.themed('textColorPrimary', $theme);}
 
       border-bottom-color: #0078C4;
       cursor: default;
@@ -35,9 +36,8 @@
     }
 
     &:hover {
-      @include themify($themes) {
-        color: themed('textColorPrimary')
-      }
+      @include t.themify(t.$themes) using ($theme) {
+        color: t.themed('textColorPrimary', $theme);}
     }
   }
 

@@ -113,8 +113,6 @@ class Header extends React.Component {
             topic = route.params[0];
         } else if (route.page == 'SubmitPost') {
             page_title = tt('header_jsx.create_a_post');
-        } else if (route.page == 'ChangePassword') {
-            page_title = tt('header_jsx.change_account_password');
         } else if (route.page === 'MinusedAccounts') {
             page_title = tt('minused_accounts_jsx.title');
         } else if (route.page === 'Referrers') {

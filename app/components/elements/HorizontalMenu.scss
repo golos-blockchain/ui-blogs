@@ -1,3 +1,5 @@
+@use '@styles/themes' as t;
+
 .HorizontalMenu {
   .active > a {
     background: none;
@@ -5,8 +7,8 @@
     font-weight: 600;
   }
   li > a:hover {
-    @include themify($themes) {
-      color: themed('textColorPrimary');
+    @include t.themify(t.$themes) using ($theme) {
+      color: t.themed('textColorPrimary', $theme);
     }
   }
   > li:first-child > a {

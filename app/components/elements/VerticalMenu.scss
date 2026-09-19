@@ -1,3 +1,5 @@
+@use '@styles/themes' as t;
+
 .VerticalMenu {
 
   width: 200px;
@@ -16,8 +18,8 @@
     position: relative;
     padding: 0.7rem 1rem;
 
-    @include themify($themes) {
-      color: themed('textColorPrimary');
+    @include t.themify(t.$themes) using ($theme) {
+      color: t.themed('textColorPrimary', $theme);
     }
 
     font-size: 14px;
@@ -42,8 +44,8 @@
 
   > li.title {
     padding: 0.56rem;
-    @include themify($themes) {
-      color: themed('textColorPrimary');
+    @include t.themify(t.$themes) using ($theme) {
+      color: t.themed('textColorPrimary', $theme);
     }
     font-size: 14px;
     font-weight: 500;
@@ -74,8 +76,8 @@
       line-height: 50px;
 
       .Icon {
-        @include themify($themes) {
-          fill: themed('textColorPrimary');
+        @include t.themify(t.$themes) using ($theme) {
+          fill: t.themed('textColorPrimary', $theme);
         }
       }
 

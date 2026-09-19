@@ -22,6 +22,10 @@ const baseState = {
     nightmodeEnabled: false,
 };
 
+function loadNightmode() {
+    return localStorage.getItem('nightmodeEnabled') == 'true' || false;
+}
+
 function getDefaultState() {
     const state = { ...baseState };
 
@@ -29,8 +33,7 @@ function getDefaultState() {
         const locale = cookie.load(LOCALE_COOKIE_KEY);
         if (locale) state.locale = locale;
 
-        state.nightmodeEnabled =
-            localStorage.getItem('nightmodeEnabled') == 'true' || false;
+        state.nightmodeEnabled = loadNightmode();
     }
 
     return state;
@@ -80,10 +83,11 @@ const userSlice = createSlice({
         changeLanguage(state, { payload }) {
             state.locale = payload;
         },
+        syncNightmode(state) {
+            state.nightmodeEnabled = loadNightmode();
+        },
         toggleNightmode(state) {
-            const nightmodeEnabled =
-                localStorage.getItem('nightmodeEnabled') == 'true' || false;
-
+            const nightmodeEnabled = loadNightmode();
             localStorage.setItem('nightmodeEnabled', !nightmodeEnabled);
             state.nightmodeEnabled = !nightmodeEnabled;
         },

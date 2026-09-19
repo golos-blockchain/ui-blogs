@@ -1,3 +1,5 @@
+@use '@styles/themes' as t;
+
 .DropdownMenu {
   position: relative;
   display: inline-block;
@@ -13,8 +15,8 @@
     min-width: 232px;
     z-index: 1000;
 
-    @include themify($themes) {
-      background-color: themed('summaryBackgroundColor');
+    @include t.themify(t.$themes) using ($theme) {
+      background-color: t.themed('summaryBackgroundColor', $theme);
     }
 
     display: block;

@@ -1,79 +1,66 @@
-import React, { Component } from 'react';
+import React, { useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux';
-import cn from 'classnames';
+import { connect } from 'react-redux'
+import cn from 'classnames'
 import tt from 'counterpart'
+
+import shouldComponentUpdate from 'app/utils/shouldComponentUpdate'
+import { proxifyImageUrlWithStrip } from 'app/utils/ProxifyUrl'
 import CircularProgress from './CircularProgress'
-import shouldComponentUpdate from 'app/utils/shouldComponentUpdate';
-import { proxifyImageUrlWithStrip } from 'app/utils/ProxifyUrl';
 
-class Userpic extends Component {
-    static propTypes = {
-        account: PropTypes.string,
-        votingPower: PropTypes.number,
-        showProgress: PropTypes.bool,
-        progressClass: PropTypes.string,
-        imageUrl: PropTypes.string,
-        onClick: PropTypes.func,
-    }
+const Userpic = ({
+    account,
+    votingPower,
+    showProgress: initialShowProgress = false,
+    progressClass,
+    imageUrl,
+    title,
+    onClick,
+    width = 48,
+    height = 48,
+    hideIfDefault = false,
+    json_metadata,
+    reputation,
+    hideReputationForSmall
+}) => {
+    const [showProgress, setShowProgress] = useState(initialShowProgress)
+    const [showPower, setShowPower] = useState(false)
 
-    static defaultProps = {
-        width: 48,
-        height: 48,
-        hideIfDefault: false,
-        showProgress: false
-    }
-
-    state = {
-        showProgress: this.props.showProgress,
-        showPower: false
-    }
-
-    shouldComponentUpdate = shouldComponentUpdate(this, 'Userpic')
-
-    extractUrl = () => {
-        const { json_metadata, width, hideIfDefault, imageUrl } = this.props
-
-        let url = null;
-
-        // TODO: Rewrite bottom block
+    const extractUrl = useCallback(() => {
+        let url = null
 
         if (imageUrl) {
             url = imageUrl
         } else {
-            // try to extract image url from users metaData
             try {
-                const md = JSON.parse(json_metadata);
-                if (md.profile) url = md.profile.profile_image;
+                const md = JSON.parse(json_metadata)
+                if (md.profile) url = md.profile.profile_image
             } catch (e) {
                 console.warn('Try to extract image url from users metaData failed!')
             }
         }
 
         if (url && /^(https?:)\/\//.test(url)) {
-            const size = width && width > 75 ? '200x200' : '75x75';
-            url = proxifyImageUrlWithStrip(url, size);
+            const size = width && width > 75 ? '200x200' : '75x75'
+            url = proxifyImageUrlWithStrip(url, size)
         } else {
             if (hideIfDefault) {
-                return null;
+                return null
             }
-            url = require('app/assets/images/user.png');
+            url = require('app/assets/images/user.png')
         }
 
         return url
-    }
+    }, [imageUrl, json_metadata, width, hideIfDefault])
 
-    votingPowerToPercents = power => power / 100
+    const votingPowerToPercents = useCallback(power => power / 100, [])
 
-    toggleProgress = () => this.setState({
-        showProgress: !this.state.showProgress,
-        showPower: !this.state.showPower
-    })
+    const toggleProgress = useCallback(() => {
+        setShowProgress(prev => !prev)
+        setShowPower(prev => !prev)
+    }, [])
 
-    getVotingIndicator = (percentage) => {
-        const { progressClass } = this.props
-        const { showProgress, showPower } = this.state
-
+    const getVotingIndicator = useCallback((percentage) => {
         const votingClasses = cn('voting_power', {
             'show-progress': showProgress,
             'show-power': showPower
@@ -84,54 +71,68 @@ class Userpic extends Component {
                 <CircularProgress
                     percentage={percentage}
                     show={showProgress}
-                    size={this.props.width}
+                    size={width}
                     strokeWidth={2.5}
                 />
             </div>
         )
+    }, [showProgress, showPower, progressClass, width])
+
+    const style = {
+        width: `${width}px`,
+        height: `${height}px`,
+        backgroundImage: `url(${extractUrl()})`
     }
 
-    render() {
-        const { width, height, votingPower, reputation, hideReputationForSmall, showProgress, onClick } = this.props
+    if (votingPower) {
+        const percentage = votingPowerToPercents(votingPower)
+        const toggle = showProgress ? () => {} : toggleProgress
 
-        const style = {
-            width: `${width}px`,
-            height: `${height}px`,
-            backgroundImage: `url(${this.extractUrl()})`
-        }
-
-        if (votingPower) {
-            const percentage = this.votingPowerToPercents(votingPower)
-            const toggle = showProgress ? () => { } : this.toggleProgress
-
-            return (
-                <div className="Userpic" onClick={toggle} style={style}>
-                    {percentage ? this.getVotingIndicator(percentage) : null}
-                </div>
-            )
-        } else if (reputation !== undefined) {
-            return <div className="Userpic_parent" onClick={onClick}>
-                    <div className="Userpic" style={style}></div>
-                    <div className="Userpic__badge" title={tt('g.reputation')}>{reputation}</div>
-                </div>
-       } else {
-            return <div className="Userpic" style={style} onClick={onClick} />
-        }
+        return (
+            <div className='Userpic' title={title} onClick={toggle} style={style}>
+                {percentage ? getVotingIndicator(percentage) : null}
+            </div>
+        )
+    } else if (reputation !== undefined) {
+        return (
+            <div className='Userpic_parent' onClick={onClick}>
+                <div className='Userpic' title={title} style={style}></div>
+                <div className='Userpic__badge' title={tt('g.reputation')}>{reputation}</div>
+            </div>
+        )
+    } else {
+        return <div className='Userpic' title={title} style={style} onClick={onClick} />
     }
 }
 
-export default connect(
-    (state, props) => {
-        const { account, width, height, hideIfDefault, onClick } = props;
+Userpic.propTypes = {
+    account: PropTypes.string,
+    votingPower: PropTypes.number,
+    showProgress: PropTypes.bool,
+    progressClass: PropTypes.string,
+    imageUrl: PropTypes.string,
+    title: PropTypes.string,
+    onClick: PropTypes.func,
+    width: PropTypes.number,
+    height: PropTypes.number,
+    hideIfDefault: PropTypes.bool,
+    json_metadata: PropTypes.string,
+    reputation: PropTypes.number,
+    hideReputationForSmall: PropTypes.bool
+}
 
-        return {
-            json_metadata: state.global.accounts &&
-                state.global.accounts[account] &&
-                state.global.accounts[account].json_metadata,
-            width,
-            height,
-            hideIfDefault,
-            onClick,
-        };
+const mapStateToProps = (state, props) => {
+    const { account, width, height, hideIfDefault, onClick } = props
+
+    return {
+        json_metadata: state.global.accounts &&
+            state.global.accounts[account] &&
+            state.global.accounts[account].json_metadata,
+        width,
+        height,
+        hideIfDefault,
+        onClick
     }
-)(Userpic)
+}
+
+export default connect(mapStateToProps)(Userpic)

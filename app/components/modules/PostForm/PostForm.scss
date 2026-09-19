@@ -1,3 +1,5 @@
+@use '@styles/themes' as t;
+
 
 .PostForm {
   display: flex;
@@ -46,8 +48,8 @@
   }
 
   &_page &__footer {
-    @include themify($themes) {
-      background-color: themed('summaryBackgroundColor');
+    @include t.themify(t.$themes) using ($theme) {
+      background-color: t.themed('summaryBackgroundColor', $theme);
     }
 
     box-shadow: 0 -2px 12px 0 rgba(0,0,0, 0.07);

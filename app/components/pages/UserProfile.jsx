@@ -10,7 +10,6 @@ import transaction from 'app/redux/Transaction';
 import user from 'app/redux/User';
 import app from 'app/redux/AppReducer';
 import Icon from 'app/components/elements/Icon'
-import UserKeys from 'app/components/elements/UserKeys';
 import Settings from 'app/components/modules/Settings';
 import ReputationHistory from 'app/components/modules/ReputationHistory'
 import Mentions from 'app/components/modules/Mentions'

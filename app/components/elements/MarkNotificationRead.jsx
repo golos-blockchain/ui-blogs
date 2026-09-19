@@ -1,56 +1,59 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
-import {connect} from 'react-redux';
-import { markNotificationReadWs } from 'app/utils/NotifyApiClient';
+import { connect } from 'react-redux'
+import { markNotificationReadWs } from 'app/utils/NotifyApiClient'
 
-class MarkNotificationRead extends React.Component {
+const MarkNotificationRead = (props) => {
+    const { fields, account, update, interval } = props
+    const intervalRef = useRef(null)
+    const fieldsArrayRef = useRef([])
 
-    static propTypes = {
-        fields: PropTypes.string,
-        account: PropTypes.string,
-        update: PropTypes.func,
-        interval: PropTypes.number,
-    };
-
-    shouldComponentUpdate() {
-        return false;
-    }
-
-    _activateInterval(interval) {
-        if (!this.interval) {
-            const { account, update } = this.props;
-            this.interval = setInterval(() => {
-                markNotificationReadWs(account, this.fields_array).then(nc => update(nc));
-            }, interval);
+    const activateInterval = (intervalDuration) => {
+        if (!intervalRef.current) {
+            intervalRef.current = setInterval(() => {
+                markNotificationReadWs(account, fieldsArrayRef.current).then(nc => update(nc))
+            }, intervalDuration)
         }
     }
 
-    componentDidMount() {
-        const { account, fields, update, interval } = this.props;
-        this.fields_array = fields.replace(/\s/g,'').split(',');
-        if (interval)
-            this._activateInterval(interval);
-        else
-            markNotificationReadWs(account, this.fields_array).then(nc => update(nc));
-    }
+    useEffect(() => {
+        fieldsArrayRef.current = fields.replace(/\s/g, '').split(',')
 
-    UNSAFE_componentWillReceiveProps(nextProps) {
-        if (nextProps.interval) {
-            this._activateInterval(nextProps.interval);
+        if (interval) {
+            activateInterval(interval)
         } else {
-            if (this.interval) {
-                clearInterval(this.interval);
-                this.interval = undefined;
+            markNotificationReadWs(account, fieldsArrayRef.current).then(nc => update(nc))
+        }
+
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current)
+                intervalRef.current = null
             }
         }
-    }
+    }, [])
 
-    render() {
-        return null;
-    }
+    useEffect(() => {
+        if (interval) {
+            activateInterval(interval)
+        } else {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current)
+                intervalRef.current = null
+            }
+        }
+    }, [interval])
 
+    return null
+}
+
+MarkNotificationRead.propTypes = {
+    fields: PropTypes.string,
+    account: PropTypes.string,
+    update: PropTypes.func,
+    interval: PropTypes.number,
 }
 
 export default connect(null, dispatch => ({
-    update: (payload) => { dispatch({type: 'UPDATE_NOTIFICOUNTERS', payload})},
-}))(MarkNotificationRead);
+    update: (payload) => { dispatch({ type: 'UPDATE_NOTIFICOUNTERS', payload }) },
+}))(MarkNotificationRead)

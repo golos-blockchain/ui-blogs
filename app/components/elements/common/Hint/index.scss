@@ -1,3 +1,5 @@
+@use '@styles/themes' as t;
+
 @import "../../../extends";
 
 .Hint {
@@ -25,8 +27,8 @@
     padding: 22px 26px 20px;
     border-radius: 8px;
 
-    @include themify($themes) {
-        background: themed('summaryBackgroundColor');
+    @include t.themify(t.$themes) using ($theme) {
+        background: t.themed('summaryBackgroundColor', $theme);
     }
 
     box-shadow: 0 2px 12px 0 rgba(0,0,0, 0.15);

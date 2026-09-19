@@ -846,12 +846,6 @@
     "get_sp_when_sign_up2": " %(VESTING_TOKENS)s зарегистрировавшись сегодня.",
     "all_accounts_refunded": "Все потери по восстанавливаемым аккаунтам были полностью компенсированы"
   },
-  "suggestpassword_jsx": {
-    "APP_NAME_cannot_recover_passwords_keep_this_page_in_a_secure_location": "%(APP_NAME)s не может восстановить пароли. Сохраните эту страницу в безопасном месте, например, в огнестойком сейфе или в депозитарной ячейке.",
-    "APP_NAME_password_backup": "%(APP_NAME)s резервное копирование пароля",
-    "APP_NAME_password_backup_required": "%(APP_NAME)s резервное копирование пароля (обязательно!)",
-    "after_printing_write_down_your_user_name": "После печати запишите ваше имя пользователя"
-  },
   "time_versions_jsx": {
     "rev": "ред.",
     "version_NUM": "(версия %(NUM)s)"

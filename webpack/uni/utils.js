@@ -18,4 +18,14 @@ export const fixConfigForServer = (cfg) => {
       }
       return plugin;
   });
+
+  cfg.externals = [
+    ...(cfg.externals || []),
+    'react',
+    'react-dom',
+    'react-redux',
+    'prop-types',
+    'classnames',
+  ];
+
 };

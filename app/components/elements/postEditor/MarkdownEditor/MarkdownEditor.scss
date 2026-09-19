@@ -1,3 +1,5 @@
+@use '@styles/themes' as t;
+
 .MarkdownEditor {
   padding-top: 4px;
 
@@ -39,22 +41,22 @@
     border: none !important;
     border-radius: 0;
 
-    @include themify($themes) {
-      color: themed('textColorPrimary');
+    @include t.themify(t.$themes) using ($theme) {
+      color: t.themed('textColorPrimary', $theme);
     }
 
     background: none;
   }
 
   & .CodeMirror-cursor {
-      @include themify($themes) {
-        border-left-color: themed('textColorPrimary');
+      @include t.themify(t.$themes) using ($theme) {
+        border-left-color: t.themed('textColorPrimary', $theme);
       }
   }
 
   //& .CodeMirror-selectedtext {
-  //    @include themify($themes) {
-  //      background-color: themed('summaryBackgroundColor');
+  //    @include t.themify(t.$themes) using ($theme) {
+  //      background-color: t.themed('summaryBackgroundColor', $theme);
   //    }
   //}
 
@@ -62,8 +64,8 @@
     padding: 10px 8px 0 !important;
     margin: 0;
 
-    @include themify($themes) {
-        background: themed('zebra');
+    @include t.themify(t.$themes) using ($theme) {
+        background: t.themed('zebra', $theme);
     }
 
     border-radius: 6px;

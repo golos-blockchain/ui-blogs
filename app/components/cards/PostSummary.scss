@@ -1,3 +1,5 @@
+@use '@styles/themes' as t;
+
 ul.PostsList__summaries {
   margin-left: 0;
 
@@ -17,8 +19,8 @@ ul.PostsList__summaries {
 .PostSummary {
   padding: 0 0 0.5rem;
   margin: 0 0 1.25vw;
-  @include themify($themes) {
-    background-color: themed('summaryBackgroundColor');
+  @include t.themify(t.$themes) using ($theme) {
+    background-color: t.themed('summaryBackgroundColor', $theme);
   }
   clear: left;
   @include clearfix;
@@ -166,13 +168,13 @@ ul.PostsList__summaries {
     margin: 0;
     overflow: hidden;
     > a {
-      @include themify($themes) {
-        color: themed('textColorPrimary');
+      @include t.themify(t.$themes) using ($theme) {
+        color: t.themed('textColorPrimary', $theme);
       }
     }
     > a:visited {
-      @include themify($themes) {
-        color: themed('textColorSecondary');
+      @include t.themify(t.$themes) using ($theme) {
+        color: t.themed('textColorSecondary', $theme);
       }
     }
     .Icon {
@@ -225,8 +227,8 @@ ul.PostsList__summaries {
   padding: 0.3rem 0.1rem 0.15rem;
   font-family: $body-font-family;
 
-  @include themify($themes) {
-    color: themed('textColorPrimary');
+  @include t.themify(t.$themes) using ($theme) {
+    color: t.themed('textColorPrimary', $theme);
   }
 
   overflow: hidden;
@@ -239,8 +241,8 @@ ul.PostsList__summaries {
     display: inline;
   }
   > a:visited {
-    @include themify($themes) {
-      color: themed('textColorSecondary');
+    @include t.themify(t.$themes) using ($theme) {
+      color: t.themed('textColorSecondary', $theme);
     }
   }
 }

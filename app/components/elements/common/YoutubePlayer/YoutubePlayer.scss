@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 .YoutubePlayer {
   $play-size: 128px;
 
@@ -15,8 +17,8 @@
     top: 50%;
     width: $play-size;
     height: $play-size;
-    margin-left: -$play-size / 2;
-    margin-top: -$play-size / 2;
+    margin-left: math.div(-$play-size, 2);
+    margin-top: math.div(-$play-size, 2);
     background: url('/images/youtube.svg');
     background-size: $play-size;
     opacity: 0.8;

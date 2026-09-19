@@ -2,33 +2,26 @@ import React from 'react'
 import { connect } from 'react-redux'
 import tt from 'counterpart'
 
-import { APP_ICON, } from 'app/client_config'
+import { APP_ICON } from 'app/client_config'
 import Icon from 'app/components/elements/Icon'
 
-class ChainFailure extends React.Component {
-    render() {
-        const { chain_failure } = this.props
-        if (chain_failure) {
-            return (
-                <div className="App__announcement row">
-                    <div className="column">
-                        <div align="center" className="callout alert" style={{backgroundColor: 'rgb(250, 62, 62)', color: 'white'}}>
-                            <Icon className="logo-icon" name={APP_ICON} /> {tt('chain_failure_jsx.title')}
-                        </div>
+const ChainFailure = ({ chain_failure }) => {
+    if (chain_failure) {
+        return (
+            <div className='App__announcement row'>
+                <div className='column'>
+                    <div align='center' className='callout alert' style={{backgroundColor: 'rgb(250, 62, 62)', color: 'white'}}>
+                        <Icon className='logo-icon' name={APP_ICON} /> {tt('chain_failure_jsx.title')}
                     </div>
                 </div>
-            )
-        }
-        return null
+            </div>
+        )
     }
+    return null
 }
 
 export default connect(
-    (state, ownProps) => {
-        return {
-            chain_failure: state.global.chain_failure,
-        }
-    },
-    dispatch => ({
+    (state) => ({
+        chain_failure: state.global.chain_failure
     })
 )(ChainFailure)

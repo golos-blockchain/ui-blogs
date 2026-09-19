@@ -1,3 +1,5 @@
+@use '@styles/themes' as t;
+
 
 .TagsEditLine {
   $tag-height: 24px;
@@ -48,8 +50,8 @@
     border-radius: $tag-height/2;
     font-size: 12px;
 
-    @include themify($themes) {
-      color: themed('textColorSecondary');
+    @include t.themify(t.$themes) using ($theme) {
+      color: t.themed('textColorSecondary', $theme);
     }
 
     &_draggable {
@@ -70,8 +72,8 @@
       cursor: pointer;
 
       &:hover {
-        @include themify($themes) {
-          color: themed('textColorPrimary');
+        @include t.themify(t.$themes) using ($theme) {
+          color: t.themed('textColorPrimary', $theme);
         }
         border-color: #e1e1e1;
       }
@@ -89,8 +91,8 @@
 
   &__tag-icon:hover,
   &__tag_favorite:hover &__tag-icon {
-    @include themify($themes) {
-      color: themed('textColorPrimary');
+    @include t.themify(t.$themes) using ($theme) {
+      color: t.themed('textColorPrimary', $theme);
     }
   }
 

@@ -245,7 +245,7 @@ if (env !== 'test') {
 
     const port = process.env.PORT ? parseInt(process.env.PORT) : 8080;
 
-    app.listen(port);
+    app.listen(port, process.env.HOST || undefined);
 
     // Tell parent process koa-server is started
     if (process.send) process.send('online');

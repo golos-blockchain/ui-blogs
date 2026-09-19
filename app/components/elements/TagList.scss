@@ -1,3 +1,5 @@
+@use '@styles/themes' as t;
+
 .TagList {
   ul.VerticalMenu {
     a {
@@ -16,14 +18,13 @@
     padding: 0.2rem 0.5rem;
     border-radius: 0.3rem;
 
-    @include themify($themes) {
-      background: themed('zebra');
-      color: themed('textColorSecondary')
-    }
+    @include t.themify(t.$themes) using ($theme) {
+      background: t.themed('zebra', $theme);
+      color: t.themed('textColorSecondary', $theme);}
 
     &:hover {
-      @include themify($themes) {
-        color: themed('textColorPrimary');
+      @include t.themify(t.$themes) using ($theme) {
+        color: t.themed('textColorPrimary', $theme);
       }
     }
   }

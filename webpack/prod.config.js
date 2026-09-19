@@ -43,7 +43,16 @@ module.exports = merge(baseConfig, {
                             },
                         },
                     },
-                    'sass-loader',
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            sourceMap: true,
+                            sassOptions: {
+                                quietDeps: true,
+                                silenceDeprecations: ['import'],
+                            },
+                        },
+                    },
                 ],
             },
         ],

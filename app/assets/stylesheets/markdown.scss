@@ -1,3 +1,5 @@
+@use '@styles/themes' as t; 
+
 .Markdown {
   font-family: 'Source Serif Pro', serif;
   font-size: 1.2em;
@@ -86,9 +88,9 @@
     font-size: 85%;
     border-radius: 3px;
     border: none;
-    @include themify($themes) {
-        background-color: themed('zebra');
-        color: themed('textColorPrimary');
+    @include t.themify(t.$themes) using ($theme) {
+        background-color: t.themed('zebra', $theme);
+        color: t.themed('textColorPrimary', $theme);
     }
     font-weight: inherit;
   }
@@ -159,8 +161,8 @@
   }
 
   blockquote > p {
-    @include themify($themes) {
-        color: themed('textColorSecondary');
+    @include t.themify(t.$themes) using ($theme) {
+        color: t.themed('textColorSecondary', $theme);
     }
   }
 }

@@ -6,6 +6,7 @@ function resolvePath(...rest) {
 
 module.exports = {
     react: path.join(__dirname, '../node_modules', 'react'),
+    'react-dom': path.join(__dirname, '../node_modules', 'react-dom'),
     src: path.join(__dirname, '..', 'src'),
     app: path.join(__dirname, '..', 'app'),
     assets: resolvePath('assets'),
@@ -17,4 +18,5 @@ module.exports = {
     '@modules': resolvePath('components', 'modules'),
     '@pages': resolvePath('components', 'pages'),
     '@utils': resolvePath('utils'),
+    '@styles': path.join(__dirname, '..', 'app', 'assets', 'stylesheets'), // for using in .scss files
 };
