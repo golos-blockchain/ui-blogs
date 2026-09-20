@@ -49,7 +49,7 @@ const CMCWidget = () => {
 
             const { dex } = golos.libs
             let res = await dex.apidexGetPrices({ sym: 'GOLOS' })
-            if (res.price_rub) {
+            if (res.price_rub || res.price_usd) {
                 const price_change = getPriceChange(res)
                 setState({
                     loaded: true,
@@ -109,9 +109,9 @@ const CMCWidget = () => {
                         </span><br/>
                         <span style={{ fontSize: '16px' }}>
                             <span className='CMCWidget__main-val'>{price_rub ? price_rub.toFixed(5) : null}</span>
-                            <span className='CMCWidget__main-cur'>&nbsp;RUB&nbsp;
+                            {(price_rub || price_change) ? <React.Fragment><span className='CMCWidget__main-cur'>&nbsp;RUB&nbsp;
                             {(price_change && price_change.toFixed) ? <span style={{ color: price_change < 0 ? '#d94040' : '#009600' }}>({price_change.toFixed(2)}%)</span> : null}
-                            </span><br />
+                            </span><br /></React.Fragment> : null}
                             <span className='CMCWidget__sub-parent'>
                                 <span className='CMCWidget__sub'>{price_usd ? price_usd.toFixed(5) + ' USD' : null}</span>
                             </span><br/>
