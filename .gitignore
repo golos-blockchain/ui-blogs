@@ -2,6 +2,7 @@
 .idea
 coverage
 node_modules
+/git-deps/
 *.log
 dist
 build-client

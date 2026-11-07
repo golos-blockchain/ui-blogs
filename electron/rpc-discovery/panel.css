@@ -1,0 +1,1 @@
+body {font: 18px system-ui; line-height: 1.5; margin: 24px;} button,input {font: inherit;} input {width: 95%;} button:focus-visible,input:focus-visible {outline: 3px solid #075dd9; outline-offset: 3px;} li {margin-bottom: 16px;}
