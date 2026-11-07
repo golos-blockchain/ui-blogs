@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'none'; img-src 'none'; base-uri 'none'; form-action 'none'"><title>Поиск RPC через P2P</title><link rel="stylesheet" href="panel.css"></head>
+<body><main><h1>Найти RPC через P2P</h1>
+<p>Поиск через обычные P2P-узлы и их объявления. Это не проверка RPC и не синхронизация блокчейна. Обычные seed-узлы могут не поддерживать каталог RPC.</p>
+<p>Результаты непроверенные: доступность, сеть и ответы RPC не подтверждены. Автоматического подключения или переключения нет. Текущий выбор RPC не изменяется.</p>
+<button id="find" type="button">Найти RPC через P2P</button> <button id="cancel" type="button" disabled>Отменить поиск</button>
+<p id="status" role="status" aria-live="polite" aria-atomic="true">Поиск ещё не запущен.</p>
+<p>Нажмите «Выбрать RPC», подтвердите непроверенный адрес и отдельно сохраните его в настройках. Можно также скопировать адрес вручную. Поддерживаются HTTP(S) и WS(S); проверка доступности не выполняется.</p>
+<ul id="results" aria-label="Непроверенные адреса RPC"></ul>
+</main><script src="panel.js"></script></body></html>

@@ -64,7 +64,14 @@ class AppSettings extends React.Component {
         } else {
             cfg.main_app = data.main_app
         }
-        window.appSettings.save(cfg)
+        // Desktop capability accepts only the editable form schema, never the full config.
+        return window.appSettings.save({
+            ws_connection_client: cfg.ws_connection_client,
+            img_proxy_prefix: data.img_proxy_prefix, use_img_proxy: data.use_img_proxy,
+            auth_service: data.auth_service, notify_service: data.notify_service,
+            notify_service_ws: data.notify_service_ws, elastic_search: data.elastic_search,
+            main_app: data.main_app,
+        }).catch(() => { this.setState({ saveError: 'Настройки не сохранены. Проверьте адрес RPC и откройте настройки через меню приложения.' }); })
     }
 
     _onClose = (e) => {
@@ -87,6 +94,8 @@ class AppSettings extends React.Component {
             elastic_search: $STM_Config.elastic_search.url,
             main_app: $STM_Config.main_app,
         }
+        const candidate = typeof window !== 'undefined' && window.appSettings && window.appSettings.candidate ? window.appSettings.candidate() : null
+        if (candidate) { initialValues.ws_connection_client = 'custom'; initialValues.custom_address = candidate }
         this.initialValues = initialValues
     }
 
@@ -154,6 +163,7 @@ class AppSettings extends React.Component {
             <div className='secondary' style={{ paddingLeft: '0.625rem', marginBottom: '0.25rem' }}>
                 {tt('app_settings.to_save_click_button')}
             </div>
+            {this.state.saveError && <p role='alert'>{this.state.saveError}</p>}
             <Formik
                 initialValues={this.initialValues}
                 onSubmit={this._onSubmit}
@@ -168,6 +178,7 @@ class AppSettings extends React.Component {
                     <div className='row'>
                         <div className='column small-12' style={{paddingTop: 5}}>
                             {tt('app_settings.ws_connection_client')}
+                            {typeof window !== 'undefined' && window.rpcDiscoveryPanel && <button type='button' onClick={() => window.rpcDiscoveryPanel.open()}>Найти RPC через P2P</button>}
                             <div style={{marginBottom: '1.25rem'}}>
                                 {this._renderNodes(values.ws_connection_client)}
                             </div>
@@ -289,7 +300,8 @@ module.exports = {
 
 module.exports.openAppSettings = function() {
     if (!process.env.MOBILE_APP) {
-        window.location.href = '/__app_settings'
+        if (window.appSettings && window.appSettings.open) window.appSettings.open()
+        else window.location.href = '/__app_settings'
         return
     }
     const { pathname } = window.location
